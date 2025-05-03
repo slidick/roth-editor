@@ -1,0 +1,6 @@
+[submodule "addons/window_system"]
+	path = addons/window_system
+	url = https://github.com/slidick/godot-window-system
+[submodule "addons/settings_system"]
+	path = addons/settings_system
+	url = https://github.com/slidick/godot-settings-system

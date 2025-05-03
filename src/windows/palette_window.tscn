@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkqacuc6f5k1d"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uubki"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_q3eik"]
+[ext_resource type="Script" uid="uid://bpifcuimx8sov" path="res://src/windows/palette_window.gd" id="3_q3eik"]
+
+[node name="PaletteWindow" instance=ExtResource("1_uubki")]
+theme = ExtResource("2_q3eik")
+script = ExtResource("3_q3eik")
+resizable = false
+show_maximize_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer" index="0"]
+visible = false
+layout_mode = 2
+color = Color(0.639594, 0.495817, 0.979716, 1)
+
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/ColorRect" index="0"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer" index="1"]
+visible = false
+layout_mode = 2

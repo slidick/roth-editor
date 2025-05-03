@@ -1,0 +1,311 @@
+[gd_scene load_steps=15 format=3 uid="uid://dba8cygkkmhat"]
+
+[ext_resource type="Script" uid="uid://c7m0sdb6bu4b3" path="res://src/main.gd" id="1_eewff"]
+[ext_resource type="StyleBox" uid="uid://cn25wp84p5qer" path="res://src/themes/menu_panel.tres" id="2_gh0ne"]
+[ext_resource type="PackedScene" uid="uid://dac4bey346gky" path="res://src/windows/das_window.tscn" id="3_3cfgd"]
+[ext_resource type="FontFile" uid="uid://bmx77ca0le7ge" path="res://assets/fonts/Kenney Pixel.ttf" id="3_rlaii"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="4_rlaii"]
+[ext_resource type="StyleBox" uid="uid://cy0f7oold3swp" path="res://src/themes/pop_up_menu_theme.tres" id="5_5mrjc"]
+[ext_resource type="PackedScene" uid="uid://d06ghcmejei5d" path="res://src/windows/editor/editor_window.tscn" id="5_fyndt"]
+[ext_resource type="PackedScene" uid="uid://osgu4pclsqcs" path="res://src/windows/open_map_window.tscn" id="8_5mrjc"]
+[ext_resource type="PackedScene" uid="uid://ctidddlqpgfo3" path="res://src/windows/controls_window.tscn" id="8_mgm53"]
+[ext_resource type="PackedScene" uid="uid://dxr5najj0quo3" path="res://src/windows/loading_window.tscn" id="9_kf8lf"]
+[ext_resource type="PackedScene" uid="uid://c18j0kkjserp8" path="res://src/windows/search_window.tscn" id="9_uewes"]
+[ext_resource type="PackedScene" uid="uid://s2yign08bgnw" path="res://src/windows/sound_effects_window.tscn" id="10_tb146"]
+[ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
+[ext_resource type="Script" uid="uid://d04xqq0rdmwqg" path="res://src/resources/parsers/dbase_500.gd" id="15_mlv6i"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_eewff")
+
+[node name="Menu" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="ColorRect" type="ColorRect" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+color = Color(0.601793, 0.81459, 0.959943, 1)
+
+[node name="Title" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.1
+anchor_right = 0.5
+anchor_bottom = 0.2
+offset_left = -544.0
+offset_right = 544.0
+grow_horizontal = 2
+size_flags_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_rlaii")
+theme_override_font_sizes/font_size = 96
+text = "Realms of the Haunting
+Editor"
+horizontal_alignment = 1
+
+[node name="Version" type="Label" parent="Menu"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.25
+anchor_right = 0.5
+anchor_bottom = 0.4
+offset_left = -544.0
+offset_right = 544.0
+grow_horizontal = 2
+size_flags_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_rlaii")
+theme_override_font_sizes/font_size = 96
+text = "v0.0.0"
+horizontal_alignment = 1
+
+[node name="MenuPanel" type="PanelContainer" parent="Menu"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_styles/panel = ExtResource("2_gh0ne")
+
+[node name="MenuBar" type="MenuBar" parent="Menu/MenuPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+mouse_filter = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_rlaii")
+theme_override_font_sizes/font_size = 32
+flat = true
+
+[node name="Main" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+theme = ExtResource("4_rlaii")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/panel = ExtResource("5_5mrjc")
+item_count = 5
+item_0/text = "Open Map"
+item_0/id = 3
+item_1/id = 4
+item_1/separator = true
+item_2/text = "Settings"
+item_2/id = 0
+item_3/id = 1
+item_3/separator = true
+item_4/text = "Quit"
+item_4/id = 2
+
+[node name="Windows" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+unique_name_in_owner = true
+theme = ExtResource("4_rlaii")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/panel = ExtResource("5_5mrjc")
+item_count = 4
+item_0/text = "Editor"
+item_0/checkable = 1
+item_0/id = 1
+item_1/text = "Search"
+item_1/checkable = 1
+item_1/id = 3
+item_2/text = "DAS Viewer"
+item_2/checkable = 1
+item_2/id = 0
+item_3/text = "Sound Viewer"
+item_3/checkable = 1
+item_3/id = 3
+
+[node name="Help" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+theme = ExtResource("4_rlaii")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/panel = ExtResource("5_5mrjc")
+item_count = 1
+item_0/text = "Controls"
+item_0/checkable = 1
+item_0/id = 2
+
+[node name="AlwaysBehindWindows" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Editor" parent="AlwaysBehindWindows" instance=ExtResource("5_fyndt")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 33.0
+offset_right = 1530.0
+offset_bottom = 1080.0
+grow_horizontal = 1
+grow_vertical = 1
+start_maximized = true
+
+[node name="Windows" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DASViewer" parent="Windows" instance=ExtResource("3_3cfgd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -581.0
+offset_top = -429.0
+offset_right = 581.0
+offset_bottom = 429.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Controls" parent="Windows" instance=ExtResource("8_mgm53")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.5
+anchor_right = 0.3
+anchor_bottom = 0.5
+offset_left = -174.0
+offset_top = -156.5
+offset_right = 174.0
+offset_bottom = 156.5
+grow_horizontal = 2
+grow_vertical = 2
+show_maximize_button = false
+
+[node name="Search" parent="Windows" instance=ExtResource("9_uewes")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -472.5
+offset_top = -303.5
+offset_right = 472.5
+offset_bottom = 303.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SoundViewer" parent="Windows" instance=ExtResource("10_tb146")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -666.5
+offset_top = -342.5
+offset_right = 666.5
+offset_bottom = 342.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AlwaysInFrontWindows" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="OpenMap" parent="AlwaysInFrontWindows" instance=ExtResource("8_5mrjc")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Settings" parent="AlwaysInFrontWindows" instance=ExtResource("12_srxbw")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -437.5
+offset_top = -220.5
+offset_right = 437.5
+offset_bottom = 220.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading" parent="AlwaysInFrontWindows" instance=ExtResource("9_kf8lf")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("15_mlv6i")
+
+[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Main" to="." method="_on_main_index_pressed"]
+[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Windows" to="." method="_on_windows_index_pressed"]
+[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Help" to="." method="_on_help_index_pressed"]
+[connection signal="window_shown" from="AlwaysBehindWindows/Editor" to="." method="_on_view_3d_window_window_shown"]
+[connection signal="window_shown" from="Windows/DASViewer" to="." method="_on_das_window_window_shown"]
+[connection signal="window_shown" from="Windows/Controls" to="." method="_on_controls_window_shown"]
+[connection signal="search_result_activated" from="Windows/Search" to="AlwaysBehindWindows/Editor" method="_on_search_result_activated"]
+[connection signal="window_shown" from="Windows/Search" to="." method="_on_search_window_shown"]
+[connection signal="window_shown" from="Windows/SoundViewer" to="." method="_on_sound_effects_window_shown"]

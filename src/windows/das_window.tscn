@@ -1,0 +1,154 @@
+[gd_scene load_steps=7 format=3 uid="uid://dac4bey346gky"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_hb1vl"]
+[ext_resource type="Script" uid="uid://dvw1ym85q7blq" path="res://src/windows/das_window.gd" id="2_7mm5x"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_kk7cp"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_t1662"]
+[ext_resource type="StyleBox" uid="uid://bxb0wg00e7qct" path="res://src/themes/loading_bar_background.tres" id="5_dwma1"]
+[ext_resource type="StyleBox" uid="uid://bh13lqgmbc0m1" path="res://src/themes/loading_bar_fill.tres" id="6_81hr7"]
+
+[node name="DASWindow" instance=ExtResource("1_hb1vl")]
+theme = ExtResource("2_kk7cp")
+script = ExtResource("2_7mm5x")
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_t1662")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+text = "DAS File:"
+
+[node name="DASFiles" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+allow_reselect = true
+
+[node name="LoadButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Load"
+
+[node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/background = ExtResource("5_dwma1")
+theme_override_styles/fill = ExtResource("6_81hr7")
+
+[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Textures" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="1"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureLayoutOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+flat = true
+selected = 0
+item_count = 2
+popup/item_0/text = "List View"
+popup/item_0/id = 0
+popup/item_1/text = "Grid View"
+popup/item_1/id = 1
+
+[node name="TextureList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/VBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+theme_override_colors/guide_color = Color(0, 0, 0, 0)
+theme_override_constants/v_separation = 10
+fixed_icon_size = Vector2i(25, 25)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TextureContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="DataContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/HBoxContainer/Control" index="0"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="2"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 1
+
+[node name="DasInfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Header" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Load Errors" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="3"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Load Errors" index="0"]
+layout_mode = 2
+horizontal_scroll_mode = 2
+
+[node name="Errors" type="RichTextLabel" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Load Errors/ScrollContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+fit_content = true
+autowrap_mode = 0
+
+[node name="AnimationTimer" type="Timer" parent="." index="2"]
+unique_name_in_owner = true
+wait_time = 0.1
+
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/DASFiles" to="." method="_on_das_files_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/VBoxContainer/TextureLayoutOption" to="." method="_on_texture_layout_option_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Textures/VBoxContainer/TextureList" to="." method="_on_text_item_selected"]
+[connection signal="timeout" from="AnimationTimer" to="." method="_on_animation_timer_timeout"]

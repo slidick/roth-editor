@@ -1,0 +1,938 @@
+[gd_scene load_steps=16 format=3 uid="uid://d06ghcmejei5d"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
+[ext_resource type="Script" uid="uid://bihs4h46r2f3u" path="res://src/windows/editor/editor_window.gd" id="3_v1i8b"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_v1i8b"]
+[ext_resource type="Script" uid="uid://dybtxpsisv4p1" path="res://src/windows/editor/cross_hair.gd" id="6_rysh3"]
+[ext_resource type="Script" uid="uid://cgov2cxbe7e85" path="res://src/cameras/camera_free.gd" id="7_e4nci"]
+[ext_resource type="PackedScene" uid="uid://clbdnv0bq58oe" path="res://src/ui/arrow_3d.tscn" id="7_rysh3"]
+[ext_resource type="Script" uid="uid://bb6x1yts7r6sm" path="res://src/windows/editor/picker.gd" id="8_kqd67"]
+[ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/palette_window.tscn" id="9_y8pqo"]
+[ext_resource type="PackedScene" uid="uid://h7epeqaiukln" path="res://src/windows/texture_window.tscn" id="11_q0i2p"]
+[ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/metadata_window.tscn" id="12_kytel"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rysh3"]
+bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_y8pqo"]
+
+[sub_resource type="Sky" id="Sky_5ukvr"]
+sky_material = SubResource("ProceduralSkyMaterial_y8pqo")
+
+[sub_resource type="Environment" id="Environment_kc8ui"]
+background_mode = 2
+sky = SubResource("Sky_5ukvr")
+sky_custom_fov = 95.0
+tonemap_mode = 2
+volumetric_fog_density = 0.0045
+volumetric_fog_anisotropy = -0.66
+volumetric_fog_detail_spread = 0.840896
+adjustment_brightness = 1.62
+adjustment_contrast = 1.52
+
+[node name="EditorWindow" instance=ExtResource("1_3db0t")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_x08gi")
+script = ExtResource("3_v1i8b")
+show_focus_highlight = false
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_v1i8b")
+header = false
+
+[node name="NoMapLoaded" type="Control" parent="Contents/VBoxContainer/MainContainer" index="0"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/NoMapLoaded" index="0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -12.0
+offset_right = 53.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "No map loaded."
+
+[node name="MapContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+
+[node name="MapsTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+focus_mode = 0
+theme_override_constants/draw_guides = 0
+theme_override_constants/draw_relationship_lines = 1
+column_titles_visible = true
+allow_rmb_select = true
+hide_root = true
+select_mode = 2
+
+[node name="MapsTreeMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/MapsTree" index="5"]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Save"
+item_0/id = 1
+item_1/text = "Edit Map Metadata"
+item_1/id = 2
+item_2/text = "Close"
+item_2/id = 0
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 0
+
+[node name="ViewportBorder" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer" index="0"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+color = Color(0.736966, 0.860665, 0.934149, 1)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder" index="0"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+focus_mode = 2
+stretch = true
+mouse_target = true
+
+[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer" index="0"]
+unique_name_in_owner = true
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(1182, 949)
+render_target_update_mode = 4
+
+[node name="3DView" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport" index="0"]
+unique_name_in_owner = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView" index="0"]
+
+[node name="PositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/CanvasLayer" index="0"]
+unique_name_in_owner = true
+offset_right = 1.0
+offset_bottom = 23.0
+
+[node name="CrossHair" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/CanvasLayer" index="1"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_rysh3")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView" index="1"]
+environment = SubResource("Environment_kc8ui")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView" index="2"]
+transform = Transform3D(-0.866025, -0.469846, 0.17101, 0, 0.34202, 0.939692, -0.5, 0.813798, -0.296198, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView" index="3"]
+unique_name_in_owner = true
+script = ExtResource("7_e4nci")
+
+[node name="Arrow3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Camera3D" index="0" instance=ExtResource("7_rysh3")]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1, -2)
+enabled = false
+
+[node name="Picker" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView" index="4"]
+unique_name_in_owner = true
+script = ExtResource("8_kqd67")
+
+[node name="Maps" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView" index="5"]
+unique_name_in_owner = true
+
+[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.65
+current_tab = 0
+
+[node name="Edit" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer" index="1"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+metadata/_tab_index = 0
+
+[node name="EditFaceContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit" index="0"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="0"]
+layout_mode = 2
+text = "Textures"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(220.69, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Wall"
+vertical_alignment = 1
+
+[node name="AdditionalCheckButton" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+text = "Enabled"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MidTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "TOP"
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="1"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "MID"
+
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="2"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "BOT"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="XShiftEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+max_value = 255.0
+rounded = true
+editable = false
+update_on_text_changed = true
+
+[node name="YShiftEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+max_value = 255.0
+rounded = true
+editable = false
+update_on_text_changed = true
+
+[node name="0x0CEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+max_length = 3
+editable = false
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="0"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "XSHF"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="1"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "YSHF"
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="2"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "TID"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="3"]
+layout_mode = 2
+text = "Texture Flags"
+
+[node name="TransparencyCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Transparency"
+
+[node name="FlipXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "X-Flip"
+
+[node name="ImageFitCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="6"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Image Fit"
+
+[node name="FixedSizeTransparencyCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="7"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fixed Size Transparency"
+
+[node name="NoReflectCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="8"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Reflect"
+
+[node name="HalfPixelCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="9"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Half Pixel"
+
+[node name="EdgeMapCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="10"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Edge Map"
+
+[node name="DrawFromBottomCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="11"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Draw From Bottom"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="12"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2" index="0"]
+layout_mode = 2
+text = "Unk0x00:"
+
+[node name="Unk0x00Edit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2" index="2"]
+layout_mode = 2
+text = "Type:"
+
+[node name="TypeEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="13"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3" index="0"]
+layout_mode = 2
+text = "Horizontal Fit:"
+
+[node name="Unk0x00+TypeEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 32768.0
+rounded = true
+update_on_text_changed = true
+
+[node name="AutoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3" index="2"]
+layout_mode = 2
+text = "Auto"
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="14"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="15"]
+layout_mode = 2
+text = "Face Flags"
+
+[node name="StopWalkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="16"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Stop Walk"
+
+[node name="StopAlenCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="17"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Stop Alen"
+
+[node name="Flag3CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="18"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flag 3"
+
+[node name="RoomBlkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="19"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "RoomBlk"
+
+[node name="Flag5CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="20"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flag 5"
+
+[node name="Flag6CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="21"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flag 6"
+
+[node name="Flag7CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="22"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flag 7"
+
+[node name="Flag8CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="23"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flag 8"
+
+[node name="EditSectorContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit" index="1"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer" index="0"]
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="0"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Heights"
+
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="1"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="2"]
+layout_mode = 2
+text = "Scale"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="RoofHeightEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -32768.0
+max_value = 32767.0
+update_on_text_changed = true
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="1"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Roof"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="RoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="FloorHeightEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -32768.0
+max_value = 32767.0
+update_on_text_changed = true
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="1"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Floor"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="FloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="3"]
+layout_mode = 2
+
+[node name="GlowEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3" index="1"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "Glow"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3" index="2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "ID"
+horizontal_alignment = 2
+
+[node name="FloorTriggerIDEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+max_value = 65535.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="4"]
+layout_mode = 2
+
+[node name="CandleCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Candle"
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8" index="1"]
+custom_minimum_size = Vector2(136, 0)
+layout_mode = 2
+text = "Unk0x04"
+horizontal_alignment = 2
+
+[node name="Unk0x04Edit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 0)
+layout_mode = 2
+max_value = 65535.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="5"]
+layout_mode = 2
+
+[node name="LightningCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer9" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "Lightning"
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer9" index="1"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Texture
+Height
+Override"
+horizontal_alignment = 2
+
+[node name="TextureHeightOverrideEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer9" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 0)
+layout_mode = 2
+size_flags_vertical = 4
+min_value = -128.0
+max_value = 127.0
+rounded = true
+update_on_text_changed = true
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="6"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Textures"
+vertical_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="7"]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="8"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="1"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "X:"
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="2"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "Y:"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="9"]
+layout_mode = 2
+
+[node name="RoofTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="1"]
+layout_mode = 2
+text = "ROF"
+
+[node name="RoofOffsetXEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="RoofOffsetYEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="10"]
+layout_mode = 2
+
+[node name="FloorTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="1"]
+layout_mode = 2
+text = "FLR"
+
+[node name="FloorOffsetXEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="FloorOffsetYEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="11"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10" index="0"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Roof:"
+
+[node name="RoofFlipXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FLipX"
+
+[node name="RoofFlipYCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FLipY"
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="12"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11" index="0"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Floor:"
+
+[node name="FloorFlipXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FLipX"
+
+[node name="FloorFlipYCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FLipY"
+
+[node name="Info" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer" index="2"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Search" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search index..."
+caret_blink = true
+
+[node name="SearchOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "Sector"
+popup/item_0/id = 0
+popup/item_1/text = "Face"
+popup/item_1/id = 1
+popup/item_2/text = "Object"
+popup/item_2/id = 2
+popup/item_3/text = "SFX"
+popup/item_3/id = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EditContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer/ScrollContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer/ScrollContainer/EditContainer" index="0"]
+layout_mode = 2
+
+[node name="Dialogs" type="Control" parent="." index="2"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Palette" parent="Dialogs" index="0" instance=ExtResource("9_y8pqo")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -294.5
+offset_top = -281.5
+offset_right = 294.5
+offset_bottom = 281.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Texture" parent="Dialogs" index="1" instance=ExtResource("11_q0i2p")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -508.0
+offset_top = -346.0
+offset_right = 508.0
+offset_bottom = 346.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Metadata" parent="Dialogs" index="2" instance=ExtResource("12_kytel")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -259.0
+offset_top = -268.5
+offset_right = 259.0
+offset_bottom = 268.5
+grow_horizontal = 2
+grow_vertical = 2
+resizable = true
+show_maximize_button = true
+
+[connection signal="button_clicked" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/MapsTree" to="." method="_on_maps_tree_button_clicked"]
+[connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/MapsTree" to="." method="_on_maps_tree_item_mouse_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/MapsTree/MapsTreeMenu" to="." method="_on_maps_tree_menu_index_pressed"]
+[connection signal="focus_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_entered"]
+[connection signal="focus_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_exited"]
+[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]
+[connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
+[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer2/AdditionalCheckButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_additional_check_button_toggled"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/TopTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_top_texture_option_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/MidTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_mid_texture_option_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/BottomTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_bottom_texture_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/XShiftEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_x_shift_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/YShiftEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_y_shift_edit_value_changed"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/0x0CEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_x_0c_edit_text_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/TransparencyCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_transparency_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/FlipXCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flip_x_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/ImageFitCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_image_fit_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/FixedSizeTransparencyCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_fixed_size_transparency_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/NoReflectCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_no_reflect_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HalfPixelCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_half_pixel_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/EdgeMapCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_edge_map_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/DrawFromBottomCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_draw_from_bottom_check_box_toggled"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2/Unk0x00Edit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_unk_0x_00_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2/TypeEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_type_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3/Unk0x00+TypeEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_unk_0x_00_type_edit_value_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3/AutoButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_auto_button_pressed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/StopWalkCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_stop_walk_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/StopAlenCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_stop_alen_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag3CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_3_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/RoomBlkCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_room_blk_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag5CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_5_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag6CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_6_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag7CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_7_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag8CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_8_check_box_toggled"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RoofHeightEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_height_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RoofScaleOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_scale_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/FloorHeightEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_height_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/FloorScaleOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_scale_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3/GlowEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_glow_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3/FloorTriggerIDEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_trigger_id_edit_value_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8/CandleCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_candle_check_box_toggled"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8/Unk0x04Edit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_unk_0x_04_edit_value_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer9/LightningCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_lightning_check_box_toggled"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer9/TextureHeightOverrideEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_texture_height_override_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6/RoofTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_texture_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6/RoofOffsetXEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_offset_x_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6/RoofOffsetYEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_offset_y_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7/FloorTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_texture_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7/FloorOffsetXEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_offset_x_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7/FloorOffsetYEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_offset_y_edit_value_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10/RoofFlipXCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_flip_x_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10/RoofFlipYCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_flip_y_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11/FloorFlipXCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_flip_x_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11/FloorFlipYCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_flip_y_check_box_toggled"]
+[connection signal="text_submitted" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer/HBoxContainer/Search" to="." method="_on_search_text_submitted"]

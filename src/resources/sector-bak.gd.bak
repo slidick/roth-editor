@@ -1,0 +1,303 @@
+extends Node3D
+class_name Sector
+
+# Texture scaling (A, B)
+# (0, 0) = 1:2
+# (1, 0) = 1:1
+# (0, 1) = 2:1
+# (1, 1) = 4:1
+
+# "Texture Fit" Flags
+const LINK_EXISTS = 1 << 0
+const CANDLE = 1 << 1
+const CEILING_A = 1 << 2
+const CEILING_B = 1 << 3
+const FLOOR_A = 1 << 4
+const FLOOR_B = 1 << 5
+const LIGHTNING = 1 << 6
+const FLAG8 = 1 << 7
+
+
+var sector_index: int
+var ceiling_height: int
+var floor_height: int
+var faces: Array
+var first_face_index: int
+var faces_count: int
+var data: Dictionary
+var vertices: Array
+var floor_texture: int
+var ceiling_texture: int
+var ceiling: MeshInstance3D
+@warning_ignore("shadowed_global_identifier")
+var floor: MeshInstance3D
+var objects: Array = []
+
+
+static func check_flag(byte_value: int, flag: int) -> bool:
+	return (byte_value & flag) > 0
+
+
+
+func _init(sector_data: Dictionary, index: int) -> void:
+	sector_index = index
+	data = sector_data
+	ceiling_height = sector_data.ceilingHeight
+	floor_height = sector_data.floorHeight
+	first_face_index = sector_data.firstFaceIndex
+	faces_count = sector_data.facesCount
+	floor_texture = sector_data.floorTextureIndex
+	ceiling_texture = sector_data.ceilingTextureIndex
+	if "objectInformation" in sector_data:
+		objects = sector_data.objectInformation
+	
+
+func update_faces(faces_array: Array) -> void:
+	for i in range(first_face_index, first_face_index + faces_count):
+		faces.append(faces_array[i])
+	_update_vertices()
+
+func update_polygon_vertices(vertices_array: Array) -> void:
+	vertices = vertices_array
+
+## Get all vertices of a sector in order (for polygon drawing/checking)
+func _update_vertices() -> void:
+	if (not faces or len(faces) == 0):
+		return
+	
+	# Collect all vertices from the sector's faces
+	var _vertices := []
+	for face: Face in faces:
+		if (face.v1 and face.v2):
+			_vertices.append(Vector2(face.v1.x, face.v1.y))
+			_vertices.append(Vector2(face.v2.x, face.v2.y))
+	
+	vertices = Geometry2D.convex_hull(_vertices)
+
+
+
+
+func initialize_mesh() -> void:
+	if get_child_count() > 0:
+		return
+	var das: Dictionary = await DASManager.get_das()
+	if das.is_empty():
+		return
+	var mapping: Dictionary = das.mapping
+	
+	
+	
+	# Flooring
+	var static_body := StaticBody3D.new()
+	var collision_shape := CollisionShape3D.new()
+	var convex_polygon_shape := ConvexPolygonShape3D.new()
+	
+	
+	
+	var mesh_instance := MeshInstance3D.new()
+	var mesh_tool := SurfaceTool.new()
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	
+	var image := Image.new()
+	var floor_scale = 2
+	if floor_texture in mapping and "image" in mapping[floor_texture]:
+		
+		image.copy_from(mapping[floor_texture].image)
+		if mapping[floor_texture].flipped:
+			image.rotate_90(COUNTERCLOCKWISE)
+			image.flip_y()
+		
+		
+		var floor_a = 0
+		var floor_b = 0
+		if check_flag(data.textureFit, FLOOR_A):
+			floor_a = 1
+		if check_flag(data.textureFit, FLOOR_B):
+			floor_b = 1
+		#if floor_a == 0 and floor_b == 0:
+			#image.resize(image.get_size().x/2, image.get_size().y/2, Image.INTERPOLATE_NEAREST)
+			#floor_scale = 4
+		#if floor_a == 1 and floor_b == 0:
+			#floor_scale = 2
+		#if floor_a == 0 and floor_b == 1:
+			#image.resize(image.get_size().x*2, image.get_size().y*2, Image.INTERPOLATE_NEAREST)
+			#floor_scale = 1
+			#print("Resizing")
+		#if floor_a == 1 and floor_b == 1:
+			#image.resize(image.get_size().x*4, image.get_size().y*4, Image.INTERPOLATE_NEAREST)
+			#floor_scale = .5
+		
+		var img := ImageTexture.create_from_image(image)
+		material.albedo_texture = img
+	else:
+		if floor_texture >= 65280:
+			var color: Array = das.palette[floor_texture - 65280]
+			material.albedo_color = Color(color[0] / 256.0, color[1] / 256.0, color[2] / 256.0)
+		else:
+			print("Floor has invalid texture index: %s, texture: %s" % [sector_index, floor_texture])
+			material.albedo_color = Color.BLUE
+	
+	mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	
+	var verts := Geometry2D.triangulate_polygon(vertices)
+	var collision_points := []
+	
+	var min_x: int = 10000
+	var min_y: int = 10000
+	var max_x: int = -10000
+	var max_y: int = -10000
+	
+	for v_in in verts:
+		var v: Vector2 = vertices[v_in]
+		min_x = min(min_x, v.x)
+		min_y = min(min_y, v.y)
+		max_x = max(max_x, v.x)
+		max_y = max(max_y, v.y)
+	
+	
+	for v_in in verts:
+		var v: Vector2 = vertices[v_in]
+		var u = float(v.x - min_x) / (max_x - min_x)
+		var vv = float(v.y - min_y) / (max_y - min_y)
+		mesh_tool.set_uv(Vector2(u,vv))
+		mesh_tool.add_vertex(Vector3(v.x/100.0, floor_height/100.0, v.y/100.0))
+		collision_points.append(Vector3(v.x/100.0, floor_height/100.0, v.y/100.0))
+
+	var mesh: ArrayMesh = mesh_tool.commit()
+	
+	
+	if floor_texture in mapping:
+		var mesh_length = max_x - min_x
+		var mesh_height = max_y - min_y
+		material.uv1_scale.x = float(mesh_length) / mapping[floor_texture].height / 2
+		material.uv1_scale.y = float(mesh_height) / mapping[floor_texture].width / 2
+		
+		var grid_x_shift: int = (min_x % 256)
+		if grid_x_shift < 0:
+			grid_x_shift += 256
+		if grid_x_shift != 0:
+			material.uv1_offset.x = (float(grid_x_shift*(64*floor_scale)/mapping[floor_texture].height ) / 256) - 1
+		var grid_y_shift: int = min_y % 256
+		if grid_y_shift < 0:
+			grid_y_shift += 256
+		if grid_y_shift != 0:
+			material.uv1_offset.y = (float(grid_y_shift*(64*floor_scale)/mapping[floor_texture].width) / 256) - 1
+		
+		
+		
+		
+		
+		var modifier = 2
+		if image.get_size().x == 256:
+			modifier = .5
+		
+		if data.floorTextureShiftX > 0:
+			material.uv1_offset.x += float(data.floorTextureShiftX) / modifier / mapping[floor_texture].height
+		else:
+			material.uv1_offset.x += float(data.floorTextureShiftX + 256) / modifier / mapping[floor_texture].height
+		
+		modifier = 2
+		if image.get_size().y == 256:
+			modifier = .5
+		
+		if data.floorTextureShiftY > 0:
+			material.uv1_offset.y -= float(data.floorTextureShiftY) / modifier / mapping[floor_texture].width
+		else:
+			material.uv1_offset.y -= float(data.floorTextureShiftY + 256) / modifier / mapping[floor_texture].width
+		
+		
+	
+	convex_polygon_shape.points = collision_points
+	collision_shape.shape = convex_polygon_shape
+	static_body.add_child(collision_shape)
+	mesh_instance.add_child(static_body)
+	
+	mesh_instance.mesh = mesh
+	mesh_instance.material_override = material
+	add_child(mesh_instance)
+	floor = mesh_instance
+	
+	
+	
+	# Ceiling
+	static_body = StaticBody3D.new()
+	collision_shape = CollisionShape3D.new()
+	convex_polygon_shape = ConvexPolygonShape3D.new()
+	mesh_instance = MeshInstance3D.new()
+	#mesh = ImmediateMesh.new()
+	mesh_tool = SurfaceTool.new()
+	material = StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	if ceiling_texture in mapping and "image" in mapping[ceiling_texture]:
+		image = mapping[ceiling_texture].image
+		image.rotate_90(COUNTERCLOCKWISE)
+		image.flip_y()
+		var img := ImageTexture.create_from_image(image)
+		material.albedo_texture = img
+		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	else:
+		if ceiling_texture >= 65280:
+			var color: Array = das.palette[ceiling_texture - 65280]
+			#print("Using rgb from palette (%s, %s, %s) for Ceiling: %s" % [color[0], color[1], color[2], sector_index])
+			material.albedo_color = Color(color[0] / 256.0, color[1] / 256.0, color[2] / 256.0)
+		else:
+			print("Ceiling has invalid texture index: %s, texture: %s" % [sector_index, ceiling_texture])
+			material.albedo_color = Color.RED
+	mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	collision_points = []
+	verts = Geometry2D.triangulate_polygon(vertices)
+	verts.reverse()
+	for v_in in verts:
+		var v: Vector2 = vertices[v_in]
+		mesh_tool.set_uv(Vector2(v.x/100.0, v.y/100.0))
+		mesh_tool.add_vertex(Vector3(v.x/100.0, ceiling_height/100.0, v.y/100.0))
+		collision_points.append(Vector3(v.x/100.0, ceiling_height/100.0, v.y/100.0))
+	mesh = mesh_tool.commit()
+	
+	convex_polygon_shape.points = collision_points
+	collision_shape.shape = convex_polygon_shape
+	static_body.add_child(collision_shape)
+	mesh_instance.add_child(static_body)
+	
+	mesh_instance.mesh = mesh
+	mesh_instance.material_override = material
+	add_child(mesh_instance)
+	ceiling = mesh_instance
+	
+	for object: Dictionary in objects:
+		#print(JSON.stringify(object, "\t"))
+		var node := Object3D.new()
+		var data := {}
+		for key in object:
+			data[key] = object[key]
+		node.data = data
+		
+		var shape = SphereShape3D.new()
+		shape.radius = 0.125
+		var static_body_2 = StaticBody3D.new()
+		var collision = CollisionShape3D.new()
+		collision.shape = shape
+		static_body_2.add_child(collision)
+		var sphere_mesh := SphereMesh.new()
+		sphere_mesh.radius = 0.125
+		sphere_mesh.height = 0.25
+		mesh_instance = MeshInstance3D.new()
+		mesh_instance.mesh = sphere_mesh
+		mesh_instance.add_child(static_body_2)
+		material = StandardMaterial3D.new()
+		material.albedo_color = Color.REBECCA_PURPLE
+		mesh_instance.material_override = material
+		mesh_instance.position = Vector3(
+				-object.posX / 100.0,
+				object.posZ / 100.0,
+				object.posY / 100.0,
+		)
+		node.add_child(mesh_instance)
+		add_child(node)
+
+
+class Object3D extends Node3D:
+	var is_object: bool = true
+	var data: Dictionary = {}

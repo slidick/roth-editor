@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://clbdnv0bq58oe"]
+
+[ext_resource type="Script" uid="uid://divo0oos0xcmp" path="res://src/ui/arrow_3d.gd" id="1_g73mc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1g744"]
+no_depth_test = true
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.720955, 0.288738, 0.228448, 1)
+metallic = 0.5
+roughness = 0.5
+disable_receive_shadows = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D"]
+material_override = SubResource("StandardMaterial3D_1g744")
+cast_shadow = 0
+operation = 1
+script = ExtResource("1_g73mc")
+
+[node name="LeftPoint" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -0.106, 0, -0.392)
+size = Vector3(0.2, 0.2, 0.5)
+
+[node name="RightPoint" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0.106, 0, -0.392)
+size = Vector3(0.2, 0.2, 0.5)
+
+[node name="Base" type="CSGBox3D" parent="."]
+size = Vector3(0.2, 0.2, 1)

@@ -1,0 +1,67 @@
+[gd_scene load_steps=6 format=3 uid="uid://h7epeqaiukln"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_abgak"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_gmem8"]
+[ext_resource type="Script" uid="uid://bpwig8y7sg2j8" path="res://src/windows/texture_window.gd" id="3_gmem8"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_hdfxv"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_gmem8"]
+
+[node name="TextureWindow" instance=ExtResource("1_abgak")]
+offset_right = 1016.0
+offset_bottom = 692.0
+theme = ExtResource("2_gmem8")
+script = ExtResource("3_gmem8")
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_hdfxv")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="WallOptions" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AllCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="0"]
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("ButtonGroup_gmem8")
+text = "All"
+
+[node name="TileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="1"]
+layout_mode = 2
+button_group = SubResource("ButtonGroup_gmem8")
+text = "Vertically Tileable"
+
+[node name="HorzTileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="2"]
+layout_mode = 2
+button_group = SubResource("ButtonGroup_gmem8")
+text = "Horizontally Tileable"
+
+[node name="BothCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="3"]
+layout_mode = 2
+button_group = SubResource("ButtonGroup_gmem8")
+text = "Vertically & Horizontally Tileable"
+
+[node name="TextureList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+max_columns = 0
+fixed_column_width = 100
+icon_mode = 0
+fixed_icon_size = Vector2i(95, 95)
+
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/AllCheckBox" to="." method="_on_all_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/TileableCheckBox" to="." method="_on_tileable_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/HorzTileableCheckBox" to="." method="_on_horz_tileable_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/BothCheckBox" to="." method="_on_both_check_box_toggled"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TextureList" to="." method="_on_texture_list_item_activated"]
