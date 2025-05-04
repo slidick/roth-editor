@@ -302,6 +302,7 @@ func _reset_edits() -> void:
 
 
 func _reset_edit_sector() -> void:
+	%SectorIndexLabel.text = ""
 	%RoofHeightEdit.get_line_edit().clear()
 	%RoofScaleOption.select(1)
 	%FloorHeightEdit.get_line_edit().clear()
@@ -340,7 +341,7 @@ func _reset_edit_sector() -> void:
 
 func load_edit_sector(sector: Sector.SectorMesh3D) -> void:
 	_reset_edit_sector()
-	
+	%SectorIndexLabel.text = "Index: %d" % sector.ref.index
 	%RoofHeightEdit.get_line_edit().text = "%d" % sector.ref.data.ceilingHeight
 	%RoofHeightEdit.set_value_no_signal(sector.ref.data.ceilingHeight)
 	var roof_a: int = sector.ref.data.textureFit & Sector.CEILING_A > 0
@@ -493,6 +494,7 @@ func load_edit_sector(sector: Sector.SectorMesh3D) -> void:
 
 
 func _reset_edit_face() -> void:
+	%FaceIndexLabel.text = ""
 	%TopTextureOption.clear()
 	%MidTextureOption.clear()
 	%BottomTextureOption.clear()
@@ -522,7 +524,7 @@ func _reset_edit_face() -> void:
 
 func load_edit_face(face: Face.FaceMesh3D) -> void:
 	_reset_edit_face()
-	
+	%FaceIndexLabel.text = "%d" % face.ref.index
 	if face.ref.texture_data.unk0x08 & (1 << 0) > 0:
 		%TransparencyCheckBox.set_pressed_no_signal(true)
 	if face.ref.texture_data.unk0x08 & (1 << 1) > 0:

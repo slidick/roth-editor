@@ -496,6 +496,7 @@ text = "Flag 8"
 
 [node name="EditSectorContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit" index="1"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
@@ -817,6 +818,7 @@ size_flags_vertical = 8
 
 [node name="PlatformContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="16"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="0"]
