@@ -114,7 +114,7 @@ func search() -> void:
 		sectors = Roth.get_map(search_map).sectors
 		faces = Roth.get_map(search_map).faces
 		objects = Roth.get_map(search_map).objects
-		sfx = Roth.get_map(search_map).sfx
+		sfx = Roth.get_map(search_map).sound_effects
 		
 	
 	var search_field: String = %FieldsOption.text
