@@ -31,7 +31,7 @@ func _init(p_map_info: Dictionary) -> void:
 				map_json.sectorsSection.sectors[i],
 				i,
 				map_info,
-				map_json.midPlatformsSection.platforms,
+				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
 			)
 		)
 		for object: Dictionary in sectors[i].objects:
