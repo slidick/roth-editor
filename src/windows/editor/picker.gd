@@ -124,6 +124,8 @@ func select(node: Node3D, highlight: bool = true) -> void:
 	_reset_edits()
 	
 	if highlight:
+		if not node is MeshInstance3D:
+			node = node.get_child(0)
 		if node.get_child_count() > 0:
 			if selected_node and selected_node != node.get_child(0):
 				selected_node.get_parent().material_overlay = null
