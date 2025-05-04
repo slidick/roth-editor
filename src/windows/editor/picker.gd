@@ -323,6 +323,19 @@ func _reset_edit_sector() -> void:
 	%FloorFlipXCheckBox.set_pressed_no_signal(false)
 	%FloorFlipYCheckBox.set_pressed_no_signal(false)
 	%EditSectorContainer.show()
+	
+	%PlatformCheckButton.set_pressed_no_signal(false)
+	%PlatformFloorHeightEdit.get_line_edit().clear()
+	%PlatformFloorScaleOption.select(1)
+	%PlatformRoofHeightEdit.get_line_edit().clear()
+	%PlatformRoofScaleOption.select(1)
+	%PlatformRoofTextureOption.clear()
+	%PlatformRoofOffsetXEdit.get_line_edit().clear()
+	%PlatformRoofOffsetYEdit.get_line_edit().clear()
+	%PlatformFloorTextureOption.clear()
+	%PlatformFloorOffsetXEdit.get_line_edit().clear()
+	%PlatformFloorOffsetYEdit.get_line_edit().clear()
+
 
 
 func load_edit_sector(sector: Sector.SectorMesh3D) -> void:
@@ -409,6 +422,74 @@ func load_edit_sector(sector: Sector.SectorMesh3D) -> void:
 	%FloorTextureOption.add_item("Sky")
 	%FloorTextureOption.add_item("Select Texture")
 	%FloorTextureOption.add_item("Select Palette")
+	
+	
+	if sector.ref.platform:
+		%PlatformCheckButton.set_pressed_no_signal(true)
+		%PlatformContainer.show()
+	
+		%PlatformFloorHeightEdit.get_line_edit().text = "%d" % sector.ref.platform.floorHeight
+		%PlatformFloorHeightEdit.set_value_no_signal(sector.ref.platform.floorHeight)
+		
+		%PlatformRoofHeightEdit.get_line_edit().text = "%d" % sector.ref.platform.ceilingHeight
+		%PlatformRoofHeightEdit.set_value_no_signal(sector.ref.platform.ceilingHeight)
+		
+		var platform_floor_a: int = sector.ref.platform.floorTextureScale & Sector.FLOOR_A > 0
+		var platform_floor_b: int = sector.ref.platform.floorTextureScale & Sector.FLOOR_B > 0
+		if platform_floor_a == 0 and platform_floor_b == 0:
+			%PlatformFloorScaleOption.select(0)
+		elif platform_floor_a == 1 and platform_floor_b == 0:
+			%PlatformFloorScaleOption.select(1)
+		elif platform_floor_a == 0 and platform_floor_b == 1:
+			%PlatformFloorScaleOption.select(2)
+		elif platform_floor_a == 1 and platform_floor_b == 1:
+			%PlatformFloorScaleOption.select(3)
+		
+		var platform_ceiling_a: int = sector.ref.platform.floorTextureScale & Sector.CEILING_A > 0
+		var platform_ceiling_b: int = sector.ref.platform.floorTextureScale & Sector.CEILING_B > 0
+		if platform_ceiling_a == 0 and platform_ceiling_b == 0:
+			%PlatformRoofScaleOption.select(0)
+		elif platform_ceiling_a == 1 and platform_ceiling_b == 0:
+			%PlatformRoofScaleOption.select(1)
+		elif platform_ceiling_a == 0 and platform_ceiling_b == 1:
+			%PlatformRoofScaleOption.select(2)
+		elif platform_ceiling_a == 1 and platform_ceiling_b == 1:
+			%PlatformRoofScaleOption.select(3)
+		
+		
+		%PlatformRoofOffsetXEdit.get_line_edit().text = "%d" % sector.ref.platform.ceilingTextureShiftX
+		%PlatformRoofOffsetXEdit.set_value_no_signal(sector.ref.platform.ceilingTextureShiftX)
+		%PlatformRoofOffsetYEdit.get_line_edit().text = "%d" % sector.ref.platform.ceilingTextureShiftY
+		%PlatformRoofOffsetYEdit.set_value_no_signal(sector.ref.platform.ceilingTextureShiftY)
+		
+		%PlatformFloorOffsetXEdit.get_line_edit().text = "%d" % sector.ref.platform.floorTextureShiftX
+		%PlatformFloorOffsetXEdit.set_value_no_signal(sector.ref.platform.floorTextureShiftX)
+		%PlatformFloorOffsetYEdit.get_line_edit().text = "%d" % sector.ref.platform.floorTextureShiftY
+		%PlatformFloorOffsetYEdit.set_value_no_signal(sector.ref.platform.floorTextureShiftY)
+		
+		if sector.ref.platform.ceilingTextureIndex in das.mapping:
+			%PlatformRoofTextureOption.add_item( "%s:%s" % [das.mapping[sector.ref.platform.ceilingTextureIndex].index, das.mapping[sector.ref.platform.ceilingTextureIndex].name] )
+		else:
+			%PlatformRoofTextureOption.add_item( "%d" % sector.ref.platform.ceilingTextureIndex )
+		if sector.ref.platform.floorTextureIndex in das.mapping:
+			%PlatformFloorTextureOption.add_item( "%s:%s" % [das.mapping[sector.ref.platform.floorTextureIndex].index, das.mapping[sector.ref.platform.floorTextureIndex].name] )
+		else:
+			%PlatformFloorTextureOption.add_item( "%d" % sector.ref.platform.floorTextureIndex )
+		
+		%PlatformRoofTextureOption.add_item("--------")
+		%PlatformRoofTextureOption.add_item("Sky")
+		%PlatformRoofTextureOption.add_item("Select Texture")
+		%PlatformRoofTextureOption.add_item("Select Palette")
+		%PlatformFloorTextureOption.add_item("--------")
+		%PlatformFloorTextureOption.add_item("Sky")
+		%PlatformFloorTextureOption.add_item("Select Texture")
+		%PlatformFloorTextureOption.add_item("Select Palette")
+		
+		
+	else:
+		%PlatformCheckButton.set_pressed_no_signal(false)
+		%PlatformContainer.hide()
+
 
 
 func _reset_edit_face() -> void:
@@ -561,8 +642,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		load_edit_face(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %BottomTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
-		selected_node.get_parent().ref.texture_data.lowerTextureIndex = das.sky
+		selected_node.get_parent().ref.texture_data.lowerTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
 		load_edit_face(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %BottomTextureOption.item_count - 4:
@@ -591,8 +671,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		load_edit_face(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %MidTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
-		selected_node.get_parent().ref.texture_data.midTextureIndex = das.sky
+		selected_node.get_parent().ref.texture_data.midTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
 		load_edit_face(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %MidTextureOption.item_count - 4:
@@ -621,15 +700,18 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		load_edit_face(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %TopTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
-		selected_node.get_parent().ref.texture_data.upperTextureIndex = das.sky
+		selected_node.get_parent().ref.texture_data.upperTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
 		load_edit_face(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %TopTextureOption.item_count - 4:
 		%TopTextureOption.select(0)
 
 
-func _redraw_selected_node() -> void:
+func _redraw_selected_node(node: Variant = null) -> void:
+	var caret: int = 0
+	if node:
+		caret = node.get_line_edit().caret_column
+	
 	var child_index: int = -1
 	for i in range(selected_node.get_parent().ref.node.get_child_count()):
 		if selected_node.get_parent().ref.node.get_child(i) == selected_node.get_parent():
@@ -651,6 +733,11 @@ func _redraw_selected_node() -> void:
 	if child_index < 0:
 		return
 	select(ref_node.get_child(child_index))
+	
+	if node:
+		node.get_line_edit().grab_focus()
+		await get_tree().process_frame
+		node.get_line_edit().caret_column = caret
 
 
 func _on_transparency_check_box_toggled(toggled_on: bool) -> void:
@@ -990,8 +1077,7 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 		load_edit_sector(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %RoofTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
-		selected_node.get_parent().ref.data.ceilingTextureIndex = das.sky
+		selected_node.get_parent().ref.data.ceilingTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
 		load_edit_sector(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %RoofTextureOption.item_count - 4:
@@ -1020,8 +1106,7 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 		load_edit_sector(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %FloorTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
-		selected_node.get_parent().ref.data.floorTextureIndex = das.sky
+		selected_node.get_parent().ref.data.floorTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
 		load_edit_sector(selected_node.get_parent())
 		_redraw_selected_node()
 	elif index == %FloorTextureOption.item_count - 4:
@@ -1060,3 +1145,141 @@ func _on_floor_flip_y_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		selected_node.get_parent().ref.data.unk0x16 &= ~(Sector.FLOOR_FLIP_Y)
 	_redraw_selected_node()
+
+
+func _on_platform_floor_height_edit_value_changed(value: float) -> void:
+	selected_node.get_parent().ref.platform.floorHeight = value
+	_redraw_selected_node(%PlatformFloorHeightEdit)
+
+
+func _on_platform_floor_scale_option_item_selected(index: int) -> void:
+	match index:
+		0:
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.FLOOR_A
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.FLOOR_B
+		1:
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.FLOOR_A
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.FLOOR_B
+		2:
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.FLOOR_A
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.FLOOR_B
+		3:
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.FLOOR_A
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.FLOOR_B
+	_redraw_selected_node()
+
+
+func _on_platform_roof_height_edit_value_changed(value: float) -> void:
+	selected_node.get_parent().ref.platform.ceilingHeight = value
+	_redraw_selected_node(%PlatformRoofHeightEdit)
+
+
+func _on_platform_roof_scale_option_item_selected(index: int) -> void:
+	match index:
+		0:
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.CEILING_A
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.CEILING_B
+		1:
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.CEILING_A
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.CEILING_B
+		2:
+			selected_node.get_parent().ref.platform.floorTextureScale &= ~Sector.CEILING_A
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.CEILING_B
+		3:
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.CEILING_A
+			selected_node.get_parent().ref.platform.floorTextureScale |= Sector.CEILING_B
+	_redraw_selected_node()
+
+
+func _on_platform_floor_texture_option_item_selected(index: int) -> void:
+	if index == %PlatformFloorTextureOption.item_count - 1:
+		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
+		%Palette.show_palette(das.palette)
+		var palette_index: int = await %Palette.color_selected
+		if palette_index < 0:
+			return
+		selected_node.get_parent().ref.platform.floorTextureIndex = palette_index + 65280
+		load_edit_sector(selected_node.get_parent())
+		_redraw_selected_node()
+	elif index == %PlatformFloorTextureOption.item_count - 2:
+		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
+		%Texture.show_texture(das, true)
+		var texture_index: int = await %Texture.texture_selected
+		if texture_index < 0:
+			return
+		selected_node.get_parent().ref.platform.floorTextureIndex = texture_index
+		load_edit_sector(selected_node.get_parent())
+		_redraw_selected_node()
+	elif index == %PlatformFloorTextureOption.item_count - 3:
+		selected_node.get_parent().ref.platform.floorTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
+		load_edit_sector(selected_node.get_parent())
+		_redraw_selected_node()
+	elif index == %PlatformFloorTextureOption.item_count - 4:
+		%PlatformFloorTextureOption.select(0)
+
+
+func _on_platform_floor_offset_x_edit_value_changed(value: float) -> void:
+	selected_node.get_parent().ref.platform.floorTextureShiftX = value
+	_redraw_selected_node(%PlatformFloorOffsetXEdit)
+
+
+func _on_platform_floor_offset_y_edit_value_changed(value: float) -> void:
+	selected_node.get_parent().ref.platform.floorTextureShiftY = value
+	_redraw_selected_node(%PlatformFloorOffsetYEdit)
+
+
+func _on_platform_roof_texture_option_item_selected(index: int) -> void:
+	if index == %PlatformRoofTextureOption.item_count - 1:
+		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
+		%Palette.show_palette(das.palette)
+		var palette_index: int = await %Palette.color_selected
+		if palette_index < 0:
+			return
+		selected_node.get_parent().ref.platform.ceilingTextureIndex = palette_index + 65280
+		load_edit_sector(selected_node.get_parent())
+		_redraw_selected_node()
+	elif index == %PlatformRoofTextureOption.item_count - 2:
+		var das: Dictionary = await Roth.get_das(selected_node.get_parent().ref.map_info.das)
+		%Texture.show_texture(das, true)
+		var texture_index: int = await %Texture.texture_selected
+		if texture_index < 0:
+			return
+		selected_node.get_parent().ref.platform.ceilingTextureIndex = texture_index
+		load_edit_sector(selected_node.get_parent())
+		_redraw_selected_node()
+	elif index == %PlatformRoofTextureOption.item_count - 3:
+		selected_node.get_parent().ref.platform.ceilingTextureIndex = Roth.get_map(selected_node.get_parent().ref.map_info).metadata.skyTexture
+		load_edit_sector(selected_node.get_parent())
+		_redraw_selected_node()
+	elif index == %PlatformRoofTextureOption.item_count - 4:
+		%PlatformRoofTextureOption.select(0)
+
+
+func _on_platform_roof_offset_x_edit_value_changed(value: float) -> void:
+	selected_node.get_parent().ref.platform.ceilingTextureShiftX = value
+	_redraw_selected_node(%PlatformRoofOffsetXEdit)
+
+
+func _on_platform_roof_offset_y_edit_value_changed(value: float) -> void:
+	selected_node.get_parent().ref.platform.ceilingTextureShiftY = value
+	_redraw_selected_node(%PlatformRoofOffsetYEdit)
+
+
+func _on_platform_check_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		selected_node.get_parent().ref.platform = {
+			"ceilingTextureIndex": 2,
+			"ceilingHeight": ((selected_node.get_parent().ref.data.ceilingHeight + selected_node.get_parent().ref.data.floorHeight) / 2) - 10,
+			"ceilingTextureShiftX": 0,
+			"ceilingTextureShiftY": 0,
+			"floorTextureIndex": 2,
+			"floorHeight": ((selected_node.get_parent().ref.data.ceilingHeight + selected_node.get_parent().ref.data.floorHeight) / 2) + 10,
+			"floorTextureShiftX": 0,
+			"floorTextureShiftY": 0,
+			"floorTextureScale": Sector.FLOOR_A | Sector.CEILING_A,
+			"padding": 0,
+		}
+	else:
+		selected_node.get_parent().ref.platform = {}
+	load_edit_sector(selected_node.get_parent())
+	_redraw_selected_node(%PlatformRoofOffsetYEdit)

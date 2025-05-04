@@ -7,7 +7,6 @@ var faces := []
 var objects := []
 var sound_effects := []
 var section7_2 := []
-var platforms := []
 var vertices_count: int = 0
 var map_info := {}
 var commands_section := {}
@@ -26,15 +25,13 @@ func _init(p_map_info: Dictionary) -> void:
 	
 	var temp_object_list := []
 	
-	if "midPlatformsSection" in map_json:
-		platforms = map_json.midPlatformsSection.platforms
 	
 	for i in range(len(map_json.sectorsSection.sectors)):
 		sectors.append( Sector.new( 
 				map_json.sectorsSection.sectors[i],
 				i,
 				map_info,
-				platforms,
+				map_json.midPlatformsSection.platforms,
 			)
 		)
 		for object: Dictionary in sectors[i].objects:
@@ -93,7 +90,15 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 	
 	json["faceTextureMappingSection"] = { "mappings": texture_mappings }
 	
-	if platforms:
+	var platforms := []
+	for sector: Sector in sectors:
+		if sector.platform.is_empty():
+			sector.data.erase("intermediateFloorIndex")
+		else:
+			platforms.append(sector.platform)
+			sector.data["intermediateFloorIndex"] = len(platforms) - 1
+
+	if not platforms.is_empty():
 		json["midPlatformsSection"] = { "platforms": platforms }
 	
 	var vertices := []

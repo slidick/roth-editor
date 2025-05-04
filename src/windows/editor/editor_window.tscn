@@ -213,11 +213,26 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer" index="0"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+text = "Face"
+
+[node name="FaceIndexLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="2"]
 layout_mode = 2
 text = "Textures"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="1"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="3"]
 layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer" index="0"]
@@ -322,62 +337,62 @@ layout_mode = 2
 size_flags_vertical = 6
 text = "TID"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="2"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="4"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="3"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="5"]
 layout_mode = 2
 text = "Texture Flags"
 
-[node name="TransparencyCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="4"]
+[node name="TransparencyCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="6"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Transparency"
 
-[node name="FlipXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="5"]
+[node name="FlipXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="7"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "X-Flip"
 
-[node name="ImageFitCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="6"]
+[node name="ImageFitCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="8"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Image Fit"
 
-[node name="FixedSizeTransparencyCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="7"]
+[node name="FixedSizeTransparencyCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="9"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Fixed Size Transparency"
 
-[node name="NoReflectCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="8"]
+[node name="NoReflectCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="10"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "No Reflect"
 
-[node name="HalfPixelCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="9"]
+[node name="HalfPixelCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="11"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Half Pixel"
 
-[node name="EdgeMapCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="10"]
+[node name="EdgeMapCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="12"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Edge Map"
 
-[node name="DrawFromBottomCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="11"]
+[node name="DrawFromBottomCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="13"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Draw From Bottom"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="12"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="14"]
 visible = false
 layout_mode = 2
 
@@ -405,7 +420,7 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="13"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="15"]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3" index="0"]
@@ -424,56 +439,56 @@ update_on_text_changed = true
 layout_mode = 2
 text = "Auto"
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="14"]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="16"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="15"]
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="17"]
 layout_mode = 2
 text = "Face Flags"
 
-[node name="StopWalkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="16"]
+[node name="StopWalkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="18"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Stop Walk"
 
-[node name="StopAlenCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="17"]
+[node name="StopAlenCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="19"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Stop Alen"
 
-[node name="Flag3CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="18"]
+[node name="Flag3CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="20"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 3"
 
-[node name="RoomBlkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="19"]
+[node name="RoomBlkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="21"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "RoomBlk"
 
-[node name="Flag5CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="20"]
+[node name="Flag5CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="22"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 5"
 
-[node name="Flag6CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="21"]
+[node name="Flag6CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="23"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 6"
 
-[node name="Flag7CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="22"]
+[node name="Flag7CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="24"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 7"
 
-[node name="Flag8CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="23"]
+[node name="Flag8CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="25"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -481,7 +496,6 @@ text = "Flag 8"
 
 [node name="EditSectorContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit" index="1"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
@@ -491,7 +505,23 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer" index="0"]
 layout_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="0"]
+[node name="HBoxContainer12" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12" index="0"]
+layout_mode = 2
+text = "Sector"
+vertical_alignment = 2
+
+[node name="SectorIndexLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="2"]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="0"]
@@ -507,7 +537,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Scale"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="1"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="3"]
 layout_mode = 2
 
 [node name="RoofHeightEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="0"]
@@ -541,7 +571,7 @@ popup/item_2/id = 2
 popup/item_3/text = "4:1"
 popup/item_3/id = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="4"]
 layout_mode = 2
 
 [node name="FloorHeightEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="0"]
@@ -575,7 +605,7 @@ popup/item_2/id = 2
 popup/item_3/text = "4:1"
 popup/item_3/id = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="3"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="5"]
 layout_mode = 2
 
 [node name="GlowEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3" index="0"]
@@ -605,7 +635,7 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="6"]
 layout_mode = 2
 
 [node name="CandleCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8" index="0"]
@@ -627,7 +657,7 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="5"]
+[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="7"]
 layout_mode = 2
 
 [node name="LightningCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer9" index="0"]
@@ -654,16 +684,16 @@ max_value = 127.0
 rounded = true
 update_on_text_changed = true
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="6"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="8"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Textures"
 vertical_alignment = 2
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="7"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="9"]
 layout_mode = 2
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="8"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="10"]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="0"]
@@ -680,7 +710,7 @@ custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "Y:"
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="9"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="11"]
 layout_mode = 2
 
 [node name="RoofTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="0"]
@@ -707,7 +737,7 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="10"]
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="12"]
 layout_mode = 2
 
 [node name="FloorTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="0"]
@@ -734,7 +764,7 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="11"]
+[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="13"]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10" index="0"]
@@ -752,7 +782,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "FLipY"
 
-[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="12"]
+[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="14"]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11" index="0"]
@@ -769,6 +799,192 @@ text = "FLipX"
 unique_name_in_owner = true
 layout_mode = 2
 text = "FLipY"
+
+[node name="HBoxContainer18" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="15"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer18" index="0"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "Platform"
+vertical_alignment = 2
+
+[node name="PlatformCheckButton" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer18" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+
+[node name="PlatformContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer" index="16"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="0"]
+layout_mode = 2
+
+[node name="HBoxContainer14" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer14" index="0"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Heights"
+
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer14" index="1"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer14" index="2"]
+layout_mode = 2
+text = "Scale"
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="2"]
+layout_mode = 2
+
+[node name="PlatformFloorHeightEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -32768.0
+max_value = 32767.0
+update_on_text_changed = true
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13" index="1"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Floor"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13" index="2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="PlatformFloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="3"]
+layout_mode = 2
+
+[node name="PlatformRoofHeightEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -32768.0
+max_value = 32767.0
+update_on_text_changed = true
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12" index="1"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Roof"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12" index="2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="PlatformRoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="4"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Platform Textures"
+vertical_alignment = 2
+
+[node name="HSeparator4" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="5"]
+layout_mode = 2
+
+[node name="HBoxContainer17" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="6"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="1"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "X:"
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="2"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "Y:"
+
+[node name="HBoxContainer16" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="7"]
+layout_mode = 2
+
+[node name="PlatformFloorTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="1"]
+layout_mode = 2
+text = "FLR"
+
+[node name="PlatformFloorOffsetXEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="PlatformFloorOffsetYEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer15" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="8"]
+layout_mode = 2
+
+[node name="PlatformRoofTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="1"]
+layout_mode = 2
+text = "ROF"
+
+[node name="PlatformRoofOffsetXEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
+
+[node name="PlatformRoofOffsetYEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 255.0
+rounded = true
+update_on_text_changed = true
 
 [node name="Info" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer" index="2"]
 visible = false
@@ -935,4 +1151,15 @@ show_maximize_button = true
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer10/RoofFlipYCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_flip_y_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11/FloorFlipXCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_flip_x_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11/FloorFlipYCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_floor_flip_y_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer18/PlatformCheckButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_check_button_toggled"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13/PlatformFloorHeightEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_floor_height_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13/PlatformFloorScaleOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_floor_scale_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12/PlatformRoofHeightEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_roof_height_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12/PlatformRoofScaleOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_roof_scale_option_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16/PlatformFloorTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_floor_texture_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16/PlatformFloorOffsetXEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_floor_offset_x_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16/PlatformFloorOffsetYEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_floor_offset_y_edit_value_changed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15/PlatformRoofTextureOption" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_roof_texture_option_item_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15/PlatformRoofOffsetXEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_roof_offset_x_edit_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15/PlatformRoofOffsetYEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_platform_roof_offset_y_edit_value_changed"]
 [connection signal="text_submitted" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer/HBoxContainer/Search" to="." method="_on_search_text_submitted"]
