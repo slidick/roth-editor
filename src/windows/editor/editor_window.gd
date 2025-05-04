@@ -14,25 +14,26 @@ func _ready() -> void:
 	%MapsTree.set_column_title(0, "Maps")
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("test_map") or event.is_action_pressed("test_map_with_objects"):
-		var shown_items := []
-		for tree_item in tree_root.get_children():
-			if tree_item.get_metadata(0).visible:
-				shown_items.append(tree_item.get_metadata(0).map_info)
-			
-		if len(shown_items) == 1:
-			var map_info: Dictionary = shown_items[0]
-			var map: Map = Roth.get_map(map_info)
-			
-			var player_position: Vector3 = %Camera3D.global_position
-			player_position.y -= 1.2
-			player_position *= Roth.SCALE_3D_WORLD
-			var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
-			var buffer: PackedByteArray = map.compile(player_position, player_rotation)
-			Roth.test_run_map(buffer, map_info, true if event.is_action_pressed("test_map_with_objects") else false)
-		else:
-			Dialog.information("Have only one map shown to launch.", "Info", false, Vector2(500,150))
+func test_map(full: bool) -> void:
+	var shown_items := []
+	for tree_item in tree_root.get_children():
+		if tree_item.get_metadata(0).visible:
+			shown_items.append(tree_item.get_metadata(0).map_info)
+		
+	if len(shown_items) == 1:
+		var map_info: Dictionary = shown_items[0]
+		var map: Map = Roth.get_map(map_info)
+		
+		var player_position: Vector3 = %Camera3D.global_position
+		player_position.y -= 1.2
+		player_position *= Roth.SCALE_3D_WORLD
+		var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
+		var buffer: PackedByteArray = map.compile(player_position, player_rotation)
+		Roth.test_run_map(buffer, map_info, full)
+	elif len(shown_items) == 0:
+		pass
+	else:
+		Dialog.information("Have only one map shown to launch.", "Info", false, Vector2(500,150))
 
 
 func _input(event: InputEvent) -> void:
