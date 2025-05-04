@@ -133,7 +133,6 @@ func _on_map_completely_loaded() -> void:
 
 func _on_sub_viewport_container_focus_entered() -> void:
 	%Camera3D.has_focus = true
-	await get_tree().create_timer(0.1).timeout
 	%Picker.has_focus = true
 	%ViewportBorder.self_modulate.a = 1.0
 
