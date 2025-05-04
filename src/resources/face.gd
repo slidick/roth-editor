@@ -462,15 +462,15 @@ func _initialize_meshes() -> void:
 			mesh_instance.ref = self
 			node.add_child(mesh_instance)
 		
-		if sector.platform:
-			var mesh_height: int = sector.platform.floorHeight - sector.platform.ceilingHeight
+		if sister and sister.get_ref().sector.platform and not check_flag(texture_data.unk0x08, TRANSPARENT):
+			var mesh_height: int = sister.get_ref().sector.platform.floorHeight - sister.get_ref().sector.platform.ceilingHeight
 			if mesh_height > 0:
 				var mesh_instance: FaceMesh3D = create_mesh(
 					[
-						Vector3(v2.x/SCALE_3D_WORLD, sector.platform.ceilingHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-						Vector3(v2.x/SCALE_3D_WORLD, sector.platform.floorHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-						Vector3(v1.x/SCALE_3D_WORLD, sector.platform.floorHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-						Vector3(v1.x/SCALE_3D_WORLD, sector.platform.ceilingHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
+						Vector3(v1.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.ceilingHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
+						Vector3(v1.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.floorHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
+						Vector3(v2.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.floorHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+						Vector3(v2.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.ceilingHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
 					],
 					texture_data.midTextureIndex,
 					das,
