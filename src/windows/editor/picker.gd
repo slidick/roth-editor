@@ -117,6 +117,7 @@ func deselect() -> void:
 	for child in %EditContainer.get_children():
 		child.queue_free()
 	%Arrow3D.clear_target()
+	%Map2D.select(null)
 	_reset_edits()
 
 
@@ -141,7 +142,7 @@ func select(node: Node3D, highlight: bool = true) -> void:
 		child.queue_free()
 	
 	%Arrow3D.set_target(node)
-	
+	%Map2D.select(node.ref)
 	
 	if node is ObjectRoth.ObjectMesh3D:
 		var object:  ObjectRoth.ObjectMesh3D = node

@@ -9,7 +9,6 @@ func setup(p_data: Array) -> void:
 	data = p_data
 	queue_redraw()
 
-
 func _draw() -> void:
 	var vertices := []
 	for i in range(0, len(data)-1, JUMP):

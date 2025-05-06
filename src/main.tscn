@@ -308,6 +308,18 @@ grow_vertical = 2
 [node name="Node" type="Node" parent="."]
 script = ExtResource("15_mlv6i")
 
+[node name="FPSLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -47.0
+offset_bottom = 23.0
+grow_horizontal = 0
+theme = ExtResource("4_rlaii")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+horizontal_alignment = 2
+
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Main" to="." method="_on_main_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Windows" to="." method="_on_windows_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Help" to="." method="_on_help_index_pressed"]

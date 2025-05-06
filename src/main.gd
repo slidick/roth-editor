@@ -39,6 +39,9 @@ func _ready() -> void:
 	%Main.set_item_shortcut(Main.TestMapFull, shortcut_2, true)
 
 
+func _process(_delta: float) -> void:
+	$FPSLabel.text = "FPS: %s" % Engine.get_frames_per_second()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_debug_collision"):
 		toggle_show_debug_collisions_hint()

@@ -28,10 +28,13 @@ func open() -> void:
 	var maps: Array = []
 	var tree_item: TreeItem = %MapTree.get_next_selected(null)
 	while tree_item:
-		maps.append(tree_item.get_metadata(0))
+		var metadata: Variant = tree_item.get_metadata(0)
+		if metadata:
+			maps.append(tree_item.get_metadata(0))
 		tree_item = %MapTree.get_next_selected(tree_item)
 	if maps.is_empty():
 		return
+	print(maps)
 	Roth.load_maps(maps)
 
 

@@ -37,7 +37,7 @@ func test_map(full: bool) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouse and %SubViewportContainer.has_focus():
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouse and %Camera3D.has_focus == true:
 		%SubViewport.push_input(event)
 		get_viewport().set_input_as_handled()
 
@@ -73,6 +73,9 @@ func load_map(map_info: Dictionary) -> void:
 		var meshes := sfx.initialize_mesh()
 		for mesh: MeshInstance3D in meshes:
 			sfx_node.add_child(mesh)
+	
+	
+	%Map2D.setup(Roth.get_map(map_info))
 	
 	var map_node := Map.MapNode3D.new()
 	map_node.ref = Roth.get_map(map_info)
@@ -139,7 +142,8 @@ func _on_sub_viewport_container_focus_entered() -> void:
 
 
 func _on_sub_viewport_container_focus_exited() -> void:
-	pass
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
 	%Camera3D.has_focus = false
 	%Picker.has_focus = false
 	%ViewportBorder.self_modulate.a = 0.0

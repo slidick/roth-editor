@@ -55,6 +55,7 @@ func _input(event: InputEvent) -> void:
 			rotation.y -= event.relative.x / 1000 * sensitivity
 			rotation.x -= event.relative.y / 1000 * sensitivity
 			rotation.x = clamp(rotation.x, PI/-2, PI/2)
+			get_viewport().warp_mouse(Vector2(get_viewport().size / 2))
 	
 	if event is InputEventMouseButton:
 		match event.button_index:
