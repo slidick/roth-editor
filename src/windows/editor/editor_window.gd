@@ -63,16 +63,14 @@ func load_map(map_info: Dictionary) -> void:
 	var objects_node := Node3D.new()
 	objects_node.name = "Objects"
 	for object: ObjectRoth in Roth.get_map(map_info).objects:
-		var meshes := object.initialize_mesh()
-		for mesh: MeshInstance3D in meshes:
-			objects_node.add_child(mesh)
+		var mesh := object.initialize_mesh()
+		objects_node.add_child(mesh)
 	
 	var sfx_node := Node3D.new()
 	sfx_node.name = "SFX"
 	for sfx: Section7_1 in Roth.get_map(map_info).sound_effects:
-		var meshes := sfx.initialize_mesh()
-		for mesh: MeshInstance3D in meshes:
-			sfx_node.add_child(mesh)
+		var mesh := sfx.initialize_mesh()
+		sfx_node.add_child(mesh)
 	
 	
 	%Map2D.setup(Roth.get_map(map_info))
@@ -250,7 +248,9 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				Roth.loaded_maps.erase(item.get_metadata(0).map_info.name)
 				for child_item: TreeItem in item.get_children():
 					child_item.free()
+				%Map2D.close_map(item.get_metadata(0).map_info)
 				item.free()
+				
 
 
 func _on_search_text_submitted(search_text: String) -> void:

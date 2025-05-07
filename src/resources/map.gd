@@ -34,7 +34,7 @@ func _init(p_map_info: Dictionary) -> void:
 				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
 			)
 		)
-		for object: Dictionary in sectors[i].objects:
+		for object: Dictionary in sectors[i].data.objectInformation:
 			object["sector_index"] = i
 			temp_object_list.append(object)
 	
@@ -42,7 +42,8 @@ func _init(p_map_info: Dictionary) -> void:
 		objects.append( ObjectRoth.new(
 				temp_object_list[i],
 				i,
-				map_info
+				map_info,
+				sectors
 			)
 		)
 	

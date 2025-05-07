@@ -4,7 +4,7 @@ class_name Section7_1
 var data: Dictionary = {}
 var index: int = -1
 var map_info: Dictionary = {}
-
+var node: SFXNode3D
 
 func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary) -> void:
 	data = p_data
@@ -12,7 +12,19 @@ func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary) -> void:
 	map_info = p_map_info
 
 
-func initialize_mesh() -> Array:
+func initialize_mesh() -> Node3D:
+	if node:
+		for child: Node in node.get_children():
+			child.queue_free()
+		_initialize_mesh()
+		return
+	
+	node = SFXNode3D.new()
+	node.ref = self
+	_initialize_mesh()
+	return node
+
+func _initialize_mesh() -> void:
 	var shape := SphereShape3D.new()
 	shape.radius = 0.125
 	var static_body := StaticBody3D.new()
@@ -34,8 +46,134 @@ func initialize_mesh() -> Array:
 			data.unk0x02 / Roth.SCALE_3D_WORLD,
 	)
 	mesh_instance.ref = self
-	return [mesh_instance]
+	node.add_child(mesh_instance)
 
+
+
+func get_node_2d() -> Node2D:
+	var sfx_node := SFXNode2D.new(self)
+	return sfx_node
+
+
+
+class CircleDraw2D extends Node2D:
+	var roth_rotation: int = 0
+	var radius: int = 1
+	var highlighted: bool = false :
+		set(value):
+			highlighted = value
+			queue_redraw()
+	var selected: bool = false :
+		set(value):
+			selected = value
+			queue_redraw()
+	func _init(p_rotation: int) -> void:
+		roth_rotation = p_rotation
+	func _draw() -> void:
+		var color := Color.ORANGE_RED
+		if selected:
+			color = Color.ORANGE
+		elif highlighted:
+			color = Color.CORAL
+		draw_circle(Vector2.ZERO, radius, color)
+		if roth_rotation >= 0:
+			var angle_degrees: float = ((float(roth_rotation) / 256) * 360) - 90
+			draw_line(Vector2.ZERO, Vector2(cos(deg_to_rad(angle_degrees)), sin(deg_to_rad(angle_degrees))) * 1.5, color, 0.1)
+
+
+
+class SFXNode2D extends Node2D:
+	signal object_selected(object: SFXNode2D, tell_3d: bool)
+	const DRAGGING_THRESHOLD: float = 2.0
+	var ref: Section7_1
+	var circle: CircleDraw2D
+	var mouse_over: bool = false
+	var dragging: bool = false
+	var drag_started: bool = false
+	var dragging_amount := Vector2.ZERO
+	func _init(p_ref: Section7_1) -> void:
+		ref = p_ref
+		position = Vector2(
+			-ref.data.unk0x00 / Roth.SCALE_2D_WORLD,
+			ref.data.unk0x02 / Roth.SCALE_2D_WORLD
+		)
+		circle = CircleDraw2D.new(-1)
+		add_child(circle)
+		var shape := CircleShape2D.new()
+		shape.radius = 1
+		var collision := CollisionShape2D.new()
+		collision.shape = shape
+		var area := Area2D.new()
+		area.add_child(collision)
+		area.mouse_entered.connect(_on_mouse_entered)
+		area.mouse_exited.connect(_on_mouse_exited)
+		add_child(area)
+	
+	func _on_mouse_entered() -> void:
+		mouse_over = true
+		circle.highlighted = true
+	
+	func _on_mouse_exited() -> void:
+		mouse_over = false
+		circle.highlighted = false
+	
+	func _input(event: InputEvent) -> void:
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					if mouse_over:
+						dragging = true
+						dragging_amount = Vector2.ZERO
+						drag_started = false
+						circle.selected = true
+						object_selected.emit(self, true)
+				else:
+					if dragging:
+						dragging = false
+						if drag_started:
+							drag_started = false
+							update_position()
+		if event is InputEventMouseMotion and dragging:
+			dragging_amount += event.relative
+			if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
+				drag_started = true
+				var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
+				global_position = mouse.snappedf(get_parent().get_parent().snap)
+	
+	func deselect() -> void:
+		circle.selected = false
+	
+	func select() -> void:
+		circle.selected = true
+		object_selected.emit(self, false)
+	
+	func update_position() -> void:
+		var pos := Vector2(
+			position.x * Roth.SCALE_2D_WORLD,
+			position.y * Roth.SCALE_2D_WORLD
+		)
+		ref.data.unk0x00 = -int(pos.x)
+		ref.data.unk0x02 = int(pos.y)
+		ref.initialize_mesh()
+		await get_tree().process_frame
+		object_selected.emit(self, true)
+
+
+	func is_inside(point: Vector2, sector: Sector) -> bool:
+		var polygon_path_finder := PolygonPathFinder.new()
+		var points := sector.vertices.slice(0,-1)
+		var connections := []
+		for i in range(len(points)-1):
+			connections.append(i)
+			connections.append(i+1)
+		connections.append(len(points)-1)
+		connections.append(0)
+		polygon_path_finder.setup(points, connections)
+		return polygon_path_finder.is_point_inside(point)
+
+
+class SFXNode3D extends Node3D:
+	var ref: Section7_1
 
 class SFXMesh3D extends MeshInstance3D:
 	var ref: Section7_1

@@ -9,14 +9,23 @@ const MIN_ZOOM := 0.2
 
 var zoom_toward_mouse := true
 var line_width: float = 0.1
-var map: Map
-var sectors: Array = []
+var map: Variant
 var minimum_x: float = 0
 var minimum_y: float = 0
 var maximum_x: float = 0
 var maximum_y: float = 0
 var additional_zoom: float = 1
-var has_focus: bool = false
+var has_focus: bool = false :
+	set(value):
+		has_focus = value
+		if has_focus == false:
+			if hovered_sector and hovered_sector != selected_sector:
+				hovered_sector = null
+				queue_redraw()
+			if hovered_face and hovered_face != selected_face:
+				hovered_face = null
+				queue_redraw()
+				
 var mouse_drag_enabled: bool = false
 var zooming: bool = false
 var hovered_sector: Variant = null
@@ -24,6 +33,7 @@ var selected_sector: Variant = null
 var hovered_face: Variant = null
 var selected_face: Variant = null
 var holding_mouse: bool = false
+var snap: float = 0.1
 var timer: Timer
 
 @onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
@@ -34,6 +44,8 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(check_for_hover)
 	add_child(timer)
+	if %SnapCheckBox.button_pressed:
+		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
 
 
 func _process(_delta: float) -> void:
@@ -46,6 +58,8 @@ func _process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if not map:
+		return
 	if event.is_action_pressed("map_2d_zoom_in"):
 		additional_zoom /= ZOOM_SPEED
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
@@ -66,12 +80,13 @@ func _input(event: InputEvent) -> void:
 		else:
 			update_camera_zoom()
 	
-	if event is InputEventMouseMotion:
-		if not hovered_sector:
-			if timer.is_stopped():
-				timer.start()
-		else:
-			check_for_hover()
+	if %SectorCheckBox.button_pressed:
+		if event is InputEventMouseMotion:
+			if not hovered_sector:
+				if timer.is_stopped():
+					timer.start()
+			else:
+				check_for_hover()
 	
 	if mouse_drag_enabled:
 		if event is InputEventMouseMotion:
@@ -81,20 +96,31 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if event.pressed and hovered_face:
-					owner.select_face(hovered_face.index, "Face")
-					selected_face = hovered_face
-					selected_sector = hovered_sector
-					queue_redraw()
-				elif event.pressed and hovered_sector:
-					owner.select_face(hovered_sector.index, "Sector")
-					selected_sector = hovered_sector
-					selected_face = null
-					queue_redraw()
-				if event.pressed:
-					holding_mouse = true
-				else:
-					holding_mouse = false
+				if %SectorCheckBox.button_pressed:
+					if event.pressed and hovered_face and selected_face and hovered_face == selected_face:
+						selected_face = null
+						selected_sector = null
+						queue_redraw()
+						%Picker.deselect()
+					elif event.pressed and hovered_face:
+						owner.select_face(hovered_face.index, "Face")
+						selected_face = hovered_face
+						selected_sector = hovered_sector
+						queue_redraw()
+					elif event.pressed and hovered_sector and selected_sector and hovered_sector == selected_sector and not selected_face:
+						selected_sector = null
+						selected_face = null
+						queue_redraw()
+						%Picker.deselect()
+					elif event.pressed and hovered_sector:
+						owner.select_face(hovered_sector.index, "Sector")
+						selected_sector = hovered_sector
+						selected_face = null
+						queue_redraw()
+					if event.pressed:
+						holding_mouse = true
+					else:
+						holding_mouse = false
 			MOUSE_BUTTON_MIDDLE:
 				if event.pressed:
 					mouse_drag_enabled = true
@@ -124,12 +150,34 @@ func _draw() -> void:
 
 func setup(p_map: Map) -> void:
 	map = p_map
-	sectors = p_map.sectors
 	update_bounds()
 	update_camera_center()
 	update_camera_zoom()
 	update_line_width(additional_zoom)
-	#queue_redraw()
+	_on_sector_check_box_toggled(%SectorCheckBox.button_pressed)
+	_on_object_check_box_toggled(%ObjectCheckBox.button_pressed)
+	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
+	queue_redraw()
+
+
+func close_map(map_info: Dictionary) -> void:
+	if map.map_info == map_info:
+		map = null
+		selected_face = null
+		selected_sector = null
+		hovered_face = null
+		hovered_sector = null
+		zooming = false
+		holding_mouse = false
+		update_bounds()
+		update_camera_center()
+		additional_zoom = 1
+		%Camera2D.zoom = Vector2.ONE * 2
+		queue_redraw()
+		for child: Node2D in %Objects.get_children():
+			child.queue_free()
+		for child: Node2D in %SFX.get_children():
+			child.queue_free()
 
 
 func update_bounds() -> void:
@@ -137,7 +185,9 @@ func update_bounds() -> void:
 	minimum_y = 10000
 	maximum_x = -10000
 	maximum_y = -10000
-	for sector: Sector in sectors:
+	if not map:
+		return
+	for sector: Sector in map.sectors:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			minimum_x = min(minimum_x, face.v1.x / Roth.SCALE_2D_WORLD)
@@ -231,9 +281,9 @@ func draw_grid() -> void:
 
 
 func draw_sectors() -> void:
-	if not sectors:
+	if not map or not map.sectors:
 		return
-	for sector: Sector in sectors:
+	for sector: Sector in map.sectors:
 
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
@@ -284,11 +334,68 @@ func add_objects() -> void:
 	for child: Node in %Objects.get_children():
 		child.queue_free()
 	for object: ObjectRoth in map.objects:
-		%Objects.add_child(object.get_node_2d())
+		var object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
+		object_node.object_selected.connect(_on_object_selected)
+		%Objects.add_child(object_node)
+
+func add_sfx() -> void:
+	for child: Node in %SFX.get_children():
+		child.queue_free()
+	for sfx: Section7_1 in map.sound_effects:
+		var sfx_node: Section7_1.SFXNode2D = sfx.get_node_2d()
+		sfx_node.object_selected.connect(_on_sfx_selected)
+		%SFX.add_child(sfx_node)
+
+func redraw_object(object: ObjectRoth) -> void:
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object.index == object_node.ref.index:
+			object_node.queue_free()
+			var new_object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
+			new_object_node.object_selected.connect(_on_object_selected)
+			%Objects.add_child(new_object_node)
+			new_object_node.select()
+
+
+func redraw_sfx(object: Section7_1) -> void:
+	for object_node: Section7_1.SFXNode2D in %SFX.get_children():
+		if object.index == object_node.ref.index:
+			object_node.queue_free()
+			var new_object_node: Section7_1.SFXNode2D = object.get_node_2d()
+			new_object_node.object_selected.connect(_on_sfx_selected)
+			%SFX.add_child(new_object_node)
+			new_object_node.select()
+	
+
+func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool) -> void:
+	selected_sector = null
+	selected_face = null
+	queue_redraw()
+	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object != selected_object:
+			object.deselect()
+	for sfx: Section7_1.SFXNode2D in %SFX.get_children():
+		sfx.deselect()
+	if tell_3d:
+		owner.select_face(selected_object.ref.index, "Object")
+
+func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void:
+	selected_sector = null
+	selected_face = null
+	queue_redraw()
+	for sfx: Section7_1.SFXNode2D in %SFX.get_children():
+		if sfx != selected_sfx:
+			sfx.deselect()
+	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		object.deselect()
+	if tell_3d:
+		owner.select_face(selected_sfx.ref.index, "SFX")
 
 
 func remove_objects() -> void:
 	for child: Node in %Objects.get_children():
+		child.queue_free()
+func remove_sfx() -> void:
+	for child: Node in %SFX.get_children():
 		child.queue_free()
 
 
@@ -307,10 +414,12 @@ func is_mouse_inside(sector: Sector) -> bool:
 
 
 func check_for_hover() -> void:
+	if not map:
+		return
 	if hovered_sector and is_mouse_inside(hovered_sector):
 		check_for_face_hover(hovered_sector)
 		return
-	for sector: Sector in sectors:
+	for sector: Sector in map.sectors:
 		if is_mouse_inside(sector):
 			check_for_face_hover(sector)
 			if hovered_sector != sector:
@@ -321,6 +430,7 @@ func check_for_hover() -> void:
 				queue_redraw()
 			return
 	hovered_sector = null
+	hovered_face = null
 	queue_redraw()
 
 func check_for_face_hover(sector: Sector) -> void:
@@ -351,9 +461,21 @@ func select(object: Variant) -> void:
 		selected_sector = object
 		selected_face = null
 		queue_redraw()
+	elif object is ObjectRoth:
+		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+			if object_node.ref.index == object.index:
+				object_node.select()
+	elif object is Section7_1:
+		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+			if sfx_node.ref.index == object.index:
+				sfx_node.select()
 	else:
 		selected_face = null
 		selected_sector = null
+		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+			object_node.deselect()
+		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+			sfx_node.deselect()
 		queue_redraw()
 		
 
@@ -396,8 +518,15 @@ func _on_grid_edit_value_changed(value: float) -> void:
 	queue_redraw()
 
 
-func _on_sector_check_box_toggled(_toggled_on: bool) -> void:
+func _on_sector_check_box_toggled(toggled_on: bool) -> void:
 	queue_redraw()
+	if toggled_on:
+		pass
+	else:
+		selected_face = null
+		selected_sector = null
+		hovered_face = null
+		hovered_sector = null
 
 
 func _on_object_check_box_toggled(toggled_on: bool) -> void:
@@ -405,3 +534,22 @@ func _on_object_check_box_toggled(toggled_on: bool) -> void:
 		add_objects()
 	else:
 		remove_objects()
+
+func _on_sfx_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		add_sfx()
+	else:
+		remove_sfx()
+
+
+func _on_snap_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
+		%SnapEdit.editable = true
+	else:
+		snap = 0.1
+		%SnapEdit.editable = false
+
+
+func _on_snap_edit_value_changed(value: float) -> void:
+	snap = value / Roth.SCALE_2D_WORLD

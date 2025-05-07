@@ -31,7 +31,7 @@ var map_info: Dictionary
 var faces: Array
 var vertices: Array
 var platform: Dictionary
-var objects: Array = []
+#var objects: Array = []
 var node: Node3D
 
 static func check_flag(byte_value: int, flag: int) -> bool:
@@ -44,8 +44,8 @@ func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_platforms
 	map_info = p_map_info
 	if "intermediateFloorIndex" in data:
 		platform = p_platforms[data.intermediateFloorIndex]
-	if "objectInformation" in data:
-		objects = data.objectInformation
+	#if "objectInformation" in data:
+		#objects = data.objectInformation
 
 
 func update_faces(faces_array: Array) -> void:

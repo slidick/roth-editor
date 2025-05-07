@@ -5,7 +5,12 @@ var selected_material: StandardMaterial3D
 var mouse_inside: bool = true
 var moused_over_node: CollisionObject3D
 var selected_node: CollisionObject3D
-var has_focus: bool = false
+var has_focus: bool = false :
+	set(value):
+		has_focus = value
+		if has_focus == false:
+			if moused_over_node and selected_node != moused_over_node:
+				moused_over_node.get_parent().material_overlay = null
 var picking_enabled: bool = true
 
 func _ready() -> void:
@@ -146,12 +151,14 @@ func select(node: Node3D, highlight: bool = true) -> void:
 	
 	if node is ObjectRoth.ObjectMesh3D:
 		var object:  ObjectRoth.ObjectMesh3D = node
+		%EditObjectContainer.load_edit_object(object)
 		add_label("Object Data", HORIZONTAL_ALIGNMENT_CENTER)
 		add_label("index: %s" % object.ref.index)
 		for key: String in object.ref.data:
 			add_label("%s: %s" % [key, object.ref.data[key]])
 	elif node is Section7_1.SFXMesh3D:
 		var sfx:  Section7_1.SFXMesh3D = node
+		%EditSFXContainer.load_edit_sfx(sfx)
 		add_label("SFX Data", HORIZONTAL_ALIGNMENT_CENTER)
 		add_label("index: %s" % sfx.ref.index)
 		for key: String in sfx.ref.data:
@@ -300,6 +307,8 @@ func add_texture(texture_index: int, das_name: String) -> void:
 func _reset_edits() -> void:
 	%EditFaceContainer.hide()
 	%EditSectorContainer.hide()
+	%EditObjectContainer.hide()
+	%EditSFXContainer.hide()
 
 
 func _reset_edit_sector() -> void:
