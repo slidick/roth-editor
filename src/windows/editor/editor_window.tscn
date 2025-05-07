@@ -60,7 +60,6 @@ mouse_filter = 2
 
 [node name="NoMapLoaded" type="Control" parent="Contents/VBoxContainer/MainContainer" index="0"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 mouse_filter = 2
 
@@ -81,6 +80,7 @@ text = "No map loaded."
 
 [node name="MapContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer" index="1"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -241,7 +241,7 @@ unique_name_in_owner = true
 handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(412, 308)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="3DView" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport" index="0"]
 unique_name_in_owner = true
@@ -322,7 +322,7 @@ unique_name_in_owner = true
 handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(1182, 627)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="0"]
 
