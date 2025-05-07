@@ -1304,6 +1304,15 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 			"floorTextureScale": Sector.FLOOR_A | Sector.CEILING_A,
 			"padding": 0,
 		}
+		for face_ref: WeakRef in selected_node.get_parent().ref.faces:
+			var face: Face = face_ref.get_ref()
+			if face.sister:
+				var sister: Face = face.sister.get_ref()
+				if sister.texture_data.midTextureIndex == Roth.get_map(sister.map_info).metadata.skyTexture:
+					sister.texture_data.midTextureIndex = 2
+				var value := int(sister.face_length)
+				sister.texture_data.unk0x00 = int(value) & 255
+				sister.texture_data.type = (int(value) >> 8) | (sister.texture_data.type & (1<<7))
 	else:
 		selected_node.get_parent().ref.platform = {}
 	load_edit_sector(selected_node.get_parent())
