@@ -372,6 +372,26 @@ func _initialize_meshes() -> void:
 		mesh_instance.ref = self
 		node.add_child(mesh_instance)
 	else:
+		if check_flag(texture_data.unk0x08, TRANSPARENT):
+			var floor_height: int = max(sector.data.floorHeight, sister.get_ref().sector.data.floorHeight)
+			var ceiling_height: int = min(sector.data.ceilingHeight, sister.get_ref().sector.data.ceilingHeight)
+			var mesh_height: int = ceiling_height - floor_height
+			
+			var mesh_instance: FaceMesh3D = create_mesh(
+				[
+					Vector3(v1.x/SCALE_3D_WORLD, floor_height/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
+					Vector3(v1.x/SCALE_3D_WORLD, ceiling_height/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
+					Vector3(v2.x/SCALE_3D_WORLD, ceiling_height/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+					Vector3(v2.x/SCALE_3D_WORLD, floor_height/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+				],
+				texture_data.midTextureIndex,
+				das,
+				mesh_height,
+				true,
+			)
+			mesh_instance.ref = self
+			node.add_child(mesh_instance)
+		
 		if sector.data.floorHeight < sister.get_ref().sector.data.floorHeight:
 			var mesh_height: int = sister.get_ref().sector.data.floorHeight - sector.data.floorHeight
 			var mesh_instance: FaceMesh3D = create_mesh(
@@ -388,7 +408,6 @@ func _initialize_meshes() -> void:
 			)
 			mesh_instance.ref = self
 			node.add_child(mesh_instance)
-		
 		
 		if sector.data.ceilingHeight > sister.get_ref().sector.data.ceilingHeight:
 			var mesh_height: int = sector.data.ceilingHeight - sister.get_ref().sector.data.ceilingHeight
@@ -408,12 +427,7 @@ func _initialize_meshes() -> void:
 			node.add_child(mesh_instance)
 		
 		
-		#if (sector.data.ceilingHeight == sister.get_ref().sector.data.ceilingHeight and
-				#sector.data.floorHeight == sister.get_ref().sector.data.floorHeight
-		#):
 		if true:
-			
-			
 			var direction: Vector2 = (v2-v1).normalized()
 			var right_perendicular := Vector2(-direction.y, direction.x)
 			#var left_perendicular: Vector2 = -right_perendicular
@@ -479,26 +493,7 @@ func _initialize_meshes() -> void:
 				)
 				mesh_instance.ref = self
 				node.add_child(mesh_instance)
-		
-		if check_flag(texture_data.unk0x08, TRANSPARENT):
-			var floor_height: int = max(sector.data.floorHeight, sister.get_ref().sector.data.floorHeight)
-			var ceiling_height: int = min(sector.data.ceilingHeight, sister.get_ref().sector.data.ceilingHeight)
-			var mesh_height: int = ceiling_height - floor_height
-			
-			var mesh_instance: FaceMesh3D = create_mesh(
-				[
-					Vector3(v1.x/SCALE_3D_WORLD, floor_height/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v1.x/SCALE_3D_WORLD, ceiling_height/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, ceiling_height/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, floor_height/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-				],
-				texture_data.midTextureIndex,
-				das,
-				mesh_height,
-				true,
-			)
-			mesh_instance.ref = self
-			node.add_child(mesh_instance)
+
 
 
 class Face3D extends Node3D:

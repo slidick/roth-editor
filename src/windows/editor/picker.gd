@@ -303,6 +303,7 @@ func _reset_edits() -> void:
 
 func _reset_edit_sector() -> void:
 	%SectorIndexLabel.text = ""
+	%SelectFacesPopupMenu.clear()
 	%RoofHeightEdit.get_line_edit().clear()
 	%RoofScaleOption.select(1)
 	%FloorHeightEdit.get_line_edit().clear()
@@ -341,7 +342,13 @@ func _reset_edit_sector() -> void:
 
 func load_edit_sector(sector: Sector.SectorMesh3D) -> void:
 	_reset_edit_sector()
-	%SectorIndexLabel.text = "Index: %d" % sector.ref.index
+	%SectorIndexLabel.text = "Sector: %d" % sector.ref.index
+	var i: int = 0
+	for face_ref: WeakRef in sector.ref.faces:
+		var face: Face = face_ref.get_ref()
+		%SelectFacesPopupMenu.add_item("%d" % face.index)
+		%SelectFacesPopupMenu.set_item_metadata(i, face.node)
+		i += 1
 	%RoofHeightEdit.get_line_edit().text = "%d" % sector.ref.data.ceilingHeight
 	%RoofHeightEdit.set_value_no_signal(sector.ref.data.ceilingHeight)
 	var roof_a: int = sector.ref.data.textureFit & Sector.CEILING_A > 0
@@ -519,12 +526,14 @@ func _reset_edit_face() -> void:
 	%Flag6CheckBox.set_pressed_no_signal(false)
 	%Flag7CheckBox.set_pressed_no_signal(false)
 	%Flag8CheckBox.set_pressed_no_signal(false)
+	%SelectSisterButton.hide()
 	%EditFaceContainer.show()
+	
 
 
 func load_edit_face(face: Face.FaceMesh3D) -> void:
 	_reset_edit_face()
-	%FaceIndexLabel.text = "%d" % face.ref.index
+	%FaceIndexLabel.text = "Face: %d" % face.ref.index
 	if face.ref.texture_data.unk0x08 & (1 << 0) > 0:
 		%TransparencyCheckBox.set_pressed_no_signal(true)
 	if face.ref.texture_data.unk0x08 & (1 << 1) > 0:
@@ -558,6 +567,7 @@ func load_edit_face(face: Face.FaceMesh3D) -> void:
 		%Flag7CheckBox.set_pressed_no_signal(true)
 	if face.ref.data.addCollision & (1 << 7) > 0:
 		%Flag8CheckBox.set_pressed_no_signal(true)
+	
 	
 	%Unk0x00Edit.set_value_no_signal(face.ref.texture_data.unk0x00)
 	%Unk0x00Edit.get_line_edit().text = "%d" % face.ref.texture_data.unk0x00
@@ -619,6 +629,9 @@ func load_edit_face(face: Face.FaceMesh3D) -> void:
 	%BottomTextureOption.add_item("Sky")
 	%BottomTextureOption.add_item("Select Texture")
 	%BottomTextureOption.add_item("Select Palette")
+	
+	if face.ref.sister:
+		%SelectSisterButton.show()
 
 
 
@@ -1285,3 +1298,20 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 		selected_node.get_parent().ref.platform = {}
 	load_edit_sector(selected_node.get_parent())
 	_redraw_selected_node(%PlatformRoofOffsetYEdit)
+
+
+func _on_select_sister_button_pressed() -> void:
+	select(selected_node.get_parent().ref.sister.get_ref().node, true)
+
+
+func _on_select_sector_button_pressed() -> void:
+	select(selected_node.get_parent().ref.sector.node, true)
+
+
+func _on_select_faces_button_pressed() -> void:
+	%SelectFacesPopupMenu.popup(Rect2i(%SelectFacesButton.global_position.x, %SelectFacesButton.global_position.y+%SelectFacesButton.size.y, %SelectFacesButton.size.x, 0))
+
+
+func _on_select_faces_popup_menu_index_pressed(index: int) -> void:
+	var face_node: Node3D = %SelectFacesPopupMenu.get_item_metadata(index)
+	select(face_node, true)

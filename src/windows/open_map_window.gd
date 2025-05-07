@@ -1,27 +1,27 @@
 extends BaseWindow
 
 
-
 func _ready() -> void:
 	super._ready()
 	Roth.settings_loaded.connect(_on_settings_loaded)
-	%Map.reload_selected.connect(_on_reload_selected)
 	%MapTree.set_column_title(0, "Maps")
 	%MapTree.create_item()
+
 
 func _show() -> void:
 	super._show()
 	%MapTree.grab_focus()
 	%MapTree.get_root().select(0)
 
+
 func _hide() -> void:
 	super._hide()
 	%MapTree.deselect_all()
+	%Map.clear()
+
 
 func cancel() -> void:
 	_hide()
-	
-	
 
 
 func open() -> void:
@@ -50,22 +50,6 @@ func _on_settings_loaded() -> void:
 			tree_item.set_metadata(0, map_info)
 
 
-func _on_reload_selected() -> void:
-	_on_map_tree_cell_selected()
-
-
-func _on_map_list_item_selected(index: int) -> void:
-	var map_info: Dictionary = %MapList.get_item_metadata(index)
-	var map: Map = Roth.get_map(map_info)
-	%Map.setup(map.sectors)
-	%Sectors.text = "%s" % len(map.sectors)
-	%Faces.text = "%s" % len(map.faces)
-	%Vertices.text = "%s" % map.vertices_count
-	%Objects.text = "%s" % len(map.objects)
-	%MapName.text = "%s" % map_info.name
-	%DASFile.text = "%s" % map_info.das
-
-
 func _on_cancel_button_pressed() -> void:
 	cancel()
 
@@ -90,4 +74,3 @@ func _on_map_tree_cell_selected() -> void:
 func _on_map_tree_item_activated() -> void:
 	Roth.load_maps([%MapTree.get_selected().get_metadata(0)])
 	cancel()
-	

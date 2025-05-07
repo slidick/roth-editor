@@ -1,7 +1,5 @@
 extends Node2D
 
-signal reload_selected
-
 var drag: bool = false
 var sectors: Array = []
 var minimum_x: float = 0
@@ -19,6 +17,10 @@ func setup(p_sectors: Array) -> void:
 	queue_redraw()
 
 
+func clear() -> void:
+	sectors = []
+
+
 func _draw() -> void:
 	if not sectors:
 		return
@@ -26,7 +28,6 @@ func _draw() -> void:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			if not face:
-				reload_selected.emit()
 				return
 			minimum_x = min(minimum_x, face.v1.x / Roth.SCALE_2D_WORLD)
 			minimum_x = min(minimum_x, face.v2.x / Roth.SCALE_2D_WORLD)
