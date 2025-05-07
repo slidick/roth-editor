@@ -34,7 +34,6 @@ func open() -> void:
 		tree_item = %MapTree.get_next_selected(tree_item)
 	if maps.is_empty():
 		return
-	print(maps)
 	Roth.load_maps(maps)
 
 
