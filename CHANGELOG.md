@@ -1,3 +1,20 @@
+**0.5.0**
+### New Features
+  - 2D editing view
+  - Basic editing of objects and sound effects
+  - Select associated faces/sectors from edit panel
+
+---
+
+**0.4.0**
+### New Features
+  - Platform editing
+
+### Bugfixes
+  - Search which was broken in 0.3.0 has been fixed.
+
+---
+
 **0.3.0**
 ### New Features
   - Support for reading and writing .raw files.
