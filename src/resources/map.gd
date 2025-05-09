@@ -10,6 +10,7 @@ var section7_2 := []
 var vertices_count: int = 0
 var map_info := {}
 var commands_section := {}
+var node: MapNode3D
 
 func _init(p_map_info: Dictionary) -> void:
 	var filepath: String
@@ -74,15 +75,190 @@ func _init(p_map_info: Dictionary) -> void:
 	vertices_count = len(map_json.verticesSection.vertices)
 	commands_section = map_json.commandsSection
 
+func get_next_face_index() -> int:
+	var count: int = 0
+	for sector: Sector in sectors:
+		for face_ref: WeakRef in sector.faces:
+			count = max(count, face_ref.get_ref().index)
+	return count + 1
+
+func get_next_sector_index() -> int:
+	var count: int = 0
+	for sector: Sector in sectors:
+		count = max(count, sector.index)
+	return count + 1
+
+
+func delete_sector(sector_to_delete: Sector) -> void:
+	sectors.erase(sector_to_delete)
+
+func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
+	var initial_data := {
+		"ceilingHeight": 256,
+		"floorHeight": 0,
+		"unk0x04": 0,
+		"ceilingTextureIndex": 3,
+		"floorTextureIndex": 3,
+		"textureFit": 0b00010100,
+		"lighting": 128,
+		"textureMapOverride": 0,
+		"facesCount": 4,
+		"firstFaceOffset": Parser.Type.Word,
+		"ceilingTextureShiftX": 0,
+		"ceilingTextureShiftY": 0,
+		"floorTextureShiftX": 0,
+		"floorTextureShiftY": 0,
+		"floorTriggerID": 0,
+		"unk0x16": 0b00010100,
+		"objectInformation": [],
+	}
+	
+	var new_sector: Sector = Sector.new(initial_data, get_next_sector_index(), map_info)
+	sectors.append(new_sector)
+	
+	var v2 := Vector2.ZERO
+	var v3 := Vector2.ZERO
+	
+	if ((starting_position.x > ending_position.x and starting_position.y > ending_position.y)
+		or (starting_position.x < ending_position.x and starting_position.y < ending_position.y)
+	):
+		v2 = Vector2(ending_position.x, starting_position.y)
+		v3 = Vector2(starting_position.x, ending_position.y)
+	else:
+		v3 = Vector2(ending_position.x, starting_position.y)
+		v2 = Vector2(starting_position.x, ending_position.y)
+	var face_1: Face = Face.create_new_face(map_info, new_sector)
+	face_1.v1 = Vector2(starting_position)
+	face_1.v2 = v2
+	face_1.update_horizontal_fit()
+	new_sector.faces.append(weakref(face_1))
+	var face_2: Face = Face.create_new_face(map_info, new_sector)
+	face_2.v1 = v2
+	face_2.v2 = Vector2(ending_position)
+	face_2.update_horizontal_fit()
+	new_sector.faces.append(weakref(face_2))
+	var face_3: Face = Face.create_new_face(map_info, new_sector)
+	face_3.v1 = Vector2(ending_position)
+	face_3.v2 = v3
+	face_3.update_horizontal_fit()
+	new_sector.faces.append(weakref(face_3))
+	var face_4: Face = Face.create_new_face(map_info, new_sector)
+	face_4.v1 = v3
+	face_4.v2 = Vector2(starting_position)
+	face_4.update_horizontal_fit()
+	new_sector.faces.append(weakref(face_4))
+	new_sector._update_vertices()
+	node.get_node("Faces").add_child(await face_1.initialize_mesh())
+	node.get_node("Faces").add_child(await face_2.initialize_mesh())
+	node.get_node("Faces").add_child(await face_3.initialize_mesh())
+	node.get_node("Faces").add_child(await face_4.initialize_mesh())
+	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+	
+	return new_sector
+
+
+func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_node_2: VertexNode) -> void:
+	print("Splitting sector")
+	
+	var new_sector: Sector = existing_sector.duplicate()
+	sectors.append(new_sector)
+	
+	var face_1: Face = Face.create_new_face(map_info, existing_sector)
+	face_1.v1 = vertex_node_1.coordinate
+	face_1.v2 = vertex_node_2.coordinate
+	var face_2: Face = Face.create_new_face(map_info, new_sector)
+	face_2.index += 1
+	face_2.v1 = vertex_node_2.coordinate
+	face_2.v2 = vertex_node_1.coordinate
+	face_1.sister = weakref(face_2)
+	face_2.sister = weakref(face_1)
+	
+	# Is faces in order?
+	var existing_faces := existing_sector.faces.duplicate()
+	var new_faces := []
+	var split_index_1: int = -1
+	var split_index_2: int = -1
+	for i in range(len(existing_faces)):
+		if existing_faces[i].get_ref().v1 == vertex_node_1.coordinate:
+			split_index_1 = i
+		if existing_faces[i].get_ref().v2 == vertex_node_2.coordinate:
+			split_index_2 = i
+	
+	if split_index_2 > split_index_1:
+		existing_sector.faces = existing_faces.slice(split_index_1, split_index_2+1)
+		existing_sector.faces.append(weakref(face_2))
+		new_faces.append_array(existing_faces.slice(split_index_2+1))
+		new_faces.append_array(existing_faces.slice(0, split_index_1))
+		new_faces.append(weakref(face_1))
+	else:
+		existing_sector.faces = existing_faces.slice(split_index_1)
+		existing_sector.faces.append_array(existing_faces.slice(0, split_index_2+1))
+		existing_sector.faces.append(weakref(face_2))
+		new_faces.append_array(existing_faces.slice(split_index_2+1, split_index_1))
+		new_faces.append(weakref(face_1))
+	
+	
+	
+	new_sector.faces = new_faces
+	
+	for face_ref: WeakRef in existing_sector.faces:
+		face_ref.get_ref().sector = existing_sector
+	for face_ref: WeakRef in new_sector.faces:
+		face_ref.get_ref().sector = new_sector
+	
+	
+	new_sector._update_vertices()
+	existing_sector._update_vertices()
+	existing_sector.initialize_mesh()
+	node.get_node("Faces").add_child(await face_1.initialize_mesh())
+	node.get_node("Faces").add_child(await face_2.initialize_mesh())
+	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+
 
 func compile(player_position: Variant = null, player_rotation: Variant = null) -> PackedByteArray:
+	
+	var bad_sectors := []
+	# Check for concave sectors.
+	for sector: Sector in sectors:
+		if not sector.is_convex():
+			bad_sectors.append(sector)
+	if len(bad_sectors) > 0:
+		var array := bad_sectors.map(func (a:Sector) -> int: return a.index)
+		if not await Dialog.confirm("Sectors are concave and will render improperly:\n%s" % ", ".join(array), "Error: Concave sectors", false):
+			return PackedByteArray()
+	
+	
 	var json := {}
 	json["mapMetadataSection"] = metadata.duplicate()
 	json["sectorsSection"] = { "sectors": sectors.map(func (sector: Sector) -> Dictionary: return sector.data) }
-	json["facesSection"] = { "faces": faces.map(func (face: Face) -> Dictionary: return face.data) }
+	
+	var compiled_faces := []
+	
+	for sector: Sector in sectors:
+		sector.data["firstFaceIndex"] = len(compiled_faces)
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			compiled_faces.append(face)
+			face.index = len(compiled_faces) - 1
+			
+		sector.data["facesCount"] = len(sector.faces)
+		
+	
+	var i: = 0
+	for sector: Sector in sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			face.data["sectorIndex"] = i
+			if face.sister:
+				face.data["sisterFaceIndex"] = face.sister.get_ref().index
+			else:
+				face.data.erase("sisterFaceIndex")
+		i += 1
+	
+	json["facesSection"] = { "faces": compiled_faces.map(func (face: Face) -> Dictionary: return face.data) }
 	
 	var texture_mappings := []
-	for face: Face in faces:
+	for face: Face in compiled_faces:
 		if face.texture_data not in texture_mappings:
 			texture_mappings.append(face.texture_data)
 			face.data["textureMappingIndex"] = len(texture_mappings) - 1
@@ -103,7 +279,7 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 		json["midPlatformsSection"] = { "platforms": platforms }
 	
 	var vertices := []
-	for face: Face in faces:
+	for face: Face in compiled_faces:
 		var v1: Dictionary = {
 			"x": -int(face.v1.x),
 			"y": int(face.v1.y)

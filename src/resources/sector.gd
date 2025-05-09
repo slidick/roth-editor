@@ -28,7 +28,7 @@ var data: Dictionary
 var index: int
 var map_info: Dictionary
 
-var faces: Array
+var faces: Array = []
 var vertices: Array
 var platform: Dictionary
 #var objects: Array = []
@@ -38,7 +38,7 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
-func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_platforms: Array) -> void:
+func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_platforms: Array = []) -> void:
 	data = p_data
 	index = p_index
 	map_info = p_map_info
@@ -46,6 +46,14 @@ func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_platforms
 		platform = p_platforms[data.intermediateFloorIndex]
 	#if "objectInformation" in data:
 		#objects = data.objectInformation
+
+
+func duplicate() -> Sector:
+	var new_sector := Sector.new(data.duplicate(true), Roth.get_map(map_info).get_next_sector_index(), map_info)
+	if platform:
+		new_sector.platform = platform.duplicate(true)
+	new_sector.faces = []
+	return new_sector
 
 
 func update_faces(faces_array: Array) -> void:
@@ -62,6 +70,199 @@ func _update_vertices() -> void:
 		_vertices.append(face.v1)
 		_vertices.append(face.v2)
 	vertices = Geometry2D.convex_hull(_vertices)
+
+func delete_vertex(vertex_node: VertexNode) -> void:
+	var vertex_to_delete: Vector2 = vertex_node.coordinate
+	var only_two: bool = true if len(vertex_node.sectors) == 2 else false
+	var face_to_change: Face
+	var face_to_delete: WeakRef
+	var faces_remaining := []
+	
+	for face_ref: WeakRef in faces:
+		var face: Face = face_ref.get_ref()
+		if face.v1 == vertex_to_delete:
+			face_to_delete = face_ref
+		elif face.v2 == vertex_to_delete:
+			face_to_change = face
+		else:
+			faces_remaining.append(face)
+	
+	if len(faces_remaining) < 2:
+		delete_sector()
+		return
+	
+	if only_two:
+		if face_to_delete.get_ref().sister:
+			if face_to_change.sister:
+				face_to_delete.get_ref().sister.get_ref().sister = weakref(face_to_change)
+			else:
+				face_to_delete.get_ref().sister.get_ref().sister = null
+	else:
+		if face_to_delete and face_to_delete.get_ref().sister:
+			face_to_delete.get_ref().sister.get_ref().sister = null
+	
+	
+	var current_vertices := get_vertices()
+	var next_index := current_vertices.find(vertex_to_delete) + 1
+	if next_index == -1:
+		print("ERROR")
+		return
+	
+	face_to_change.v2 = current_vertices[next_index % len(current_vertices)]
+	face_to_change.update_horizontal_fit()
+	faces.erase(face_to_delete)
+	if face_to_delete:
+		face_to_delete.get_ref().delete()
+	_update_vertices()
+	initialize_mesh()
+	for face_ref: WeakRef in faces:
+		var face: Face = face_ref.get_ref()
+		if face.sister:
+			face.sister.get_ref().initialize_mesh()
+			face.sister.get_ref().update_horizontal_fit()
+		face.initialize_mesh()
+		face.update_horizontal_fit()
+
+
+func delete_sector() -> void:
+	for face_ref: WeakRef in faces:
+		var face: Face = face_ref.get_ref()
+		if face.sister:
+			face.sister.get_ref().sister = null
+			face.sister.get_ref().initialize_mesh()
+		face.delete()
+	faces.clear()
+	node.queue_free()
+	Roth.get_map(map_info).delete_sector(self)
+
+
+func delete_face(face_to_delete: Face) -> void:
+	var face_to_delete_ref: WeakRef
+	var remaining_faces := []
+	for face_ref: WeakRef in faces:
+		var face: Face = face_ref.get_ref()
+		if face == face_to_delete:
+			face_to_delete_ref = face_ref
+		else:
+			remaining_faces.append(face_ref)
+	
+	if len(remaining_faces) < 3:
+		delete_sector()
+		return
+	
+	faces.erase(face_to_delete_ref)
+	
+	if face_to_delete.sister:
+		var sister: Face = face_to_delete.sister.get_ref()
+		sister.sister = null
+		sister.sector.delete_face(sister)
+	face_to_delete.delete()
+
+
+func split_face(face_to_split: Face) -> Face:
+	var idx: int
+	var new_face: Face
+	for i in range(len(faces)):
+		var face: Face = faces[i].get_ref()
+		if face == face_to_split:
+			idx = i
+			new_face = face.duplicate()
+			var mid_point: Vector2 = (face.v1 + face.v2) / 2
+			face.v2 = mid_point
+			new_face.v1 = mid_point
+			var mesh: Node3D = await new_face.initialize_mesh()
+			node.get_parent().get_parent().get_node("Faces").add_child(mesh)
+	if not new_face:
+		return
+	faces.insert(idx+1, weakref(new_face))
+	_update_vertices()
+	initialize_mesh()
+	for face_ref: WeakRef in faces:
+		var face: Face = face_ref.get_ref()
+		if face.sister:
+			face.sister.get_ref().initialize_mesh()
+			face.sister.get_ref().update_horizontal_fit()
+		face.initialize_mesh()
+		face.update_horizontal_fit()
+	return new_face
+
+
+
+func get_vertices() -> Array:
+	# Collect all vertices from the sector's faces
+	var vertex_pairs := []
+	for face_ref: WeakRef in faces:
+		var face: Face = face_ref.get_ref()
+		vertex_pairs.append({
+			"start": Vector2(face.v1.x, face.v1.y ),
+			"end": Vector2(face.v2.x, face.v2.y )
+		})
+	
+	
+	# Sort vertices to form a connected polygon
+	var ordered_vertices := []
+	if len(vertex_pairs) > 0:
+		ordered_vertices.append(vertex_pairs[0].start)
+		ordered_vertices.append(vertex_pairs[0].end)
+		vertex_pairs.pop_front()
+		
+		while len(vertex_pairs) > 0:
+			var last_vertex: Vector2 = ordered_vertices[len(ordered_vertices) - 1]
+			var foundNext := false
+			
+			for i in range(len(vertex_pairs)):
+				var pair: Dictionary = vertex_pairs[i]
+				
+				# If last_vertex connects to start of pair
+				if (approx_equal(last_vertex.x, pair.start.x) && approx_equal(last_vertex.y, pair.start.y)):
+					ordered_vertices.append(pair.end)
+					vertex_pairs.pop_at(i)
+					foundNext = true
+					break
+				# If last_vertex connects to end of pair
+				elif (approx_equal(last_vertex.x, pair.end.x) && approx_equal(last_vertex.y, pair.end.y)):
+					ordered_vertices.append(pair.start)
+					vertex_pairs.pop_at(i)
+					foundNext = true
+					break
+			
+			if not foundNext:
+				break
+	return ordered_vertices.slice(0,-1)
+
+
+func is_convex() -> bool:
+	var ordered_vertices := get_vertices()
+	 # Get the number of vertices
+	var n: int = len(ordered_vertices)
+	
+	# If there are less than 3 vertices, we cannot form a polygon
+	if n < 3:
+		return false
+	
+	var orientation: float = cross_sign(ordered_vertices[0], ordered_vertices[1], ordered_vertices[2])
+	for i in range(1, n):
+		# For each triplet of consecutive points
+		var p1: Vector2 = ordered_vertices[i % n]
+		var p2: Vector2 = ordered_vertices[(i + 1) % n]
+		var p3: Vector2 = ordered_vertices[(i + 2) % n]
+		
+		var new_orientation: float = cross_sign(p1, p2, p3)
+		# If orientation changes, the polygon is concave
+		if sign(orientation) * sign(new_orientation) < 0:
+			return false
+	
+	return true
+
+
+# Check if two points are approximately equal
+func approx_equal(a: float, b: float, epsilon: float = 0.001) -> bool:
+	return abs(a - b) < epsilon
+
+
+func cross_sign(p1: Vector2, p2: Vector2, p3: Vector2) -> float:
+	# Calculate cross product component
+	return (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)
 
 
 func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, is_ceiling: bool, texture_shift_x: int, texture_shift_y: int, is_platform: bool) -> SectorMesh3D:

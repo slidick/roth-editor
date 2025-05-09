@@ -12,6 +12,7 @@ func _ready() -> void:
 	Roth.map_loading_completely_finished.connect(_on_map_completely_loaded)
 	tree_root = %MapsTree.create_item()
 	%MapsTree.set_column_title(0, "Maps")
+	%MapContainer.hide()
 
 
 func test_map(full: bool) -> void:
@@ -28,7 +29,9 @@ func test_map(full: bool) -> void:
 		player_position.y -= 1.2
 		player_position *= Roth.SCALE_3D_WORLD
 		var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
-		var buffer: PackedByteArray = map.compile(player_position, player_rotation)
+		var buffer: PackedByteArray = await map.compile(player_position, player_rotation)
+		if buffer.is_empty():
+			return
 		Roth.test_run_map(buffer, map_info, full)
 	elif len(shown_items) == 0:
 		pass
@@ -86,6 +89,7 @@ func load_map(map_info: Dictionary) -> void:
 	map_node.visible = false
 	map_node.process_mode = PROCESS_MODE_DISABLED
 	%Maps.add_child(map_node)
+	Roth.get_map(map_info).node = map_node
 	
 	var tree_child: TreeItem = tree_root.create_child()
 	tree_child.set_text(0, map_info.name)
@@ -207,7 +211,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 					if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
 						error = "Name in use."
 				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
-				var buffer: PackedByteArray = map.compile()
+				var buffer: PackedByteArray = await map.compile()
 				Roth.save_custom(buffer, results[1], map.map_info.das, true)
 				Roth.loaded_maps.erase(map.map_info.name)
 				map.map_info.name = results[1].to_upper()
@@ -218,7 +222,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				Roth.load_roth_settings()
 			else:
 				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
-				var buffer: PackedByteArray = map.compile()
+				var buffer: PackedByteArray = await map.compile()
 				Roth.save_custom(buffer, map.map_info.name, map.map_info.das)
 		1:
 			var selected: Array = []

@@ -35,6 +35,11 @@ var selected_face: Variant = null
 var holding_mouse: bool = false
 var snap: float = 0.1
 var timer: Timer
+var start_box_draw: bool = false 
+var start_box_position := Vector2.ZERO
+var start_sector_split: bool = false
+var start_sector_split_vertex: VertexNode
+var last_allow_move: bool = false
 
 @onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
@@ -93,6 +98,25 @@ func _input(event: InputEvent) -> void:
 			%Camera2D.position.x -= event.relative.x * DRAG_SENSITIVITY / %Camera2D.zoom.x
 			%Camera2D.position.y -= event.relative.y * DRAG_SENSITIVITY / %Camera2D.zoom.x
 	
+	if start_box_draw:
+		if event is InputEventMouseMotion:
+			queue_redraw()
+		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+			start_box_draw = false
+			start_box_position = Vector2.ZERO
+			queue_redraw()
+	
+	if start_sector_split:
+		if event is InputEventMouseMotion:
+			queue_redraw()
+		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+			start_sector_split = false
+			queue_redraw()
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+			start_sector_split = false
+			check_for_split()
+			queue_redraw()
+	
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
@@ -121,6 +145,41 @@ func _input(event: InputEvent) -> void:
 						holding_mouse = true
 					else:
 						holding_mouse = false
+						
+				elif %BoxCheckBox.button_pressed == true and not event.shift_pressed:
+					if event.pressed:
+						start_box_draw = true
+						start_box_position = (get_global_mouse_position() + global_position).snappedf(snap)
+					else:
+						if start_box_draw == false:
+							return
+						if start_box_position == (get_global_mouse_position() + global_position).snappedf(snap):
+							start_box_draw = false
+							start_box_position = Vector2.ZERO
+							queue_redraw()
+							return
+						var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
+						start_box_draw = false
+						start_box_position = Vector2.ZERO
+						queue_redraw()
+						add_vertices(false)
+						
+						for sector: Sector in map.sectors:
+							for face_ref: WeakRef in sector.faces:
+								var face: Face = face_ref.get_ref()
+								for new_face_ref: WeakRef in new_sector.faces:
+									var new_face: Face = new_face_ref.get_ref()
+									if face.sister and face.sister.get_ref() == new_face:
+										pass
+									elif new_face.v2 == face.v1 and new_face.v1 == face.v2:
+										print("Sister Merge")
+										face.sister = weakref(new_face)
+										new_face.sister = weakref(face)
+										face.initialize_mesh()
+										new_face.initialize_mesh()
+										add_vertices(false)
+										queue_redraw()
+				
 			MOUSE_BUTTON_MIDDLE:
 				if event.pressed:
 					mouse_drag_enabled = true
@@ -146,7 +205,22 @@ func _draw() -> void:
 	draw_grid()
 	draw_sectors()
 	update_camera_zoom()
+	draw_box()
+	draw_sector_split()
 
+func draw_box() -> void:
+	if not start_box_draw:
+		return
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
+	var size: Vector2 = current_mouse - start_box_position
+	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, line_width, true)
+
+func draw_sector_split() -> void:
+	if not start_sector_split:
+		return
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
+	draw_line(start_sector_split_vertex.coordinate / Roth.SCALE_2D_WORLD, current_mouse, Color.GHOST_WHITE, line_width, true)
+	
 
 func setup(p_map: Map) -> void:
 	map = p_map
@@ -157,6 +231,7 @@ func setup(p_map: Map) -> void:
 	_on_sector_check_box_toggled(%SectorCheckBox.button_pressed)
 	_on_object_check_box_toggled(%ObjectCheckBox.button_pressed)
 	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
+	_on_vertex_check_box_toggled(%VertexCheckBox.button_pressed)
 	queue_redraw()
 
 
@@ -177,6 +252,8 @@ func close_map(map_info: Dictionary) -> void:
 		for child: Node2D in %Objects.get_children():
 			child.queue_free()
 		for child: Node2D in %SFX.get_children():
+			child.queue_free()
+		for child: Node2D in %Vertices.get_children():
 			child.queue_free()
 
 
@@ -553,3 +630,127 @@ func _on_snap_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_snap_edit_value_changed(value: float) -> void:
 	snap = value / Roth.SCALE_2D_WORLD
+
+
+func _on_vertex_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		add_vertices(true)
+	else:
+		remove_vertices()
+
+
+func add_vertices(allow_move: bool) -> void:
+	remove_vertices()
+	last_allow_move = allow_move
+	var vertices := {}
+	var split_vertices := {}
+	for sector: Sector in map.sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			if face.v1 not in vertices:
+				vertices[face.v1] = {"faces": [face], "sectors": []}
+			else:
+				if face not in vertices[face.v1].faces:
+					vertices[face.v1].faces.append(face)
+			if sector not in vertices[face.v1].sectors:
+				vertices[face.v1].sectors.append(sector)
+				
+			if face.v2 not in vertices:
+				vertices[face.v2] = { "faces": [face], "sectors": []}
+			else:
+				if face not in vertices[face.v2].faces:
+					vertices[face.v2].faces.append(face)
+			if sector not in vertices[face.v2].sectors:
+				vertices[face.v2].sectors.append(sector)
+			
+			var split_vertex := (face.v1 + face.v2) / 2
+			if split_vertex not in split_vertices:
+				split_vertices[split_vertex] = {"faces": [face], "sectors": []}
+			else:
+				if face not in split_vertices[split_vertex].faces:
+					split_vertices[split_vertex].faces.append(face)
+			if sector not in split_vertices[split_vertex].sectors:
+				split_vertices[split_vertex].sectors.append(sector)
+	
+	for vertex: Vector2 in split_vertices:
+		var vertex_node := VertexNode.new(vertex, split_vertices[vertex], allow_move, true)
+		#vertex_node.position_updated.connect(queue_redraw)
+		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+		%Vertices.add_child(vertex_node)
+	for vertex: Vector2 in vertices:
+		var vertex_node := VertexNode.new(vertex, vertices[vertex], allow_move)
+		vertex_node.position_updated.connect(_on_vertex_position_updated)
+		vertex_node.position_finalized.connect(_on_vertex_position_finalized)
+		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+		vertex_node.start_sector_split.connect(_on_sector_split)
+		%Vertices.add_child(vertex_node)
+
+
+
+
+func remove_vertices() -> void:
+	for child: Node in %Vertices.get_children():
+		child.queue_free()
+
+func _on_vertex_position_updated() -> void:
+	queue_redraw()
+	for child: Node in %Vertices.get_children():
+		if child.split_vertex:
+			child.redraw_split_vertex()
+
+
+func _on_vertex_position_finalized(vertex: VertexNode) -> void:
+	#var delete_vertex: bool = false
+	for face: Face in vertex.faces:
+		if face.face_length == 0:
+			print("Face deletion")
+			face.sector.delete_face(face)
+			add_vertices(true)
+			return
+	
+	for sector: Sector in map.sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			for vertex_face: Face in vertex.faces:
+				if face.sister and face.sister.get_ref() == vertex_face:
+					pass
+				elif vertex_face.v2 == face.v1 and vertex_face.v1 == face.v2:
+					print("Sister Merge")
+					face.sister = weakref(vertex_face)
+					vertex_face.sister = weakref(face)
+					face.initialize_mesh()
+					vertex_face.initialize_mesh()
+					add_vertices(true)
+					queue_redraw()
+					return
+
+
+
+func _on_vertex_deleted() -> void:
+	add_vertices(last_allow_move)
+	queue_redraw()
+
+
+func _on_box_check_box_toggled(_toggled_on: bool) -> void:
+	if _toggled_on:
+		add_vertices(false)
+	else:
+		remove_vertices()
+
+
+func _on_sector_split(starting_vertex_node: VertexNode) -> void:
+	start_sector_split = true
+	start_sector_split_vertex = starting_vertex_node
+
+func check_for_split() -> void:
+	for child: VertexNode in %Vertices.get_children():
+		if not child.split_vertex:
+			if child.mouse_over:
+				for face: Face in start_sector_split_vertex.faces:
+					if face in child.faces:
+						return
+				for sector: Sector in start_sector_split_vertex.sectors:
+					if sector in child.sectors:
+						map.split_sector(sector, start_sector_split_vertex, child)
+						queue_redraw()
+						add_vertices(last_allow_move)

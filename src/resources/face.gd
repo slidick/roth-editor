@@ -42,7 +42,11 @@ var sector: Sector
 var sister: WeakRef
 var v1: Vector2
 var v2: Vector2
-var face_length: float
+var face_length: float :
+	set(value):
+		pass
+	get():
+		return (v2-v1).length()
 
 var texture_data: Dictionary
 
@@ -78,26 +82,65 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
-func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_vertices: Array, p_sectors: Array, p_texture_mappings: Array) -> void:
+func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_vertices: Array = [], p_sectors: Array = [], p_texture_mappings: Array = []) -> void:
 	data = p_data
 	index = p_index
 	map_info = p_map_info
 	
-	sector = p_sectors[data.sectorIndex]
-	v1 = Vector2(-p_vertices[data.vertexIndex01].x, p_vertices[data.vertexIndex01].y)
-	v2 = Vector2(-p_vertices[data.vertexIndex02].x, p_vertices[data.vertexIndex02].y)
-	face_length = (v2-v1).length()
+	if not p_sectors.is_empty():
+		sector = p_sectors[data.sectorIndex]
+	if not p_vertices.is_empty():
+		v1 = Vector2(-p_vertices[data.vertexIndex01].x, p_vertices[data.vertexIndex01].y)
+		v2 = Vector2(-p_vertices[data.vertexIndex02].x, p_vertices[data.vertexIndex02].y)
 	
 	data.erase("vertexIndex01")
 	data.erase("vertexIndex02")
 	
-	texture_data = p_texture_mappings[data.textureMappingIndex].duplicate(true)
+	if not p_texture_mappings.is_empty():
+		texture_data = p_texture_mappings[data.textureMappingIndex].duplicate(true)
 	data.erase("textureMappingIndex")
 
+
+func duplicate() -> Face:
+	var new_face := Face.new(data.duplicate(true), Roth.get_map(map_info).get_next_face_index(), map_info)
+	new_face.v1 = Vector2(v1)
+	new_face.v2 = Vector2(v2)
+	new_face.sector = sector
+	new_face.texture_data = texture_data.duplicate(true)
+	return new_face
+
+static func create_new_face(p_map_info: Dictionary, p_sector: Sector) -> Face:
+	var initial_data := {
+		"addCollision": 0,
+	}
+	var new_face := Face.new(initial_data, Roth.get_map(p_map_info).get_next_face_index(), p_map_info)
+	#new_face.v1 = Vector2(v1)
+	#new_face.v2 = Vector2(v2)
+	new_face.sector = p_sector
+	var initial_texture_data := {
+		"unk0x00": 16,
+		"type": 0,
+		"midTextureIndex": 3,
+		"upperTextureIndex": 65535,
+		"lowerTextureIndex": 65535,
+		"unk0x08": 0,
+	}
+	new_face.texture_data = initial_texture_data
+	return new_face
 
 func update_sister_face(faces_array: Array) -> void:
 	if "sisterFaceIndex" in data:
 		sister = weakref(faces_array[data.sisterFaceIndex])
+
+func update_horizontal_fit() -> void:
+	var value := int(ceil(face_length))
+	texture_data.unk0x00 = int(value) & 255
+	texture_data.type = (int(value) >> 8) | (texture_data.type & (1<<7))
+
+
+func delete() -> void:
+	node.queue_free()
+	sector = null
 
 
 func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: float, mid: bool = false) -> FaceMesh3D:

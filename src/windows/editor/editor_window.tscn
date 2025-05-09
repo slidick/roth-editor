@@ -80,7 +80,6 @@ text = "No map loaded."
 
 [node name="MapContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer" index="1"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -145,16 +144,28 @@ layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
 text = "SFX"
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="5"]
-custom_minimum_size = Vector2(0, 100)
+[node name="VertexCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_kytel")
+text = "Vertex"
+
+[node name="BoxCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="6"]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_kytel")
+text = "Box"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="7"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "Options"
 vertical_alignment = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="6"]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="8"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="7"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="9"]
 layout_mode = 2
 
 [node name="GridCheckBox" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer" index="0"]
@@ -173,7 +184,7 @@ rounded = true
 update_on_text_changed = true
 custom_arrow_step = 8.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="8"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="10"]
 layout_mode = 2
 
 [node name="SnapCheckBox" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2" index="0"]
@@ -241,7 +252,7 @@ unique_name_in_owner = true
 handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(412, 308)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="3DView" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport" index="0"]
 unique_name_in_owner = true
@@ -321,8 +332,10 @@ stretch = true
 unique_name_in_owner = true
 handle_input_locally = false
 physics_object_picking = true
+physics_object_picking_sort = true
+physics_object_picking_first_only = true
 size = Vector2i(1182, 627)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="0"]
 
@@ -353,6 +366,11 @@ unique_name_in_owner = true
 
 [node name="SFX" type="Node2D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="1"]
 unique_name_in_owner = true
+
+[node name="Vertices" type="Node2D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="2"]
+unique_name_in_owner = true
+
+[node name="Polygon2D" type="Polygon2D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/Vertices" index="0"]
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer" index="1"]
 layout_mode = 2
@@ -1638,6 +1656,8 @@ panel_style_override = ExtResource("4_v1i8b")
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/SectorCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_sector_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/ObjectCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_object_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/SFXCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_sfx_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/VertexCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_vertex_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/BoxCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_box_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer/GridCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_grid_check_box_toggled"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer/GridEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_grid_edit_value_changed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2/SnapCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_check_box_toggled"]

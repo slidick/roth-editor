@@ -951,7 +951,7 @@ func _on_unk_0x_00_type_edit_value_changed(value: float) -> void:
 
 
 func _on_auto_button_pressed() -> void:
-	_on_unk_0x_00_type_edit_value_changed(int(selected_node.get_parent().ref.face_length))
+	_on_unk_0x_00_type_edit_value_changed(int(ceil(selected_node.get_parent().ref.face_length)))
 
 
 func _on_roof_height_edit_value_changed(value: float) -> void:
@@ -1310,7 +1310,7 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 				var sister: Face = face.sister.get_ref()
 				if sister.texture_data.midTextureIndex == Roth.get_map(sister.map_info).metadata.skyTexture:
 					sister.texture_data.midTextureIndex = 2
-				var value := int(sister.face_length)
+				var value := int(ceil(sister.face_length))
 				sister.texture_data.unk0x00 = int(value) & 255
 				sister.texture_data.type = (int(value) >> 8) | (sister.texture_data.type & (1<<7))
 	else:
@@ -1320,11 +1320,13 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_select_sister_button_pressed() -> void:
-	select(selected_node.get_parent().ref.sister.get_ref().node, true)
+	if selected_node:
+		select(selected_node.get_parent().ref.sister.get_ref().node, true)
 
 
 func _on_select_sector_button_pressed() -> void:
-	select(selected_node.get_parent().ref.sector.node, true)
+	if selected_node:
+		select(selected_node.get_parent().ref.sector.node, true)
 
 
 func _on_select_faces_button_pressed() -> void:
