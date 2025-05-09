@@ -1,3 +1,21 @@
+**0.6.0**
+### New Features
+  - Vertex / Sector Editing
+    - Move, delete, and merge vertices
+    - Split faces
+    - Draw new rectangular sectors
+    - Split sectors
+
+*Notes*
+  - Features still unimplemented:
+    - Vertex unmerging
+    - Sector merging / deleting double-sided faces
+    - Undo / redo
+    - More robust saving
+  - Still for experimentation only. Needs more testing.
+
+---
+
 **0.5.0**
 ### New Features
   - 2D editing view
