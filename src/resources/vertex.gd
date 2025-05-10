@@ -97,7 +97,7 @@ func _input(event: InputEvent) -> void:
 								update_meshes()
 								position_finalized.emit(self)
 			else:
-				if mouse_over:
+				if mouse_over and event.pressed:
 					start_sector_split.emit(self)
 				
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
