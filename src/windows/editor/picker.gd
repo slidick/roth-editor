@@ -12,6 +12,7 @@ var has_focus: bool = false :
 			if moused_over_node and selected_node != moused_over_node:
 				moused_over_node.get_parent().material_overlay = null
 var picking_enabled: bool = true
+var copied_texture_data: Dictionary = {}
 
 func _ready() -> void:
 	highlight_material = StandardMaterial3D.new()
@@ -96,6 +97,17 @@ func _process(_delta: float) -> void:
 			moused_over_node = result.collider
 			if moused_over_node != selected_node:
 				moused_over_node.get_parent().material_overlay = highlight_material
+		
+		if Input.is_action_just_pressed("copy_texture"):
+			if moused_over_node:
+				copied_texture_data = moused_over_node.get_parent().ref.texture_data.duplicate()
+		
+		if Input.is_action_just_pressed("paste_texture"):
+			if moused_over_node:
+				moused_over_node.get_parent().ref.texture_data.midTextureIndex = copied_texture_data.midTextureIndex
+				moused_over_node.get_parent().ref.texture_data.upperTextureIndex = copied_texture_data.upperTextureIndex
+				moused_over_node.get_parent().ref.texture_data.lowerTextureIndex = copied_texture_data.lowerTextureIndex
+				moused_over_node.get_parent().ref.initialize_mesh()
 		
 		if Input.is_action_just_pressed("select_face"):
 			if selected_node and selected_node != moused_over_node:
@@ -537,6 +549,8 @@ func _reset_edit_face() -> void:
 	%Flag7CheckBox.set_pressed_no_signal(false)
 	%Flag8CheckBox.set_pressed_no_signal(false)
 	%SelectSisterButton.hide()
+	%SisterEdit.text = ""
+	#%EditSisterContainer.hide()
 	%EditFaceContainer.show()
 	
 
@@ -642,6 +656,8 @@ func load_edit_face(face: Face.FaceMesh3D) -> void:
 	
 	if face.ref.sister:
 		%SelectSisterButton.show()
+		%SisterEdit.text = "%d" % face.ref.sister.get_ref().index
+		#%EditSisterContainer.show()
 
 
 
@@ -1320,7 +1336,7 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_select_sister_button_pressed() -> void:
-	if selected_node:
+	if selected_node and selected_node.get_parent().ref.sister:
 		select(selected_node.get_parent().ref.sister.get_ref().node, true)
 
 
@@ -1336,3 +1352,15 @@ func _on_select_faces_button_pressed() -> void:
 func _on_select_faces_popup_menu_index_pressed(index: int) -> void:
 	var face_node: Node3D = %SelectFacesPopupMenu.get_item_metadata(index)
 	select(face_node, true)
+
+
+func _on_sister_edit_text_changed(new_text: String) -> void:
+	var new_sister: Variant = owner.get_face(int(new_text), "Face", selected_node.get_parent().ref.map_info)
+	selected_node.get_parent().ref.sister = weakref(new_sister)
+
+
+func _on_flip_face_button_pressed() -> void:
+	var v1:Vector2 = Vector2(selected_node.get_parent().ref.v1)
+	selected_node.get_parent().ref.v1 = Vector2(selected_node.get_parent().ref.v2)
+	selected_node.get_parent().ref.v2 = v1
+	_redraw_selected_node()

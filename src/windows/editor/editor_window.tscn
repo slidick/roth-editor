@@ -354,7 +354,7 @@ offset_right = 8000.0
 offset_bottom = 8000.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
 color = Color(0.199622, 0.246742, 0.296914, 1)
 
 [node name="Map2D" type="Node2D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="2"]
@@ -643,53 +643,98 @@ layout_mode = 2
 layout_mode = 2
 text = "Face Flags"
 
-[node name="StopWalkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="18"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="18"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StopWalkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Stop Walk"
 
-[node name="StopAlenCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="19"]
+[node name="StopAlenCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Stop Alen"
 
-[node name="Flag3CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="20"]
+[node name="Flag3CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer" index="2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 3"
 
-[node name="RoomBlkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="21"]
+[node name="RoomBlkCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer" index="3"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "RoomBlk"
 
-[node name="Flag5CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="22"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flag5CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 5"
 
-[node name="Flag6CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="23"]
+[node name="Flag6CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 6"
 
-[node name="Flag7CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="24"]
+[node name="Flag7CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2" index="2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 7"
 
-[node name="Flag8CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="25"]
+[node name="Flag8CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2" index="3"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Flag 8"
+
+[node name="HSeparator4" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="19"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="20"]
+layout_mode = 2
+text = "Advanced"
+
+[node name="EditSisterContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="21"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/EditSisterContainer" index="0"]
+layout_mode = 2
+text = "Change Sister:"
+
+[node name="SisterEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/EditSisterContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SelectNewSisterButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/EditSisterContainer" index="2"]
+visible = false
+layout_mode = 2
+text = "Select"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer" index="22"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer5" index="0"]
+layout_mode = 2
+text = "Flip Face:"
+
+[node name="FlipFaceButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer5" index="1"]
+layout_mode = 2
+text = "Flip"
 
 [node name="EditSectorContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit" index="1"]
 unique_name_in_owner = true
@@ -1690,14 +1735,16 @@ panel_style_override = ExtResource("4_v1i8b")
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer2/TypeEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_type_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3/Unk0x00+TypeEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_unk_0x_00_type_edit_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer3/AutoButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_auto_button_pressed"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/StopWalkCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_stop_walk_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/StopAlenCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_stop_alen_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag3CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_3_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/RoomBlkCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_room_blk_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag5CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_5_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag6CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_6_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag7CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_7_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/Flag8CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_8_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer/StopWalkCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_stop_walk_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer/StopAlenCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_stop_alen_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer/Flag3CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_3_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer/RoomBlkCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_room_blk_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2/Flag5CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_5_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2/Flag6CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_6_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2/Flag7CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_7_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer4/VBoxContainer2/Flag8CheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flag_8_check_box_toggled"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/EditSisterContainer/SisterEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_sister_edit_text_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer5/FlipFaceButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_flip_face_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_select_faces_button_pressed"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton/SelectFacesPopupMenu" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_select_faces_popup_menu_index_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RoofHeightEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_roof_height_edit_value_changed"]

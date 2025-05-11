@@ -296,6 +296,35 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 					if index == sfx.ref.index:
 						%Picker.select(sfx)
 
+func get_face(index: int, type: String, map_info: Dictionary) -> Variant:
+	var map_node: Node3D
+	
+	for i in range(tree_root.get_child_count()):
+		if tree_root.get_child(i).get_text(0) == map_info.name:
+			map_node = tree_root.get_child(i).get_metadata(0)
+	
+	if not map_node:
+		return null
+	
+	match type:
+		"Sector":
+			for sector: Node3D in map_node.get_node("Sectors").get_children():
+				if index == sector.ref.index:
+					return sector.ref
+		"Face":
+			for face: Node3D in map_node.get_node("Faces").get_children():
+				if index == face.ref.index:
+					return face.ref
+		"Object":
+			for object: Node3D in map_node.get_node("Objects").get_children():
+				if index == object.ref.index:
+					return object.ref
+		"SFX":
+			for sfx: Node3D in map_node.get_node("SFX").get_children():
+				if index == sfx.ref.index:
+					return sfx.ref
+	return null
+
 
 func _on_search_result_activated(search_result: Dictionary) -> void:
 	await Roth.load_maps([search_result.map_info])

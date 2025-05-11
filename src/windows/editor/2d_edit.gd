@@ -40,6 +40,8 @@ var start_box_position := Vector2.ZERO
 var start_sector_split: bool = false
 var start_sector_split_vertex: VertexNode
 var last_allow_move: bool = false
+var skip_sector_hover: int = 0
+var skip_sector_hover_prev: int = 0
 
 @onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
@@ -84,6 +86,10 @@ func _input(event: InputEvent) -> void:
 			queue_redraw()
 		else:
 			update_camera_zoom()
+	
+	if event.is_action_pressed("next_sector_hover"):
+		skip_sector_hover += 1
+		check_for_hover()
 	
 	if %SectorCheckBox.button_pressed:
 		if event is InputEventMouseMotion:
@@ -143,6 +149,8 @@ func _input(event: InputEvent) -> void:
 						queue_redraw()
 					if event.pressed:
 						holding_mouse = true
+						skip_sector_hover = 0
+						skip_sector_hover_prev = 0
 					else:
 						holding_mouse = false
 						
@@ -365,6 +373,8 @@ func draw_sectors() -> void:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			if face.sister:
+				if not face.sister.get_ref():
+					continue
 				if face.sector.data.floorHeight != face.sister.get_ref().sector.data.floorHeight:
 					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.BLUE, line_width, true)
 					
@@ -493,11 +503,17 @@ func is_mouse_inside(sector: Sector) -> bool:
 func check_for_hover() -> void:
 	if not map:
 		return
-	if hovered_sector and is_mouse_inside(hovered_sector):
-		check_for_face_hover(hovered_sector)
-		return
+	if skip_sector_hover == skip_sector_hover_prev:
+		if hovered_sector and is_mouse_inside(hovered_sector):
+			check_for_face_hover(hovered_sector)
+			return
+	skip_sector_hover_prev = skip_sector_hover
+	var sectors_to_skip: int = skip_sector_hover
 	for sector: Sector in map.sectors:
 		if is_mouse_inside(sector):
+			if sectors_to_skip > 0:
+				sectors_to_skip -= 1
+				continue
 			check_for_face_hover(sector)
 			if hovered_sector != sector:
 				hovered_sector = sector
@@ -506,6 +522,10 @@ func check_for_hover() -> void:
 					owner.select_face(selected_sector.index, "Sector")
 				queue_redraw()
 			return
+	if skip_sector_hover > 0:
+		skip_sector_hover = 0
+		check_for_hover()
+		return
 	hovered_sector = null
 	hovered_face = null
 	queue_redraw()
