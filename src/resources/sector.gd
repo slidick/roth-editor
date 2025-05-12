@@ -240,7 +240,9 @@ func is_convex() -> bool:
 	if n < 3:
 		return false
 	
+	
 	var orientation: float = cross_sign(ordered_vertices[0], ordered_vertices[1], ordered_vertices[2])
+	
 	for i in range(1, n):
 		# For each triplet of consecutive points
 		var p1: Vector2 = ordered_vertices[i % n]
@@ -251,6 +253,9 @@ func is_convex() -> bool:
 		# If orientation changes, the polygon is concave
 		if sign(orientation) * sign(new_orientation) < 0:
 			return false
+		
+		if orientation == 0.0:
+			orientation = new_orientation
 	
 	return true
 
