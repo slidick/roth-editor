@@ -12,7 +12,8 @@ var has_focus: bool = false :
 			if moused_over_node and selected_node != moused_over_node:
 				moused_over_node.get_parent().material_overlay = null
 var picking_enabled: bool = true
-var copied_texture_data: Dictionary = {}
+var copied_face_texture_data: Dictionary = {}
+var copied_sector_texture_data: Dictionary = {}
 
 func _ready() -> void:
 	highlight_material = StandardMaterial3D.new()
@@ -100,14 +101,23 @@ func _process(_delta: float) -> void:
 		
 		if Input.is_action_just_pressed("copy_texture"):
 			if moused_over_node:
-				copied_texture_data = moused_over_node.get_parent().ref.texture_data.duplicate()
+				if moused_over_node.get_parent().ref is Face:
+					copied_face_texture_data = moused_over_node.get_parent().ref.texture_data.duplicate()
+				elif moused_over_node.get_parent().ref is Sector:
+					copied_sector_texture_data = moused_over_node.get_parent().ref.data.duplicate()
 		
 		if Input.is_action_just_pressed("paste_texture"):
 			if moused_over_node:
-				moused_over_node.get_parent().ref.texture_data.midTextureIndex = copied_texture_data.midTextureIndex
-				moused_over_node.get_parent().ref.texture_data.upperTextureIndex = copied_texture_data.upperTextureIndex
-				moused_over_node.get_parent().ref.texture_data.lowerTextureIndex = copied_texture_data.lowerTextureIndex
-				moused_over_node.get_parent().ref.initialize_mesh()
+				if moused_over_node.get_parent().ref is Face and copied_face_texture_data:
+					moused_over_node.get_parent().ref.texture_data.midTextureIndex = copied_face_texture_data.midTextureIndex
+					moused_over_node.get_parent().ref.texture_data.upperTextureIndex = copied_face_texture_data.upperTextureIndex
+					moused_over_node.get_parent().ref.texture_data.lowerTextureIndex = copied_face_texture_data.lowerTextureIndex
+					moused_over_node.get_parent().ref.initialize_mesh()
+				elif moused_over_node.get_parent().ref is Sector and copied_sector_texture_data:
+					moused_over_node.get_parent().ref.data.ceilingTextureIndex = copied_sector_texture_data.ceilingTextureIndex
+					moused_over_node.get_parent().ref.data.floorTextureIndex = copied_sector_texture_data.floorTextureIndex
+					moused_over_node.get_parent().ref.initialize_mesh()
+				
 		
 		if Input.is_action_just_pressed("select_face"):
 			if selected_node and selected_node != moused_over_node:
