@@ -42,6 +42,8 @@ var start_sector_split_vertex: VertexNode
 var last_allow_move: bool = false
 var skip_sector_hover: int = 0
 var skip_sector_hover_prev: int = 0
+var start_vertex_select: bool = false 
+var start_vertex_select_position := Vector2.ZERO
 
 @onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
@@ -110,6 +112,14 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 			start_box_draw = false
 			start_box_position = Vector2.ZERO
+			queue_redraw()
+	
+	if start_vertex_select:
+		if event is InputEventMouseMotion:
+			queue_redraw()
+		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+			start_vertex_select = false
+			start_vertex_select_position = Vector2.ZERO
 			queue_redraw()
 	
 	if start_sector_split:
@@ -187,6 +197,46 @@ func _input(event: InputEvent) -> void:
 										new_face.initialize_mesh()
 										add_vertices(false)
 										queue_redraw()
+				elif %VertexCheckBox.button_pressed:
+					if event.pressed:
+						for vertex_node: VertexNode in %Vertices.get_children():
+							if vertex_node.mouse_over:
+								if event.shift_pressed:
+									vertex_node.toggle_selected()
+								return
+						
+						if not start_sector_split:
+							start_vertex_select = true
+							start_vertex_select_position = (get_global_mouse_position() + global_position).snappedf(snap)
+					else:
+						if start_vertex_select == false:
+							for vertex_node: VertexNode in %Vertices.get_children():
+								if vertex_node.mouse_over:
+									return
+							for vertex_node: VertexNode in %Vertices.get_children():
+								if not vertex_node.split_vertex:
+									vertex_node.deselect()
+							return
+						
+						var starting_position := start_vertex_select_position
+						var ending_position := (get_global_mouse_position() + global_position).snappedf(snap)
+						var v2 := Vector2(ending_position.x, starting_position.y)
+						var v3 := Vector2(starting_position.x, ending_position.y)
+						
+						for vertex_node: VertexNode in  %Vertices.get_children():
+							if not vertex_node.split_vertex and Geometry2D.is_point_in_polygon(vertex_node.position, [
+								starting_position,
+								v2,
+								ending_position,
+								v3
+							]):
+								vertex_node.select()
+							elif not vertex_node.split_vertex:
+								if not event.shift_pressed:
+									vertex_node.deselect()
+						start_vertex_select = false
+						start_vertex_select_position = Vector2.ZERO
+						queue_redraw()
 				
 			MOUSE_BUTTON_MIDDLE:
 				if event.pressed:
@@ -214,6 +264,7 @@ func _draw() -> void:
 	draw_sectors()
 	update_camera_zoom()
 	draw_box()
+	draw_vertex_select()
 	draw_sector_split()
 
 func draw_box() -> void:
@@ -222,6 +273,15 @@ func draw_box() -> void:
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
 	var size: Vector2 = current_mouse - start_box_position
 	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, line_width, true)
+
+func draw_vertex_select() -> void:
+	if not start_vertex_select:
+		return
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
+	draw_dashed_line(start_vertex_select_position, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(start_vertex_select_position, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(current_mouse, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(current_mouse, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
 
 func draw_sector_split() -> void:
 	if not start_sector_split:
@@ -703,6 +763,8 @@ func add_vertices(allow_move: bool) -> void:
 		vertex_node.position_finalized.connect(_on_vertex_position_finalized)
 		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 		vertex_node.start_sector_split.connect(_on_sector_split)
+		vertex_node.vertex_dragged.connect(_on_vertex_dragged)
+		vertex_node.single_vertex_selected.connect(_on_vertex_selected)
 		%Vertices.add_child(vertex_node)
 
 
@@ -720,6 +782,12 @@ func _on_vertex_position_updated() -> void:
 
 
 func _on_vertex_position_finalized(vertex: VertexNode) -> void:
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != vertex:
+			vertex_node.finalize_move()
+	
+	
+	
 	#var delete_vertex: bool = false
 	for face: Face in vertex.faces:
 		if face.face_length == 0:
@@ -751,6 +819,12 @@ func _on_vertex_deleted() -> void:
 	queue_redraw()
 
 
+func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != node_dragged:
+			vertex_node.move(relative)
+
+
 func _on_box_check_box_toggled(_toggled_on: bool) -> void:
 	if _toggled_on:
 		add_vertices(false)
@@ -774,3 +848,8 @@ func check_for_split() -> void:
 						map.split_sector(sector, start_sector_split_vertex, child)
 						queue_redraw()
 						add_vertices(last_allow_move)
+
+func _on_vertex_selected(vertex_node_selected: VertexNode) -> void:
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != vertex_node_selected and not vertex_node.split_vertex:
+			vertex_node.deselect()

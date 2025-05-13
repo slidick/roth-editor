@@ -103,7 +103,6 @@ func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 		"lighting": 128,
 		"textureMapOverride": 0,
 		"facesCount": 4,
-		"firstFaceOffset": Parser.Type.Word,
 		"ceilingTextureShiftX": 0,
 		"ceilingTextureShiftY": 0,
 		"floorTextureShiftX": 0,

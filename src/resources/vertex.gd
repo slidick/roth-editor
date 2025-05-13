@@ -5,6 +5,8 @@ signal position_updated
 signal position_finalized(vertex: VertexNode)
 signal vertex_deleted
 signal start_sector_split(vertex: VertexNode)
+signal vertex_dragged(relative: Vector2)
+signal single_vertex_selected(vertex: VertexNode)
 const DRAW_SIZE := 0.25
 
 var coordinate: Vector2
@@ -20,6 +22,8 @@ var dragging: bool = false
 var drag_started: bool = false
 var dragging_amount := Vector2.ZERO
 var allow_move: bool = false
+var is_selected: bool = false
+var face_vertex_move := []
 
 func _init(p_coordinate: Vector2, p_data: Dictionary, p_allow_move: bool, p_split_vertex: bool = false) -> void:
 	coordinate = Vector2(p_coordinate)
@@ -56,7 +60,7 @@ func _ready() -> void:
 
 func _on_mouse_entered() -> void:
 	if not split_vertex:
-		if allow_move:
+		if allow_move and not is_selected:
 			polygon.color = Color.GRAY
 	else:
 		polygon.color = Color.GREEN_YELLOW
@@ -64,7 +68,7 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	if not split_vertex:
-		if allow_move:
+		if allow_move and not is_selected:
 			polygon.color = Color.DIM_GRAY
 	else:
 		polygon.color = Color.YELLOW_GREEN
@@ -74,11 +78,11 @@ func _on_mouse_exited() -> void:
 func _input(event: InputEvent) -> void:
 	if allow_move and event is InputEventKey:
 		if drag_started and event.keycode == KEY_ESCAPE and event.pressed:
-			if dragging:
-				dragging = false
-				drag_started = false
-				position = start_drag_position
-				update_attached_faces()
+			dragging = false
+			drag_started = false
+			position = start_drag_position
+			
+			update_attached_faces()
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if not event.shift_pressed:
@@ -89,6 +93,10 @@ func _input(event: InputEvent) -> void:
 							dragging_amount = Vector2.ZERO
 							drag_started = false
 							polygon.color = Color.WHITE
+							if not is_selected:
+								is_selected = true
+								single_vertex_selected.emit(self)
+							
 					else:
 						if dragging:
 							dragging = false
@@ -114,8 +122,17 @@ func _input(event: InputEvent) -> void:
 			if drag_started == false:
 				drag_started = true
 				start_drag_position = position
+				face_vertex_move = []
+				for face: Face in faces:
+					if face.v1 == coordinate:
+						face_vertex_move.append("v1")
+					elif face.v2 == coordinate:
+						face_vertex_move.append("v2")
+						
 			var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
-			global_position = mouse.snappedf(get_parent().get_parent().snap)
+			var relative: Vector2 = global_position - mouse.snappedf(get_parent().get_parent().snap)
+			global_position -= relative
+			vertex_dragged.emit(self, relative)
 			update_attached_faces()
 
 func delete() -> void:
@@ -124,16 +141,53 @@ func delete() -> void:
 		sector.delete_vertex(self)
 	vertex_deleted.emit()
 
+func select() -> void:
+	is_selected = true
+	polygon.color = Color.WHITE
+
+func deselect() -> void:
+	is_selected = false
+	polygon.color = Color.DIM_GRAY
+
+func toggle_selected() -> void:
+	if is_selected:
+		deselect()
+	else:
+		select()
+
+
+func move(relative: Vector2) -> void:
+	if is_selected:
+		if drag_started == false:
+			drag_started = true
+			start_drag_position = position
+			face_vertex_move = []
+			for face: Face in faces:
+				if face.v1 == coordinate:
+					face_vertex_move.append("v1")
+				elif face.v2 == coordinate:
+					face_vertex_move.append("v2")
+		global_position -= relative
+		update_attached_faces()
+
+func finalize_move() -> void:
+	if is_selected:
+		drag_started = false
+		update_meshes()
 
 func update_attached_faces() -> void:
 	var new_coordinate := position * Roth.SCALE_2D_WORLD
+	var dont_update: bool = false
+	var i: int = 0
 	for face: Face in faces:
-		if face.v1 == coordinate:
+		if face.v1 == coordinate and face_vertex_move[i] == "v1":
 			face.v1 = new_coordinate
-		elif face.v2 == coordinate:
+		elif face.v2 == coordinate and face_vertex_move[i] == "v2":
 			face.v2 = new_coordinate
-	coordinate = new_coordinate
-	position_updated.emit()
+		i += 1
+	if not dont_update:
+		coordinate = Vector2(new_coordinate)
+		position_updated.emit()
 
 
 func update_meshes() -> void:
