@@ -93,6 +93,9 @@ func _input(event: InputEvent) -> void:
 		skip_sector_hover += 1
 		check_for_hover()
 	
+	if event.is_action_pressed("unmerge_vertex"):
+		unmerge_vertex()
+	
 	if %SectorCheckBox.button_pressed:
 		if event is InputEventMouseMotion:
 			if not hovered_sector:
@@ -853,3 +856,57 @@ func _on_vertex_selected(vertex_node_selected: VertexNode) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != vertex_node_selected and not vertex_node.split_vertex:
 			vertex_node.deselect()
+
+
+func unmerge_vertex() -> void:
+	var selected_vertices := []
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node.is_selected and not vertex_node.split_vertex:
+			selected_vertices.append(vertex_node.coordinate)
+			vertex_node.queue_free()
+	
+	
+	
+	for sector: Sector in map.sectors:
+		var vertices := {}
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			if face.v1 in selected_vertices:
+				if face.v1 not in vertices:
+					vertices[face.v1] = {"faces": [face], "sectors": [sector]}
+					if face.sister:
+						face.sister = null
+						face.initialize_mesh()
+						queue_redraw()
+				else:
+					if face not in vertices[face.v1].faces:
+						vertices[face.v1].faces.append(face)
+						if face.sister:
+							face.sister = null
+							face.initialize_mesh()
+							queue_redraw()
+			if face.v2 in selected_vertices:
+				if face.v2 not in vertices:
+					vertices[face.v2] = {"faces": [face], "sectors": [sector]}
+					if face.sister:
+						face.sister = null
+						face.initialize_mesh()
+						queue_redraw()
+				else:
+					if face not in vertices[face.v2].faces:
+						vertices[face.v2].faces.append(face)
+						if face.sister:
+							face.sister = null
+							face.initialize_mesh()
+							queue_redraw()
+		
+		
+		for vertex: Vector2 in vertices:
+			var vertex_node := VertexNode.new(vertex, vertices[vertex], last_allow_move)
+			vertex_node.position_updated.connect(_on_vertex_position_updated)
+			vertex_node.position_finalized.connect(_on_vertex_position_finalized)
+			vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+			vertex_node.start_sector_split.connect(_on_sector_split)
+			vertex_node.vertex_dragged.connect(_on_vertex_dragged)
+			vertex_node.single_vertex_selected.connect(_on_vertex_selected)
+			%Vertices.add_child(vertex_node)
