@@ -219,6 +219,10 @@ func split_face() -> void:
 		new_faces[1].sister = weakref(faces[0])
 		faces[1].sister = weakref(new_faces[0])
 		new_faces[0].sister = weakref(faces[1])
+		faces[0].initialize_mesh()
+		faces[1].initialize_mesh()
+		new_faces[0].initialize_mesh()
+		new_faces[1].initialize_mesh()
 	
 	vertex_deleted.emit()
 	

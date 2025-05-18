@@ -69,6 +69,7 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if not map:
 		return
+	
 	if event.is_action_pressed("map_2d_zoom_in"):
 		additional_zoom /= ZOOM_SPEED
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
@@ -95,6 +96,24 @@ func _input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed("unmerge_vertex"):
 		unmerge_vertex()
+	
+	if event.is_action_pressed("delete_selected"):
+		await get_tree().process_frame # Fixes weird double input bug somehow caused from the confirmation dialog
+		if selected_face and selected_face.sister:
+			if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
+				map.merge_sectors(selected_face)
+				hovered_face = null
+				selected_face = null
+				hovered_sector = null
+				queue_redraw()
+				%Picker.deselect()
+		elif not selected_face and selected_sector:
+			if await Dialog.confirm("Delete selected sector?", "Confirm Deletion", false):
+				selected_sector.delete_sector()
+				hovered_sector = null
+				selected_sector = null
+				queue_redraw()
+				%Picker.deselect()
 	
 	if %SectorCheckBox.button_pressed:
 		if event is InputEventMouseMotion:
@@ -210,7 +229,7 @@ func _input(event: InputEvent) -> void:
 						
 						if not start_sector_split:
 							start_vertex_select = true
-							start_vertex_select_position = (get_global_mouse_position() + global_position).snappedf(snap)
+							start_vertex_select_position = (get_global_mouse_position() + global_position)
 					else:
 						if start_vertex_select == false:
 							for vertex_node: VertexNode in %Vertices.get_children():
@@ -222,7 +241,7 @@ func _input(event: InputEvent) -> void:
 							return
 						
 						var starting_position := start_vertex_select_position
-						var ending_position := (get_global_mouse_position() + global_position).snappedf(snap)
+						var ending_position := (get_global_mouse_position() + global_position)
 						var v2 := Vector2(ending_position.x, starting_position.y)
 						var v3 := Vector2(starting_position.x, ending_position.y)
 						
@@ -280,14 +299,14 @@ func draw_box() -> void:
 func draw_vertex_select() -> void:
 	if not start_vertex_select:
 		return
-	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
 	draw_dashed_line(start_vertex_select_position, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
 	draw_dashed_line(start_vertex_select_position, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
 	draw_dashed_line(current_mouse, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
 	draw_dashed_line(current_mouse, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
 
 func draw_sector_split() -> void:
-	if not start_sector_split:
+	if not start_sector_split or not start_sector_split_vertex:
 		return
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
 	draw_line(start_sector_split_vertex.coordinate / Roth.SCALE_2D_WORLD, current_mouse, Color.GHOST_WHITE, line_width, true)

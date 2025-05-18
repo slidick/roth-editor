@@ -132,7 +132,8 @@ func delete_sector() -> void:
 			face.sister.get_ref().initialize_mesh()
 		face.delete()
 	faces.clear()
-	node.queue_free()
+	if node:
+		node.queue_free()
 	Roth.get_map(map_info).delete_sector(self)
 
 
@@ -186,6 +187,30 @@ func split_face(face_to_split: Face) -> Face:
 		face.update_horizontal_fit()
 	return new_face
 
+
+func reorder_faces() -> void:
+	var ordered_faces := []
+	var face_array := faces.duplicate()
+	
+	ordered_faces.append(face_array.pop_front())
+	
+	while len(face_array) > 0:
+		var last_face: Face = ordered_faces[len(ordered_faces) - 1].get_ref()
+		var found_next: bool = false
+		
+		for i in range(len(face_array)):
+			var face: Face = face_array[i].get_ref()
+			if face.v1 == last_face.v2:
+				ordered_faces.append(face_array.pop_at(i))
+				found_next = true
+				break
+		
+		if not found_next:
+			print("ERROR: Couldn't connect faces to form sector.")
+			return
+	
+	faces = ordered_faces
+	_update_vertices()
 
 
 func get_vertices() -> Array:

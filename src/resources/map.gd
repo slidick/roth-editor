@@ -90,6 +90,8 @@ func get_next_sector_index() -> int:
 
 
 func delete_sector(sector_to_delete: Sector) -> void:
+	if sector_to_delete.node:
+		sector_to_delete.node.queue_free()
 	sectors.erase(sector_to_delete)
 
 func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
@@ -157,7 +159,7 @@ func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 
 
 func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_node_2: VertexNode) -> void:
-	print("Splitting sector")
+	#Console.print("Splitting sector")
 	
 	var new_sector: Sector = existing_sector.duplicate()
 	sectors.append(new_sector)
@@ -171,6 +173,8 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	face_2.v2 = vertex_node_1.coordinate
 	face_1.sister = weakref(face_2)
 	face_2.sister = weakref(face_1)
+	face_1.update_horizontal_fit()
+	face_2.update_horizontal_fit()
 	
 	# Is faces in order?
 	var existing_faces := existing_sector.faces.duplicate()
@@ -206,12 +210,55 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 		face_ref.get_ref().sector = new_sector
 	
 	
-	new_sector._update_vertices()
-	existing_sector._update_vertices()
+	new_sector.reorder_faces()
+	existing_sector.reorder_faces()
 	existing_sector.initialize_mesh()
 	node.get_node("Faces").add_child(await face_1.initialize_mesh())
 	node.get_node("Faces").add_child(await face_2.initialize_mesh())
 	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+
+
+func merge_sectors(double_sided_face: Face) -> void:
+	if not double_sided_face.sister:
+		#Console.print("Not a double sided face.")
+		return
+	#Console.print("Deleting double sided face and merging sectors.")
+	
+	
+	var sector: Sector = double_sided_face.sector
+	var sister_sector: Sector = double_sided_face.sister.get_ref().sector
+	
+	var new_faces := []
+	for face_ref: WeakRef in sister_sector.faces:
+		if face_ref.get_ref() == double_sided_face.sister.get_ref():
+			face_ref.get_ref().delete()
+		elif face_ref.get_ref().sister and face_ref.get_ref().sister.get_ref().sector == sector:
+			face_ref.get_ref().delete()
+		else:
+			face_ref.get_ref().sector = sector
+			new_faces.append(weakref(face_ref.get_ref()))
+	
+	for face_ref: WeakRef in sector.faces:
+		if face_ref.get_ref() == double_sided_face:
+			face_ref.get_ref().delete()
+		elif face_ref.get_ref().sister and face_ref.get_ref().sister.get_ref().sector == null:
+			face_ref.get_ref().delete()
+		else:
+			new_faces.append(weakref(face_ref.get_ref()))
+	
+	
+	
+	delete_sector(sister_sector)
+	sector.faces = new_faces
+	sector.reorder_faces()
+	sector.initialize_mesh()
+	for face_ref: WeakRef in sector.faces:
+		var face: Face = face_ref.get_ref()
+		if face.sister:
+			face.sister.get_ref().initialize_mesh()
+			face.sister.get_ref().update_horizontal_fit()
+		face.initialize_mesh()
+		face.update_horizontal_fit()
 
 
 func compile(player_position: Variant = null, player_rotation: Variant = null) -> PackedByteArray:
