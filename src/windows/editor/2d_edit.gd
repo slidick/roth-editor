@@ -105,8 +105,9 @@ func _input(event: InputEvent) -> void:
 				hovered_face = null
 				selected_face = null
 				hovered_sector = null
+				owner.select_face(selected_sector.index, "Sector")
 				queue_redraw()
-				%Picker.deselect()
+				
 		elif not selected_face and selected_sector:
 			if await Dialog.confirm("Delete selected sector?", "Confirm Deletion", false):
 				selected_sector.delete_sector()
