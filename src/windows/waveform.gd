@@ -17,4 +17,5 @@ func _draw() -> void:
 			(size.y / 2) + (data[i].x * (size.y/2)),
 		)
 		vertices.append(v1)
-	draw_polyline(vertices, Color.WEB_GREEN, 1.0, true)
+	if not vertices.is_empty():
+		draw_polyline(vertices, Color.WEB_GREEN, 1.0, true)
