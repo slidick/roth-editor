@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=21 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://h7epeqaiukln" path="res://src/windows/texture_window.tscn" id="11_q0i2p"]
 [ext_resource type="Script" uid="uid://pdmovt0easru" path="res://src/windows/editor/edit_sfx_container.gd" id="11_yrxyp"]
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/metadata_window.tscn" id="12_kytel"]
+[ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/array_02_window.tscn" id="15_d740k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rysh3"]
 bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
@@ -106,13 +107,15 @@ select_mode = 2
 
 [node name="MapsTreeMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/MapsTree" index="5"]
 unique_name_in_owner = true
-item_count = 3
+item_count = 4
 item_0/text = "Save"
 item_0/id = 1
 item_1/text = "Edit Map Metadata"
 item_1/id = 2
-item_2/text = "Close"
-item_2/id = 0
+item_2/text = "Edit Array02"
+item_2/id = 3
+item_3/text = "Close"
+item_3/id = 0
 
 [node name="ToolsContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer" index="1"]
 layout_mode = 2
@@ -1751,6 +1754,23 @@ grow_vertical = 2
 resizable = true
 show_maximize_button = true
 panel_style_override = ExtResource("4_v1i8b")
+
+[node name="Array02" parent="Dialogs" index="3" instance=ExtResource("15_d740k")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -800.0
+offset_top = -300.0
+offset_right = 800.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+minimize_style = "fade_out"
 
 [connection signal="button_clicked" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/MapsTree" to="." method="_on_maps_tree_button_clicked"]
 [connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/MapsTree" to="." method="_on_maps_tree_item_mouse_selected"]

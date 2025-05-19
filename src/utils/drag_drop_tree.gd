@@ -15,7 +15,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	drop_mode_flags = Tree.DROP_MODE_INBETWEEN | Tree.DROP_MODE_ON_ITEM
+	drop_mode_flags = Tree.DROP_MODE_INBETWEEN
 	var drop_section := get_drop_section_at_position(at_position)
 	if drop_section == -100:
 		return false

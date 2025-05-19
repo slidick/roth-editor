@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=3 uid="uid://bbbs14qgufor4"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_1g63i"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5yxm6"]
+[ext_resource type="Script" uid="uid://bo7760gc34t3u" path="res://src/windows/array_02_window.gd" id="3_wsry2"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ksim1"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_wsry2"]
+
+[node name="Array02Window" instance=ExtResource("1_1g63i")]
+offset_right = 988.0
+offset_bottom = 653.0
+theme = ExtResource("2_5yxm6")
+script = ExtResource("3_wsry2")
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_ksim1")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="AddRowButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Add Row"
+
+[node name="Tree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+columns = 16
+column_titles_visible = true
+allow_rmb_select = true
+allow_search = false
+hide_folding = true
+hide_root = true
+select_mode = 1
+script = ExtResource("5_wsry2")
+
+[node name="PopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree" index="5"]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Delete Row"
+item_0/id = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Save"
+
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/AddRowButton" to="." method="_on_add_row_button_pressed"]
+[connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

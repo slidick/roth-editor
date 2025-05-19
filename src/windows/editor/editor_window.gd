@@ -243,6 +243,20 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			var tree_item: TreeItem = %MapsTree.get_next_selected(null)
 			while tree_item:
 				if tree_item.get_parent() == tree_root:
+					selected.append(tree_item)
+				tree_item = %MapsTree.get_next_selected(tree_item)
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			var results: Array = await %Array02.edit_data(selected[0].get_metadata(0).ref.section7_2)
+			if results[0] == false:
+				return
+			selected[0].get_metadata(0).ref.section7_2 = results[1]
+		3:
+			var selected: Array = []
+			var tree_item: TreeItem = %MapsTree.get_next_selected(null)
+			while tree_item:
+				if tree_item.get_parent() == tree_root:
 					Console.print("Closing: %s" % tree_item.get_metadata(0).map_info.name)
 					selected.append(tree_item)
 				tree_item = %MapsTree.get_next_selected(tree_item)
