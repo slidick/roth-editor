@@ -651,10 +651,15 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 					entry[key2] = file.call(DAS_STRINGS_ENTRY[key2])
 				das["textures"].append(entry)
 				if entry.index == index:
-					print("FOUND")
 					texture = entry
 	
-	
+	if not "name" in texture:
+		texture["name"] = "Invalid"
+	if not "desc" in texture:
+		texture["desc"] = ""
+	if "index" not in texture:
+		texture["index"] = index
+		return texture
 	
 	file.seek(das.header.imgFATOffset + (index * 0x08))
 	

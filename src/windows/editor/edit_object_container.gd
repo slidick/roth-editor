@@ -63,16 +63,27 @@ func load_edit_object(object: ObjectRoth.ObjectMesh3D) -> void:
 	%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.ref.data.unk0x0E
 	%ObjectUnk0x0EEdit.set_value_no_signal(object.ref.data.unk0x0E)
 	
-	if object.ref.data.textureSource == 2:
+	update_texture()
+
+
+func update_texture() -> void:
+	if current_object.data.textureSource == 0:
+		object_das = current_object.map_info.das
+		object_index = current_object.data.textureIndex + 4096
+	elif current_object.data.textureSource == 1:
+		object_das = current_object.map_info.das
+		object_index = current_object.data.textureIndex + 4096 + 256
+	elif current_object.data.textureSource == 2:
 		object_das = "M/ADEMO.DAS"
-		object_index = object.ref.data.textureIndex
-	elif object.ref.data.textureSource == 3:
+		object_index = current_object.data.textureIndex
+	elif current_object.data.textureSource == 3:
 		object_das = "M/ADEMO.DAS"
-		object_index = object.ref.data.textureIndex + 256
+		object_index = current_object.data.textureIndex + 256
 	else:
-		object_das = object.ref.map_info.das
-		object_index = object.ref.data.textureIndex + 4096
-	
+		%TextureNameLabel.text = "Invalid Source"
+		%TextureDescLabel.text = ""
+		%ObjectTexture.texture = null
+		return
 	var texture := Roth.get_index_from_das(object_index, object_das)
 	if texture:
 		%TextureNameLabel.text = texture.name
@@ -82,6 +93,12 @@ func load_edit_object(object: ObjectRoth.ObjectMesh3D) -> void:
 				%ObjectTexture.texture = ImageTexture.create_from_image(texture.image[0])
 			else:
 				%ObjectTexture.texture = ImageTexture.create_from_image(texture.image)
+		else:
+			%ObjectTexture.texture = null
+	else:
+		%TextureNameLabel.text = "Invalid Index/Source"
+		%TextureDescLabel.text = ""
+		%ObjectTexture.texture = null
 
 
 func _on_object_x_edit_value_changed(value: float) -> void:
@@ -106,10 +123,12 @@ func _on_object_rotation_edit_value_changed(value: float) -> void:
 
 func _on_object_texture_index_edit_value_changed(value: float) -> void:
 	current_object.data.textureIndex = value
+	update_texture()
 
 
 func _on_object_texture_source_edit_value_changed(value: float) -> void:
 	current_object.data.textureSource = value
+	update_texture()
 
 
 func _on_object_unk_0x_07_edit_value_changed(value: float) -> void:
