@@ -240,7 +240,7 @@ func add_sfx(new_object: Section7_1) -> void:
 	var object_node_3d: Node3D = new_object.initialize_mesh()
 	node.get_node("SFX").add_child(object_node_3d)
 
-func get_sector_floor_height_from_vertex(vertex: Vector2) -> float:
+func get_sector_floor_height_from_vertex(vertex: Vector2) -> int:
 	for sector: Sector in sectors:
 		if Geometry2D.is_point_in_polygon(vertex, sector.vertices.slice(0,-1)):
 			return sector.data.floorHeight

@@ -584,6 +584,7 @@ func _on_object_copied(object: ObjectRoth) -> void:
 
 func _on_object_deleted(object: ObjectRoth) -> void:
 	map.objects.erase(object)
+	%Picker.deselect()
 
 
 func _on_object_context_popup_menu_index_pressed(index: int) -> void:
@@ -631,6 +632,7 @@ func _on_sfx_copied(object: Section7_1) -> void:
 
 func _on_sfx_deleted(object: Section7_1) -> void:
 	map.sound_effects.erase(object)
+	%Picker.deselect()
 
 
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
