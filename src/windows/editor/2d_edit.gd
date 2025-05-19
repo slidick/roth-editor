@@ -47,6 +47,7 @@ var start_vertex_select_position := Vector2.ZERO
 var copied_object_data: ObjectRoth
 var copied_sfx_data: Section7_1
 var mouse_paste_position: Vector2
+var dragging_vertex := false
 
 @onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
@@ -238,13 +239,13 @@ func _input(event: InputEvent) -> void:
 					else:
 						if start_vertex_select == false:
 							for vertex_node: VertexNode in %Vertices.get_children():
-								if vertex_node.mouse_over:
+								if vertex_node.mouse_over or dragging_vertex:
 									return
 							for vertex_node: VertexNode in %Vertices.get_children():
 								if not vertex_node.split_vertex:
 									vertex_node.deselect()
 							return
-						
+						dragging_vertex = false
 						var starting_position := start_vertex_select_position
 						var ending_position := (get_global_mouse_position() + global_position)
 						var v2 := Vector2(ending_position.x, starting_position.y)
@@ -947,6 +948,7 @@ func _on_vertex_deleted() -> void:
 
 
 func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
+	dragging_vertex = true
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != node_dragged:
 			vertex_node.move(relative)
