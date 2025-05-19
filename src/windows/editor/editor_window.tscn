@@ -1425,6 +1425,44 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="12"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="13"]
+layout_mode = 2
+text = "Texture"
+horizontal_alignment = 1
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="14"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer/HBoxContainer10" index="0"]
+layout_mode = 2
+text = "Name:"
+
+[node name="TextureNameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer/HBoxContainer10" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="15"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer/HBoxContainer11" index="0"]
+layout_mode = 2
+text = "Desc:"
+
+[node name="TextureDescLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer/HBoxContainer11" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ObjectTexture" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="16"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="EditSFXContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit" index="3"]
 unique_name_in_owner = true
 visible = false

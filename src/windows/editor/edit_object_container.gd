@@ -1,7 +1,8 @@
 extends MarginContainer
 
 var current_object: ObjectRoth
-
+var object_das: String
+var object_index: int
 
 func _redraw_object(node: Variant = null) -> void:
 	var caret: int = 0
@@ -29,6 +30,9 @@ func _reset_edit_object() -> void:
 	%ObjectRenderTypeEdit.get_line_edit().clear()
 	%ObjectUnk0x0CEdit.get_line_edit().clear()
 	%ObjectUnk0x0EEdit.get_line_edit().clear()
+	%TextureNameLabel.text = ""
+	%TextureDescLabel.text = ""
+	%ObjectTexture.texture = null
 	%EditObjectContainer.show()
 
 
@@ -58,6 +62,26 @@ func load_edit_object(object: ObjectRoth.ObjectMesh3D) -> void:
 	%ObjectUnk0x0CEdit.set_value_no_signal(object.ref.data.unk0x0C)
 	%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.ref.data.unk0x0E
 	%ObjectUnk0x0EEdit.set_value_no_signal(object.ref.data.unk0x0E)
+	
+	if object.ref.data.textureSource == 2:
+		object_das = "M/ADEMO.DAS"
+		object_index = object.ref.data.textureIndex
+	elif object.ref.data.textureSource == 3:
+		object_das = "M/ADEMO.DAS"
+		object_index = object.ref.data.textureIndex + 256
+	else:
+		object_das = object.ref.map_info.das
+		object_index = object.ref.data.textureIndex + 4096
+	
+	var texture := Roth.get_index_from_das(object_index, object_das)
+	if texture:
+		%TextureNameLabel.text = texture.name
+		%TextureDescLabel.text = texture.desc
+		if "image" in texture:
+			if typeof(texture.image) == TYPE_ARRAY:
+				%ObjectTexture.texture = ImageTexture.create_from_image(texture.image[0])
+			else:
+				%ObjectTexture.texture = ImageTexture.create_from_image(texture.image)
 
 
 func _on_object_x_edit_value_changed(value: float) -> void:

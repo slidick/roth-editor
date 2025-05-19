@@ -113,6 +113,7 @@ func _input(event: InputEvent) -> void:
 				selected_sector.delete_sector()
 				hovered_sector = null
 				selected_sector = null
+				hovered_face = null
 				queue_redraw()
 				%Picker.deselect()
 	

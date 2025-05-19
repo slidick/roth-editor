@@ -145,6 +145,13 @@ func get_das(das_file: String) -> Dictionary:
 		return loaded_das[das_file]
 
 
+func get_index_from_das(index:int, das_file: String) -> Dictionary:
+	if das_file in loaded_das:
+		if index in loaded_das[das_file]:
+			return loaded_das[das_file][index]
+	return Das._get_index_from_das(index, das_file)
+
+
 func save_custom(map_raw: PackedByteArray, map_name: String, map_das: String, add_to_custom: bool = false) -> void:
 	var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_name.to_upper() + ".RAW")
 	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)

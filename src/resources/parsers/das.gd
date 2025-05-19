@@ -141,6 +141,8 @@ const multiPlainImgsHdr := {
 	unknown8 = Type.DWord,
 }
 
+static var loaded_das := {}
+
 
 static func load_das(das_file: String) -> Dictionary:
 	Roth.das_loading_started.emit()
@@ -614,3 +616,439 @@ static func _parse_das(das_file: String) -> Dictionary:
 		Roth.das_loading_updated.emit.call_deferred(float(i) / len(das.textures), das_file.get_file())
 	
 	return das
+
+
+static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
+	if das_file in loaded_das:
+		if index in loaded_das[das_file]:
+			return loaded_das[das_file][index]
+	else:
+		loaded_das[das_file] = {}
+	
+	
+	var file := FileAccess.open(Roth.directory.path_join(das_file), FileAccess.READ)
+	var das: Dictionary = {}
+	
+	das["name"] = das_file
+	das["header"] = _parse_header(file)
+	das["palette"] = _parse_palette(file, das.header.paletteOffset)
+	das["textures"] = []
+	das["mapping"] = {}
+	das["das_strings_header"] = {}
+	das["loading_errors"] = []
+	das["sky"] = 0
+	
+	var texture := {}
+	
+	file.seek(das.header.fileNamesBlockOffset)
+	for key: String in DAS_STRINGS_HEADER:
+		if typeof(DAS_STRINGS_HEADER[key]) == TYPE_STRING:
+			das["das_strings_header"][key] = file.call(DAS_STRINGS_HEADER[key])
+		else:
+			while file.get_position() < file.get_length():
+				var entry: Dictionary
+				for key2: String in DAS_STRINGS_ENTRY:
+					entry[key2] = file.call(DAS_STRINGS_ENTRY[key2])
+				das["textures"].append(entry)
+				if entry.index == index:
+					print("FOUND")
+					texture = entry
+	
+	
+	
+	file.seek(das.header.imgFATOffset + (index * 0x08))
+	
+	for key: String in image_record:
+		texture[key] = file.call(image_record[key])
+	
+	if texture.unk_byte_00 & 2 > 0:
+		texture["is_sky"] = true
+	else:
+		texture["is_sky"] = false
+	
+	file.seek(texture["offset_data"])
+	
+	for key: String in imgBasicHdr:
+		texture[key] = file.call(imgBasicHdr[key])
+		#Console.print("%s: %s" % [key, texture[key]])
+	
+	
+	if (texture.imageType == imgBasicTypes.PLAIN_DATA or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_2 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_3 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_4 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_5 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_6 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_7 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_8 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_9
+	):
+		#Console.print("Plain: %s" % texture.name)
+		#file.seek(texture["offset_data"] + 0x06)
+		if texture.width == 0:
+			das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
+			loaded_das[das_file][index] = texture
+			return texture
+		
+		if texture.height == 0:
+			das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
+			loaded_das[das_file][index] = texture
+			return texture
+		
+		var raw_img := file.get_buffer(texture.width * texture.height)
+		if len(raw_img) != texture.width * texture.height:
+			das.loading_errors.append("Expected image mismatch! (Read past end of file) Expected: %s (%sx%s), Found: %s, Index: %s, Name: %s, Unk: %s" % [texture.width * texture.height, texture.width, texture.height, len(raw_img), texture.index, texture.name, texture.unk])
+			loaded_das[das_file][index] = texture
+			return texture
+		var data: Array
+		for pixel in raw_img:
+			data.append_array(das.palette[pixel])
+			if das.palette[pixel] == [0,0,0] and pixel == 0:
+				data.append(0)
+			else:
+				data.append(255)
+		
+		
+		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
+		
+		texture["image"] = img
+		texture["flipped"] = false
+	
+	elif (texture.imageType == imgBasicTypes.PLAIN_DATA_FLIPPED or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_FLIPPED_2 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_FLIPPED_3 or
+			texture.imageType == imgBasicTypes.PLAIN_DATA_FLIPPED_4 
+	):
+		
+		if texture.unk > 0xC0:
+			
+			
+			file.seek(texture["offset_data"] + 32)
+			
+			var alignment := file.get_position() & 0xF
+			
+			var img_reference := file.get_8()
+			var _type := file.get_8()
+			var width := file.get_16()
+			var height := file.get_16()
+			
+			
+			texture["image"] = []
+			while true:
+				#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [texture.name, img_reference, width, height])
+				var raw_img := file.get_buffer(width * height)
+				var data: Array
+				for pixel in raw_img:
+					data.append_array(das.palette[pixel])
+					if das.palette[pixel] == [0,0,0] and pixel == 0:
+						data.append(0)
+					else:
+						data.append(255)
+				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
+				img.flip_y()
+				img.rotate_90(CLOCKWISE)
+				
+				texture["image"].append(img)
+				texture["flipped"] = true
+				
+				
+				var lower_ptr_4_bits := file.get_position() & 0xF
+				var pos := file.get_position()
+				if lower_ptr_4_bits > alignment:
+					pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+				else:
+					pos = pos + (alignment - lower_ptr_4_bits)
+				file.seek(pos)
+				
+				var img_reference_new := file.get_8()
+				_type = file.get_8()
+				width = file.get_16()
+				height = file.get_16()
+				#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [texture.name, img_reference_new, width, height])
+				if img_reference != img_reference_new:
+					break
+			
+			
+			var tmp_width: int = texture.width
+			var tmp_height: int = texture.height
+			texture.width = tmp_height
+			texture.height = tmp_width
+			
+			
+			
+		elif texture.unk == 0x40:
+			#Console.print("3D Objs Textures: %s" % texture.name)
+			var numImgs := 0
+			while file.get_16() != 0:
+				numImgs += 1
+			numImgs -= 1
+			#Console.print("numImgs: %s" % numImgs)
+			
+			while file.get_8() == 0:
+				pass
+			file.seek(file.get_position() - 2)
+			
+			var alignment := file.get_position() & 0xF
+			var _img_reference := file.get_8()
+			var _type := file.get_8()
+			var width := file.get_16()
+			var height := file.get_16()
+			texture["image"] = []
+			for j in range(numImgs):
+				#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
+				var raw_img := file.get_buffer(width * height)
+				var data: Array
+				for pixel in raw_img:
+					data.append_array(das.palette[pixel])
+					if das.palette[pixel] == [0,0,0] and pixel == 0:
+						data.append(0)
+					else:
+						data.append(255)
+				
+				if width == 0:
+					das.loading_errors.append("Image width is zero! Index: %s, Name: %s, Subimage: %s, Of: %s" % [texture.index, texture.name, j, numImgs])
+				else:
+					var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
+					img.flip_y()
+					img.rotate_90(CLOCKWISE)
+					
+					texture["image"].append(img)
+					texture["flipped"] = true
+				
+				var lower_ptr_4_bits := file.get_position() & 0xF
+				var pos := file.get_position()
+				if lower_ptr_4_bits > alignment:
+					pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+				else:
+					pos = pos + (alignment - lower_ptr_4_bits)
+				file.seek(pos)
+				
+				_img_reference = file.get_8()
+				_type = file.get_8()
+				width = file.get_16()
+				height = file.get_16()
+				#Console.print("MULTI PLAIN NEXT: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference_new, type_new, width, height])
+				#if img_reference != img_reference_new:
+					#Console.print("NOT SAME REF")
+				#if type != type_new:
+					#Console.print("NOT SAME TYPE REF")
+				
+			var tmp_width: int  = texture.width
+			var tmp_height: int  = texture.height
+			texture.width = tmp_height
+			texture.height = tmp_width
+		else:
+			#Console.print("Flipped: %s" % texture.name)
+			#file.seek(texture["offset_data"] + 0x06)
+			var raw_img := file.get_buffer(texture.width * texture.height)
+			var data: Array
+			for pixel in raw_img:
+				data.append_array(das.palette[pixel])
+				if das.palette[pixel] == [0,0,0] and pixel == 0:
+					data.append(0)
+				else:
+					data.append(255)
+			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
+			img.flip_y()
+			img.rotate_90(CLOCKWISE)
+			var tmp_width: int  = texture.width
+			var tmp_height: int  = texture.height
+			texture.width = tmp_height
+			texture.height = tmp_width
+			
+			texture["image"] = img
+			texture["flipped"] = true
+	
+	elif (texture.imageType == imgBasicTypes.COMPRESSED or 
+			texture.imageType == imgBasicTypes.COMPRESSED_2 or 
+			texture.imageType == imgBasicTypes.COMPRESSED_3 or 
+			texture.imageType == imgBasicTypes.COMPRESSED_4 or 
+			texture.imageType == imgBasicTypes.COMPRESSED_5 or 
+			texture.imageType == imgBasicTypes.COMPRESSED_6
+	):
+		#Console.print("COMPRESSED: %s" % texture.name)
+		var _block_size := file.get_16()
+		var _unk := file.get_16()
+		var firstImgOffset := file.get_16()
+		var img_type_2 := file.get_16()
+		if img_type_2 != 0xFFFE:
+			#Console.print("COMPRESS TYPE 1: %s, Count: %s" % [texture.name, img_type_2])
+			file.seek(texture["offset_data"] + firstImgOffset + 0x06)
+			
+			if texture.width == 0:
+				das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
+				loaded_das[das_file][index] = texture
+				return texture
+			
+			if texture.height == 0:
+				das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
+				loaded_das[das_file][index] = texture
+				return texture
+			
+			var raw_img := file.get_buffer(texture.width * texture.height)
+			var data: Array
+			for pixel in raw_img:
+				data.append_array(das.palette[pixel])
+				if das.palette[pixel] == [0,0,0] and pixel == 0:
+					data.append(0)
+				else:
+					data.append(255)
+			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
+			
+			if texture.imageType != 1:
+				img.flip_y()
+				img.rotate_90(CLOCKWISE)
+				texture["flipped"] = true
+			else:
+				Console.print("NOT FLIPPED??")
+			
+			texture["image"] = img
+			texture["animation"] = [img]
+			#Console.print("Index: %s, Name: %s, Subimages: %s" % [texture.index, texture.name, img_type_2])
+			for j in range(img_type_2):
+				#Console.print("SubImage: %s" % j)
+				
+				var finished := false
+				var pos := 0
+				while true:
+					var code := file.get_8()
+					
+					if code == 0:
+						code = file.get_8()
+						if code == 0:
+							finished = true
+							break
+						var value := file.get_8()
+						#Console.print("Repeating Bytes")
+						for k in range(code):
+							raw_img[pos+k] = value
+						pos += code
+					elif code > 0x80:
+						#Console.print("Moving forward")
+						code &= 0x7F
+						pos += code
+					elif code < 0x80:
+						#Console.print("Copying whole")
+						for k in range(code):
+							raw_img[pos+k] = file.get_8()
+						pos += code
+					else:
+						var code_word := file.get_16()
+						
+						if code_word == 0:
+							#Console.print("Codeword 0")
+							break
+						
+						if code_word & 0x8000:
+							#Console.print("Codeword & 0x8000")
+							code_word &= 0x3FFF
+							var value := file.get_8()
+							if value == 0:
+								#Console.print("Repeating 0s")
+								for k in range(code_word):
+									raw_img[pos+k] = 0
+							else:
+								# This path is only triggered by DEMO1/588:ANICE3.
+								# Happens at the end of the last frame so nothing is lost.
+								# Not sure if something is wrong with my code translation from the c code
+								# but breaking out here seems to work ok.
+								break
+						else:
+							pass
+							#Console.print("Codeword other")
+						
+						pos += code_word
+				
+				if finished:
+					#Console.print("Finished?")
+					break
+				
+				var data2: Array
+				for pixel in raw_img:
+					data2.append_array(das.palette[pixel])
+					if das.palette[pixel] == [0,0,0] and pixel == 0:
+						data2.append(0)
+					else:
+						data2.append(255)
+				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data2)
+				img2.flip_y()
+				img2.rotate_90(CLOCKWISE)
+	
+			
+				texture["animation"].append(img2)
+			var tmp_width: int  = texture.width
+			var tmp_height: int = texture.height
+			texture.width = tmp_height
+			texture.height = tmp_width
+			texture["flipped"] = true
+		
+		else:
+			#Console.print("COMPRESS TYPE 2, Index: %s, Name: %s" % [texture.index, texture.name])
+			
+			file.seek(texture["offset_data"] + 16)
+			
+			texture["animation"] = []
+			
+			var starting_position: int = file.get_position()
+			
+			var sub_img_header := {}
+			for key: String in subImgCompressed2Hdr:
+				sub_img_header[key] = file.call(subImgCompressed2Hdr[key])
+			
+			
+			var num_imgs: int = sub_img_header.numImgs
+			while num_imgs == sub_img_header.numImgs:
+				var img_size: int = sub_img_header.width * sub_img_header.height
+				var img_buffer: Array = []
+				img_buffer.resize(img_size)
+				var pos := 0
+				
+				while pos < img_size:
+					var byte := file.get_8()
+					if byte > 0xF0:
+						var count := byte & 0x0F
+						var next_byte := file.get_8()
+						for j in range(count):
+							img_buffer[pos+j] = next_byte
+						pos += count
+					else:
+						img_buffer[pos] = byte
+						pos += 1
+				
+				var data: Array
+				for pixel: int in img_buffer:
+					data.append_array(das.palette[pixel])
+					if das.palette[pixel] == [0,0,0] and pixel == 0:
+						data.append(0)
+					else:
+						data.append(255)
+				
+				var image := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
+				image.flip_y()
+				image.rotate_90(CLOCKWISE)
+				
+				texture["animation"].append(image)
+				
+				file.seek(starting_position + sub_img_header.currImgSize)
+				starting_position = file.get_position()
+				
+				for key: String in subImgCompressed2Hdr:
+					sub_img_header[key] = file.call(subImgCompressed2Hdr[key])
+			texture["flipped"] = true
+			if len(texture["animation"]) > 0:
+				texture["image"] = texture["animation"][0]
+			var tmp_width: int  = texture.width
+			var tmp_height: int = texture.height
+			texture.width = tmp_height
+			texture.height = tmp_width
+	
+	elif texture.imageType == 0x80:
+		das.loading_errors.append("Object not loaded: %s, Desc: %s, Index: %s" % [texture.name, texture.desc, texture.index])
+		Console.print("Object not loaded: %s, Desc: %s, Index: %s" % [texture.name, texture.desc, texture.index])
+	else:
+		das.loading_errors.append("Unknown Type: %s, Name: %s" % [texture.imageType, texture.name])
+		Console.print("Unknown Type: %s, Name: %s" % [texture.imageType, texture.name])
+	
+	
+	loaded_das[das_file][index] = texture
+	return texture
