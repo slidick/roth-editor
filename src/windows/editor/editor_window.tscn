@@ -372,6 +372,25 @@ unique_name_in_owner = true
 
 [node name="Polygon2D" type="Polygon2D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/Vertices" index="0"]
 
+[node name="ObjectContextPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="3"]
+unique_name_in_owner = true
+item_count = 2
+item_0/text = "New Object"
+item_0/id = 0
+item_1/text = "Paste Object"
+item_1/id = 1
+item_1/disabled = true
+
+[node name="SFXContextPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="4"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+item_count = 2
+item_0/text = "New SFX"
+item_0/id = 0
+item_1/text = "Paste SFX"
+item_1/id = 1
+item_1/disabled = true
+
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer" index="1"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1752,6 +1771,8 @@ panel_style_override = ExtResource("4_v1i8b")
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_sub_viewport_container_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_sub_viewport_container_mouse_exited"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/ObjectContextPopupMenu" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_object_context_popup_menu_index_pressed"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/SFXContextPopupMenu" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_sfx_context_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer/Control/SelectSisterButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_select_sister_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer/SelectSectorButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_select_sector_button_pressed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer2/AdditionalCheckButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VSplitContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/3DView/Picker" method="_on_additional_check_button_toggled"]

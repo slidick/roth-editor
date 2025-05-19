@@ -6,11 +6,42 @@ var index: int = -1
 var map_info: Dictionary = {}
 var node: SFXNode3D
 
+
+static func new_from_copied_object(p_object: Section7_1, p_position: Vector2) -> Section7_1:	
+	var object := Section7_1.new(p_object.data.duplicate(true), Roth.get_map(p_object.map_info).get_next_sfx_index(), p_object.map_info)
+	object.data.unk0x00 = -p_position.x
+	object.data.unk0x02 = p_position.y
+	
+	return object
+
+
+static func new_object(p_map_info: Dictionary, p_position: Vector2) -> Section7_1:
+	var default_data := {
+		"unk0x00": 0,
+		"unk0x02": 0,
+		"unk0x04": 0,
+		"unk0x06": 0,
+		"unk0x08": 0,
+		"unk0x0A": 0,
+		"unk0x0C": 0,
+		"unk0x0E": 0,
+		"unk0x10": 0,
+	}
+	
+	var object := Section7_1.new(default_data, Roth.get_map(p_map_info).get_next_sfx_index(), p_map_info)
+	object.data.unk0x00 = -p_position.x
+	object.data.unk0x02 = p_position.y
+	
+	return object
+
+
 func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary) -> void:
 	data = p_data
 	index = p_index
 	map_info = p_map_info
 
+func duplicate() -> Section7_1:
+	return Section7_1.new(data.duplicate(true), index, map_info)
 
 func initialize_mesh() -> Node3D:
 	if node:
@@ -40,9 +71,10 @@ func _initialize_mesh() -> void:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color.ORANGE_RED
 	mesh_instance.material_override = material
+	var sector_floor_height:int = Roth.get_map(map_info).get_sector_floor_height_from_vertex(Vector2(-data.unk0x00, data.unk0x02))
 	mesh_instance.position = Vector3(
 			-data.unk0x00 / Roth.SCALE_3D_WORLD,
-			0,
+			sector_floor_height / Roth.SCALE_3D_WORLD,
 			data.unk0x02 / Roth.SCALE_3D_WORLD,
 	)
 	mesh_instance.ref = self
@@ -84,13 +116,19 @@ class CircleDraw2D extends Node2D:
 
 class SFXNode2D extends Node2D:
 	signal object_selected(object: SFXNode2D, tell_3d: bool)
+	signal object_copied(object: Section7_1)
+	signal object_deleted(object: Section7_1)
+	
 	const DRAGGING_THRESHOLD: float = 2.0
+	
 	var ref: Section7_1
 	var circle: CircleDraw2D
 	var mouse_over: bool = false
 	var dragging: bool = false
 	var drag_started: bool = false
 	var dragging_amount := Vector2.ZERO
+	var popup_menu: PopupMenu
+	
 	func _init(p_ref: Section7_1) -> void:
 		ref = p_ref
 		position = Vector2(
@@ -108,6 +146,12 @@ class SFXNode2D extends Node2D:
 		area.mouse_entered.connect(_on_mouse_entered)
 		area.mouse_exited.connect(_on_mouse_exited)
 		add_child(area)
+		
+		popup_menu = PopupMenu.new()
+		popup_menu.add_item("Copy")
+		popup_menu.add_item("Delete")
+		popup_menu.index_pressed.connect(_on_popup_menu_index_pressed)
+		add_child(popup_menu)
 	
 	func _on_mouse_entered() -> void:
 		mouse_over = true
@@ -133,12 +177,27 @@ class SFXNode2D extends Node2D:
 						if drag_started:
 							drag_started = false
 							update_position()
+			
+			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
+				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+				circle.selected = true
+				object_selected.emit(self, true)
+		
 		if event is InputEventMouseMotion and dragging:
 			dragging_amount += event.relative
 			if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
 				drag_started = true
 				var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
 				global_position = mouse.snappedf(get_parent().get_parent().snap)
+	
+	func _on_popup_menu_index_pressed(index: int) -> void:
+		match index:
+			0:
+				object_copied.emit(ref.duplicate())
+			1:
+				object_deleted.emit(ref)
+				ref.node.queue_free()
+				queue_free()
 	
 	func deselect() -> void:
 		circle.selected = false

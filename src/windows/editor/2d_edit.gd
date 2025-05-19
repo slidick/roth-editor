@@ -44,6 +44,9 @@ var skip_sector_hover: int = 0
 var skip_sector_hover_prev: int = 0
 var start_vertex_select: bool = false 
 var start_vertex_select_position := Vector2.ZERO
+var copied_object_data: ObjectRoth
+var copied_sfx_data: Section7_1
+var mouse_paste_position: Vector2
 
 @onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
@@ -268,7 +271,23 @@ func _input(event: InputEvent) -> void:
 				else:
 					mouse_drag_enabled = false
 					queue_redraw()
-				
+			
+			MOUSE_BUTTON_RIGHT:
+				if %ObjectCheckBox.button_pressed:
+					if event.pressed:
+						mouse_paste_position = Vector2(
+							get_global_mouse_position().x + global_position.x,
+							get_global_mouse_position().y + global_position.y
+						)
+						%ObjectContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+				if %SFXCheckBox.button_pressed:
+					if event.pressed:
+						mouse_paste_position = Vector2(
+							get_global_mouse_position().x + global_position.x,
+							get_global_mouse_position().y + global_position.y
+						)
+						%SFXContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+
 
 func _on_sub_viewport_container_mouse_entered() -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -507,6 +526,8 @@ func add_objects() -> void:
 	for object: ObjectRoth in map.objects:
 		var object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
 		object_node.object_selected.connect(_on_object_selected)
+		object_node.object_copied.connect(_on_object_copied)
+		object_node.object_deleted.connect(_on_object_deleted)
 		%Objects.add_child(object_node)
 
 func add_sfx() -> void:
@@ -515,6 +536,8 @@ func add_sfx() -> void:
 	for sfx: Section7_1 in map.sound_effects:
 		var sfx_node: Section7_1.SFXNode2D = sfx.get_node_2d()
 		sfx_node.object_selected.connect(_on_sfx_selected)
+		sfx_node.object_copied.connect(_on_sfx_copied)
+		sfx_node.object_deleted.connect(_on_sfx_deleted)
 		%SFX.add_child(sfx_node)
 
 func redraw_object(object: ObjectRoth) -> void:
@@ -523,6 +546,8 @@ func redraw_object(object: ObjectRoth) -> void:
 			object_node.queue_free()
 			var new_object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
 			new_object_node.object_selected.connect(_on_object_selected)
+			new_object_node.object_copied.connect(_on_object_copied)
+			new_object_node.object_deleted.connect(_on_object_deleted)
 			%Objects.add_child(new_object_node)
 			new_object_node.select()
 
@@ -533,6 +558,8 @@ func redraw_sfx(object: Section7_1) -> void:
 			object_node.queue_free()
 			var new_object_node: Section7_1.SFXNode2D = object.get_node_2d()
 			new_object_node.object_selected.connect(_on_sfx_selected)
+			new_object_node.object_copied.connect(_on_sfx_copied)
+			new_object_node.object_deleted.connect(_on_sfx_deleted)
 			%SFX.add_child(new_object_node)
 			new_object_node.select()
 	
@@ -549,6 +576,41 @@ func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool
 	if tell_3d:
 		owner.select_face(selected_object.ref.index, "Object")
 
+
+func _on_object_copied(object: ObjectRoth) -> void:
+	copied_object_data = object
+	%ObjectContextPopupMenu.set_item_disabled(1, false)
+
+
+func _on_object_deleted(object: ObjectRoth) -> void:
+	map.objects.erase(object)
+
+
+func _on_object_context_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			var new_object := ObjectRoth.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			if not new_object:
+				return
+			map.add_object(new_object)
+			var object_node: ObjectRoth.ObjectNode2D = new_object.get_node_2d()
+			object_node.object_selected.connect(_on_object_selected)
+			object_node.object_copied.connect(_on_object_copied)
+			object_node.object_deleted.connect(_on_object_deleted)
+			%Objects.add_child(object_node)
+		1:
+			var new_object := ObjectRoth.new_from_copied_object(copied_object_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			if not new_object:
+				return
+			map.add_object(new_object)
+			var object_node: ObjectRoth.ObjectNode2D = new_object.get_node_2d()
+			object_node.object_selected.connect(_on_object_selected)
+			object_node.object_copied.connect(_on_object_copied)
+			object_node.object_deleted.connect(_on_object_deleted)
+			%Objects.add_child(object_node)
+
+
+
 func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void:
 	selected_sector = null
 	selected_face = null
@@ -562,9 +624,48 @@ func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void
 		owner.select_face(selected_sfx.ref.index, "SFX")
 
 
+func _on_sfx_copied(object: Section7_1) -> void:
+	copied_sfx_data = object
+	%SFXContextPopupMenu.set_item_disabled(1, false)
+
+
+func _on_sfx_deleted(object: Section7_1) -> void:
+	map.sound_effects.erase(object)
+
+
+func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			print("A")
+			var new_object := Section7_1.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			if not new_object:
+				print("FAILED")
+				return
+			print("HELLO")
+			map.add_sfx(new_object)
+			var object_node: Section7_1.SFXNode2D = new_object.get_node_2d()
+			object_node.object_selected.connect(_on_sfx_selected)
+			object_node.object_copied.connect(_on_sfx_copied)
+			object_node.object_deleted.connect(_on_sfx_deleted)
+			%SFX.add_child(object_node)
+		1:
+			var new_object := Section7_1.new_from_copied_object(copied_sfx_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			if not new_object:
+				return
+			map.add_sfx(new_object)
+			var object_node: Section7_1.SFXNode2D = new_object.get_node_2d()
+			object_node.object_selected.connect(_on_sfx_selected)
+			object_node.object_copied.connect(_on_sfx_copied)
+			object_node.object_deleted.connect(_on_sfx_deleted)
+			%SFX.add_child(object_node)
+
+
 func remove_objects() -> void:
 	for child: Node in %Objects.get_children():
 		child.queue_free()
+
+
+
 func remove_sfx() -> void:
 	for child: Node in %SFX.get_children():
 		child.queue_free()

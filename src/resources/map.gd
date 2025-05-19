@@ -88,6 +88,18 @@ func get_next_sector_index() -> int:
 		count = max(count, sector.index)
 	return count + 1
 
+func get_next_object_index() -> int:
+	var count: int = 0
+	for object: ObjectRoth in objects:
+		count = max(count, object.index)
+	return count + 1
+
+func get_next_sfx_index() -> int:
+	var count: int = 0
+	for sfx: Section7_1 in sound_effects:
+		count = max(count, sfx.index)
+	return count + 1
+
 
 func delete_sector(sector_to_delete: Sector) -> void:
 	if sector_to_delete.node:
@@ -217,6 +229,22 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	node.get_node("Faces").add_child(await face_2.initialize_mesh())
 	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
 
+
+func add_object(new_object: ObjectRoth) -> void:
+	objects.append(new_object)
+	var object_node_3d: Node3D = new_object.initialize_mesh()
+	node.get_node("Objects").add_child(object_node_3d)
+
+func add_sfx(new_object: Section7_1) -> void:
+	sound_effects.append(new_object)
+	var object_node_3d: Node3D = new_object.initialize_mesh()
+	node.get_node("SFX").add_child(object_node_3d)
+
+func get_sector_floor_height_from_vertex(vertex: Vector2) -> float:
+	for sector: Sector in sectors:
+		if Geometry2D.is_point_in_polygon(vertex, sector.vertices.slice(0,-1)):
+			return sector.data.floorHeight
+	return 0
 
 func merge_sectors(double_sided_face: Face) -> void:
 	if not double_sided_face.sister:
