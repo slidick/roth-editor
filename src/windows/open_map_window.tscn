@@ -47,8 +47,15 @@ focus_neighbor_right = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
 theme_override_constants/item_margin = 0
 column_titles_visible = true
+allow_rmb_select = true
 hide_root = true
 select_mode = 2
+
+[node name="MapPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" index="5"]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Delete Map"
+item_0/id = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
 layout_mode = 2
@@ -196,5 +203,7 @@ text = "Open Selected"
 
 [connection signal="cell_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" to="." method="_on_map_tree_cell_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" to="." method="_on_map_tree_item_activated"]
+[connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" to="." method="_on_map_tree_item_mouse_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree/MapPopupMenu" to="." method="_on_map_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/OpenButton" to="." method="_on_open_button_pressed"]

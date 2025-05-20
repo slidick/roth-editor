@@ -16,8 +16,18 @@ func _show() -> void:
 
 func _hide() -> void:
 	super._hide()
+	clear()
+
+
+func clear() -> void:
 	%MapTree.deselect_all()
 	%Map.clear()
+	%Sectors.text = ""
+	%Faces.text = ""
+	%Vertices.text = ""
+	%Objects.text = ""
+	%MapName.text = ""
+	%DASFile.text = ""
 
 
 func cancel() -> void:
@@ -28,9 +38,9 @@ func open() -> void:
 	var maps: Array = []
 	var tree_item: TreeItem = %MapTree.get_next_selected(null)
 	while tree_item:
-		var metadata: Variant = tree_item.get_metadata(0)
-		if metadata:
-			maps.append(tree_item.get_metadata(0))
+		var map_info: Variant = tree_item.get_metadata(0)
+		if map_info:
+			maps.append(map_info)
 		tree_item = %MapTree.get_next_selected(tree_item)
 	if maps.is_empty():
 		return
@@ -76,3 +86,33 @@ func _on_map_tree_cell_selected() -> void:
 func _on_map_tree_item_activated() -> void:
 	Roth.load_maps([%MapTree.get_selected().get_metadata(0)])
 	cancel()
+
+
+func _on_map_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			var maps: Array = []
+			var maps_string: String = ""
+			var tree_item: TreeItem = %MapTree.get_next_selected(null)
+			while tree_item:
+				var map_info: Variant = tree_item.get_metadata(0)
+				if map_info and map_info.custom:
+					maps.append(map_info)
+					maps_string += "%s\n" % map_info.name
+				tree_item = %MapTree.get_next_selected(tree_item)
+			
+			if await Dialog.confirm("Are you sure you wish to delete the following maps?\n%s" % maps_string, "Confirm Deletion", false):
+				Roth.delete_maps(maps)
+				clear()
+
+
+func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+	match mouse_button_index:
+		MOUSE_BUTTON_RIGHT:
+			var tree_item: TreeItem = %MapTree.get_item_at_position(mouse_position)
+			if tree_item.get_metadata(0):
+				if tree_item.get_metadata(0).custom:
+					%MapPopupMenu.set_item_disabled(0, false)
+				else:
+					%MapPopupMenu.set_item_disabled(0, true)
+				%MapPopupMenu.popup(Rect2i(int(mouse_position.x + %MapTree.global_position.x), int(mouse_position.y + %MapTree.global_position.y), 0, 0))

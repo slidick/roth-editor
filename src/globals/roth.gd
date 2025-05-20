@@ -131,6 +131,26 @@ func load_maps(maps_array: Array) -> void:
 	map_loading_completely_finished.emit()
 
 
+## Deletes maps from the filesystem and removes them from the list of available maps
+func delete_maps(maps_array: Array) -> void:
+	for map_info: Dictionary in maps_array:
+		var file_path := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.raw)
+		if FileAccess.file_exists(file_path):
+			DirAccess.remove_absolute(file_path)
+		maps.erase(map_info)
+	update_custom_maps_list()
+	settings_loaded.emit()
+
+
+## Rewrites the list of custom maps
+func update_custom_maps_list() -> void:
+	var file_custom_res := FileAccess.open(Settings.settings.locations.get("custom.res"), FileAccess.WRITE)
+	for map_info: Dictionary in maps:
+		if map_info.custom:
+			file_custom_res.store_string("%s %s\n" % [map_info.name.to_lower(), map_info.das.get_basename().to_lower()])
+	file_custom_res.close()
+
+
 ## Return or load the requested das_file. [br]
 ## Das files stay loaded after initial load.
 func get_das(das_file: String) -> Dictionary:

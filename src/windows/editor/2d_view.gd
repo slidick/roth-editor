@@ -19,6 +19,7 @@ func setup(p_sectors: Array) -> void:
 
 func clear() -> void:
 	sectors = []
+	queue_redraw()
 
 
 func _draw() -> void:
