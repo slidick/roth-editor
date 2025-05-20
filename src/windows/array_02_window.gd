@@ -81,3 +81,4 @@ func _on_add_row_button_pressed() -> void:
 	for i in range(%Tree.columns):
 		tree_item.set_text(i, "0")
 		tree_item.set_editable(i, true)
+	%Tree.scroll_to_item(tree_item)
