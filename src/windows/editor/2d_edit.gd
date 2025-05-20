@@ -57,8 +57,32 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(check_for_hover)
 	add_child(timer)
+	
+	var data: Variant = Settings.cache.get("2d_edit")
+	if data and typeof(data) == TYPE_DICTIONARY:
+		if "grid_enabled" in data:
+			%GridCheckBox.button_pressed = data.grid_enabled
+		if "grid_size" in data:
+			%GridEdit.value = data.grid_size
+		if "snap_enabled" in data:
+			%SnapCheckBox.button_pressed = data.snap_enabled
+		if "snap_size" in data:
+			%SnapEdit.value = data.snap_size
+	
 	if %SnapCheckBox.button_pressed:
 		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
+
+
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_WM_CLOSE_REQUEST:
+			var data := {
+				"grid_enabled": %GridCheckBox.button_pressed,
+				"grid_size": int(%GridEdit.value),
+				"snap_enabled": %SnapCheckBox.button_pressed,
+				"snap_size": int(%SnapEdit.value),
+			}
+			Settings.update_cache("2d_edit", data)
 
 
 func _process(_delta: float) -> void:
