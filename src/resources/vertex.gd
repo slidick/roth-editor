@@ -196,10 +196,10 @@ func update_meshes() -> void:
 		sector.initialize_mesh()
 	for face: Face in faces:
 		if face.sister:
-			face.sister.get_ref().initialize_mesh()
 			face.sister.get_ref().update_horizontal_fit()
-		face.initialize_mesh()
+			face.sister.get_ref().initialize_mesh()
 		face.update_horizontal_fit()
+		face.initialize_mesh()
 
 
 func redraw_split_vertex() -> void:
