@@ -1,3 +1,47 @@
+**0.7.0**
+### New Features
+  - Create brand new maps
+  - 2D View:
+    - Multiple vertex selecting and moving now available
+    - Unmerge vertices by pressing 'u' after selecting vertex
+      - Overlapping vertices will remerge after changing edit modes or by clicking and not moving
+    - Delete double-sided faces by selecting and pressing 'del'
+      - The sector you're deleting from will replace the sister sector.
+    - Delete sectors by selecting and pressing 'del'
+    - Cycle overlapping sectors by pressing 'n'
+    - Objects & SFX - Right-click
+      - Create new
+      - Copy/Paste
+      - Delete
+    - Remember last used grid and snap values
+  - 3D View:
+    - Copy and paste texture ids
+      - Point at a face/sector and press 'c' to copy
+      - Point at a face/sector and press 'v' to paste
+      - Separate copies for faces and sectors
+      - Sectors will copy both floor and ceiling textures for now
+    - Show sound effect nodes on the floor of the sector instead of at height 0.
+  - Edit Panel:
+    - Show object textures when editing objects
+    - Flip a face around (Fixed the bug that prompted this but will leave in)
+    - Manually configure the id of the sister face
+  - Delete maps from open map dialog
+  - Switch map being edited
+    - Right-click map name -> 2D Edit Mode
+    - Won't lose changes when switching
+    - Still need to select save to save
+    - Separate save and save-as options
+    - Map launched for test run will be the map open in 2d edit view
+  - Edit Unknown Array 02 option
+    - Add, remove, edit, and rearrange entries
+
+### Bugfixes
+  - Splitting a sector while holding shift on the second vertex no longer fails
+  - Concave sector detection no longer fails if the first three vertices of a sector form a straight line
+  - Faces no longer flip around when moving a vertex across its neighbor vertex
+
+---
+
 **0.6.0**
 ### New Features
   - Vertex / Sector Editing
