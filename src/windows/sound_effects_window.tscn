@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://s2yign08bgnw"]
+[gd_scene load_steps=9 format=3 uid="uid://s2yign08bgnw"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_oarqk"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_e7e65"]
 [ext_resource type="Script" uid="uid://gec5csno11xj" path="res://src/windows/sound_effects_window.gd" id="3_e7e65"]
 [ext_resource type="Script" uid="uid://dk01nqct0h45o" path="res://src/windows/waveform.gd" id="4_ro71n"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_tl0lu"]
 [ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="5_14u5g"]
 [ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="6_tl0lu"]
 [ext_resource type="Texture2D" uid="uid://v8bmkjmutd7s" path="res://assets/icons/arrows-right.svg" id="7_b60c5"]
@@ -12,6 +13,7 @@
 theme = ExtResource("2_e7e65")
 script = ExtResource("3_e7e65")
 panel_corner_radius = 0
+panel_style_override = ExtResource("4_tl0lu")
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 layout_mode = 2
