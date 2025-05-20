@@ -46,25 +46,108 @@ Left Mouse:  Select
 F1:  Lock/Unlock Mouselook
 F2:  Toggle Collision Shapes
 F3:  Toggle Mouse Select
-F11:  Toggle Fullscreen
-R: Run Map - Limited mode
-T: Run Map - Full mode"
+"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="3"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer3" index="0"]
+layout_mode = 2
+text = "Editor"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer3" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer3" index="2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "F11:  Toggle Fullscreen
+R: Run Map - Limited mode
+T: Run Map - Full mode"
+
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="2"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="0"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="0"]
 layout_mode = 2
 text = "2D Controls"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="1"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Left Mouse: Select
 Middle Mouse: Pan
-Mouse Wheel: Zoom"
+Mouse Wheel: Zoom
+"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="1"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="0"]
+layout_mode = 2
+text = "Face"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Left Click: Select
+N: Cycle overlapping sectors
+Del: Delete Sector or Double-sided face
+"
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="2"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="0"]
+layout_mode = 2
+text = "Vertex"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Left Click: Select / Move
+Right Click While Dragging : Delete
+Right Click on green node: Split Face
+Shift+Left-Click on vertex: Start Sector Split
+U: Unmerge selected vertex
+"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="3"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="0"]
+layout_mode = 2
+text = "Box"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Left Click: Draw new sector"
