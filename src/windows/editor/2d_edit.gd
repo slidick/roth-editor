@@ -408,6 +408,9 @@ func update_bounds() -> void:
 	maximum_y = -10000
 	if not map:
 		return
+	if not map.sectors:
+		default_bounds()
+		return
 	for sector: Sector in map.sectors:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
@@ -968,7 +971,7 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 			for vertex_face: Face in vertex.faces:
 				if face.sister and face.sister.get_ref() == vertex_face:
 					pass
-				elif vertex_face.v2 == face.v1 and vertex_face.v1 == face.v2:
+				elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
 					print("Sister Merge")
 					face.sister = weakref(vertex_face)
 					vertex_face.sister = weakref(face)

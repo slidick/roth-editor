@@ -2,6 +2,7 @@ extends Control
 
 
 enum Main {
+	NewMap,
 	OpenMap,
 	Sep0,
 	TestMapLimited,
@@ -54,7 +55,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		if await Dialog.confirm("Are you sure?", "Confirm Quit", false):
+		if await Dialog.confirm("Are you sure?\nMake sure to save!", "Confirm Quit", false):
 			Console.print("Quitting...")
 			get_tree().quit()
 
@@ -134,6 +135,8 @@ func take_screenshot() -> void:
 
 func _on_main_index_pressed(index: int) -> void:
 	match index:
+		Main.NewMap:
+			%NewMap.toggle()
 		Main.OpenMap:
 			%OpenMap.toggle()
 		Main.Settings:

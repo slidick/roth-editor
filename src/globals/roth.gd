@@ -117,7 +117,7 @@ func get_map(map_info: Dictionary) -> Map:
 	if map_info.name in loaded_maps:
 		return loaded_maps[map_info.name]
 	
-	var map := Map.new(map_info)
+	var map := Map.load_from_file(map_info)
 	loaded_maps[map_info.name] = map
 	return map
 
@@ -151,6 +151,16 @@ func update_custom_maps_list() -> void:
 	file_custom_res.close()
 
 
+func create_new_map(map_info: Dictionary) -> void:
+	var map := Map.new()
+	map.map_info = map_info
+	maps.append(map_info)
+	update_custom_maps_list()
+	Roth.settings_loaded.emit()
+	loaded_maps[map_info.name] = map
+	load_maps([map_info])
+
+
 ## Return or load the requested das_file. [br]
 ## Das files stay loaded after initial load.
 func get_das(das_file: String) -> Dictionary:
@@ -172,16 +182,13 @@ func get_index_from_das(index:int, das_file: String) -> Dictionary:
 	return Das._get_index_from_das(index, das_file)
 
 
-func save_custom(map_raw: PackedByteArray, map_name: String, map_das: String, add_to_custom: bool = false) -> void:
+func save_custom(map_raw: PackedByteArray, map_name: String, _map_das: String, add_to_custom: bool = false) -> void:
 	var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_name.to_upper() + ".RAW")
 	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
 	file.store_buffer(map_raw)
 	file.close()
-	
 	if add_to_custom:
-		var file_custom_res := FileAccess.open(Settings.settings.locations.get("custom.res"), FileAccess.READ_WRITE)
-		file_custom_res.seek(file_custom_res.get_length())
-		file_custom_res.store_string("%s %s\n" % [map_name.to_lower(), map_das.get_basename().to_lower()])
+		update_custom_maps_list()
 
 
 ## Takes a compiled map, saves it to a temporary file, and runs it.

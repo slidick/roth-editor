@@ -1,7 +1,23 @@
 extends RefCounted
 class_name Map
 
-var metadata := {}
+var metadata := {
+	"initPosX": 0,
+	"initPosZ": 0,
+	"initPosY": 0,
+	"rotation": 0,
+	"moveSpeed": 5,
+	"playerHeight": 72,
+	"maxClimb": 32,
+	"minFit": 48,
+	"unk0x10": 2,
+	"candleGlow": 8,
+	"lightAmbience": 0,
+	"unk0x16": 0,
+	"skyTexture": 0,
+	"unk0x1A": 0,
+}
+
 var sectors := []
 var faces := []
 var objects := []
@@ -9,10 +25,17 @@ var sound_effects := []
 var section7_2 := []
 var vertices_count: int = 0
 var map_info := {}
-var commands_section := {}
+var commands_section := {
+	"header": {
+		"signature": "3u",
+		"unk0x02": 0
+	},
+	"entryCommandIndexes": [],
+	"allCommands": []
+}
 var node: MapNode3D
 
-func _init(p_map_info: Dictionary) -> void:
+static func load_from_file(p_map_info: Dictionary) -> Map:
 	var filepath: String
 	if p_map_info.custom:
 		filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(p_map_info.raw)
@@ -20,7 +43,9 @@ func _init(p_map_info: Dictionary) -> void:
 		filepath = Roth.directory.path_join(p_map_info.raw)
 	Console.print("Loading map: %s" % filepath)
 	
-	map_info = p_map_info
+	var loaded_map := Map.new()
+	
+	loaded_map.map_info = p_map_info
 	
 	var map_json: Dictionary = Raw.parse_file(filepath)
 	
@@ -28,52 +53,55 @@ func _init(p_map_info: Dictionary) -> void:
 	
 	
 	for i in range(len(map_json.sectorsSection.sectors)):
-		sectors.append( Sector.new( 
+		loaded_map.sectors.append( Sector.new( 
 				map_json.sectorsSection.sectors[i],
 				i,
-				map_info,
+				loaded_map.map_info,
 				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
 			)
 		)
-		for object: Dictionary in sectors[i].data.objectInformation:
+		for object: Dictionary in loaded_map.sectors[i].data.objectInformation:
 			object["sector_index"] = i
 			temp_object_list.append(object)
 	
 	for i in range(len(temp_object_list)):
-		objects.append( ObjectRoth.new(
+		loaded_map.objects.append( ObjectRoth.new(
 				temp_object_list[i],
 				i,
-				map_info,
-				sectors
+				loaded_map.map_info,
+				loaded_map.sectors
 			)
 		)
 	
 	for i in range(len(map_json.facesSection.faces)):
-		faces.append( Face.new(
+		loaded_map.faces.append( Face.new(
 				map_json.facesSection.faces[i],
 				i,
-				map_info,
+				loaded_map.map_info,
 				map_json.verticesSection.vertices,
-				sectors,
+				loaded_map.sectors,
 				map_json.faceTextureMappingSection.mappings,
 			)
 		)
 	
-	for face: Face in faces:
-		face.update_sister_face(faces)
+	for face: Face in loaded_map.faces:
+		face.update_sister_face(loaded_map.faces)
 	
-	for sector: Sector in sectors:
-		sector.update_faces(faces)
+	for sector: Sector in loaded_map.sectors:
+		sector.update_faces(loaded_map.faces)
 	
 	for i in range(len(map_json.section7.unkArray01)):
-		sound_effects.append(Section7_1.new(map_json.section7.unkArray01[i], i, map_info))
+		loaded_map.sound_effects.append(Section7_1.new(map_json.section7.unkArray01[i], i, loaded_map.map_info))
 	
 	if "unkArray02" in map_json.section7:
-		section7_2 = map_json.section7.unkArray02
+		loaded_map.section7_2 = map_json.section7.unkArray02
 	
-	metadata = map_json.mapMetadataSection
-	vertices_count = len(map_json.verticesSection.vertices)
-	commands_section = map_json.commandsSection
+	loaded_map.metadata = map_json.mapMetadataSection
+	loaded_map.vertices_count = len(map_json.verticesSection.vertices)
+	loaded_map.commands_section = map_json.commandsSection
+	
+	return loaded_map
+
 
 func get_next_face_index() -> int:
 	var count: int = 0

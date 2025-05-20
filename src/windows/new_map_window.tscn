@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=3 uid="uid://5dfgd2lm0jth"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_hmf5h"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_lnj40"]
+[ext_resource type="Script" uid="uid://d4d10pfu7nf2" path="res://src/windows/new_map_window.gd" id="2_q4jna"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_aik1h"]
+
+[node name="NewMapWindow" instance=ExtResource("1_hmf5h")]
+offset_right = 503.0
+offset_bottom = 214.0
+theme = ExtResource("2_lnj40")
+script = ExtResource("2_q4jna")
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_focus_highlight = false
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_aik1h")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="MapNameEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 8
+
+[node name="DasOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="CreateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Create"
+
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapNameEdit" to="." method="_on_map_name_edit_text_changed"]
+[connection signal="text_submitted" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapNameEdit" to="." method="_on_map_name_edit_text_submitted"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/DasOption" to="." method="_on_das_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CreateButton" to="." method="_on_create_button_pressed"]
