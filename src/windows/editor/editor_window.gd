@@ -2,6 +2,18 @@ extends BaseWindow
 
 const EYE_ICON: Texture2D = preload("uid://crb7de5pvofid")
 const EYE_CLOSED_ICON: Texture2D = preload("uid://d8l1uefa8sbq")
+enum MapMenu {
+	Save,
+	SaveAs,
+	Sep1,
+	EditMetadata,
+	EditArray02,
+	Sep2,
+	EditMode,
+	Sep3,
+	Close,
+}
+
 
 var tree_root: TreeItem
 
@@ -16,27 +28,18 @@ func _ready() -> void:
 
 
 func test_map(full: bool) -> void:
-	var shown_items := []
-	for tree_item in tree_root.get_children():
-		if tree_item.get_metadata(0).visible:
-			shown_items.append(tree_item.get_metadata(0).map_info)
-		
-	if len(shown_items) == 1:
-		var map_info: Dictionary = shown_items[0]
-		var map: Map = Roth.get_map(map_info)
-		
-		var player_position: Vector3 = %Camera3D.global_position
-		player_position.y -= 1.2
-		player_position *= Roth.SCALE_3D_WORLD
-		var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
-		var buffer: PackedByteArray = await map.compile(player_position, player_rotation)
-		if buffer.is_empty():
-			return
-		Roth.test_run_map(buffer, map_info, full)
-	elif len(shown_items) == 0:
-		pass
-	else:
-		Dialog.information("Have only one map shown to launch.", "Info", false, Vector2(500,150))
+	var map: Map = %Map2D.map
+	if not map:
+		return
+	
+	var player_position: Vector3 = %Camera3D.global_position
+	player_position.y -= 1.2
+	player_position *= Roth.SCALE_3D_WORLD
+	var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
+	var buffer: PackedByteArray = await map.compile(player_position, player_rotation)
+	if buffer.is_empty():
+		return
+	Roth.test_run_map(buffer, map.map_info, full)
 
 
 func _input(event: InputEvent) -> void:
@@ -169,68 +172,71 @@ func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
 func _on_maps_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
 	var tree_item: TreeItem = %MapsTree.get_item_at_position(mouse_position)
 	if mouse_button_index == MOUSE_BUTTON_RIGHT and tree_item.get_parent() == tree_root:
+		if tree_item.get_metadata(0).map_info.custom:
+			%MapsTreeMenu.set_item_disabled(MapMenu.Save, false)
+		else:
+			%MapsTreeMenu.set_item_disabled(MapMenu.Save, true)
 		%MapsTreeMenu.popup(Rect2i(int(%MapsTree.global_position.x+mouse_position.x), int(%MapsTree.global_position.y+mouse_position.y), 0, 0))
 
 
 func _on_maps_tree_menu_index_pressed(index: int) -> void:
+	var selected: Array = []
+	var tree_item: TreeItem = %MapsTree.get_next_selected(null)
+	while tree_item:
+		if tree_item.get_parent() == tree_root:
+			selected.append(tree_item)
+		tree_item = %MapsTree.get_next_selected(tree_item)
 	match index:
-		0:
-			var selected: Array = []
-			var tree_item: TreeItem = %MapsTree.get_next_selected(null)
-			while tree_item:
-				if tree_item.get_parent() == tree_root:
-					selected.append(tree_item)
-				tree_item = %MapsTree.get_next_selected(tree_item)
+		MapMenu.Save:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save.", "Info", false, Vector2(400,150))
 				return
-			if not selected[0].get_metadata(0).map_info.custom:
-				Console.print("Saving file as: %s" % selected[0].get_metadata(0).map_info.name)
-			
-				var results: Array = await Dialog.input("New Map Name:", "Save As", "", "", false)
-				if not results[0]:
-					return
-				
-				var error: String = ""
-				if len(results[1]) > 8:
-					error = "Please limit to 8 characters"
-				if results[1].contains(" "):
-					error = "No spaces"
-				if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
-					error = "Name in use."
-				
-				while not error.is_empty():
-					results = await Dialog.input("New Map Name:", "Save As", results[1], error, false)
-					if not results[0]:
-						return
-					error = ""
-					if len(results[1]) > 8:
-						error = "Please limit to 8 characters"
-					if results[1].find(" ") > 0:
-						error = "No spaces"
-					if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
-						error = "Name in use."
-				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
-				var buffer: PackedByteArray = await map.compile()
-				Roth.save_custom(buffer, results[1], map.map_info.das, true)
-				Roth.loaded_maps.erase(map.map_info.name)
-				map.map_info.name = results[1].to_upper()
-				map.map_info.raw = results[1].to_upper() + ".RAW"
-				map.map_info.custom = true
-				Roth.loaded_maps[map.map_info.name] = map
-				selected[0].set_text(0, results[1])
-				Roth.load_roth_settings()
-			else:
+			if selected[0].get_metadata(0).map_info.custom:
+				Console.print("Saving file: %s" % selected[0].get_metadata(0).map_info.name)
 				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
 				var buffer: PackedByteArray = await map.compile()
 				Roth.save_custom(buffer, map.map_info.name, map.map_info.das)
-		1:
-			var selected: Array = []
-			var tree_item: TreeItem = %MapsTree.get_next_selected(null)
-			while tree_item:
-				if tree_item.get_parent() == tree_root:
-					selected.append(tree_item)
-				tree_item = %MapsTree.get_next_selected(tree_item)
+		MapMenu.SaveAs:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
+				return
+			var results: Array = await Dialog.input("New Map Name:", "Save As", "", "", false)
+			if not results[0]:
+				return
+			
+			var error: String = ""
+			if len(results[1]) > 8:
+				error = "Please limit to 8 characters"
+			if results[1].contains(" "):
+				error = "No spaces"
+			if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
+				error = "Name in use."
+			
+			while not error.is_empty():
+				results = await Dialog.input("New Map Name:", "Save As", results[1], error, false)
+				if not results[0]:
+					return
+				error = ""
+				if len(results[1]) > 8:
+					error = "Please limit to 8 characters"
+				if results[1].find(" ") > 0:
+					error = "No spaces"
+				if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
+					error = "Name in use."
+			
+			Console.print("Saving file as: %s" % results[1].to_upper())
+			
+			var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
+			var buffer: PackedByteArray = await map.compile()
+			Roth.save_custom(buffer, results[1], map.map_info.das, true)
+			Roth.loaded_maps.erase(map.map_info.name)
+			map.map_info.name = results[1].to_upper()
+			map.map_info.raw = results[1].to_upper() + ".RAW"
+			map.map_info.custom = true
+			Roth.loaded_maps[map.map_info.name] = map
+			selected[0].set_text(0, results[1])
+			Roth.load_roth_settings()
+		MapMenu.EditMetadata:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
@@ -238,13 +244,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if results[0] == false:
 				return
 			selected[0].get_metadata(0).ref.metadata = results[1]
-		2:
-			var selected: Array = []
-			var tree_item: TreeItem = %MapsTree.get_next_selected(null)
-			while tree_item:
-				if tree_item.get_parent() == tree_root:
-					selected.append(tree_item)
-				tree_item = %MapsTree.get_next_selected(tree_item)
+		MapMenu.EditArray02:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
@@ -252,23 +252,20 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if results[0] == false:
 				return
 			selected[0].get_metadata(0).ref.section7_2 = results[1]
-		3:
-			var selected: Array = []
-			var tree_item: TreeItem = %MapsTree.get_next_selected(null)
-			while tree_item:
-				if tree_item.get_parent() == tree_root:
-					Console.print("Closing: %s" % tree_item.get_metadata(0).map_info.name)
-					selected.append(tree_item)
-				tree_item = %MapsTree.get_next_selected(tree_item)
-			
+		MapMenu.EditMode:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			%Map2D.setup(Roth.get_map(selected[0].get_metadata(0).ref.map_info))
+		MapMenu.Close:
 			for item: TreeItem in selected:
-				item.get_metadata(0).queue_free()
-				Roth.loaded_maps.erase(item.get_metadata(0).map_info.name)
-				for child_item: TreeItem in item.get_children():
-					child_item.free()
-				%Map2D.close_map(item.get_metadata(0).map_info)
-				item.free()
-				
+				if await Dialog.confirm("Close map?\n %s" % item.get_metadata(0).map_info.name, "Confirm Close", false):
+					item.get_metadata(0).queue_free()
+					Roth.loaded_maps.erase(item.get_metadata(0).map_info.name)
+					for child_item: TreeItem in item.get_children():
+						child_item.free()
+					%Map2D.close_map(item.get_metadata(0).map_info)
+					item.free()
 
 
 func _on_search_text_submitted(search_text: String) -> void:

@@ -335,6 +335,8 @@ func draw_sector_split() -> void:
 	
 
 func setup(p_map: Map) -> void:
+	if map:
+		close_map(map.map_info)
 	map = p_map
 	update_bounds()
 	update_camera_center()
@@ -356,10 +358,11 @@ func close_map(map_info: Dictionary) -> void:
 		hovered_sector = null
 		zooming = false
 		holding_mouse = false
-		update_bounds()
+		%Picker.deselect()
+		default_bounds()
 		update_camera_center()
 		additional_zoom = 1
-		%Camera2D.zoom = Vector2.ONE * 2
+		update_camera_zoom()
 		queue_redraw()
 		for child: Node2D in %Objects.get_children():
 			child.queue_free()
@@ -368,6 +371,11 @@ func close_map(map_info: Dictionary) -> void:
 		for child: Node2D in %Vertices.get_children():
 			child.queue_free()
 
+func default_bounds() -> void:
+	minimum_x = -409.6
+	maximum_x = 409.6
+	minimum_y = -409.6
+	maximum_y = 409.6
 
 func update_bounds() -> void:
 	minimum_x = 10000
@@ -522,6 +530,8 @@ func draw_sectors() -> void:
 
 
 func add_objects() -> void:
+	if not map:
+		return
 	for child: Node in %Objects.get_children():
 		child.queue_free()
 	for object: ObjectRoth in map.objects:
@@ -532,6 +542,8 @@ func add_objects() -> void:
 		%Objects.add_child(object_node)
 
 func add_sfx() -> void:
+	if not map:
+		return
 	for child: Node in %SFX.get_children():
 		child.queue_free()
 	for sfx: Section7_1 in map.sound_effects:
@@ -848,6 +860,8 @@ func _on_vertex_check_box_toggled(toggled_on: bool) -> void:
 
 
 func add_vertices(allow_move: bool) -> void:
+	if not map:
+		return
 	remove_vertices()
 	last_allow_move = allow_move
 	var vertices := {}
