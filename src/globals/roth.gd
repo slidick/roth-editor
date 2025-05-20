@@ -155,7 +155,7 @@ func create_new_map(map_info: Dictionary) -> void:
 	var map := Map.new()
 	map.map_info = map_info
 	maps.append(map_info)
-	update_custom_maps_list()
+	save_custom(await map.compile(), map_info.name, "", true)
 	Roth.settings_loaded.emit()
 	loaded_maps[map_info.name] = map
 	load_maps([map_info])
