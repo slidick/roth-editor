@@ -21,6 +21,10 @@ func _ready() -> void:
 
 
 func _on_settings_loaded() -> void:
+	for tree_item: TreeItem in tree_root.get_children():
+		tree_root.remove_child(tree_item)
+		tree_item.free()
+	
 	dbase400_filepath = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
 		return
@@ -29,11 +33,14 @@ func _on_settings_loaded() -> void:
 		return
 	
 	var entries: Array = DBase400.parse(dbase400_filepath)
+	#var i: int = 0
 	for entry: Dictionary in entries:
 		if entry.offset > 0:
 			var child_item: TreeItem = tree_root.create_child()
 			child_item.set_text(0, entry.string)
+			#child_item.set_text(0, "%d: %s" % [i, entry.string])
 			child_item.set_metadata(0, entry)
+			#i += 1
 
 
 func _on_dialog_list_item_activated() -> void:
@@ -42,6 +49,7 @@ func _on_dialog_list_item_activated() -> void:
 
 
 func play(entry: Dictionary) -> void:
+	#print(entry)
 	var data: Array = DBase500.parse(dbase500_filepath, entry.offset)
 	Roth.play_audio_buffer(data)
 	%Waveform.setup(data)
