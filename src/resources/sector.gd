@@ -307,6 +307,7 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	#material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	var image := Image.new()
 	if texture in mapping and "image" in mapping[texture]:

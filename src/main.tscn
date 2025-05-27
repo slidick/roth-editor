@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dba8cygkkmhat"]
+[gd_scene load_steps=15 format=3 uid="uid://dba8cygkkmhat"]
 
 [ext_resource type="Script" uid="uid://c7m0sdb6bu4b3" path="res://src/main.gd" id="1_eewff"]
 [ext_resource type="StyleBox" uid="uid://cn25wp84p5qer" path="res://src/themes/menu_panel.tres" id="2_gh0ne"]
@@ -14,7 +14,6 @@
 [ext_resource type="PackedScene" uid="uid://s2yign08bgnw" path="res://src/windows/sound_effects_window.tscn" id="10_tb146"]
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/new_map_window.tscn" id="12_mlv6i"]
 [ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
-[ext_resource type="Script" uid="uid://d04xqq0rdmwqg" path="res://src/resources/parsers/dbase_500.gd" id="15_mlv6i"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -323,9 +322,6 @@ offset_right = 200.0
 offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="Node" type="Node" parent="."]
-script = ExtResource("15_mlv6i")
 
 [node name="FPSLabel" type="Label" parent="."]
 layout_mode = 1
