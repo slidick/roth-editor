@@ -145,7 +145,6 @@ func save_positions() -> void:
 		if command_node.name == "_connection_layer":
 			continue
 		command_node.save_position()
-		
 
 
 func _on_refresh() -> void:
@@ -201,7 +200,15 @@ func _on_all_command_indices_item_selected(index: int) -> void:
 			%ArgsLabel.text += String.chr((value) & 0xFF)
 			%ArgsLabel.text += String.chr((value >> 8) & 0xFF)
 		i += 1
+	ensure_visible(metadata)
 	update_command_base()
+
+
+func ensure_visible(command_node: GraphNode) -> void:
+	%GraphEdit.scroll_offset = command_node.position_offset * %GraphEdit.zoom
+	%GraphEdit.scroll_offset.x -= (%GraphEdit.size.x / 2) - (command_node.size.x / 2) * %GraphEdit.zoom
+	%GraphEdit.scroll_offset.y -= (%GraphEdit.size.y / 2) - (command_node.size.y / 2) * %GraphEdit.zoom
+	%GraphEdit.set_selected(command_node)
 
 
 func _on_args_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
@@ -415,7 +422,6 @@ func delete_command(index: int) -> void:
 			%AllCommandIndices.get_item_metadata(i).next_command_index = 0
 		if %AllCommandIndices.get_item_metadata(i).next_command_index > index:
 			%AllCommandIndices.get_item_metadata(i).next_command_index -= 1
-		
 
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:
