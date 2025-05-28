@@ -154,8 +154,7 @@ func update_custom_maps_list() -> void:
 func create_new_map(map_info: Dictionary) -> void:
 	var map := Map.new()
 	map.map_info = map_info
-	maps.append(map_info)
-	save_custom(await map.compile(), map_info.name, "", true)
+	save_custom(await map.compile(), map_info, true)
 	Roth.settings_loaded.emit()
 	loaded_maps[map_info.name] = map
 	load_maps([map_info])
@@ -182,12 +181,13 @@ func get_index_from_das(index:int, das_file: String) -> Dictionary:
 	return Das._get_index_from_das(index, das_file)
 
 
-func save_custom(map_raw: PackedByteArray, map_name: String, _map_das: String, add_to_custom: bool = false) -> void:
-	var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_name.to_upper() + ".RAW")
+func save_custom(map_raw: PackedByteArray, map_info: Dictionary, add_to_custom: bool = false) -> void:
+	var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".RAW")
 	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
 	file.store_buffer(map_raw)
 	file.close()
 	if add_to_custom:
+		maps.append(map_info)
 		update_custom_maps_list()
 
 

@@ -196,7 +196,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				Console.print("Saving file: %s" % selected[0].get_metadata(0).map_info.name)
 				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
 				var buffer: PackedByteArray = await map.compile()
-				Roth.save_custom(buffer, map.map_info.name, map.map_info.das)
+				Roth.save_custom(buffer, map.map_info)
 		MapMenu.SaveAs:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
@@ -229,11 +229,11 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			
 			var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
 			var buffer: PackedByteArray = await map.compile()
-			Roth.save_custom(buffer, results[1], map.map_info.das, true)
 			Roth.loaded_maps.erase(map.map_info.name)
 			map.map_info.name = results[1].to_upper()
 			map.map_info.raw = results[1].to_upper() + ".RAW"
 			map.map_info.custom = true
+			Roth.save_custom(buffer, map.map_info, true)
 			Roth.loaded_maps[map.map_info.name] = map
 			selected[0].set_text(0, results[1])
 			Roth.load_roth_settings()
@@ -257,10 +257,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			var results: Array = await %CommandEditor.edit_data(selected[0].get_metadata(0).ref.commands_section)
-			if results[0] == false:
-				return
-			selected[0].get_metadata(0).ref.commands_section = results[1].duplicate(true)
+			%CommandEditor.edit_data(selected[0].get_metadata(0).ref)
 		MapMenu.EditMode:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))

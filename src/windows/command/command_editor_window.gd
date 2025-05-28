@@ -1,8 +1,8 @@
 extends BaseWindow
-signal finished(results: Array)
 
 const COMMAND_NODE = preload("uid://bg2itg1120pon")
 
+var map: Map
 var command_section := {}
 var selected_arg: TreeItem
 var row_value: int = 0
@@ -16,7 +16,6 @@ func _ready() -> void:
 func _fade_out() -> void:
 	super._fade_out()
 	clear_entry()
-	finished.emit([false])
 
 
 func clear_entry() -> void:
@@ -34,7 +33,9 @@ func clear_entry() -> void:
 		child.free()
 
 
-func edit_data(p_command_section: Dictionary) -> Array:
+func edit_data(p_map: Map) -> void:
+	var p_command_section: Dictionary = p_map.commands_section
+	map = p_map
 	if command_section != p_command_section:
 		command_section = p_command_section.duplicate(true)
 		%EntryCommandIndices.clear()
@@ -125,19 +126,15 @@ func edit_data(p_command_section: Dictionary) -> Array:
 		
 	
 	toggle(true)
-	var results: Array = await finished
-	#toggle(false)
-	return results
 
 
 func _on_cancel_button_pressed() -> void:
-	finished.emit([false])
 	toggle(false)
 
 
 func _on_save_button_pressed() -> void:
 	save_positions()
-	finished.emit([true, command_section])
+	map.commands_section = command_section.duplicate(true)
 
 
 func save_positions() -> void:
@@ -380,6 +377,8 @@ func _on_remove_from_entry_list(index: int) -> void:
 
 
 func remove_from_entry_list(index: int) -> void:
+	if not index in command_section.entryCommandIndexes:
+		return
 	command_section.entryCommandIndexes.erase(index)
 	
 	var has_to: bool = false
@@ -400,6 +399,7 @@ func remove_from_entry_list(index: int) -> void:
 
 func _on_delete_command(index: int) -> void:
 	delete_command(index)
+	remove_from_entry_list(index)
 
 
 func delete_command(index: int) -> void:
@@ -486,3 +486,107 @@ func _on_map_name_button_pressed() -> void:
 	%ArgsTree.get_root().get_child(5).set_text(0, "%d" % value)
 	
 	update_args_array()
+
+
+var previous_search: String
+var search_count: int = 0
+
+func _on_search_edit_text_submitted(new_text: String) -> void:
+	if new_text.is_empty():
+		return
+	if new_text == previous_search:
+		search_count += 1
+	else:
+		search_count = 0
+	previous_search = new_text
+	var search_amount: int = search_count
+	for command_node: Control in %GraphEdit.get_children():
+		if command_node.name == "_connection_layer":
+			continue
+		match %SearchOptions.text:
+			"Floor Sector ID":
+				if command_node.data.commandBase == 19 and len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"LeftClick Face ID":
+				if command_node.data.commandBase == 24 and len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg01":
+				if len(command_node.data.args) >= 1 and command_node.data.args[0] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg02":
+				if len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg03":
+				if len(command_node.data.args) >= 3 and command_node.data.args[2] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg04":
+				if len(command_node.data.args) >= 4 and command_node.data.args[3] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg05":
+				if len(command_node.data.args) >= 5 and command_node.data.args[4] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg06":
+				if len(command_node.data.args) >= 6 and command_node.data.args[5] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg07":
+				if len(command_node.data.args) >= 7 and command_node.data.args[6] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Arg08":
+				if len(command_node.data.args) >= 8 and command_node.data.args[7] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Command Base":
+				if command_node.data.commandBase == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Command Modifier":
+				if command_node.data.commandModifier == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
+	if search_count > 0:
+		search_count = 0
+		previous_search = ""
+		_on_search_edit_text_submitted(new_text)
+
+func search_select(command_node: CommandNode) -> void:
+	ensure_visible(command_node)
+	_on_all_command_indices_item_selected(command_node.index-1)
+	%AllCommandIndices.select(command_node.index-1)
+	%AllCommandIndices.ensure_current_is_visible()
+
+func _on_search_options_item_selected(_index: int) -> void:
+	search_count = 0
+	previous_search = ""
