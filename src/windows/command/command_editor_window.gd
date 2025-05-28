@@ -45,7 +45,7 @@ func edit_data(p_map: Map) -> void:
 			child.queue_free()
 		var command_nodes := {}
 		for i in range(len(command_section.entryCommandIndexes)):
-			%EntryCommandIndices.add_item("%d: %d" % [i+1, command_section.entryCommandIndexes[i]])
+			%EntryCommandIndices.add_item("%d" % command_section.entryCommandIndexes[i])
 			%EntryCommandIndices.set_item_metadata(i, command_section.entryCommandIndexes[i])
 			
 			var command_node: CommandNode = COMMAND_NODE.instantiate()
@@ -361,10 +361,18 @@ func _on_add_to_entry_list(index: int) -> void:
 
 func add_to_entry_list(index: int) -> void:
 	command_section.entryCommandIndexes.append(index)
-	var new_index: int = %EntryCommandIndices.item_count + 1
-	%EntryCommandIndices.add_item("%d: %d" % [new_index, index])
-	%EntryCommandIndices.set_item_metadata(new_index-1, index)
-	%EntryCommandIndices.select(new_index-1)
+	command_section.entryCommandIndexes.sort()
+	command_section.entryCommandIndexes.sort_custom(func (i1: int, i2: int) -> bool: return command_section.allCommands[i1-1].commandBase < command_section.allCommands[i2-1].commandBase)
+	
+	var selected_index: int = 0
+	%EntryCommandIndices.clear()
+	for i in range(len(command_section.entryCommandIndexes)):
+		%EntryCommandIndices.add_item("%d" % command_section.entryCommandIndexes[i])
+		%EntryCommandIndices.set_item_metadata(i, command_section.entryCommandIndexes[i])
+		if command_section.entryCommandIndexes[i] == index:
+			selected_index = i
+	%EntryCommandIndices.select(selected_index)
+	
 	%AllCommandIndices.select(index-1)
 	%AllCommandIndices.ensure_current_is_visible()
 	_on_all_command_indices_item_selected(index-1)
@@ -393,7 +401,7 @@ func remove_from_entry_list(index: int) -> void:
 	
 	%EntryCommandIndices.clear()
 	for i in range(len(command_section.entryCommandIndexes)):
-		%EntryCommandIndices.add_item("%d: %d" % [i+1, command_section.entryCommandIndexes[i]])
+		%EntryCommandIndices.add_item("%d" % command_section.entryCommandIndexes[i])
 		%EntryCommandIndices.set_item_metadata(i, command_section.entryCommandIndexes[i])
 
 
