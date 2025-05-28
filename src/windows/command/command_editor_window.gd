@@ -538,6 +538,12 @@ func _on_search_edit_text_submitted(new_text: String) -> void:
 					if search_amount == 0:
 						return
 					search_amount -= 1
+			"Object ID":
+				if command_node.data.commandBase == 8 and len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
+					search_select(command_node)
+					if search_amount == 0:
+						return
+					search_amount -= 1
 			"Arg01":
 				if len(command_node.data.args) >= 1 and command_node.data.args[0] == int(new_text):
 					search_select(command_node)

@@ -320,6 +320,10 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 				for object: Node3D in map_node.get_node("Objects").get_children():
 					if index == object.ref.index:
 						%Picker.select(object)
+			"Object ID":
+				for object: Node3D in map_node.get_node("Objects").get_children():
+					if index == object.ref.data.unk0x0E:
+						%Picker.select(object)
 			"SFX":
 				for sfx: Node3D in map_node.get_node("SFX").get_children():
 					if index == sfx.ref.index:
