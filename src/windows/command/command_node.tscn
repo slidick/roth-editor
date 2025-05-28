@@ -1,0 +1,158 @@
+[gd_scene load_steps=3 format=3 uid="uid://bg2itg1120pon"]
+
+[ext_resource type="Script" uid="uid://dc3d5e26qqvpa" path="res://src/windows/command/command_node.gd" id="1_3ggqm"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="1_rj88y"]
+
+[node name="CommandNode" type="GraphNode"]
+offset_top = 439.0
+offset_right = 258.0
+offset_bottom = 929.0
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1_3ggqm")
+
+[node name="CommandPopupMenu" type="PopupMenu" parent="."]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Add to Entry List"
+item_0/id = 0
+item_1/text = "Remove from Entry List"
+item_1/id = 1
+item_2/text = "Delete Command"
+item_2/id = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Index:"
+
+[node name="CommandIndexEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Base:"
+
+[node name="CommandBaseEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Modifier:"
+
+[node name="CommandModifierEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Next Command:"
+
+[node name="CommandNextCommandIndexEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Args:"
+
+[node name="Control" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ArgsLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AddArgButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Add"
+
+[node name="MapNameButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enter Map Name"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ArgsTree" type="Tree" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+script = ExtResource("1_rj88y")
+
+[node name="ArgsPopupMenu" type="PopupMenu" parent="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+item_count = 1
+item_0/text = "Delete"
+item_0/id = 0
+
+[connection signal="index_pressed" from="CommandPopupMenu" to="." method="_on_command_popup_menu_index_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/CommandBaseEdit" to="." method="_on_command_base_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/CommandNextCommandIndexEdit" to="." method="_on_command_next_command_index_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/AddArgButton" to="." method="_on_add_arg_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/MapNameButton" to="." method="_on_map_name_button_pressed"]
+[connection signal="item_edited" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_edited"]
+[connection signal="item_mouse_selected" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_mouse_selected"]
+[connection signal="item_moved" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_moved"]
+[connection signal="index_pressed" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree/ArgsPopupMenu" to="." method="_on_args_popup_menu_index_pressed"]

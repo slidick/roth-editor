@@ -1,4 +1,7 @@
 extends Tree
+
+signal item_moved
+
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	var items := []
 	var next: TreeItem = get_next_selected(null)
@@ -58,3 +61,4 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 					item.move_after(other_item)
 				else:
 					item.move_after(data[i - 1])
+	item_moved.emit()

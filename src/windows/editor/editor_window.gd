@@ -8,6 +8,7 @@ enum MapMenu {
 	Sep1,
 	EditMetadata,
 	EditArray02,
+	EditCommands,
 	Sep2,
 	EditMode,
 	Sep3,
@@ -252,6 +253,14 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if results[0] == false:
 				return
 			selected[0].get_metadata(0).ref.section7_2 = results[1]
+		MapMenu.EditCommands:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			var results: Array = await %CommandEditor.edit_data(selected[0].get_metadata(0).ref.commands_section)
+			if results[0] == false:
+				return
+			selected[0].get_metadata(0).ref.commands_section = results[1].duplicate(true)
 		MapMenu.EditMode:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
@@ -282,7 +291,8 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 	
 	for i in range(tree_root.get_child_count()):
 		if p_map_name.is_empty():
-			maps_available.append(tree_root.get_child(i).get_metadata(0))
+			if tree_root.get_child(i).get_metadata(0).visible:
+				maps_available.append(tree_root.get_child(i).get_metadata(0))
 		else:
 			if tree_root.get_child(i).get_text(0) == p_map_name:
 				maps_available.append(tree_root.get_child(i).get_metadata(0))
