@@ -404,6 +404,10 @@ func remove_from_entry_list(index: int) -> void:
 	else:
 		%AllCommandIndices.get_item_metadata(index-1).title = "Command"
 	
+	reset_entry_list()
+
+
+func reset_entry_list() -> void:
 	%EntryCommandIndices.clear()
 	for i in range(len(command_section.entryCommandIndexes)):
 		%EntryCommandIndices.add_item("%d" % command_section.entryCommandIndexes[i])
@@ -412,11 +416,11 @@ func remove_from_entry_list(index: int) -> void:
 
 func _on_delete_command(index: int) -> void:
 	delete_command(index)
-	remove_from_entry_list(index)
 
 
 func delete_command(index: int) -> void:
 	#Console.print("Delete command: %d" % index)
+	remove_from_entry_list(index)
 	command_section.allCommands.erase(index-1)
 	%AllCommandIndices.get_item_metadata(index-1).queue_free()
 	%AllCommandIndices.remove_item(index-1)
@@ -425,7 +429,6 @@ func delete_command(index: int) -> void:
 	for conn:Dictionary in %GraphEdit.connections:
 		if %GraphEdit.get_node(str(conn.to_node)).next_command_index >= index:
 			%GraphEdit.disconnect_node(conn.from_node, conn.from_port, conn.to_node, conn.to_port)
-			
 	
 	for i in range(index-1, %AllCommandIndices.item_count):
 		%AllCommandIndices.set_item_text(i, "%d" % (i+1))
@@ -435,6 +438,12 @@ func delete_command(index: int) -> void:
 			%AllCommandIndices.get_item_metadata(i).next_command_index = 0
 		if %AllCommandIndices.get_item_metadata(i).next_command_index > index:
 			%AllCommandIndices.get_item_metadata(i).next_command_index -= 1
+	
+	for i in range(len(command_section.entryCommandIndexes)):
+		if command_section.entryCommandIndexes[i] > index:
+			command_section.entryCommandIndexes[i] -= 1
+	
+	reset_entry_list()
 
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:
