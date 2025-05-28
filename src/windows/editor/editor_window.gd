@@ -309,6 +309,13 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 					if index == face.ref.index:
 						if face.get_child_count() > 0:
 							%Picker.select(face.get_child(0))
+			"Face ID":
+				for face: Node3D in map_node.get_node("Faces").get_children():
+					if ("additionalMetadata" in face.ref.texture_data
+						and index == face.ref.texture_data.additionalMetadata.unk0x0C
+					):
+						if face.get_child_count() > 0:
+							%Picker.select(face.get_child(0))
 			"Object":
 				for object: Node3D in map_node.get_node("Objects").get_children():
 					if index == object.ref.index:
