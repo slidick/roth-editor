@@ -174,6 +174,11 @@ func _on_entry_command_indices_item_selected(index: int) -> void:
 
 
 func _on_all_command_indices_item_selected(index: int) -> void:
+	switch_to_command(index)
+	ensure_visible(%AllCommandIndices.get_item_metadata(index))
+
+
+func switch_to_command(index: int) -> void:
 	var metadata: CommandNode = %AllCommandIndices.get_item_metadata(index)
 	
 	%CommandIndexEdit.text = "%d" % (index + 1)
@@ -197,7 +202,7 @@ func _on_all_command_indices_item_selected(index: int) -> void:
 			%ArgsLabel.text += String.chr((value) & 0xFF)
 			%ArgsLabel.text += String.chr((value >> 8) & 0xFF)
 		i += 1
-	ensure_visible(metadata)
+	
 	update_command_base()
 
 
@@ -332,7 +337,7 @@ func add_command(at_position: Variant = null) -> void:
 	%AllCommandIndices.set_item_metadata(_index, command_node)
 	%AllCommandIndices.select(_index)
 	%AllCommandIndices.ensure_current_is_visible()
-	_on_all_command_indices_item_selected(_index)
+	switch_to_command(_index)
 
 
 func _on_all_command_indices_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
@@ -375,7 +380,7 @@ func add_to_entry_list(index: int) -> void:
 	
 	%AllCommandIndices.select(index-1)
 	%AllCommandIndices.ensure_current_is_visible()
-	_on_all_command_indices_item_selected(index-1)
+	switch_to_command(index-1)
 	%EntryCommandIndices.ensure_current_is_visible()
 	%AllCommandIndices.get_item_metadata(index-1).title = "Entry Command"
 
