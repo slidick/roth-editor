@@ -421,7 +421,7 @@ func _on_delete_command(index: int) -> void:
 func delete_command(index: int) -> void:
 	#Console.print("Delete command: %d" % index)
 	remove_from_entry_list(index)
-	command_section.allCommands.erase(index-1)
+	command_section.allCommands.pop_at(index-1)
 	%AllCommandIndices.get_item_metadata(index-1).queue_free()
 	%AllCommandIndices.remove_item(index-1)
 	clear_entry()
