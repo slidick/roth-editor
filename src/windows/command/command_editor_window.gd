@@ -583,9 +583,10 @@ func _on_search_edit_text_submitted(new_text: String) -> void:
 
 func search_select(command_node: CommandNode) -> void:
 	ensure_visible(command_node)
-	_on_all_command_indices_item_selected(command_node.index-1)
 	%AllCommandIndices.select(command_node.index-1)
 	%AllCommandIndices.ensure_current_is_visible()
+	_on_all_command_indices_item_selected(command_node.index-1)
+
 
 func _on_search_options_item_selected(_index: int) -> void:
 	search_count = 0
