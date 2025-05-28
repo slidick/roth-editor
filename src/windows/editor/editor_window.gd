@@ -303,6 +303,10 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 				for sector: Node3D in map_node.get_node("Sectors").get_children():
 					if index == sector.ref.index:
 						%Picker.select(sector)
+			"Sector ID":
+				for sector: Node3D in map_node.get_node("Sectors").get_children():
+					if index == sector.ref.data.floorTriggerID:
+						%Picker.select(sector)
 			"Face":
 				for face: Node3D in map_node.get_node("Faces").get_children():
 					if index == face.ref.index:

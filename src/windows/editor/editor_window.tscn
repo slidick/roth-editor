@@ -1692,15 +1692,17 @@ caret_blink = true
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
-item_count = 4
+item_count = 5
 popup/item_0/text = "Sector"
 popup/item_0/id = 0
-popup/item_1/text = "Face"
-popup/item_1/id = 1
-popup/item_2/text = "Object"
-popup/item_2/id = 2
-popup/item_3/text = "SFX"
-popup/item_3/id = 3
+popup/item_1/text = "Sector ID"
+popup/item_1/id = 4
+popup/item_2/text = "Face"
+popup/item_2/id = 1
+popup/item_3/text = "Object"
+popup/item_3/id = 2
+popup/item_4/text = "SFX"
+popup/item_4/id = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Info/MarginContainer/VBoxContainer" index="1"]
 layout_mode = 2
