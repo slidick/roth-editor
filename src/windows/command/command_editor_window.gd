@@ -427,7 +427,7 @@ func delete_command(index: int) -> void:
 	clear_entry()
 	
 	for conn:Dictionary in %GraphEdit.connections:
-		if %GraphEdit.get_node(str(conn.to_node)).next_command_index >= index:
+		if %GraphEdit.get_node(str(conn.from_node)).next_command_index >= index:
 			%GraphEdit.disconnect_node(conn.from_node, conn.from_port, conn.to_node, conn.to_port)
 	
 	for i in range(index-1, %AllCommandIndices.item_count):
