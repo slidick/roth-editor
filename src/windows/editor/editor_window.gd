@@ -230,9 +230,13 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
 			var buffer: PackedByteArray = await map.compile()
 			Roth.loaded_maps.erase(map.map_info.name)
-			map.map_info.name = results[1].to_upper()
-			map.map_info.raw = results[1].to_upper() + ".RAW"
-			map.map_info.custom = true
+			var new_map_info := {
+				"name": results[1].to_upper(),
+				"raw": results[1].to_upper() + ".RAW",
+				"custom": true,
+				"das": map.map_info.das
+			}
+			map.map_info = new_map_info
 			Roth.save_custom(buffer, map.map_info, true)
 			Roth.loaded_maps[map.map_info.name] = map
 			selected[0].set_text(0, results[1])
