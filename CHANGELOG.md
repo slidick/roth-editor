@@ -1,3 +1,25 @@
+**0.8.0**
+### New Features
+  - Command Editor
+    - A first iteration command editor is now available
+    - Both a simple list view and a visual graph view are available
+    - Changes are synced across the views
+    - Command Base 59 (Warping/Map Change) has support for entering a map name
+    - All other command types require manually entering/understanding all fields for now
+    - Has a search feature for all different fields and a couple known types
+  - Search the map for sector ids, face ids, and object ids using info tab
+
+### Changes
+  - When running a custom map, the file will now be saved and ran using its name
+    - Before it was saved as a different file called TEST_MAP.RAW
+    - This change allows proper testing of map transitions with custom names
+  - When running a builtin map, the file will still be saved as TEST_MAP.RAW
+
+### Bugfixes
+  - Save-as is (hopefully) no longer broken
+
+---
+
 **0.7.0**
 ### New Features
   - Create brand new maps
