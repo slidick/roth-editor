@@ -231,7 +231,7 @@ maps {
 	roth_res_test += "D:\\%s %s\n" % [raw_filename.get_basename(), map_info.das.replace("/", "\\").get_basename()]
 	
 	for custom_map_info:Dictionary in Roth.maps:
-		if custom_map_info.custom:
+		if custom_map_info.custom and custom_map_info.name != map_info.name:
 			roth_res_test += "D:\\%s %s\n" % [custom_map_info.raw.get_basename(), custom_map_info.das.replace("/", "\\").get_basename()]
 	
 	
