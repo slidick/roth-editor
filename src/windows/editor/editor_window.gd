@@ -273,17 +273,30 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 					%Map2D.close_map(item.get_metadata(0).map_info)
 					item.free()
 
+var previous_search: String
+var search_count: int = 0
 
 func _on_search_text_submitted(search_text: String) -> void:
 	if search_text.is_empty():
 		%Picker.deselect()
 		return
 	
+	if search_text == previous_search:
+		search_count += 1
+	else:
+		search_count = 0
+	previous_search = search_text
+	
 	var type: String = %SearchOption.get_item_text(%SearchOption.selected)
-	select_face(int(search_text), type)
+	select_face(int(search_text), type, "", search_count)
 
 
-func select_face(index: int, type: String, p_map_name: String = "") -> void:
+func _on_search_option_item_selected(_index: int) -> void:
+	search_count = 0
+	previous_search = ""
+
+
+func select_face(index: int, type: String, p_map_name: String = "", count: int = 0) -> void:
 	var maps_available := []
 	
 	for i in range(tree_root.get_child_count()):
@@ -300,22 +313,30 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 				for sector: Node3D in map_node.get_node("Sectors").get_children():
 					if index == sector.ref.index:
 						%Picker.select(sector)
+						return
 			"Sector ID":
 				for sector: Node3D in map_node.get_node("Sectors").get_children():
 					if index == sector.ref.data.floorTriggerID:
-						%Picker.select(sector)
+						if count == 0:
+							%Picker.select(sector)
+							return
+						count -= 1
 			"Face":
 				for face: Node3D in map_node.get_node("Faces").get_children():
 					if index == face.ref.index:
 						if face.get_child_count() > 0:
 							%Picker.select(face.get_child(0))
+							return
 			"Face ID":
 				for face: Node3D in map_node.get_node("Faces").get_children():
 					if ("additionalMetadata" in face.ref.texture_data
 						and index == face.ref.texture_data.additionalMetadata.unk0x0C
 					):
 						if face.get_child_count() > 0:
-							%Picker.select(face.get_child(0))
+							if count == 0:
+								%Picker.select(face.get_child(0))
+								return
+							count -= 1
 			"Object":
 				for object: Node3D in map_node.get_node("Objects").get_children():
 					if index == object.ref.index:
@@ -323,11 +344,19 @@ func select_face(index: int, type: String, p_map_name: String = "") -> void:
 			"Object ID":
 				for object: Node3D in map_node.get_node("Objects").get_children():
 					if index == object.ref.data.unk0x0E:
-						%Picker.select(object)
+						if count == 0:
+							%Picker.select(object)
+							return
+						count -= 1
 			"SFX":
 				for sfx: Node3D in map_node.get_node("SFX").get_children():
 					if index == sfx.ref.index:
 						%Picker.select(sfx)
+	if search_count > 0:
+		search_count = 0
+		previous_search = ""
+		select_face(index, type, p_map_name, search_count)
+
 
 func get_face(index: int, type: String, map_info: Dictionary) -> Variant:
 	var map_node: Node3D
