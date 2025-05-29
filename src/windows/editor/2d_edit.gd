@@ -133,7 +133,7 @@ func _input(event: InputEvent) -> void:
 				hovered_face = null
 				selected_face = null
 				hovered_sector = null
-				owner.select_face(selected_sector.index, "Sector")
+				owner.select_face(selected_sector.index, "Sector", map.map_info.name)
 				queue_redraw()
 				
 		elif not selected_face and selected_sector:
@@ -195,7 +195,7 @@ func _input(event: InputEvent) -> void:
 						queue_redraw()
 						%Picker.deselect()
 					elif event.pressed and hovered_face:
-						owner.select_face(hovered_face.index, "Face")
+						owner.select_face(hovered_face.index, "Face", map.map_info.name)
 						selected_face = hovered_face
 						selected_sector = hovered_sector
 						queue_redraw()
@@ -205,7 +205,7 @@ func _input(event: InputEvent) -> void:
 						queue_redraw()
 						%Picker.deselect()
 					elif event.pressed and hovered_sector:
-						owner.select_face(hovered_sector.index, "Sector")
+						owner.select_face(hovered_sector.index, "Sector", map.map_info.name)
 						selected_sector = hovered_sector
 						selected_face = null
 						queue_redraw()
@@ -614,7 +614,7 @@ func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool
 	for sfx: Section7_1.SFXNode2D in %SFX.get_children():
 		sfx.deselect()
 	if tell_3d:
-		owner.select_face(selected_object.ref.index, "Object")
+		owner.select_face(selected_object.ref.index, "Object", map.map_info.name)
 
 
 func _on_object_copied(object: ObjectRoth) -> void:
@@ -662,7 +662,7 @@ func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void
 	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		object.deselect()
 	if tell_3d:
-		owner.select_face(selected_sfx.ref.index, "SFX")
+		owner.select_face(selected_sfx.ref.index, "SFX", map.map_info.name)
 
 
 func _on_sfx_copied(object: Section7_1) -> void:
@@ -746,7 +746,7 @@ func check_for_hover() -> void:
 				hovered_sector = sector
 				if holding_mouse:
 					selected_sector = hovered_sector
-					owner.select_face(selected_sector.index, "Sector")
+					owner.select_face(selected_sector.index, "Sector", map.map_info.name)
 				queue_redraw()
 			return
 	if skip_sector_hover > 0:
@@ -770,7 +770,7 @@ func check_for_face_hover(sector: Sector) -> void:
 				hovered_face = face
 				if holding_mouse:
 					selected_face = hovered_face
-					owner.select_face(selected_face.index, "Face")
+					owner.select_face(selected_face.index, "Face", map.map_info.name)
 				queue_redraw()
 	if not found:
 		hovered_face = null
