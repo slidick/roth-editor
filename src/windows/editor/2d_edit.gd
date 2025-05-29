@@ -362,6 +362,7 @@ func setup(p_map: Map) -> void:
 	if map:
 		close_map(map.map_info)
 	map = p_map
+	%MapNameLabel.text = map.map_info.name.to_upper()
 	update_bounds()
 	update_camera_center()
 	update_camera_zoom()

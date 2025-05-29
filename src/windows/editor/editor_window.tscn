@@ -134,54 +134,59 @@ item_9/id = 0
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="0"]
+[node name="MapNameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="1"]
 layout_mode = 2
 text = "2D Edit Mode"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="2"]
 layout_mode = 2
 
-[node name="SectorCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="2"]
+[node name="SectorCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="3"]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 button_group = SubResource("ButtonGroup_kytel")
 text = "Sector/Face"
 
-[node name="ObjectCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="3"]
+[node name="ObjectCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="4"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
 text = "Object"
 
-[node name="SFXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="4"]
+[node name="SFXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="5"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
 text = "SFX"
 
-[node name="VertexCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="5"]
+[node name="VertexCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="6"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
 text = "Vertex"
 
-[node name="BoxCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="6"]
+[node name="BoxCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="7"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
 text = "Box"
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="7"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="8"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "Options"
 vertical_alignment = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="8"]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="9"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="9"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="10"]
 layout_mode = 2
 
 [node name="GridCheckBox" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer" index="0"]
@@ -200,7 +205,7 @@ rounded = true
 update_on_text_changed = true
 custom_arrow_step = 8.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="10"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer" index="11"]
 layout_mode = 2
 
 [node name="SnapCheckBox" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MapContainer/PanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2" index="0"]
