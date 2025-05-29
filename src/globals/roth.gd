@@ -204,80 +204,83 @@ func test_run_map(map_raw: PackedByteArray, map_info: Dictionary, with_objects: 
 	
 	var dosbox_bin: String = Settings.settings.locations.get("dosbox")
 	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
-	
-	
-	
 	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
 	var roth_res_test_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res")
 	
-	var raw_filename := "TEST_MAP.RAW"
-	var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(raw_filename)
-	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
-	file.store_buffer(map_raw)
-	file.close()
 	
-	var roth_res_test := """
-	version="Roth Custom Maps"
-	snd=data\\fxscript.sfx
-	das2=m\\ademo
+	
+	
+	var raw_filename: String
+	if map_info.custom:
+		save_custom(map_raw, map_info)
+		raw_filename = map_info.name.to_upper() + ".RAW"
+	else:
+		raw_filename = "TEST_MAP.RAW"
+		var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(raw_filename)
+		var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
+		file.store_buffer(map_raw)
+		file.close()
+	
+	var roth_res_test := """version="Roth Custom Maps"
+snd=data\\fxscript.sfx
+das2=m\\ademo
 
-	maps {
-	"""
+maps {
+"""
 	
 	roth_res_test += "D:\\%s %s\n" % [raw_filename.get_basename(), map_info.das.replace("/", "\\").get_basename()]
 	
 	for custom_map_info:Dictionary in Roth.maps:
 		if custom_map_info.custom:
-			roth_res_test += "	D:\\%s %s\n" % [custom_map_info.raw.get_basename(), custom_map_info.das.replace("/", "\\").get_basename()]
+			roth_res_test += "D:\\%s %s\n" % [custom_map_info.raw.get_basename(), custom_map_info.das.replace("/", "\\").get_basename()]
 	
 	
-	roth_res_test += """
-	m\\study1 m\\demo
-	m\\study2 m\\demo
-	m\\study3 m\\demo
-	m\\study4 m\\demo
-	m\\abagate2 m\\demo3
-	m\\optemp1 m\\demo
-	m\\anubis m\\demo2
-	m\\gnarl1 m\\demo2
-	m\\mauso1ea m\\demo4
-	m\\mauso1eb m\\demo4
-	m\\mas3 m\\demo4
-	m\\mas4 m\\demo4
-	m\\mas6 m\\demo4
-	m\\mas7 m\\demo4
-	m\\aelf m\\demo4
-	m\\caverns2 m\\demo4
-	m\\caverns3 m\\demo4
-	m\\grave m\\demo4
-	m\\maze m\\demo4
-	m\\dominion m\\demo3
-	m\\salvat m\\demo3
-	m\\dopple m\\demo3
-	m\\soulst2 m\\demo1
-	m\\soulst3 m\\demo1
-	m\\tower1 m\\demo2
-	m\\tgate1f m\\demo2
-	m\\tgate1g m\\demo2
-	m\\tgate1h m\\demo2
-	m\\tgate1i m\\demo2
-	m\\caverns m\\demo
-	m\\temple1 m\\demo
-	m\\raquia1 m\\demo1
-	m\\raquia2 m\\demo1
-	m\\raquia3 m\\demo1
-	m\\raquia4 m\\demo1
-	m\\raquia5 m\\demo1
-	m\\church1 m\\demo1
-	m\\vicar m\\demo1
-	m\\aqua1 m\\demo1
-	m\\aqua2 m\\demo1
-	m\\lrinth m\\demo1
-	m\\lrinth1 m\\demo1
-	m\\elohim1 m\\demo1
-	m\\vicar1 m\\demo1
-	}
-	"""
+	roth_res_test += """m\\study1 m\\demo
+m\\study2 m\\demo
+m\\study3 m\\demo
+m\\study4 m\\demo
+m\\abagate2 m\\demo3
+m\\optemp1 m\\demo
+m\\anubis m\\demo2
+m\\gnarl1 m\\demo2
+m\\mauso1ea m\\demo4
+m\\mauso1eb m\\demo4
+m\\mas3 m\\demo4
+m\\mas4 m\\demo4
+m\\mas6 m\\demo4
+m\\mas7 m\\demo4
+m\\aelf m\\demo4
+m\\caverns2 m\\demo4
+m\\caverns3 m\\demo4
+m\\grave m\\demo4
+m\\maze m\\demo4
+m\\dominion m\\demo3
+m\\salvat m\\demo3
+m\\dopple m\\demo3
+m\\soulst2 m\\demo1
+m\\soulst3 m\\demo1
+m\\tower1 m\\demo2
+m\\tgate1f m\\demo2
+m\\tgate1g m\\demo2
+m\\tgate1h m\\demo2
+m\\tgate1i m\\demo2
+m\\caverns m\\demo
+m\\temple1 m\\demo
+m\\raquia1 m\\demo1
+m\\raquia2 m\\demo1
+m\\raquia3 m\\demo1
+m\\raquia4 m\\demo1
+m\\raquia5 m\\demo1
+m\\church1 m\\demo1
+m\\vicar m\\demo1
+m\\aqua1 m\\demo1
+m\\aqua2 m\\demo1
+m\\lrinth m\\demo1
+m\\lrinth1 m\\demo1
+m\\elohim1 m\\demo1
+m\\vicar1 m\\demo1
+}
+"""
 	
 	var roth_res_test_file := FileAccess.open(roth_res_test_filepath, FileAccess.WRITE)
 	roth_res_test_file.store_string(roth_res_test)
