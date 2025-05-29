@@ -354,7 +354,7 @@ func select_face(index: int, type: String, p_map_name: String = "", count: int =
 						%Picker.select(sfx)
 	if search_count > 0:
 		search_count = 0
-		previous_search = ""
+		previous_search = str(index)
 		select_face(index, type, p_map_name, search_count)
 
 
