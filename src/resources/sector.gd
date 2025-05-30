@@ -181,10 +181,10 @@ func split_face(face_to_split: Face) -> Face:
 	for face_ref: WeakRef in faces:
 		var face: Face = face_ref.get_ref()
 		if face.sister:
-			face.sister.get_ref().initialize_mesh()
 			face.sister.get_ref().update_horizontal_fit()
-		face.initialize_mesh()
+			face.sister.get_ref().initialize_mesh()
 		face.update_horizontal_fit()
+		face.initialize_mesh()
 	return new_face
 
 
