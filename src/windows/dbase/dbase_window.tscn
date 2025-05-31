@@ -170,6 +170,17 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Backdrop" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="8"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 7
+
+[node name="BackdropRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Backdrop" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/CommandList" to="." method="_on_command_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer/CommandTree" to="." method="_on_command_tree_item_selected"]

@@ -118,6 +118,12 @@ func _on_settings_loaded() -> void:
 			var entry: Dictionary = sfx_entries[i]
 			var idx: int = %SFXList.add_item("%d: %s - %s" % [(i+1), entry.name, entry.desc])
 			%SFXList.set_item_metadata(idx, entry)
+	
+	# BACKDROP.RAW
+	%BackdropRect.texture = null
+	var image: Image = Backdrop.parse()
+	if image:
+		%BackdropRect.texture = ImageTexture.create_from_image(image)
 
 
 func _on_command_list_item_selected(index: int) -> void:
