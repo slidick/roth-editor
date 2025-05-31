@@ -107,6 +107,17 @@ func _on_settings_loaded() -> void:
 			var offset: int = icons_offsets[i]
 			var idx: int = %IconList.add_item("%d"  % (i+1))
 			%IconList.set_item_metadata(idx, offset)
+	
+	# FXSCRIPT.SFX
+	# Clear
+	%SFXList.clear()
+	
+	var sfx_entries: Array = FXScript.get_sfx_entries()
+	if not sfx_entries.is_empty():
+		for i in range(len(sfx_entries)):
+			var entry: Dictionary = sfx_entries[i]
+			var idx: int = %SFXList.add_item("%d: %s - %s" % [(i+1), entry.name, entry.desc])
+			%SFXList.set_item_metadata(idx, entry)
 
 
 func _on_command_list_item_selected(index: int) -> void:
@@ -323,3 +334,9 @@ func _on_icon_list_item_selected(index: int) -> void:
 	texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	texture_rect.texture = ImageTexture.create_from_image(image)
 	%IconPanel.add_child(texture_rect)
+
+
+func _on_sfx_list_item_activated(index: int) -> void:
+	var entry: Dictionary = %SFXList.get_item_metadata(index)
+	var entry_data := FXScript.get_from_entry(entry)
+	Roth.play_audio_entry(entry_data)

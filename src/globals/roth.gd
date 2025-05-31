@@ -334,5 +334,8 @@ func degrees_to_rotation(degrees: float) -> int:
 func play_audio_buffer(buffer: PackedVector2Array) -> void:
 	audio_player.play_buffer(buffer)
 
+func play_audio_entry(entry: Dictionary) -> void:
+	audio_player.play_entry(entry)
+
 func stop_audio_buffer() -> void:
 	audio_player.stop_buffer()
