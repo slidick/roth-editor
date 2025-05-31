@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dba8cygkkmhat"]
+[gd_scene load_steps=16 format=3 uid="uid://dba8cygkkmhat"]
 
 [ext_resource type="Script" uid="uid://c7m0sdb6bu4b3" path="res://src/main.gd" id="1_eewff"]
 [ext_resource type="StyleBox" uid="uid://cn25wp84p5qer" path="res://src/themes/menu_panel.tres" id="2_gh0ne"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://dxr5najj0quo3" path="res://src/windows/loading_window.tscn" id="9_kf8lf"]
 [ext_resource type="PackedScene" uid="uid://c18j0kkjserp8" path="res://src/windows/search_window.tscn" id="9_uewes"]
 [ext_resource type="PackedScene" uid="uid://s2yign08bgnw" path="res://src/windows/sound_effects_window.tscn" id="10_tb146"]
+[ext_resource type="PackedScene" uid="uid://dq8sxf6oabjnm" path="res://src/windows/dbase100/dbase_100_window.tscn" id="11_tb146"]
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/new_map_window.tscn" id="12_mlv6i"]
 [ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
 
@@ -130,7 +131,7 @@ unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_styles/panel = ExtResource("5_5mrjc")
-item_count = 4
+item_count = 5
 item_0/text = "Editor"
 item_0/checkable = 1
 item_0/id = 1
@@ -143,6 +144,9 @@ item_2/id = 0
 item_3/text = "Sound Viewer"
 item_3/checkable = 1
 item_3/id = 3
+item_4/text = "DBase100"
+item_4/checkable = 1
+item_4/id = 4
 
 [node name="Help" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
 unique_name_in_owner = true
@@ -252,6 +256,22 @@ offset_bottom = 342.5
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="DBase100" parent="Windows" instance=ExtResource("11_tb146")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -472.0
+offset_top = -313.5
+offset_right = 472.0
+offset_bottom = 313.5
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="AlwaysInFrontWindows" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -344,3 +364,4 @@ horizontal_alignment = 2
 [connection signal="search_result_activated" from="Windows/Search" to="AlwaysBehindWindows/Editor" method="_on_search_result_activated"]
 [connection signal="window_shown" from="Windows/Search" to="." method="_on_search_window_shown"]
 [connection signal="window_shown" from="Windows/SoundViewer" to="." method="_on_sound_effects_window_shown"]
+[connection signal="window_shown" from="Windows/DBase100" to="." method="_on_d_base_100_window_shown"]

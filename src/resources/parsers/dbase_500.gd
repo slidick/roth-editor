@@ -49,6 +49,33 @@ static func parse(filepath: String, offset: int) -> Array:
 		i += 1
 	return data
 
+static func get_at_offset(offset: int) -> Array:
+	var filepath: String = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE500.DAT")
+	if not FileAccess.file_exists(filepath):
+		return []
+	var file := FileAccess.open(filepath, FileAccess.READ)
+	var delta_table: Array = _init_delta_table()
+	
+	file.seek(8 * offset)
+		
+	var wav_header := Parser.parse_section(file, WAV_HEADER)
+	#print(JSON.stringify(wav_header, '\t', false))
+	
+	var dpcm_state := 0.0
+	var data_end: int = file.get_position() + wav_header.subChunk2Size
+	var data: Array = []
+	data.resize(wav_header.subChunk2Size)
+	var i: int = 0
+	while file.get_position() < data_end:
+		dpcm_state += delta_table[file.get_8()]
+		if dpcm_state > 32767:
+			dpcm_state -= 65536
+		if dpcm_state < -32768:
+			dpcm_state += 65536
+		data[i] = (Vector2.ONE * (dpcm_state/pow(2,15)))
+		i += 1
+	return data
+
 
 static func _init_delta_table() -> Array:
 	var delta_table := []

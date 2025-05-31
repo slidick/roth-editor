@@ -65,3 +65,54 @@ static func parse(filepath: String) -> Array:
 		#while file.get_position() % 2 > 0:
 			#var _padding := file.get_8()
 		#print("Length: %s, Timestamp: %s, Color: %s, String: %s" % [length, timestamp, font_color, string])
+
+
+static func get_at_offset(offset: int) -> Dictionary:
+	var filepath: String = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
+	if not FileAccess.file_exists(filepath):
+		return {}
+	var file := FileAccess.open(filepath, FileAccess.READ)
+	file.seek(offset)
+	var entry := Parser.parse_section(file, ARRAY01_ENTRY)
+	file.close()
+	return entry
+
+
+static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary:
+	var position: int = file.get_position()
+	file.seek(offset)
+	var subtitle := {}
+	subtitle["entries"] = []
+	while file.get_position() < file.get_length():
+		var length := file.get_16()
+		var timestamp := file.get_16()
+		if timestamp == 0xFFFF:
+			var _padding := file.get_32()
+			var length_str := file.get_16()
+			_padding = file.get_16()
+			var title := ""
+			for i in range(length_str):
+				title += String.chr(file.get_8())
+			while file.get_position() % 2 > 0:
+				_padding = file.get_8()
+			subtitle["title"] = title
+			break
+		if length == 0:
+			file.seek(file.get_position()-2)
+			continue
+		var font_color := file.get_8()
+		var string := ""
+		#for i in range(length_str-5):
+			#string += String.chr(file.get_8())
+		string = file.get_line()
+		while file.get_position() % 2 > 0:
+			var _padding := file.get_8()
+		subtitle["entries"].append({
+			"length": length,
+			"timestamp": timestamp,
+			"font_color": font_color,
+			"string": string,
+		})
+	
+	file.seek(position)
+	return subtitle
