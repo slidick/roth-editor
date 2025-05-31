@@ -14,6 +14,7 @@ func _ready() -> void:
 
 
 func _on_settings_loaded() -> void:
+	# DBase100
 	# Actions/Commands Clear
 	%CommandList.clear()
 	for tree_item: TreeItem in %CommandTree.get_root().get_children():
@@ -34,64 +35,78 @@ func _on_settings_loaded() -> void:
 	for node: Node in %InventoryPanel.get_children():
 		node.queue_free()
 	
+	# DBase100 Parse
 	dbase100 = DBase100.parse()
-	if dbase100.is_empty():
-		return
-	
-	# Actions/Commands
-	for i in range(len(dbase100.actions)):
-		var action: Dictionary = dbase100.actions[i]
-		if action.offset == 0:
-			continue
-		if action.length == 0:
-			continue
-		var idx: int = %CommandList.add_item("%d" % (i+1))
-		%CommandList.set_item_metadata(idx, action)
-		#if "unk_word_00" in action and action.unk_word_00 != 768:
-			#print(action)
-		#if "length" in action and action.length == 0:
-			#print(action)
-	
-	
-	# Cutscenes
-	for i in range(len(dbase100.cutscenes)):
-		var cutscene: Dictionary = dbase100.cutscenes[i]
-		if cutscene.name == "":
-			continue
-		var idx: int = %CutsceneList.add_item("%d: %s" % [(i+1), cutscene.name])
-		%CutsceneList.set_item_metadata(idx, cutscene)
-	
-	
-	# Interfaces
-	for i in range(len(dbase100.interfaces)):
-		var interface: Dictionary = dbase100.interfaces[i]
-		%InterfaceList.add_item("%d: %s" % [(i+1), interface.subtitle.string])
-	
-	
-	# Inventory
-	for i in range(len(dbase100.inventory)):
-		var inventory_item: Dictionary = dbase100.inventory[i]
-		var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.subtitle.string])
-		%InventoryList.set_item_metadata(idx, inventory_item)
-	
+	if not dbase100.is_empty():
+		# Actions/Commands
+		for i in range(len(dbase100.actions)):
+			var action: Dictionary = dbase100.actions[i]
+			if action.offset == 0:
+				continue
+			if action.length == 0:
+				continue
+			var idx: int = %CommandList.add_item("%d" % (i+1))
+			%CommandList.set_item_metadata(idx, action)
+			#if "unk_word_00" in action and action.unk_word_00 != 768:
+				#print(action)
+			#if "length" in action and action.length == 0:
+				#print(action)
+		
+		
+		# Cutscenes
+		for i in range(len(dbase100.cutscenes)):
+			var cutscene: Dictionary = dbase100.cutscenes[i]
+			if cutscene.name == "":
+				continue
+			var idx: int = %CutsceneList.add_item("%d: %s" % [(i+1), cutscene.name])
+			%CutsceneList.set_item_metadata(idx, cutscene)
+		
+		
+		# Interfaces
+		for i in range(len(dbase100.interfaces)):
+			var interface: Dictionary = dbase100.interfaces[i]
+			%InterfaceList.add_item("%d: %s" % [(i+1), interface.subtitle.string])
+		
+		
+		# Inventory
+		for i in range(len(dbase100.inventory)):
+			var inventory_item: Dictionary = dbase100.inventory[i]
+			var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.subtitle.string])
+			%InventoryList.set_item_metadata(idx, inventory_item)
+		
 	
 	
 	# DBASE200
-	var dbase200_offsets: Array = DBase200.get_animation_offsets()
-	if dbase200_offsets.is_empty():
-		return
-	
 	# DBase200 Clear
 	%DBase200List.clear()
 	for node: Node in %DBase200Panel.get_children():
 		node.queue_free()
 	%AnimationTimer.stop()
 	
-	# DBase200
-	for i in range(len(dbase200_offsets)):
-		var offset: int = dbase200_offsets[i]
-		var idx: int = %DBase200List.add_item("%d" % (i+1))
-		%DBase200List.set_item_metadata(idx, offset)
+	# DBase200 Parse
+	var dbase200_offsets: Array = DBase200.get_animation_offsets()
+	if not dbase200_offsets.is_empty():
+		# DBase200 Init
+		for i in range(len(dbase200_offsets)):
+			var offset: int = dbase200_offsets[i]
+			var idx: int = %DBase200List.add_item("%d" % (i+1))
+			%DBase200List.set_item_metadata(idx, offset)
+	
+	
+	# IconsAll
+	# IconsAll Clear
+	%IconList.clear()
+	for node: Node in %IconPanel.get_children():
+		node.queue_free()
+		
+	# IconsAll Parse
+	var icons_offsets: Array = IconsAll.get_icon_offsets()
+	if not icons_offsets.is_empty():
+		# IconsAll Init
+		for i in range(len(icons_offsets)):
+			var offset: int = icons_offsets[i]
+			var idx: int = %IconList.add_item("%d"  % (i+1))
+			%IconList.set_item_metadata(idx, offset)
 
 
 func _on_command_list_item_selected(index: int) -> void:
@@ -289,3 +304,22 @@ func _on_animation_timer_timeout() -> void:
 		return
 	animation_position = (animation_position + 1) % (len(animation) - 1)
 	animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])
+
+
+func _on_tab_container_tab_changed(_tab: int) -> void:
+	%AnimationTimer.stop()
+
+
+func _on_icon_list_item_selected(index: int) -> void:
+	for node: Node in %IconPanel.get_children():
+		node.queue_free()
+	var image_offset: int = %IconList.get_item_metadata(index)
+	var image: Image = IconsAll.get_at_offset(image_offset)
+	var texture_rect := TextureRect.new()
+	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	texture_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	texture_rect.custom_minimum_size.y = 100
+	texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	texture_rect.texture = ImageTexture.create_from_image(image)
+	%IconPanel.add_child(texture_rect)

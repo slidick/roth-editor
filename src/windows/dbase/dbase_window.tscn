@@ -83,6 +83,7 @@ layout_mode = 2
 
 [node name="CutsceneList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="0"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 allow_reselect = true
 allow_rmb_select = true
@@ -117,7 +118,7 @@ layout_mode = 2
 
 [node name="DBase200List" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 allow_reselect = true
 allow_rmb_select = true
@@ -132,9 +133,35 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 wait_time = 0.1
 
+[node name="Icons" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="6"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons" index="0"]
+layout_mode = 2
+
+[node name="IconList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+allow_reselect = true
+allow_rmb_select = true
+auto_width = true
+
+[node name="IconPanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer/IconPanel" index="0"]
+layout_mode = 2
+
+[connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/CommandList" to="." method="_on_command_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer/CommandTree" to="." method="_on_command_tree_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryList" to="." method="_on_inventory_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer/DBase200List" to="." method="_on_d_base_200_list_item_selected"]
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/AnimationTimer" to="." method="_on_animation_timer_timeout"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer/IconList" to="." method="_on_icon_list_item_selected"]

@@ -65,3 +65,42 @@ static func parse_section_value(file: FileAccess, type: Variant) -> Variant:
 			return value
 		_:
 			return null
+
+
+static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette: Array) -> Image:
+	var decoded_sprite_size: int = rle_image_hdr.width * rle_image_hdr.height * 4
+	var decoded_sprite_buffer: Array = []
+	decoded_sprite_buffer.resize(decoded_sprite_size)
+	
+	var dest_idx: int = 0
+	while dest_idx < decoded_sprite_size:
+		var byte: int = file.get_8()
+		if byte > 0xF0:
+			var pixel_count: int = byte & 0x0F
+			var value: int = file.get_8()
+			var pixel_value: Array = palette[value].duplicate()
+			if palette[value] == [0,0,0] and value == 0:
+				pixel_value.append(0)
+			else:
+				pixel_value.append(255)
+			for i in range(pixel_count):
+				decoded_sprite_buffer[dest_idx] = pixel_value[0]
+				decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
+				decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
+				decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
+				dest_idx += 4
+		else:
+			var pixel_value: Array = palette[byte].duplicate()
+			if palette[byte] == [0,0,0] and byte == 0:
+				pixel_value.append(0)
+			else:
+				pixel_value.append(255)
+			decoded_sprite_buffer[dest_idx] = pixel_value[0]
+			decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
+			decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
+			decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
+			dest_idx += 4
+	
+	var image := Image.create_from_data(rle_image_hdr.width, rle_image_hdr.height, false, Image.FORMAT_RGBA8, decoded_sprite_buffer)
+	
+	return image
