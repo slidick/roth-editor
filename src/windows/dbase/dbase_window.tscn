@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uerpl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5d3u0"]
-[ext_resource type="Script" uid="uid://cd6kkomqlbspw" path="res://src/windows/dbase100/dbase_100_window.gd" id="2_d2ulm"]
+[ext_resource type="Script" uid="uid://cd6kkomqlbspw" path="res://src/windows/dbase/dbase_window.gd" id="2_d2ulm"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_xdice"]
 
 [node name="DBase100Window" instance=ExtResource("1_uerpl")]
@@ -26,7 +26,7 @@ layout_mode = 2
 
 [node name="CommandList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 allow_reselect = true
 auto_width = true
@@ -107,7 +107,34 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Animations" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="5"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations" index="0"]
+layout_mode = 2
+
+[node name="DBase200List" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+allow_reselect = true
+allow_rmb_select = true
+auto_width = true
+
+[node name="DBase200Panel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AnimationTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations" index="1"]
+unique_name_in_owner = true
+wait_time = 0.1
+
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/CommandList" to="." method="_on_command_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer/CommandTree" to="." method="_on_command_tree_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryList" to="." method="_on_inventory_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer/DBase200List" to="." method="_on_d_base_200_list_item_selected"]
+[connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/AnimationTimer" to="." method="_on_animation_timer_timeout"]

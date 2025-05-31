@@ -1,6 +1,9 @@
 extends BaseWindow
 
 var dbase100: Dictionary = {}
+var animation: Array
+var animation_position: int = 0
+var animation_rect: TextureRect
 
 func _ready() -> void:
 	super._ready()
@@ -71,6 +74,24 @@ func _on_settings_loaded() -> void:
 		var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.subtitle.string])
 		%InventoryList.set_item_metadata(idx, inventory_item)
 	
+	
+	
+	# DBASE200
+	var dbase200_offsets: Array = DBase200.get_animation_offsets()
+	if dbase200_offsets.is_empty():
+		return
+	
+	# DBase200 Clear
+	%DBase200List.clear()
+	for node: Node in %DBase200Panel.get_children():
+		node.queue_free()
+	%AnimationTimer.stop()
+	
+	# DBase200
+	for i in range(len(dbase200_offsets)):
+		var offset: int = dbase200_offsets[i]
+		var idx: int = %DBase200List.add_item("%d" % (i+1))
+		%DBase200List.set_item_metadata(idx, offset)
 
 
 func _on_command_list_item_selected(index: int) -> void:
@@ -181,21 +202,44 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(index)
 	
-	var vbox := VBoxContainer.new()
-	var scroll := ScrollContainer.new()
-	scroll.add_child(vbox)
-	%InventoryPanel.add_child(scroll)
 	
 	var title := Label.new()
+	#title.size_flags_horizontal = Control.SIZE_SHRINK_CENTER & Control.SIZE_EXPAND
 	title.text = "%s" % inventory_item.subtitle.string
-	vbox.add_child(title)
-	vbox.add_child(HSeparator.new())
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	var vbox_main := VBoxContainer.new()
+	vbox_main.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox_main.add_child(title)
+	vbox_main.add_child(HSeparator.new())
+	%InventoryPanel.add_child(vbox_main)
+	
+	var vbox := VBoxContainer.new()
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.add_child(vbox)
+	
+	if "inventory_image" in inventory_item and inventory_item["inventory_image"] != 0:
+		var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8+4)
+		var texture_rect := TextureRect.new()
+		texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		texture_rect.custom_minimum_size.y = 150
+		#texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		texture_rect.texture = ImageTexture.create_from_image(image)
+		vbox_main.add_child(texture_rect)
+	
+	vbox_main.add_child(scroll)
 	
 	for key: String in inventory_item:
 		if key == "subtitle" or key == "offset_dbase400":
 			continue
 		
 		var hbox := HBoxContainer.new()
+		
 		vbox.add_child(hbox)
 		
 		var label1 := Label.new()
@@ -206,6 +250,42 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		var label2 := Label.new()
 		label2.text = "%s" % [inventory_item[key]]
 		#label2.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
-		#label2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hbox.add_child(label2)
-		
+
+
+func _on_d_base_200_list_item_selected(index: int) -> void:
+	for node: Node in %DBase200Panel.get_children():
+		node.queue_free()
+	%AnimationTimer.stop()
+	var image_offset: int = %DBase200List.get_item_metadata(index)
+	var image: Variant = DBase200.get_at_offset(image_offset)
+	match typeof(image):
+		TYPE_ARRAY:
+			animation_position = 0
+			animation = image
+			animation_rect = TextureRect.new()
+			animation_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			animation_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			animation_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			animation_rect.custom_minimum_size.y = 100
+			animation_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])
+			%DBase200Panel.add_child(animation_rect)
+			%AnimationTimer.start()
+		TYPE_OBJECT:
+			var texture_rect := TextureRect.new()
+			texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			texture_rect.custom_minimum_size.y = 100
+			texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			texture_rect.texture = ImageTexture.create_from_image(image)
+			%DBase200Panel.add_child(texture_rect)
+
+
+func _on_animation_timer_timeout() -> void:
+	if len(animation) == 1:
+		return
+	animation_position = (animation_position + 1) % (len(animation) - 1)
+	animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])

@@ -18,7 +18,7 @@ enum WindowID {
 	Search,
 	DAS,
 	Sound,
-	DBase100,
+	DbaseViewer,
 }
 
 enum HelpID {
@@ -161,8 +161,8 @@ func _on_windows_index_pressed(index: int) -> void:
 			%Search.toggle()
 		WindowID.Sound:
 			%SoundViewer.toggle()
-		WindowID.DBase100:
-			%DBase100.toggle()
+		WindowID.DbaseViewer:
+			%DbaseViewer.toggle()
 
 
 func _on_help_index_pressed(index: int) -> void:
@@ -192,4 +192,4 @@ func _on_sound_effects_window_shown(_bool: bool) -> void:
 
 
 func _on_d_base_100_window_shown(_bool: bool) -> void:
-	%Windows.set_item_checked(WindowID.DBase100, _bool)
+	%Windows.set_item_checked(WindowID.DbaseViewer, _bool)
