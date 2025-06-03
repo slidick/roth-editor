@@ -11,6 +11,7 @@ func _ready() -> void:
 	%CommandTree.create_item()
 	%CommandTree.set_column_title(0, "Command")
 	%CommandTree.set_column_title(1, "Value")
+	Roth.gdv_loading_updated.connect(_on_gdv_loading_updated)
 
 
 func _on_settings_loaded() -> void:
@@ -26,6 +27,7 @@ func _on_settings_loaded() -> void:
 	%CutsceneList.clear()
 	for node: Node in %CutscenePanel.get_children():
 		node.queue_free()
+	%VideoControlsContainer.hide()
 	
 	# Interface Clear
 	%InterfaceList.clear()
@@ -202,6 +204,8 @@ func _on_cutscene_list_item_selected(index: int) -> void:
 	for node: Node in %CutscenePanel.get_children():
 		node.queue_free()
 	
+	%VideoControlsContainer.show()
+	
 	var cutscene: Dictionary = %CutsceneList.get_item_metadata(index)
 	
 	var vbox := VBoxContainer.new()
@@ -226,6 +230,147 @@ func _on_cutscene_list_item_selected(index: int) -> void:
 				continue
 			var color: String = Color(palette[subtitle_line.font_color][0], palette[subtitle_line.font_color][1], palette[subtitle_line.font_color][2]).to_html()
 			rich_text.append_text("- [color=%s]%s[/color]\n" % [color, subtitle_line.string])
+
+
+func _on_cutscene_list_item_activated(_index: int) -> void:
+	%VideoTimer.stop()
+	play_video()
+
+func _on_play_video_button_pressed() -> void:
+	play_video()
+
+func _on_pause_video_button_pressed() -> void:
+	pause_video()
+
+func _on_stop_video_button_pressed() -> void:
+	stop_video()
+
+
+var current_video: Dictionary = {}
+var current_frame: int = 0
+var dragging_slider: bool = false
+
+func play_video() -> void:
+	if not %VideoTimer.is_stopped():
+		pause_video()
+		return
+	stop_video()
+	var cutscene: Dictionary = %CutsceneList.get_item_metadata(%CutsceneList.get_selected_items()[0])
+	var gdv: Dictionary
+	if current_video.is_empty() or (current_video and current_video.name != cutscene.name):
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var thread := Thread.new()
+		#gdv = GDV.parse(cutscene.name)
+		%VideoLoadingBar.show()
+		%VideoLoadingBar.value = 0
+		thread.start(parse_thread.bind(cutscene.name))
+		gdv = await gdv_parsing_done
+		%VideoLoadingBar.hide()
+		thread.wait_to_finish()
+	else:
+		gdv = current_video
+	if not gdv.is_empty():
+		Roth.play_audio_buffer(gdv.audio)
+		current_video = gdv
+		current_frame = 0
+		%VideoTitleLabel.text = "%s" % gdv.name
+		%VideoRect.texture = ImageTexture.create_from_image(current_video.video[current_frame])
+		%VideoTimer.paused = false
+		%VideoTimer.start()
+		%VideoSlider.max_value = len(current_video.video) - 1
+		%VideoTimeLabel.text = "%s/%s" % [_seconds_to_time(0), _seconds_to_time(int(float(len(current_video.video)/current_video.header.framerate)))]
+
+signal gdv_parsing_done(gdv: Dictionary)
+
+func parse_thread(gdv_name: String) -> void:
+	var gdv: Dictionary = GDV.parse(gdv_name)
+	gdv_parsing_done.emit.call_deferred(gdv)
+
+
+func _on_gdv_loading_updated(progress: float, _gdv_name: String) -> void:
+	%VideoLoadingBar.value = progress * 100
+
+
+func pause_video() -> void:
+	if %VideoTimer.paused:
+		%VideoTimer.paused = false
+		#Roth.unpause_audio()
+		var percentage: float = float(current_frame)/len(current_video.video)
+		var audio_frame: int = int(len(current_video.audio) * percentage)
+		Roth.play_audio_buffer(current_video.audio.slice(int(audio_frame)))
+	else:
+		Roth.stop_audio_buffer()
+		#Roth.pause_audio()
+		%VideoTimer.paused = true
+
+
+func _on_video_timer_timeout() -> void:
+	if current_frame+1 >= len(current_video.video)-1:
+		stop_video()
+		current_frame = len(current_video.video)-1
+		%VideoSlider.value = current_frame
+		%VideoRect.texture = ImageTexture.create_from_image(current_video.video[current_frame-1])
+		%VideoTimeLabel.text = "%s/%s" % [_seconds_to_time(int(float(current_frame-1)/current_video.header.framerate)), _seconds_to_time(int(float(len(current_video.video)/current_video.header.framerate)))]
+		return
+	current_frame = (current_frame + 1) % (len(current_video.video) - 1)
+	%VideoRect.texture = ImageTexture.create_from_image(current_video.video[current_frame])
+	%VideoTimeLabel.text = "%s/%s" % [_seconds_to_time(int(float(current_frame)/current_video.header.framerate)), _seconds_to_time(int(float(len(current_video.video)/current_video.header.framerate)))]
+
+	if not dragging_slider:
+		%VideoSlider.value = current_frame
+
+
+func _on_video_slider_drag_ended(value_changed: bool) -> void:
+	dragging_slider = false
+	%VideoDragLabel.text = ""
+	if value_changed:
+		current_frame = %VideoSlider.value - 1
+		if current_frame < 0:
+			current_frame = 0
+		if not %VideoTimer.paused and not %VideoTimer.is_stopped():
+			var percentage: float = float(current_frame)/len(current_video.video)
+			var audio_frame: int = int(len(current_video.audio) * percentage)
+			Roth.play_audio_buffer(current_video.audio.slice(int(audio_frame)))
+		_on_video_timer_timeout()
+
+
+func _on_video_slider_drag_started() -> void:
+	dragging_slider = true
+
+
+func _on_video_slider_value_changed(value: float) -> void:
+	if dragging_slider:
+		%VideoDragLabel.text = "%s" % _seconds_to_time(int(float(value)/current_video.header.framerate))
+		if %VideoTimer.paused or %VideoTimer.is_stopped():
+			%VideoRect.texture = ImageTexture.create_from_image(current_video.video[value])
+
+func stop_video() -> void:
+	#print("STOP")
+	GDV.stop_loading()
+	Roth.stop_audio_buffer()
+	#%VideoTimer.stop()
+	if current_video:
+		%VideoRect.texture = ImageTexture.create_from_image(current_video.video[0])
+		%VideoTimeLabel.text = "00:00/%s" % [_seconds_to_time(int(float(len(current_video.video)/current_video.header.framerate)))]
+	%VideoSlider.value = 0
+	#%VideoSlider.max_value = 0
+	%VideoTimer.paused = true
+	current_frame = 0
+
+
+func _seconds_to_time(total: int) -> String:
+	var seconds: int = total % 60
+	@warning_ignore("integer_division")
+	var minutes: int = total / 60
+	@warning_ignore("integer_division")
+	var hours: int = minutes / 60
+	if minutes >= 60:
+		minutes = minutes % 60
+	var result := "%02d:%02d:%02d" % [hours,minutes,seconds]
+	if hours == 0:
+		result = "%02d:%02d" % [minutes,seconds]
+	return result
 
 
 func _on_inventory_list_item_selected(index: int) -> void:

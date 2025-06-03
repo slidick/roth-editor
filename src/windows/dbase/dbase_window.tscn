@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://dq8sxf6oabjnm"]
+[gd_scene load_steps=8 format=3 uid="uid://dq8sxf6oabjnm"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uerpl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5d3u0"]
 [ext_resource type="Script" uid="uid://cd6kkomqlbspw" path="res://src/windows/dbase/dbase_window.gd" id="2_d2ulm"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_xdice"]
+[ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="5_kfkbs"]
+[ext_resource type="Texture2D" uid="uid://caffbwravy0jl" path="res://assets/icons/player-pause.svg" id="6_kuqxe"]
+[ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="6_sgd02"]
 
 [node name="DBase100Window" instance=ExtResource("1_uerpl")]
 offset_right = 944.0
@@ -15,9 +18,10 @@ panel_style_override = ExtResource("4_xdice")
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 layout_mode = 2
-current_tab = 0
+current_tab = 2
 
 [node name="Commands" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -74,7 +78,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Cutscenes" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="3"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -89,11 +92,80 @@ allow_reselect = true
 allow_rmb_select = true
 auto_width = true
 
-[node name="CutscenePanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="1"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CutscenePanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer" index="0"]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer" index="0"]
+layout_mode = 2
+
+[node name="VideoTitleLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="VideoRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VideoTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoRect" index="0"]
+unique_name_in_owner = true
+wait_time = 0.083
+
+[node name="VideoLoadingBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="3"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="4"]
+layout_mode = 2
+
+[node name="VideoSlider" type="HSlider" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 0.0
+
+[node name="VideoDragLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VideoControlsContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PlayVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="0"]
+layout_mode = 2
+icon = ExtResource("5_kfkbs")
+
+[node name="PauseVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="1"]
+layout_mode = 2
+icon = ExtResource("6_kuqxe")
+
+[node name="StopVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="2"]
+layout_mode = 2
+icon = ExtResource("6_sgd02")
+
+[node name="VideoTimeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+text = "00:00/0:00"
 
 [node name="Interface" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="4"]
 visible = false
@@ -185,7 +257,15 @@ stretch_mode = 5
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/CommandList" to="." method="_on_command_list_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer/CommandTree" to="." method="_on_command_tree_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryList" to="." method="_on_inventory_list_item_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_activated"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_selected"]
+[connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoRect/VideoTimer" to="." method="_on_video_timer_timeout"]
+[connection signal="drag_ended" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/VideoSlider" to="." method="_on_video_slider_drag_ended"]
+[connection signal="drag_started" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/VideoSlider" to="." method="_on_video_slider_drag_started"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/VideoSlider" to="." method="_on_video_slider_value_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer/PlayVideoButton" to="." method="_on_play_video_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer/PauseVideoButton" to="." method="_on_pause_video_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer/StopVideoButton" to="." method="_on_stop_video_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer/DBase200List" to="." method="_on_d_base_200_list_item_selected"]
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/AnimationTimer" to="." method="_on_animation_timer_timeout"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer/IconList" to="." method="_on_icon_list_item_selected"]
