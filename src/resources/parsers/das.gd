@@ -155,8 +155,19 @@ static func load_das(das_file: String) -> Dictionary:
 
 
 static func _load_das_thread(das_file: String) -> void:
-	var das: Dictionary = _parse_das(das_file)
+	#var das: Dictionary = _parse_das(das_file)
+	var palette: Array = test_for_palette(Roth.directory.path_join(das_file))
+	var das: Dictionary = RothExt.load_das(Roth.directory.path_join(das_file), func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_file.get_file()), palette)
 	Roth.das_loading_finished.emit.call_deferred(das)
+
+
+static func test_for_palette(file_path: String) -> Array:
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	var das_header: Dictionary = _parse_header(file)
+	var palette: Array = Array()
+	if das_header["paletteOffset"] == 0:
+		palette = get_default_palette()
+	return palette
 
 
 static func get_default_palette(palette_file: String = DEFAULT_PALETTE_FILE) -> Array:

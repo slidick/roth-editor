@@ -2,4 +2,7 @@
 .godot/
 /android/
 .aider*
-bin/
+/bin/
+.sconsign.dblite
+*.os
+.vscode/

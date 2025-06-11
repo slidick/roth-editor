@@ -261,7 +261,6 @@ func play_video() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var thread := Thread.new()
-		#gdv = GDV.parse(cutscene.name)
 		%VideoLoadingBar.show()
 		%VideoLoadingBar.value = 0
 		thread.start(parse_thread.bind(cutscene.name))
@@ -284,11 +283,13 @@ func play_video() -> void:
 signal gdv_parsing_done(gdv: Dictionary)
 
 func parse_thread(gdv_name: String) -> void:
-	var gdv: Dictionary = GDV.parse(gdv_name)
+	#var gdv: Dictionary = GDV.get_video(gdv_name)
+	var gdv_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % gdv_name)
+	var gdv: Dictionary = RothExt.get_video_by_path(gdv_filepath, func (percent: float) -> void: Roth.gdv_loading_updated.emit(percent))
 	gdv_parsing_done.emit.call_deferred(gdv)
 
 
-func _on_gdv_loading_updated(progress: float, _gdv_name: String) -> void:
+func _on_gdv_loading_updated(progress: float) -> void:
 	%VideoLoadingBar.value = progress * 100
 
 
@@ -347,7 +348,8 @@ func _on_video_slider_value_changed(value: float) -> void:
 
 func stop_video() -> void:
 	#print("STOP")
-	GDV.stop_loading()
+	#GDV.stop_loading()
+	RothExt.stop_video_loading()
 	Roth.stop_audio_buffer()
 	#%VideoTimer.stop()
 	if current_video:
@@ -398,6 +400,9 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.add_child(vbox)
 	
+	var image_hbox := HBoxContainer.new()
+	vbox_main.add_child(image_hbox)
+	
 	if "inventory_image" in inventory_item and inventory_item["inventory_image"] != 0:
 		var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8+4)
 		var texture_rect := TextureRect.new()
@@ -405,9 +410,36 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		texture_rect.custom_minimum_size.y = 150
-		#texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		texture_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		texture_rect.texture = ImageTexture.create_from_image(image)
-		vbox_main.add_child(texture_rect)
+		image_hbox.add_child(texture_rect)
+	if "closeup_image" in inventory_item and inventory_item["closeup_image"] != 0:
+		var video: Dictionary = DBase300.get_at_offset(inventory_item["closeup_image"]*8)
+		if video:
+			
+			var texture_rect := TextureRect.new()
+			texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			texture_rect.custom_minimum_size.y = 150
+			texture_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			#texture_rect.texture = ImageTexture.create_from_image(image)
+			image_hbox.add_child(texture_rect)
+			
+			var animated_image := AnimatedSprite2D.new()
+			animated_image.hide()
+			var sprite_frames := SpriteFrames.new()
+			animated_image.sprite_frames = sprite_frames
+			sprite_frames.set_animation_speed("default", 12)
+			for image: Image in video.video:
+				sprite_frames.add_frame("default", ImageTexture.create_from_image(image))
+			if inventory_item.closeup_type & 1 > 0:
+				sprite_frames.set_animation_loop("default", false)
+			animated_image.play("default")
+			animated_image.frame_changed.connect(func () -> void: texture_rect.texture = sprite_frames.get_frame_texture("default", animated_image.frame))
+			image_hbox.add_child(animated_image)
+			
+			
 	
 	vbox_main.add_child(scroll)
 	

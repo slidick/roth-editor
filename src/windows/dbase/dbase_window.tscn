@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dq8sxf6oabjnm"]
+[gd_scene load_steps=9 format=3 uid="uid://dq8sxf6oabjnm"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uerpl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5d3u0"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="5_kfkbs"]
 [ext_resource type="Texture2D" uid="uid://caffbwravy0jl" path="res://assets/icons/player-pause.svg" id="6_kuqxe"]
 [ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="6_sgd02"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sgd02"]
 
 [node name="DBase100Window" instance=ExtResource("1_uerpl")]
 offset_right = 944.0
@@ -76,6 +78,9 @@ auto_width = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryPanel" index="0"]
+sprite_frames = SubResource("SpriteFrames_sgd02")
 
 [node name="Cutscenes" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="3"]
 layout_mode = 2

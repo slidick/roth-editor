@@ -40,7 +40,7 @@ static func stop_loading() -> void:
 	_stop_loading = true
 
 
-static func parse(filename: String) -> Dictionary:
+static func get_video(filename: String) -> Dictionary:
 	if is_loading:
 		return {}
 	is_loading = true
@@ -49,7 +49,10 @@ static func parse(filename: String) -> Dictionary:
 		return {}
 	#print("Parsing: %s" % gdv_filepath)
 	var file := FileAccess.open(gdv_filepath, FileAccess.READ)
-	
+	return parse_file(file).merged({"name": filename})
+
+
+static func parse_file(file: FileAccess) -> Dictionary:
 	# Header
 	var header := Parser.parse_section(file, HEADER)
 	assert(header.signature == 688986516)
@@ -121,11 +124,10 @@ static func parse(filename: String) -> Dictionary:
 			_stop_loading = false
 			is_loading = false
 			return {}
-		Roth.gdv_loading_updated.emit.call_deferred(float(i) / header.nb_frames, filename)
+		Roth.gdv_loading_updated.emit.call_deferred(float(i) / header.nb_frames)
 	
 	is_loading = false
 	return {
-		"name": filename,
 		"header": header,
 		"audio": audio,
 		"video": video,
@@ -191,7 +193,6 @@ class FrameDecoder extends RefCounted:
 	var frame_height: int
 	var frame_header: Dictionary
 	var pixels: PackedByteArray
-	var previous_frame_vertical_scaling: bool
 	var reader: BitReader
 	var palette: Array
 	

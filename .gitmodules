@@ -4,3 +4,7 @@
 [submodule "addons/settings_system"]
 	path = addons/settings_system
 	url = https://github.com/slidick/godot-settings-system
+[submodule "addons/roth_gdextension/godot-cpp"]
+	path = addons/roth_gdextension/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 4.4

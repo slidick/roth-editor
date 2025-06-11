@@ -10,7 +10,7 @@ signal das_loading_started
 signal das_loading_updated(progress: float, das_file: String)
 signal das_loading_finished(das: Dictionary)
 @warning_ignore("unused_signal")
-signal gdv_loading_updated(progress: float, gdv_name: String)
+signal gdv_loading_updated(progress: float)
 
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
