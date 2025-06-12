@@ -98,9 +98,7 @@ func _on_settings_loaded() -> void:
 	# IconsAll
 	# IconsAll Clear
 	%IconList.clear()
-	for node: Node in %IconPanel.get_children():
-		node.queue_free()
-		
+	
 	# IconsAll Parse
 	var icons_offsets: Array = IconsAll.get_icon_offsets()
 	if not icons_offsets.is_empty():
@@ -108,7 +106,8 @@ func _on_settings_loaded() -> void:
 		for i in range(len(icons_offsets)):
 			var offset: int = icons_offsets[i]
 			var idx: int = %IconList.add_item("%d"  % (i+1))
-			%IconList.set_item_metadata(idx, offset)
+			var image: Image = IconsAll.get_at_offset(offset)
+			%IconList.set_item_icon(idx, ImageTexture.create_from_image(image))
 	
 	# FXSCRIPT.SFX
 	# Clear
@@ -502,21 +501,6 @@ func _on_animation_timer_timeout() -> void:
 
 func _on_tab_container_tab_changed(_tab: int) -> void:
 	%AnimationTimer.stop()
-
-
-func _on_icon_list_item_selected(index: int) -> void:
-	for node: Node in %IconPanel.get_children():
-		node.queue_free()
-	var image_offset: int = %IconList.get_item_metadata(index)
-	var image: Image = IconsAll.get_at_offset(image_offset)
-	var texture_rect := TextureRect.new()
-	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	texture_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
-	texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	texture_rect.custom_minimum_size.y = 100
-	texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	texture_rect.texture = ImageTexture.create_from_image(image)
-	%IconPanel.add_child(texture_rect)
 
 
 func _on_sfx_list_item_activated(index: int) -> void:

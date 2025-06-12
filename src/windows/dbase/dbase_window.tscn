@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dq8sxf6oabjnm"]
+[gd_scene load_steps=8 format=3 uid="uid://dq8sxf6oabjnm"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uerpl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5d3u0"]
@@ -7,8 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="5_kfkbs"]
 [ext_resource type="Texture2D" uid="uid://caffbwravy0jl" path="res://assets/icons/player-pause.svg" id="6_kuqxe"]
 [ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="6_sgd02"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_sgd02"]
 
 [node name="DBase100Window" instance=ExtResource("1_uerpl")]
 offset_right = 944.0
@@ -20,10 +18,9 @@ panel_style_override = ExtResource("4_xdice")
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 layout_mode = 2
-current_tab = 2
+current_tab = 0
 
 [node name="Commands" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -79,10 +76,8 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryPanel" index="0"]
-sprite_frames = SubResource("SpriteFrames_sgd02")
-
 [node name="Cutscenes" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="3"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -220,19 +215,14 @@ layout_mode = 2
 
 [node name="IconList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-allow_reselect = true
-allow_rmb_select = true
-auto_width = true
-
-[node name="IconPanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer" index="1"]
-unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer/IconPanel" index="0"]
-layout_mode = 2
+allow_reselect = true
+allow_rmb_select = true
+max_columns = 0
+icon_mode = 0
+fixed_icon_size = Vector2i(100, 100)
 
 [node name="SFX" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="7"]
 visible = false
@@ -273,5 +263,4 @@ stretch_mode = 5
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer/StopVideoButton" to="." method="_on_stop_video_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer/DBase200List" to="." method="_on_d_base_200_list_item_selected"]
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/AnimationTimer" to="." method="_on_animation_timer_timeout"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer/IconList" to="." method="_on_icon_list_item_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/TabContainer/SFX/HBoxContainer/SFXList" to="." method="_on_sfx_list_item_activated"]
