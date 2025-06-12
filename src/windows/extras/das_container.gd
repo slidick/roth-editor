@@ -1,4 +1,4 @@
-extends BaseWindow
+extends Control
 
 
 var animation: Array
@@ -7,7 +7,6 @@ var animation_rect: TextureRect
 
 
 func _ready() -> void:
-	super._ready()
 	Roth.das_loading_started.connect(_on_das_loading_start)
 	Roth.das_loading_updated.connect(_on_das_loading_update)
 	Roth.das_loading_finished.connect(_on_das_loading_finished)
@@ -82,7 +81,7 @@ func clear_texture() -> void:
 
 func _on_roth_settings_loaded() -> void:
 	Console.print("Settings Loaded")
-	%DASViewer.set_das_list(Roth.das_files)
+	set_das_list(Roth.das_files)
 
 
 func _on_das_files_item_selected(_index: int) -> void:
@@ -93,7 +92,7 @@ func _on_load_button_pressed() -> void:
 	load_das(%DASFiles.get_selected_metadata())
 
 
-func _on_text_item_selected(index: int) -> void:
+func _on_texture_list_item_selected(index: int) -> void:
 	var meta: Variant = %TextureList.get_item_metadata(index)
 	if meta:
 		if meta.has("animation"):

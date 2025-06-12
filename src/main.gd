@@ -16,9 +16,7 @@ enum Main {
 enum WindowID {
 	Editor,
 	Search,
-	DAS,
-	Sound,
-	DbaseViewer,
+	Extras,
 }
 
 enum HelpID {
@@ -153,26 +151,18 @@ func _on_main_index_pressed(index: int) -> void:
 
 func _on_windows_index_pressed(index: int) -> void:
 	match index:
-		WindowID.DAS:
-			%DASViewer.toggle()
 		WindowID.Editor:
 			%Editor.toggle()
 		WindowID.Search:
 			%Search.toggle()
-		WindowID.Sound:
-			%SoundViewer.toggle()
-		WindowID.DbaseViewer:
-			%DbaseViewer.toggle()
+		WindowID.Extras:
+			%Extras.toggle()
 
 
 func _on_help_index_pressed(index: int) -> void:
 	match index:
 		HelpID.Controls:
 			%Controls.toggle()
-
-
-func _on_das_window_window_shown(_bool: bool) -> void:
-	%Windows.set_item_checked(WindowID.DAS, _bool)
 
 
 func _on_view_3d_window_window_shown(_bool: bool) -> void:
@@ -187,9 +177,5 @@ func _on_search_window_shown(_bool: bool) -> void:
 	%Windows.set_item_checked(WindowID.Search, _bool)
 
 
-func _on_sound_effects_window_shown(_bool: bool) -> void:
-	%Windows.set_item_checked(WindowID.Sound, _bool)
-
-
-func _on_d_base_100_window_shown(_bool: bool) -> void:
-	%Windows.set_item_checked(WindowID.DbaseViewer, _bool)
+func _on_extras_window_shown(_bool: bool) -> void:
+	%Windows.set_item_checked(WindowID.Extras, _bool)

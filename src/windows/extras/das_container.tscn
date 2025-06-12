@@ -1,0 +1,152 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwqbfmf1jcvvm"]
+
+[ext_resource type="StyleBox" uid="uid://bxb0wg00e7qct" path="res://src/themes/loading_bar_background.tres" id="1_dd7hf"]
+[ext_resource type="Script" uid="uid://dvw1ym85q7blq" path="res://src/windows/extras/das_container.gd" id="1_vbttp"]
+[ext_resource type="StyleBox" uid="uid://bh13lqgmbc0m1" path="res://src/themes/loading_bar_fill.tres" id="2_vbttp"]
+
+[node name="DasContainer" type="MarginContainer"]
+offset_right = 624.0
+offset_bottom = 425.0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("1_vbttp")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "DAS File:"
+
+[node name="DASFiles" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+allow_reselect = true
+
+[node name="LoadButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Load"
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/background = ExtResource("1_dd7hf")
+theme_override_styles/fill = ExtResource("2_vbttp")
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Textures" type="HSplitContainer" parent="VBoxContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureLayoutOption" type="OptionButton" parent="VBoxContainer/TabContainer/Textures/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+flat = true
+selected = 0
+item_count = 2
+popup/item_0/text = "List View"
+popup/item_0/id = 0
+popup/item_1/text = "Grid View"
+popup/item_1/id = 1
+
+[node name="TextureList" type="ItemList" parent="VBoxContainer/TabContainer/Textures/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+theme_override_colors/guide_color = Color(0, 0, 0, 0)
+theme_override_constants/v_separation = 10
+fixed_icon_size = Vector2i(25, 25)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Textures"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TextureContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control" type="Control" parent="VBoxContainer/TabContainer/Textures/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="DataContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Header"]
+layout_mode = 2
+
+[node name="DasInfoContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Header/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Load Errors" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Load Errors"]
+layout_mode = 2
+horizontal_scroll_mode = 2
+
+[node name="Errors" type="RichTextLabel" parent="VBoxContainer/TabContainer/Load Errors/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+fit_content = true
+autowrap_mode = 0
+
+[node name="AnimationTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.1
+
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/DASFiles" to="." method="_on_das_files_item_selected"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/TabContainer/Textures/VBoxContainer/TextureLayoutOption" to="." method="_on_texture_layout_option_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/TabContainer/Textures/VBoxContainer/TextureList" to="." method="_on_texture_list_item_selected"]
+[connection signal="timeout" from="AnimationTimer" to="." method="_on_animation_timer_timeout"]

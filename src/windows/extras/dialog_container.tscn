@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctfactna67ath"]
+
+[ext_resource type="Script" uid="uid://gec5csno11xj" path="res://src/windows/extras/dialog_container.gd" id="1_0n1dq"]
+[ext_resource type="Script" uid="uid://dk01nqct0h45o" path="res://src/windows/waveform.gd" id="1_sqd4g"]
+[ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="2_0n1dq"]
+[ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="3_16fmd"]
+[ext_resource type="Texture2D" uid="uid://v8bmkjmutd7s" path="res://assets/icons/arrows-right.svg" id="4_mrwlj"]
+
+[node name="DialogContainer" type="MarginContainer"]
+offset_right = 637.0
+offset_bottom = 405.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_0n1dq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Search..."
+
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DialogList" type="Tree" parent="VBoxContainer/VSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+theme_override_constants/draw_guides = 0
+columns = 2
+hide_folding = true
+hide_root = true
+
+[node name="Waveform" type="Control" parent="VBoxContainer/VSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("1_sqd4g")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="Timer" type="Timer" parent="VBoxContainer/HBoxContainer/HSlider"]
+unique_name_in_owner = true
+wait_time = 0.1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "All"
+icon = ExtResource("2_0n1dq")
+
+[node name="StopButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+icon = ExtResource("3_16fmd")
+
+[node name="ShuffleButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+icon = ExtResource("4_mrwlj")
+
+[node name="PlaylistLeft" type="Label" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[connection signal="text_changed" from="VBoxContainer/SearchEdit" to="." method="_on_search_edit_text_changed"]
+[connection signal="item_activated" from="VBoxContainer/VSplitContainer/DialogList" to="." method="_on_dialog_list_item_activated"]
+[connection signal="timeout" from="VBoxContainer/HBoxContainer/HSlider/Timer" to="." method="_on_timer_timeout"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/ShuffleButton" to="." method="_on_shuffle_button_toggled"]

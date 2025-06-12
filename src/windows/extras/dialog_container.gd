@@ -1,4 +1,4 @@
-extends BaseWindow
+extends Control
 
 const SHUFFLE_ICON: Texture2D = preload("uid://vqxqqwh4il66")
 const STRAIGHT_ICON: Texture2D = preload("uid://v8bmkjmutd7s")
@@ -13,7 +13,6 @@ var current: TreeItem
 var playlist: Array = []
 
 func _ready() -> void:
-	super._ready()
 	Roth.settings_loaded.connect(_on_settings_loaded)
 	%DialogList.set_column_expand(0, true)
 	%DialogList.set_column_expand(1, false)

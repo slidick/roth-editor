@@ -106,8 +106,8 @@ func _on_settings_loaded() -> void:
 		for i in range(len(icons_offsets)):
 			var offset: int = icons_offsets[i]
 			var idx: int = %IconList.add_item("%d"  % (i+1))
-			var image: Image = IconsAll.get_at_offset(offset)
-			%IconList.set_item_icon(idx, ImageTexture.create_from_image(image))
+			var icon_image: Image = IconsAll.get_at_offset(offset)
+			%IconList.set_item_icon(idx, ImageTexture.create_from_image(icon_image))
 	
 	# FXSCRIPT.SFX
 	# Clear
@@ -122,9 +122,9 @@ func _on_settings_loaded() -> void:
 	
 	# BACKDROP.RAW
 	%BackdropRect.texture = null
-	var image: Image = Backdrop.parse()
-	if image:
-		%BackdropRect.texture = ImageTexture.create_from_image(image)
+	var backdrop_image: Image = Backdrop.parse()
+	if backdrop_image:
+		%BackdropRect.texture = ImageTexture.create_from_image(backdrop_image)
 
 
 func _on_command_list_item_selected(index: int) -> void:
