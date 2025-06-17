@@ -41,6 +41,7 @@ func _on_settings_loaded() -> void:
 	dbase100 = DBase100.parse()
 	if not dbase100.is_empty():
 		# Actions/Commands
+		#var command_counts := {}
 		for i in range(len(dbase100.actions)):
 			var action: Dictionary = dbase100.actions[i]
 			if action.offset == 0:
@@ -53,7 +54,15 @@ func _on_settings_loaded() -> void:
 				#print(action)
 			#if "length" in action and action.length == 0:
 				#print(action)
-		
+			#print(action)
+			#for opcode: Dictionary in action.opcodes:
+				#if opcode.command not in command_counts:
+					#command_counts[opcode.command] = 1
+				#else:
+					#command_counts[opcode.command] += 1
+				#if opcode.command == 35:
+					#print(i+1)
+		#print(JSON.stringify(command_counts, '\t', true))
 		
 		# Cutscenes
 		for i in range(len(dbase100.cutscenes)):
@@ -197,7 +206,10 @@ func _on_command_tree_item_selected() -> void:
 					continue
 				var color: String = Color(palette[subtitle_line.font_color][0], palette[subtitle_line.font_color][1], palette[subtitle_line.font_color][2]).to_html()
 				rich_text.append_text("- [color=%s]%s[/color]\n" % [color, subtitle_line.string])
-
+		8:
+			var label := Label.new()
+			label.text = "%s" % DBase400.get_at_offset(opcode.full_value).string
+			vbox.add_child(label)
 
 func _on_cutscene_list_item_selected(index: int) -> void:
 	for node: Node in %CutscenePanel.get_children():
