@@ -210,7 +210,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				error = "Please limit to 8 characters"
 			if results[1].contains(" "):
 				error = "No spaces"
-			if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
+			if results[1].to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
 				error = "Name in use."
 			
 			while not error.is_empty():
@@ -222,7 +222,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 					error = "Please limit to 8 characters"
 				if results[1].find(" ") > 0:
 					error = "No spaces"
-				if results[1] in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
+				if results[1].to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
 					error = "Name in use."
 			
 			Console.print("Saving file as: %s" % results[1].to_upper())
@@ -237,7 +237,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			map.map_info.custom = true
 			Roth.save_custom(buffer, map.map_info, true)
 			Roth.loaded_maps[map.map_info.name] = map
-			selected[0].set_text(0, results[1])
+			selected[0].set_text(0, results[1].to_upper())
 			Roth.load_roth_settings()
 		MapMenu.EditMetadata:
 			if len(selected) != 1:
