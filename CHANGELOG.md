@@ -1,3 +1,29 @@
+**0.9.0**
+### New Features
+  - New Extras Window parses remaining files: DBASE100.DAT, DBASE200.DAT, DBASE300.DAT, .GDV files, FXSCRIPT.SFX, ICONS.ALL, and BACKDROP.RAW
+  - Includes the following:
+    - Global command list
+    - Movie list
+      - Subtitles
+      - Video Playback
+    - Inventory item list
+      - Images
+      - Animation videos
+      - Extra unknown info
+    - Interface text list
+    - Weapon animations
+    - Sound effects
+    - Game Icons
+    - Backdrop Image
+
+### Changes
+  - Moved Dialog Viewer into Extras Window
+  - Moved DAS Viewer into Extras Window
+  - DAS and GDV parsing are now handled by a c++ extension so there should be a noticable speed improvement (though not as great as hoped)
+    - This means it's no longer a standalone executable; it now requires the accompanying .dll / .so file next to it
+
+---
+
 **0.8.0**
 ### New Features
   - Command Editor
