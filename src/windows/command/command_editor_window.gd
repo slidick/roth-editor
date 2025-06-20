@@ -455,6 +455,13 @@ func _on_graph_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
 			add_command(add_at_position)
+		1:
+			for child: Node in %GraphEdit.get_children():
+				if child.name == "_connection_layer":
+					continue
+				if child.selected:
+					delete_command(child.index)
+					
 
 
 func _on_entry_command_indices_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:

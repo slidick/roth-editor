@@ -90,9 +90,11 @@ show_menu = false
 
 [node name="GraphPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph" index="1"]
 unique_name_in_owner = true
-item_count = 1
+item_count = 2
 item_0/text = "Add Command"
 item_0/id = 0
+item_1/text = "Delete Selected"
+item_1/id = 1
 
 [node name="List" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="2"]
 visible = false
