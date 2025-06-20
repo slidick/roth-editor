@@ -127,7 +127,6 @@ stretch_mode = 5
 
 [node name="VideoTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoRect" index="0"]
 unique_name_in_owner = true
-wait_time = 0.083
 
 [node name="VideoLoadingBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="3"]
 unique_name_in_owner = true
@@ -266,7 +265,6 @@ metadata/_tab_index = 9
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryList" to="." method="_on_inventory_list_item_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_activated"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_selected"]
-[connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoRect/VideoTimer" to="." method="_on_video_timer_timeout"]
 [connection signal="drag_ended" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/VideoSlider" to="." method="_on_video_slider_drag_ended"]
 [connection signal="drag_started" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/VideoSlider" to="." method="_on_video_slider_drag_started"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/VideoSlider" to="." method="_on_video_slider_value_changed"]

@@ -3,10 +3,11 @@ extends Control
 const JUMP: int = 40
 
 var data: Array = []
+var sample_rate: int = 0
 
-
-func setup(p_data: Array) -> void:
-	data = p_data
+func setup(p_entry: Dictionary) -> void:
+	data = p_entry.data
+	sample_rate = p_entry.sampleRate
 	queue_redraw()
 
 func _draw() -> void:

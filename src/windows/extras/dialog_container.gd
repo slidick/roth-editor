@@ -32,6 +32,7 @@ func _on_settings_loaded() -> void:
 		return
 	
 	var entries: Array = DBase400.parse(dbase400_filepath)
+	#return
 	#var i: int = 0
 	for entry: Dictionary in entries:
 		if entry.offset > 0:
@@ -47,13 +48,13 @@ func _on_dialog_list_item_activated() -> void:
 	play(%DialogList.get_selected().get_metadata(0))
 
 
-func play(entry: Dictionary) -> void:
-	#print(entry)
-	var data: Array = DBase500.parse(dbase500_filepath, entry.offset)
-	Roth.play_audio_buffer(data)
-	%Waveform.setup(data)
+func play(entry_request: Dictionary) -> void:
+	#print(entry_request)
+	var entry: Dictionary = DBase500.get_entry_at_offset(entry_request.offset)
+	Roth.play_audio_buffer(entry.data, entry.sampleRate)
+	%Waveform.setup(entry)
 	%HSlider.value = 0
-	%HSlider.max_value = (len(data) / float(22050)) * 10
+	%HSlider.max_value = (len(entry.data) / float(entry.sampleRate)) * 10
 	%Timer.start()
 
 

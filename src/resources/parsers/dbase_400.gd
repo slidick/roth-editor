@@ -34,7 +34,7 @@ static func parse(filepath: String) -> Array:
 			var _padding := file.get_8()
 		array_01.append(entry)
 		#print("Offset: %s, Length: %s, Color: %s, String: %s" % [entry.offset, entry.length_str, entry.font_color, entry.string])
-		if entry.string == "The Making of Realms":
+		if entry.string.to_lower() == "chullum ashdar in derias.":
 			break
 	
 	return array_01
@@ -91,8 +91,11 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 			var length_str := file.get_16()
 			_padding = file.get_16()
 			var title := ""
+			var bytes2 := PackedByteArray()
 			for i in range(length_str):
-				title += String.chr(file.get_8())
+				bytes2.append(file.get_8())
+				#title += String.chr(file.get_8())
+			title = bytes2.get_string_from_ascii()
 			while file.get_position() % 2 > 0:
 				_padding = file.get_8()
 			subtitle["title"] = title
@@ -104,7 +107,13 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 		var string := ""
 		#for i in range(length_str-5):
 			#string += String.chr(file.get_8())
-		string = file.get_line()
+		#string = file.get_line()
+		var bytes := PackedByteArray()
+		var byte: int = file.get_8()
+		while byte != 0:
+			bytes.append(byte)
+			byte = file.get_8()
+		string = bytes.get_string_from_ascii()
 		while file.get_position() % 2 > 0:
 			var _padding := file.get_8()
 		subtitle["entries"].append({

@@ -53,7 +53,15 @@ static func parse_section_value(file: FileAccess, type: Variant) -> Variant:
 		TYPE_STRING:
 			var call_string: String = type.trim_suffix("_signed")
 			if call_string == "get_line":
-				return file.call(call_string)
+				
+				var bytes := PackedByteArray()
+				var byte: int = file.get_8()
+				while byte != 0:
+					bytes.append(byte)
+					byte = file.get_8()
+				return bytes.get_string_from_ascii()
+				
+				#return file.call(call_string)
 			var value: int = 0
 			value = file.call(call_string)
 			if type.ends_with("8_signed"):

@@ -12,11 +12,11 @@ func stop_buffer() -> void:
 		playback.stop()
 
 
-func play_buffer(_buffer: PackedVector2Array) -> void:
+func play_buffer(_buffer: PackedVector2Array, sample_rate: int = SAMPLE_RATE) -> void:
 	if playback:
 		playback.stop()
 	var generator := AudioStreamGenerator.new()
-	generator.mix_rate = SAMPLE_RATE
+	generator.mix_rate = sample_rate
 	generator.buffer_length = MAX_LENGTH
 	stream = generator
 	play()

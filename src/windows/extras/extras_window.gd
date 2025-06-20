@@ -1,9 +1,18 @@
 extends BaseWindow
 
+
+signal gdv_parsing_done(gdv: Dictionary)
+
+
+var accumulated_time: float = 0.0
 var dbase100: Dictionary = {}
 var animation: Array
 var animation_position: int = 0
 var animation_rect: TextureRect
+var current_video: Dictionary = {}
+var current_frame: int = 0
+var dragging_slider: bool = false
+
 
 func _ready() -> void:
 	super._ready()
@@ -12,6 +21,15 @@ func _ready() -> void:
 	%CommandTree.set_column_title(0, "Command")
 	%CommandTree.set_column_title(1, "Value")
 	Roth.gdv_loading_updated.connect(_on_gdv_loading_updated)
+
+
+func _process(delta: float) -> void:
+	if %VideoTimer.is_stopped() or %VideoTimer.paused or "header" not in current_video:
+		return
+	accumulated_time += delta
+	while accumulated_time >= (1.0 / current_video.header.framerate):
+		accumulated_time -= (1.0 / current_video.header.framerate)
+		_on_video_timer_timeout()
 
 
 func _on_settings_loaded() -> void:
@@ -85,7 +103,6 @@ func _on_settings_loaded() -> void:
 			var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.subtitle.string])
 			%InventoryList.set_item_metadata(idx, inventory_item)
 		
-	
 	
 	# DBASE200
 	# DBase200 Clear
@@ -179,10 +196,10 @@ func _on_command_tree_item_selected() -> void:
 			var button := Button.new()
 			button.text = "Play"
 			button.pressed.connect(func () -> void:
-				var data: Array = DBase500.get_at_offset(subtitle.offset)
-				if data.is_empty():
+				var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.offset)
+				if entry.is_empty():
 					return
-				Roth.play_audio_buffer(data)
+				Roth.play_audio_buffer(entry.data, entry.sampleRate)
 			)
 			vbox.add_child(button)
 		7:
@@ -210,6 +227,7 @@ func _on_command_tree_item_selected() -> void:
 			var label := Label.new()
 			label.text = "%s" % DBase400.get_at_offset(opcode.full_value).string
 			vbox.add_child(label)
+
 
 func _on_cutscene_list_item_selected(index: int) -> void:
 	for node: Node in %CutscenePanel.get_children():
@@ -247,19 +265,18 @@ func _on_cutscene_list_item_activated(_index: int) -> void:
 	%VideoTimer.stop()
 	play_video()
 
+
 func _on_play_video_button_pressed() -> void:
 	play_video()
+
 
 func _on_pause_video_button_pressed() -> void:
 	pause_video()
 
+
 func _on_stop_video_button_pressed() -> void:
 	stop_video()
 
-
-var current_video: Dictionary = {}
-var current_frame: int = 0
-var dragging_slider: bool = false
 
 func play_video() -> void:
 	if not %VideoTimer.is_stopped():
@@ -280,8 +297,8 @@ func play_video() -> void:
 		thread.wait_to_finish()
 	else:
 		gdv = current_video
-	if not gdv.is_empty():
-		Roth.play_audio_buffer(gdv.audio)
+	if not gdv.is_empty() and "header" in gdv:
+		Roth.play_audio_buffer(gdv.audio, gdv.header.playback_frequency)
 		current_video = gdv
 		current_frame = 0
 		%VideoTitleLabel.text = "%s" % gdv.name
@@ -291,7 +308,6 @@ func play_video() -> void:
 		%VideoSlider.max_value = len(current_video.video) - 1
 		%VideoTimeLabel.text = "%s/%s" % [_seconds_to_time(0), _seconds_to_time(int(float(len(current_video.video)/current_video.header.framerate)))]
 
-signal gdv_parsing_done(gdv: Dictionary)
 
 func parse_thread(gdv_name: String) -> void:
 	#var gdv: Dictionary = GDV.get_video(gdv_name)
@@ -310,7 +326,7 @@ func pause_video() -> void:
 		#Roth.unpause_audio()
 		var percentage: float = float(current_frame)/len(current_video.video)
 		var audio_frame: int = int(len(current_video.audio) * percentage)
-		Roth.play_audio_buffer(current_video.audio.slice(int(audio_frame)))
+		Roth.play_audio_buffer(current_video.audio.slice(int(audio_frame)), current_video.header.playback_frequency)
 	else:
 		Roth.stop_audio_buffer()
 		#Roth.pause_audio()
@@ -343,7 +359,7 @@ func _on_video_slider_drag_ended(value_changed: bool) -> void:
 		if not %VideoTimer.paused and not %VideoTimer.is_stopped():
 			var percentage: float = float(current_frame)/len(current_video.video)
 			var audio_frame: int = int(len(current_video.audio) * percentage)
-			Roth.play_audio_buffer(current_video.audio.slice(int(audio_frame)))
+			Roth.play_audio_buffer(current_video.audio.slice(int(audio_frame)), current_video.header.playback_frequency)
 		_on_video_timer_timeout()
 
 
@@ -356,6 +372,7 @@ func _on_video_slider_value_changed(value: float) -> void:
 		%VideoDragLabel.text = "%s" % _seconds_to_time(int(float(value)/current_video.header.framerate))
 		if %VideoTimer.paused or %VideoTimer.is_stopped():
 			%VideoRect.texture = ImageTexture.create_from_image(current_video.video[value])
+
 
 func stop_video() -> void:
 	#print("STOP")

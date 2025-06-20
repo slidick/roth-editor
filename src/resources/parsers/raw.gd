@@ -251,6 +251,7 @@ static func parse_file(filepath: String = "res://TEST.RAW") -> Dictionary:
 	# -------------
 	var map_metadata := Parser.parse_section(file, MAP_METADATA)
 	
+	file.seek(header["verticesOffset"])
 	
 	# Vertices
 	# -------------

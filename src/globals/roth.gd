@@ -16,6 +16,8 @@ const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
 var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
 
+const OLD_EXE: float = 3.925
+const NEW_EXE: float = 3.983
 
 var res: Dictionary = {}
 var maps: Array = []
@@ -84,7 +86,7 @@ func load_roth_settings() -> void:
 					"das": (line_split[1]+".das").to_upper(),
 					"custom": false,
 				})
-			else:
+			elif not line.is_empty():
 				res[line] = true
 		file.close()
 		
@@ -93,6 +95,22 @@ func load_roth_settings() -> void:
 				das_files.append(das)
 		
 		das_files.sort()
+		
+		match res.version:
+			"ROTH VERSION F1.4":
+				res["exe_version"] = OLD_EXE
+			"ROTH VERSION F1.8":
+				res["exe_version"] = OLD_EXE
+			"ROTH VERSION F1.14":
+				res["exe_version"] = OLD_EXE
+			"ROTH VERSION F1":
+				res["exe_version"] = NEW_EXE
+			"ROTH VERSION 1.8":
+				res["exe_version"] = NEW_EXE
+			"ROTH VERSION 1.12":
+				res["exe_version"] = NEW_EXE
+			_:
+				res["exe_version"] = 0.0
 	
 	if locations and locations.get("custom.res"):
 		if not FileAccess.file_exists(locations.get("custom.res")):
@@ -296,10 +314,17 @@ m\\vicar1 m\\demo1
 	autoexec.store_string("mount c \"%s\"\n" % roth_directory)
 	autoexec.store_string("c:\n")
 	autoexec.store_string("cd \\roth\n")
-	if with_objects:
-		autoexec.store_string("ROTH.EXE /G 03 @D:\\test.res\n")
+	
+	if res.exe_version == OLD_EXE:
+		if with_objects:
+			autoexec.store_string("ROTH.EXE /G 03 @D:\\test.res\n")
+		else:
+			autoexec.store_string("ROTH.EXE /9 /G 03 FILE D:\\%s DAS %s SND DATA\\FXSCRIPT.SFX\n" % [raw_filename, map_info.das.replace("/", "\\")])
+		
 	else:
-		autoexec.store_string("ROTH.EXE /9 /G 03 FILE D:\\%s DAS %s SND DATA\\FXSCRIPT.SFX\n" % [raw_filename, map_info.das.replace("/", "\\")])
+		autoexec.store_string("ROTH.EXE @D:\\test.res\n")
+	
+	
 	autoexec.store_string("exit\n")
 	autoexec.close()
 	
@@ -332,8 +357,8 @@ func degrees_to_rotation(degrees: float) -> int:
 	return int(((degrees + 180) * 128) / 90)
 
 
-func play_audio_buffer(buffer: PackedVector2Array) -> void:
-	audio_player.play_buffer(buffer)
+func play_audio_buffer(buffer: PackedVector2Array, sample_rate: int) -> void:
+	audio_player.play_buffer(buffer, sample_rate)
 
 func play_audio_entry(entry: Dictionary) -> void:
 	audio_player.play_entry(entry)
