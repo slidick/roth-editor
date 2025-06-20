@@ -553,7 +553,7 @@ update_on_text_changed = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-max_length = 3
+max_length = 5
 editable = false
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="3"]
