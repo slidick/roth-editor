@@ -168,26 +168,13 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 			material.albedo_color = Color.TRANSPARENT
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		else:
-			var mapping_image: Image
+			var mapping_image: ImageTexture
 			if typeof(mapping[texture].image) == TYPE_ARRAY:
 				mapping_image = mapping[texture].image[0]
 			else:
 				mapping_image = mapping[texture].image
 			
-			var image := Image.new()
-			if not mapping[texture].flipped or check_flag(texture_data.unk0x08, PIN_BOTTOM):
-				image.copy_from(mapping_image)
-			else:
-				image = mapping_image
-			
-			if not mapping[texture].flipped:
-				image.flip_y()
-				image.rotate_90(CLOCKWISE)
-			
-			if check_flag(texture_data.unk0x08, PIN_BOTTOM):
-				image.flip_y()
-				
-			material.albedo_texture = ImageTexture.create_from_image(image)
+			material.albedo_texture = mapping_image
 
 	else:
 		if texture == 65535:
@@ -200,24 +187,25 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 			Console.print("Face has invalid texture; index: %s, texture: %s" % [index, texture])
 			material.albedo_color = Color.WHITE
 	
+	
 	var mesh_tool := SurfaceTool.new()
 	mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	mesh_tool.set_uv(Vector2(0,1))
+	mesh_tool.set_uv(Vector2(1,0))
 	mesh_tool.add_vertex(vertices[0])
 	mesh_tool.set_uv(Vector2(0,0))
 	mesh_tool.add_vertex(vertices[1])
-	mesh_tool.set_uv(Vector2(1,0))
+	mesh_tool.set_uv(Vector2(0,1))
 	mesh_tool.add_vertex(vertices[2])
 	
-	mesh_tool.set_uv(Vector2(0,1))
-	mesh_tool.add_vertex(vertices[0])
 	mesh_tool.set_uv(Vector2(1,0))
+	mesh_tool.add_vertex(vertices[0])
+	mesh_tool.set_uv(Vector2(0,1))
 	mesh_tool.add_vertex(vertices[2])
 	mesh_tool.set_uv(Vector2(1,1))
 	mesh_tool.add_vertex(vertices[3])
 	mesh_tool.generate_normals()
-	var mesh: ArrayMesh = mesh_tool.commit()
 	
+	var mesh: ArrayMesh = mesh_tool.commit()
 	
 	
 	if check_flag(texture_data.unk0x08, PIN_BOTTOM):
@@ -225,7 +213,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 		mesh_tool.set_uv(Vector2(0,0))
 		mesh_tool.add_vertex(vertices[0])
-		mesh_tool.set_uv(Vector2(0,1))
+		mesh_tool.set_uv(Vector2(1,0))
 		mesh_tool.add_vertex(vertices[1])
 		mesh_tool.set_uv(Vector2(1,1))
 		mesh_tool.add_vertex(vertices[2])
@@ -234,22 +222,18 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		mesh_tool.add_vertex(vertices[0])
 		mesh_tool.set_uv(Vector2(1,1))
 		mesh_tool.add_vertex(vertices[2])
-		mesh_tool.set_uv(Vector2(1,0))
+		mesh_tool.set_uv(Vector2(0,1))
 		mesh_tool.add_vertex(vertices[3])
 		mesh_tool.generate_normals()
 		mesh = mesh_tool.commit()
-	
-	
-	
-	
 	
 	
 	var texture_width: float = 128
 	var texture_height: float = 128
 	
 	if texture in mapping:
-		texture_width = mapping[texture].width
-		texture_height = mapping[texture].height
+		texture_width = mapping[texture].height
+		texture_height = mapping[texture].width
 		
 	if check_flag(texture_data.unk0x08, HALF_PIXEL):
 		texture_width *= 0.5
@@ -258,15 +242,15 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	
 	if not check_flag(texture_data.unk0x08, IMAGE_FIT) or (check_flag(texture_data.unk0x08, TRANSPARENT) and not mid):
 		#material.uv1_scale.x = face_length / (2 * texture_width)
-		material.uv1_scale.x = (texture_data.unk0x00 + ((texture_data.type & ~(1<<7))<<8)) / (2 * texture_width)
-		material.uv1_scale.y = mesh_height / (2 * texture_height)
+		material.uv1_scale.y = (texture_data.unk0x00 + ((texture_data.type & ~(1<<7))<<8)) / (2 * texture_width)
+		material.uv1_scale.x = mesh_height / (2 * texture_height)
 		
 		
 		
 	if sector.data.textureMapOverride > 0 and sister and mid and check_flag(texture_data.unk0x08, TRANSPARENT_UPPER_LOWER):
 		
 		if not check_flag(texture_data.unk0x08, IMAGE_FIT):
-			material.uv1_scale.y = float(sector.data.textureMapOverride * 2) / texture_height
+			material.uv1_scale.x = float(sector.data.textureMapOverride * 2) / texture_height
 		
 		
 		
@@ -279,16 +263,16 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		
 		mesh_tool = SurfaceTool.new()
 		mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-		mesh_tool.set_uv(Vector2(0,1))
+		mesh_tool.set_uv(Vector2(1,0))
 		mesh_tool.add_vertex(new_points[0])
 		mesh_tool.set_uv(Vector2(0,0))
 		mesh_tool.add_vertex(new_points[1])
-		mesh_tool.set_uv(Vector2(1,0))
+		mesh_tool.set_uv(Vector2(0,1))
 		mesh_tool.add_vertex(new_points[2])
 		
-		mesh_tool.set_uv(Vector2(0,1))
-		mesh_tool.add_vertex(new_points[0])
 		mesh_tool.set_uv(Vector2(1,0))
+		mesh_tool.add_vertex(new_points[0])
+		mesh_tool.set_uv(Vector2(0,1))
 		mesh_tool.add_vertex(new_points[2])
 		mesh_tool.set_uv(Vector2(1,1))
 		mesh_tool.add_vertex(new_points[3])
@@ -298,7 +282,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	if sector.data.textureMapOverride < 0 and sister and mid and check_flag(texture_data.unk0x08, TRANSPARENT_UPPER_LOWER):
 		
 		if not check_flag(texture_data.unk0x08, IMAGE_FIT):
-			material.uv1_scale.y = abs(float(sector.data.textureMapOverride * 2)) / texture_height
+			material.uv1_scale.x = abs(float(sector.data.textureMapOverride * 2)) / texture_height
 		
 		var new_points: Array = [
 			Vector3(vertices[0].x, vertices[0].y, vertices[0].z),
@@ -309,16 +293,16 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		
 		mesh_tool = SurfaceTool.new()
 		mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-		mesh_tool.set_uv(Vector2(0,1))
+		mesh_tool.set_uv(Vector2(1,0))
 		mesh_tool.add_vertex(new_points[0])
 		mesh_tool.set_uv(Vector2(0,0))
 		mesh_tool.add_vertex(new_points[1])
-		mesh_tool.set_uv(Vector2(1,0))
+		mesh_tool.set_uv(Vector2(0,1))
 		mesh_tool.add_vertex(new_points[2])
 		
-		mesh_tool.set_uv(Vector2(0,1))
-		mesh_tool.add_vertex(new_points[0])
 		mesh_tool.set_uv(Vector2(1,0))
+		mesh_tool.add_vertex(new_points[0])
+		mesh_tool.set_uv(Vector2(0,1))
 		mesh_tool.add_vertex(new_points[2])
 		mesh_tool.set_uv(Vector2(1,1))
 		mesh_tool.add_vertex(new_points[3])
@@ -330,22 +314,26 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	if texture in mapping and "additionalMetadata" in texture_data and not check_flag(texture_data.unk0x08, IMAGE_FIT):
 		if texture_data.additionalMetadata.shiftTextureX != 0:
 				if texture_data.additionalMetadata.shiftTextureX > 0:
-					material.uv1_offset.x = float(texture_data.additionalMetadata.shiftTextureX) / texture_width
+					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureX) / texture_width
 				else:
-					material.uv1_offset.x = float(texture_data.additionalMetadata.shiftTextureX + 256) / texture_width
+					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureX + 256) / texture_width
 		
 		if texture_data.additionalMetadata.shiftTextureY != 0:
 				if texture_data.additionalMetadata.shiftTextureY > 0:
-					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureY) / texture_height
+					material.uv1_offset.x = float(texture_data.additionalMetadata.shiftTextureY) / texture_height
 				else:
-					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureY + 256) / texture_height
-	
-		
+					material.uv1_offset.x = float(texture_data.additionalMetadata.shiftTextureY + 256) / texture_height
 	
 	
-	if check_flag(texture_data.unk0x08, FLIP_X):
+	
+	
+	if check_flag(texture_data.unk0x08, PIN_BOTTOM):
 		material.uv1_scale.x *= -1
 		material.uv1_offset.x *= -1
+	
+	if check_flag(texture_data.unk0x08, FLIP_X):
+		material.uv1_scale.y *= -1
+		material.uv1_offset.y *= -1
 	
 	
 	if check_flag(texture_data.unk0x08, TRANSPARENT) and mid:

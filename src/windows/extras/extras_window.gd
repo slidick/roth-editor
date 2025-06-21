@@ -217,12 +217,13 @@ func _on_command_tree_item_selected() -> void:
 			rich_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			vbox.add_child(rich_text)
 			
-			var palette: Array = Das.get_default_palette()
-			for subtitle_line: Dictionary in cutscene.subtitles.entries:
-				if subtitle_line.string.is_empty():
-					continue
-				var color: String = Color(palette[subtitle_line.font_color][0], palette[subtitle_line.font_color][1], palette[subtitle_line.font_color][2]).to_html()
-				rich_text.append_text("- [color=%s]%s[/color]\n" % [color, subtitle_line.string])
+			if "subtitles" in cutscene:
+				var palette: Array = Das.get_default_palette()
+				for subtitle_line: Dictionary in cutscene.subtitles.entries:
+					if subtitle_line.string.is_empty():
+						continue
+					var color: String = Color(palette[subtitle_line.font_color][0], palette[subtitle_line.font_color][1], palette[subtitle_line.font_color][2]).to_html()
+					rich_text.append_text("- [color=%s]%s[/color]\n" % [color, subtitle_line.string])
 		8:
 			var label := Label.new()
 			label.text = "%s" % DBase400.get_at_offset(opcode.full_value).string

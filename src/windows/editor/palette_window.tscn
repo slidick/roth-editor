@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uubki"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_q3eik"]
-[ext_resource type="Script" uid="uid://bpifcuimx8sov" path="res://src/windows/palette_window.gd" id="3_q3eik"]
+[ext_resource type="Script" uid="uid://bpifcuimx8sov" path="res://src/windows/editor/palette_window.gd" id="3_q3eik"]
 
 [node name="PaletteWindow" instance=ExtResource("1_uubki")]
 theme = ExtResource("2_q3eik")

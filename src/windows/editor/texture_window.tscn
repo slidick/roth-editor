@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_abgak"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_gmem8"]
-[ext_resource type="Script" uid="uid://bpwig8y7sg2j8" path="res://src/windows/texture_window.gd" id="3_gmem8"]
+[ext_resource type="Script" uid="uid://bpwig8y7sg2j8" path="res://src/windows/editor/texture_window.gd" id="3_gmem8"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_hdfxv"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_gmem8"]

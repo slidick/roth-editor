@@ -286,9 +286,8 @@ static func _parse_das(das_file: String) -> Dictionary:
 			
 			
 			var img := Image.create_from_data(das.textures[i].width, das.textures[i].height, false, Image.FORMAT_RGBA8, data)
-			
-			das.textures[i]["image"] = img
-			das.textures[i]["flipped"] = false
+			var image_texture := ImageTexture.create_from_image(img)
+			das.textures[i]["image"] = image_texture
 		
 		elif (das.textures[i].imageType == imgBasicTypes.PLAIN_DATA_FLIPPED or
 				das.textures[i].imageType == imgBasicTypes.PLAIN_DATA_FLIPPED_2 or
@@ -321,11 +320,8 @@ static func _parse_das(das_file: String) -> Dictionary:
 						else:
 							data.append(255)
 					var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-					img.flip_y()
-					img.rotate_90(CLOCKWISE)
-					
-					das.textures[i]["image"].append(img)
-					das.textures[i]["flipped"] = true
+					var image_texture := ImageTexture.create_from_image(img)
+					das.textures[i]["image"].append(image_texture)
 					
 					
 					var lower_ptr_4_bits := file.get_position() & 0xF
@@ -343,14 +339,6 @@ static func _parse_das(das_file: String) -> Dictionary:
 					#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [das.textures[i].name, img_reference_new, width, height])
 					if img_reference != img_reference_new:
 						break
-				
-				
-				var tmp_width: int = das.textures[i].width
-				var tmp_height: int = das.textures[i].height
-				das.textures[i].width = tmp_height
-				das.textures[i].height = tmp_width
-				
-				
 				
 			elif das.textures[i].unk == 0x40:
 				#Console.print("3D Objs Textures: %s" % das.textures[i].name)
@@ -385,11 +373,8 @@ static func _parse_das(das_file: String) -> Dictionary:
 						das.loading_errors.append("Image width is zero! Index: %s, Name: %s, Subimage: %s, Of: %s" % [das.textures[i].index, das.textures[i].name, j, numImgs])
 					else:
 						var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-						img.flip_y()
-						img.rotate_90(CLOCKWISE)
-						
-						das.textures[i]["image"].append(img)
-						das.textures[i]["flipped"] = true
+						var image_texture := ImageTexture.create_from_image(img)
+						das.textures[i]["image"].append(image_texture)
 					
 					var lower_ptr_4_bits := file.get_position() & 0xF
 					var pos := file.get_position()
@@ -409,13 +394,7 @@ static func _parse_das(das_file: String) -> Dictionary:
 					#if type != type_new:
 						#Console.print("NOT SAME TYPE REF")
 					
-				var tmp_width: int  = das.textures[i].width
-				var tmp_height: int  = das.textures[i].height
-				das.textures[i].width = tmp_height
-				das.textures[i].height = tmp_width
 			else:
-				#Console.print("Flipped: %s" % das.textures[i].name)
-				#file.seek(das.textures[i]["offset_data"] + 0x06)
 				var raw_img := file.get_buffer(das.textures[i].width * das.textures[i].height)
 				var data: Array
 				for pixel in raw_img:
@@ -425,15 +404,8 @@ static func _parse_das(das_file: String) -> Dictionary:
 					else:
 						data.append(255)
 				var img := Image.create_from_data(das.textures[i].width, das.textures[i].height, false, Image.FORMAT_RGBA8, data)
-				img.flip_y()
-				img.rotate_90(CLOCKWISE)
-				var tmp_width: int  = das.textures[i].width
-				var tmp_height: int  = das.textures[i].height
-				das.textures[i].width = tmp_height
-				das.textures[i].height = tmp_width
-				
-				das.textures[i]["image"] = img
-				das.textures[i]["flipped"] = true
+				var image_texture := ImageTexture.create_from_image(img)
+				das.textures[i]["image"] = image_texture
 		
 		elif (das.textures[i].imageType == imgBasicTypes.COMPRESSED or 
 				das.textures[i].imageType == imgBasicTypes.COMPRESSED_2 or 
@@ -468,16 +440,9 @@ static func _parse_das(das_file: String) -> Dictionary:
 					else:
 						data.append(255)
 				var img := Image.create_from_data(das.textures[i].width, das.textures[i].height, false, Image.FORMAT_RGBA8, data)
-				
-				if das.textures[i].imageType != 1:
-					img.flip_y()
-					img.rotate_90(CLOCKWISE)
-					das.textures[i]["flipped"] = true
-				else:
-					Console.print("NOT FLIPPED??")
-				
-				das.textures[i]["image"] = img
-				das.textures[i]["animation"] = [img]
+				var image_texture := ImageTexture.create_from_image(img)
+				das.textures[i]["image"] = image_texture
+				das.textures[i]["animation"] = [image_texture]
 				#Console.print("Index: %s, Name: %s, Subimages: %s" % [das.textures[i].index, das.textures[i].name, img_type_2])
 				for j in range(img_type_2):
 					#Console.print("SubImage: %s" % j)
@@ -545,16 +510,8 @@ static func _parse_das(das_file: String) -> Dictionary:
 						else:
 							data2.append(255)
 					var img2 := Image.create_from_data(das.textures[i].width, das.textures[i].height, false, Image.FORMAT_RGBA8, data2)
-					img2.flip_y()
-					img2.rotate_90(CLOCKWISE)
-		
-				
-					das.textures[i]["animation"].append(img2)
-				var tmp_width: int  = das.textures[i].width
-				var tmp_height: int = das.textures[i].height
-				das.textures[i].width = tmp_height
-				das.textures[i].height = tmp_width
-				das.textures[i]["flipped"] = true
+					var image_texture2 := ImageTexture.create_from_image(img2)
+					das.textures[i]["animation"].append(image_texture2)
 			
 			else:
 				#Console.print("COMPRESS TYPE 2, Index: %s, Name: %s" % [das.textures[i].index, das.textures[i].name])
@@ -597,24 +554,17 @@ static func _parse_das(das_file: String) -> Dictionary:
 						else:
 							data.append(255)
 					
-					var image := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
-					image.flip_y()
-					image.rotate_90(CLOCKWISE)
-					
-					das.textures[i]["animation"].append(image)
+					var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
+					var image_texture := ImageTexture.create_from_image(img)
+					das.textures[i]["animation"].append(image_texture)
 					
 					file.seek(starting_position + sub_img_header.currImgSize)
 					starting_position = file.get_position()
 					
 					for key: String in subImgCompressed2Hdr:
 						sub_img_header[key] = file.call(subImgCompressed2Hdr[key])
-				das.textures[i]["flipped"] = true
 				if len(das.textures[i]["animation"]) > 0:
 					das.textures[i]["image"] = das.textures[i]["animation"][0]
-				var tmp_width: int  = das.textures[i].width
-				var tmp_height: int = das.textures[i].height
-				das.textures[i].width = tmp_height
-				das.textures[i].height = tmp_width
 		
 		elif das.textures[i].imageType == 0x80:
 			das.loading_errors.append("Object not loaded: %s, Desc: %s, Index: %s" % [das.textures[i].name, das.textures[i].desc, das.textures[i].index])
@@ -726,9 +676,8 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 		
 		
 		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-		
-		texture["image"] = img
-		texture["flipped"] = false
+		var image_texture := ImageTexture.create_from_image(img)
+		texture["image"] = image_texture
 	
 	elif (texture.imageType == imgBasicTypes.PLAIN_DATA_FLIPPED or
 			texture.imageType == imgBasicTypes.PLAIN_DATA_FLIPPED_2 or
@@ -761,11 +710,8 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 					else:
 						data.append(255)
 				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-				img.flip_y()
-				img.rotate_90(CLOCKWISE)
-				
-				texture["image"].append(img)
-				texture["flipped"] = true
+				var image_texture := ImageTexture.create_from_image(img)
+				texture["image"].append(image_texture)
 				
 				
 				var lower_ptr_4_bits := file.get_position() & 0xF
@@ -783,14 +729,6 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 				#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [texture.name, img_reference_new, width, height])
 				if img_reference != img_reference_new:
 					break
-			
-			
-			var tmp_width: int = texture.width
-			var tmp_height: int = texture.height
-			texture.width = tmp_height
-			texture.height = tmp_width
-			
-			
 			
 		elif texture.unk == 0x40:
 			#Console.print("3D Objs Textures: %s" % texture.name)
@@ -825,11 +763,8 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 					das.loading_errors.append("Image width is zero! Index: %s, Name: %s, Subimage: %s, Of: %s" % [texture.index, texture.name, j, numImgs])
 				else:
 					var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-					img.flip_y()
-					img.rotate_90(CLOCKWISE)
-					
-					texture["image"].append(img)
-					texture["flipped"] = true
+					var image_texture := ImageTexture.create_from_image(img)
+					texture["image"].append(image_texture)
 				
 				var lower_ptr_4_bits := file.get_position() & 0xF
 				var pos := file.get_position()
@@ -849,13 +784,7 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 				#if type != type_new:
 					#Console.print("NOT SAME TYPE REF")
 				
-			var tmp_width: int  = texture.width
-			var tmp_height: int  = texture.height
-			texture.width = tmp_height
-			texture.height = tmp_width
 		else:
-			#Console.print("Flipped: %s" % texture.name)
-			#file.seek(texture["offset_data"] + 0x06)
 			var raw_img := file.get_buffer(texture.width * texture.height)
 			var data: Array
 			for pixel in raw_img:
@@ -865,15 +794,8 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 				else:
 					data.append(255)
 			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-			img.flip_y()
-			img.rotate_90(CLOCKWISE)
-			var tmp_width: int  = texture.width
-			var tmp_height: int  = texture.height
-			texture.width = tmp_height
-			texture.height = tmp_width
-			
-			texture["image"] = img
-			texture["flipped"] = true
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"] = image_texture
 	
 	elif (texture.imageType == imgBasicTypes.COMPRESSED or 
 			texture.imageType == imgBasicTypes.COMPRESSED_2 or 
@@ -910,16 +832,9 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 				else:
 					data.append(255)
 			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-			
-			if texture.imageType != 1:
-				img.flip_y()
-				img.rotate_90(CLOCKWISE)
-				texture["flipped"] = true
-			else:
-				Console.print("NOT FLIPPED??")
-			
-			texture["image"] = img
-			texture["animation"] = [img]
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"] = image_texture
+			texture["animation"] = [image_texture]
 			#Console.print("Index: %s, Name: %s, Subimages: %s" % [texture.index, texture.name, img_type_2])
 			for j in range(img_type_2):
 				#Console.print("SubImage: %s" % j)
@@ -987,16 +902,8 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 					else:
 						data2.append(255)
 				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data2)
-				img2.flip_y()
-				img2.rotate_90(CLOCKWISE)
-	
-			
-				texture["animation"].append(img2)
-			var tmp_width: int  = texture.width
-			var tmp_height: int = texture.height
-			texture.width = tmp_height
-			texture.height = tmp_width
-			texture["flipped"] = true
+				var image_texture2 := ImageTexture.create_from_image(img2)
+				texture["animation"].append(image_texture2)
 		
 		else:
 			#Console.print("COMPRESS TYPE 2, Index: %s, Name: %s" % [texture.index, texture.name])
@@ -1039,24 +946,17 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 					else:
 						data.append(255)
 				
-				var image := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
-				image.flip_y()
-				image.rotate_90(CLOCKWISE)
-				
-				texture["animation"].append(image)
+				var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
+				var image_texture := ImageTexture.create_from_image(img)
+				texture["animation"].append(image_texture)
 				
 				file.seek(starting_position + sub_img_header.currImgSize)
 				starting_position = file.get_position()
 				
 				for key: String in subImgCompressed2Hdr:
 					sub_img_header[key] = file.call(subImgCompressed2Hdr[key])
-			texture["flipped"] = true
 			if len(texture["animation"]) > 0:
 				texture["image"] = texture["animation"][0]
-			var tmp_width: int  = texture.width
-			var tmp_height: int = texture.height
-			texture.width = tmp_height
-			texture.height = tmp_width
 	
 	elif texture.imageType == 0x80:
 		das.loading_errors.append("Object not loaded: %s, Desc: %s, Index: %s" % [texture.name, texture.desc, texture.index])

@@ -6,16 +6,28 @@ var das: Dictionary
 var vert_tileable: bool = false
 var horz_tileable: bool = false
 var only_ceilings: bool = false
-
+var rotated_textures: Dictionary = {}
 
 func _fade_out() -> void:
 	super._fade_out()
 	texture_selected.emit(-1)
 
 
+func das_ready(p_das: Dictionary) -> void:
+	rotated_textures[p_das.name] = {}
+	for texture: Dictionary in das.textures:
+		if not "image" in texture:
+			continue
+		
+
+
 func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
 	das = p_das
 	only_ceilings = p_only_ceilings
+	
+	
+	if das.name not in rotated_textures:
+		rotated_textures[das.name] = {}
 	
 	%TextureList.clear()
 	
@@ -53,7 +65,18 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
 		):
 			var index: int = %TextureList.add_item("%s: %s (%s) %sx%s" % [texture["index"], texture["name"], texture["desc"], texture["width"], texture["height"]])
 			%TextureList.set_item_metadata(index, texture)
-			var image_texture := ImageTexture.create_from_image(texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image)
+			var image_texture: ImageTexture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+			if not only_ceilings:
+				if texture.index in rotated_textures[das.name]:
+					print("Getting stored")
+					image_texture = rotated_textures[das.name][texture.index]
+				else:
+					var rotated_image: Image = image_texture.get_image()
+					rotated_image.rotate_90(CLOCKWISE)
+					rotated_image.flip_x()
+					image_texture = ImageTexture.create_from_image(rotated_image)
+					rotated_textures[das.name][texture.index] = image_texture
+				
 			%TextureList.set_item_icon(index, image_texture)
 	
 	toggle(true)

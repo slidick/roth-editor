@@ -1,11 +1,6 @@
 extends Control
 
 
-var animation: Array
-var animation_position: int = 0
-var animation_rect: TextureRect
-
-
 func _ready() -> void:
 	Roth.das_loading_started.connect(_on_das_loading_start)
 	Roth.das_loading_updated.connect(_on_das_loading_update)
@@ -47,7 +42,7 @@ func load_das(das_file: Variant) -> void:
 			#%TextureList.set_item_text(index, "%s:%s" % [texture["index"], texture["name"]])
 		%TextureList.set_item_metadata(index, texture)
 		if "image" in texture:
-			var image_texture := ImageTexture.create_from_image(texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image)
+			var image_texture: ImageTexture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
 			%TextureList.set_item_icon(index, image_texture)
 		else:
 			%TextureList.set_item_icon(index, ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8)))
@@ -124,46 +119,74 @@ func show_texture_data(data: Dictionary) -> void:
 		%DataContainer.add_child(label)
 
 
-func show_texture(img: Image) -> void:
+func show_texture(img: ImageTexture) -> void:
 	clear_texture()
 	var texture_rect := TextureRect.new()
 	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	texture_rect.texture = ImageTexture.create_from_image(img)
+	texture_rect.texture = img
 	texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	
+	var label := Label.new()
+	label.text = "Floor / Ceiling:"
+	%TextureContainer.add_child(label)
 	%TextureContainer.add_child(texture_rect)
+	
+	var rotation_container := RotationContainer.new()
+	var texture_rect_wall := TextureRect.new()
+	texture_rect_wall.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	texture_rect_wall.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	texture_rect_wall.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	texture_rect_wall.texture = img
+	rotation_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rotation_container.add_child(texture_rect_wall)
+	
+	label = Label.new()
+	label.text = "Wall:"
+	%TextureContainer.add_child(label)
+	%TextureContainer.add_child(rotation_container)
 
 
 func show_texture_array(array: Array) -> void:
 	clear_texture()
-	for img: Image in array:
+	for img: ImageTexture in array:
+		
 		var texture_rect := TextureRect.new()
 		texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		texture_rect.texture = ImageTexture.create_from_image(img)
-		texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		%TextureContainer.add_child(texture_rect)
+		texture_rect.texture = img
+		
+		var rotation_container := RotationContainer.new()
+		rotation_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		rotation_container.add_child(texture_rect)
+		%TextureContainer.add_child(rotation_container)
 
 
 func show_texture_animation(array: Array) -> void:
 	clear_texture()
-	animation = array
-	animation_position = 0
-	animation_rect = TextureRect.new()
+	var animation_rect := TextureRect.new()
 	animation_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	animation_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	animation_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	animation_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])
-	%TextureContainer.add_child(animation_rect)
-	%AnimationTimer.start()
-
-
-func _on_animation_timer_timeout() -> void:
-	animation_position = (animation_position + 1) % (len(animation) - 1)
-	animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])
+	
+	var rotation_container := RotationContainer.new()
+	rotation_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rotation_container.add_child(animation_rect)
+	%TextureContainer.add_child(rotation_container)
+	
+	var animated_image := AnimatedSprite2D.new()
+	animated_image.hide()
+	var sprite_frames := SpriteFrames.new()
+	animated_image.sprite_frames = sprite_frames
+	sprite_frames.set_animation_speed("default", 12)
+	for image: ImageTexture in array.slice(0,-1):
+		sprite_frames.add_frame("default", image)
+	animated_image.play("default")
+	animated_image.frame_changed.connect(func () -> void: animation_rect.texture = sprite_frames.get_frame_texture("default", animated_image.frame))
+	%TextureContainer.add_child(animated_image)
+	animation_rect.texture = sprite_frames.get_frame_texture("default", 0)
 
 
 func _on_das_loading_start() -> void:
@@ -184,18 +207,12 @@ func _on_das_loading_finished(_das: Dictionary) -> void:
 func _on_texture_layout_option_item_selected(index: int) -> void:
 	match index:
 		0:
-			#for i in range(%TextureList.item_count):
-				#var texture: Dictionary = %TextureList.get_item_metadata(i)
-				#%TextureList.set_item_text(i, "%s: %s (%s) %sx%s" % [texture["index"], texture["name"], texture["desc"], texture["width"], texture["height"]])
 			%TextureList.max_columns = 1
 			%TextureList.icon_mode = ItemList.ICON_MODE_LEFT
 			%TextureList.fixed_column_width = 0
 			%TextureList.fixed_icon_size = Vector2(25,25)
 			%TextureList.ensure_current_is_visible()
 		1:
-			#for i in range(%TextureList.item_count):
-				#var texture: Dictionary = %TextureList.get_item_metadata(i)
-				#%TextureList.set_item_text(i, "%s:%s" % [texture["index"], texture["name"]])
 			%TextureList.max_columns = 0
 			%TextureList.icon_mode = ItemList.ICON_MODE_TOP
 			%TextureList.fixed_column_width = 100

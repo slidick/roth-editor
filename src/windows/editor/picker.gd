@@ -319,9 +319,7 @@ func add_texture(texture_index: int, das_name: String) -> void:
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		texture_rect.custom_minimum_size.y = 100
-		texture_rect.texture = ImageTexture.create_from_image(
-			das.mapping[texture_index].image[0] if typeof(das.mapping[texture_index].image) == TYPE_ARRAY else das.mapping[texture_index].image
-		)
+		texture_rect.texture = das.mapping[texture_index].image[0] if typeof(das.mapping[texture_index].image) == TYPE_ARRAY else das.mapping[texture_index].image
 		texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		%EditContainer.add_child(texture_rect)
 

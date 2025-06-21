@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_1g63i"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5yxm6"]
-[ext_resource type="Script" uid="uid://bo7760gc34t3u" path="res://src/windows/array_02_window.gd" id="3_wsry2"]
+[ext_resource type="Script" uid="uid://bo7760gc34t3u" path="res://src/windows/editor/array_02_window.gd" id="3_wsry2"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ksim1"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_wsry2"]
 

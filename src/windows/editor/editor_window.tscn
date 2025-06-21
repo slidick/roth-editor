@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=23 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
@@ -9,12 +9,13 @@
 [ext_resource type="PackedScene" uid="uid://clbdnv0bq58oe" path="res://src/ui/arrow_3d.tscn" id="7_rysh3"]
 [ext_resource type="Script" uid="uid://bb6x1yts7r6sm" path="res://src/windows/editor/picker.gd" id="8_kqd67"]
 [ext_resource type="Script" uid="uid://bg8a1j6sb2ctl" path="res://src/windows/editor/2d_edit.gd" id="9_kytel"]
-[ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/palette_window.tscn" id="9_y8pqo"]
+[ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/editor/palette_window.tscn" id="9_y8pqo"]
 [ext_resource type="Script" uid="uid://mi4etip4nmsx" path="res://src/windows/editor/edit_object_container.gd" id="10_2yf5m"]
-[ext_resource type="PackedScene" uid="uid://h7epeqaiukln" path="res://src/windows/texture_window.tscn" id="11_q0i2p"]
+[ext_resource type="PackedScene" uid="uid://h7epeqaiukln" path="res://src/windows/editor/texture_window.tscn" id="11_q0i2p"]
+[ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="11_w2pak"]
 [ext_resource type="Script" uid="uid://pdmovt0easru" path="res://src/windows/editor/edit_sfx_container.gd" id="11_yrxyp"]
-[ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/metadata_window.tscn" id="12_kytel"]
-[ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/array_02_window.tscn" id="15_d740k"]
+[ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
+[ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/editor/array_02_window.tscn" id="15_d740k"]
 [ext_resource type="PackedScene" uid="uid://q5yql3cy7s8q" path="res://src/windows/command/command_editor_window.tscn" id="16_vdrel"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rysh3"]
@@ -1497,10 +1498,14 @@ text = "Desc:"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ObjectTexture" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="16"]
+[node name="Container" type="Container" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer" index="16"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+script = ExtResource("11_w2pak")
+
+[node name="ObjectTexture" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/TabContainer/Edit/EditObjectContainer/VBoxContainer/Container" index="0"]
 unique_name_in_owner = true
 texture_filter = 1
-custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

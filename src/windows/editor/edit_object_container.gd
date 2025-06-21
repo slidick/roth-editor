@@ -90,9 +90,9 @@ func update_texture() -> void:
 		%TextureDescLabel.text = texture.desc
 		if "image" in texture:
 			if typeof(texture.image) == TYPE_ARRAY:
-				%ObjectTexture.texture = ImageTexture.create_from_image(texture.image[0])
+				%ObjectTexture.texture = texture.image[0]
 			else:
-				%ObjectTexture.texture = ImageTexture.create_from_image(texture.image)
+				%ObjectTexture.texture = texture.image
 		else:
 			%ObjectTexture.texture = null
 	else:

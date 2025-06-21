@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_r7v6o"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_ilgvm"]
-[ext_resource type="Script" uid="uid://ecgg6atfpbj" path="res://src/windows/metadata_window.gd" id="3_r7v6o"]
+[ext_resource type="Script" uid="uid://ecgg6atfpbj" path="res://src/windows/editor/metadata_window.gd" id="3_r7v6o"]
 
 [node name="MetadataWindow" instance=ExtResource("1_r7v6o")]
 offset_right = 518.0

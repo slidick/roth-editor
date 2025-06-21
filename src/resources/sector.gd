@@ -309,7 +309,6 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	#material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
-	var image := Image.new()
 	if texture in mapping and "image" in mapping[texture]:
 		if mapping[texture].is_sky:
 			material.albedo_color = Color.TRANSPARENT
@@ -318,25 +317,7 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 		if is_platform:
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		
-		image.copy_from(mapping[texture].image)
-		if mapping[texture].flipped:
-			image.rotate_90(COUNTERCLOCKWISE)
-			image.flip_y()
-		
-		
-		if not is_ceiling:
-			if check_flag(data.unk0x16, FLOOR_FLIP_X):
-				image.flip_x()
-			if check_flag(data.unk0x16, FLOOR_FLIP_Y):
-				image.flip_y()
-		if is_ceiling:
-			if check_flag(data.unk0x16, CEILING_FLIP_X):
-				image.flip_x()
-			if check_flag(data.unk0x16, CEILING_FLIP_Y):
-				image.flip_y()
-		
-		var img_texture := ImageTexture.create_from_image(image)
-		material.albedo_texture = img_texture
+		material.albedo_texture = mapping[texture].image
 	else:
 		if texture >= 65280:
 			var color: Array = das.palette[texture - 65280]
@@ -394,15 +375,9 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 		var texture_width: float = mapping[texture].width
 		var texture_height: float = mapping[texture].height
 		
-		if mapping[texture].flipped:
-			texture_width = mapping[texture].height
-			texture_height = mapping[texture].width
-		
 		if texture_width == 256:
 			texture_width /= 2
 			texture_height /= 2
-		
-		
 		
 		var floor_a: int = 0
 		var floor_b: int = 0
@@ -488,6 +463,25 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 			material.uv1_offset.x = (float(grid_x_shift + x_shift) / (texture_width * 2))
 			var grid_y_shift: int = min_y % 1024
 			material.uv1_offset.y = (float(grid_y_shift - y_shift) / (texture_height * 2))
+	
+	
+		if not is_ceiling:
+			if check_flag(data.unk0x16, FLOOR_FLIP_X):
+				material.uv1_scale.x *= -1
+				material.uv1_offset.x *= -1
+			if check_flag(data.unk0x16, FLOOR_FLIP_Y):
+				material.uv1_scale.y *= -1
+				material.uv1_offset.y *= -1
+		if is_ceiling:
+			if check_flag(data.unk0x16, CEILING_FLIP_X):
+				material.uv1_scale.x *= -1
+				material.uv1_offset.x *= -1
+			if check_flag(data.unk0x16, CEILING_FLIP_Y):
+				material.uv1_scale.y *= -1
+				material.uv1_offset.y *= -1
+	
+	
+	
 	
 	if not collision_points.is_empty():
 		convex_polygon_shape.points = collision_points

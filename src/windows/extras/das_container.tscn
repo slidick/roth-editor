@@ -91,19 +91,14 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Control" type="Control" parent="VBoxContainer/TabContainer/Textures/HBoxContainer"]
+[node name="Control" type="ScrollContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="DataContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer/Control"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Header" type="MarginContainer" parent="VBoxContainer/TabContainer"]
@@ -141,12 +136,7 @@ size_flags_vertical = 3
 fit_content = true
 autowrap_mode = 0
 
-[node name="AnimationTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 0.1
-
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer/DASFiles" to="." method="_on_das_files_item_selected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="item_selected" from="VBoxContainer/TabContainer/Textures/VBoxContainer/TextureLayoutOption" to="." method="_on_texture_layout_option_item_selected"]
 [connection signal="item_selected" from="VBoxContainer/TabContainer/Textures/VBoxContainer/TextureList" to="." method="_on_texture_list_item_selected"]
-[connection signal="timeout" from="AnimationTimer" to="." method="_on_animation_timer_timeout"]

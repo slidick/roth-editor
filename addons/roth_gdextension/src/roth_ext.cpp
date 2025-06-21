@@ -7,6 +7,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/image.hpp>
+#include <godot_cpp/classes/image_texture.hpp>
 
 using namespace godot;
 
@@ -337,9 +338,8 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 			}
 
 			Ref<Image> img = Image::create_from_data(das["textures"].get(i).get("width"), das["textures"].get(i).get("height"), false, Image::FORMAT_RGBA8, data);
-			
-			das["textures"].get(i).set("image", img);
-			das["textures"].get(i).set("flipped", false);
+			Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
+			das["textures"].get(i).set("image", texture);
 		
     	} else if (static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA_FLIPPED ||
 				static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA_FLIPPED_2 ||
@@ -373,12 +373,8 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 						}
 					}
 					Ref<Image> img = Image::create_from_data(width, height, false, Image::FORMAT_RGBA8, data);
-					img->flip_y();
-					img->rotate_90(CLOCKWISE);
-					
-					das["textures"].get(i).get("image").call("append", img);
-					das["textures"].get(i).set("flipped", true);
-					
+					Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
+					das["textures"].get(i).get("image").call("append", texture);					
 					
 					int lower_ptr_4_bits = file->get_position() & 0xF;
 					int pos = file->get_position();
@@ -397,13 +393,6 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 						break;
 					}
 				}
-				
-				int tmp_width = das["textures"].get(i).get("width");
-				int tmp_height = das["textures"].get(i).get("height");
-				das["textures"].get(i).set("width", tmp_height);
-				das["textures"].get(i).set("height", tmp_width);
-				
-				
 				
 			} else if (static_cast<int>(das["textures"].get(i).get("unk")) == 0x40) {
 				int numImgs = 0;
@@ -442,11 +431,8 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 						das["loading_errors"].call("append", String("Image width is zero! Index: {0}, Name: {1}, Subimage: {2}, Of: {3}").format(args));
 					} else {
 						Ref<Image> img = Image::create_from_data(width, height, false, Image::FORMAT_RGBA8, data);
-						img->flip_y();
-						img->rotate_90(CLOCKWISE);
-						
-						das["textures"].get(i).get("image").call("append", img);
-						das["textures"].get(i).set("flipped", true);
+						Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
+						das["textures"].get(i).get("image").call("append", texture);
 					}
 
 					int lower_ptr_4_bits = file->get_position() & 0xF;
@@ -463,11 +449,6 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 					width = file->get_16();
 					height = file->get_16();
 				}
-					
-				int tmp_width = das["textures"].get(i).get("width");
-				int tmp_height = das["textures"].get(i).get("height");
-				das["textures"].get(i).get("width") = tmp_height;
-				das["textures"].get(i).get("height") = tmp_width;
 
 			} else {
 
@@ -482,15 +463,8 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 					}
 				}		
 				Ref<Image> img = Image::create_from_data(das["textures"].get(i).get("width"), das["textures"].get(i).get("height"), false, Image::FORMAT_RGBA8, data);
-				img->flip_y();
-				img->rotate_90(CLOCKWISE);
-				int tmp_width = das["textures"].get(i).get("width");
-				int tmp_height = das["textures"].get(i).get("height");
-				das["textures"].get(i).set("width", tmp_height);
-				das["textures"].get(i).set("height", tmp_width);
-				
-				das["textures"].get(i).set("image", img);
-				das["textures"].get(i).set("flipped", true);
+				Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
+				das["textures"].get(i).set("image", texture);
 			}
 		
 		
@@ -534,16 +508,18 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 					}
 				}
 				Ref<Image> img = Image::create_from_data(das["textures"].get(i).get("width"), das["textures"].get(i).get("height"), false, Image::FORMAT_RGBA8, data);
-				
+				Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
+				/*
 				if (static_cast<int>(das["textures"].get(i).get("imageType")) != 1) {
 					img->flip_y();
 					img->rotate_90(CLOCKWISE);
 					das["textures"].get(i).set("flipped", true);
 				}
+				*/
 				
-				das["textures"].get(i).set("image", img);
+				das["textures"].get(i).set("image", texture);
 				das["textures"].get(i).set("animation", Array());
-				das["textures"].get(i).get("animation").call("append", img);
+				das["textures"].get(i).get("animation").call("append", texture);
 				for (int j=0; j<img_type_2; j++) {					
 					bool finished = false;
 					int pos = 0;
@@ -605,18 +581,10 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 						}
 					}
 					Ref<Image> img2 = Image::create_from_data(das["textures"].get(i).get("width"), das["textures"].get(i).get("height"), false, Image::FORMAT_RGBA8, data2);
-					img2->flip_y();
-					img2->rotate_90(CLOCKWISE);
-					
-					das["textures"].get(i).get("animation").call("append", img2);
+					Ref<ImageTexture> texture2 = ImageTexture::create_from_image(img2);
+					das["textures"].get(i).get("animation").call("append", texture2);
 				}
 
-				int tmp_width = das["textures"].get(i).get("width");
-				int tmp_height = das["textures"].get(i).get("height");
-				das["textures"].get(i).set("width", tmp_height);
-				das["textures"].get(i).set("height", tmp_width);
-				das["textures"].get(i).set("flipped", true);
-			
 			} else {
 				
 				file->seek(static_cast<int>(das["textures"].get(i).get("offset_data")) + 16);
@@ -673,11 +641,10 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 						}
 					}
 					
-					Ref<Image> image = Image::create_from_data(sub_img_header["width"], sub_img_header["height"], false, Image::FORMAT_RGBA8, data);
-					image->flip_y();
-					image->rotate_90(CLOCKWISE);
+					Ref<Image> img = Image::create_from_data(sub_img_header["width"], sub_img_header["height"], false, Image::FORMAT_RGBA8, data);
+					Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
 					
-					das["textures"].get(i).get("animation").call("append", image);
+					das["textures"].get(i).get("animation").call("append", texture);
 					
 					file->seek(starting_position + static_cast<int>(sub_img_header["currImgSize"]));
 					starting_position = file->get_position();
@@ -694,14 +661,11 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 					sub_img_header.set("unk4", file->get_16());
 					sub_img_header.set("height", file->get_16());
 				}
-				das["textures"].get(i).set("flipped", true);
+
 				if (static_cast<int>(das["textures"].get(i).get("animation").call("size")) > 0) {
 					das["textures"].get(i).set("image", das["textures"].get(i).get("animation").get(0));
 				}
-				int tmp_width  = das["textures"].get(i).get("width");
-				int tmp_height = das["textures"].get(i).get("height");
-				das["textures"].get(i).set("width", tmp_height);
-				das["textures"].get(i).set("height", tmp_width);
+				
 			}
 		
     } else if (static_cast<int>(das["textures"].get(i).get("imageType")) == 0x80) {

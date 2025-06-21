@@ -375,7 +375,7 @@ func setup(p_map: Map) -> void:
 
 
 func close_map(map_info: Dictionary) -> void:
-	if map.map_info == map_info:
+	if map and map.map_info == map_info:
 		map = null
 		selected_face = null
 		selected_sector = null
