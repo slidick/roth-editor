@@ -7,7 +7,7 @@ const HEADER := {
 
 const FILETYPE_GDV: int = 0x29111994
 const FILETYPE_HMP: int = 0x4D494D48
-const FILETYPE_MIDI: int = 0x6468545D
+const FILETYPE_MIDI: int = 0x6468544D
 
 const FILETYPE_IMG1: int = 0x01
 const FILETYPE_IMG7: int = 0x03
@@ -37,8 +37,7 @@ const IMG7_HDR := {
 }
 
 static func parse() -> void:
-	var dbase300_filepath := "/opt/Realms of the Haunting/DATA/DBASE300.DAT"
-	#var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
 		return
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
@@ -60,16 +59,63 @@ static func parse() -> void:
 			FILETYPE_MIDI:
 				pass
 			FILETYPE_IMG1:
-				parse_rle_image(file)
+				pass
+				#parse_rle_image(file)
 			FILETYPE_IMG3:
-				parse_rle_image(file)
+				pass
+				#parse_rle_image(file)
 			FILETYPE_IMG7:
-				parse_rle_image(file)
+				pass
+				#parse_rle_image(file)
 		file.seek(ending_position)
 		count += 1
 		file.seek((file.get_position() + 7) & ~7)
 	
 	print("Count: %s" % count)
+
+
+static func get_midi_offsets() -> Array:
+	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	if not FileAccess.file_exists(dbase300_filepath):
+		return []
+	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
+	var header := Parser.parse_section(file, HEADER)
+	assert(header.signature == "DBASE300")
+	
+	var midis := []
+	while file.get_position() < file.get_length():
+		var current_position: int = file.get_position()
+		var size: int = file.get_32()
+		var ending_position: int = file.get_position() + size
+		var filetype: int = file.get_32()
+		file.seek(file.get_position() - 4)
+		
+		match filetype:
+			FILETYPE_GDV:
+				pass
+			FILETYPE_HMP:
+				file.seek(ending_position)
+				var next_current_position: int = file.get_position()
+				var next_size:int = file.get_32()
+				var next_ending_position: int = file.get_position() + next_size
+				var next_filetype: int = file.get_32()
+				if next_filetype == FILETYPE_MIDI:
+					midis.append(next_current_position)
+				ending_position = next_ending_position
+			FILETYPE_MIDI:
+				midis.append(current_position)
+			FILETYPE_IMG1:
+				pass
+			FILETYPE_IMG3:
+				pass
+			FILETYPE_IMG7:
+				pass
+			_:
+				print(filetype)
+		file.seek(ending_position)
+		file.seek((file.get_position() + 7) & ~7)
+	
+	return midis
 
 
 static func get_at_offset(offset: int ) -> Variant:
@@ -89,7 +135,7 @@ static func get_at_offset(offset: int ) -> Variant:
 		FILETYPE_HMP:
 			pass
 		FILETYPE_MIDI:
-			pass
+			return file.get_buffer(_size)
 		FILETYPE_IMG1:
 			return parse_rle_image(file)
 		FILETYPE_IMG3:
@@ -97,7 +143,6 @@ static func get_at_offset(offset: int ) -> Variant:
 		FILETYPE_IMG7:
 			return parse_rle_image(file)
 	return
-
 
 
 static func parse_rle_image(file: FileAccess) -> Image:
@@ -114,6 +159,7 @@ static func parse_rle_image(file: FileAccess) -> Image:
 			palette = []
 			for i in range(0, len(raw_palette), 3):
 				palette.append([raw_palette[i+0], raw_palette[i+1], raw_palette[i+2]])
+			return Parser.decode_rle_img(header, file, palette, false)
 		FILETYPE_IMG3:
 			header = Parser.parse_section(file, IMG3_HDR)
 		FILETYPE_IMG7:

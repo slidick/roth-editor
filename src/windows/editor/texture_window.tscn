@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://h7epeqaiukln"]
+[gd_scene load_steps=7 format=3 uid="uid://h7epeqaiukln"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_abgak"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_gmem8"]
@@ -6,6 +6,9 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_hdfxv"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_gmem8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r0iqj"]
+bg_color = Color(0.4, 0.4, 0.4, 0.4)
 
 [node name="TextureWindow" instance=ExtResource("1_abgak")]
 offset_right = 1016.0
@@ -23,36 +26,85 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
 layout_mode = 2
 
-[node name="WallOptions" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="0"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer" index="0"]
+layout_mode = 2
+text = "Favorites"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="FavoritesList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+max_columns = 0
+fixed_column_width = 50
+icon_mode = 0
+fixed_icon_size = Vector2i(45, 45)
+
+[node name="FavoritesPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer/FavoritesList" index="2"]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Remove"
+item_0/id = 0
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer" index="3"]
+layout_mode = 2
+text = "Recent"
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer" index="4"]
+layout_mode = 2
+
+[node name="RecentlyUsedList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+max_columns = 0
+fixed_column_width = 50
+icon_mode = 0
+fixed_icon_size = Vector2i(45, 45)
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WallOptions" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AllCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="0"]
+[node name="AllCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions" index="0"]
 layout_mode = 2
 button_pressed = true
 button_group = SubResource("ButtonGroup_gmem8")
 text = "All"
 
-[node name="TileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="1"]
+[node name="TileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions" index="1"]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_gmem8")
 text = "Vertically Tileable"
 
-[node name="HorzTileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="2"]
+[node name="HorzTileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions" index="2"]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_gmem8")
 text = "Horizontally Tileable"
 
-[node name="BothCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions" index="3"]
+[node name="BothCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions" index="3"]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_gmem8")
-text = "Vertically & Horizontally Tileable"
+text = "Both"
 
-[node name="TextureList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="TextureList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2" index="1"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 max_columns = 0
@@ -60,8 +112,24 @@ fixed_column_width = 100
 icon_mode = 0
 fixed_icon_size = Vector2i(95, 95)
 
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/AllCheckBox" to="." method="_on_all_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/TileableCheckBox" to="." method="_on_tileable_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/HorzTileableCheckBox" to="." method="_on_horz_tileable_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/WallOptions/BothCheckBox" to="." method="_on_both_check_box_toggled"]
-[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TextureList" to="." method="_on_texture_list_item_activated"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2" index="2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_r0iqj")
+
+[node name="TextureContainer" type="HFlowContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/ScrollContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="texture_selected" from="." to="." method="_on_texture_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer/FavoritesList" to="." method="_on_favorites_list_item_activated"]
+[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer/FavoritesList" to="." method="_on_favorites_list_item_clicked"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer/FavoritesList/FavoritesPopupMenu" to="." method="_on_favorites_popup_menu_index_pressed"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer/RecentlyUsedList" to="." method="_on_recently_used_list_item_activated"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions/AllCheckBox" to="." method="_on_all_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions/TileableCheckBox" to="." method="_on_tileable_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions/HorzTileableCheckBox" to="." method="_on_horz_tileable_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/WallOptions/BothCheckBox" to="." method="_on_both_check_box_toggled"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/VBoxContainer2/TextureList" to="." method="_on_texture_list_item_activated"]

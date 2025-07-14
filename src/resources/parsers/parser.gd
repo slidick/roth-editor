@@ -75,8 +75,12 @@ static func parse_section_value(file: FileAccess, type: Variant) -> Variant:
 			return null
 
 
-static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette: Array) -> Image:
-	var decoded_sprite_size: int = rle_image_hdr.width * rle_image_hdr.height * 4
+static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette: Array, with_alpha: bool = true) -> Image:
+	var decoded_sprite_size: int = rle_image_hdr.width * rle_image_hdr.height
+	if with_alpha:
+		decoded_sprite_size *= 4
+	else:
+		decoded_sprite_size *= 3
 	var decoded_sprite_buffer: Array = []
 	decoded_sprite_buffer.resize(decoded_sprite_size)
 	
@@ -95,8 +99,11 @@ static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette:
 				decoded_sprite_buffer[dest_idx] = pixel_value[0]
 				decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
 				decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
-				decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
-				dest_idx += 4
+				if with_alpha:
+					decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
+					dest_idx += 4
+				else:
+					dest_idx += 3
 		else:
 			var pixel_value: Array = palette[byte].duplicate()
 			if palette[byte] == [0,0,0] and byte == 0:
@@ -106,8 +113,11 @@ static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette:
 			decoded_sprite_buffer[dest_idx] = pixel_value[0]
 			decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
 			decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
-			decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
-			dest_idx += 4
+			if with_alpha:
+				decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
+				dest_idx += 4
+			else:
+				dest_idx += 3
 	
 	var image := Image.create_from_data(rle_image_hdr.width, rle_image_hdr.height, false, Image.FORMAT_RGBA8, decoded_sprite_buffer)
 	

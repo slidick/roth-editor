@@ -73,13 +73,17 @@ func _on_settings_loaded() -> void:
 			#if "length" in action and action.length == 0:
 				#print(action)
 			#print(action)
-			#for opcode: Dictionary in action.opcodes:
+			for opcode: Dictionary in action.opcodes:
 				#if opcode.command not in command_counts:
 					#command_counts[opcode.command] = 1
 				#else:
 					#command_counts[opcode.command] += 1
-				#if opcode.command == 35:
-					#print(i+1)
+				#if opcode.command == 54:
+					#print("C: %s, V: %s" % [i+1, opcode.full_value])
+				if opcode.command == 28:
+					print([i+1, opcode.full_value])
+					
+					#print(opcode.full_value)
 		#print(JSON.stringify(command_counts, '\t', true))
 		
 		# Cutscenes
