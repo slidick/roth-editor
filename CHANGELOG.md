@@ -1,3 +1,17 @@
+**0.10.0**
+### New Features
+  - Add support for the other versions of RotH
+    - UK, Germany, France, Italy, Spain, and US versions now supported
+  - Texture loading improvements *significantly* reduce vram usage
+  - Delete multiple commands at once
+
+### Bugfixes
+  - Face ID can now be proper length to support door hinges
+  - GDV audio shouldn't get out of sync anymore
+  - Save-as now does a case insensitive name collision check
+
+---
+
 **0.9.0**
 ### New Features
   - New Extras Window parses remaining files: DBASE100.DAT, DBASE200.DAT, DBASE300.DAT, .GDV files, FXSCRIPT.SFX, ICONS.ALL, and BACKDROP.RAW
@@ -19,7 +33,7 @@
 ### Changes
   - Moved Dialog Viewer into Extras Window
   - Moved DAS Viewer into Extras Window
-  - DAS and GDV parsing are now handled by a c++ extension so there should be a noticable speed improvement (though not as great as hoped)
+  - DAS and GDV parsing are now handled by a c++ extension so there should be a noticeable speed improvement (though not as great as hoped)
     - This means it's no longer a standalone executable; it now requires the accompanying .dll / .so file next to it
 
 ---
