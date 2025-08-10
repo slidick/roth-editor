@@ -139,7 +139,6 @@ func _on_command_search_edit_text_submitted(new_text: String) -> void:
 		search_count = 0
 	previous_search = new_text
 	var search_amount: int = search_count
-	print(search_amount)
 	
 	var search_type: int = -1
 	match %CommandSearchOption.selected:

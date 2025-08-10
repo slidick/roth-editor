@@ -50,14 +50,17 @@ editable = false
 layout_mode = 2
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Base:"
 
-[node name="CommandBaseEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+[node name="CommandBaseOption" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+text_overrun_behavior = 3
+fit_to_longest_item = false
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -147,7 +150,7 @@ item_0/text = "Delete"
 item_0/id = 0
 
 [connection signal="index_pressed" from="CommandPopupMenu" to="." method="_on_command_popup_menu_index_pressed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer/CommandBaseEdit" to="." method="_on_command_base_edit_text_changed"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/CommandBaseOption" to="." method="_on_command_base_option_item_selected"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer3/CommandNextCommandIndexEdit" to="." method="_on_command_next_command_index_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/AddArgButton" to="." method="_on_add_arg_button_pressed"]
