@@ -1,6 +1,7 @@
 extends BaseWindow
 
 const COMMAND_NODE = preload("uid://bg2itg1120pon")
+const VERTICAL_SPACING: int = 488
 
 var map: Map
 var command_section := {}
@@ -56,7 +57,7 @@ func edit_data(p_map: Map) -> void:
 				command_node.position_offset.x = command_section.allCommands[command_section.entryCommandIndexes[i]-1].node_data.x
 				command_node.position_offset.y = command_section.allCommands[command_section.entryCommandIndexes[i]-1].node_data.y
 			else:
-				command_node.position_offset.y = 500 * i
+				command_node.position_offset.y = VERTICAL_SPACING * i
 			row_value = i + 1
 			%GraphEdit.add_child(command_node)
 			command_node.title = "Entry Command"
@@ -76,7 +77,7 @@ func edit_data(p_map: Map) -> void:
 						command_node_2.position_offset.x = command_section.allCommands[next_command_index-1].node_data.x
 						command_node_2.position_offset.y = command_section.allCommands[next_command_index-1].node_data.y
 					else:
-						command_node_2.position_offset.y = 500 * i
+						command_node_2.position_offset.y = VERTICAL_SPACING * i
 						command_node_2.position_offset.x = j * 300
 					%GraphEdit.add_child(command_node_2)
 				j += 1
@@ -100,13 +101,14 @@ func edit_data(p_map: Map) -> void:
 					command_node.position_offset.x = command_section.allCommands[i].node_data.x
 					command_node.position_offset.y = command_section.allCommands[i].node_data.y
 				else:
-					command_node.position_offset.y = 500 * k
+					command_node.position_offset.y = VERTICAL_SPACING * k
 					k += 1
 					command_node.position_offset.x = -600
 				%GraphEdit.add_child(command_node)
 				command_node.title = "Orphan Command"
 				command_nodes[i+1] = command_node
 				repeat.append(command_node)
+		
 		
 		for command_node: CommandNode in repeat:
 			if command_node.data.nextCommandIndex != 0:
@@ -324,7 +326,7 @@ func add_command(at_position: Variant = null) -> void:
 		var pos:Vector2 = (at_position + %GraphEdit.scroll_offset) / %GraphEdit.zoom
 		command_node.position_offset = pos
 	else:
-		command_node.position_offset.y = 500 * row_value
+		command_node.position_offset.y = VERTICAL_SPACING * row_value
 	row_value += 1
 	%GraphEdit.add_child(command_node)
 	command_node.title = "Orphan Command"

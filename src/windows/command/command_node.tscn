@@ -1,12 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg2itg1120pon"]
+[gd_scene load_steps=2 format=3 uid="uid://bg2itg1120pon"]
 
 [ext_resource type="Script" uid="uid://dc3d5e26qqvpa" path="res://src/windows/command/command_node.gd" id="1_3ggqm"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="1_rj88y"]
 
 [node name="CommandNode" type="GraphNode"]
 offset_top = 439.0
-offset_right = 258.0
-offset_bottom = 929.0
+offset_right = 262.0
+offset_bottom = 917.0
 slot/0/left_enabled = false
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)
@@ -28,121 +27,256 @@ item_1/id = 1
 item_2/text = "Delete Command"
 item_2/id = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4"]
-custom_minimum_size = Vector2(150, 0)
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
 layout_mode = 2
 text = "Index:"
 
-[node name="CommandIndexEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer4"]
+[node name="CommandIndexEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+layout_mode = 2
+text = "Next:"
+
+[node name="CommandNextCommandIndexEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Base:"
 
-[node name="CommandBaseOption" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="CommandBaseOption" type="OptionButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text_overrun_behavior = 3
 fit_to_longest_item = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Modifier:"
 
-[node name="CommandModifierEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+[node name="CommandModifierEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="Label4" type="Label" parent="VBoxContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Next Command:"
-
-[node name="CommandNextCommandIndexEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="Label5" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Args:"
 
-[node name="Control" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ArgsLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer/Control"]
+[node name="ArgsLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AddArgButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AddArgButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Add"
 
-[node name="MapNameButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="MapNameButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Enter Map Name"
+text = "Change"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="FlagsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="FlagButton1" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+text = "Flag 1"
+text_overrun_behavior = 3
 
-[node name="ArgsTree" type="Tree" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="FlagButton2" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 2"
+text_overrun_behavior = 3
+
+[node name="FlagButton3" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 3"
+text_overrun_behavior = 3
+
+[node name="FlagButton4" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 4"
+text_overrun_behavior = 3
+
+[node name="FlagButton5" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 5"
+text_overrun_behavior = 3
+
+[node name="FlagButton6" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 6"
+text_overrun_behavior = 3
+
+[node name="FlagButton7" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 7"
+text_overrun_behavior = 3
+
+[node name="FlagButton8" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 8"
+text_overrun_behavior = 3
+
+[node name="FlagButton9" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 9"
+text_overrun_behavior = 3
+
+[node name="FlagButton10" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 10"
+text_overrun_behavior = 3
+
+[node name="FlagButton11" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 11"
+text_overrun_behavior = 3
+
+[node name="FlagButton12" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 12"
+text_overrun_behavior = 3
+
+[node name="FlagButton13" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 13"
+text_overrun_behavior = 3
+
+[node name="FlagButton14" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 14"
+text_overrun_behavior = 3
+
+[node name="FlagButton15" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 15"
+text_overrun_behavior = 3
+
+[node name="FlagButton16" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Flag 16"
+text_overrun_behavior = 3
+
+[node name="ArgsTree" type="Tree" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 260)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 allow_rmb_select = true
 hide_folding = true
 hide_root = true
-script = ExtResource("1_rj88y")
 
-[node name="ArgsPopupMenu" type="PopupMenu" parent="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree"]
+[node name="ArgsPopupMenu" type="PopupMenu" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree"]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 1
@@ -150,12 +284,27 @@ item_0/text = "Delete"
 item_0/id = 0
 
 [connection signal="index_pressed" from="CommandPopupMenu" to="." method="_on_command_popup_menu_index_pressed"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer/CommandBaseOption" to="." method="_on_command_base_option_item_selected"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/CommandNextCommandIndexEdit" to="." method="_on_command_next_command_index_edit_text_changed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/AddArgButton" to="." method="_on_add_arg_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/MapNameButton" to="." method="_on_map_name_button_pressed"]
-[connection signal="item_edited" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_edited"]
-[connection signal="item_mouse_selected" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_mouse_selected"]
-[connection signal="item_moved" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_moved"]
-[connection signal="index_pressed" from="VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree/ArgsPopupMenu" to="." method="_on_args_popup_menu_index_pressed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2/CommandNextCommandIndexEdit" to="." method="_on_command_next_command_index_edit_text_changed"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/HBoxContainer/CommandBaseOption" to="." method="_on_command_base_option_item_selected"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/AddArgButton" to="." method="_on_add_arg_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/MapNameButton" to="." method="_on_map_name_button_pressed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton1" to="." method="_on_flag_button_toggled" binds= [0]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton2" to="." method="_on_flag_button_toggled" binds= [1]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton3" to="." method="_on_flag_button_toggled" binds= [2]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton4" to="." method="_on_flag_button_toggled" binds= [3]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton5" to="." method="_on_flag_button_toggled" binds= [4]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton6" to="." method="_on_flag_button_toggled" binds= [5]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton7" to="." method="_on_flag_button_toggled" binds= [6]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton8" to="." method="_on_flag_button_toggled" binds= [7]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton9" to="." method="_on_flag_button_toggled" binds= [8]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton10" to="." method="_on_flag_button_toggled" binds= [9]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton11" to="." method="_on_flag_button_toggled" binds= [10]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton12" to="." method="_on_flag_button_toggled" binds= [11]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton13" to="." method="_on_flag_button_toggled" binds= [12]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton14" to="." method="_on_flag_button_toggled" binds= [13]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton15" to="." method="_on_flag_button_toggled" binds= [14]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton16" to="." method="_on_flag_button_toggled" binds= [15]]
+[connection signal="item_edited" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_edited"]
+[connection signal="item_mouse_selected" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_mouse_selected"]
+[connection signal="index_pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ArgsTree/ArgsPopupMenu" to="." method="_on_args_popup_menu_index_pressed"]
