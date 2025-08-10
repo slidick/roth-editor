@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=3 uid="uid://b688jp3monkmt"]
+
+[ext_resource type="Script" uid="uid://bp7gn3qh024hs" path="res://src/windows/extras/commands_container.gd" id="1_h6prd"]
+
+[node name="Commands" type="MarginContainer"]
+offset_right = 855.0
+offset_bottom = 473.0
+script = ExtResource("1_h6prd")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Search:"
+
+[node name="CommandSearchEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+keep_editing_on_text_submit = true
+caret_blink = true
+
+[node name="CommandSearchOption" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 6
+popup/item_0/text = "Set Flag"
+popup/item_0/id = 0
+popup/item_1/text = "Unset Flag"
+popup/item_1/id = 1
+popup/item_2/text = "Has Flag"
+popup/item_2/id = 2
+popup/item_3/text = "Not Have Flag"
+popup/item_3/id = 3
+popup/item_4/text = "Has Flag Single"
+popup/item_4/id = 4
+popup/item_5/text = "Not Have Flag Single"
+popup/item_5/id = 5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CommandList" type="ItemList" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+allow_reselect = true
+auto_width = true
+
+[node name="SplitContainer" type="SplitContainer" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommandTree" type="Tree" parent="VBoxContainer/HBoxContainer2/SplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+column_titles_visible = true
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="CommandPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer2/SplitContainer"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/CommandSearchEdit" to="." method="_on_command_search_edit_text_submitted"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer2/CommandList" to="." method="_on_command_list_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer2/SplitContainer/CommandTree" to="." method="_on_command_tree_item_selected"]

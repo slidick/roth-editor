@@ -29,7 +29,10 @@ static func parse(filepath: String) -> Array:
 	var array_01 := []
 	# First Array -- In Game Subtitles
 	while file.get_position() < file.get_length():
-		var entry := Parser.parse_section(file, ARRAY01_ENTRY)
+		var entry: Dictionary = {}
+		entry.dbase_400_offset = file.get_position()
+		entry.merge(Parser.parse_section(file, ARRAY01_ENTRY))
+		
 		while file.get_position() % 4 > 0:
 			var _padding := file.get_8()
 		array_01.append(entry)

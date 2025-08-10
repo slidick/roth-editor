@@ -41,7 +41,8 @@ const DBASE100_INVENTORY_ENTRY := {
 	"add_length": Parser.Type.Word,
 	"unk_byte_04": Parser.Type.Byte,            # always 0
 	"unk_byte_05": Parser.Type.Byte,
-	"unk_dword_04": Parser.Type.DWord,
+	"unk_word_06": Parser.Type.Word,
+	"unk_word_07": Parser.Type.Word,
 	#"unk_bytes_01"              / Bytes(lambda ctx: ctx.add_length)
 }
 
@@ -117,6 +118,13 @@ static func parse() -> Dictionary:
 		if inventory_item["offset_dbase400"] != 0:
 			dbase400.seek(inventory_item["offset_dbase400"])
 			inventory_item["subtitle"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			while dbase400.get_position() % 4 > 0:
+				var _padding := dbase400.get_8()
+			inventory_item["next_subtitle"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+		
+		if inventory_item["unk_word_06"] != 0:
+			dbase400.seek(inventory_item["unk_word_06"])
+			inventory_item["right_click"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
 		
 		inventory.append(inventory_item)
 		dbase100.seek(position)

@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dq8sxf6oabjnm"]
+[gd_scene load_steps=11 format=3 uid="uid://dq8sxf6oabjnm"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uerpl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5d3u0"]
 [ext_resource type="Script" uid="uid://cd6kkomqlbspw" path="res://src/windows/extras/extras_window.gd" id="2_d2ulm"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_xdice"]
 [ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="5_kfkbs"]
+[ext_resource type="PackedScene" uid="uid://b688jp3monkmt" path="res://src/windows/extras/commands_container.tscn" id="5_rtctb"]
 [ext_resource type="Texture2D" uid="uid://caffbwravy0jl" path="res://assets/icons/player-pause.svg" id="6_kuqxe"]
 [ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="6_sgd02"]
 [ext_resource type="PackedScene" uid="uid://ctfactna67ath" path="res://src/windows/extras/dialog_container.tscn" id="8_kuqxe"]
@@ -22,41 +23,8 @@ panel_style_override = ExtResource("4_xdice")
 layout_mode = 2
 current_tab = 0
 
-[node name="Commands" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1"]
+[node name="Commands" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1" instance=ExtResource("5_rtctb")]
 layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Commands" index="0"]
-layout_mode = 2
-
-[node name="CommandList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer" index="0"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-allow_reselect = true
-auto_width = true
-
-[node name="SplitContainer" type="SplitContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CommandTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer" index="0"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-columns = 2
-column_titles_visible = true
-allow_reselect = true
-allow_rmb_select = true
-hide_folding = true
-hide_root = true
-select_mode = 1
-
-[node name="CommandPanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer" index="1"]
-unique_name_in_owner = true
-clip_contents = true
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="2"]
 visible = false
@@ -260,8 +228,6 @@ layout_mode = 2
 metadata/_tab_index = 9
 
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/CommandList" to="." method="_on_command_list_item_selected"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Commands/HBoxContainer/SplitContainer/CommandTree" to="." method="_on_command_tree_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/InventoryList" to="." method="_on_inventory_list_item_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_activated"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/CutsceneList" to="." method="_on_cutscene_list_item_selected"]

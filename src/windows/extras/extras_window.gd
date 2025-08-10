@@ -17,9 +17,6 @@ var dragging_slider: bool = false
 func _ready() -> void:
 	super._ready()
 	Roth.settings_loaded.connect(_on_settings_loaded)
-	%CommandTree.create_item()
-	%CommandTree.set_column_title(0, "Command")
-	%CommandTree.set_column_title(1, "Value")
 	Roth.gdv_loading_updated.connect(_on_gdv_loading_updated)
 
 
@@ -34,12 +31,6 @@ func _process(delta: float) -> void:
 
 func _on_settings_loaded() -> void:
 	# DBase100
-	# Actions/Commands Clear
-	%CommandList.clear()
-	for tree_item: TreeItem in %CommandTree.get_root().get_children():
-		tree_item.free()
-	for node: Node in %CommandPanel.get_children():
-		node.queue_free()
 	
 	# Cutscenes Clear
 	%CutsceneList.clear()
@@ -58,34 +49,6 @@ func _on_settings_loaded() -> void:
 	# DBase100 Parse
 	dbase100 = DBase100.parse()
 	if not dbase100.is_empty():
-		# Actions/Commands
-		#var command_counts := {}
-		for i in range(len(dbase100.actions)):
-			var action: Dictionary = dbase100.actions[i]
-			if action.offset == 0:
-				continue
-			if action.length == 0:
-				continue
-			var idx: int = %CommandList.add_item("%d" % (i+1))
-			%CommandList.set_item_metadata(idx, action)
-			#if "unk_word_00" in action and action.unk_word_00 != 768:
-				#print(action)
-			#if "length" in action and action.length == 0:
-				#print(action)
-			#print(action)
-			for opcode: Dictionary in action.opcodes:
-				#if opcode.command not in command_counts:
-					#command_counts[opcode.command] = 1
-				#else:
-					#command_counts[opcode.command] += 1
-				#if opcode.command == 54:
-					#print("C: %s, V: %s" % [i+1, opcode.full_value])
-				if opcode.command == 28:
-					print([i+1, opcode.full_value])
-					
-					#print(opcode.full_value)
-		#print(JSON.stringify(command_counts, '\t', true))
-		
 		# Cutscenes
 		for i in range(len(dbase100.cutscenes)):
 			var cutscene: Dictionary = dbase100.cutscenes[i]
@@ -155,83 +118,6 @@ func _on_settings_loaded() -> void:
 	var backdrop_image: Image = Backdrop.parse()
 	if backdrop_image:
 		%BackdropRect.texture = ImageTexture.create_from_image(backdrop_image)
-
-
-func _on_command_list_item_selected(index: int) -> void:
-	var action: Dictionary = %CommandList.get_item_metadata(index)
-	
-	for tree_item: TreeItem in %CommandTree.get_root().get_children():
-		tree_item.free()
-	for node: Node in %CommandPanel.get_children():
-		node.queue_free()
-	
-	for opcode: Dictionary in action.opcodes:
-		var tree_item: TreeItem = %CommandTree.get_root().create_child()
-		tree_item.set_text(0, "%d" % opcode.command)
-		tree_item.set_metadata(0, opcode)
-		tree_item.set_text(1, "%d" % opcode.full_value)
-
-
-func _on_command_tree_item_selected() -> void:
-	for node: Node in %CommandPanel.get_children():
-		node.queue_free()
-	
-	var vbox := VBoxContainer.new()
-	%CommandPanel.add_child(vbox)
-	
-	var tree_item: TreeItem = %CommandTree.get_selected()
-	var opcode: Dictionary = tree_item.get_metadata(0)
-	match opcode.command:
-		5:
-			var label := Label.new()
-			var subtitle := DBase400.get_at_offset(opcode.full_value)
-			label.text = "%s" % subtitle.string
-			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			label.autowrap_mode = TextServer.AUTOWRAP_WORD
-			var color: Array = Das.get_default_palette()[subtitle.font_color]
-			label.add_theme_color_override("font_color", Color(color[0], color[1], color[2]))
-			
-			var scroll := ScrollContainer.new()
-			scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			scroll.add_child(label)
-			vbox.add_child(scroll)
-			
-			var button := Button.new()
-			button.text = "Play"
-			button.pressed.connect(func () -> void:
-				var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.offset)
-				if entry.is_empty():
-					return
-				Roth.play_audio_buffer(entry.data, entry.sampleRate)
-			)
-			vbox.add_child(button)
-		7:
-			var label := Label.new()
-			var cutscene: Dictionary = dbase100.cutscenes[opcode.full_value-1]
-			label.text = "%s" % cutscene.entry.string
-			label.autowrap_mode = TextServer.AUTOWRAP_WORD
-			vbox.add_child(label)
-			
-			vbox.add_child(HSeparator.new())
-			
-			var rich_text := RichTextLabel.new()
-			rich_text.bbcode_enabled = true
-			rich_text.selection_enabled = true
-			rich_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			vbox.add_child(rich_text)
-			
-			if "subtitles" in cutscene:
-				var palette: Array = Das.get_default_palette()
-				for subtitle_line: Dictionary in cutscene.subtitles.entries:
-					if subtitle_line.string.is_empty():
-						continue
-					var color: String = Color(palette[subtitle_line.font_color][0], palette[subtitle_line.font_color][1], palette[subtitle_line.font_color][2]).to_html()
-					rich_text.append_text("- [color=%s]%s[/color]\n" % [color, subtitle_line.string])
-		8:
-			var label := Label.new()
-			label.text = "%s" % DBase400.get_at_offset(opcode.full_value).string
-			vbox.add_child(label)
 
 
 func _on_cutscene_list_item_selected(index: int) -> void:
@@ -477,7 +363,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	vbox_main.add_child(scroll)
 	
 	for key: String in inventory_item:
-		if key == "subtitle" or key == "offset_dbase400":
+		if key == "subtitle":
 			continue
 		
 		var hbox := HBoxContainer.new()
@@ -490,7 +376,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		hbox.add_child(label1)
 		
 		var label2 := Label.new()
-		label2.text = "%s" % [inventory_item[key]]
+		label2.text = "%s" % [inventory_item[key].string if key == "next_subtitle" or key == "right_click" else inventory_item[key]]
 		#label2.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
 		label2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hbox.add_child(label2)

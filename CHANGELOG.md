@@ -4,6 +4,7 @@
     - UK, Germany, France, Italy, Spain, and US versions now supported
   - Texture loading improvements *significantly* reduce vram usage
   - Delete multiple commands at once
+  - Favorite and recent texture support
 
 ### Bugfixes
   - Face ID can now be proper length to support door hinges
