@@ -228,6 +228,15 @@ func _input(event: InputEvent) -> void:
 							start_box_position = Vector2.ZERO
 							queue_redraw()
 							return
+						
+						if (start_box_position.x == (get_global_mouse_position() + global_position).snappedf(snap).x or 
+								start_box_position.y == (get_global_mouse_position() + global_position).snappedf(snap).y
+						):
+							start_box_draw = false
+							start_box_position = Vector2.ZERO
+							queue_redraw()
+							return
+						
 						var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
 						start_box_draw = false
 						start_box_position = Vector2.ZERO
