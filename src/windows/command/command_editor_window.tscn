@@ -39,7 +39,7 @@ keep_editing_on_text_submit = true
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
-item_count = 13
+item_count = 14
 popup/item_0/text = "Floor Sector ID"
 popup/item_0/id = 0
 popup/item_1/text = "LeftClick Face ID"
@@ -66,6 +66,8 @@ popup/item_11/text = "Command Base"
 popup/item_11/id = 10
 popup/item_12/text = "Command Modifier"
 popup/item_12/id = 11
+popup/item_13/text = "Command Index"
+popup/item_13/id = 13
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
 layout_mode = 2

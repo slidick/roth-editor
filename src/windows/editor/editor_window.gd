@@ -354,6 +354,14 @@ func select_face(index: int, type: String, p_map_name: String = "", count: int =
 				for sfx: Node3D in map_node.get_node("SFX").get_children():
 					if index == sfx.ref.index:
 						%Picker.select(sfx)
+			"SFX ID":
+				for sfx: Node3D in map_node.get_node("SFX").get_children():
+					if index == sfx.ref.data.unk0x06:
+						if count == 0:
+							%Picker.select(sfx)
+							return
+						count -= 1
+				
 	if search_count > 0:
 		search_count = 0
 		previous_search = str(index)

@@ -184,7 +184,7 @@ const OBJECT := {
 	"textureIndex": Parser.Type.Byte,
 	"textureSource": Parser.Type.Byte,
 	"rotation": Parser.Type.Byte,
-	"unk0x07": Parser.Type.Byte,
+	"unk0x07": Parser.Type.Byte,  # Flags [bit 8 is start hidden]
 	"lighting": Parser.Type.Byte,
 	"renderType": Parser.Type.Byte,
 	"posZ": Parser.Type.SignedWord,

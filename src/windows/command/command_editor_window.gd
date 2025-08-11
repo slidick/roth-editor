@@ -1,7 +1,8 @@
 extends BaseWindow
 
 const COMMAND_NODE = preload("uid://bg2itg1120pon")
-const VERTICAL_SPACING: int = 488
+const VERTICAL_SPACING: int = 546
+const HORIZONTAL_SPACING: int = 400
 
 var map: Map
 var command_section := {}
@@ -78,7 +79,7 @@ func edit_data(p_map: Map) -> void:
 						command_node_2.position_offset.y = command_section.allCommands[next_command_index-1].node_data.y
 					else:
 						command_node_2.position_offset.y = VERTICAL_SPACING * i
-						command_node_2.position_offset.x = j * 300
+						command_node_2.position_offset.x = j * HORIZONTAL_SPACING
 					%GraphEdit.add_child(command_node_2)
 				j += 1
 				command_nodes[next_command_index] = command_node_2
@@ -311,7 +312,7 @@ func _on_add_command_button_pressed() -> void:
 
 func add_command(at_position: Variant = null) -> void:
 	var new_command := {
-		"commandBase": 0,
+		"commandBase": 1,
 		"commandModifier": 0,
 		"nextCommandIndex": 0,
 		"args": [0],
@@ -368,8 +369,22 @@ func _on_add_to_entry_list(index: int) -> void:
 
 func add_to_entry_list(index: int) -> void:
 	command_section.entryCommandIndexes.append(index)
-	command_section.entryCommandIndexes.sort()
+	#command_section.entryCommandIndexes.sort()
 	command_section.entryCommandIndexes.sort_custom(func (i1: int, i2: int) -> bool: return command_section.allCommands[i1-1].commandBase < command_section.allCommands[i2-1].commandBase)
+	
+	var new_entry_indexes_mapping: Dictionary = {}
+	for entry_command_index: int in command_section.entryCommandIndexes:
+		var command_base: int = command_section.allCommands[entry_command_index-1].commandBase
+		if command_base not in new_entry_indexes_mapping:
+			new_entry_indexes_mapping[command_base] = [entry_command_index]
+		else:
+			new_entry_indexes_mapping[command_base].append(entry_command_index)
+	
+	var new_entry_indexes: Array = []
+	for command_base: int in new_entry_indexes_mapping:
+		new_entry_indexes_mapping[command_base].sort()
+		new_entry_indexes.append_array(new_entry_indexes_mapping[command_base])
+	command_section.entryCommandIndexes = new_entry_indexes
 	
 	var selected_index: int = 0
 	%EntryCommandIndices.clear()
@@ -611,6 +626,12 @@ func _on_search_edit_text_submitted(new_text: String) -> void:
 				if command_node.data.commandModifier == int(new_text):
 					search_select(command_node)
 					if search_amount == 0:
+						return
+					search_amount -= 1
+			"Command Index":
+				if command_node.index == int(new_text):
+					if search_amount == 0:
+						search_select(command_node)
 						return
 					search_amount -= 1
 	if search_count > 0:
