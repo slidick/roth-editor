@@ -412,8 +412,8 @@ static func parse_file(filepath: String = "res://TEST.RAW") -> Dictionary:
 		parsed_file["section7"]["unkArray02"] = unk_array_02
 	
 	
-	parsed_file["commandsSection"]["entryCommandIndexes"].sort()
-	parsed_file["commandsSection"]["entryCommandIndexes"].sort_custom(func (i1: int, i2: int) -> bool: return parsed_file["commandsSection"]["allCommands"][i1-1].commandBase < parsed_file["commandsSection"]["allCommands"][i2-1].commandBase)
+	#parsed_file["commandsSection"]["entryCommandIndexes"].sort()
+	#parsed_file["commandsSection"]["entryCommandIndexes"].sort_custom(func (i1: int, i2: int) -> bool: return parsed_file["commandsSection"]["allCommands"][i1-1].commandBase < parsed_file["commandsSection"]["allCommands"][i2-1].commandBase)
 	
 	
 	return parsed_file
