@@ -386,12 +386,27 @@ func delete_command(index: int) -> void:
 	for i in range(index-1, len(command_nodes)):
 		command_nodes[i].index = i + 1
 	
-	# Update commands next_command_index
+	# Update references to commands
 	for command_node: CommandNode in command_nodes:
+		# Update next_command_index
 		if command_node.next_command_index == index:
 			command_node.next_command_index = 0
 		if command_node.next_command_index > index:
 			command_node.next_command_index -= 1
+		
+		# Update arg1
+		if command_node.command_base in [64]:
+			if command_node.arg_1 == index:
+				command_node.arg_1 = 0
+			if command_node.arg_1 > index:
+				command_node.arg_1 -= 1
+		
+		# Update arg2
+		if command_node.command_base in [23, 30, 56]:
+			if command_node.arg_2 == index:
+				command_node.arg_2 = 0
+			if command_node.arg_2 > index:
+				command_node.arg_2 -= 1
 	
 	# Update entry commands with new indexes
 	for i in range(len(command_section.entryCommandIndexes)):

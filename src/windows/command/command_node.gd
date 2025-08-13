@@ -113,34 +113,18 @@ var next_command_index: int :
 				if command_node is CommandNode:
 					if command_node.index == data.nextCommandIndex:
 						get_parent().connect_node(self.name, 0, command_node.name, 0)
-
-#var args: Array :
-	#get():
-		#return data.args
-	#set(new_value):
-		#for node: LineEdit in arg_nodes:
-			#node.set_text(str(0))
-			#node.get_parent().hide()
-		##for tree_item: TreeItem in %ArgsTree.get_root().get_children():
-			##tree_item.free()
-		#%MapNameLabel.text = ""
-		#var i: int = 0
-		#for value: int in new_value:
-			#
-			#arg_nodes[i].set_text(str((value)))
-			#arg_nodes[i].get_parent().show()
-			#
-			#
-			#
-			##var tree_item: TreeItem = %ArgsTree.get_root().create_child()
-			##tree_item.set_text(0, "%d" % value)
-			##tree_item.set_editable(0, true)
-			#if i >= 2:
-				#%MapNameLabel.text += String.chr((value) & 0xFF)
-				#%MapNameLabel.text += String.chr((value >> 8) & 0xFF)
-			#i += 1
-		#data.args = new_value 
-
+var arg_1: int :
+	get():
+		return int(%Arg1Range.text)
+	set(new_value):
+		%Arg1Range.text = str(new_value)
+		update_args_array()
+var arg_2: int :
+	get():
+		return int(%Arg2Range.text)
+	set(new_value):
+		%Arg2Range.text = str(new_value)
+		update_args_array()
 
 func initialize(p_index: int, p_data: Dictionary) -> void:
 	index = p_index
