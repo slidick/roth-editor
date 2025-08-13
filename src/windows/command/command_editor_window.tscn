@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://q5yql3cy7s8q"]
+[gd_scene load_steps=5 format=3 uid="uid://q5yql3cy7s8q"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_05anr"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_m2b42"]
 [ext_resource type="Script" uid="uid://2qw76q2vnud2" path="res://src/windows/command/command_editor_window.gd" id="2_skgt8"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_hej61"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_hej61"]
 
 [node name="CommandEditorWindow" instance=ExtResource("1_05anr")]
 offset_right = 849.0
@@ -69,20 +68,15 @@ popup/item_12/id = 11
 popup/item_13/text = "Command Index"
 popup/item_13/id = 13
 
-[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="Graph" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
-
-[node name="Graph" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="1"]
-layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-metadata/_tab_index = 0
 
-[node name="GraphEdit" type="GraphEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph" index="0"]
+[node name="GraphEdit" type="GraphEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 right_disconnects = true
@@ -90,210 +84,13 @@ zoom = 0.5
 zoom_min = 0.1
 show_menu = false
 
-[node name="GraphPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph" index="1"]
+[node name="GraphPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph" index="1"]
 unique_name_in_owner = true
 item_count = 2
 item_0/text = "Add Command"
 item_0/id = 0
 item_1/text = "Delete Selected"
 item_1/id = 1
-
-[node name="List" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="2"]
-visible = false
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-metadata/_tab_index = 1
-
-[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List" index="0"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer" index="0"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 1.5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer" index="0"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/VBoxContainer" index="0"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-text = "Entry Commands"
-vertical_alignment = 1
-
-[node name="EntryCommandIndices" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/VBoxContainer" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-allow_reselect = true
-allow_rmb_select = true
-
-[node name="EntryCommandPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/VBoxContainer/EntryCommandIndices" index="2"]
-unique_name_in_owner = true
-item_count = 1
-item_0/text = "Remove From Entry Command"
-item_0/id = 0
-
-[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer" index="1"]
-layout_mode = 2
-
-[node name="HBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer" index="2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2" index="0"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/HBoxContainer" index="0"]
-layout_mode = 2
-text = "All Commands"
-
-[node name="AddCommandButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/HBoxContainer" index="1"]
-layout_mode = 2
-size_flags_horizontal = 10
-text = "Add"
-
-[node name="AllCommandIndices" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-allow_reselect = true
-allow_rmb_select = true
-
-[node name="AllCommandPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/AllCommandIndices" index="2"]
-unique_name_in_owner = true
-item_count = 2
-item_0/text = "Add to Entry List"
-item_0/id = 0
-item_1/text = "Delete Command"
-item_1/id = 1
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2" index="0"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer4" index="0"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Index:"
-
-[node name="CommandIndexEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer4" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2" index="1"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer" index="0"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Base:"
-
-[node name="CommandBaseEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2" index="2"]
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer2" index="0"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Modifier:"
-
-[node name="CommandModifierEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer2" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2" index="3"]
-layout_mode = 2
-
-[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer3" index="0"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Next Command:"
-
-[node name="CommandNextCommandIndexEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer3" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2" index="4"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer" index="0"]
-layout_mode = 2
-
-[node name="Label5" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer" index="0"]
-layout_mode = 2
-text = "Args:"
-
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ArgsLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer/Control" index="0"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 6
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="AddArgButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer" index="2"]
-unique_name_in_owner = true
-layout_mode = 2
-disabled = true
-text = "Add"
-
-[node name="MapNameButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer" index="1"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Enter Map Name"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer" index="2"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ArgsTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" index="0"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-allow_rmb_select = true
-hide_folding = true
-hide_root = true
-script = ExtResource("5_hej61")
-
-[node name="ArgsPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ArgsTree" index="5"]
-unique_name_in_owner = true
-item_count = 1
-item_0/text = "Delete"
-item_0/id = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
 layout_mode = 2
@@ -309,25 +106,9 @@ text = "Save"
 
 [connection signal="text_submitted" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/SearchEdit" to="." method="_on_search_edit_text_submitted"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/SearchOptions" to="." method="_on_search_options_item_selected"]
-[connection signal="connection_request" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph/GraphEdit" to="." method="_on_graph_edit_connection_request"]
-[connection signal="disconnection_request" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
-[connection signal="popup_request" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph/GraphEdit" to="." method="_on_graph_edit_popup_request"]
-[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/Graph/GraphPopupMenu" to="." method="_on_graph_popup_menu_index_pressed"]
-[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/VBoxContainer/EntryCommandIndices" to="." method="_on_entry_command_indices_item_clicked"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/VBoxContainer/EntryCommandIndices" to="." method="_on_entry_command_indices_item_selected"]
-[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/VBoxContainer/EntryCommandIndices/EntryCommandPopupMenu" to="." method="_on_entry_command_popup_menu_index_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/HBoxContainer/AddCommandButton" to="." method="_on_add_command_button_pressed"]
-[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/AllCommandIndices" to="." method="_on_all_command_indices_item_clicked"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/AllCommandIndices" to="." method="_on_all_command_indices_item_selected"]
-[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/HBoxContainer/HBoxContainer2/AllCommandIndices/AllCommandPopupMenu" to="." method="_on_all_command_popup_menu_index_pressed"]
-[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer/CommandBaseEdit" to="." method="_on_command_base_edit_text_changed"]
-[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
-[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/HBoxContainer3/CommandNextCommandIndexEdit" to="." method="_on_command_next_command_index_edit_text_changed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer/AddArgButton" to="." method="_on_add_arg_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/MapNameButton" to="." method="_on_map_name_button_pressed"]
-[connection signal="item_edited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_edited"]
-[connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_mouse_selected"]
-[connection signal="item_moved" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ArgsTree" to="." method="_on_args_tree_item_moved"]
-[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/List/HSplitContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ArgsTree/ArgsPopupMenu" to="." method="_on_args_popup_menu_index_pressed"]
+[connection signal="connection_request" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_connection_request"]
+[connection signal="disconnection_request" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
+[connection signal="popup_request" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_popup_request"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph/GraphPopupMenu" to="." method="_on_graph_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

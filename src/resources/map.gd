@@ -336,7 +336,10 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 	
 	var compiled_faces := []
 	
-	for sector: Sector in sectors:
+	# Cycle backwards through the sectors to put the texture mappings in correct order for the
+	# study fireplace explosion to work correctly.
+	for i in range(len(sectors)-1, -1, -1):
+		var sector: Sector = sectors[i]
 		sector.data["firstFaceIndex"] = len(compiled_faces)
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
@@ -346,8 +349,8 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 		sector.data["facesCount"] = len(sector.faces)
 		
 	
-	var i: = 0
-	for sector: Sector in sectors:
+	for i in range(len(sectors)-1, -1, -1):
+		var sector: Sector = sectors[i]
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			face.data["sectorIndex"] = i
@@ -355,7 +358,6 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 				face.data["sisterFaceIndex"] = face.sister.get_ref().index
 			else:
 				face.data.erase("sisterFaceIndex")
-		i += 1
 	
 	json["facesSection"] = { "faces": compiled_faces.map(func (face: Face) -> Dictionary: return face.data) }
 	

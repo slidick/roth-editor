@@ -97,7 +97,7 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="ArgsLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="MapNameLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -327,56 +327,61 @@ size_flags_vertical = 3
 text = "Flag 8"
 text_overrun_behavior = 3
 
-[node name="FlagButton9" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagsContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="FlagButton9" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 9"
 text_overrun_behavior = 3
 
-[node name="FlagButton10" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton10" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 10"
 text_overrun_behavior = 3
 
-[node name="FlagButton11" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton11" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 11"
 text_overrun_behavior = 3
 
-[node name="FlagButton12" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton12" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 12"
 text_overrun_behavior = 3
 
-[node name="FlagButton13" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton13" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 13"
 text_overrun_behavior = 3
 
-[node name="FlagButton14" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton14" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 14"
 text_overrun_behavior = 3
 
-[node name="FlagButton15" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton15" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 15"
 text_overrun_behavior = 3
 
-[node name="FlagButton16" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton16" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -384,7 +389,6 @@ text = "Flag 16"
 text_overrun_behavior = 3
 
 [connection signal="index_pressed" from="CommandPopupMenu" to="." method="_on_command_popup_menu_index_pressed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2/CommandNextCommandIndexEdit" to="." method="_on_command_next_command_index_edit_text_changed"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/CommandBaseOption" to="." method="_on_command_base_option_item_selected"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/MapNameButton" to="." method="_on_map_name_button_pressed"]
@@ -404,11 +408,11 @@ text_overrun_behavior = 3
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton6" to="." method="_on_flag_button_toggled" binds= [5]]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton7" to="." method="_on_flag_button_toggled" binds= [6]]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton8" to="." method="_on_flag_button_toggled" binds= [7]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton9" to="." method="_on_flag_button_toggled" binds= [8]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton10" to="." method="_on_flag_button_toggled" binds= [9]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton11" to="." method="_on_flag_button_toggled" binds= [10]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton12" to="." method="_on_flag_button_toggled" binds= [11]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton13" to="." method="_on_flag_button_toggled" binds= [12]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton14" to="." method="_on_flag_button_toggled" binds= [13]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton15" to="." method="_on_flag_button_toggled" binds= [14]]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton16" to="." method="_on_flag_button_toggled" binds= [15]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton9" to="." method="_on_flag_button_toggled" binds= [8]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton10" to="." method="_on_flag_button_toggled" binds= [9]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton11" to="." method="_on_flag_button_toggled" binds= [10]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton12" to="." method="_on_flag_button_toggled" binds= [11]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton13" to="." method="_on_flag_button_toggled" binds= [12]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton14" to="." method="_on_flag_button_toggled" binds= [13]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton15" to="." method="_on_flag_button_toggled" binds= [14]]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2/FlagButton16" to="." method="_on_flag_button_toggled" binds= [15]]
