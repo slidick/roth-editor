@@ -365,7 +365,13 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 			texture_mappings.append(face.texture_data)
 			face.data["textureMappingIndex"] = len(texture_mappings) - 1
 		else:
-			face.data["textureMappingIndex"] = texture_mappings.find(face.texture_data)
+			# Map commands can't modify face flags if the texture mapping is assigned to more than one face
+			var texture_mapping: Dictionary = texture_mappings[texture_mappings.find(face.texture_data)]
+			if "additionalMetadata" in texture_mapping and texture_mapping.additionalMetadata.unk0x0C != 0:
+				texture_mappings.append(face.texture_data)
+				face.data["textureMappingIndex"] = len(texture_mappings) - 1
+			else:
+				face.data["textureMappingIndex"] = texture_mappings.find(face.texture_data)
 	
 	json["faceTextureMappingSection"] = { "mappings": texture_mappings }
 	
@@ -587,7 +593,7 @@ func write_texture_mapping_section(buffer: PackedByteArray, json: Dictionary, se
 		buffer.encode_u16(position + 0x06, mapping.lowerTextureIndex)
 		buffer.encode_u16(position + 0x08, mapping.unk0x08)
 		position += 0x0A
-		if "additionalMetadata" in mapping and mapping.type & 128 > 0:
+		if "additionalMetadata" in mapping and (mapping.type & 128) > 0:
 			buffer.encode_u8(position, mapping.additionalMetadata.shiftTextureX)
 			buffer.encode_u8(position + 0x01, mapping.additionalMetadata.shiftTextureY)
 			buffer.encode_u16(position + 0x02, mapping.additionalMetadata.unk0x0C)
