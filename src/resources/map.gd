@@ -367,16 +367,15 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 	# Get a list of face ids used by map command 52
 	var command_52_face_ids := []
 	for command: Dictionary in commands_section.allCommands:
-		if command.commandBase == 52:
-			if command.args[1] != 0 and command.args[1] not in command_52_face_ids:
-				command_52_face_ids.append(command.args[1])
+		if command.commandBase in [46, 52]:
+			if command.args[1] != 0:
+				if command.args[1] not in command_52_face_ids:
+					command_52_face_ids.append(command.args[1])
 			else:
-				# If face id equals zero it uses the face id of the face that triggered it
-				# Should probably walk back the command chain to figure it out, but
-				# I've only seen this issue on RAQUIA3 and this fixes that, so I'll worry about
-				# that later.
-				pass
-	
+				var face_ids: Array = get_triggering_ids(commands_section, command.index)
+				for face_id: int in face_ids:
+					if face_id not in command_52_face_ids:
+						command_52_face_ids.append(face_id)
 	
 	var texture_mappings := []
 	for face: Face in compiled_faces:
@@ -836,6 +835,23 @@ func write_footer(buffer: PackedByteArray, _json: Dictionary, section_sizes: Dic
 	for byte: int in footer:
 		buffer.encode_u8(position, byte)
 		position += 0x01
+
+
+static func get_triggering_ids(command_section: Dictionary, command_index: int) -> Array:
+	var triggering_ids: Array = []
+	for entry_command: int in command_section.entryCommandIndexes:
+		var command: Dictionary = command_section.allCommands[entry_command-1]
+		var next_command_index: int = command.nextCommandIndex
+		
+		while next_command_index != 0:
+			var next_command: Dictionary = command_section.allCommands[next_command_index-1]
+			if next_command.index == command_index:
+				assert(len(command.args) > 1)
+				print(command.args[1])
+				triggering_ids.append(command.args[1])
+			next_command_index = next_command.nextCommandIndex
+	
+	return triggering_ids
 
 
 class MapNode3D extends Node3D:
