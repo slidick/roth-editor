@@ -340,9 +340,7 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 	
 	var compiled_faces := []
 	
-	# Cycle backwards through the sectors to put the texture mappings in correct order for the
-	# study fireplace explosion to work correctly.
-	for i in range(len(sectors)-1, -1, -1):
+	for i in range(len(sectors)):
 		var sector: Sector = sectors[i]
 		sector.data["firstFaceIndex"] = len(compiled_faces)
 		for face_ref: WeakRef in sector.faces:
@@ -353,7 +351,7 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 		sector.data["facesCount"] = len(sector.faces)
 		
 	
-	for i in range(len(sectors)-1, -1, -1):
+	for i in range(len(sectors)):
 		var sector: Sector = sectors[i]
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
@@ -365,20 +363,34 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 	
 	json["facesSection"] = { "faces": compiled_faces.map(func (face: Face) -> Dictionary: return face.data) }
 	
+	
+	# Get a list of face ids used by map command 52
+	var command_52_face_ids := []
+	for command: Dictionary in commands_section.allCommands:
+		if command.commandBase == 52:
+			if command.args[1] != 0 and command.args[1] not in command_52_face_ids:
+				command_52_face_ids.append(command.args[1])
+			else:
+				# If face id equals zero it uses the face id of the face that triggered it
+				# Should probably walk back the command chain to figure it out, but
+				# I've only seen this issue on RAQUIA3 and this fixes that, so I'll worry about
+				# that later.
+				pass
+	
+	
 	var texture_mappings := []
 	for face: Face in compiled_faces:
 		if face.texture_data not in texture_mappings:
 			texture_mappings.append(face.texture_data)
 			face.data["textureMappingIndex"] = len(texture_mappings) - 1
 		else:
-			# Map commands can't modify face flags if the texture mapping is assigned to more than one face
+			# Map command 52 can't modify face flags if the texture mapping is assigned to more than one face
 			var texture_mapping: Dictionary = texture_mappings[texture_mappings.find(face.texture_data)]
-			if "additionalMetadata" in texture_mapping and texture_mapping.additionalMetadata.unk0x0C != 0:
+			if "additionalMetadata" in texture_mapping and texture_mapping.additionalMetadata.unk0x0C in command_52_face_ids:
 				texture_mappings.append(face.texture_data)
 				face.data["textureMappingIndex"] = len(texture_mappings) - 1
 			else:
 				face.data["textureMappingIndex"] = texture_mappings.find(face.texture_data)
-	
 	json["faceTextureMappingSection"] = { "mappings": texture_mappings }
 	
 	var platforms := []
