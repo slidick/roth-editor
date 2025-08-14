@@ -59,6 +59,8 @@ const FIELDS: Array = [
 	"unk0x0A_snd",
 	"unk0x0C_snd",
 	"unk0x0E_snd",
+	"CommandData",
+	"commandBase",
 ]
 
 
@@ -103,18 +105,20 @@ func search() -> void:
 	var faces := []
 	var objects := []
 	var sfx := []
+	var commands := []
 	if search_map.name == "All Maps":
 		for map_info:Dictionary in Roth.maps:
 			sectors.append_array(Roth.get_map(map_info).sectors)
 			faces.append_array(Roth.get_map(map_info).faces)
 			objects.append_array(Roth.get_map(map_info).objects)
 			sfx.append_array(Roth.get_map(map_info).sound_effects)
-			
+			commands.append_array(Roth.get_map(map_info).commands_section.allCommands)
 	else:
 		sectors = Roth.get_map(search_map).sectors
 		faces = Roth.get_map(search_map).faces
 		objects = Roth.get_map(search_map).objects
 		sfx = Roth.get_map(search_map).sound_effects
+		commands = Roth.get_map(search_map).commands_section.allCommands
 		
 	
 	var search_field: String = %FieldsOption.text
@@ -207,6 +211,12 @@ func search() -> void:
 		for sound: Section7_1 in sfx:
 			if compare(int(sound.data[search_field]), search_value, operator):
 				results.append({"type": "SFX", "value": sound})
+	elif (
+			search_field == "commandBase"
+	):
+		for command: Dictionary in commands:
+			if compare(int(command[search_field]), search_value, operator):
+				results.append({"type": "Command", "value": command})
 	
 	
 	if results:

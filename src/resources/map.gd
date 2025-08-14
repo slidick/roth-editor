@@ -100,6 +100,10 @@ static func load_from_file(p_map_info: Dictionary) -> Map:
 	loaded_map.vertices_count = len(map_json.verticesSection.vertices)
 	loaded_map.commands_section = map_json.commandsSection
 	
+	for i in range(len(loaded_map.commands_section.allCommands)):
+		loaded_map.commands_section.allCommands[i]["map_info"] = p_map_info
+		loaded_map.commands_section.allCommands[i]["index"] = i+1
+	
 	return loaded_map
 
 
