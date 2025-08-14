@@ -154,6 +154,8 @@ func _on_command_search_edit_text_submitted(new_text: String) -> void:
 			search_type = 13
 		5:
 			search_type = 141
+		6:
+			search_type = 54
 	#print(search_type)
 	for i in range(len(dbase100.actions)):
 		var action: Dictionary = dbase100.actions[i]

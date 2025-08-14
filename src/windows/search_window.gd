@@ -61,6 +61,7 @@ const FIELDS: Array = [
 	"unk0x0E_snd",
 	"CommandData",
 	"commandBase",
+	"commandModifier",
 ]
 
 
@@ -213,6 +214,7 @@ func search() -> void:
 				results.append({"type": "SFX", "value": sound})
 	elif (
 			search_field == "commandBase"
+			or search_field == "commandModifier"
 	):
 		for command: Dictionary in commands:
 			if compare(int(command[search_field]), search_value, operator):
