@@ -28,8 +28,12 @@ func edit_data(p_map: Map) -> void:
 		var command_nodes_mapping := {}
 		var jump_to_commands := []
 		var autorun_commands := []
-		
+		row_value = 0
 		for i in range(len(command_section.entryCommandIndexes)):
+			
+			if command_section.entryCommandIndexes[i] in command_nodes_mapping:
+				continue
+			
 			var command_node: CommandNode = COMMAND_NODE.instantiate()
 			command_node.initialize(command_section.entryCommandIndexes[i], command_section.allCommands[command_section.entryCommandIndexes[i]-1])
 			
@@ -37,9 +41,8 @@ func edit_data(p_map: Map) -> void:
 				command_node.position_offset.x = command_section.allCommands[command_section.entryCommandIndexes[i]-1].node_data.x
 				command_node.position_offset.y = command_section.allCommands[command_section.entryCommandIndexes[i]-1].node_data.y
 			else:
-				command_node.position_offset.y = VERTICAL_SPACING * i
-			
-			row_value = i + 1
+				command_node.position_offset.y = VERTICAL_SPACING * row_value
+				row_value += 1
 			%GraphEdit.add_child(command_node)
 			command_node.title = "Entry Command"
 			command_node.add_to_entry_list.connect(_on_add_to_entry_list)
@@ -60,13 +63,17 @@ func edit_data(p_map: Map) -> void:
 					command_node_2.remove_from_entry_list.connect(_on_remove_from_entry_list)
 					command_node_2.delete_command.connect(_on_delete_command)
 					command_node_2.initialize(next_command_index, command_section.allCommands[next_command_index-1])
+					
 					if "node_data" in command_section.allCommands[next_command_index-1]:
 						command_node_2.position_offset.x = command_section.allCommands[next_command_index-1].node_data.x
 						command_node_2.position_offset.y = command_section.allCommands[next_command_index-1].node_data.y
 					else:
-						command_node_2.position_offset.y = VERTICAL_SPACING * i
+						command_node_2.position_offset.y = VERTICAL_SPACING * (row_value-1)
 						command_node_2.position_offset.x = j * HORIZONTAL_SPACING
 					%GraphEdit.add_child(command_node_2)
+					
+					if next_command_index in command_section.entryCommandIndexes:
+						command_node_2.title = "Entry Command"
 					
 					if command_section.allCommands[next_command_index-1].commandBase == 56:
 						jump_to_commands.append(command_section.allCommands[next_command_index-1].args[1])
