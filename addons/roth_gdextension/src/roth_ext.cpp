@@ -285,10 +285,14 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
     
 		
 		// Decode by type
-
-
+		if ((static_cast<int>(das["textures"].get(i).get("unk_byte_00")) & 32) > 0) {
+			Array args = Array();
+			args.append(das["textures"].get(i).get("imageType"));
+			args.append(das["textures"].get(i).get("name"));
+			args.append(das["textures"].get(i).get("index"));
+			das["loading_errors"].call("append", String("Folder Type: {0}, Name: {1}, Index: {2}").format(args));
    		// Plain Image
-		if (static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA ||
+		} else if (static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA ||
 			static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA_2 ||
 			static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA_3 ||
 			static_cast<int>(das["textures"].get(i).get("imageType")) == PLAIN_DATA_4 ||

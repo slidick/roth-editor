@@ -20,7 +20,7 @@ func load_das(das_file: Variant) -> void:
 			return
 	else:
 		for i in range(%DASFiles.item_count):
-			if %DASFiles.get_item_metadata(i) == das_file.name:
+			if %DASFiles.get_item_metadata(i).get_file().get_basename() == das_file.name:
 				%DASFiles.select(i)
 		das = das_file
 	for key: String in das.header:

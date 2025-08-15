@@ -252,7 +252,9 @@ static func _parse_das(das_file: String) -> Dictionary:
 			#Console.print("%s: %s" % [key, das.textures[i][key]])
 		
 		
-		if (das.textures[i].imageType == imgBasicTypes.PLAIN_DATA or
+		if (das.textures[i].unk_byte_00 & 32) > 0:
+			das.loading_errors.append("Folder Type: %s, Name: %s" % [das.textures[i].imageType, das.textures[i].name])
+		elif (das.textures[i].imageType == imgBasicTypes.PLAIN_DATA or
 				das.textures[i].imageType == imgBasicTypes.PLAIN_DATA_2 or
 				das.textures[i].imageType == imgBasicTypes.PLAIN_DATA_3 or
 				das.textures[i].imageType == imgBasicTypes.PLAIN_DATA_4 or
@@ -638,8 +640,10 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 		texture[key] = file.call(imgBasicHdr[key])
 		#Console.print("%s: %s" % [key, texture[key]])
 	
-	
-	if (texture.imageType == imgBasicTypes.PLAIN_DATA or
+	if (texture.unk_byte_00 & 32) > 0:
+		das.loading_errors.append("Folder Type: %s, Name: %s" % [texture.imageType, texture.name])
+		Console.print("Folder Type: %s, Name: %s" % [texture.imageType, texture.name])
+	elif (texture.imageType == imgBasicTypes.PLAIN_DATA or
 			texture.imageType == imgBasicTypes.PLAIN_DATA_2 or
 			texture.imageType == imgBasicTypes.PLAIN_DATA_3 or
 			texture.imageType == imgBasicTypes.PLAIN_DATA_4 or

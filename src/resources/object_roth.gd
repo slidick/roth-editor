@@ -29,9 +29,11 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 
 static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
+	var floor_height: int = 0
 	for sector: Sector in Roth.get_map(p_map_info).sectors:
 		if Geometry2D.is_point_in_polygon(p_position, sector.vertices.slice(0,-1)):
 			new_sector_index = sector.index
+			floor_height = sector.data.floorHeight
 	
 	if new_sector_index == -1:
 		Console.print("Can't create object outside a sector")
@@ -40,13 +42,13 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRot
 	var default_data := {
 		"posX": 0,
 		"posY": 0,
-		"textureIndex": 2,
-		"textureSource": 0,
+		"textureIndex": 0,
+		"textureSource": 2,
 		"rotation": 0,
 		"unk0x07": 0,
 		"lighting": 128,
 		"renderType": 0,
-		"posZ": 0,
+		"posZ": floor_height,
 		"unk0x0C": 0,
 		"unk0x0E": 0,
 	}
@@ -75,12 +77,14 @@ func initialize_mesh() -> Node3D:
 	if node:
 		for child: Node in node.get_children():
 			child.queue_free()
-		_initialize_mesh()
+		#_initialize_mesh()
+		_initialize_mesh_actual()
 		return
 	
 	node = ObjectNode3D.new()
 	node.ref = self
-	_initialize_mesh()
+	_initialize_mesh_actual()
+	#_initialize_mesh()
 	return node
 
 
@@ -107,6 +111,127 @@ func _initialize_mesh() -> void:
 	)
 	mesh_instance.ref = self
 	node.add_child(mesh_instance)
+
+
+func _initialize_mesh_actual() -> void:
+	var object_das: String
+	var object_index: int
+	if data.textureSource == 0:
+		object_das = map_info.das
+		object_index = data.textureIndex + 4096
+	elif data.textureSource == 1:
+		object_das = map_info.das
+		object_index = data.textureIndex + 4096 + 256
+	elif data.textureSource == 2:
+		object_das = "M/ADEMO.DAS"
+		object_index = data.textureIndex
+	elif data.textureSource == 3:
+		object_das = "M/ADEMO.DAS"
+		object_index = data.textureIndex + 256
+	else:
+		_initialize_mesh()
+		return
+	
+	var texture := Roth.get_index_from_das(object_index, object_das)
+	if texture.name == "Invalid":
+		_initialize_mesh()
+		return
+	var width: float = texture.height / Roth.SCALE_3D_WORLD
+	var height: float = texture.width / Roth.SCALE_3D_WORLD
+	if (texture.unk & (1<<7)) > 0:
+		width /= 2
+		height /= 2
+	
+	var low_y: float = 0
+	var high_y: float = height * 2
+	if (texture.unk_byte_00 & (1<<3) > 0):
+		low_y -= height
+		high_y -= height
+	
+	if (texture.unk_byte_00 & (1<<4) > 0):
+		low_y -= (height * 2)
+		high_y -= (height * 2)
+	
+	
+	var material := StandardMaterial3D.new()
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	if data.renderType & (1<<7) > 0:
+		pass
+	else:
+		material.billboard_mode = BaseMaterial3D.BILLBOARD_FIXED_Y
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	if "image" in texture:
+		material.albedo_texture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+	elif "animation" in texture:
+		material.albedo_texture = texture.animation[0]
+	else:
+		_initialize_mesh()
+		return
+	
+	var mesh := QuadMesh.new()
+	mesh.material = material
+	
+	var mesh_array := ArrayMesh.new()
+	mesh_array.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh.get_mesh_arrays())
+	var mdt := MeshDataTool.new()
+	mdt.create_from_surface(mesh_array, 0)
+	mdt.set_vertex_uv(1, Vector2(1,0))
+	mdt.set_vertex_uv(2, Vector2(0,1))
+	
+	
+	
+	mdt.set_vertex(0, Vector3(width, low_y, 0))
+	mdt.set_vertex(1, Vector3(-width, low_y, 0))
+	mdt.set_vertex(2, Vector3(width, high_y, 0))
+	mdt.set_vertex(3, Vector3(-width, high_y, 0))
+	
+	if (data.unk0x07 & (1<<4)) > 0:
+		mdt.set_vertex_uv(0, Vector2(1,0))
+		mdt.set_vertex_uv(1, Vector2(1,1))
+		mdt.set_vertex_uv(2, Vector2(0,0))
+		mdt.set_vertex_uv(3, Vector2(0,1))
+	
+	
+	mesh_array.clear_surfaces()
+	#mesh_array.material = material
+	mdt.commit_to_surface(mesh_array)
+
+
+	
+	var mesh_instance := ObjectMesh3D.new()
+	mesh_instance.mesh = mesh_array
+	mesh_instance.material_override = material
+	mesh_instance.ref = self
+	mesh_instance.position = Vector3(
+			-data.posX / Roth.SCALE_3D_WORLD,
+			data.posZ / Roth.SCALE_3D_WORLD,
+			data.posY / Roth.SCALE_3D_WORLD,
+	)
+	node.add_child(mesh_instance)
+	
+	var shape := BoxShape3D.new()
+	shape.size.z = 0.005
+	shape.size.x = width * 2
+	shape.size.y = height * 2
+	
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	collision.position.y = height
+	
+	if (texture.unk_byte_00 & (1<<3) > 0):
+		collision.position.y = 0
+	if (texture.unk_byte_00 & (1<<4) > 0):
+		collision.position.y = -height
+	
+	var static_body := StaticBodyObject3D.new(not data.renderType & (1<<7) > 0)
+	static_body.add_child(collision)
+	mesh_instance.add_child(static_body)
+	
+	if data.renderType & (1<<7) > 0:
+		var angle_degrees: float = ((float(data.rotation) / 256) * 360) - 180
+		mesh_instance.rotation_degrees.y -= angle_degrees
 
 
 func get_node_2d() -> Node2D:
@@ -293,3 +418,12 @@ class ObjectNode3D extends Node3D:
 
 class ObjectMesh3D extends MeshInstance3D:
 	var ref: ObjectRoth
+
+class StaticBodyObject3D extends StaticBody3D:
+	var follow: bool = false
+	func _init(p_follow: bool) -> void:
+		follow = p_follow
+	func _process(_delta: float) -> void:
+		if follow:
+			look_at(get_viewport().get_camera_3d().global_position)
+			rotation.x = 0
