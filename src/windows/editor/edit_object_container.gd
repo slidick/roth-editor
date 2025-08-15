@@ -23,6 +23,7 @@ func _reset_edit_object() -> void:
 	%ObjectYEdit.get_line_edit().clear()
 	%ObjectZEdit.get_line_edit().clear()
 	%ObjectRotationEdit.get_line_edit().clear()
+	%ObjectRotationEdit.editable = true
 	%ObjectTextureIndexEdit.get_line_edit().clear()
 	%ObjectTextureSourceEdit.get_line_edit().clear()
 	%ObjectUnk0x07Edit.get_line_edit().clear()
@@ -33,6 +34,16 @@ func _reset_edit_object() -> void:
 	%TextureNameLabel.text = ""
 	%TextureDescLabel.text = ""
 	%ObjectTexture.texture = null
+	%ObjectFlagButton1.set_pressed_no_signal(false)
+	%ObjectFlagButton2.set_pressed_no_signal(false)
+	%ObjectFlagButton3.set_pressed_no_signal(false)
+	%ObjectFlagButton4.set_pressed_no_signal(false)
+	%ObjectFlagButton5.set_pressed_no_signal(false)
+	%ObjectFlagButton6.set_pressed_no_signal(false)
+	%ObjectFlagButton7.set_pressed_no_signal(false)
+	%ObjectFlagButton8.set_pressed_no_signal(false)
+	%RenderDirectionalCheckBox.set_pressed_no_signal(true)
+	%RenderBillboardCheckBox.set_pressed_no_signal(false)
 	%EditObjectContainer.show()
 
 
@@ -62,6 +73,24 @@ func load_edit_object(object: ObjectRoth.ObjectMesh3D) -> void:
 	%ObjectUnk0x0CEdit.set_value_no_signal(object.ref.data.unk0x0C)
 	%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.ref.data.unk0x0E
 	%ObjectUnk0x0EEdit.set_value_no_signal(object.ref.data.unk0x0E)
+	%ObjectFlagButton1.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<0)) > 0)
+	%ObjectFlagButton2.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<1)) > 0)
+	%ObjectFlagButton3.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<2)) > 0)
+	%ObjectFlagButton4.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<3)) > 0)
+	%ObjectFlagButton5.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<4)) > 0)
+	%ObjectFlagButton6.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<5)) > 0)
+	%ObjectFlagButton7.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<6)) > 0)
+	%ObjectFlagButton8.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<7)) > 0)
+	
+	if (object.ref.data.renderType & (1<<7)) > 0:
+		%RenderBillboardCheckBox.set_pressed_no_signal(false)
+		%RenderDirectionalCheckBox.set_pressed_no_signal(true)
+		%ObjectRotationEdit.editable = true
+	else:
+		%RenderBillboardCheckBox.set_pressed_no_signal(true)
+		%RenderDirectionalCheckBox.set_pressed_no_signal(false)
+		%ObjectRotationEdit.editable = false
+	
 	
 	update_texture()
 
@@ -149,3 +178,75 @@ func _on_object_unk_0x_0c_edit_value_changed(value: float) -> void:
 
 func _on_object_unk_0x_0e_edit_value_changed(value: float) -> void:
 	current_object.data.unk0x0E = value
+
+
+func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 0)
+		%ObjectRotationEdit.editable = true
+		%RenderStyleLabel.text = "Collision Style"
+	else:
+		current_object.data.unk0x07 &= ~(1 << 0)
+		%RenderStyleLabel.text = "Render Style"
+		if not %RenderDirectionalCheckBox.button_pressed:
+			%ObjectRotationEdit.editable = false
+
+
+func _on_object_flag_button_2_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 1)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 1)
+
+
+func _on_object_flag_button_3_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 2)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 2)
+
+
+func _on_object_flag_button_4_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 3)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 3)
+
+
+func _on_object_flag_button_5_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 4)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 4)
+
+
+func _on_object_flag_button_6_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 5)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 5)
+
+
+func _on_object_flag_button_7_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 6)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 6)
+
+
+func _on_object_flag_button_8_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		current_object.data.unk0x07 |= (1 << 7)
+	else:
+		current_object.data.unk0x07 &= ~(1 << 7)
+
+
+
+func _on_render_directional_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		%ObjectRotationEdit.editable = true
+		current_object.data.renderType |= (1 << 7)
+	else:
+		if not %ObjectFlagButton1.button_pressed:
+			%ObjectRotationEdit.editable = false
+		current_object.data.renderType &= ~(1 << 7)

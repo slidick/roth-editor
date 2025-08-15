@@ -846,9 +846,8 @@ static func get_triggering_ids(command_section: Dictionary, command_index: int) 
 		while next_command_index != 0:
 			var next_command: Dictionary = command_section.allCommands[next_command_index-1]
 			if next_command.index == command_index:
-				assert(len(command.args) > 1)
-				print(command.args[1])
-				triggering_ids.append(command.args[1])
+				if len(command.args) > 1:
+					triggering_ids.append(command.args[1])
 			next_command_index = next_command.nextCommandIndex
 	
 	return triggering_ids
