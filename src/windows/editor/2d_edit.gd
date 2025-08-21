@@ -15,6 +15,7 @@ var minimum_y: float = 0
 var maximum_x: float = 0
 var maximum_y: float = 0
 var additional_zoom: float = 1
+var prev_viewport_size := Vector2i.ZERO
 var has_focus: bool = false :
 	set(value):
 		has_focus = value
@@ -102,21 +103,19 @@ func _input(event: InputEvent) -> void:
 		additional_zoom /= ZOOM_SPEED
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
 		zooming = true
+		update_camera_zoom()
 		var changed: bool = update_line_width(additional_zoom)
 		if changed:
 			queue_redraw()
-		else:
-			update_camera_zoom()
 	
 	if event.is_action_pressed("map_2d_zoom_out"):
 		additional_zoom *= ZOOM_SPEED
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
 		zooming = true
+		update_camera_zoom()
 		var changed: bool = update_line_width(additional_zoom)
 		if changed:
 			queue_redraw()
-		else:
-			update_camera_zoom()
 	
 	if event.is_action_pressed("next_sector_hover"):
 		skip_sector_hover += 1
@@ -455,13 +454,16 @@ func update_camera_zoom() -> void:
 	var zoom_x: float = %Camera2D.get_viewport().size.x / size.x
 	var zoom: float = min(zoom_x, zoom_y) * 0.95
 	
-	
 	var mouse_pos := get_global_mouse_position()
 	%Camera2D.zoom = Vector2(zoom, zoom) * additional_zoom
 	var new_mouse_pos := get_global_mouse_position()
 	if zooming and zoom_toward_mouse:
 		%Camera2D.position += mouse_pos - new_mouse_pos
 		zooming = false
+	
+	if prev_viewport_size != %Camera2D.get_viewport().size:
+		prev_viewport_size = %Camera2D.get_viewport().size
+		update_line_width(additional_zoom)
 
 
 func update_line_width(x: float) -> bool:
@@ -485,7 +487,7 @@ func update_line_width(x: float) -> bool:
 	else:
 		line_width =  2
 	
-	return prev_line_width == line_width
+	return prev_line_width != line_width
 
 
 func draw_grid() -> void:
