@@ -16,8 +16,10 @@ var search_count: int = 0
 func edit_data(p_map: Map) -> void:
 	var p_command_section: Dictionary = p_map.commands_section
 	map = p_map
+	%MapLabel.text = map.map_info.name
 	if command_section != p_command_section:
-		command_section = p_command_section.duplicate(true)
+		#command_section = p_command_section.duplicate(true)
+		command_section = p_command_section
 		
 		for child: Node in %GraphEdit.get_children():
 			if child.name == "_connection_layer":

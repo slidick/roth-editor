@@ -10,9 +10,15 @@ offset_right = 849.0
 offset_bottom = 556.0
 theme = ExtResource("2_m2b42")
 script = ExtResource("2_skgt8")
+movable = false
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_hej61")
+start_maximized = true
+header = false
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 layout_mode = 2
@@ -24,7 +30,14 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="MapLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Map Name"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
 layout_mode = 2
 
 [node name="SearchEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
@@ -68,7 +81,7 @@ popup/item_12/id = 11
 popup/item_13/text = "Command Index"
 popup/item_13/id = 13
 
-[node name="Graph" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="Graph" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -79,6 +92,7 @@ theme_override_constants/margin_bottom = 10
 [node name="GraphEdit" type="GraphEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Graph" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
+scroll_offset = Vector2(-799, -395)
 right_disconnects = true
 zoom = 0.5
 zoom_min = 0.1
@@ -92,7 +106,8 @@ item_0/id = 0
 item_1/text = "Delete Selected"
 item_1/id = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3"]
+visible = false
 layout_mode = 2
 
 [node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]

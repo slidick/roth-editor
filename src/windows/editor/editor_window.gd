@@ -2,6 +2,9 @@ extends BaseWindow
 
 const EYE_ICON: Texture2D = preload("uid://crb7de5pvofid")
 const EYE_CLOSED_ICON: Texture2D = preload("uid://d8l1uefa8sbq")
+
+#const COMMAND_EDITOR: PackedScene = preload("uid://q5yql3cy7s8q")
+
 enum MapMenu {
 	Save,
 	SaveAs,
@@ -171,6 +174,15 @@ func load_map(map_info: Dictionary) -> void:
 	%NoMapLoaded.hide()
 	%MapContainer.show()
 	
+	
+	#var command_editor_scene := COMMAND_EDITOR.instantiate()
+	#command_editor_scene.name = "%s Command Editor" % map_info.name
+	#
+	#%MapContainer.add_child(command_editor_scene)
+	#command_editor_scene.modulate.a = 1.0
+	#command_editor_scene.edit_data(Roth.get_map(map_info))
+	
+	
 	if tree_root.get_child_count() == 1:
 		var starting_position := Vector3(
 			-Roth.get_map(map_info).metadata["initPosX"],
@@ -317,7 +329,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			%CommandEditor.edit_data(selected[0].get_metadata(0).ref)
+			%"Command Editor".edit_data(selected[0].get_metadata(0).ref)
 		MapMenu.EditMode:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
