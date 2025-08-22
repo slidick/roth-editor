@@ -435,3 +435,8 @@ func _on_flip_face_button_pressed() -> void:
 	current_face.v1 = Vector2(current_face.v2)
 	current_face.v2 = v1
 	%Picker.redraw_selected_node()
+
+
+func _on_face_debug_button_pressed() -> void:
+	#print(current_face.texture_data)
+	Das._get_index_from_das(current_face.texture_data.midTextureIndex, current_face.map_info.das)

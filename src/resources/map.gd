@@ -278,6 +278,14 @@ func get_sector_floor_height_from_vertex(vertex: Vector2) -> int:
 			return sector.data.floorHeight
 	return 0
 
+
+func get_sector_ceiling_height_from_vertex(vertex: Vector2) -> int:
+	for sector: Sector in sectors:
+		if Geometry2D.is_point_in_polygon(vertex, sector.vertices.slice(0,-1)):
+			return sector.data.ceilingHeight
+	return 0
+
+
 func merge_sectors(double_sided_face: Face) -> void:
 	if not double_sided_face.sister:
 		#Console.print("Not a double sided face.")

@@ -67,7 +67,7 @@ public:
     static Dictionary get_video_by_path(String p_gdv_video_path, Callable p_callable);
     static void stop_video_loading();
     static Dictionary get_video_by_file(Ref<FileAccess> p_file, Callable p_callable = Callable());
-    static Dictionary load_das(String p_das_path, Callable p_callable, Array p_palette = Array());
+    static Dictionary load_das(String p_das_name, String p_das_path, Callable p_callable, Array p_palette = Array());
     
 };
 

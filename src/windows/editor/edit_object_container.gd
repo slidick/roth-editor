@@ -250,3 +250,26 @@ func _on_render_directional_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_object.data.renderType &= ~(1 << 7)
 	_redraw_object()
+
+
+func _on_browse_objects_button_pressed() -> void:
+	var object: Dictionary = await %ObjectSelection.wait_for_object_selection(current_object.map_info.das)
+	if object.is_empty():
+		return
+	var source := 0
+	var index := 0
+	if object.das.get_file().get_basename() == "ADEMO":
+		source = 2
+		index = object.index
+		if object.index >= 256:
+			source = 3
+			index -= 256
+	else:
+		source = 0
+		if object.index >= 4352:
+			source = 1
+		index = object.index - 4096
+	current_object.data.textureIndex = index
+	current_object.data.textureSource = source
+	update_texture()
+	_redraw_object()

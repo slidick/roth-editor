@@ -144,6 +144,7 @@ func _input(event: InputEvent) -> void:
 				queue_redraw()
 				%Picker.deselect()
 	
+	
 	if %SectorCheckBox.button_pressed:
 		if event is InputEventMouseMotion:
 			if not hovered_sector:
@@ -646,22 +647,25 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 			if not new_object:
 				return
 			map.add_object(new_object)
-			var object_node: ObjectRoth.ObjectNode2D = new_object.get_node_2d()
-			object_node.object_selected.connect(_on_object_selected)
-			object_node.object_copied.connect(_on_object_copied)
-			object_node.object_deleted.connect(_on_object_deleted)
-			%Objects.add_child(object_node)
+			add_object_to_2d_map(new_object, true)
+			
 		1:
 			var new_object := ObjectRoth.new_from_copied_object(copied_object_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_object:
 				return
 			map.add_object(new_object)
-			var object_node: ObjectRoth.ObjectNode2D = new_object.get_node_2d()
-			object_node.object_selected.connect(_on_object_selected)
-			object_node.object_copied.connect(_on_object_copied)
-			object_node.object_deleted.connect(_on_object_deleted)
-			%Objects.add_child(object_node)
+			add_object_to_2d_map(new_object, true)
 
+
+func add_object_to_2d_map(new_object: ObjectRoth, p_select: bool = false) -> void:
+	if not %ObjectCheckBox.button_pressed:
+		return
+	var object_node: ObjectRoth.ObjectNode2D = new_object.get_node_2d()
+	object_node.object_selected.connect(_on_object_selected)
+	object_node.object_copied.connect(_on_object_copied)
+	object_node.object_deleted.connect(_on_object_deleted)
+	%Objects.add_child(object_node)
+	_on_object_selected(object_node, p_select)
 
 
 func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void:

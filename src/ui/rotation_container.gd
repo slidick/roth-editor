@@ -4,7 +4,7 @@ class_name RotationContainer
 var enabled: bool = true
 
 func _get_minimum_size() -> Vector2:
-	var children_size: Vector2
+	var children_size := Vector2.ZERO
 	for child: Control in get_children():
 		var min_size: Vector2 = child.get_combined_minimum_size()
 		if child.visible:

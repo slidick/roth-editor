@@ -57,7 +57,7 @@ func _on_set_current_location_button_pressed() -> void:
 	var player_position: Vector3 = %Camera3D.global_position
 	player_position.y -= 1.2
 	player_position *= Roth.SCALE_3D_WORLD
-	%StartingPositionXEdit.text = "%d" % player_position.x
+	%StartingPositionXEdit.text = "%d" % -player_position.x
 	%StartingPositionYEdit.text = "%d" % player_position.z
 	%StartingPositionZEdit.text = "%d" % player_position.y
 	%StartingRotationEdit.text = "%d" % Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)

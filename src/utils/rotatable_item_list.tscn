@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0qwk04pu2mgq"]
+
+[ext_resource type="Script" uid="uid://dq8tj4o0sku2b" path="res://src/utils/rotatable_item_list.gd" id="1_uwxbx"]
+
+[node name="RotatableItemList" type="PanelContainer"]
+offset_right = 832.0
+offset_bottom = 575.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_uwxbx")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HFlowContainer" type="HFlowContainer" parent="ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

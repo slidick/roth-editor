@@ -118,6 +118,45 @@ static func get_midi_offsets() -> Array:
 	return midis
 
 
+static func save_hmps() -> void:
+	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	if not FileAccess.file_exists(dbase300_filepath):
+		return
+	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
+	var header := Parser.parse_section(file, HEADER)
+	assert(header.signature == "DBASE300")
+	
+	var i := 0
+	while file.get_position() < file.get_length():
+		var _current_position: int = file.get_position()
+		var size: int = file.get_32()
+		var ending_position: int = file.get_position() + size
+		var filetype: int = file.get_32()
+		file.seek(file.get_position() - 4)
+		match filetype:
+			FILETYPE_GDV:
+				pass
+			FILETYPE_HMP:
+				var buffer := file.get_buffer(size)
+				var savefile := FileAccess.open(OS.get_user_data_dir().path_join("%d.hmp" % i), FileAccess.WRITE)
+				savefile.store_buffer(buffer)
+				savefile.close()
+				i += 1
+			FILETYPE_MIDI:
+				pass
+			FILETYPE_IMG1:
+				pass
+			FILETYPE_IMG3:
+				pass
+			FILETYPE_IMG7:
+				pass
+			_:
+				print(filetype)
+		file.seek(ending_position)
+		file.seek((file.get_position() + 7) & ~7)
+	
+	return
+
 static func get_at_offset(offset: int ) -> Variant:
 	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
@@ -133,7 +172,7 @@ static func get_at_offset(offset: int ) -> Variant:
 			var video: Dictionary = RothExt.get_video_by_file(file)
 			return video
 		FILETYPE_HMP:
-			pass
+			return file.get_buffer(_size)
 		FILETYPE_MIDI:
 			return file.get_buffer(_size)
 		FILETYPE_IMG1:
@@ -142,7 +181,7 @@ static func get_at_offset(offset: int ) -> Variant:
 			return parse_rle_image(file)
 		FILETYPE_IMG7:
 			return parse_rle_image(file)
-	return
+	return {"Error": "Invalid offset."}
 
 
 static func parse_rle_image(file: FileAccess) -> Image:

@@ -62,6 +62,48 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRot
 	return object
 
 
+static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
+	var new_sector_index: int = -1
+	var floor_height: int = 0
+	for sector: Sector in Roth.get_map(p_map_info).sectors:
+		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), sector.vertices.slice(0,-1)):
+			new_sector_index = sector.index
+			floor_height = sector.data.floorHeight
+	
+	if "sector_index" in extra_info:
+		new_sector_index = extra_info.sector_index
+	if new_sector_index == -1:
+		Console.print("Can't create object outside a sector")
+		return
+	
+	var default_data := {
+		"posX": 0,
+		"posY": 0,
+		"textureIndex": 0,
+		"textureSource": 2,
+		"rotation": 0,
+		"unk0x07": 0,
+		"lighting": 128,
+		"renderType": 0,
+		"posZ": floor_height,
+		"unk0x0C": 0,
+		"unk0x0E": 0,
+	}
+	
+	var object := ObjectRoth.new(default_data, Roth.get_map(p_map_info).get_next_object_index(), p_map_info, Roth.get_map(p_map_info).sectors)
+	object.data.posX = -p_position.x
+	object.data.posY = p_position.z
+	object.data.posZ = p_position.y
+	object.sectors[new_sector_index].data.objectInformation.append(object.data)
+	object.data.sector_index = new_sector_index
+	
+	if extra_info["render_type"] == "fixed":
+		object.data.renderType = 128
+	object.data.rotation = extra_info.rotation
+	
+	return object
+
+
 func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_sectors: Array) -> void:
 	data = p_data
 	index = p_index
@@ -145,8 +187,9 @@ func _initialize_mesh_actual() -> void:
 	var low_y: float = 0
 	var high_y: float = height * 2
 	if (texture.unk_byte_00 & (1<<3) > 0):
-		low_y -= height
-		high_y -= height
+		pass
+		#low_y -= height
+		#high_y -= height
 	
 	if (texture.unk_byte_00 & (1<<4) > 0):
 		low_y -= (height * 2)

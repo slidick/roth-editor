@@ -157,7 +157,7 @@ static func load_das(das_file: String) -> Dictionary:
 static func _load_das_thread(das_file: String) -> void:
 	#var das: Dictionary = _parse_das(das_file)
 	var palette: Array = test_for_palette(Roth.directory.path_join(das_file))
-	var das: Dictionary = RothExt.load_das(Roth.directory.path_join(das_file), func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_file.get_file()), palette)
+	var das: Dictionary = RothExt.load_das(das_file, Roth.directory.path_join(das_file), func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_file.get_file()), palette)
 	Roth.das_loading_finished.emit.call_deferred(das)
 
 
@@ -602,7 +602,6 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 	das["sky"] = 0
 	
 	var texture := {}
-	
 	file.seek(das.header.fileNamesBlockOffset)
 	for key: String in DAS_STRINGS_HEADER:
 		if typeof(DAS_STRINGS_HEADER[key]) == TYPE_STRING:
@@ -615,6 +614,8 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 				das["textures"].append(entry)
 				if entry.index == index:
 					texture = entry
+	
+	texture["das"] = das_file
 	
 	if not "name" in texture:
 		texture["name"] = "Invalid"
@@ -968,7 +969,6 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 	else:
 		das.loading_errors.append("Unknown Type: %s, Name: %s" % [texture.imageType, texture.name])
 		Console.print("Unknown Type: %s, Name: %s" % [texture.imageType, texture.name])
-	
 	
 	loaded_das[das_file][index] = texture
 	return texture

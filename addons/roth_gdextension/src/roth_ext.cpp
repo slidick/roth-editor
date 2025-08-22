@@ -192,7 +192,7 @@ void RothExt::stop_video_loading() {
 }
 
 
-Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_palette) {
+Dictionary RothExt::load_das(String p_das_name, String p_das_path, Callable p_callback, Array p_palette) {
   	// File
 	Ref<FileAccess> file = FileAccess::open(p_das_path, FileAccess::READ);
   
@@ -261,6 +261,8 @@ Dictionary RothExt::load_das(String p_das_path, Callable p_callback, Array p_pal
 	
 	// Textures
  	for ( int i=0; i<static_cast<int>(das["textures"].call("size")); i++) {
+
+		das["textures"].get(i).set("das", p_das_name);
 
 		file->seek(static_cast<int>(das["header"].get("imgFATOffset")) + (static_cast<int>(das["textures"].get(i).get("index")) * 0x08));
 		

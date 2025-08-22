@@ -334,7 +334,8 @@ func add_texture(texture_index: int, das_name: String) -> void:
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		texture_rect.custom_minimum_size.y = 100
-		texture_rect.texture = das.mapping[texture_index].image[0] if typeof(das.mapping[texture_index].image) == TYPE_ARRAY else das.mapping[texture_index].image
+		if "image" in das.mapping[texture_index]:
+			texture_rect.texture = das.mapping[texture_index].image[0] if typeof(das.mapping[texture_index].image) == TYPE_ARRAY else das.mapping[texture_index].image
 		texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		%EditContainer.add_child(texture_rect)
 
@@ -344,6 +345,10 @@ func _reset_edits() -> void:
 	%EditSectorContainer.hide()
 	%EditObjectContainer.hide()
 	%EditSFXContainer.hide()
+	%EditFaceContainer.current_face = null
+	%EditSectorContainer.current_sector = null
+	%EditObjectContainer.current_object = null
+	%EditSFXContainer.current_object = null
 
 
 func redraw_selected_node(node: Variant = null) -> void:

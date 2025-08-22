@@ -24,3 +24,5 @@ func _handle_command(command: String) -> void:
 				return
 			var section := DBase400.get_at_offset(command_array[1].to_int())
 			Console.print("%s" % section)
+		"save_hmps":
+			DBase300.save_hmps()
