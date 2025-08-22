@@ -1881,17 +1881,16 @@ grow_vertical = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -508.0
-offset_top = -346.0
-offset_right = 508.0
-offset_bottom = 346.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
+exclusive = true
 
 [node name="Metadata" parent="Dialogs" index="2" instance=ExtResource("12_kytel")]
 unique_name_in_owner = true
@@ -1960,6 +1959,7 @@ offset_right = 790.0
 offset_bottom = 430.0
 grow_horizontal = 2
 grow_vertical = 2
+exclusive = true
 
 [node name="3DContextMenu" type="PopupMenu" parent="." index="3"]
 unique_name_in_owner = true

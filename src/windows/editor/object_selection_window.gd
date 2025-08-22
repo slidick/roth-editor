@@ -66,7 +66,7 @@ func load_favorites(p_das: String) -> void:
 			tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
-		var idx: int = %FavoriteItemList.add_item("%s: %s\n%s x %s" % [texture_data.index, texture_data.name, texture_data.height, texture_data.width], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
+		var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 		%FavoriteItemList.set_item_metadata(idx, texture_data)
 		if texture_data.das != p_das and texture_data.das != "M/ADEMO.DAS":
 			%FavoriteItemList.set_hidden(idx, true)
@@ -82,7 +82,7 @@ func load_recents(p_das: String) -> void:
 			tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
-		var idx: int = %RecentItemList.add_item("%s: %s\n%s x %s" % [texture_data.index, texture_data.name, texture_data.height, texture_data.width], tex, Vector2(75,75))
+		var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 		%RecentItemList.set_item_metadata(idx, texture_data)
 		if texture_data.das != p_das and texture_data.das != "M/ADEMO.DAS":
 			%RecentItemList.set_hidden(idx, true)
@@ -124,7 +124,7 @@ func add_to_recent(texture_data: Dictionary) -> void:
 		tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
 	else:
 		tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
-	var idx: int = %RecentItemList.add_item("%s: %s\n%s x %s" % [texture_data.index, texture_data.name, texture_data.height, texture_data.width], tex, Vector2(75,75))
+	var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 	%RecentItemList.set_item_metadata(idx, texture_data)
 	%RecentItemList.move_item(idx, 0)
 	recents.push_front({"das": texture_data.das, "index": texture_data.index})
@@ -136,14 +136,18 @@ func add_to_recent(texture_data: Dictionary) -> void:
 
 
 func _on_rotatable_item_list_item_selected(index: int) -> void:
-	var texture: Dictionary = %RotatableItemList.get_item_metadata(index)
+	display_texture_data(%RotatableItemList.get_item_metadata(index))
+	%RecentItemList.deselect_all()
+	%FavoriteItemList.deselect_all()
+
+
+func display_texture_data(texture_data: Dictionary) -> void:
 	for child: Node in %ObjectInfoContainer.get_children():
 		child.queue_free()
-	for key: String in texture:
+	for key: String in texture_data:
 		var label := Label.new()
-		label.text = "%s: %s" % [key, texture[key]]
+		label.text = "%s: %s" % [key, texture_data[key]]
 		%ObjectInfoContainer.add_child(label)
-		
 
 
 func _on_recent_item_list_item_activated(index: int) -> void:
@@ -166,7 +170,7 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 				tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
 			else:
 				tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
-			var idx: int = %FavoriteItemList.add_item("%s: %s\n%s x %s" % [texture_data.index, texture_data.name, texture_data.height, texture_data.width], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
+			var idx: int = %FavoriteItemList.add_item("%s\n" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 			%FavoriteItemList.set_item_metadata(idx, texture_data)
 			favorites.append({"das": texture_data.das, "index": texture_data.index})
 			Settings.update_settings("objects", {"favorites": favorites})
@@ -185,3 +189,15 @@ func _on_favorite_item_list_context_option_selected(index: int, context_index: i
 			%FavoriteItemList.remove_item(index)
 			favorites.pop_at(index)
 			Settings.update_settings("objects", {"favorites": favorites})
+
+
+func _on_favorite_item_list_item_selected(index: int) -> void:
+	%RecentItemList.deselect_all()
+	%RotatableItemList.deselect_all()
+	display_texture_data(%FavoriteItemList.get_item_metadata(index))
+
+
+func _on_recent_item_list_item_selected(index: int) -> void:
+	%RotatableItemList.deselect_all()
+	%FavoriteItemList.deselect_all()
+	display_texture_data(%RecentItemList.get_item_metadata(index))

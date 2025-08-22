@@ -16,6 +16,11 @@ func clear() -> void:
 		child.queue_free()
 
 
+func deselect_all() -> void:
+	for child: RotatedIconNode in %HFlowContainer.get_children():
+		child.deselect()
+
+
 func add_item(p_text: String, p_icon: Texture2D, p_icon_size := Vector2(150,150), p_context_options: Array[String] = []) -> int:
 	var new_index: int = %HFlowContainer.get_child_count()
 	var rotated_icon_node := RotatedIconNode.new(new_index, p_text, p_icon, true, p_icon_size, p_context_options)
@@ -60,8 +65,13 @@ func remove_item(at_index: int) -> void:
 	for i in range(at_index, %HFlowContainer.get_child_count()):
 		%HFlowContainer.get_child(i).index -= 1
 
+
 func set_hidden(p_index: int, p_hidden: bool) -> void:
 	%HFlowContainer.get_child(p_index).visible = not p_hidden
+
+
+func set_rotated(p_index: int, p_rotated: bool) -> void:
+	%HFlowContainer.get_child(p_index).set_rotated(p_rotated)
 
 
 func set_item_metadata(p_index: int, p_metadata: Variant) -> void:

@@ -9,7 +9,6 @@ var only_ceilings: bool = false
 var loaded_das: Dictionary = {}
 var favorites: Dictionary = {}
 var recents: Dictionary = {}
-var selected_favorite: int = -1
 
 
 func _notification(what: int) -> void:
@@ -21,14 +20,7 @@ func _notification(what: int) -> void:
 func _ready() -> void:
 	super._ready()
 	favorites = Settings.settings.get("favorite_textures", {})
-	for das_name: String in favorites:
-		for i in range(len(favorites[das_name])):
-			favorites[das_name][i] = int(favorites[das_name][i])
-	
 	recents = Settings.cache.get("recent_textures", {})
-	for das_name: String in recents:
-		for i in range(len(recents[das_name])):
-			recents[das_name][i] = int(recents[das_name][i])
 
 
 func _fade_out() -> void:
@@ -36,7 +28,7 @@ func _fade_out() -> void:
 	texture_selected.emit(-1)
 
 
-func das_ready(p_das: Dictionary) -> void:
+func init_das(p_das: Dictionary) -> void:
 	loaded_das[p_das.name] = {}
 	if p_das.name not in favorites:
 		favorites[p_das.name] = []
@@ -45,11 +37,9 @@ func das_ready(p_das: Dictionary) -> void:
 	for texture: Dictionary in p_das.textures:
 		if not "image" in texture:
 			continue
-		var texture_select_node := TextureSelectNode.new(texture)
-		texture_select_node.selected.connect(_on_texture_list_item_activated)
-		texture_select_node.add_to_favorites_selected.connect(_on_add_to_favorites_selected)
-		%TextureContainer.add_child(texture_select_node)
-		loaded_das[p_das.name][texture.index] = texture_select_node
+		var tex: Texture2D = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+		var idx: int = %RotatableItemList.add_item("%s: %s\n%s x %s" % [texture.index, texture.name, texture.height, texture.width], tex, Vector2(150,150), Array(["Add to Favorites"], TYPE_STRING, "", null))
+		%RotatableItemList.set_item_metadata(idx, texture)
 
 
 func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
@@ -62,81 +52,70 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
 		%WallOptions.show()
 	
 	if p_das.name not in loaded_das:
-		das_ready(p_das)
+		init_das(p_das)
 	
-	#%TextureList.clear()
-	#for child: Control in %TextureContainer.get_children():
-		#child.queue_free()
 	
-	for das_name: String in loaded_das:
-		for texture_index: int in loaded_das[das_name]:
-			var texture_select_node: TextureSelectNode = loaded_das[das_name][texture_index]
-			texture_select_node.hide()
-	
-	%FavoritesList.clear()
+	%FavoriteItemList.clear()
 	for texture_index: int in favorites[p_das.name]:
 		var texture_data: Dictionary = p_das.mapping[texture_index]
-		var idx: int = %FavoritesList.add_item("%s: %s" % [texture_data.index, texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image)
-		%FavoritesList.set_item_metadata(idx, texture_data)
+		if is_viable(texture_data):
+			var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
+			%FavoriteItemList.set_item_metadata(idx, texture_data)
+			if only_ceilings:
+				%FavoriteItemList.set_rotated(idx, false)
 	
-	%RecentlyUsedList.clear()
+	
+	%RecentItemList.clear()
 	for texture_index: int in recents[p_das.name]:
 		var texture_data: Dictionary = p_das.mapping[texture_index]
-		var idx: int = %RecentlyUsedList.add_item("%s: %s" % [texture_data.index, texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image)
-		%RecentlyUsedList.set_item_metadata(idx, texture_data)
-	
-	#for das_name: String in loaded_das:
-	for texture_index: int in loaded_das[p_das.name]:
-		var texture_select_node: TextureSelectNode = loaded_das[p_das.name][texture_index]
-		var texture: Dictionary = texture_select_node.texture_data
-		if ( ((only_ceilings or (vert_tileable and horz_tileable))
-			and (texture.width > 0
-				and (texture.width & (texture.width - 1)) == 0
-				and texture.height > 0
-				and (texture.height & (texture.height - 1)) == 0
-				))
-			or (not only_ceilings
-				and not vert_tileable
-				and not horz_tileable
-				)
-			or (not only_ceilings
-				and vert_tileable
-				and not horz_tileable
-				and texture.height > 0
-				and (texture.height & (texture.height - 1)) == 0
-				)
-			or (not only_ceilings
-				and horz_tileable
-				and not vert_tileable
-				and texture.width > 0
-				and (texture.width & (texture.width - 1)) == 0
-				)
-		):
-			
-			texture_select_node.show()
+		if is_viable(texture_data):
+			var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image, Vector2(75,75))
+			%RecentItemList.set_item_metadata(idx, texture_data)
 			if only_ceilings:
-				texture_select_node.set_rotated(false)
+				%RecentItemList.set_rotated(idx, false)
+	
+	
+	for i in range(%RotatableItemList.item_count):
+		var texture: Dictionary = %RotatableItemList.get_item_metadata(i)
+		if is_viable(texture):
+			%RotatableItemList.set_hidden(i, false)
+			if only_ceilings:
+				%RotatableItemList.set_rotated(i, false)
 			else:
-				texture_select_node.set_rotated(true)
-
+				%RotatableItemList.set_rotated(i, true)
+		else:
+			%RotatableItemList.set_hidden(i, true)
 	
 	toggle(true)
 
 
-
-func _on_texture_list_item_activated(index: int) -> void:
-	#texture_selected.emit(%TextureList.get_item_metadata(index).index)
-	texture_selected.emit(index)
-	toggle(false)
-
-
-func _on_add_to_favorites_selected(texture_data: Dictionary) -> void:
-	if texture_data.index in favorites[current_das.name]:
-		return
-	var idx: int = %FavoritesList.add_item("%s: %s" % [texture_data.index, texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image)
-	%FavoritesList.set_item_metadata(idx, texture_data)
-	favorites[current_das.name].append(texture_data.index)
-	Settings.update_settings("favorite_textures", favorites)
+func is_viable(texture_data: Dictionary) -> bool:
+	if ( ((only_ceilings or (vert_tileable and horz_tileable))
+		and (texture_data.width > 0
+			and (texture_data.width & (texture_data.width - 1)) == 0
+			and texture_data.height > 0
+			and (texture_data.height & (texture_data.height - 1)) == 0
+			))
+		or (not only_ceilings
+			and not vert_tileable
+			and not horz_tileable
+			)
+		or (not only_ceilings
+			and vert_tileable
+			and not horz_tileable
+			and texture_data.width > 0
+			and (texture_data.width & (texture_data.width - 1)) == 0
+			)
+		or (not only_ceilings
+			and horz_tileable
+			and not vert_tileable
+			and texture_data.height > 0
+			and (texture_data.height & (texture_data.height - 1)) == 0
+			)
+	):
+		return true
+	else:
+		return false
 
 
 func _on_tileable_check_box_toggled(toggled_on: bool) -> void:
@@ -167,49 +146,89 @@ func _on_both_check_box_toggled(toggled_on: bool) -> void:
 		show_texture(current_das, only_ceilings)
 
 
-func _on_favorites_list_item_activated(index: int) -> void:
-	texture_selected.emit(%FavoritesList.get_item_metadata(index).index)
+func _on_favorite_item_list_item_activated(index: int) -> void:
+	texture_selected.emit(%FavoriteItemList.get_item_metadata(index).index)
+	add_to_recents(%FavoriteItemList.get_item_metadata(index).index)
 	toggle(false)
 
 
-func _on_favorites_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
-	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		selected_favorite = index
-		%FavoritesPopupMenu.popup(Rect2i(int(%FavoritesList.global_position.x + at_position.x), int(%FavoritesList.global_position.y + at_position.y), 0, 0))
-
-
-func _on_favorites_popup_menu_index_pressed(index: int) -> void:
-	match index:
+func _on_favorite_item_list_context_option_selected(index: int, context_index: int) -> void:
+	match context_index:
 		0:
-			print("Remove index: %s" % selected_favorite)
-			%FavoritesList.remove_item(selected_favorite)
-			favorites[current_das.name].pop_at(selected_favorite)
-			selected_favorite = -1
+			var texture_index: int = %FavoriteItemList.get_item_metadata(index).index
+			%FavoriteItemList.remove_item(index)
+			var idx: int = favorites[current_das.name].find(texture_index)
+			if idx == -1:
+				idx = favorites[current_das.name].find(float(texture_index))
+			favorites[current_das.name].pop_at(idx)
 			Settings.update_settings("favorite_textures", favorites)
 
 
-func _on_recently_used_list_item_activated(index: int) -> void:
-	texture_selected.emit(%RecentlyUsedList.get_item_metadata(index).index)
+func _on_recent_item_list_item_activated(index: int) -> void:
+	texture_selected.emit(%RecentItemList.get_item_metadata(index).index)
+	add_to_recents(%RecentItemList.get_item_metadata(index).index)
 	toggle(false)
 
 
-func _on_texture_selected(texture_index: int) -> void:
+func add_to_recents(texture_index: int) -> void:
 	if texture_index == -1:
 		return
 	
-	for i in range(%RecentlyUsedList.item_count):
-		if texture_index == %RecentlyUsedList.get_item_metadata(i).index:
-			%RecentlyUsedList.move_item(i, 0)
-			recents[current_das.name].pop_at(i)
-			recents[current_das.name].push_front(texture_index)
-			return
+	if (texture_index in recents[current_das.name]
+		or float(texture_index) in recents[current_das.name]
+	):
+		var idx: int = recents[current_das.name].find(texture_index)
+		if idx == -1:
+			idx = recents[current_das.name].find(float(texture_index))
+		recents[current_das.name].pop_at(idx)
+		recents[current_das.name].push_front(texture_index)
+		return
 	
-	var texture_data: Dictionary = current_das.mapping[texture_index]
-	var idx: int = %RecentlyUsedList.add_item("%s: %s" % [texture_data.index, texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image)
-	%RecentlyUsedList.set_item_metadata(idx, texture_data)
-	%RecentlyUsedList.move_item(idx, 0)
 	recents[current_das.name].push_front(texture_index)
 	
 	if len(recents[current_das.name]) > 20:
 		recents[current_das.name].pop_back()
-		%RecentlyUsedList.remove_item(20)
+
+
+func _on_rotatable_item_list_item_activated(index: int) -> void:
+	texture_selected.emit(%RotatableItemList.get_item_metadata(index).index)
+	add_to_recents(%RotatableItemList.get_item_metadata(index).index)
+	toggle(false)
+
+
+func _on_rotatable_item_list_context_option_selected(index: int, context_index: int) -> void:
+	match context_index:
+		0:
+			var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
+			if texture_data.index in favorites[current_das.name]:
+				return
+			var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
+			%FavoriteItemList.set_item_metadata(idx, texture_data)
+			favorites[current_das.name].append(texture_data.index)
+			Settings.update_settings("favorite_textures", favorites)
+
+
+func _on_rotatable_item_list_item_selected(index: int) -> void:
+	%FavoriteItemList.deselect_all()
+	%RecentItemList.deselect_all()
+	display_texture_data(%RotatableItemList.get_item_metadata(index))
+	
+func display_texture_data(texture_data: Dictionary) -> void:
+	for child: Node in %InfoContainer.get_children():
+		child.queue_free()
+	for key: String in texture_data:
+		var label := Label.new()
+		label.text = "%s: %s" % [key, texture_data[key]]
+		%InfoContainer.add_child(label)
+
+
+func _on_favorite_item_list_item_selected(index: int) -> void:
+	%RecentItemList.deselect_all()
+	%RotatableItemList.deselect_all()
+	display_texture_data(%FavoriteItemList.get_item_metadata(index))
+
+
+func _on_recent_item_list_item_selected(index: int) -> void:
+	%FavoriteItemList.deselect_all()
+	%RotatableItemList.deselect_all()
+	display_texture_data(%RecentItemList.get_item_metadata(index))

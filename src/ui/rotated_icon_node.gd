@@ -59,6 +59,7 @@ func _ready() -> void:
 	var label := Label.new()
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	
 	var vbox_layout := VBoxContainer.new()
 	vbox_layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
