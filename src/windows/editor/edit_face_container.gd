@@ -426,7 +426,13 @@ func _on_select_sector_button_pressed() -> void:
 
 
 func _on_sister_edit_text_changed(new_text: String) -> void:
+	if new_text.is_empty():
+		current_face.sister = null
+		return
 	var new_sister: Variant = owner.get_face(int(new_text), "Face", current_face.map_info)
+	if not new_sister:
+		current_face.sister = null
+		return
 	current_face.sister = weakref(new_sister)
 
 
