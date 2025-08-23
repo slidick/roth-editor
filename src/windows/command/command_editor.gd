@@ -1,4 +1,4 @@
-extends BaseWindow
+extends Control
 
 const COMMAND_NODE = preload("uid://bg2itg1120pon")
 const VERTICAL_SPACING: int = 546
@@ -238,16 +238,6 @@ func edit_data(p_map: Map) -> void:
 		for key: int in command_nodes_mapping:
 			command_nodes.append(command_nodes_mapping[key])
 	
-	toggle(true)
-
-
-func _on_cancel_button_pressed() -> void:
-	toggle(false)
-
-
-func _on_save_button_pressed() -> void:
-	save_positions()
-	map.commands_section = command_section.duplicate(true)
 
 
 func save_positions() -> void:
@@ -289,9 +279,6 @@ func _on_graph_edit_disconnection_request(from_node: StringName, _from_port: int
 	):
 		%GraphEdit.get_node(str(to_node)).title = "Orphan Command"
 
-
-func _on_add_command_button_pressed() -> void:
-	add_command()
 
 
 func add_command(at_position: Variant = null) -> void:
@@ -558,3 +545,7 @@ func _on_search_edit_text_submitted(new_text: String) -> void:
 func _on_search_options_item_selected(_index: int) -> void:
 	search_count = 0
 	previous_search = ""
+
+
+func _on_graph_edit_end_node_move() -> void:
+	save_positions()

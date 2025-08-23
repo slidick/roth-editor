@@ -1,0 +1,97 @@
+[gd_scene load_steps=3 format=3 uid="uid://buvv5wgtyctbw"]
+
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_8pnp2"]
+[ext_resource type="Script" uid="uid://d00va22y52dco" path="res://src/windows/command/command_editor.gd" id="2_u488m"]
+
+[node name="CommandEditor" type="MarginContainer"]
+offset_right = 1554.0
+offset_bottom = 858.0
+theme = ExtResource("1_8pnp2")
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("2_u488m")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MapLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Map Name"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search..."
+keep_editing_on_text_submit = true
+
+[node name="SearchOptions" type="OptionButton" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 14
+popup/item_0/text = "Floor Sector ID"
+popup/item_0/id = 0
+popup/item_1/text = "LeftClick Face ID"
+popup/item_1/id = 1
+popup/item_2/text = "Object ID"
+popup/item_2/id = 12
+popup/item_3/text = "Arg01"
+popup/item_3/id = 2
+popup/item_4/text = "Arg02"
+popup/item_4/id = 3
+popup/item_5/text = "Arg03"
+popup/item_5/id = 4
+popup/item_6/text = "Arg04"
+popup/item_6/id = 5
+popup/item_7/text = "Arg05"
+popup/item_7/id = 6
+popup/item_8/text = "Arg06"
+popup/item_8/id = 7
+popup/item_9/text = "Arg07"
+popup/item_9/id = 8
+popup/item_10/text = "Arg08"
+popup/item_10/id = 9
+popup/item_11/text = "Command Base"
+popup/item_11/id = 10
+popup/item_12/text = "Command Modifier"
+popup/item_12/id = 11
+popup/item_13/text = "Command Index"
+popup/item_13/id = 13
+
+[node name="Graph" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GraphEdit" type="GraphEdit" parent="VBoxContainer/Graph"]
+unique_name_in_owner = true
+layout_mode = 2
+scroll_offset = Vector2(-5, -5)
+right_disconnects = true
+zoom = 0.5
+zoom_min = 0.1
+show_menu = false
+
+[node name="GraphPopupMenu" type="PopupMenu" parent="VBoxContainer/Graph"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+item_count = 2
+item_0/text = "Add Command"
+item_0/id = 0
+item_1/text = "Delete Selected"
+item_1/id = 1
+
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer2/SearchEdit" to="." method="_on_search_edit_text_submitted"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer2/SearchOptions" to="." method="_on_search_options_item_selected"]
+[connection signal="connection_request" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_connection_request"]
+[connection signal="disconnection_request" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
+[connection signal="end_node_move" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_end_node_move"]
+[connection signal="popup_request" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_popup_request"]
+[connection signal="index_pressed" from="VBoxContainer/Graph/GraphPopupMenu" to="." method="_on_graph_popup_menu_index_pressed"]

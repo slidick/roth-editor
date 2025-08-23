@@ -405,13 +405,13 @@ func _on_flag_button_toggled(toggled_on: bool, shift: int) -> void:
 	if "arg_1" in current_command and current_command.arg_1.begins_with("Flags/"):
 		update_args_array()
 		return
-	var arg1 := int(%Arg1Range.text)
+	#var arg1 := int(%Arg1Range.text)
 	if toggled_on:
-		arg1 |= (1 << shift)
+		arg_1 |= (1 << shift)
 	else:
-		arg1 &= ~(1 << shift)
-	%Arg1Range.set_text(str((arg1)))
-	update_args_array()
+		arg_1 &= ~(1 << shift)
+	#%Arg1Range.set_text(str((arg1)))
+	#update_args_array()
 
 
 func _on_arg_text_changed(_new_text: String) -> void:

@@ -29,6 +29,7 @@ func _ready() -> void:
 	tree_root = %MapsTree.create_item()
 	%MapsTree.set_column_title(0, "Maps")
 	%MapContainer.hide()
+	%EditorHeader.hide()
 
 
 func test_map(full: bool) -> void:
@@ -173,6 +174,7 @@ func load_map(map_info: Dictionary) -> void:
 	
 	%NoMapLoaded.hide()
 	%MapContainer.show()
+	%EditorHeader.show()
 	
 	
 	#var command_editor_scene := COMMAND_EDITOR.instantiate()
@@ -330,6 +332,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
 			%"Command Editor".edit_data(selected[0].get_metadata(0).ref)
+			%TabBar.current_tab = 1
 		MapMenu.EditMode:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
@@ -513,3 +516,14 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 			Roth.get_map(map_info).add_object(new_object)
 			%Map2D.add_object_to_2d_map(new_object, false)
 			%Picker.select(new_object.node)
+
+
+func _on_tab_bar_tab_changed(tab: int) -> void:
+	%EditorTab.current_tab = tab
+	match tab:
+		0:
+			%MapPanelContainer.show()
+			%EditInfoContainer.show()
+		1:
+			%MapPanelContainer.hide()
+			%EditInfoContainer.hide()
