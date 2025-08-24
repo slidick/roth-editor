@@ -175,6 +175,7 @@ size_flags_vertical = 3
 [node name="MapNameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "No Map Loaded"
 horizontal_alignment = 1
 
 [node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="1"]

@@ -22,11 +22,11 @@ const command_list: Array = [
 	{"command_base": 7, "number_of_args": 7, "can_be_entry_command": false, "name": "Change Floor/Ceiling Height", "flag_1": "Ceiling", "flag_3": "Slower", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_3": "Starting Height", "arg_4": "Ending Height", "arg_5": "Autoclose Timeout"},
 	{"command_base": 8, "number_of_args": 3, "can_be_entry_command": true, "name": "Left-Click Object", "flag_1": "No Switch", "flag_2": "Remove After", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "SFX Index"},
 	{"command_base": 9, "number_of_args": 6, "can_be_entry_command": false, "name": "Move Sector", "flag_1": "Floor Texture Moves", "flag_2": "Ceiling Texture Moves", "flag_3": "Platform Floor Texture Moves", "flag_4": "Platform Ceiling Texture Moves", "flag_6": "Auto Repeat", "flag_7": "Move Along X-Axis", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_5": "Auto Revert Timeout"},
-	{"command_base": 10, "number_of_args": 5, "can_be_entry_command": false, "name": "Change Floor Texture", "flag_3": "Disabled", "flag_9": "Scale A", "flag_10": "Scale B", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "Texture Index", "arg_4": "X/Y Shift", "arg_5": "Auto Revert Timeout"},
-	{"command_base": 12, "number_of_args": 8, "can_be_entry_command": false, "name": "Change Face Texture Advanced", "flag_4": "All Texture Maps With ID", "flag_9": "Transparency", "flag_10": "X-Flip", "flag_11": "Image Fit", "flag_12": "Fixed Size Transparency", "flag_13": "No Reflect", "flag_14": "Half Pixel", "flag_15": "Edge Map", "flag_16": "Draw From Bottom", "arg_1": "Flags", "arg_2": "Face ID", "arg_3": "Mid-Texture Index", "arg_4": "X/Y Shift", "arg_5": "Auto Revert Timeout", "arg_6": "Upper-Texture Index", "arg_7": "Bottom-Texture Index"},
+	{"command_base": 10, "number_of_args": 5, "can_be_entry_command": false, "name": "Change Floor Texture", "flag_3": "Disabled", "flag_9": "Scale A", "flag_10": "Scale B", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "Texture Index", "arg_4": "X Shift/Y Shift", "arg_5": "Auto Revert Timeout"},
+	{"command_base": 12, "number_of_args": 8, "can_be_entry_command": false, "name": "Change Face Texture Advanced", "flag_4": "All Texture Maps With ID", "flag_9": "Transparency", "flag_10": "X-Flip", "flag_11": "Image Fit", "flag_12": "Fixed Size Transparency", "flag_13": "No Reflect", "flag_14": "Half Pixel", "flag_15": "Edge Map", "flag_16": "Draw From Bottom", "arg_1": "Flags", "arg_2": "Face ID", "arg_3": "Mid-Texture Index", "arg_4": "X Shift/Y Shift", "arg_5": "Auto Revert Timeout", "arg_6": "Upper-Texture Index", "arg_7": "Bottom-Texture Index"},
 	{"command_base": 13, "number_of_args": 4, "can_be_entry_command": false, "name": "Change Object Texture", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "Auto Revert Timeout", "arg_4": "Object Texture Index"},
-	{"command_base": 14, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Sector Texture", "flag_1": "Floor", "flag_2": "Ceiling", "flag_3": "Platform Floor", "flag_4": "Platform Ceiling", "arg_1": "Flags/X-Speed", "arg_2": "Sector ID/Y-Speed"},
-	{"command_base": 15, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Face Texture", "arg_1": "Flags/X-Speed", "arg_2": "Sector ID/Y-Speed"},
+	{"command_base": 14, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Sector Texture", "flag_1": "Floor", "flag_2": "Ceiling", "flag_3": "Platform Floor", "flag_4": "Platform Ceiling", "arg_1": "Flags/X-Speed", "arg_2": "Y-Speed/Sector ID"},
+	{"command_base": 15, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Face Texture", "arg_1": "Flags/X-Speed", "arg_2": "Y-Speed/Sector ID"},
 	{"command_base": 16, "number_of_args": 2, "can_be_entry_command": false, "name": "Activate SFX Node", "arg_1": "Flags", "arg_2": "SFX Node ID"},
 	{"command_base": 17, "number_of_args": 3, "can_be_entry_command": false, "name": "Flash Lights", "arg_1": "Flags", "arg_2": "Sector ID"},
 	{"command_base": 18, "number_of_args": 1, "can_be_entry_command": false, "name": "Delay Timer", "arg_1": "Length"},
@@ -88,6 +88,39 @@ const command_list: Array = [
 	%Arg8Range,
 ]
 
+@onready var arg_label_nodes: Array = [
+	%Arg1Label,
+	%Arg2Label,
+	%Arg3Label,
+	%Arg4Label,
+	%Arg5Label,
+	%Arg6Label,
+	%Arg7Label,
+	%Arg8Label,
+]
+
+@onready var arg_b_nodes: Array = [
+	%Arg1bRange,
+	%Arg2bRange,
+	%Arg3bRange,
+	%Arg4bRange,
+	%Arg5bRange,
+	%Arg6bRange,
+	%Arg7bRange,
+	%Arg8bRange,
+]
+
+@onready var arg_b_label_nodes: Array = [
+	%Arg1bLabel,
+	%Arg2bLabel,
+	%Arg3bLabel,
+	%Arg4bLabel,
+	%Arg5bLabel,
+	%Arg6bLabel,
+	%Arg7bLabel,
+	%Arg8bLabel,
+]
+
 var current_command: Dictionary
 
 var index: int = 0 :
@@ -141,20 +174,30 @@ func initialize(p_index: int, p_data: Dictionary) -> void:
 
 
 func _ready() -> void:
+	
+	# Panel Theme
 	var style_box := StyleBoxFlat.new()
 	style_box.bg_color = Color("#3399cc")
-	var style_box_header := StyleBoxFlat.new()
-	style_box_header.bg_color = Color("#8877ee")
-	var style_box_header_selected := StyleBoxFlat.new()
-	style_box_header_selected.bg_color = Color("#442277")
-	
-	title = "Command"
 	add_theme_stylebox_override("panel", style_box)
 	add_theme_stylebox_override("panel_selected", style_box)
+	
+	# Panel Header Theme
+	var style_box_header := StyleBoxFlat.new()
+	style_box_header.bg_color = Color("#8877ee")
 	add_theme_stylebox_override("titlebar", style_box_header)
+	
+	# Panel Header Selected Theme
+	var style_box_header_selected := StyleBoxFlat.new()
+	style_box_header_selected.bg_color = Color("#442277")
 	add_theme_stylebox_override("titlebar_selected", style_box_header_selected)
+	
+	# Generic Title
+	title = "Command"
+	
+	# One set of connections
 	set_slot(0, true, 0, Color.WHITE, true, 0, Color.WHITE)
 	
+	# Initialize command option list and select loaded command
 	var idx: int = 0
 	for command: Dictionary in command_list:
 		%CommandBaseOption.add_item("%s%s: %s" % ["*" if command.can_be_entry_command else "", command.command_base, command.name])
@@ -164,24 +207,21 @@ func _ready() -> void:
 			current_command = command
 		idx += 1
 	
+	# Load data
 	%CommandIndexEdit.text = "%d" % index
 	%CommandModifierEdit.text = "%d" % data.commandModifier
 	%CommandNextCommandIndexEdit.text = "%d" % data.nextCommandIndex
 	%MapNameLabel.text = ""
-
 	
-	#for node: LineEdit in arg_nodes:
-		#node.set_text(str(0))
-		#node.get_parent().hide()
-	
+	# Load data args
 	var i: int = 0
 	for value: int in data.args:
-		arg_nodes[i].get_parent().show()
 		
-		if i == 0 and "arg_1" in current_command and current_command.arg_1.begins_with("Flags/"):
-			arg_nodes[i].set_text(str((value>>8)))
+		if "arg_%d" % (i+1) in current_command and current_command["arg_%d" % (i+1)].contains("/"):
+			arg_nodes[i].set_text(str(value & 0xFF))
+			arg_b_nodes[i].set_text(str(value >> 8))
 		else:
-			arg_nodes[i].set_text(str((value)))
+			arg_nodes[i].set_text(str(value))
 	
 		if i >= 2:
 			%MapNameLabel.text += String.chr((value) & 0xFF)
@@ -255,7 +295,7 @@ func update_command_base() -> void:
 	elif "arg_1" in current_command and current_command.arg_1.begins_with("Flags"):
 		%FlagsContainer.show()
 		%FlagsContainer2.hide()
-		arg_nodes[0].editable = true
+		arg_nodes[0].editable = false
 	else:
 		%FlagsContainer.hide()
 		arg_nodes[0].editable = true
@@ -266,6 +306,11 @@ func update_command_base() -> void:
 			arg_nodes[i].get_parent().hide()
 		else:
 			arg_nodes[i].get_parent().show()
+		if "arg_%d" % (i+1) in current_command and current_command["arg_%d" % (i+1)].contains("/"):
+			arg_b_nodes[i].get_parent().show()
+		else:
+			arg_b_nodes[i].get_parent().hide()
+	
 	
 	update_args_array()
 	
@@ -303,30 +348,20 @@ func update_command_base() -> void:
 	%FlagButton15.tooltip_text = current_command.flag_15 if "flag_15" in current_command else "Flag 15"
 	%FlagButton16.tooltip_text = current_command.flag_16 if "flag_16" in current_command else "Flag 16"
 	
-	if "arg_1" in current_command:
-		if current_command.arg_1.begins_with("Flags/"):
-			%Arg1Label.text = "%s:" % current_command.arg_1.get_slice("/", 1)
+	for i in range(len(arg_nodes)):
+		if "arg_%d" % (i+1) in current_command:
+			if current_command["arg_%d" % (i+1)].contains("/"):
+				arg_label_nodes[i].text = "%s:" % current_command["arg_%d" % (i+1)].get_slice("/", 0)
+				arg_label_nodes[i].tooltip_text = "%s" % current_command["arg_%d" % (i+1)].get_slice("/", 0)
+				arg_b_label_nodes[i].text = "%s:" % current_command["arg_%d" % (i+1)].get_slice("/", 1)
+				arg_b_label_nodes[i].tooltip_text = "%s" % current_command["arg_%d" % (i+1)].get_slice("/", 1)
+			else:
+				arg_label_nodes[i].text = "%s:" % current_command["arg_%d" % (i+1)]
+				arg_label_nodes[i].tooltip_text = "%s" % current_command["arg_%d" % (i+1)]
 		else:
-			%Arg1Label.text = "%s:" % current_command.arg_1
-	else:
-		%Arg1Label.text = "Arg 1:"
-	%Arg2Label.text = ("%s:" % current_command.arg_2) if "arg_2" in current_command else "Arg 2:"
-	%Arg3Label.text = ("%s:" % current_command.arg_3) if "arg_3" in current_command else "Arg 3:"
-	%Arg4Label.text = ("%s:" % current_command.arg_4) if "arg_4" in current_command else "Arg 4:"
-	%Arg5Label.text = ("%s:" % current_command.arg_5) if "arg_5" in current_command else "Arg 5:"
-	%Arg6Label.text = ("%s:" % current_command.arg_6) if "arg_6" in current_command else "Arg 6:"
-	%Arg7Label.text = ("%s:" % current_command.arg_7) if "arg_7" in current_command else "Arg 7:"
-	%Arg8Label.text = ("%s:" % current_command.arg_8) if "arg_8" in current_command else "Arg 8:"
-	
-	%Arg1Label.tooltip_text = ("%s" % current_command.arg_1) if "arg_1" in current_command else "Arg 1"
-	%Arg2Label.tooltip_text = ("%s" % current_command.arg_2) if "arg_2" in current_command else "Arg 2"
-	%Arg3Label.tooltip_text = ("%s" % current_command.arg_3) if "arg_3" in current_command else "Arg 3"
-	%Arg4Label.tooltip_text = ("%s" % current_command.arg_4) if "arg_4" in current_command else "Arg 4"
-	%Arg5Label.tooltip_text = ("%s" % current_command.arg_5) if "arg_5" in current_command else "Arg 5"
-	%Arg6Label.tooltip_text = ("%s" % current_command.arg_6) if "arg_6" in current_command else "Arg 6"
-	%Arg7Label.tooltip_text = ("%s" % current_command.arg_7) if "arg_7" in current_command else "Arg 7"
-	%Arg8Label.tooltip_text = ("%s" % current_command.arg_8) if "arg_8" in current_command else "Arg 8"
-	
+			arg_label_nodes[i].text = "Arg %d:" % (i + 1)
+			arg_label_nodes[i].tooltip_text = "Arg %d" % (i + 1)
+
 
 
 func _on_command_modifier_edit_text_changed(new_text: String) -> void:
@@ -336,15 +371,11 @@ func _on_command_modifier_edit_text_changed(new_text: String) -> void:
 func update_args_array() -> void:
 	var arg_array := []
 	for i in range(len(arg_nodes)):
-		var node: LineEdit = arg_nodes[i]
-		if node.get_parent().visible:
-			if i == 0 and "arg_1" in current_command and current_command.arg_1.begins_with("Flags/"):
-				var first_half := gather_flags()
-				var second_half := int(node.text) << 8
-				arg_array.append(first_half+second_half)
+		if arg_nodes[i].get_parent().visible:
+			if "arg_%d" % (i+1) in current_command and current_command["arg_%d" % (i+1)].contains("/"):
+				arg_array.append(int(arg_nodes[i].text) + (int(arg_b_nodes[i].text) << 8))
 			else:
-				arg_array.append(int(node.text))
-	#print(arg_array)
+				arg_array.append(int(arg_nodes[i].text))
 	data.args = arg_array
 	%MapNameLabel.text = ""
 	for value: int in arg_array.slice(2):
@@ -402,29 +433,11 @@ func _on_map_name_button_pressed() -> void:
 
 
 func _on_flag_button_toggled(toggled_on: bool, shift: int) -> void:
-	if "arg_1" in current_command and current_command.arg_1.begins_with("Flags/"):
-		update_args_array()
-		return
-	#var arg1 := int(%Arg1Range.text)
 	if toggled_on:
 		arg_1 |= (1 << shift)
 	else:
 		arg_1 &= ~(1 << shift)
-	#%Arg1Range.set_text(str((arg1)))
-	#update_args_array()
 
 
 func _on_arg_text_changed(_new_text: String) -> void:
 	update_args_array()
-
-
-func gather_flags() -> int:
-	return ((int(%FlagButton1.button_pressed) << 0) +
-			(int(%FlagButton2.button_pressed) << 1) +
-			(int(%FlagButton3.button_pressed) << 2) +
-			(int(%FlagButton4.button_pressed) << 3) +
-			(int(%FlagButton5.button_pressed) << 4) +
-			(int(%FlagButton6.button_pressed) << 5) +
-			(int(%FlagButton7.button_pressed) << 6) +
-			(int(%FlagButton8.button_pressed) << 7)
-	)

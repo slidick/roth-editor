@@ -114,15 +114,22 @@ text = "Change"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2"]
 custom_minimum_size = Vector2(194, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Arg1Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg1Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg1Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg1Container"]
+[node name="Arg1Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -130,16 +137,34 @@ mouse_filter = 0
 text = "Arg1:"
 text_overrun_behavior = 3
 
-[node name="Arg1Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg1Container"]
+[node name="Arg1Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "0"
 editable = false
 
-[node name="Arg2Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg1bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg2Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg2Container"]
+[node name="Arg1bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg1b:"
+text_overrun_behavior = 3
+
+[node name="Arg1bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg2Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Arg2Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -147,15 +172,33 @@ mouse_filter = 0
 text = "Arg 2:"
 text_overrun_behavior = 3
 
-[node name="Arg2Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg2Container"]
+[node name="Arg2Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg2bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg3Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg2bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg 2b:"
+text_overrun_behavior = 3
+
+[node name="Arg2bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg3Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg3Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg3Container"]
+[node name="Arg3Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -163,15 +206,33 @@ mouse_filter = 0
 text = "Arg3:"
 text_overrun_behavior = 3
 
-[node name="Arg3Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg3Container"]
+[node name="Arg3Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg3bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg4Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg3bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg3b:"
+text_overrun_behavior = 3
+
+[node name="Arg3bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg4Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg4Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg4Container"]
+[node name="Arg4Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -179,15 +240,33 @@ mouse_filter = 0
 text = "Arg4:"
 text_overrun_behavior = 3
 
-[node name="Arg4Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg4Container"]
+[node name="Arg4Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg4bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg5Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg4bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg4b:"
+text_overrun_behavior = 3
+
+[node name="Arg4bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg5Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg5Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg5Container"]
+[node name="Arg5Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -195,15 +274,33 @@ mouse_filter = 0
 text = "Arg5:"
 text_overrun_behavior = 3
 
-[node name="Arg5Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg5Container"]
+[node name="Arg5Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg5bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg6Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg5bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg5b:"
+text_overrun_behavior = 3
+
+[node name="Arg5bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg6Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg6Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg6Container"]
+[node name="Arg6Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -211,15 +308,33 @@ mouse_filter = 0
 text = "Arg6:"
 text_overrun_behavior = 3
 
-[node name="Arg6Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg6Container"]
+[node name="Arg6Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg6bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg7Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg6bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg6b:"
+text_overrun_behavior = 3
+
+[node name="Arg6bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg7Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg7Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg7Container"]
+[node name="Arg7Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -227,15 +342,33 @@ mouse_filter = 0
 text = "Arg7:"
 text_overrun_behavior = 3
 
-[node name="Arg7Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg7Container"]
+[node name="Arg7Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg7bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg8Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Arg7bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+mouse_filter = 0
+text = "Arg7b:"
+text_overrun_behavior = 3
+
+[node name="Arg7bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg8Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg8Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg8Container"]
+[node name="Arg8Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -243,18 +376,31 @@ mouse_filter = 0
 text = "Arg8:"
 text_overrun_behavior = 3
 
-[node name="Arg8Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg8Container"]
+[node name="Arg8Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="Arg8bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Tree" type="Tree" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
-visible = false
+[node name="Arg8bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+mouse_filter = 0
+text = "Arg8b:"
+text_overrun_behavior = 3
+
+[node name="Arg8bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer"]
 layout_mode = 2
@@ -392,14 +538,22 @@ text_overrun_behavior = 3
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/CommandBaseOption" to="." method="_on_command_base_option_item_selected"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer2/CommandModifierEdit" to="." method="_on_command_modifier_edit_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/MapNameButton" to="." method="_on_map_name_button_pressed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg1Container/Arg1Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg2Container/Arg2Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg3Container/Arg3Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg4Container/Arg4Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg5Container/Arg5Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg6Container/Arg6Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg7Container/Arg7Range" to="." method="_on_arg_text_changed"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Arg8Container/Arg8Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container/Arg1Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer/Arg1bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container/Arg2Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer/Arg2bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container/Arg3Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer/Arg3bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container/Arg4Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer/Arg4bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container/Arg5Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer/Arg5bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container/Arg6Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer/Arg6bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container/Arg7Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer/Arg7bRange" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container/Arg8Range" to="." method="_on_arg_text_changed"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer/Arg8bRange" to="." method="_on_arg_text_changed"]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton1" to="." method="_on_flag_button_toggled" binds= [0]]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton2" to="." method="_on_flag_button_toggled" binds= [1]]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagButton3" to="." method="_on_flag_button_toggled" binds= [2]]
