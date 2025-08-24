@@ -1,287 +1,382 @@
 extends Control
 
+signal command_editor_loading_finished
+
 const COMMAND_NODE = preload("uid://bg2itg1120pon")
-const VERTICAL_SPACING: int = 546
+const VERTICAL_SPACING: int = 540
 const HORIZONTAL_SPACING: int = 400
 
 var map: Map
 var command_section: Dictionary = {}
 var command_nodes: Array = []
-var row_value: int = 0
 var add_at_position := Vector2.ZERO
 var previous_search: String
 var search_count: int = 0
+var graph_edit: GraphEdit
+var _is_loading: bool = false
 
 
-func edit_data(p_map: Map) -> void:
-	var p_command_section: Dictionary = p_map.commands_section
+# Threaded loading of the command editor would be ideal so the program wouldn't become unresponsive
+# while loading. However unfortunately, it ends up taking significantly longer to load on a thread.
+# It's unclear if this is a problem with Godot or my usage of threads.
+# In my testing of STUDY1 which has maybe the largest command section,
+# the unthreaded load takes about 6.5 seconds, while the threaded load takes a whopping 50 seconds,
+# the last 4.5 seconds of which still make the program unresponsive. For these reasons I'll stick
+# with the unthreaded loading for now.
+func load_command_editor_threaded(p_map: Map) -> void:
+	if _is_loading:
+		return
+	_is_loading = true
+	%ProgressBar.show()
+	%ProgressBar.value = 0.0
+	%MapLabel.text = p_map.map_info.name
 	map = p_map
-	%MapLabel.text = map.map_info.name
-	if command_section != p_command_section:
-		#command_section = p_command_section.duplicate(true)
-		command_section = p_command_section
-		
-		for child: Node in %GraphEdit.get_children():
-			if child.name == "_connection_layer":
-				continue
-			child.queue_free()
-		
-		command_nodes = []
-		var command_nodes_mapping := {}
-		var jump_to_commands := []
-		var autorun_commands := []
-		row_value = 0
-		for i in range(len(command_section.entryCommandIndexes)):
-			
-			if command_section.entryCommandIndexes[i] in command_nodes_mapping:
-				continue
-			
-			var command_node: CommandNode = COMMAND_NODE.instantiate()
-			command_node.initialize(command_section.entryCommandIndexes[i], command_section.allCommands[command_section.entryCommandIndexes[i]-1])
-			
-			if "node_data" in command_section.allCommands[command_section.entryCommandIndexes[i]-1]:
-				command_node.position_offset.x = command_section.allCommands[command_section.entryCommandIndexes[i]-1].node_data.x
-				command_node.position_offset.y = command_section.allCommands[command_section.entryCommandIndexes[i]-1].node_data.y
-			else:
-				command_node.position_offset.y = VERTICAL_SPACING * row_value
-				row_value += 1
-			%GraphEdit.add_child(command_node)
-			command_node.title = "Entry Command"
-			command_node.add_to_entry_list.connect(_on_add_to_entry_list)
-			command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
-			command_node.delete_command.connect(_on_delete_command)
-			command_nodes_mapping[command_section.entryCommandIndexes[i]] = command_node
-			
-			var next_command_index: int = command_section.allCommands[command_section.entryCommandIndexes[i]-1].nextCommandIndex
-			var graph_node_prev: StringName = command_node.name
-			var j: int = 1
-			while next_command_index != 0:
-				var command_node_2: CommandNode
-				if next_command_index in command_nodes_mapping:
-					command_node_2 = command_nodes_mapping[next_command_index]
-				else:
-					command_node_2 = COMMAND_NODE.instantiate()
-					command_node_2.add_to_entry_list.connect(_on_add_to_entry_list)
-					command_node_2.remove_from_entry_list.connect(_on_remove_from_entry_list)
-					command_node_2.delete_command.connect(_on_delete_command)
-					command_node_2.initialize(next_command_index, command_section.allCommands[next_command_index-1])
-					
-					if "node_data" in command_section.allCommands[next_command_index-1]:
-						command_node_2.position_offset.x = command_section.allCommands[next_command_index-1].node_data.x
-						command_node_2.position_offset.y = command_section.allCommands[next_command_index-1].node_data.y
-					else:
-						command_node_2.position_offset.y = VERTICAL_SPACING * (row_value-1)
-						command_node_2.position_offset.x = j * HORIZONTAL_SPACING
-					%GraphEdit.add_child(command_node_2)
-					
-					if next_command_index in command_section.entryCommandIndexes:
-						command_node_2.title = "Entry Command"
-					
-					if command_section.allCommands[next_command_index-1].commandBase == 56:
-						jump_to_commands.append(command_section.allCommands[next_command_index-1].args[1])
-				
-				j += 1
-				command_nodes_mapping[next_command_index] = command_node_2
-				next_command_index = command_section.allCommands[next_command_index-1].nextCommandIndex
-				%GraphEdit.connect_node(graph_node_prev, 0, command_node_2.name, 0)
-				graph_node_prev = command_node_2.name
-		
-		var k: int = 0
-		for command_index: int in jump_to_commands:
-			if command_index not in command_nodes_mapping:
-				var command_node: CommandNode = COMMAND_NODE.instantiate()
-				command_node.initialize(command_index, command_section.allCommands[command_index-1])
-				command_node.add_to_entry_list.connect(_on_add_to_entry_list)
-				command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
-				command_node.delete_command.connect(_on_delete_command)
-				if "node_data" in command_section.allCommands[command_index-1]:
-					command_node.position_offset.x = command_section.allCommands[command_index-1].node_data.x
-					command_node.position_offset.y = command_section.allCommands[command_index-1].node_data.y
-				else:
-					command_node.position_offset.y = VERTICAL_SPACING * k
-					k += 1
-					command_node.position_offset.x = HORIZONTAL_SPACING * 10
-				%GraphEdit.add_child(command_node)
-				command_node.title = "Jump Command"
-				command_nodes_mapping[command_index] = command_node
-				
-				
-				
-				var next_command_index: int = command_section.allCommands[command_index-1].nextCommandIndex
-				var graph_node_prev: StringName = command_node.name
-				var j: int = 1
-				while next_command_index != 0:
-					var command_node_2: CommandNode
-					if next_command_index in command_nodes_mapping:
-						command_node_2 = command_nodes_mapping[next_command_index]
-					else:
-						command_node_2 = COMMAND_NODE.instantiate()
-						command_node_2.add_to_entry_list.connect(_on_add_to_entry_list)
-						command_node_2.remove_from_entry_list.connect(_on_remove_from_entry_list)
-						command_node_2.delete_command.connect(_on_delete_command)
-						command_node_2.initialize(next_command_index, command_section.allCommands[next_command_index-1])
-						if "node_data" in command_section.allCommands[next_command_index-1]:
-							command_node_2.position_offset.x = command_section.allCommands[next_command_index-1].node_data.x
-							command_node_2.position_offset.y = command_section.allCommands[next_command_index-1].node_data.y
-						else:
-							command_node_2.position_offset.y = VERTICAL_SPACING * (k-1)
-							command_node_2.position_offset.x = (j * HORIZONTAL_SPACING) + (HORIZONTAL_SPACING * 10)
-						%GraphEdit.add_child(command_node_2)
-						
-						if command_section.allCommands[next_command_index-1].commandBase == 56:
-							jump_to_commands.append(command_section.allCommands[next_command_index-1].args[1])
-					
-					j += 1
-					command_nodes_mapping[next_command_index] = command_node_2
-					next_command_index = command_section.allCommands[next_command_index-1].nextCommandIndex
-					%GraphEdit.connect_node(graph_node_prev, 0, command_node_2.name, 0)
-					graph_node_prev = command_node_2.name
-				
-				
-			else:
-				command_nodes_mapping[command_index].title = "Jump Command"
-		
-		
-		
-		for i in range(len(command_section.allCommands)):
-			if command_section.allCommands[i].commandBase == 61:
-				autorun_commands.append(i+1)
-		
-		k = -1
-		for command_index: int in autorun_commands:
-			if command_index not in command_nodes_mapping:
-				var command_node: CommandNode = COMMAND_NODE.instantiate()
-				command_node.initialize(command_index, command_section.allCommands[command_index-1])
-				command_node.add_to_entry_list.connect(_on_add_to_entry_list)
-				command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
-				command_node.delete_command.connect(_on_delete_command)
-				if "node_data" in command_section.allCommands[command_index-1]:
-					command_node.position_offset.x = command_section.allCommands[command_index-1].node_data.x
-					command_node.position_offset.y = command_section.allCommands[command_index-1].node_data.y
-				else:
-					command_node.position_offset.y = VERTICAL_SPACING * k
-					k += -1
-					command_node.position_offset.x = 0
-				%GraphEdit.add_child(command_node)
-				command_node.title = "Autorun Command"
-				command_nodes_mapping[command_index] = command_node
-				
-				
-				
-				var next_command_index: int = command_section.allCommands[command_index-1].nextCommandIndex
-				var graph_node_prev: StringName = command_node.name
-				var j: int = 1
-				while next_command_index != 0:
-					var command_node_2: CommandNode
-					if next_command_index in command_nodes_mapping:
-						command_node_2 = command_nodes_mapping[next_command_index]
-					else:
-						command_node_2 = COMMAND_NODE.instantiate()
-						command_node_2.add_to_entry_list.connect(_on_add_to_entry_list)
-						command_node_2.remove_from_entry_list.connect(_on_remove_from_entry_list)
-						command_node_2.delete_command.connect(_on_delete_command)
-						command_node_2.initialize(next_command_index, command_section.allCommands[next_command_index-1])
-						if "node_data" in command_section.allCommands[next_command_index-1]:
-							command_node_2.position_offset.x = command_section.allCommands[next_command_index-1].node_data.x
-							command_node_2.position_offset.y = command_section.allCommands[next_command_index-1].node_data.y
-						else:
-							command_node_2.position_offset.y = VERTICAL_SPACING * (k+1)
-							command_node_2.position_offset.x = (j * HORIZONTAL_SPACING)
-						%GraphEdit.add_child(command_node_2)
-						
-						if command_section.allCommands[next_command_index-1].commandBase == 56:
-							jump_to_commands.append(command_section.allCommands[next_command_index-1].args[1])
-					
-					j += 1
-					command_nodes_mapping[next_command_index] = command_node_2
-					next_command_index = command_section.allCommands[next_command_index-1].nextCommandIndex
-					%GraphEdit.connect_node(graph_node_prev, 0, command_node_2.name, 0)
-					graph_node_prev = command_node_2.name
-				
-				
-				
-				
-			else:
-				command_nodes_mapping[command_index].title = "Autorun Command"
-		
-		
-		k = 0
-		var repeat := []
-		for i in range(len(command_section.allCommands)):
-			if i + 1 not in command_nodes_mapping:
-				var command_node: CommandNode = COMMAND_NODE.instantiate()
-				command_node.initialize(i+1, command_section.allCommands[i])
-				command_node.add_to_entry_list.connect(_on_add_to_entry_list)
-				command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
-				command_node.delete_command.connect(_on_delete_command)
-				if "node_data" in command_section.allCommands[i]:
-					command_node.position_offset.x = command_section.allCommands[i].node_data.x
-					command_node.position_offset.y = command_section.allCommands[i].node_data.y
-				else:
-					command_node.position_offset.y = VERTICAL_SPACING * k
-					k += 1
-					command_node.position_offset.x = -600
-				%GraphEdit.add_child(command_node)
-				command_node.title = "Orphan Command"
-				command_nodes_mapping[i+1] = command_node
-				repeat.append(command_node)
-		
-		
-		for command_node: CommandNode in repeat:
-			if command_node.data.nextCommandIndex != 0:
-				%GraphEdit.connect_node(command_node.name, 0, command_nodes_mapping[command_node.data.nextCommandIndex].name, 0)
-				if command_nodes_mapping[command_node.data.nextCommandIndex].title == "Orphan Command":
-					command_nodes_mapping[command_node.data.nextCommandIndex].title = "Command"
-		
-		
-		command_nodes_mapping.sort()
-		for key: int in command_nodes_mapping:
-			command_nodes.append(command_nodes_mapping[key])
+	if command_section != p_map.commands_section:
+		command_section = p_map.commands_section
+		if graph_edit:
+			graph_edit.queue_free()
+			await graph_edit.tree_exited
+		var thread := Thread.new()
+		var _err: Error = thread.start(init_graph_edit)
+		await command_editor_loading_finished
+		if graph_edit and not graph_edit.is_inside_tree():
+			%Graph.add_child(graph_edit)
+		thread.wait_to_finish()
+	_is_loading = false
+	%ProgressBar.hide()
+
+
+func load_command_editor(p_map: Map) -> void:
+	%MapLabel.text = p_map.map_info.name
+	map = p_map
+	if command_section != p_map.commands_section:
+		command_section = p_map.commands_section
+		if graph_edit:
+			graph_edit.queue_free()
+			await graph_edit.tree_exited
+		init_graph_edit()
+		if graph_edit and not graph_edit.is_inside_tree():
+			%Graph.add_child(graph_edit)
+			# BUGFIX: The next three lines work around a graphical bug related to the connection lines
+			await get_tree().process_frame
+			graph_edit.zoom = 0.5
+			graph_edit.scroll_offset = Vector2(-5, -5)
+
+
+func _loading_update(percentage: float) -> void:
+	%ProgressBar.value = percentage * 100
+
+
+func close(p_map_name: String) -> void:
+	if p_map_name == map.map_info.name:
+		if graph_edit:
+			graph_edit.queue_free()
+			graph_edit = null
+		command_section = {}
+		_is_loading = false
+		%MapLabel.text = "No Commands Loaded"
+
+
+func init_graph_edit() -> void:
+	# Setup a new GraphEdit
+	graph_edit = GraphEdit.new()
+	graph_edit.connection_request.connect(_on_graph_edit_connection_request)
+	graph_edit.disconnection_request.connect(_on_graph_edit_disconnection_request)
+	graph_edit.end_node_move.connect(_on_graph_edit_end_node_move)
+	graph_edit.popup_request.connect(_on_graph_edit_popup_request)
+	graph_edit.scroll_offset = Vector2(-5, -5)
+	graph_edit.right_disconnects = true
+	#graph_edit.zoom = 0.5
+	graph_edit.zoom = 1
+	graph_edit.zoom_min = 0.01
+	graph_edit.show_menu = false
+	#graph_edit.show_grid = false
 	
+	# Initialize variables
+	command_nodes = []
+	var command_nodes_mapping := {}
+	var referenced_commands := []
+	var autorun_commands := []
+	var row_value: int = 0
+	var loading_count: float = 0.0
+	
+	# Commands that don't need entry
+	# -- These with autorun modifier 1 --
+	# Change Floor/Ceiling Height: 7
+	# Move Sector: 9
+	# Scroll Sector: 14
+	# Scroll Face: 15
+	# Flash Lights: 17
+	# Face Emits Damage: 53
+	# Autorun Timer: 61
+	# -- And the following --
+	# False Jump to commands, linked from Command: 56 arg2
+	# Run Commands, linked from Command: 64 arg1
+	# And I suppose the enable Commands from command: 23 arg2
+	
+	
+	
+	# Initialize entry command chains
+	for i in range(len(command_section.entryCommandIndexes)):
+		
+		# Skip any command that has already been initialized
+		if command_section.entryCommandIndexes[i] in command_nodes_mapping:
+			continue
+		
+		# Initialize command node and add to mapping
+		command_nodes_mapping[command_section.entryCommandIndexes[i]] = initialize_command_node(command_section.entryCommandIndexes[i], command_section.allCommands[command_section.entryCommandIndexes[i]-1], Vector2(0, VERTICAL_SPACING * row_value))
+		
+		# Update loading progress bar
+		loading_count += 1
+		_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+		
+		# Initialize loop variables
+		var next_command_index: int = command_section.allCommands[command_section.entryCommandIndexes[i]-1].nextCommandIndex
+		var graph_node_prev: StringName = command_nodes_mapping[command_section.entryCommandIndexes[i]].name
+		var j: int = 1
+		
+		# Cycle through the rest of the command chain
+		while next_command_index != 0:
+			if next_command_index not in command_nodes_mapping:
+				# Initialize and add to mapping
+				command_nodes_mapping[next_command_index] = initialize_command_node(next_command_index, command_section.allCommands[next_command_index-1], Vector2(HORIZONTAL_SPACING * j, VERTICAL_SPACING * row_value))
+				
+				# Update progress bar
+				loading_count += 1
+				_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+				
+				# Keep track of the referenced commands for the types (23, 51, 56, 64[arg1])
+				if (command_section.allCommands[next_command_index-1].commandBase == 23
+					or command_section.allCommands[next_command_index-1].commandBase == 56
+				):
+					if command_section.allCommands[next_command_index-1].args[1] not in referenced_commands:
+						referenced_commands.append(command_section.allCommands[next_command_index-1].args[1])
+				if command_section.allCommands[next_command_index-1].commandBase == 64:
+					if command_section.allCommands[next_command_index-1].args[0] not in referenced_commands:
+						referenced_commands.append(command_section.allCommands[next_command_index-1].args[0])
+			
+			# Connect previous node to this node
+			graph_edit.connect_node(graph_node_prev, 0, command_nodes_mapping[next_command_index].name, 0)
+			
+			# Update loop variables
+			graph_node_prev = command_nodes_mapping[next_command_index].name
+			next_command_index = command_section.allCommands[next_command_index-1].nextCommandIndex
+			j += 1
+		
+		# New row
+		row_value += 1
+	
+	
+	# Autorun commands
+	
+	# This additional loop looks for any autorun command
+	# Known types 7, 9, 14, 15, 17, and 53
+	# Potentially any that have autorun modifier bit set
+	# Also 61 which is autorun even without autorun bit set
+	for i in range(len(command_section.allCommands)):
+		if (i+1 not in command_nodes_mapping
+			and i+1 not in autorun_commands
+		):
+			if ((command_section.allCommands[i].commandModifier & 1) > 0
+				or command_section.allCommands[i].commandBase == 61
+			):
+				autorun_commands.append(i+1)
+	
+	# Initialize autorun command chains
+	row_value = -1
+	for command_index: int in autorun_commands:
+		
+		# Skip any command that has already been initialized
+		if command_index in command_nodes_mapping:
+			continue
+		
+		# Initialize and add to mapping
+		command_nodes_mapping[command_index] = initialize_command_node(command_index, command_section.allCommands[command_index-1], Vector2(0, VERTICAL_SPACING * row_value))
+		
+		# Update loading progress bar
+		loading_count += 1
+		_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+		
+		# Initialize loop variables
+		var next_command_index: int = command_section.allCommands[command_index-1].nextCommandIndex
+		var graph_node_prev: StringName = command_nodes_mapping[command_index].name
+		var j: int = 1
+		
+		# Cycle through the rest of the command chain
+		while next_command_index != 0:
+			if not next_command_index in command_nodes_mapping:
+				# Initialize and add to mapping
+				command_nodes_mapping[next_command_index] = initialize_command_node(next_command_index, command_section.allCommands[next_command_index-1], Vector2(HORIZONTAL_SPACING * j, VERTICAL_SPACING * row_value))
+				
+				# Update progress bar
+				loading_count += 1
+				_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+			
+				# Keep track of the referenced commands for the types (23, 51, 56, 64[arg1])
+				if (command_section.allCommands[next_command_index-1].commandBase == 23
+					or command_section.allCommands[next_command_index-1].commandBase == 56
+				):
+					if command_section.allCommands[next_command_index-1].args[1] not in referenced_commands:
+						referenced_commands.append(command_section.allCommands[next_command_index-1].args[1])
+				if command_section.allCommands[next_command_index-1].commandBase == 64:
+					if command_section.allCommands[next_command_index-1].args[0] not in referenced_commands:
+						referenced_commands.append(command_section.allCommands[next_command_index-1].args[0])
+			
+			# Connect previous node to this node
+			graph_edit.connect_node(graph_node_prev, 0, command_nodes_mapping[next_command_index].name, 0)
+			
+			# Update loop variables
+			graph_node_prev = command_nodes_mapping[next_command_index].name
+			next_command_index = command_section.allCommands[next_command_index-1].nextCommandIndex
+			j += 1
+		
+		# New row
+		row_value += -1
+	
+	
+	# Initialize referenced commands chains
+	row_value = 0
+	for command_index: int in referenced_commands:
+		
+		# Skip any command that has already been initialized
+		if command_index in command_nodes_mapping:
+			continue
+		
+		# Initialize and add to mapping
+		command_nodes_mapping[command_index] = initialize_command_node(command_index, command_section.allCommands[command_index-1], Vector2(HORIZONTAL_SPACING * 10, VERTICAL_SPACING * row_value))
+		
+		# Update loading progress bar
+		loading_count += 1
+		_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+		
+		# Initialize loop variables
+		var next_command_index: int = command_section.allCommands[command_index-1].nextCommandIndex
+		var graph_node_prev: StringName = command_nodes_mapping[command_index].name
+		var j: int = 1
+		
+		# Cycle through the rest of the command chain
+		while next_command_index != 0:
+			if next_command_index not in command_nodes_mapping:
+				# Initialize and add to mapping
+				command_nodes_mapping[next_command_index] = initialize_command_node(next_command_index, command_section.allCommands[next_command_index-1], Vector2((HORIZONTAL_SPACING * 10) + (HORIZONTAL_SPACING * j), VERTICAL_SPACING * row_value))
+				
+				# Update progress bar
+				loading_count += 1
+				_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+				
+				# TODO: What about references from referenced commands?
+			
+			# Connect previous node to this node
+			graph_edit.connect_node(graph_node_prev, 0, command_nodes_mapping[next_command_index].name, 0)
+			
+			# Update loop variables
+			graph_node_prev = command_nodes_mapping[next_command_index].name
+			next_command_index = command_section.allCommands[next_command_index-1].nextCommandIndex
+			j += 1
+		
+		# New row
+		row_value += 1
+	
+	
+	# Final loop looking for any leftovers
+	row_value = 0
+	var repeat := []
+	for i in range(len(command_section.allCommands)):
+		if i + 1 not in command_nodes_mapping:
+			# Initialize and add to mapping
+			command_nodes_mapping[i+1] = initialize_command_node(i+1, command_section.allCommands[i], Vector2(HORIZONTAL_SPACING * -5, VERTICAL_SPACING * row_value))
+			
+			# Update progress bar
+			loading_count += 1
+			_loading_update.call_deferred(loading_count / len(command_section.allCommands))
+			
+			# Append to repeat array
+			repeat.append(command_nodes_mapping[i+1])
+			
+			# New row
+			row_value += 1
+	
+	# A final-final loop through the leftovers to make any connections
+	for command_node: CommandNode in repeat:
+		if command_node.data.nextCommandIndex != 0:
+			graph_edit.connect_node(command_node.name, 0, command_nodes_mapping[command_node.data.nextCommandIndex].name, 0)
+	
+	
+	# Sort the node mapping and convert to array
+	command_nodes_mapping.sort()
+	for key: int in command_nodes_mapping:
+		command_nodes.append(command_nodes_mapping[key])
+	
+	# Finished initializing graph edit
+	command_editor_loading_finished.emit.call_deferred()
+
+
+
+func initialize_command_node(p_index: int, p_command_data: Dictionary, p_position: Vector2) -> CommandNode:
+	# Init command node
+	var command_node: CommandNode = COMMAND_NODE.instantiate()
+	command_node.initialize(p_index, p_command_data)
+	
+	# Load position data
+	if "node_data" in p_command_data:
+		command_node.position_offset.x = p_command_data.node_data.x
+		command_node.position_offset.y = p_command_data.node_data.y
+	else:
+		command_node.position_offset = p_position
+	
+	# Setup signals
+	command_node.add_to_entry_list.connect(_on_add_to_entry_list)
+	command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
+	command_node.delete_command.connect(_on_delete_command)
+	
+	# Add to graph
+	graph_edit.add_child(command_node)
+	
+	# Return Node
+	return command_node
 
 
 func save_positions() -> void:
-	for command_node: Control in %GraphEdit.get_children():
+	for command_node: Control in graph_edit.get_children():
 		if command_node.name == "_connection_layer":
 			continue
 		command_node.save_position()
 
 
 func ensure_visible(command_node: GraphNode) -> void:
-	%GraphEdit.scroll_offset = command_node.position_offset * %GraphEdit.zoom
-	%GraphEdit.scroll_offset.x -= (%GraphEdit.size.x / 2) - (command_node.size.x / 2) * %GraphEdit.zoom
-	%GraphEdit.scroll_offset.y -= (%GraphEdit.size.y / 2) - (command_node.size.y / 2) * %GraphEdit.zoom
-	%GraphEdit.set_selected(command_node)
+	graph_edit.scroll_offset = command_node.position_offset * graph_edit.zoom
+	graph_edit.scroll_offset.x -= (graph_edit.size.x / 2) - (command_node.size.x / 2) * graph_edit.zoom
+	graph_edit.scroll_offset.y -= (graph_edit.size.y / 2) - (command_node.size.y / 2) * graph_edit.zoom
+	graph_edit.set_selected(command_node)
 
 
 func _on_graph_edit_connection_request(from_node: StringName, from_port: int, to_node: StringName, _to_port: int) -> void:
 	# Only allow one connection out
-	for conn: Dictionary in %GraphEdit.connections:
+	for conn: Dictionary in graph_edit.connections:
 		if conn.from_node == from_node and conn.from_port == from_port:
 			return
 	
-	%GraphEdit.get_node(str(from_node)).next_command_index = %GraphEdit.get_node(str(to_node)).index
+	graph_edit.get_node(str(from_node)).next_command_index = graph_edit.get_node(str(to_node)).index
 	
-	if %GraphEdit.get_node(str(to_node)).title == "Orphan Command":
-		%GraphEdit.get_node(str(to_node)).title = "Command"
+	#if graph_edit.get_node(str(to_node)).title == "Orphan Command":
+		#graph_edit.get_node(str(to_node)).title = "Command"
 
 
-func _on_graph_edit_disconnection_request(from_node: StringName, _from_port: int, to_node: StringName, _to_port: int) -> void:
-	%GraphEdit.get_node(str(from_node)).next_command_index = 0
+func _on_graph_edit_disconnection_request(from_node: StringName, _from_port: int, _to_node: StringName, _to_port: int) -> void:
+	graph_edit.get_node(str(from_node)).next_command_index = 0
 	
-	var another_connection: bool = false
-	for conn: Dictionary in %GraphEdit.connections:
-		if conn.to_node == to_node:
-			another_connection = true
-	
-	if (not another_connection and
-			%GraphEdit.get_node(str(to_node)).title == "Command"
-	):
-		%GraphEdit.get_node(str(to_node)).title = "Orphan Command"
+	#var another_connection: bool = false
+	#for conn: Dictionary in graph_edit.connections:
+		#if conn.to_node == to_node:
+			#another_connection = true
+	#
+	#if (not another_connection and
+			#graph_edit.get_node(str(to_node)).title == "Command"
+	#):
+		#graph_edit.get_node(str(to_node)).title = "Orphan Command"
 
 
-
-func add_command(at_position: Variant = null) -> void:
+func add_command(at_position: Vector2) -> void:
 	var new_command := {
 		"commandBase": 1,
 		"commandModifier": 0,
@@ -293,14 +388,12 @@ func add_command(at_position: Variant = null) -> void:
 	
 	var command_node: CommandNode = COMMAND_NODE.instantiate()
 	command_node.initialize(new_index, new_command)
-	if at_position:
-		var pos:Vector2 = (at_position + %GraphEdit.scroll_offset) / %GraphEdit.zoom
-		command_node.position_offset = pos
-	else:
-		command_node.position_offset.y = VERTICAL_SPACING * row_value
-		row_value += 1
-	%GraphEdit.add_child(command_node)
-	command_node.title = "Orphan Command"
+	
+	var pos:Vector2 = (at_position + graph_edit.scroll_offset) / graph_edit.zoom
+	command_node.position_offset = pos
+	
+	graph_edit.add_child(command_node)
+	#command_node.title = "Orphan Command"
 	command_node.add_to_entry_list.connect(_on_add_to_entry_list)
 	command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
 	command_node.delete_command.connect(_on_delete_command)
@@ -332,7 +425,7 @@ func add_to_entry_list(index: int) -> void:
 		new_entry_indexes.append_array(new_entry_indexes_mapping[command_base])
 	command_section.entryCommandIndexes = new_entry_indexes
 	
-	command_nodes[index-1].title = "Entry Command"
+	#command_nodes[index-1].title = "Entry Command"
 
 
 func _on_remove_from_entry_list(index: int) -> void:
@@ -344,15 +437,15 @@ func remove_from_entry_list(index: int) -> void:
 		return
 	command_section.entryCommandIndexes.erase(index)
 	
-	var has_to: bool = false
-	for conn: Dictionary in %GraphEdit.connections:
-		if conn.to_node == command_nodes[index-1].name:
-			has_to = true
-	
-	if has_to == false:
-		command_nodes[index-1].title = "Orphan Command"
-	else:
-		command_nodes[index-1].title = "Command"
+	#var has_to: bool = false
+	#for conn: Dictionary in graph_edit.connections:
+		#if conn.to_node == command_nodes[index-1].name:
+			#has_to = true
+	#
+	#if has_to == false:
+		#command_nodes[index-1].title = "Orphan Command"
+	#else:
+		#command_nodes[index-1].title = "Command"
 
 
 func _on_delete_command(index: int) -> void:
@@ -365,14 +458,14 @@ func delete_command(index: int) -> void:
 	command_section.allCommands.pop_at(index-1)
 	
 	# Check for a connection
-	var has_connection: bool = false
-	var to_node: StringName
-	var from_node: StringName = command_nodes[index-1].name
-	for conn: Dictionary in %GraphEdit.connections:
-		if conn.from_node == from_node:
-			has_connection = true
-			to_node = conn.to_node
-			break
+	#var has_connection: bool = false
+	#var to_node: StringName
+	#var from_node: StringName = command_nodes[index-1].name
+	#for conn: Dictionary in graph_edit.connections:
+		#if conn.from_node == from_node:
+			#has_connection = true
+			#to_node = conn.to_node
+			#break
 	
 	# Remove command node
 	command_nodes[index-1].queue_free()
@@ -410,21 +503,21 @@ func delete_command(index: int) -> void:
 			command_section.entryCommandIndexes[i] -= 1
 	
 	# Check if connected node has any other connections and change title accordingly
-	if has_connection:
-		var another_connection: bool = false
-		for conn: Dictionary in %GraphEdit.connections:
-			if conn.to_node == to_node and conn.from_node != from_node:
-				another_connection = true
-				break
-		if (not another_connection and
-				%GraphEdit.get_node(str(to_node)).title == "Command"
-		):
-			%GraphEdit.get_node(str(to_node)).title = "Orphan Command"
+	#if has_connection:
+		#var another_connection: bool = false
+		#for conn: Dictionary in graph_edit.connections:
+			#if conn.to_node == to_node and conn.from_node != from_node:
+				#another_connection = true
+				#break
+		#if (not another_connection and
+				#graph_edit.get_node(str(to_node)).title == "Command"
+		#):
+			#graph_edit.get_node(str(to_node)).title = "Orphan Command"
 
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:
 	add_at_position = at_position
-	%GraphPopupMenu.popup(Rect2i(int(at_position.x + %GraphEdit.global_position.x), int(at_position.y + %GraphEdit.global_position.y), 0, 0))
+	%GraphPopupMenu.popup(Rect2i(int(at_position.x + graph_edit.global_position.x), int(at_position.y + graph_edit.global_position.y), 0, 0))
 
 
 func _on_graph_popup_menu_index_pressed(index: int) -> void:
@@ -432,7 +525,7 @@ func _on_graph_popup_menu_index_pressed(index: int) -> void:
 		0:
 			add_command(add_at_position)
 		1:
-			for child: Node in %GraphEdit.get_children():
+			for child: Node in graph_edit.get_children():
 				if child.name == "_connection_layer":
 					continue
 				if child.selected:
@@ -448,7 +541,7 @@ func _on_search_edit_text_submitted(new_text: String) -> void:
 		search_count = 0
 	previous_search = new_text
 	var search_amount: int = search_count
-	for command_node: Control in %GraphEdit.get_children():
+	for command_node: Control in graph_edit.get_children():
 		if command_node.name == "_connection_layer":
 			continue
 		match %SearchOptions.text:

@@ -3,8 +3,6 @@ extends BaseWindow
 const EYE_ICON: Texture2D = preload("uid://crb7de5pvofid")
 const EYE_CLOSED_ICON: Texture2D = preload("uid://d8l1uefa8sbq")
 
-#const COMMAND_EDITOR: PackedScene = preload("uid://q5yql3cy7s8q")
-
 enum MapMenu {
 	Save,
 	SaveAs,
@@ -21,6 +19,9 @@ enum MapMenu {
 
 var tree_root: TreeItem
 var context_collision: Dictionary
+var previous_search: String
+var search_count: int = 0
+
 
 func _ready() -> void:
 	super._ready()
@@ -331,7 +332,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			%"Command Editor".edit_data(selected[0].get_metadata(0).ref)
+			%"Command Editor".load_command_editor(selected[0].get_metadata(0).ref)
 			%TabBar.current_tab = 1
 		MapMenu.EditMode:
 			if len(selected) != 1:
@@ -346,10 +347,9 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 					for child_item: TreeItem in item.get_children():
 						child_item.free()
 					%Map2D.close_map(item.get_metadata(0).map_info)
+					%"Command Editor".close(item.get_metadata(0).map_info.name)
 					item.free()
 
-var previous_search: String
-var search_count: int = 0
 
 func _on_search_text_submitted(search_text: String) -> void:
 	if search_text.is_empty():

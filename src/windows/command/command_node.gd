@@ -19,7 +19,7 @@ const command_list: Array = [
 	{"command_base": 1, "number_of_args": 0, "can_be_entry_command": false, "name": "Empty (No SFX)"},
 	{"command_base": 2, "number_of_args": 5, "can_be_entry_command": true, "name": "Light Switch", "flag_2": "Remove After Use", "flag_6": "Start Off", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "Sector ID", "arg_5": "SFX Index"},
 	{"command_base": 3, "number_of_args": 8, "can_be_entry_command": true, "name": "Modify Sector", "flag_2": "Texture Height Override", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_5": "Auto Revert Timeout"},
-	{"command_base": 7, "number_of_args": 7, "can_be_entry_command": false, "name": "Change Floor/Ceiling Height", "flag_1": "Ceiling", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_3": "Starting Height", "arg_4": "Ending Height", "arg_5": "Autoclose Timeout"},
+	{"command_base": 7, "number_of_args": 7, "can_be_entry_command": false, "name": "Change Floor/Ceiling Height", "flag_1": "Ceiling", "flag_3": "Slower", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_3": "Starting Height", "arg_4": "Ending Height", "arg_5": "Autoclose Timeout"},
 	{"command_base": 8, "number_of_args": 3, "can_be_entry_command": true, "name": "Left-Click Object", "flag_1": "No Switch", "flag_2": "Remove After", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "SFX Index"},
 	{"command_base": 9, "number_of_args": 6, "can_be_entry_command": false, "name": "Move Sector", "flag_1": "Floor Texture Moves", "flag_2": "Ceiling Texture Moves", "flag_3": "Platform Floor Texture Moves", "flag_4": "Platform Ceiling Texture Moves", "flag_6": "Auto Repeat", "flag_7": "Move Along X-Axis", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_5": "Auto Revert Timeout"},
 	{"command_base": 10, "number_of_args": 5, "can_be_entry_command": false, "name": "Change Floor Texture", "flag_3": "Disabled", "flag_9": "Scale A", "flag_10": "Scale B", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "Texture Index", "arg_4": "X/Y Shift", "arg_5": "Auto Revert Timeout"},
@@ -30,12 +30,12 @@ const command_list: Array = [
 	{"command_base": 16, "number_of_args": 2, "can_be_entry_command": false, "name": "Activate SFX Node", "arg_1": "Flags", "arg_2": "SFX Node ID"},
 	{"command_base": 17, "number_of_args": 3, "can_be_entry_command": false, "name": "Flash Lights", "arg_1": "Flags", "arg_2": "Sector ID"},
 	{"command_base": 18, "number_of_args": 1, "can_be_entry_command": false, "name": "Delay Timer", "arg_1": "Length"},
-	{"command_base": 19, "number_of_args": 3, "can_be_entry_command": true, "name": "Enter Sector", "flag_5": "Only Once", "flag_6": "Continuously", "flag_9": "In Air", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "SFX Index"},
+	{"command_base": 19, "number_of_args": 3, "can_be_entry_command": true, "name": "Enter Sector", "flag_1": "Not East", "flag_2": "Not North", "flag_3": "Not West", "flag_4": "Not South", "flag_5": "Only Once", "flag_6": "Continuously", "flag_9": "In Air", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "SFX Index"},
 	{"command_base": 21, "number_of_args": 4, "can_be_entry_command": false, "name": "Count", "arg_1": "Flags"},
 	{"command_base": 22, "number_of_args": 2, "can_be_entry_command": false, "name": "Spawn Object Simple", "arg_1": "Flags", "arg_2": "Object ID"},
 	{"command_base": 23, "number_of_args": 2, "can_be_entry_command": false, "name": "Toggle Command", "flag_2": "Enable", "flag_3": "Disable", "flag_6": "More Than Once", "arg_1": "Flags", "arg_2": "Command Index"},
 	{"command_base": 24, "number_of_args": 7, "can_be_entry_command": true, "name": "Left-Click Face", "flag_1": "Mid-Face", "flag_2": "Lower-Face", "flag_3": "Upper-Face", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Face ID", "arg_3": "SFX Index", "arg_4": "Start X", "arg_5": "End X", "arg_6": "Start Y", "arg_7": "End Y"},
-	{"command_base": 25, "number_of_args": 7, "can_be_entry_command": true, "name": "Left-Click Floor", "flag_1": "Disabled", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "SFX Index", "arg_4": "Start X", "arg_5": "End X", "arg_6": "Start Y", "arg_7": "End Y"},
+	{"command_base": 25, "number_of_args": 7, "can_be_entry_command": true, "name": "Left-Click Floor", "flag_1": "Platform Floor", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "SFX Index", "arg_4": "Start X", "arg_5": "End X", "arg_6": "Start Y", "arg_7": "End Y"},
 	{"command_base": 26, "number_of_args": 3, "can_be_entry_command": true, "name": "Attack Face", "arg_1": "Flags", "arg_2": "Face ID"},
 	{"command_base": 27, "number_of_args": 3, "can_be_entry_command": true, "name": "Kill Enemy", "arg_1": "Flags", "arg_2": "Object ID"},
 	{"command_base": 28, "number_of_args": 3, "can_be_entry_command": false, "name": "Cycle Texture", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "Change To 1 Texture After This Sector ID's Texture"},
@@ -48,7 +48,7 @@ const command_list: Array = [
 	{"command_base": 36, "number_of_args": 3, "can_be_entry_command": false, "name": "Rotate Object", "flag_1": "Counter-Clockwise", "arg_1": "Flags", "arg_2": "Object ID"},
 	{"command_base": 37, "number_of_args": 4, "can_be_entry_command": true, "name": "Texture Animation Ends", "arg_1": "Flags", "arg_2": "Texture Index", "arg_3": "Ending Frame?"},
 	{"command_base": 38, "number_of_args": 2, "can_be_entry_command": false, "name": "Set/Unset Flag", "flag_1": "Unset", "arg_1": "Flags", "arg_2": "Value"},
-	{"command_base": 39, "number_of_args": 2, "can_be_entry_command": false, "name": "If Not Item", "flag_1": "If Item", "flag_2": "In Hand", "flag_3": "If Ever Had Item", "flag_4": "Disable?", "flag_5": "Only Once", "flag_6": "No Auto Equip", "arg_1": "Flags", "arg_2": "Item ID"},
+	{"command_base": 39, "number_of_args": 2, "can_be_entry_command": false, "name": "If Not Item", "flag_1": "If Item", "flag_2": "In Hand", "flag_3": "If Ever Had Item?", "flag_4": "Disable?", "flag_5": "Only Once", "flag_6": "No Auto Equip", "arg_1": "Flags", "arg_2": "Item ID"},
 	{"command_base": 40, "number_of_args": 2, "can_be_entry_command": false, "name": "If Not Flag", "flag_1": "If Flag", "arg_1": "Flags", "arg_2": "Value"},
 	{"command_base": 41, "number_of_args": 2, "can_be_entry_command": false, "name": "Give Item", "arg_1": "Flags", "arg_2": "Item ID"},
 	{"command_base": 42, "number_of_args": 2, "can_be_entry_command": false, "name": "Remove Item", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Item ID"},
@@ -170,9 +170,9 @@ func _ready() -> void:
 	%MapNameLabel.text = ""
 
 	
-	for node: LineEdit in arg_nodes:
-		node.set_text(str(0))
-		node.get_parent().hide()
+	#for node: LineEdit in arg_nodes:
+		#node.set_text(str(0))
+		#node.get_parent().hide()
 	
 	var i: int = 0
 	for value: int in data.args:
@@ -212,7 +212,7 @@ func _ready() -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		if index in get_parent().owner.command_section.entryCommandIndexes:
+		if index in get_parent().get_parent().get_parent().get_parent().command_section.entryCommandIndexes:
 			%CommandPopupMenu.set_item_disabled(0, true)
 			%CommandPopupMenu.set_item_disabled(1, false)
 		else:
@@ -236,7 +236,7 @@ func _on_command_base_option_item_selected(idx: int) -> void:
 
 
 func update_command_base() -> void:
-	if index in get_parent().owner.command_section.entryCommandIndexes:
+	if index in get_parent().get_parent().get_parent().get_parent().command_section.entryCommandIndexes:
 		%CommandBaseOption.disabled = true
 	else:
 		%CommandBaseOption.disabled = false

@@ -19,7 +19,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
-text = "Map Name"
+text = "No Commands Loaded"
 horizontal_alignment = 1
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
@@ -67,17 +67,9 @@ popup/item_13/text = "Command Index"
 popup/item_13/id = 13
 
 [node name="Graph" type="MarginContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="GraphEdit" type="GraphEdit" parent="VBoxContainer/Graph"]
 unique_name_in_owner = true
 layout_mode = 2
-scroll_offset = Vector2(-5, -5)
-right_disconnects = true
-zoom = 0.5
-zoom_min = 0.1
-show_menu = false
+size_flags_vertical = 3
 
 [node name="GraphPopupMenu" type="PopupMenu" parent="VBoxContainer/Graph"]
 unique_name_in_owner = true
@@ -88,10 +80,14 @@ item_0/id = 0
 item_1/text = "Delete Selected"
 item_1/id = 1
 
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/Graph"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
 [connection signal="text_submitted" from="VBoxContainer/HBoxContainer2/SearchEdit" to="." method="_on_search_edit_text_submitted"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer2/SearchOptions" to="." method="_on_search_options_item_selected"]
-[connection signal="connection_request" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_connection_request"]
-[connection signal="disconnection_request" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
-[connection signal="end_node_move" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_end_node_move"]
-[connection signal="popup_request" from="VBoxContainer/Graph/GraphEdit" to="." method="_on_graph_edit_popup_request"]
 [connection signal="index_pressed" from="VBoxContainer/Graph/GraphPopupMenu" to="." method="_on_graph_popup_menu_index_pressed"]

@@ -270,6 +270,7 @@ size_flags_stretch_ratio = 4.0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
+theme_override_constants/separation = 0
 
 [node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer" index="0"]
 custom_minimum_size = Vector2(300, 28)
@@ -342,7 +343,7 @@ mouse_target = true
 unique_name_in_owner = true
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(476, 356)
+size = Vector2i(480, 359)
 render_target_update_mode = 4
 
 [node name="3DView" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport" index="0"]
@@ -426,7 +427,7 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(1131, 539)
+size = Vector2i(1131, 544)
 render_target_update_mode = 4
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="0"]
