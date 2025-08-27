@@ -377,14 +377,16 @@ func _on_graph_edit_disconnection_request(from_node: StringName, _from_port: int
 
 
 func add_command(at_position: Vector2) -> void:
+	var new_index: int = len(command_nodes) + 1
+	
 	var new_command := {
 		"commandBase": 1,
 		"commandModifier": 0,
 		"nextCommandIndex": 0,
 		"args": [0],
+		"map_info": map.map_info,
+		"index": new_index,
 	}
-	
-	var new_index: int = len(command_nodes) + 1
 	
 	var command_node: CommandNode = COMMAND_NODE.instantiate()
 	command_node.initialize(new_index, new_command)

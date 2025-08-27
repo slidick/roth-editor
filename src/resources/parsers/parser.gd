@@ -26,6 +26,18 @@ static func unsigned32_to_signed(unsigned: int) -> int:
 	return (unsigned + (1 << 31)) % (1 << 32) - (1 << 31)
 
 
+static func signed8_to_unsigned(signed: int) -> int:
+	return signed & 0xFF
+
+
+static func signed16_to_unsigned(signed: int) -> int:
+	return signed & 0xFFFF
+
+
+static func signed32_to_unsigned(signed: int) -> int:
+	return signed & 0xFFFFFFFF
+
+
 static func parse_section(file: FileAccess, section_definition: Dictionary) -> Dictionary:
 	var section := {}
 	for key: String in section_definition:

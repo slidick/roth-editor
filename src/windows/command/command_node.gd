@@ -19,14 +19,14 @@ const command_list: Array = [
 	{"command_base": 1, "number_of_args": 0, "can_be_entry_command": false, "name": "Empty (No SFX)"},
 	{"command_base": 2, "number_of_args": 5, "can_be_entry_command": true, "name": "Light Switch", "flag_2": "Remove After Use", "flag_6": "Start Off", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "Sector ID", "arg_5": "SFX Index"},
 	{"command_base": 3, "number_of_args": 8, "can_be_entry_command": true, "name": "Modify Sector", "flag_2": "Texture Height Override", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_5": "Auto Revert Timeout"},
-	{"command_base": 7, "number_of_args": 7, "can_be_entry_command": false, "name": "Change Floor/Ceiling Height", "flag_1": "Ceiling", "flag_3": "Slower", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_3": "Starting Height", "arg_4": "Ending Height", "arg_5": "Autoclose Timeout"},
+	{"command_base": 7, "number_of_args": 7, "can_be_entry_command": false, "name": "Change Floor/Ceiling Height", "flag_1": "Ceiling", "flag_3": "Slower", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_3": "Starting Height", "arg_4": "Ending Height", "arg_5": "Autoclose Timeout", "arg_3_signed": true, "arg_4_signed": true},
 	{"command_base": 8, "number_of_args": 3, "can_be_entry_command": true, "name": "Left-Click Object", "flag_1": "No Switch", "flag_2": "Remove After", "flag_5": "Only Once", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "SFX Index"},
 	{"command_base": 9, "number_of_args": 6, "can_be_entry_command": false, "name": "Move Sector", "flag_1": "Floor Texture Moves", "flag_2": "Ceiling Texture Moves", "flag_3": "Platform Floor Texture Moves", "flag_4": "Platform Ceiling Texture Moves", "flag_6": "Auto Repeat", "flag_7": "Move Along X-Axis", "arg_1": "Flags/Speed", "arg_2": "Sector ID", "arg_5": "Auto Revert Timeout"},
 	{"command_base": 10, "number_of_args": 5, "can_be_entry_command": false, "name": "Change Floor Texture", "flag_3": "Disabled", "flag_9": "Scale A", "flag_10": "Scale B", "arg_1": "Flags", "arg_2": "Sector ID", "arg_3": "Texture Index", "arg_4": "X Shift/Y Shift", "arg_5": "Auto Revert Timeout"},
 	{"command_base": 12, "number_of_args": 8, "can_be_entry_command": false, "name": "Change Face Texture Advanced", "flag_4": "All Texture Maps With ID", "flag_9": "Transparency", "flag_10": "X-Flip", "flag_11": "Image Fit", "flag_12": "Fixed Size Transparency", "flag_13": "No Reflect", "flag_14": "Half Pixel", "flag_15": "Edge Map", "flag_16": "Draw From Bottom", "arg_1": "Flags", "arg_2": "Face ID", "arg_3": "Mid-Texture Index", "arg_4": "X Shift/Y Shift", "arg_5": "Auto Revert Timeout", "arg_6": "Upper-Texture Index", "arg_7": "Bottom-Texture Index"},
 	{"command_base": 13, "number_of_args": 4, "can_be_entry_command": false, "name": "Change Object Texture", "arg_1": "Flags", "arg_2": "Object ID", "arg_3": "Auto Revert Timeout", "arg_4": "Object Texture Index"},
-	{"command_base": 14, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Sector Texture", "flag_1": "Floor", "flag_2": "Ceiling", "flag_3": "Platform Floor", "flag_4": "Platform Ceiling", "arg_1": "Flags/X-Speed", "arg_2": "Y-Speed/Sector ID"},
-	{"command_base": 15, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Face Texture", "arg_1": "Flags/X-Speed", "arg_2": "Y-Speed/Sector ID"},
+	{"command_base": 14, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Sector Texture", "flag_1": "Floor", "flag_2": "Ceiling", "flag_3": "Platform Floor", "flag_4": "Platform Ceiling", "arg_1": "Flags/X-Speed", "arg_2": "Y-Speed/Sector ID", "arg_1_b_signed": true, "arg_2_signed": true},
+	{"command_base": 15, "number_of_args": 3, "can_be_entry_command": false, "name": "Scroll Face Texture", "arg_1": "Flags/X-Speed", "arg_2": "Y-Speed/Sector ID", "arg_1_b_signed": true, "arg_2_signed": true},
 	{"command_base": 16, "number_of_args": 2, "can_be_entry_command": false, "name": "Activate SFX Node", "arg_1": "Flags", "arg_2": "SFX Node ID"},
 	{"command_base": 17, "number_of_args": 3, "can_be_entry_command": false, "name": "Flash Lights", "arg_1": "Flags", "arg_2": "Sector ID"},
 	{"command_base": 18, "number_of_args": 1, "can_be_entry_command": false, "name": "Delay Timer", "arg_1": "Length"},
@@ -129,6 +129,7 @@ var index: int = 0 :
 	set(new_value):
 		index = new_value
 		%CommandIndexEdit.text = "%d" % index
+		data.index = new_value
 var data: Dictionary = {}
 var selected_arg: TreeItem
 var command_base: int :
@@ -218,11 +219,20 @@ func _ready() -> void:
 	for value: int in data.args:
 		
 		if "arg_%d" % (i+1) in current_command and current_command["arg_%d" % (i+1)].contains("/"):
-			arg_nodes[i].set_text(str(value & 0xFF))
-			arg_b_nodes[i].set_text(str(value >> 8))
+			if "arg_%d_signed" % (i+1) in current_command and current_command["arg_%d_signed" % (i+1)] == true:
+				arg_nodes[i].set_text(str(Parser.unsigned8_to_signed(value & 0xFF)))
+			else:
+				arg_nodes[i].set_text(str(value & 0xFF))
+			if "arg_%d_b_signed" % (i+1) in current_command and current_command["arg_%d_b_signed" % (i+1)] == true:
+				arg_b_nodes[i].set_text(str(Parser.unsigned8_to_signed(value >> 8)))
+			else:
+				arg_b_nodes[i].set_text(str(value >> 8))
 		else:
-			arg_nodes[i].set_text(str(value))
-	
+			if "arg_%d_signed" % (i+1) in current_command and current_command["arg_%d_signed" % (i+1)] == true:
+				arg_nodes[i].set_text(str(Parser.unsigned16_to_signed(value)))
+			else:
+				arg_nodes[i].set_text(str(value))
+		
 		if i >= 2:
 			%MapNameLabel.text += String.chr((value) & 0xFF)
 			%MapNameLabel.text += String.chr((value >> 8) & 0xFF)
@@ -373,10 +383,14 @@ func update_args_array() -> void:
 	for i in range(len(arg_nodes)):
 		if arg_nodes[i].get_parent().visible:
 			if "arg_%d" % (i+1) in current_command and current_command["arg_%d" % (i+1)].contains("/"):
-				arg_array.append(int(arg_nodes[i].text) + (int(arg_b_nodes[i].text) << 8))
+				var first_half: int = Parser.signed8_to_unsigned(int(arg_nodes[i].text))
+				var second_half: int = Parser.signed8_to_unsigned(int(arg_b_nodes[i].text)) << 8
+				arg_array.append(first_half + second_half)
 			else:
-				arg_array.append(int(arg_nodes[i].text))
+				arg_array.append(Parser.signed16_to_unsigned(int(arg_nodes[i].text)))
+	
 	data.args = arg_array
+	#print(arg_array)
 	%MapNameLabel.text = ""
 	for value: int in arg_array.slice(2):
 		%MapNameLabel.text += String.chr((value) & 0xFF)
@@ -441,3 +455,26 @@ func _on_flag_button_toggled(toggled_on: bool, shift: int) -> void:
 
 func _on_arg_text_changed(_new_text: String) -> void:
 	update_args_array()
+
+
+func _on_arg_range_text_submitted(new_text: String, arg_index: int, is_b: bool) -> void:
+	if "arg_%d" % (arg_index + 1) in current_command and current_command["arg_%d" % (arg_index + 1)].contains("/"):
+		var new_value: int = Parser.signed8_to_unsigned(int(new_text))
+		if is_b:
+			if "arg_%d_b_signed" % (arg_index + 1) in current_command and current_command["arg_%d_b_signed" % (arg_index + 1)] == true:
+				new_value = Parser.unsigned8_to_signed(new_value)
+			arg_b_nodes[arg_index].text = str(new_value)
+		else:
+			if "arg_%d_signed" % (arg_index + 1) in current_command and current_command["arg_%d_signed" % (arg_index + 1)] == true:
+				new_value = Parser.unsigned8_to_signed(new_value)
+			arg_nodes[arg_index].text = str(new_value)
+	else:
+		var new_value: int = Parser.signed16_to_unsigned(int(new_text))
+		if is_b:
+			if "arg_%d_b_signed" % (arg_index + 1) in current_command and current_command["arg_%d_b_signed" % (arg_index + 1)] == true:
+				new_value = Parser.unsigned16_to_signed(new_value)
+			arg_b_nodes[arg_index].text = str(new_value)
+		else:
+			if "arg_%d_signed" % (arg_index + 1) in current_command and current_command["arg_%d_signed" % (arg_index + 1)] == true:
+				new_value = Parser.unsigned16_to_signed(new_value)
+			arg_nodes[arg_index].text = str(new_value)
