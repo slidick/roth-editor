@@ -21,7 +21,7 @@ var tree_root: TreeItem
 var context_collision: Dictionary
 var previous_search: String
 var search_count: int = 0
-
+var copied_object_data: ObjectRoth
 
 func _ready() -> void:
 	super._ready()
@@ -67,25 +67,18 @@ func _input(event: InputEvent) -> void:
 			await get_tree().process_frame
 			%Picker.select(%EditObjectContainer.current_object.node)
 	if event.is_action_pressed("open_3d_context_menu"):
-		
-		
-		
 		var viewport := %Picker.get_viewport()
 		var mouse_position := viewport.get_mouse_position()
-		
 		var viewport_size: Vector2i = viewport.size
 		if viewport.get("content_scale_size"):
-			
 			viewport_size = viewport.content_scale_size
-		
-		if (	(mouse_position.x < 0 or
+		if ((mouse_position.x < 0 or
 				mouse_position.y < 0 or
 				mouse_position.x > viewport_size.x or
 				mouse_position.y > viewport_size.y) and 
 				Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
 		):
 			return
-		
 		var camera := viewport.get_camera_3d()
 		var origin_position: Vector2 = mouse_position
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -110,6 +103,15 @@ func _input(event: InputEvent) -> void:
 					get_viewport().warp_mouse(pos)
 					
 				%"3DContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+			if result.collider.get_parent().ref is ObjectRoth:
+				context_collision = result
+				var pos: Vector2 = get_viewport().get_mouse_position()
+				if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+					pos = %SubViewportContainer.global_position
+					pos += %SubViewportContainer.size / 2
+					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+					get_viewport().warp_mouse(pos)
+				%"3DObjectContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
 
 
 func load_map(map_info: Dictionary) -> void:
@@ -516,6 +518,31 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 			Roth.get_map(map_info).add_object(new_object)
 			%Map2D.add_object_to_2d_map(new_object, false)
 			%Picker.select(new_object.node)
+		1:
+			var map_info: Dictionary = context_collision.collider.get_parent().ref.map_info
+			var extra_info: Dictionary = {
+				"render_type": "billboard",
+				"rotation": 0,
+				"sector_index": -1,
+			}
+			var pos: Vector3 = context_collision.position * Roth.SCALE_3D_WORLD
+			if context_collision.collider.get_parent().ref is Face:
+				extra_info["render_type"] = "fixed"
+				extra_info["sector_index"] = context_collision.collider.get_parent().ref.sector.index
+				var angle: float = rad_to_deg(atan2(context_collision.normal.x, -context_collision.normal.z))
+				if angle < 0:
+					angle += 360
+				extra_info["rotation"] = int((angle / 360) * 256)
+				if not context_collision.collider.get_parent().ref.sister:
+					pos += (context_collision.normal * 2)
+			elif context_collision.collider.get_parent().ref is Sector:
+				extra_info["sector_index"] = context_collision.collider.get_parent().ref.index
+			var new_object := ObjectRoth.new_from_copied_object_3d(map_info, copied_object_data, pos, extra_info)
+			if not new_object:
+				return
+			Roth.get_map(map_info).add_object(new_object)
+			%Map2D.add_object_to_2d_map(new_object, true)
+			%Picker.select(new_object.node)
 
 
 func _on_tab_bar_tab_changed(tab: int) -> void:
@@ -527,3 +554,20 @@ func _on_tab_bar_tab_changed(tab: int) -> void:
 		1:
 			%MapPanelContainer.hide()
 			%EditInfoContainer.hide()
+
+
+func _on_3d_object_context_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			var object: ObjectRoth = context_collision.collider.get_parent().ref
+			copy_object(object)
+		1:
+			var object: ObjectRoth = context_collision.collider.get_parent().ref
+			object.delete()
+			%Picker.deselect()
+
+
+func copy_object(object: ObjectRoth) -> void:
+	copied_object_data = object
+	%"3DContextMenu".set_item_disabled(1, false)
+	%ObjectContextPopupMenu.set_item_disabled(1, false)

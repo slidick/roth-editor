@@ -68,13 +68,14 @@ func _loading_update(percentage: float) -> void:
 
 
 func close(p_map_name: String) -> void:
-	if p_map_name == map.map_info.name:
-		if graph_edit:
-			graph_edit.queue_free()
-			graph_edit = null
-		command_section = {}
-		_is_loading = false
-		%MapLabel.text = "No Commands Loaded"
+	if map:
+		if p_map_name == map.map_info.name:
+			if graph_edit:
+				graph_edit.queue_free()
+				graph_edit = null
+			command_section = {}
+			_is_loading = false
+			%MapLabel.text = "No Commands Loaded"
 
 
 func init_graph_edit() -> void:

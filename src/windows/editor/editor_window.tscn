@@ -2070,12 +2070,23 @@ grow_horizontal = 2
 grow_vertical = 2
 exclusive = true
 
-[node name="3DContextMenu" type="PopupMenu" parent="." index="3"]
+[node name="3DObjectContextMenu" type="PopupMenu" parent="." index="3"]
+unique_name_in_owner = true
+item_count = 2
+item_0/text = "Copy Object"
+item_0/id = 0
+item_1/text = "Delete Object"
+item_1/id = 1
+
+[node name="3DContextMenu" type="PopupMenu" parent="." index="4"]
 unique_name_in_owner = true
 size = Vector2i(126, 100)
-item_count = 1
-item_0/text = "Add Object"
+item_count = 2
+item_0/text = "New Object"
 item_0/id = 0
+item_1/text = "Paste Object"
+item_1/id = 1
+item_1/disabled = true
 
 [connection signal="button_clicked" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/MapsTree" to="." method="_on_maps_tree_button_clicked"]
 [connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/MapsTree" to="." method="_on_maps_tree_item_mouse_selected"]
@@ -2196,4 +2207,5 @@ item_0/id = 0
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/EditInfoContainer/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer7/SFXUnk0x0EEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/EditInfoContainer/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0e_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/EditInfoContainer/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer8/SFXUnk0x10Edit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/EditInfoContainer/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_10_edit_value_changed"]
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/EditorHeader/TabBar" to="." method="_on_tab_bar_tab_changed"]
+[connection signal="index_pressed" from="3DObjectContextMenu" to="." method="_on_3d_object_context_menu_index_pressed"]
 [connection signal="index_pressed" from="3DContextMenu" to="." method="_on_3d_context_menu_index_pressed"]

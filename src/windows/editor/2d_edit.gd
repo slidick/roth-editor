@@ -45,7 +45,6 @@ var skip_sector_hover: int = 0
 var skip_sector_hover_prev: int = 0
 var start_vertex_select: bool = false 
 var start_vertex_select_position := Vector2.ZERO
-var copied_object_data: ObjectRoth
 var copied_sfx_data: Section7_1
 var mouse_paste_position: Vector2
 var dragging_vertex := false
@@ -598,6 +597,7 @@ func redraw_object(object: ObjectRoth) -> void:
 	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		if object.index == object_node.ref.index:
 			object_node.queue_free()
+			await get_tree().process_frame
 			var new_object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
 			new_object_node.object_selected.connect(_on_object_selected)
 			new_object_node.object_copied.connect(_on_object_copied)
@@ -632,12 +632,10 @@ func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool
 
 
 func _on_object_copied(object: ObjectRoth) -> void:
-	copied_object_data = object
-	%ObjectContextPopupMenu.set_item_disabled(1, false)
+	owner.copy_object(object)
 
 
-func _on_object_deleted(object: ObjectRoth) -> void:
-	map.objects.erase(object)
+func _on_object_deleted(_object: ObjectRoth) -> void:
 	%Picker.deselect()
 
 
@@ -651,7 +649,7 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 			add_object_to_2d_map(new_object, true)
 			
 		1:
-			var new_object := ObjectRoth.new_from_copied_object(copied_object_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			var new_object := ObjectRoth.new_from_copied_object(owner.copied_object_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_object:
 				return
 			map.add_object(new_object)

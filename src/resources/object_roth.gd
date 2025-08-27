@@ -6,13 +6,16 @@ var index: int = -1
 var map_info: Dictionary = {}
 var sectors: Array = []
 var node: ObjectNode3D
+var node_2d: ObjectNode2D
 
 
 static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
+	var floor_height: int = 0
 	for sector: Sector in p_object.sectors:
 		if Geometry2D.is_point_in_polygon(p_position, sector.vertices.slice(0,-1)):
 			new_sector_index = sector.index
+			floor_height = sector.data.floorHeight
 	
 	if new_sector_index == -1:
 		Console.print("Can't paste object outside a sector")
@@ -21,8 +24,36 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 	var object := ObjectRoth.new(p_object.data.duplicate(true), Roth.get_map(p_object.map_info).get_next_object_index(), p_object.map_info, p_object.sectors)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.y
+	object.data.posZ = floor_height
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
 	object.data.sector_index = new_sector_index
+	
+	return object
+
+static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRoth, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
+	var new_sector_index: int = -1
+	for sector: Sector in Roth.get_map(p_map_info).sectors:
+		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), sector.vertices.slice(0,-1)):
+			new_sector_index = sector.index
+	
+	if "sector_index" in extra_info:
+		new_sector_index = extra_info.sector_index
+	if new_sector_index == -1:
+		Console.print("Can't paste object outside a sector")
+		return
+	
+	var object := ObjectRoth.new(p_object.data.duplicate(true), Roth.get_map(p_map_info).get_next_object_index(), p_map_info, Roth.get_map(p_map_info).sectors)
+	object.data.posX = -p_position.x
+	object.data.posY = p_position.z
+	object.data.posZ = p_position.y
+	object.sectors[new_sector_index].data.objectInformation.append(object.data)
+	object.data.sector_index = new_sector_index
+	
+	if extra_info["render_type"] == "fixed":
+		object.data.renderType |= 128
+	elif extra_info["render_type"] == "billboard":
+		object.data.renderType &= 0
+	object.data.rotation = extra_info.rotation
 	
 	return object
 
@@ -278,9 +309,18 @@ func _initialize_mesh_actual() -> void:
 
 
 func get_node_2d() -> Node2D:
-	var object := ObjectNode2D.new(self)
-	return object
+	if not node_2d:
+		node_2d = ObjectNode2D.new(self)
+	return node_2d
 
+
+func delete() -> void:
+	if node:
+		node.queue_free()
+	if node_2d:
+		node_2d.queue_free()
+	sectors[data.sector_index].data.objectInformation.erase(data)
+	Roth.get_map(map_info).objects.erase(self)
 
 
 class CircleDraw2D extends Node2D:
@@ -388,10 +428,8 @@ class ObjectNode2D extends Node2D:
 			0:
 				object_copied.emit(ref.duplicate())
 			1:
-				ref.sectors[ref.data.sector_index].data.objectInformation.erase(ref.data)
+				ref.delete()
 				object_deleted.emit(ref)
-				ref.node.queue_free()
-				queue_free()
 	
 	
 	func deselect() -> void:
