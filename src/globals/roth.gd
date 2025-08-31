@@ -221,14 +221,6 @@ func test_run_map(map_raw: PackedByteArray, map_info: Dictionary, with_objects: 
 		return
 	
 	
-	var dosbox_bin: String = Settings.settings.locations.get("dosbox")
-	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
-	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
-	var roth_res_test_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res")
-	
-	
-	
-	
 	var raw_filename: String
 	if map_info.custom:
 		save_custom(map_raw, map_info)
@@ -240,14 +232,30 @@ func test_run_map(map_raw: PackedByteArray, map_info: Dictionary, with_objects: 
 		file.store_buffer(map_raw)
 		file.close()
 	
+	var run_map_info := map_info.duplicate()
+	run_map_info.raw = raw_filename
+	
+	run_map(run_map_info, with_objects)
+
+
+func run_map(map_info: Dictionary, with_objects: bool = true) -> void:
+	var dosbox_bin: String = Settings.settings.locations.get("dosbox")
+	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
+	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
+	var roth_res_test_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res")
+	
+	
+	
 	var roth_res_test := """version="Roth Custom Maps"
 snd=data\\fxscript.sfx
 das2=m\\ademo
 
 maps {
 """
-	
-	roth_res_test += "D:\\%s %s\n" % [raw_filename.get_basename(), map_info.das.replace("/", "\\").get_basename()]
+	if map_info.custom:
+		roth_res_test += "D:\\%s %s\n" % [map_info.raw.get_basename(), map_info.das.replace("/", "\\").get_basename()]
+	else:
+		roth_res_test += "%s %s\n" % [map_info.raw.get_basename(), map_info.das.replace("/", "\\").get_basename()]
 	
 	for custom_map_info:Dictionary in Roth.maps:
 		if custom_map_info.custom and custom_map_info.name != map_info.name:
@@ -319,7 +327,7 @@ m\\vicar1 m\\demo1
 		if with_objects:
 			autoexec.store_string("ROTH.EXE /G 03 @D:\\test.res\n")
 		else:
-			autoexec.store_string("ROTH.EXE /9 /G 03 FILE D:\\%s DAS %s SND DATA\\FXSCRIPT.SFX\n" % [raw_filename, map_info.das.replace("/", "\\")])
+			autoexec.store_string("ROTH.EXE /9 /G 03 FILE D:\\%s DAS %s SND DATA\\FXSCRIPT.SFX\n" % [map_info.raw, map_info.das.replace("/", "\\")])
 		
 	else:
 		autoexec.store_string("ROTH.EXE @D:\\test.res\n")
@@ -341,8 +349,8 @@ m\\vicar1 m\\demo1
 		dosbox_autoexec_filepath
 	])
 	
-	#print("Executing: %s" % dosbox_bin)
-	#print(dosbox_args)
+	print("Executing: %s" % dosbox_bin)
+	print(dosbox_args)
 	
 	OS.execute(dosbox_bin, dosbox_args)
 

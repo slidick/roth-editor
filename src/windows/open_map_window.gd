@@ -35,6 +35,13 @@ func cancel() -> void:
 
 
 func open() -> void:
+	var maps: Array = get_selected_maps()
+	if maps.is_empty():
+		return
+	Roth.load_maps(maps)
+
+
+func get_selected_maps() -> Array:
 	var maps: Array = []
 	var tree_item: TreeItem = %MapTree.get_next_selected(null)
 	while tree_item:
@@ -42,9 +49,7 @@ func open() -> void:
 		if map_info:
 			maps.append(map_info)
 		tree_item = %MapTree.get_next_selected(tree_item)
-	if maps.is_empty():
-		return
-	Roth.load_maps(maps)
+	return maps
 
 
 func _on_settings_loaded() -> void:
@@ -116,3 +121,11 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 				else:
 					%MapPopupMenu.set_item_disabled(0, true)
 				%MapPopupMenu.popup(Rect2i(int(mouse_position.x + %MapTree.global_position.x), int(mouse_position.y + %MapTree.global_position.y), 0, 0))
+
+
+func _on_run_button_pressed() -> void:
+	var maps := get_selected_maps()
+	if len(maps) != 1:
+		Dialog.information("Select a single map to run.", "Error", true, Vector2(400, 150), "Okay")
+		return
+	Roth.run_map(maps[0])
