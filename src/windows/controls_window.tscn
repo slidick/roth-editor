@@ -43,6 +43,11 @@ F: Toggle Arrow
 Mouse Wheel:  Change Max Speed
 Hold Right Mouse:  Mouselook
 Left Mouse:  Select
+C: Copy Texture
+V: Paste Texture
+Z: Open Context Menu
+PgUp: Move Selected Object to Ceiling
+PgDown: Move Selected Object to Floor
 F1:  Lock/Unlock Mouselook
 F2:  Toggle Collision Shapes
 F3:  Toggle Mouse Select
@@ -64,8 +69,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "F11:  Toggle Fullscreen
-R: Run Map - Limited mode
-T: Run Map - Full mode"
+R: Run Maps"
 
 [node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1"]
 layout_mode = 2

@@ -371,6 +371,8 @@ func setup(p_map: Map) -> void:
 		close_map(map.map_info)
 	map = p_map
 	%MapNameLabel.text = map.map_info.name.to_upper()
+	if not map.name_changed.is_connected(_on_map_name_changed):
+		map.name_changed.connect(_on_map_name_changed)
 	update_bounds()
 	update_camera_center()
 	update_camera_zoom()
@@ -384,6 +386,8 @@ func setup(p_map: Map) -> void:
 
 func close_map(map_info: Dictionary) -> void:
 	if map and map.map_info == map_info:
+		if map.name_changed.is_connected(_on_map_name_changed):
+			map.name_changed.disconnect(_on_map_name_changed)
 		map = null
 		%MapNameLabel.text = "No Map Loaded"
 		selected_face = null
@@ -404,6 +408,11 @@ func close_map(map_info: Dictionary) -> void:
 			child.queue_free()
 		for child: Node2D in %Vertices.get_children():
 			child.queue_free()
+
+
+func _on_map_name_changed(new_map_name: String) -> void:
+	%MapNameLabel.text = new_map_name
+
 
 func default_bounds() -> void:
 	minimum_x = -409.6

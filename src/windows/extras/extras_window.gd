@@ -202,7 +202,7 @@ func play_video() -> void:
 
 func parse_thread(gdv_name: String) -> void:
 	#var gdv: Dictionary = GDV.get_video(gdv_name)
-	var gdv_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % gdv_name)
+	var gdv_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % gdv_name)
 	var gdv: Dictionary = RothExt.get_video_by_path(gdv_filepath, func (percent: float) -> void: Roth.gdv_loading_updated.emit(percent))
 	gdv_parsing_done.emit.call_deferred(gdv)
 

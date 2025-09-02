@@ -193,9 +193,12 @@ const OBJECT := {
 }
 
 
-static func parse_file(filepath: String = "res://TEST.RAW") -> Dictionary:
+static func parse_file(filepath: String) -> Dictionary:
 	#print("Parsing: %s" % filepath)
 	var file: FileAccess = FileAccess.open(filepath, FileAccess.READ)
+	if not file:
+		Console.print("Error: File not found: %s" % filepath)
+		return {}
 	
 	# Header
 	# -------------

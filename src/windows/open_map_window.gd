@@ -28,6 +28,7 @@ func clear() -> void:
 	%Objects.text = ""
 	%MapName.text = ""
 	%DASFile.text = ""
+	%Commands.text = ""
 
 
 func cancel() -> void:
@@ -56,12 +57,12 @@ func _on_settings_loaded() -> void:
 	%MapTree.clear()
 	%MapTree.create_item()
 	for map_info:Dictionary in Roth.maps:
-		if map_info.custom:
+		if "vanilla" not in map_info:
 			var tree_item: TreeItem = %MapTree.get_root().create_child()
 			tree_item.set_text(0, map_info.name)
 			tree_item.set_metadata(0, map_info)
 	for map_info:Dictionary in Roth.maps:
-		if not map_info.custom:
+		if "vanilla" in map_info:
 			var tree_item: TreeItem = %MapTree.get_root().create_child()
 			tree_item.set_text(0, map_info.name)
 			tree_item.set_metadata(0, map_info)
@@ -79,6 +80,8 @@ func _on_open_button_pressed() -> void:
 func _on_map_tree_cell_selected() -> void:
 	var map_info: Dictionary = %MapTree.get_selected().get_metadata(0)
 	var map: Map = Roth.get_map(map_info)
+	if not map:
+		return
 	%Map.setup(map.sectors)
 	%Sectors.text = "%s" % len(map.sectors)
 	%Faces.text = "%s" % len(map.faces)
@@ -86,6 +89,7 @@ func _on_map_tree_cell_selected() -> void:
 	%Objects.text = "%s" % len(map.objects)
 	%MapName.text = "%s" % map_info.name
 	%DASFile.text = "%s" % map_info.das
+	%Commands.text = "%s" % len(map.commands_section.allCommands)
 
 
 func _on_map_tree_item_activated() -> void:
@@ -97,11 +101,33 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
 			var maps: Array = []
+			var tree_item: TreeItem = %MapTree.get_next_selected(null)
+			var map_info: Variant
+			while tree_item:
+				map_info = tree_item.get_metadata(0)
+				if map_info and "vanilla" not in map_info:
+					maps.append(tree_item)
+				tree_item = %MapTree.get_next_selected(tree_item)
+			if len(maps) > 1:
+				await Dialog.information("Please select only one map to rename.", "Info", false, Vector2(400,150))
+				return
+			
+			tree_item = maps[0]
+			map_info = maps[0].get_metadata(0)
+			
+			var new_map_name := await Roth.query_for_map_name("Rename %s" % map_info.name)
+			if new_map_name.is_empty() or new_map_name == map_info.name:
+				return
+			Roth.rename_map(map_info, new_map_name)
+			tree_item.set_text(0, new_map_name)
+			
+		1:
+			var maps: Array = []
 			var maps_string: String = ""
 			var tree_item: TreeItem = %MapTree.get_next_selected(null)
 			while tree_item:
 				var map_info: Variant = tree_item.get_metadata(0)
-				if map_info and map_info.custom:
+				if map_info and "vanilla" not in map_info:
 					maps.append(map_info)
 					maps_string += "%s\n" % map_info.name
 				tree_item = %MapTree.get_next_selected(tree_item)
@@ -116,16 +142,25 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 		MOUSE_BUTTON_RIGHT:
 			var tree_item: TreeItem = %MapTree.get_item_at_position(mouse_position)
 			if tree_item.get_metadata(0):
-				if tree_item.get_metadata(0).custom:
+				if "vanilla" not in tree_item.get_metadata(0):
 					%MapPopupMenu.set_item_disabled(0, false)
+					%MapPopupMenu.set_item_disabled(1, false)
 				else:
 					%MapPopupMenu.set_item_disabled(0, true)
+					%MapPopupMenu.set_item_disabled(1, true)
 				%MapPopupMenu.popup(Rect2i(int(mouse_position.x + %MapTree.global_position.x), int(mouse_position.y + %MapTree.global_position.y), 0, 0))
 
 
 func _on_run_button_pressed() -> void:
-	var maps := get_selected_maps()
-	if len(maps) != 1:
-		Dialog.information("Select a single map to run.", "Error", true, Vector2(400, 150), "Okay")
+	var maps: Array = []
+	if %MapTree.get_selected().get_metadata(0):
+		maps.append(Roth.get_map(%MapTree.get_selected().get_metadata(0)))
+	var tree_item: TreeItem = %MapTree.get_next_selected(null)
+	while tree_item:
+		var map_info: Variant = tree_item.get_metadata(0)
+		if map_info and Roth.get_map(map_info) not in maps:
+			maps.append(Roth.get_map(map_info))
+		tree_item = %MapTree.get_next_selected(tree_item)
+	if len(maps) == 0:
 		return
-	Roth.run_map(maps[0])
+	Roth.test_run_maps(maps)

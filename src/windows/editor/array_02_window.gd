@@ -33,6 +33,7 @@ func _fade_out() -> void:
 func edit_data(array_02: Array) -> Array:
 	for child: TreeItem in tree_root.get_children():
 		tree_root.remove_child(child)
+		child.free()
 	
 	for row: Dictionary in array_02:
 		var tree_item: TreeItem = tree_root.create_child()

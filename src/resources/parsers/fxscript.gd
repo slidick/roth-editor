@@ -29,7 +29,7 @@ const SND_NAME_ENTRY := {
 
 
 static func get_sfx_entries() -> Array:
-	var sfx_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DATA").path_join("FXSCRIPT.SFX")
+	var sfx_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("FXSCRIPT.SFX")
 	if not FileAccess.file_exists(sfx_filepath):
 		return []
 	var file := FileAccess.open(sfx_filepath, FileAccess.READ)
@@ -58,7 +58,7 @@ static func get_sfx_entries() -> Array:
 
 
 static func get_from_entry(entry: Dictionary) -> Dictionary:
-	var sfx_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DATA").path_join("FXSCRIPT.SFX")
+	var sfx_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("FXSCRIPT.SFX")
 	if not FileAccess.file_exists(sfx_filepath):
 		return {}
 	var file := FileAccess.open(sfx_filepath, FileAccess.READ)

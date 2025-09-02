@@ -275,8 +275,8 @@ func _gui_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func save_position() -> void:
-	data["node_data"] = Vector2(position_offset)
+#func save_position() -> void:
+	#data["node_data"] = Vector2(position_offset)
 
 
 func _on_command_base_option_item_selected(idx: int) -> void:

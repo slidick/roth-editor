@@ -37,7 +37,7 @@ const IMG7_HDR := {
 }
 
 static func parse() -> void:
-	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
 		return
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
@@ -75,7 +75,7 @@ static func parse() -> void:
 
 
 static func get_midi_offsets() -> Array:
-	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
 		return []
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
@@ -119,7 +119,7 @@ static func get_midi_offsets() -> Array:
 
 
 static func save_hmps() -> void:
-	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
 		return
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
@@ -158,7 +158,7 @@ static func save_hmps() -> void:
 	return
 
 static func get_at_offset(offset: int ) -> Variant:
-	var dbase300_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
 		return {}
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)

@@ -15,6 +15,7 @@ signal gdv_loading_updated(progress: float)
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
 var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
+var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
 const OLD_EXE: float = 3.925
 const NEW_EXE: float = 3.983
@@ -22,12 +23,12 @@ const NEW_EXE: float = 3.983
 var res: Dictionary = {}
 var maps: Array = []
 var das_files: Array = []
-var directory: String = ""
+var install_directory: String = ""
 var loaded_maps: Dictionary = {}
 var loaded_das: Dictionary = {}
 var loading_das: Dictionary = {}
-
 var audio_player: RothAudioPlayer
+
 
 ## Initialization
 func _ready() -> void:
@@ -36,14 +37,47 @@ func _ready() -> void:
 	
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_MAP_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_MAP_DIRECTORY)
-	Settings.update_settings("locations", {"custom.res": ROTH_CUSTOM_MAP_DIRECTORY.path_join("custom.res")})
+	
+	#Settings.update_settings("locations", {"custom.res": ROTH_CUSTOM_MAP_DIRECTORY.path_join("custom.res")})
 	
 	das_loading_updated.connect(_on_das_loading_updated)
 	Settings.settings_updated.connect(_on_settings_updated)
 	
+	migrate_away_from_custom_res()
+	
 	# Wait for the scene to be ready so other nodes have time to connect to this nodes settings_loaded signal
 	await get_tree().get_root().ready
 	load_roth_settings()
+
+
+## Used to save old list of map name -> das files into separate .json files per map
+func migrate_away_from_custom_res() -> void:
+	var locations: Dictionary = Settings.settings.get("locations")
+	if locations and "custom.res" in locations:
+		Console.print("CUSTOM.RES found. Migrating to new format...")
+		
+		# Cycle through custom.res, saving in new format
+		if FileAccess.file_exists(locations.get("custom.res")):
+			var file := FileAccess.open(locations.get("custom.res"), FileAccess.READ)
+			while file.get_position() < file.get_length():
+				var line: String = file.get_line()
+				var line_split: Array = line.split(" ")
+				var map: Map = get_map({
+					"name": line_split[0].get_file().get_basename().to_upper(),
+					"das": (line_split[1]+".das").to_upper(),
+					"filepath": ROTH_CUSTOM_MAP_DIRECTORY.path_join((line_split[0]+".raw").to_upper())
+				})
+				save_custom_metadata(map)
+		
+		# Remove old files
+		if FileAccess.file_exists(locations["custom.res"]):
+			DirAccess.remove_absolute(locations["custom.res"])
+		if FileAccess.file_exists(ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res")):
+			DirAccess.remove_absolute(ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res"))
+		
+		# Remove entry from settings file
+		locations.erase("custom.res")
+		Settings._save_settings()
 
 
 func _on_das_loading_updated(progress: float, das_file: String) -> void:
@@ -62,7 +96,7 @@ func load_roth_settings() -> void:
 	maps.clear()
 	das_files.clear()
 	if locations and locations.get("roth.res"):
-		directory = locations.get("roth.res").get_base_dir()
+		install_directory = locations.get("roth.res").get_base_dir()
 		var file := FileAccess.open(locations.get("roth.res"), FileAccess.READ)
 		# Parse the roth.res file
 		while file.get_position() < file.get_length():
@@ -82,9 +116,9 @@ func load_roth_settings() -> void:
 				var line_split: Array = line.split(" ")
 				maps.append({
 					"name": line_split[0].get_file().get_basename().to_upper(),
-					"raw": (line_split[0]+".raw").to_upper(),
 					"das": (line_split[1]+".das").to_upper(),
-					"custom": false,
+					"filepath": install_directory.path_join((line_split[0]+".raw").to_upper()),
+					"vanilla": true,
 				})
 			elif not line.is_empty():
 				res[line] = true
@@ -103,7 +137,7 @@ func load_roth_settings() -> void:
 				res["exe_version"] = OLD_EXE
 			"ROTH VERSION F1.14":
 				res["exe_version"] = OLD_EXE
-			"ROTH VERSION F1":
+			"SPANISH ROTH F1":
 				res["exe_version"] = NEW_EXE
 			"ROTH VERSION 1.8":
 				res["exe_version"] = NEW_EXE
@@ -112,20 +146,19 @@ func load_roth_settings() -> void:
 			_:
 				res["exe_version"] = 0.0
 	
-	if locations and locations.get("custom.res"):
-		if not FileAccess.file_exists(locations.get("custom.res")):
-			var file_custom := FileAccess.open(locations.get("custom.res"), FileAccess.WRITE)
-			file_custom.close()
-		var file := FileAccess.open(locations.get("custom.res"), FileAccess.READ)
-		while file.get_position() < file.get_length():
-			var line: String = file.get_line()
-			var line_split: Array = line.split(" ")
-			maps.append({
-				"name": line_split[0].get_file().get_basename().to_upper(),
-				"raw": (line_split[0]+".raw").to_upper(),
-				"das": (line_split[1]+".das").to_upper(),
-				"custom": true,
-			})
+	
+	for file in DirAccess.get_files_at(ROTH_CUSTOM_MAP_DIRECTORY):
+		if file.to_lower().ends_with(".json"):
+			var file_string: String = FileAccess.get_file_as_string(ROTH_CUSTOM_MAP_DIRECTORY.path_join(file))
+			if not file_string.is_empty():
+				var file_json: Variant = JSON.parse_string(file_string)
+				if file_json:
+					file_json["filepath"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file).get_basename() + ".RAW"
+					file_json["filepath_json"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file)
+					maps.append(file_json)
+	
+	#print(JSON.stringify(maps, "\t"))
+	
 	settings_loaded.emit()
 
 
@@ -153,27 +186,38 @@ func load_maps(maps_array: Array) -> void:
 ## Deletes maps from the filesystem and removes them from the list of available maps
 func delete_maps(maps_array: Array) -> void:
 	for map_info: Dictionary in maps_array:
-		var file_path := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.raw)
-		if FileAccess.file_exists(file_path):
-			DirAccess.remove_absolute(file_path)
+		if FileAccess.file_exists(map_info.filepath):
+			DirAccess.remove_absolute(map_info.filepath)
+		if FileAccess.file_exists(map_info.filepath_json):
+			DirAccess.remove_absolute(map_info.filepath_json)
 		maps.erase(map_info)
-	update_custom_maps_list()
+#	update_custom_maps_list()
 	settings_loaded.emit()
 
 
-## Rewrites the list of custom maps
-func update_custom_maps_list() -> void:
-	var file_custom_res := FileAccess.open(Settings.settings.locations.get("custom.res"), FileAccess.WRITE)
-	for map_info: Dictionary in maps:
-		if map_info.custom:
-			file_custom_res.store_string("%s %s\n" % [map_info.name.to_lower(), map_info.das.get_basename().to_lower()])
-	file_custom_res.close()
+## Renames a map by saving it with a new name and erasing the old version
+func rename_map(map_info: Dictionary, new_map_name: String) -> void:
+	Console.print("Renaming map from %s to %s" % [map_info.name, new_map_name])
+	var old_map_info: Dictionary = map_info.duplicate()
+	
+	var map: Map = get_map(map_info)
+	map.map_info.filepath = map.map_info.filepath.replace(map_info.name, new_map_name)
+	map.map_info.name = new_map_name
+	
+	save_custom(map)
+	
+	if FileAccess.file_exists(map.map_info.filepath) and map.map_info.filepath != old_map_info.filepath:
+		if FileAccess.file_exists(old_map_info.filepath):
+			DirAccess.remove_absolute(old_map_info.filepath)
+		if FileAccess.file_exists(old_map_info.filepath_json):
+			DirAccess.remove_absolute(old_map_info.filepath_json)
 
 
+## Creates a new map
 func create_new_map(map_info: Dictionary) -> void:
 	var map := Map.new()
 	map.map_info = map_info
-	save_custom(await map.compile(), map_info, true)
+	save_custom(map)
 	Roth.settings_loaded.emit()
 	loaded_maps[map_info.name] = map
 	load_maps([map_info])
@@ -193,6 +237,7 @@ func get_das(das_file: String) -> Dictionary:
 		return loaded_das[das_file]
 
 
+## Directly get a single image from a das file by index
 func get_index_from_das(index:int, das_file: String) -> Dictionary:
 	if das_file in loaded_das:
 		if index in loaded_das[das_file]:
@@ -200,158 +245,107 @@ func get_index_from_das(index:int, das_file: String) -> Dictionary:
 	return Das._get_index_from_das(index, das_file)
 
 
-func save_custom(map_raw: PackedByteArray, map_info: Dictionary, add_to_custom: bool = false) -> void:
-	var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".RAW")
+## Takes a map and saves it to raw format, optionally overriding directory and player starting data
+func save_custom(map: Map, directory: String = ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
+	var raw_filepath := directory.path_join(map.map_info.name.to_upper() + ".RAW")
+	var raw_map := map.compile(player_data)
 	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
-	file.store_buffer(map_raw)
+	file.store_buffer(raw_map)
 	file.close()
-	if add_to_custom:
-		maps.append(map_info)
-		update_custom_maps_list()
+	if map.map_info not in maps:
+		maps.append(map.map_info)
+	
+	if directory == ROTH_CUSTOM_MAP_DIRECTORY:
+		save_custom_metadata(map)
 
 
-## Takes a compiled map, saves it to a temporary file, and runs it.
-func test_run_map(map_raw: PackedByteArray, map_info: Dictionary, with_objects: bool) -> void:
+## Save a map's editor metadata in a json format next to the raw file
+func save_custom_metadata(map: Map) -> void:
+	var json_filepath: String
+	if "filepath_json" in map.map_info:
+		json_filepath = map.map_info.filepath_json
+	else:
+		json_filepath = ROTH_CUSTOM_MAP_DIRECTORY.path_join(map.map_info.name.to_upper() + ".json")
+	
+	var save_info: Dictionary = map.map_info.duplicate()
+	save_info.erase("filepath")
+	
+	var json_file := FileAccess.open(json_filepath, FileAccess.WRITE)
+	json_file.store_string(JSON.stringify(save_info, "\t"))
+	json_file.close()
+
+
+## Takes an array of Maps and an optional player start location. [br]
+## Saves the maps in a temporary directory, creates a .res file for the maps, and runs it
+func test_run_maps(maps_to_run: Array, player_data: Dictionary = {}) -> void:
+	# Check for required settings
 	if not FileAccess.file_exists(Settings.settings.locations.get("roth.res")):
 		Console.print("Roth.res not selected.")
 		return
-	
 	if not FileAccess.file_exists(Settings.settings.locations.get("dosbox")):
 		Console.print("Dosbox executable not selected.")
 		return
 	
+	# Delete and create temporary run directory
+	remove_dir_recursive(ROTH_TEMP_DIRECTORY)
+	DirAccess.make_dir_recursive_absolute(ROTH_TEMP_DIRECTORY)
 	
-	var raw_filename: String
-	if map_info.custom:
-		save_custom(map_raw, map_info)
-		raw_filename = map_info.name.to_upper() + ".RAW"
-	else:
-		raw_filename = "TEST_MAP.RAW"
-		var raw_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join(raw_filename)
-		var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
-		file.store_buffer(map_raw)
-		file.close()
+	# Save the maps into temporary directory
+	for i in range(len(maps_to_run)):
+		save_custom(maps_to_run[i], ROTH_TEMP_DIRECTORY, player_data if i == 0 else {})
 	
-	var run_map_info := map_info.duplicate()
-	run_map_info.raw = raw_filename
-	
-	run_map(run_map_info, with_objects)
-
-
-func run_map(map_info: Dictionary, with_objects: bool = true) -> void:
-	var dosbox_bin: String = Settings.settings.locations.get("dosbox")
-	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
-	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
-	var roth_res_test_filepath := ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res")
-	
-	
-	
+	# Create the .res file in the temporary directory with the specified maps
+	var roth_res_test_filepath := ROTH_TEMP_DIRECTORY.path_join("test.res")
 	var roth_res_test := """version="Roth Custom Maps"
 snd=data\\fxscript.sfx
 das2=m\\ademo
 
 maps {
 """
-	if map_info.custom:
-		roth_res_test += "D:\\%s %s\n" % [map_info.raw.get_basename(), map_info.das.replace("/", "\\").get_basename()]
-	else:
-		roth_res_test += "%s %s\n" % [map_info.raw.get_basename(), map_info.das.replace("/", "\\").get_basename()]
-	
-	for custom_map_info:Dictionary in Roth.maps:
-		if custom_map_info.custom and custom_map_info.name != map_info.name:
-			roth_res_test += "D:\\%s %s\n" % [custom_map_info.raw.get_basename(), custom_map_info.das.replace("/", "\\").get_basename()]
-	
-	
-	roth_res_test += """m\\study1 m\\demo
-m\\study2 m\\demo
-m\\study3 m\\demo
-m\\study4 m\\demo
-m\\abagate2 m\\demo3
-m\\optemp1 m\\demo
-m\\anubis m\\demo2
-m\\gnarl1 m\\demo2
-m\\mauso1ea m\\demo4
-m\\mauso1eb m\\demo4
-m\\mas3 m\\demo4
-m\\mas4 m\\demo4
-m\\mas6 m\\demo4
-m\\mas7 m\\demo4
-m\\aelf m\\demo4
-m\\caverns2 m\\demo4
-m\\caverns3 m\\demo4
-m\\grave m\\demo4
-m\\maze m\\demo4
-m\\dominion m\\demo3
-m\\salvat m\\demo3
-m\\dopple m\\demo3
-m\\soulst2 m\\demo1
-m\\soulst3 m\\demo1
-m\\tower1 m\\demo2
-m\\tgate1f m\\demo2
-m\\tgate1g m\\demo2
-m\\tgate1h m\\demo2
-m\\tgate1i m\\demo2
-m\\caverns m\\demo
-m\\temple1 m\\demo
-m\\raquia1 m\\demo1
-m\\raquia2 m\\demo1
-m\\raquia3 m\\demo1
-m\\raquia4 m\\demo1
-m\\raquia5 m\\demo1
-m\\church1 m\\demo1
-m\\vicar m\\demo1
-m\\aqua1 m\\demo1
-m\\aqua2 m\\demo1
-m\\lrinth m\\demo1
-m\\lrinth1 m\\demo1
-m\\elohim1 m\\demo1
-m\\vicar1 m\\demo1
-}
-"""
+	for map: Map in maps_to_run:
+		roth_res_test += "D:\\%s %s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das.replace("/", "\\").get_basename()]
+	roth_res_test += "}\n"
 	
 	var roth_res_test_file := FileAccess.open(roth_res_test_filepath, FileAccess.WRITE)
 	roth_res_test_file.store_string(roth_res_test)
 	roth_res_test_file.close()
 	
 	
-	
-	
+	# Create the dosbox auto exec .conf file
+	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
+	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
 	var autoexec := FileAccess.open(dosbox_autoexec_filepath, FileAccess.WRITE)
 	autoexec.store_string("[autoexec]\n")
-	autoexec.store_string("mount d \"%s\"\n" % ROTH_CUSTOM_MAP_DIRECTORY)
+	autoexec.store_string("mount d \"%s\"\n" % ROTH_TEMP_DIRECTORY)
 	autoexec.store_string("mount c \"%s\"\n" % roth_directory)
 	autoexec.store_string("c:\n")
 	autoexec.store_string("cd \\roth\n")
-	
+	# Only the older version allows command line arguments
 	if res.exe_version == OLD_EXE:
-		if with_objects:
-			autoexec.store_string("ROTH.EXE /G 03 @D:\\test.res\n")
-		else:
-			autoexec.store_string("ROTH.EXE /9 /G 03 FILE D:\\%s DAS %s SND DATA\\FXSCRIPT.SFX\n" % [map_info.raw, map_info.das.replace("/", "\\")])
-		
+		# Increase starting gamma
+		autoexec.store_string("ROTH.EXE /G 03 @D:\\test.res\n")
 	else:
+		# Newer version should save gamma anyway
 		autoexec.store_string("ROTH.EXE @D:\\test.res\n")
-	
-	
 	autoexec.store_string("exit\n")
 	autoexec.close()
 	
-	
+	# Assemble the dosbox command line arguments
 	var dosbox_args := []
 	if Settings.settings.locations.get("dosbox_config") and FileAccess.file_exists(Settings.settings.locations.get("dosbox_config")):
 		dosbox_args.append_array([
 			"-conf",
 			Settings.settings.locations.get("dosbox_config")
 		])
-	
 	dosbox_args.append_array([
 		"-conf",
 		dosbox_autoexec_filepath
 	])
 	
-	print("Executing: %s" % dosbox_bin)
-	print(dosbox_args)
-	
+	# Run dosbox
+	var dosbox_bin: String = Settings.settings.locations.get("dosbox")
+	Console.print("Executing: %s" % dosbox_bin)
+	Console.print(dosbox_args)
 	OS.execute(dosbox_bin, dosbox_args)
 
 
@@ -365,11 +359,49 @@ func degrees_to_rotation(degrees: float) -> int:
 	return int(((degrees + 180) * 128) / 90)
 
 
+## Plays audio by passing an array of Vector2 and a sample rate
 func play_audio_buffer(buffer: PackedVector2Array, sample_rate: int) -> void:
 	audio_player.play_buffer(buffer, sample_rate)
 
+
+## Plays audio by passing an entry returned from FXScript.get_from_entry
 func play_audio_entry(entry: Dictionary) -> void:
 	audio_player.play_entry(entry)
 
+
+## Stops audio
 func stop_audio_buffer() -> void:
 	audio_player.stop_buffer()
+
+
+## Helper function removes a directory recursively
+func remove_dir_recursive(directory: String) -> void:
+	if DirAccess.dir_exists_absolute(directory):
+		for dir in DirAccess.get_directories_at(directory):
+			remove_dir_recursive(directory.path_join(dir))
+		for file in DirAccess.get_files_at(directory):
+			DirAccess.remove_absolute(directory.path_join(file))
+		DirAccess.remove_absolute(directory)
+
+
+## Helper function to query the user for a valid name for a map
+func query_for_map_name(title: String) -> String:
+	var results: Array
+	var error: String = "Init"
+	var i: int = 0
+	while not error.is_empty():
+		results = await Dialog.input("New Map Name:", title, results[1], error if i != 0 else "", false)
+		i += 1
+		if not results[0]:
+			return ""
+		error = ""
+		if len(results[1]) > 8:
+			error = "Please limit to 8 characters"
+		if results[1].find(" ") > 0:
+			error = "No spaces"
+		if results[1].to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
+			error = "Name in use."
+		if len(results[1]) == 0:
+			error = "Name is empty"
+	
+	return results[1].to_upper()

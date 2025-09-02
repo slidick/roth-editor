@@ -71,7 +71,7 @@ static func parse(filepath: String) -> Array:
 
 
 static func get_at_offset(offset: int) -> Dictionary:
-	var filepath: String = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
+	var filepath: String = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(filepath):
 		return {}
 	var file := FileAccess.open(filepath, FileAccess.READ)

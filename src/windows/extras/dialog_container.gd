@@ -24,10 +24,10 @@ func _on_settings_loaded() -> void:
 		tree_root.remove_child(tree_item)
 		tree_item.free()
 	
-	dbase400_filepath = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
+	dbase400_filepath = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
 		return
-	dbase500_filepath = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE500.DAT")
+	dbase500_filepath = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE500.DAT")
 	if not FileAccess.file_exists(dbase500_filepath):
 		return
 	

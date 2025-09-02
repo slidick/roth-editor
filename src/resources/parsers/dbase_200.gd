@@ -34,7 +34,7 @@ const IMG_ROW_DEFS := {
 
 
 static func parse_full() -> Array:
-	var dbase200_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
+	var dbase200_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
 	if not FileAccess.file_exists(dbase200_filepath):
 		return []
 	var palette: Array = Das.get_default_palette()
@@ -62,7 +62,7 @@ static func parse_full() -> Array:
 
 
 static func get_animation_offsets() -> Array:
-	var dbase200_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
+	var dbase200_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
 	if not FileAccess.file_exists(dbase200_filepath):
 		return []
 	var file := FileAccess.open(dbase200_filepath, FileAccess.READ)
@@ -82,7 +82,7 @@ static func get_animation_offsets() -> Array:
 
 
 static func get_at_offset(offset: int) -> Variant:
-	var dbase200_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
+	var dbase200_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
 	if not FileAccess.file_exists(dbase200_filepath):
 		return
 	var palette: Array = Das.get_default_palette()

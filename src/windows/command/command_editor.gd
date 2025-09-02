@@ -31,6 +31,8 @@ func load_command_editor_threaded(p_map: Map) -> void:
 	%ProgressBar.value = 0.0
 	%MapLabel.text = p_map.map_info.name
 	map = p_map
+	if not map.name_changed.is_connected(_on_map_name_changed):
+		map.name_changed.connect(_on_map_name_changed)
 	if command_section != p_map.commands_section:
 		command_section = p_map.commands_section
 		if graph_edit:
@@ -49,6 +51,8 @@ func load_command_editor_threaded(p_map: Map) -> void:
 func load_command_editor(p_map: Map) -> void:
 	%MapLabel.text = p_map.map_info.name
 	map = p_map
+	if not map.name_changed.is_connected(_on_map_name_changed):
+		map.name_changed.connect(_on_map_name_changed)
 	if command_section != p_map.commands_section:
 		command_section = p_map.commands_section
 		if graph_edit:
@@ -67,6 +71,10 @@ func _loading_update(percentage: float) -> void:
 	%ProgressBar.value = percentage * 100
 
 
+func _on_map_name_changed(new_map_name: String) -> void:
+	%MapLabel.text = new_map_name
+
+
 func close(p_map_name: String) -> void:
 	if map:
 		if p_map_name == map.map_info.name:
@@ -76,6 +84,9 @@ func close(p_map_name: String) -> void:
 			command_section = {}
 			_is_loading = false
 			%MapLabel.text = "No Commands Loaded"
+			if map.name_changed.is_connected(_on_map_name_changed):
+				map.name_changed.disconnect(_on_map_name_changed)
+			map = null
 
 
 func init_graph_edit() -> void:
@@ -319,9 +330,10 @@ func initialize_command_node(p_index: int, p_command_data: Dictionary, p_positio
 	command_node.initialize(p_index, p_command_data)
 	
 	# Load position data
-	if "node_data" in p_command_data:
-		command_node.position_offset.x = p_command_data.node_data.x
-		command_node.position_offset.y = p_command_data.node_data.y
+	#if "node_data" in p_command_data:
+	if "command_positions" in map.map_info and p_index in map.map_info.command_positions:
+		command_node.position_offset.x = map.map_info.command_positions[p_index].x
+		command_node.position_offset.y = map.map_info.command_positions[p_index].y
 	else:
 		command_node.position_offset = p_position
 	
@@ -338,10 +350,17 @@ func initialize_command_node(p_index: int, p_command_data: Dictionary, p_positio
 
 
 func save_positions() -> void:
+	var positions: Dictionary = {}
 	for command_node: Control in graph_edit.get_children():
 		if command_node.name == "_connection_layer":
 			continue
-		command_node.save_position()
+		#command_node.save_position()
+		positions[command_node.index] = {
+			"x": command_node.position_offset.x,
+			"y": command_node.position_offset.y,
+		}
+	
+	map.map_info["command_positions"] = positions
 
 
 func ensure_visible(command_node: GraphNode) -> void:
@@ -403,6 +422,8 @@ func add_command(at_position: Vector2) -> void:
 	
 	command_section.allCommands.append(new_command)
 	command_nodes.append(command_node)
+	
+	save_positions()
 
 
 func _on_add_to_entry_list(index: int) -> void:
@@ -516,6 +537,12 @@ func delete_command(index: int) -> void:
 				#graph_edit.get_node(str(to_node)).title == "Command"
 		#):
 			#graph_edit.get_node(str(to_node)).title = "Orphan Command"
+	
+	# Force minimap refresh
+	await get_tree().process_frame
+	graph_edit.minimap_enabled = false
+	graph_edit.minimap_enabled = true
+	save_positions()
 
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:

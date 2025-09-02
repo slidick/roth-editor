@@ -15,7 +15,7 @@ const RLE_IMG_HDR := {
 
 
 static func get_icon_offsets() -> Array:
-	var icon_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DATA").path_join("ICONS.ALL")
+	var icon_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("ICONS.ALL")
 	if not FileAccess.file_exists(icon_filepath):
 		return []
 	var file := FileAccess.open(icon_filepath, FileAccess.READ)
@@ -31,7 +31,7 @@ static func get_icon_offsets() -> Array:
 
 
 static func get_at_offset(offset: int) -> Variant:
-	var icon_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DATA").path_join("ICONS.ALL")
+	var icon_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("ICONS.ALL")
 	if not FileAccess.file_exists(icon_filepath):
 		return
 	var palette: Array = Das.get_default_palette()

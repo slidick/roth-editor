@@ -147,7 +147,7 @@ static var loaded_das := {}
 static func load_das(das_file: String) -> Dictionary:
 	Roth.das_loading_started.emit()
 	var thread := Thread.new()
-	Console.print("Loading das: %s" % Roth.directory.path_join(das_file))
+	Console.print("Loading das: %s" % Roth.install_directory.path_join(das_file))
 	var _err: Error = thread.start(_load_das_thread.bind(das_file))
 	var das: Dictionary = await Roth.das_loading_finished
 	thread.wait_to_finish()
@@ -156,8 +156,8 @@ static func load_das(das_file: String) -> Dictionary:
 
 static func _load_das_thread(das_file: String) -> void:
 	#var das: Dictionary = _parse_das(das_file)
-	var palette: Array = test_for_palette(Roth.directory.path_join(das_file))
-	var das: Dictionary = RothExt.load_das(das_file, Roth.directory.path_join(das_file), func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_file.get_file()), palette)
+	var palette: Array = test_for_palette(Roth.install_directory.path_join(das_file))
+	var das: Dictionary = RothExt.load_das(das_file, Roth.install_directory.path_join(das_file), func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_file.get_file()), palette)
 	Roth.das_loading_finished.emit.call_deferred(das)
 
 
@@ -171,7 +171,7 @@ static func test_for_palette(file_path: String) -> Array:
 
 
 static func get_default_palette(palette_file: String = DEFAULT_PALETTE_FILE) -> Array:
-	var file := FileAccess.open(Roth.directory.path_join(palette_file), FileAccess.READ)
+	var file := FileAccess.open(Roth.install_directory.path_join(palette_file), FileAccess.READ)
 	var das_header: Dictionary = _parse_header(file)
 	var palette: Array = _parse_palette(file, das_header.paletteOffset)
 	file.close()
@@ -209,7 +209,7 @@ static func _parse_palette(file: FileAccess, offset: int) -> Array:
 
 
 static func _parse_das(das_file: String) -> Dictionary:
-	var file := FileAccess.open(Roth.directory.path_join(das_file), FileAccess.READ)
+	var file := FileAccess.open(Roth.install_directory.path_join(das_file), FileAccess.READ)
 	var das: Dictionary = {}
 	
 	das["name"] = das_file
@@ -589,7 +589,7 @@ static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
 		loaded_das[das_file] = {}
 	
 	
-	var file := FileAccess.open(Roth.directory.path_join(das_file), FileAccess.READ)
+	var file := FileAccess.open(Roth.install_directory.path_join(das_file), FileAccess.READ)
 	var das: Dictionary = {}
 	
 	das["name"] = das_file

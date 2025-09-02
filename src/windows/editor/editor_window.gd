@@ -22,6 +22,7 @@ var context_collision: Dictionary
 var previous_search: String
 var search_count: int = 0
 var copied_object_data: ObjectRoth
+var first_load: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -33,19 +34,30 @@ func _ready() -> void:
 	%EditorHeader.hide()
 
 
-func test_map(full: bool) -> void:
+func test_map() -> void:
 	var map: Map = %Map2D.map
 	if not map:
 		return
+	
+	var maps: Array = []
+	maps.append(map)
+	
+	for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		if tree_item.get_metadata(0).ref not in maps:
+			maps.append(tree_item.get_metadata(0).ref)
+	
 	
 	var player_position: Vector3 = %Camera3D.global_position
 	player_position.y -= 1.2
 	player_position *= Roth.SCALE_3D_WORLD
 	var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
-	var buffer: PackedByteArray = await map.compile(player_position, player_rotation)
-	if buffer.is_empty():
-		return
-	Roth.test_run_map(buffer, map.map_info, full)
+	
+	var player_data: Dictionary = {
+		"position": player_position,
+		"rotation": player_rotation,
+	}
+	
+	Roth.test_run_maps(maps, player_data)
 
 
 func _input(event: InputEvent) -> void:
@@ -120,36 +132,40 @@ func load_map(map_info: Dictionary) -> void:
 			Console.print("Map loaded already")
 			return
 	
+	var map: Map = Roth.get_map(map_info)
+	if not map:
+		return
+	
 	var sectors_node := Node3D.new()
 	sectors_node.name = "Sectors"
-	for sector: Sector in Roth.get_map(map_info).sectors:
+	for sector: Sector in map.sectors:
 		var mesh := await sector.initialize_mesh()
 		sectors_node.add_child(mesh)
 	
 	var faces_node := Node3D.new()
 	faces_node.name = "Faces"
-	for face: Face in Roth.get_map(map_info).faces:
+	for face: Face in map.faces:
 		var mesh := await face.initialize_mesh()
 		faces_node.add_child(mesh)
 	
 	var objects_node := Node3D.new()
 	objects_node.name = "Objects"
-	for object: ObjectRoth in Roth.get_map(map_info).objects:
+	for object: ObjectRoth in map.objects:
 		var mesh := object.initialize_mesh()
 		objects_node.add_child(mesh)
 	
 	var sfx_node := Node3D.new()
 	sfx_node.name = "SFX"
-	for sfx: Section7_1 in Roth.get_map(map_info).sound_effects:
+	for sfx: Section7_1 in map.sound_effects:
 		var mesh := sfx.initialize_mesh()
 		sfx_node.add_child(mesh)
 	
 	
-	%Map2D.setup(Roth.get_map(map_info))
+	%Map2D.setup(map)
 	
 	var map_node := Map.MapNode3D.new()
-	map_node.ref = Roth.get_map(map_info)
-	map_node.map_info = Roth.get_map(map_info).map_info
+	map_node.ref = map
+	map_node.map_info = map.map_info
 	map_node.add_child(sectors_node)
 	map_node.add_child(faces_node)
 	map_node.add_child(objects_node)
@@ -158,7 +174,7 @@ func load_map(map_info: Dictionary) -> void:
 	map_node.visible = false
 	map_node.process_mode = PROCESS_MODE_DISABLED
 	%Maps.add_child(map_node)
-	Roth.get_map(map_info).node = map_node
+	map.node = map_node
 	
 	var tree_child: TreeItem = tree_root.create_child()
 	tree_child.set_text(0, map_info.name)
@@ -180,28 +196,8 @@ func load_map(map_info: Dictionary) -> void:
 	%EditorHeader.show()
 	
 	
-	#var command_editor_scene := COMMAND_EDITOR.instantiate()
-	#command_editor_scene.name = "%s Command Editor" % map_info.name
-	#
-	#%MapContainer.add_child(command_editor_scene)
-	#command_editor_scene.modulate.a = 1.0
-	#command_editor_scene.edit_data(Roth.get_map(map_info))
-	
-	
 	if tree_root.get_child_count() == 1:
-		var starting_position := Vector3(
-			-Roth.get_map(map_info).metadata["initPosX"],
-			Roth.get_map(map_info).metadata["initPosZ"],
-			Roth.get_map(map_info).metadata["initPosY"],
-			
-		)
-		%Camera3D.global_position = starting_position / Roth.SCALE_3D_WORLD
-		%Camera3D.global_position.y += 1.2
-		%Camera3D.rotation_degrees = Vector3(
-			0,
-			Roth.rotation_to_degrees(Roth.get_map(map_info).metadata["rotation"]),
-			0,
-		)
+		first_load = true
 
 
 func _on_map_loaded(map_info: Dictionary) -> void:
@@ -214,6 +210,22 @@ func _on_map_completely_loaded() -> void:
 	%Maps.get_child(%Maps.get_child_count() - 1).visible = true
 	tree_root.get_child(%Maps.get_child_count() - 1).set_button(0, 0, EYE_ICON)
 	%Maps.get_child(%Maps.get_child_count() - 1).process_mode = PROCESS_MODE_INHERIT
+	
+	if first_load:
+		first_load = false
+		var starting_position := Vector3(
+			-%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["initPosX"],
+			%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["initPosZ"],
+			%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["initPosY"],
+			
+		)
+		%Camera3D.global_position = starting_position / Roth.SCALE_3D_WORLD
+		%Camera3D.global_position.y += 1.2
+		%Camera3D.rotation_degrees = Vector3(
+			0,
+			Roth.rotation_to_degrees(%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["rotation"]),
+			0,
+		)
 
 
 func _on_sub_viewport_container_focus_entered() -> void:
@@ -248,7 +260,7 @@ func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
 func _on_maps_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
 	var tree_item: TreeItem = %MapsTree.get_item_at_position(mouse_position)
 	if mouse_button_index == MOUSE_BUTTON_RIGHT and tree_item.get_parent() == tree_root:
-		if tree_item.get_metadata(0).map_info.custom:
+		if not "vanilla" in tree_item.get_metadata(0).map_info:
 			%MapsTreeMenu.set_item_disabled(MapMenu.Save, false)
 		else:
 			%MapsTreeMenu.set_item_disabled(MapMenu.Save, true)
@@ -267,53 +279,34 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save.", "Info", false, Vector2(400,150))
 				return
-			if selected[0].get_metadata(0).map_info.custom:
+			if "vanilla" not in selected[0].get_metadata(0).map_info:
 				Console.print("Saving file: %s" % selected[0].get_metadata(0).map_info.name)
 				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
-				var buffer: PackedByteArray = await map.compile()
-				Roth.save_custom(buffer, map.map_info)
+				Roth.save_custom(map)
 		MapMenu.SaveAs:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
 				return
-			var results: Array = await Dialog.input("New Map Name:", "Save As", "", "", false)
-			if not results[0]:
+			
+			var new_map_name: String = await Roth.query_for_map_name("Save As")
+			if new_map_name.is_empty():
 				return
 			
-			var error: String = ""
-			if len(results[1]) > 8:
-				error = "Please limit to 8 characters"
-			if results[1].contains(" "):
-				error = "No spaces"
-			if results[1].to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
-				error = "Name in use."
-			
-			while not error.is_empty():
-				results = await Dialog.input("New Map Name:", "Save As", results[1], error, false)
-				if not results[0]:
-					return
-				error = ""
-				if len(results[1]) > 8:
-					error = "Please limit to 8 characters"
-				if results[1].find(" ") > 0:
-					error = "No spaces"
-				if results[1].to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
-					error = "Name in use."
-			
-			Console.print("Saving file as: %s" % results[1].to_upper())
+			Console.print("Saving file as: %s" % new_map_name)
 			
 			var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
-			var buffer: PackedByteArray = await map.compile()
 			Roth.loaded_maps.erase(map.map_info.name)
 			Roth.maps.erase(map.map_info)
 			Roth.maps.append(map.map_info.duplicate())
-			map.map_info.name = results[1].to_upper()
-			map.map_info.raw = results[1].to_upper() + ".RAW"
-			map.map_info.custom = true
-			Roth.save_custom(buffer, map.map_info, true)
+			map.map_info.name = new_map_name
+			map.map_info.filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(new_map_name + ".RAW")
+			map.map_info.erase("vanilla")
+			Roth.save_custom(map)
 			Roth.loaded_maps[map.map_info.name] = map
-			selected[0].set_text(0, results[1].to_upper())
-			Roth.load_roth_settings()
+			selected[0].set_text(0, new_map_name)
+			map.name_changed.emit(new_map_name)
+			#Roth.load_roth_settings()
+			Roth.settings_loaded.emit()
 		MapMenu.EditMetadata:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))

@@ -2,7 +2,7 @@ extends Node
 class_name Backdrop
 
 static func parse() -> Variant:
-	var backdrop_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DATA").path_join("BACKDROP.RAW")
+	var backdrop_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("BACKDROP.RAW")
 	if not FileAccess.file_exists(backdrop_filepath):
 		return 
 	var palette: Array = Das.get_default_palette()

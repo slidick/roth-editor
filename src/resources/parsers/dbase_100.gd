@@ -64,10 +64,10 @@ const DBASE_100_OPCODE := {
 }
 
 static func parse() -> Dictionary:
-	var dbase100_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("DBASE100.DAT")
+	var dbase100_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE100.DAT")
 	if not FileAccess.file_exists(dbase100_filepath):
 		return {}
-	var dbase400_filepath: String = Roth.directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
+	var dbase400_filepath: String = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
 		return {}
 	

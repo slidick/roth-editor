@@ -1,6 +1,9 @@
 extends RefCounted
 class_name Map
 
+@warning_ignore("unused_signal")
+signal name_changed(new_name: String)
+
 var metadata := {
 	"initPosX": 0,
 	"initPosZ": 0,
@@ -34,13 +37,10 @@ var commands_section := {
 	"allCommands": []
 }
 var node: MapNode3D
+var editor_metadata := {}
 
 static func load_from_file(p_map_info: Dictionary) -> Map:
-	var filepath: String
-	if p_map_info.custom:
-		filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(p_map_info.raw)
-	else:
-		filepath = Roth.directory.path_join(p_map_info.raw)
+	var filepath: String = p_map_info.filepath
 	Console.print("Loading map: %s" % filepath)
 	
 	var loaded_map := Map.new()
@@ -48,6 +48,8 @@ static func load_from_file(p_map_info: Dictionary) -> Map:
 	loaded_map.map_info = p_map_info
 	
 	var map_json: Dictionary = Raw.parse_file(filepath)
+	if map_json.is_empty():
+		return
 	
 	var temp_object_list := []
 	
@@ -103,6 +105,8 @@ static func load_from_file(p_map_info: Dictionary) -> Map:
 	for i in range(len(loaded_map.commands_section.allCommands)):
 		loaded_map.commands_section.allCommands[i]["map_info"] = p_map_info
 		loaded_map.commands_section.allCommands[i]["index"] = i+1
+	
+	
 	
 	return loaded_map
 
@@ -329,8 +333,7 @@ func merge_sectors(double_sided_face: Face) -> void:
 		face.update_horizontal_fit()
 
 
-func compile(player_position: Variant = null, player_rotation: Variant = null) -> PackedByteArray:
-	
+func find_bad_sectors() -> Array:
 	var bad_sectors := []
 	# Check for concave sectors.
 	for sector: Sector in sectors:
@@ -338,8 +341,12 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 			bad_sectors.append(sector)
 	if len(bad_sectors) > 0:
 		var array := bad_sectors.map(func (a:Sector) -> int: return a.index)
-		if not await Dialog.confirm("Sectors are concave and will render improperly:\n%s" % ", ".join(array), "Error: Concave sectors", false):
-			return PackedByteArray()
+		#await Dialog.confirm("Sectors are concave and will render improperly:\n%s" % ", ".join(array), "Error: Concave sectors", false)
+		return array
+	return []
+
+
+func compile(player_data: Dictionary) -> PackedByteArray:
 	
 	
 	var json := {}
@@ -440,12 +447,12 @@ func compile(player_position: Variant = null, player_rotation: Variant = null) -
 	
 	
 	
-	if player_position:
-		json["mapMetadataSection"]["initPosX"] = -player_position.x
-		json["mapMetadataSection"]["initPosY"] = player_position.z
-		json["mapMetadataSection"]["initPosZ"] = player_position.y
-	if player_rotation:
-		json["mapMetadataSection"]["rotation"] = player_rotation
+	if "position" in player_data:
+		json["mapMetadataSection"]["initPosX"] = -player_data.position.x
+		json["mapMetadataSection"]["initPosY"] = player_data.position.z
+		json["mapMetadataSection"]["initPosZ"] = player_data.position.y
+	if "rotation" in player_data:
+		json["mapMetadataSection"]["rotation"] = player_data.rotation
 	
 	
 	var section_sizes: Dictionary = calculate_section_sizes_and_offsets(json)

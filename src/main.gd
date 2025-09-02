@@ -5,8 +5,7 @@ enum Main {
 	NewMap,
 	OpenMap,
 	Sep0,
-	TestMapLimited,
-	TestMapFull,
+	TestMap,
 	Sep1,
 	Settings,
 	Sep2,
@@ -31,12 +30,7 @@ func _ready() -> void:
 	input.action = "test_map"
 	var shortcut := Shortcut.new()
 	shortcut.events.append(input)
-	%Main.set_item_shortcut(Main.TestMapLimited, shortcut, true)
-	var input_2 := InputEventAction.new()
-	input_2.action = "test_map_full"
-	var shortcut_2 := Shortcut.new()
-	shortcut_2.events.append(input_2)
-	%Main.set_item_shortcut(Main.TestMapFull, shortcut_2, true)
+	%Main.set_item_shortcut(Main.TestMap, shortcut, true)
 
 
 func _process(_delta: float) -> void:
@@ -143,10 +137,8 @@ func _on_main_index_pressed(index: int) -> void:
 			#%SelectionInstallationFileDialog.popup_centered_ratio()
 		Main.Quit:
 			quit()
-		Main.TestMapLimited:
-			%Editor.test_map(false)
-		Main.TestMapFull:
-			%Editor.test_map(true)
+		Main.TestMap:
+			%Editor.test_map()
 
 
 func _on_windows_index_pressed(index: int) -> void:

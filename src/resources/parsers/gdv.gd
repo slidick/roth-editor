@@ -44,7 +44,7 @@ static func get_video(filename: String) -> Dictionary:
 	if is_loading:
 		return {}
 	is_loading = true
-	var gdv_filepath: String =  Roth.directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % filename)
+	var gdv_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % filename)
 	if not FileAccess.file_exists(gdv_filepath):
 		return {}
 	#print("Parsing: %s" % gdv_filepath)
