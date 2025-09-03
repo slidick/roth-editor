@@ -5,7 +5,7 @@ signal position_updated
 signal position_finalized(vertex: VertexNode)
 signal vertex_deleted
 signal start_sector_split(vertex: VertexNode)
-signal vertex_dragged(relative: Vector2)
+signal vertex_dragged(vertex: VertexNode, relative: Vector2)
 signal single_vertex_selected(vertex: VertexNode)
 const DRAW_SIZE := 0.25
 

@@ -257,6 +257,58 @@ func _input(event: InputEvent) -> void:
 										new_face.initialize_mesh()
 										add_vertices(false)
 										queue_redraw()
+				elif %ObjectCheckBox.button_pressed:
+					if event.pressed:
+						var objects_selected: int = 0
+						var object_index: int = -1
+						var leave: bool = false
+						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+							if object_node.mouse_over:
+								leave = true
+								if event.shift_pressed:
+									object_node.toggle_selected()
+							if object_node.circle.selected:
+								objects_selected += 1
+								object_index = object_node.ref.index
+						if leave:
+							if objects_selected != 1:
+								%Picker.clear()
+							else:
+								owner.select_face(object_index, "Object", map.map_info.name)
+							return
+						start_vertex_select = true
+						start_vertex_select_position = (get_global_mouse_position() + global_position)
+					else:
+						if start_vertex_select == false:
+							for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+								if object_node.mouse_over or dragging_vertex:
+									return
+							for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+								object_node.deselect()
+							return
+						dragging_vertex = false
+						var starting_position := start_vertex_select_position
+						var ending_position := (get_global_mouse_position() + global_position)
+						var v2 := Vector2(ending_position.x, starting_position.y)
+						var v3 := Vector2(starting_position.x, ending_position.y)
+						var objects_selected: int = 0
+						for object_node: ObjectRoth.ObjectNode2D in  %Objects.get_children():
+							if Geometry2D.is_point_in_polygon(object_node.position, [
+								starting_position,
+								v2,
+								ending_position,
+								v3
+							]):
+								object_node.select()
+								objects_selected += 1
+							else:
+								if not event.shift_pressed:
+									object_node.deselect()
+						if objects_selected != 1:
+							%Picker.clear()
+						start_vertex_select = false
+						start_vertex_select_position = Vector2.ZERO
+						queue_redraw()
 				elif %VertexCheckBox.button_pressed:
 					if event.pressed:
 						for vertex_node: VertexNode in %Vertices.get_children():
@@ -588,6 +640,8 @@ func add_objects() -> void:
 		object_node.object_selected.connect(_on_object_selected)
 		object_node.object_copied.connect(_on_object_copied)
 		object_node.object_deleted.connect(_on_object_deleted)
+		object_node.object_dragged.connect(_on_object_dragged)
+		object_node.object_drag_ended.connect(_on_object_drag_ended)
 		%Objects.add_child(object_node)
 
 func add_sfx() -> void:
@@ -611,6 +665,8 @@ func redraw_object(object: ObjectRoth) -> void:
 			new_object_node.object_selected.connect(_on_object_selected)
 			new_object_node.object_copied.connect(_on_object_copied)
 			new_object_node.object_deleted.connect(_on_object_deleted)
+			new_object_node.object_dragged.connect(_on_object_dragged)
+			new_object_node.object_drag_ended.connect(_on_object_drag_ended)
 			%Objects.add_child(new_object_node)
 			new_object_node.select()
 
@@ -672,6 +728,8 @@ func add_object_to_2d_map(new_object: ObjectRoth, p_select: bool = false) -> voi
 	object_node.object_selected.connect(_on_object_selected)
 	object_node.object_copied.connect(_on_object_copied)
 	object_node.object_deleted.connect(_on_object_deleted)
+	object_node.object_dragged.connect(_on_object_dragged)
+	object_node.object_drag_ended.connect(_on_object_drag_ended)
 	%Objects.add_child(object_node)
 	_on_object_selected(object_node, p_select)
 
@@ -812,7 +870,7 @@ func select(object: Variant) -> void:
 	elif object is ObjectRoth:
 		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 			if object_node.ref.index == object.index:
-				object_node.select()
+				object_node.select_single()
 	elif object is Section7_1:
 		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
 			if sfx_node.ref.index == object.index:
@@ -974,6 +1032,11 @@ func _on_vertex_position_updated() -> void:
 			child.redraw_split_vertex()
 
 
+func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object_node != object:
+			object_node.end_drag()
+
 func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != vertex:
@@ -1017,6 +1080,12 @@ func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != node_dragged:
 			vertex_node.move(relative)
+
+func _on_object_dragged(node_dragged: ObjectRoth.ObjectNode2D, relative: Vector2) -> void:
+	dragging_vertex = true
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object_node != node_dragged:
+			object_node.move(relative)
 
 
 func _on_box_check_box_toggled(_toggled_on: bool) -> void:

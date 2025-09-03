@@ -159,6 +159,11 @@ func deselect() -> void:
 	_reset_edits()
 
 
+func clear() -> void:
+	for child in %EditContainer.get_children():
+		child.queue_free()
+	_reset_edits()
+
 func select(node: Node3D, highlight: bool = true) -> void:
 	_reset_edits()
 	

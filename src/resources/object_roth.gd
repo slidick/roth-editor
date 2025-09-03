@@ -352,6 +352,8 @@ class ObjectNode2D extends Node2D:
 	signal object_selected(object: ObjectNode2D, tell_3d: bool)
 	signal object_copied(object: ObjectRoth)
 	signal object_deleted(object: ObjectRoth)
+	signal object_dragged(object: ObjectNode2D, relative: Vector2)
+	signal object_drag_ended(object: ObjectNode2D)
 	
 	const DRAGGING_THRESHOLD: float = 2.0
 	
@@ -362,6 +364,7 @@ class ObjectNode2D extends Node2D:
 	var drag_started: bool = false
 	var dragging_amount := Vector2.ZERO
 	var popup_menu: PopupMenu
+	var start_drag_position: Vector2
 	
 	func _init(p_ref: ObjectRoth) -> void:
 		ref = p_ref
@@ -397,19 +400,28 @@ class ObjectNode2D extends Node2D:
 		circle.highlighted = false
 	
 	func _input(event: InputEvent) -> void:
+		if event is InputEventKey:
+			if drag_started and event.keycode == KEY_ESCAPE and event.pressed:
+				dragging = false
+				drag_started = false
+				position = start_drag_position
 		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if event.pressed:
-					if mouse_over:
-						dragging = true
-						dragging_amount = Vector2.ZERO
-						drag_started = false
-						circle.selected = true
-						object_selected.emit(self, true)
-				else:
-					if dragging:
-						dragging = false
-						update_position()
+				if not event.shift_pressed:
+					if event.pressed:
+						if mouse_over:
+							dragging = true
+							dragging_amount = Vector2.ZERO
+							drag_started = false
+							if not circle.selected:
+								circle.selected = true
+								object_selected.emit(self, true)
+					else:
+						if dragging:
+							dragging = false
+							drag_started = false
+							update_position(false)
+							object_drag_ended.emit(self)
 			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
 				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
 				circle.selected = true
@@ -418,9 +430,19 @@ class ObjectNode2D extends Node2D:
 		if event is InputEventMouseMotion and dragging:
 			dragging_amount += event.relative
 			if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
-				drag_started = true
+				if drag_started == false:
+					drag_started = true
+					start_drag_position = position
+				
 				var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
-				global_position = mouse.snappedf(get_parent().get_parent().snap)
+				var relative: Vector2 = global_position - mouse.snappedf(get_parent().get_parent().snap)
+				global_position -= relative
+				object_dragged.emit(self, relative)
+				
+				
+				#drag_started = true
+				#var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
+				#global_position = mouse.snappedf(get_parent().get_parent().snap)
 	
 	
 	func _on_popup_menu_index_pressed(index: int) -> void:
@@ -437,9 +459,31 @@ class ObjectNode2D extends Node2D:
 	
 	func select() -> void:
 		circle.selected = true
+	
+	func select_single() -> void:
+		circle.selected = true
 		object_selected.emit(self, false)
 	
-	func update_position() -> void:
+	func toggle_selected() -> void:
+		if circle.selected:
+			deselect()
+		else:
+			select()
+	
+	func move(relative: Vector2) -> void:
+		if circle.selected:
+			if drag_started == false:
+				drag_started = true
+				start_drag_position = position
+			global_position -= relative
+	
+	func end_drag() -> void:
+		if circle.selected:
+			drag_started = false
+			print("ENDING")
+			update_position(false)
+	
+	func update_position(select: bool = true) -> void:
 		var pos := Vector2(
 			position.x * Roth.SCALE_2D_WORLD,
 			position.y * Roth.SCALE_2D_WORLD
@@ -479,7 +523,8 @@ class ObjectNode2D extends Node2D:
 		
 		ref.initialize_mesh()
 		await get_tree().process_frame
-		object_selected.emit(self, true)
+		if select:
+			object_selected.emit(self, true)
 
 
 	func is_inside(point: Vector2, sector: Sector) -> bool:
