@@ -138,6 +138,14 @@ static func parse() -> Dictionary:
 		if action["offset"] != 0:
 			var position: int = dbase100.get_position()
 			dbase100.seek(action["offset"])
+			#var v1: int = dbase100.get_8()
+			#var v2: int = dbase100.get_8()
+			#var v3: int = dbase100.get_8()
+			#var c: int = dbase100.get_8()
+			#var arg: int = (v3 << 16) + (v2 << 8) + v1
+			#if c != 3:
+				#print('C: ', c, ' A: ', arg)
+			#dbase100.seek(action["offset"])
 			action["length"] = dbase100.get_16()
 			action["unk_word_00"] = dbase100.get_16()
 			if action["length"] != 0:

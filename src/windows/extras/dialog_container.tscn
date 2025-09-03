@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ctfactna67ath"]
 
 [ext_resource type="Script" uid="uid://gec5csno11xj" path="res://src/windows/extras/dialog_container.gd" id="1_0n1dq"]
-[ext_resource type="Script" uid="uid://dk01nqct0h45o" path="res://src/windows/waveform.gd" id="1_sqd4g"]
+[ext_resource type="Script" uid="uid://dk01nqct0h45o" path="res://src/windows/extras/waveform.gd" id="1_sqd4g"]
 [ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="2_0n1dq"]
 [ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="3_16fmd"]
 [ext_resource type="Texture2D" uid="uid://v8bmkjmutd7s" path="res://assets/icons/arrows-right.svg" id="4_mrwlj"]

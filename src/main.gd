@@ -2,8 +2,7 @@ extends Control
 
 
 enum Main {
-	NewMap,
-	OpenMap,
+	ManageMaps,
 	Sep0,
 	TestMap,
 	Sep1,
@@ -35,6 +34,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	$FPSLabel.text = "FPS: %s" % Engine.get_frames_per_second()
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_debug_collision"):
@@ -128,10 +128,8 @@ func take_screenshot() -> void:
 
 func _on_main_index_pressed(index: int) -> void:
 	match index:
-		Main.NewMap:
-			%NewMap.toggle()
-		Main.OpenMap:
-			%OpenMap.toggle()
+		Main.ManageMaps:
+			%ManageMaps.toggle()
 		Main.Settings:
 			%Settings.toggle(true)
 			#%SelectionInstallationFileDialog.popup_centered_ratio()

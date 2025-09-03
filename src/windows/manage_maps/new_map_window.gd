@@ -1,13 +1,14 @@
 extends BaseWindow
 
+signal map_created(map_info: Dictionary)
 
 func _ready() -> void:
 	super._ready()
 	Roth.settings_loaded.connect(_on_settings_loaded)
 
 
-func _hide() -> void:
-	super._hide()
+func toggle(_bool: Variant = null) -> void:
+	super.toggle(_bool)
 	%MapNameEdit.text = ""
 	%DasOption.select(-1)
 	%CreateButton.disabled = true
@@ -22,7 +23,7 @@ func _on_settings_loaded() -> void:
 
 
 func _on_cancel_button_pressed() -> void:
-	_hide()
+	toggle(false)
 
 
 func _on_create_button_pressed() -> void:
@@ -30,17 +31,18 @@ func _on_create_button_pressed() -> void:
 
 
 func create() -> void:
-	if %MapNameEdit.text.to_upper() in Roth.maps.map(func (map: Dictionary) -> String: return map.name):
-		await Dialog.information("Map name already in use.", "Name Conflict", false, Vector2(500,200))
+	var map_name: String = %MapNameEdit.text.to_upper()
+	var error := Roth.check_map_name(map_name)
+	if not error.is_empty():
+		await Dialog.information(error, "Name Error", false, Vector2(400,150))
 		return
 	var create_info := {
-		"name": %MapNameEdit.text.to_upper(),
+		"name": map_name,
 		"das": %DasOption.text.to_upper(),
-		"raw": %MapNameEdit.text.to_upper() + ".RAW",
-		"custom": true
 	}
 	Roth.create_new_map(create_info)
-	_hide()
+	toggle(false)
+	map_created.emit(create_info)
 
 
 func _on_das_option_item_selected(_index: int) -> void:

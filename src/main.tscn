@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dba8cygkkmhat"]
+[gd_scene load_steps=13 format=3 uid="uid://dba8cygkkmhat"]
 
 [ext_resource type="Script" uid="uid://c7m0sdb6bu4b3" path="res://src/main.gd" id="1_eewff"]
 [ext_resource type="StyleBox" uid="uid://cn25wp84p5qer" path="res://src/themes/menu_panel.tres" id="2_gh0ne"]
@@ -6,12 +6,11 @@
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="4_rlaii"]
 [ext_resource type="StyleBox" uid="uid://cy0f7oold3swp" path="res://src/themes/pop_up_menu_theme.tres" id="5_5mrjc"]
 [ext_resource type="PackedScene" uid="uid://d06ghcmejei5d" path="res://src/windows/editor/editor_window.tscn" id="5_fyndt"]
-[ext_resource type="PackedScene" uid="uid://osgu4pclsqcs" path="res://src/windows/open_map_window.tscn" id="8_5mrjc"]
+[ext_resource type="PackedScene" uid="uid://osgu4pclsqcs" path="res://src/windows/manage_maps/manage_maps_window.tscn" id="8_5mrjc"]
 [ext_resource type="PackedScene" uid="uid://ctidddlqpgfo3" path="res://src/windows/controls_window.tscn" id="8_mgm53"]
 [ext_resource type="PackedScene" uid="uid://dxr5najj0quo3" path="res://src/windows/loading_window.tscn" id="9_kf8lf"]
 [ext_resource type="PackedScene" uid="uid://c18j0kkjserp8" path="res://src/windows/search_window.tscn" id="9_uewes"]
 [ext_resource type="PackedScene" uid="uid://dq8sxf6oabjnm" path="res://src/windows/extras/extras_window.tscn" id="11_tb146"]
-[ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/new_map_window.tscn" id="12_mlv6i"]
 [ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
 
 [node name="Main" type="Control"]
@@ -104,23 +103,21 @@ theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_accelerator_color = Color(0.244148, 0.280182, 0.530773, 1)
 theme_override_styles/panel = ExtResource("5_5mrjc")
-item_count = 8
-item_0/text = "New Map"
-item_0/id = 8
-item_1/text = "Open Map"
-item_1/id = 3
-item_2/id = 4
-item_2/separator = true
-item_3/text = "Run Maps"
-item_3/id = 7
-item_4/id = 5
-item_4/separator = true
-item_5/text = "Settings"
-item_5/id = 0
-item_6/id = 1
-item_6/separator = true
-item_7/text = "Quit"
-item_7/id = 2
+item_count = 7
+item_0/text = "Manage Maps"
+item_0/id = 3
+item_1/id = 4
+item_1/separator = true
+item_2/text = "Run Maps"
+item_2/id = 7
+item_3/id = 5
+item_3/separator = true
+item_4/text = "Settings"
+item_4/id = 0
+item_5/id = 1
+item_5/separator = true
+item_6/text = "Quit"
+item_6/id = 2
 
 [node name="Windows" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
 unique_name_in_owner = true
@@ -239,7 +236,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="OpenMap" parent="AlwaysInFrontWindows" instance=ExtResource("8_5mrjc")]
+[node name="ManageMaps" parent="AlwaysInFrontWindows" instance=ExtResource("8_5mrjc")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -250,22 +247,6 @@ anchor_right = 0.9
 anchor_bottom = 0.9
 offset_right = 0.0
 offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="NewMap" parent="AlwaysInFrontWindows" instance=ExtResource("12_mlv6i")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -257.0
-offset_top = -90.0
-offset_right = 257.0
-offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 

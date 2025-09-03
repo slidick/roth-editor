@@ -1,0 +1,217 @@
+[gd_scene load_steps=6 format=3 uid="uid://bl4vofcsfauae"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_ns3js"]
+[ext_resource type="Script" uid="uid://ce2ns2ct4fr35" path="res://src/windows/manage_maps/export_window.gd" id="2_ivu1h"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_lnd0k"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_i6gxu"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_i6gxu"]
+
+[node name="ExportWindow" instance=ExtResource("1_ns3js")]
+offset_right = 1195.0
+offset_bottom = 732.0
+theme = ExtResource("2_lnd0k")
+script = ExtResource("2_ivu1h")
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_i6gxu")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Preset:"
+
+[node name="PresetOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 1
+popup/item_0/text = "New Export Preset"
+popup/item_0/id = 0
+
+[node name="DeletePresetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer" index="2"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Delete Preset"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer6" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Name: "
+
+[node name="NameEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer6" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Short name..."
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer7" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Version: "
+
+[node name="VersionEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer7" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Digits and periods only.."
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Title: "
+
+[node name="TitleEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Full title..."
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="4"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Initial Release:"
+
+[node name="ReleaseDateEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "YYYY or YYYY-MM-DD"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="5"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer4" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Description: "
+
+[node name="DescriptionEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer4" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Short description..."
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="6"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer5" index="0"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 0
+text = "Story: "
+
+[node name="StoryEdit" type="TextEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer5" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Optional story..."
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Maps To Export"
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "First Map Is Starting Map"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Drag to Rearrange"
+horizontal_alignment = 2
+
+[node name="MapsTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+column_titles_visible = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+script = ExtResource("5_i6gxu")
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Export"
+
+[node name="FileDialog" type="FileDialog" parent="." index="2"]
+unique_name_in_owner = true
+title = "Export Maps"
+initial_position = 2
+size = Vector2i(1072, 525)
+mode_overrides_title = false
+access = 2
+filters = PackedStringArray("*.roth")
+use_native_dialog = true
+
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/PresetOption" to="." method="_on_preset_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/DeletePresetButton" to="." method="_on_delete_preset_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ExportButton" to="." method="_on_export_button_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

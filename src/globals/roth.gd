@@ -11,6 +11,8 @@ signal das_loading_updated(progress: float, das_file: String)
 signal das_loading_finished(das: Dictionary)
 @warning_ignore("unused_signal")
 signal gdv_loading_updated(progress: float)
+@warning_ignore("unused_signal")
+signal close_map(map_info: Dictionary)
 
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
@@ -62,12 +64,11 @@ func migrate_away_from_custom_res() -> void:
 			while file.get_position() < file.get_length():
 				var line: String = file.get_line()
 				var line_split: Array = line.split(" ")
-				var map: Map = get_map({
+				var map_info: Dictionary = {
 					"name": line_split[0].get_file().get_basename().to_upper(),
 					"das": (line_split[1]+".das").to_upper(),
-					"filepath": ROTH_CUSTOM_MAP_DIRECTORY.path_join((line_split[0]+".raw").to_upper())
-				})
-				save_custom_metadata(map)
+				}
+				save_metadata(map_info)
 		
 		# Remove old files
 		if FileAccess.file_exists(locations["custom.res"]):
@@ -204,7 +205,7 @@ func rename_map(map_info: Dictionary, new_map_name: String) -> void:
 	map.map_info.filepath = map.map_info.filepath.replace(map_info.name, new_map_name)
 	map.map_info.name = new_map_name
 	
-	save_custom(map)
+	save_map(map)
 	
 	if FileAccess.file_exists(map.map_info.filepath) and map.map_info.filepath != old_map_info.filepath:
 		if FileAccess.file_exists(old_map_info.filepath):
@@ -217,10 +218,10 @@ func rename_map(map_info: Dictionary, new_map_name: String) -> void:
 func create_new_map(map_info: Dictionary) -> void:
 	var map := Map.new()
 	map.map_info = map_info
-	save_custom(map)
+	save_map(map)
 	Roth.settings_loaded.emit()
 	loaded_maps[map_info.name] = map
-	load_maps([map_info])
+	#load_maps([map_info])
 
 
 ## Return or load the requested das_file. [br]
@@ -246,29 +247,35 @@ func get_index_from_das(index:int, das_file: String) -> Dictionary:
 
 
 ## Takes a map and saves it to raw format, optionally overriding directory and player starting data
-func save_custom(map: Map, directory: String = ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
-	var raw_filepath := directory.path_join(map.map_info.name.to_upper() + ".RAW")
+func save_map(map: Map, directory: String = ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
 	var raw_map := map.compile(player_data)
+	save_raw(map.map_info, raw_map, directory)
+
+
+func save_raw(map_info: Dictionary, raw_map: PackedByteArray, directory: String = ROTH_CUSTOM_MAP_DIRECTORY) -> void:
+	var raw_filepath := directory.path_join(map_info.name.to_upper() + ".RAW")
 	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
 	file.store_buffer(raw_map)
 	file.close()
-	if map.map_info not in maps:
-		maps.append(map.map_info)
+	if map_info not in maps:
+		maps.append(map_info)
 	
 	if directory == ROTH_CUSTOM_MAP_DIRECTORY:
-		save_custom_metadata(map)
+		save_metadata(map_info)
 
 
 ## Save a map's editor metadata in a json format next to the raw file
-func save_custom_metadata(map: Map) -> void:
+func save_metadata(map_info: Dictionary) -> void:
 	var json_filepath: String
-	if "filepath_json" in map.map_info:
-		json_filepath = map.map_info.filepath_json
+	if "filepath_json" in map_info:
+		json_filepath = map_info.filepath_json
 	else:
-		json_filepath = ROTH_CUSTOM_MAP_DIRECTORY.path_join(map.map_info.name.to_upper() + ".json")
+		json_filepath = ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".json")
+		map_info["filepath_json"] = json_filepath
 	
-	var save_info: Dictionary = map.map_info.duplicate()
+	var save_info: Dictionary = map_info.duplicate()
 	save_info.erase("filepath")
+	save_info.erase("filepath_json")
 	
 	var json_file := FileAccess.open(json_filepath, FileAccess.WRITE)
 	json_file.store_string(JSON.stringify(save_info, "\t"))
@@ -292,7 +299,7 @@ func test_run_maps(maps_to_run: Array, player_data: Dictionary = {}) -> void:
 	
 	# Save the maps into temporary directory
 	for i in range(len(maps_to_run)):
-		save_custom(maps_to_run[i], ROTH_TEMP_DIRECTORY, player_data if i == 0 else {})
+		save_map(maps_to_run[i], ROTH_TEMP_DIRECTORY, player_data if i == 0 else {})
 	
 	# Create the .res file in the temporary directory with the specified maps
 	var roth_res_test_filepath := ROTH_TEMP_DIRECTORY.path_join("test.res")
@@ -386,7 +393,7 @@ func remove_dir_recursive(directory: String) -> void:
 
 ## Helper function to query the user for a valid name for a map
 func query_for_map_name(title: String) -> String:
-	var results: Array
+	var results: Array = [false, ""]
 	var error: String = "Init"
 	var i: int = 0
 	while not error.is_empty():
@@ -394,14 +401,20 @@ func query_for_map_name(title: String) -> String:
 		i += 1
 		if not results[0]:
 			return ""
-		error = ""
-		if len(results[1]) > 8:
-			error = "Please limit to 8 characters"
-		if results[1].find(" ") > 0:
-			error = "No spaces"
-		if results[1].to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
-			error = "Name in use."
-		if len(results[1]) == 0:
-			error = "Name is empty"
+		error = check_map_name(results[1])
 	
 	return results[1].to_upper()
+
+
+## Checks given map name for validity
+func check_map_name(title: String) -> String:
+	var error := ""
+	if len(title) > 8:
+		error = "Please limit to 8 characters"
+	if title.find(" ") > 0:
+		error = "No spaces"
+	if title.to_upper() in Roth.maps.map(func (m: Dictionary) -> String: return m.name):
+		error = "Name in use."
+	if len(title) == 0:
+		error = "Name is empty"
+	return error

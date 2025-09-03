@@ -28,6 +28,7 @@ func _ready() -> void:
 	super._ready()
 	Roth.map_loading_finished.connect(_on_map_loaded)
 	Roth.map_loading_completely_finished.connect(_on_map_completely_loaded)
+	Roth.close_map.connect(close_map)
 	tree_root = %MapsTree.create_item()
 	%MapsTree.set_column_title(0, "Maps")
 	%MapContainer.hide()
@@ -282,7 +283,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if "vanilla" not in selected[0].get_metadata(0).map_info:
 				Console.print("Saving file: %s" % selected[0].get_metadata(0).map_info.name)
 				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
-				Roth.save_custom(map)
+				Roth.save_map(map)
 		MapMenu.SaveAs:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
@@ -301,7 +302,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			map.map_info.name = new_map_name
 			map.map_info.filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(new_map_name + ".RAW")
 			map.map_info.erase("vanilla")
-			Roth.save_custom(map)
+			Roth.save_map(map)
 			Roth.loaded_maps[map.map_info.name] = map
 			selected[0].set_text(0, new_map_name)
 			map.name_changed.emit(new_map_name)
@@ -344,6 +345,18 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 					%Map2D.close_map(item.get_metadata(0).map_info)
 					%"Command Editor".close(item.get_metadata(0).map_info.name)
 					item.free()
+
+
+func close_map(map_info: Dictionary) -> void:
+	for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map_info:
+			tree_item.get_metadata(0).queue_free()
+			Roth.loaded_maps.erase(tree_item.get_metadata(0).map_info.name)
+			for child_item: TreeItem in tree_item.get_children():
+				child_item.free()
+			%Map2D.close_map(tree_item.get_metadata(0).map_info)
+			%"Command Editor".close(tree_item.get_metadata(0).map_info.name)
+			tree_item.free()
 
 
 func _on_search_text_submitted(search_text: String) -> void:

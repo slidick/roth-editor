@@ -346,7 +346,7 @@ func find_bad_sectors() -> Array:
 	return []
 
 
-func compile(player_data: Dictionary) -> PackedByteArray:
+func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
 	
 	var json := {}

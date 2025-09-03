@@ -1,10 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://osgu4pclsqcs"]
+[gd_scene load_steps=10 format=3 uid="uid://osgu4pclsqcs"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_os4qn"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_vlo3g"]
-[ext_resource type="Script" uid="uid://1sjkxava6kb5" path="res://src/windows/open_map_window.gd" id="2_xqje8"]
+[ext_resource type="Script" uid="uid://1sjkxava6kb5" path="res://src/windows/manage_maps/manage_maps_window.gd" id="2_xqje8"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_fy7uo"]
 [ext_resource type="Script" uid="uid://dplewkjlqcsb8" path="res://src/windows/editor/2d_view.gd" id="5_a6cut"]
+[ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/manage_maps/new_map_window.tscn" id="6_yjel5"]
+[ext_resource type="PackedScene" uid="uid://bl4vofcsfauae" path="res://src/windows/manage_maps/export_window.tscn" id="7_x7qhk"]
+[ext_resource type="PackedScene" uid="uid://be7yk2ubuv2c8" path="res://src/windows/manage_maps/import_window.tscn" id="8_lah0d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6cut"]
 draw_center = false
@@ -14,7 +17,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
 
-[node name="OpenMapWindow" instance=ExtResource("1_os4qn")]
+[node name="ManageMapsWindow" instance=ExtResource("1_os4qn")]
 offset_right = 1290.0
 offset_bottom = 805.0
 theme = ExtResource("2_vlo3g")
@@ -32,15 +35,20 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MapTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="MapTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 3
 focus_neighbor_left = NodePath(".")
 focus_neighbor_top = NodePath(".")
 focus_neighbor_right = NodePath(".")
@@ -51,7 +59,7 @@ allow_rmb_select = true
 hide_root = true
 select_mode = 2
 
-[node name="MapPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" index="5"]
+[node name="MapPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" index="5"]
 unique_name_in_owner = true
 item_count = 2
 item_0/text = "Rename Map"
@@ -84,7 +92,7 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer" index="0"]
 handle_input_locally = false
-size = Vector2i(1052, 552)
+size = Vector2i(1058, 536)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="0"]
@@ -197,30 +205,113 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
 layout_mode = 2
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="NewMapButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "New Map"
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Cancel
 "
 
-[node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2"]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-size_flags_horizontal = 2
-text = "Run Selected Maps"
+size_flags_horizontal = 6
+text = "Import Map
+"
 
-[node name="OpenButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2"]
-custom_minimum_size = Vector2(200, 0)
+[node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-size_flags_horizontal = 10
-text = "Open Selected"
+size_flags_horizontal = 6
+text = "Export Selected"
 
-[connection signal="cell_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" to="." method="_on_map_tree_cell_selected"]
-[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" to="." method="_on_map_tree_item_activated"]
-[connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree" to="." method="_on_map_tree_item_mouse_selected"]
-[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MapTree/MapPopupMenu" to="." method="_on_map_popup_menu_index_pressed"]
+[node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Run Selected"
+
+[node name="OpenButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="5"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Edit Selected"
+
+[node name="Dialogs" type="Control" parent="." index="2"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NewMap" parent="Dialogs" index="0" instance=ExtResource("6_yjel5")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -261.0
+offset_top = -100.0
+offset_right = 261.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Export" parent="Dialogs" index="1" instance=ExtResource("7_x7qhk")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -579.5
+offset_top = -348.0
+offset_right = 579.5
+offset_bottom = 348.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Import" parent="Dialogs" index="2" instance=ExtResource("8_lah0d")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -333.0
+offset_right = 512.0
+offset_bottom = 333.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="cell_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_cell_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_item_activated"]
+[connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_item_mouse_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree/MapPopupMenu" to="." method="_on_map_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/NewMapButton" to="." method="_on_new_map_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/ImportButton" to="." method="_on_import_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/ExportButton" to="." method="_on_export_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/RunButton" to="." method="_on_run_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/OpenButton" to="." method="_on_open_button_pressed"]
+[connection signal="map_created" from="Dialogs/NewMap" to="." method="_on_new_map_map_created"]

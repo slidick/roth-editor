@@ -29,6 +29,9 @@ func clear() -> void:
 	%MapName.text = ""
 	%DASFile.text = ""
 	%Commands.text = ""
+	%ExportButton.disabled = true
+	%RunButton.disabled = true
+	%OpenButton.disabled = true
 
 
 func cancel() -> void:
@@ -40,6 +43,7 @@ func open() -> void:
 	if maps.is_empty():
 		return
 	Roth.load_maps(maps)
+	_hide()
 
 
 func get_selected_maps() -> Array:
@@ -74,7 +78,6 @@ func _on_cancel_button_pressed() -> void:
 
 func _on_open_button_pressed() -> void:
 	open()
-	cancel()
 
 
 func _on_map_tree_cell_selected() -> void:
@@ -90,6 +93,9 @@ func _on_map_tree_cell_selected() -> void:
 	%MapName.text = "%s" % map_info.name
 	%DASFile.text = "%s" % map_info.das
 	%Commands.text = "%s" % len(map.commands_section.allCommands)
+	%ExportButton.disabled = false
+	%RunButton.disabled = false
+	%OpenButton.disabled = false
 
 
 func _on_map_tree_item_activated() -> void:
@@ -164,3 +170,26 @@ func _on_run_button_pressed() -> void:
 	if len(maps) == 0:
 		return
 	Roth.test_run_maps(maps)
+
+
+func _on_new_map_button_pressed() -> void:
+	%NewMap.toggle()
+
+
+func _on_new_map_map_created(map_info: Dictionary) -> void:
+	%MapTree.deselect_all()
+	for tree_item: TreeItem in %MapTree.get_root().get_children():
+		if tree_item.get_metadata(0) == map_info:
+			tree_item.select(0)
+			_on_map_tree_cell_selected()
+
+
+func _on_export_button_pressed() -> void:
+	var maps := get_selected_maps()
+	if maps.is_empty():
+		return
+	%Export.export_maps(maps)
+
+
+func _on_import_button_pressed() -> void:
+	%Import.import_map()
