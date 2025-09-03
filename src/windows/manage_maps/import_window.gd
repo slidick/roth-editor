@@ -14,6 +14,7 @@ func clear() -> void:
 	%ReleaseLabel.text = ""
 	%DescriptionLabel.text = ""
 	%StoryLabel.text = ""
+	%ImportButton.disabled = true
 	for child: Node in %MapsContainer.get_children():
 		child.queue_free()
 	map_data = {}
@@ -75,14 +76,25 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 			
 			checkbox.toggled.connect(func (toggled: bool) -> void:
 				map_info["import"] = toggled
+				check_for_allow_import()
 			)
 			
 			%MapsContainer.add_child(hbox)
 	else:
 		%MapsImportContainer.hide()
 	
+	check_for_allow_import()
 	
 	toggle(true)
+
+
+func check_for_allow_import() -> void:
+	for child_hbox: HBoxContainer in %MapsContainer.get_children():
+		var checkbox: CheckBox = child_hbox.get_child(0)
+		if checkbox.button_pressed:
+			%ImportButton.disabled = false
+			return
+	%ImportButton.disabled = true
 
 
 func _on_import_button_pressed() -> void:
