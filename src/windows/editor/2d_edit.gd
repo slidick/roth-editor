@@ -250,7 +250,6 @@ func _input(event: InputEvent) -> void:
 									if face.sister and face.sister.get_ref() == new_face:
 										pass
 									elif new_face.v2 == face.v1 and new_face.v1 == face.v2:
-										print("Sister Merge")
 										face.sister = weakref(new_face)
 										new_face.sister = weakref(face)
 										face.initialize_mesh()
@@ -700,7 +699,10 @@ func _on_object_copied(object: ObjectRoth) -> void:
 	owner.copy_object(object)
 
 
-func _on_object_deleted(_object: ObjectRoth) -> void:
+func _on_object_deleted(deleted_object: ObjectRoth) -> void:
+	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object != deleted_object and object.circle.selected:
+			object.ref.delete()
 	%Picker.deselect()
 
 
@@ -760,12 +762,9 @@ func _on_sfx_deleted(object: Section7_1) -> void:
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			print("A")
 			var new_object := Section7_1.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_object:
-				print("FAILED")
 				return
-			print("HELLO")
 			map.add_sfx(new_object)
 			var object_node: Section7_1.SFXNode2D = new_object.get_node_2d()
 			object_node.object_selected.connect(_on_sfx_selected)
@@ -1047,7 +1046,6 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 	#var delete_vertex: bool = false
 	for face: Face in vertex.faces:
 		if face.face_length == 0:
-			print("Face deletion")
 			face.sector.delete_face(face)
 			add_vertices(true)
 			return
@@ -1059,7 +1057,6 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 				if face.sister and face.sister.get_ref() == vertex_face:
 					pass
 				elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
-					print("Sister Merge")
 					face.sister = weakref(vertex_face)
 					vertex_face.sister = weakref(face)
 					face.initialize_mesh()

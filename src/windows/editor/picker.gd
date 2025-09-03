@@ -160,8 +160,15 @@ func deselect() -> void:
 
 
 func clear() -> void:
+	if selected_node:
+		selected_node.get_parent().material_overlay = null
+		selected_node = null
 	for child in %EditContainer.get_children():
 		child.queue_free()
+	selected_material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED
+	highlight_material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED
+	%Arrow3D.clear_target()
+	#%Map2D.select(null)
 	_reset_edits()
 
 func select(node: Node3D, highlight: bool = true) -> void:
