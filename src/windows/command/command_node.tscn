@@ -5,8 +5,8 @@
 
 [node name="CommandNode" type="GraphNode"]
 offset_top = 439.0
-offset_right = 360.0
-offset_bottom = 945.0
+offset_right = 380.0
+offset_bottom = 939.0
 theme = ExtResource("1_yh8bj")
 slot/0/left_enabled = false
 slot/0/left_type = 0
@@ -432,6 +432,7 @@ text = "0"
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.3
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer"]
 layout_mode = 2

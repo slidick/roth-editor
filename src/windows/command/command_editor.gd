@@ -4,7 +4,7 @@ signal command_editor_loading_finished
 
 const COMMAND_NODE = preload("uid://bg2itg1120pon")
 const VERTICAL_SPACING: int = 540
-const HORIZONTAL_SPACING: int = 400
+const HORIZONTAL_SPACING: int = 420
 
 var map: Map
 var command_section: Dictionary = {}
@@ -575,86 +575,132 @@ func _on_search_edit_text_submitted(new_text: String) -> void:
 		if command_node.name == "_connection_layer":
 			continue
 		match %SearchOptions.text:
-			"Floor Sector ID":
-				if command_node.data.commandBase == 19 and len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
-					ensure_visible(command_node)
+			"Sector ID":
+				if (
+						(command_node.data.commandBase == 2 and command_node.data.args[2] == int(new_text))
+						or (command_node.data.commandBase == 3 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 7 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 9 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 10 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 14 and (command_node.data.args[1]>>8) == int(new_text))
+						or (command_node.data.commandBase == 17 and (command_node.data.args[1]) == int(new_text))
+						or (command_node.data.commandBase == 19 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 25 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 28 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 29 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 49 and command_node.data.args[1] == int(new_text))
+						or (command_node.data.commandBase == 59 and command_node.data.args[1] == int(new_text) and command_node.data.args[2] == 0 and command_node.data.args[3] == 0 and command_node.data.args[4] == 0 and command_node.data.args[5] == 0)
+				):
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
-			"LeftClick Face ID":
-				if command_node.data.commandBase == 24 and len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
-					ensure_visible(command_node)
+			"Face ID":
+				if (
+						command_node.data.commandBase == 12 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 15 and (command_node.data.args[1]>>8) == int(new_text)
+						or command_node.data.commandBase == 24 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 26 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 31 and command_node.data.args[4] == int(new_text)
+						or command_node.data.commandBase == 46 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 47 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 50 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 52 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 53 and command_node.data.args[1] == int(new_text)
+				):
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Object ID":
-				if command_node.data.commandBase == 8 and len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
-					ensure_visible(command_node)
+				if (
+						command_node.data.commandBase == 2 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 8 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 13 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 22 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 27 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 32 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 32 and command_node.data.args[2] == int(new_text)
+						or command_node.data.commandBase == 35 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 36 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 48 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 57 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 58 and command_node.data.args[0] == int(new_text)
+						or command_node.data.commandBase == 60 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 60 and command_node.data.args[3] == int(new_text)
+				):
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg01":
 				if len(command_node.data.args) >= 1 and command_node.data.args[0] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg02":
 				if len(command_node.data.args) >= 2 and command_node.data.args[1] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg03":
 				if len(command_node.data.args) >= 3 and command_node.data.args[2] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg04":
 				if len(command_node.data.args) >= 4 and command_node.data.args[3] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg05":
 				if len(command_node.data.args) >= 5 and command_node.data.args[4] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg06":
 				if len(command_node.data.args) >= 6 and command_node.data.args[5] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg07":
 				if len(command_node.data.args) >= 7 and command_node.data.args[6] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Arg08":
 				if len(command_node.data.args) >= 8 and command_node.data.args[7] == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Command Base":
 				if command_node.data.commandBase == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Command Modifier":
 				if command_node.data.commandModifier == int(new_text):
-					ensure_visible(command_node)
 					if search_amount == 0:
+						ensure_visible(command_node)
 						return
 					search_amount -= 1
 			"Command Index":
-				if command_node.index == int(new_text):
+				if (
+						command_node.index == int(new_text)
+						or command_node.data.commandBase == 23 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 30 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 56 and command_node.data.args[1] == int(new_text)
+						or command_node.data.commandBase == 64 and command_node.data.args[0] == int(new_text)
+				):
 					if search_amount == 0:
 						ensure_visible(command_node)
 						return
