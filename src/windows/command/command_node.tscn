@@ -88,6 +88,37 @@ text = "Modifier:"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+editable = false
+
+[node name="ModifierMenuButton" type="MenuButton" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Change"
+item_count = 8
+popup/item_0/text = "Autorun"
+popup/item_0/checkable = 1
+popup/item_0/id = 0
+popup/item_1/text = "Toggle State"
+popup/item_1/checkable = 1
+popup/item_1/id = 1
+popup/item_2/text = "All Connected"
+popup/item_2/checkable = 1
+popup/item_2/id = 2
+popup/item_3/text = "Disable"
+popup/item_3/checkable = 1
+popup/item_3/id = 3
+popup/item_4/text = "Unused"
+popup/item_4/checkable = 1
+popup/item_4/id = 4
+popup/item_5/text = "Unused"
+popup/item_5/checkable = 1
+popup/item_5/id = 5
+popup/item_6/text = "Unused"
+popup/item_6/checkable = 1
+popup/item_6/id = 6
+popup/item_7/text = "Unknown"
+popup/item_7/checkable = 1
+popup/item_7/id = 7
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
