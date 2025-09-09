@@ -90,6 +90,8 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
 
 
 func is_viable(texture_data: Dictionary) -> bool:
+	if texture_data.das.get_file().get_basename() != current_das.name:
+		return false
 	if ( ((only_ceilings or (vert_tileable and horz_tileable))
 		and (texture_data.width > 0
 			and (texture_data.width & (texture_data.width - 1)) == 0
