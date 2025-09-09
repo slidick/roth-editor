@@ -308,6 +308,21 @@ func cross_sign(p1: Vector2, p2: Vector2, p3: Vector2) -> float:
 	return (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)
 
 
+func is_object_inside(object: ObjectRoth) -> bool:
+	var point := Vector2(-object.data.posX, object.data.posY)
+	
+	var polygon_path_finder := PolygonPathFinder.new()
+	var points := vertices.slice(0,-1)
+	var connections := []
+	for i in range(len(points)-1):
+		connections.append(i)
+		connections.append(i+1)
+	connections.append(len(points)-1)
+	connections.append(0)
+	polygon_path_finder.setup(points, connections)
+	return polygon_path_finder.is_point_inside(point)
+
+
 func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, is_ceiling: bool, texture_shift_x: int, texture_shift_y: int, is_platform: bool) -> SectorMesh3D:
 	var mapping: Dictionary = das.mapping
 	

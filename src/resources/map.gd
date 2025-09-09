@@ -212,6 +212,7 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	#Console.print("Splitting sector")
 	
 	var new_sector: Sector = existing_sector.duplicate()
+	new_sector.data.objectInformation = []
 	sectors.append(new_sector)
 	
 	var face_1: Face = Face.create_new_face(map_info, existing_sector)
@@ -268,6 +269,13 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	node.get_node("Faces").add_child(await face_1.initialize_mesh())
 	node.get_node("Faces").add_child(await face_2.initialize_mesh())
 	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+	
+	for object: ObjectRoth in objects:
+		if object.sector.get_ref() == existing_sector:
+			if not existing_sector.is_object_inside(object):
+				existing_sector.data.objectInformation.erase(object.data)
+				new_sector.data.objectInformation.append(object.data)
+				object.sector = weakref(new_sector)
 
 
 func add_object(new_object: ObjectRoth) -> void:
@@ -332,7 +340,11 @@ func merge_sectors(double_sided_face: Face) -> void:
 		else:
 			new_faces.append(weakref(face_ref.get_ref()))
 	
-	
+	for object: ObjectRoth in objects:
+		if object.sector.get_ref() == sister_sector:
+				sister_sector.data.objectInformation.erase(object.data)
+				sector.data.objectInformation.append(object.data)
+				object.sector = weakref(sector)
 	
 	delete_sector(sister_sector)
 	sector.faces = new_faces
