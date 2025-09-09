@@ -73,7 +73,7 @@ static func get_animation_offsets() -> Array:
 		var rle_image_hdr := Parser.parse_section(file, RLE_IMG_HDR)
 		file.seek(file.get_position() - 8)
 		if rle_image_hdr["imgType"] == IMGTYPE_ROWBGN_LEN:
-			offsets.append(file.get_position())
+			offsets.append(file.get_position()-4)
 		file.seek(file.get_position() + size)
 		var pos:int = file.get_position()
 		pos = (pos + 7) & ~7
@@ -91,6 +91,7 @@ static func get_at_offset(offset: int) -> Variant:
 	
 	var file := FileAccess.open(dbase200_filepath, FileAccess.READ)
 	file.seek(offset)
+	var _size := file.get_32()
 	var rle_image_hdr := Parser.parse_section(file, RLE_IMG_HDR)
 	match rle_image_hdr["imgType"]:
 		IMGTYPE_RLE:

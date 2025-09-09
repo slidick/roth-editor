@@ -21,13 +21,13 @@ panel_style_override = ExtResource("4_xdice")
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 layout_mode = 2
-current_tab = 0
+current_tab = 1
 
 [node name="Commands" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1" instance=ExtResource("5_rtctb")]
+visible = false
 layout_mode = 2
 
 [node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="2"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -41,10 +41,17 @@ allow_reselect = true
 allow_rmb_select = true
 auto_width = true
 
-[node name="InventoryPanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer" index="1"]
-unique_name_in_owner = true
+[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer" index="1"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="InventoryPanel" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/PanelContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
 [node name="Cutscenes" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="3"]
 visible = false

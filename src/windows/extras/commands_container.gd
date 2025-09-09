@@ -24,9 +24,7 @@ func _on_settings_loaded() -> void:
 		#var command_counts := {}
 		for i in range(len(dbase100.actions)):
 			var action: Dictionary = dbase100.actions[i]
-			if action.offset == 0:
-				continue
-			if action.length == 0:
+			if action.opcodes.is_empty():
 				continue
 			var idx: int = %CommandList.add_item("%d" % (i+1))
 			%CommandList.set_item_metadata(idx, action)

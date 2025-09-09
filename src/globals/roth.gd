@@ -17,6 +17,8 @@ signal close_map(map_info: Dictionary)
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
 var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
+var ROTH_CUSTOM_DBASE_DIRECTORY: String = OS.get_user_data_dir().path_join("dbase")
+var ROTH_CUSTOM_INSTALL_DIRECTORY: String = OS.get_user_data_dir().path_join("install")
 var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
 const OLD_EXE: float = 3.925
@@ -25,6 +27,7 @@ const NEW_EXE: float = 3.983
 var res: Dictionary = {}
 var maps: Array = []
 var das_files: Array = []
+var dbase_packs: Array = []
 var install_directory: String = ""
 var loaded_maps: Dictionary = {}
 var loaded_das: Dictionary = {}
@@ -39,6 +42,8 @@ func _ready() -> void:
 	
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_MAP_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_MAP_DIRECTORY)
+	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_DBASE_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DBASE_DIRECTORY)
 	
 	#Settings.update_settings("locations", {"custom.res": ROTH_CUSTOM_MAP_DIRECTORY.path_join("custom.res")})
 	
@@ -157,6 +162,37 @@ func load_roth_settings() -> void:
 					file_json["filepath"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file).get_basename() + ".RAW"
 					file_json["filepath_json"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file)
 					maps.append(file_json)
+	
+	
+	var options: Dictionary = Settings.settings.get("options", {})
+	
+	if options.is_empty():
+		options = { "active_dbase": "Original"}
+		Settings.update_settings("options", options)
+	else:
+		if "active_dbase" not in options:
+			options.active_dbase = "Original"
+			Settings.update_settings("options", options)
+	
+	dbase_packs = [
+		{
+			"name": "Original",
+			"active": false,
+			"vanilla": true,
+		}
+	]
+	for dir in DirAccess.get_directories_at(ROTH_CUSTOM_DBASE_DIRECTORY):
+		var dbase_info := { "name": dir, "active": false }
+		dbase_packs.append(dbase_info)
+	
+	if options.active_dbase not in dbase_packs.map(func (a:Dictionary) -> String: return a.name):
+		options.active_dbase = "Original"
+		Settings.update_settings("options", options)
+	
+	for dbase_info: Dictionary in dbase_packs:
+		if dbase_info.name == options.active_dbase:
+			dbase_info.active = true
+
 	
 	#print(JSON.stringify(maps, "\t"))
 	
@@ -320,13 +356,30 @@ maps {
 	roth_res_test_file.close()
 	
 	
+	# Create custom install directory if using non vanilla dbase
+	var roth_directory: String
+	var current_dbase: Dictionary
+	for dbase_info: Dictionary in dbase_packs:
+		if dbase_info.active:
+			current_dbase = dbase_info
+	if "vanilla" not in current_dbase:
+		create_install(Roth.install_directory.path_join(".."), ROTH_CUSTOM_INSTALL_DIRECTORY)
+		roth_directory = ROTH_CUSTOM_INSTALL_DIRECTORY
+		for file: String in DirAccess.get_files_at(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name)):
+			var filepath := ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name).path_join(file)
+			var dest_filepath := ROTH_CUSTOM_INSTALL_DIRECTORY.path_join(file)
+			DirAccess.copy_absolute(filepath, dest_filepath)
+	else:
+		roth_directory = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
+	
+	
 	# Create the dosbox auto exec .conf file
 	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
-	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
 	var autoexec := FileAccess.open(dosbox_autoexec_filepath, FileAccess.WRITE)
 	autoexec.store_string("[autoexec]\n")
 	autoexec.store_string("mount d \"%s\"\n" % ROTH_TEMP_DIRECTORY)
 	autoexec.store_string("mount c \"%s\"\n" % roth_directory)
+	autoexec.store_string("mount g \"%s\n" % Roth.install_directory.path_join("..").path_join("DATA/GDV"))
 	autoexec.store_string("c:\n")
 	autoexec.store_string("cd \\roth\n")
 	# Only the older version allows command line arguments
@@ -353,8 +406,8 @@ maps {
 	
 	# Run dosbox
 	var dosbox_bin: String = Settings.settings.locations.get("dosbox")
-	Console.print("Executing: %s" % dosbox_bin)
-	Console.print(dosbox_args)
+	#Console.print("Executing: %s" % dosbox_bin)
+	#Console.print(dosbox_args)
 	OS.execute(dosbox_bin, dosbox_args)
 
 
@@ -437,3 +490,218 @@ func reload_map_info(map_info: Dictionary) -> void:
 						map_info[key] = file_json[key]
 					else:
 						map_info.erase(key)
+
+
+func check_dbase_pack_name(p_name: String) -> String:
+	var error := ""
+	if p_name.to_lower() in dbase_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		error = "Name already in use."
+	if not p_name.is_valid_filename():
+		error = "Can't contain the following: : / \\ ? * \" | % < >"
+	return error
+
+
+func duplicate_dbase_pack(p_dbase_info: Dictionary, new_name: String) -> void:
+	var dbase_info := {
+		"name": new_name,
+		"active": false,
+	}
+	var copy_dir: String = ""
+	var new_dir: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(new_name)
+	DirAccess.make_dir_recursive_absolute(new_dir)
+	if "vanilla" in p_dbase_info:
+		copy_dir = Roth.install_directory.path_join("../DATA")
+	else:
+		copy_dir = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name)
+	for i in range(100, 600, 100):
+		if FileAccess.file_exists(copy_dir.path_join("DBASE%d.DAT" % i)):
+			DirAccess.copy_absolute(
+				copy_dir.path_join("DBASE%d.DAT" % i),
+				new_dir.path_join("DBASE%d.DAT" % i)
+			)
+	dbase_packs.append(dbase_info)
+	Roth.settings_loaded.emit()
+
+
+func rename_dbase_pack(p_dbase_info: Dictionary, new_name: String) -> void:
+	DirAccess.rename_absolute(
+		ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name),
+		ROTH_CUSTOM_DBASE_DIRECTORY.path_join(new_name)
+	)
+	p_dbase_info.name = new_name
+	Roth.settings_loaded.emit()
+
+
+func delete_dbase_pack(p_dbase_info: Dictionary) -> void:
+	if DirAccess.dir_exists_absolute(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name)):
+		remove_dir_recursive(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name))
+	dbase_packs.erase(p_dbase_info)
+	if p_dbase_info.active:
+		for dbase_info: Dictionary in dbase_packs:
+			if dbase_info.name == "Original":
+				dbase_info.active = true
+				Settings.update_settings("options", {"active_dbase": "Original"})
+	Roth.settings_loaded.emit()
+
+
+func create_install(installation_directory: String, roth_directory: String) -> void:
+	if DirAccess.dir_exists_absolute(roth_directory):
+		return
+	#remove_dir_recursive(roth_directory)
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("DATA"))
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("DIGI"))
+	#DirAccess.make_dir_recursive_absolute(roth_directory.path_join("GDV"))
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("M"))
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("MIDI"))
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE100.DAT"), roth_directory.path_join("DBASE100.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE200.DAT"), roth_directory.path_join("DBASE200.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE300.DAT"), roth_directory.path_join("DBASE300.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE400.DAT"), roth_directory.path_join("DBASE400.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE500.DAT"), roth_directory.path_join("DBASE500.DAT"))
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DOS4GW.EXE"), roth_directory.path_join("DOS4GW.EXE"))
+	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.RES")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/ROTH.RES"), roth_directory.path_join("ROTH.RES"))
+	elif FileAccess.file_exists(installation_directory.path_join("DATA/INSTALL/ROTH.RES")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/INSTALL/ROTH.RES"), roth_directory.path_join("ROTH.RES"))
+	else:
+		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
+		return
+	
+	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.EXE")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/ROTH.EXE"), roth_directory.path_join("ROTH.EXE"))
+	elif FileAccess.file_exists(installation_directory.path_join("DATA/INSTALL/ROTH.EXE")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/INSTALL/ROTH.EXE"), roth_directory.path_join("ROTH.EXE"))
+	else:
+		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
+		return
+	
+	var seek_value: int = 0
+	if (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f0f93c7931b9a678469095d3d7f54c04" or 
+			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "c11ab446c6d92e4e89d557864aa62997"):
+		seek_value = 145767
+	elif (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "d56e7641e8f5d4ec3144bb1c140a7677" or 
+			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f588469eb868373a339bebb5fba5a9bb"):
+		seek_value = 147338
+	else:
+		print(FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")))
+		return
+	
+	# Patch the EXE to read the GDV files from G:\
+	var roth_exe_file := FileAccess.open(roth_directory.path_join("ROTH.EXE"), FileAccess.READ_WRITE)
+	roth_exe_file.seek(seek_value)
+	roth_exe_file.store_8(0x47)
+	roth_exe_file.store_8(0x3A)
+	roth_exe_file.store_8(0x5C)
+	roth_exe_file.store_8(0x00)
+	roth_exe_file.close()
+	
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/ICONS.ALL"), roth_directory.path_join("DATA/ICONS.ALL"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/BACKDROP.RAW"), roth_directory.path_join("DATA/BACKDROP.RAW"))
+	
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FILELIST.TXT"), roth_directory.path_join("DATA/FILELIST.TXT"))
+	var filelist_file := FileAccess.open(roth_directory.path_join("DATA/FILELIST.TXT"), FileAccess.WRITE)
+	filelist_file.close()
+	
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FXSCRIPT.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FX22.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DIGI/HMIDET.386"), roth_directory.path_join("DIGI/HMIDET.386"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DIGI/HMIDRV.386"), roth_directory.path_join("DIGI/HMIDRV.386"))
+	
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/DRUM.BNK"), roth_directory.path_join("MIDI/DRUM.BNK"))
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/GRAVIS.INI"), roth_directory.path_join("MIDI/GRAVIS.INI"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/HMIMDRV.386"), roth_directory.path_join("MIDI/HMIMDRV.386"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/MELODIC.BNK"), roth_directory.path_join("MIDI/MELODIC.BNK"))
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/MT32MAP.MTX"), roth_directory.path_join("MIDI/MT32MAP.MTX"))
+	
+	
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ADEMO.DAS"), roth_directory.path_join("M/ADEMO.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO.DAS"), roth_directory.path_join("M/DEMO.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO1.DAS"), roth_directory.path_join("M/DEMO1.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO2.DAS"), roth_directory.path_join("M/DEMO2.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO3.DAS"), roth_directory.path_join("M/DEMO3.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO4.DAS"), roth_directory.path_join("M/DEMO4.DAS"))
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ABAGATE2.RAW"), roth_directory.path_join("M/ABAGATE2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AELF.RAW"), roth_directory.path_join("M/AELF.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ANUBIS.RAW"), roth_directory.path_join("M/ANUBIS.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AQUA1.RAW"), roth_directory.path_join("M/AQUA1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AQUA2.RAW"), roth_directory.path_join("M/AQUA2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS.RAW"), roth_directory.path_join("M/CAVERNS.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS2.RAW"), roth_directory.path_join("M/CAVERNS2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS3.RAW"), roth_directory.path_join("M/CAVERNS3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CHURCH1.RAW"), roth_directory.path_join("M/CHURCH1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DOMINION.RAW"), roth_directory.path_join("M/DOMINION.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DOPPLE.RAW"), roth_directory.path_join("M/DOPPLE.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ELOHIM1.RAW"), roth_directory.path_join("M/ELOHIM1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/GNARL1.RAW"), roth_directory.path_join("M/GNARL1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/GRAVE.RAW"), roth_directory.path_join("M/GRAVE.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/LRINTH.RAW"), roth_directory.path_join("M/LRINTH.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/LRINTH1.RAW"), roth_directory.path_join("M/LRINTH1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS3.RAW"), roth_directory.path_join("M/MAS3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS4.RAW"), roth_directory.path_join("M/MAS4.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS6.RAW"), roth_directory.path_join("M/MAS6.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS7.RAW"), roth_directory.path_join("M/MAS7.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAUSO1EA.RAW"), roth_directory.path_join("M/MAUSO1EA.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAUSO1EB.RAW"), roth_directory.path_join("M/MAUSO1EB.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAZE.RAW"), roth_directory.path_join("M/MAZE.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/OPTEMP1.RAW"), roth_directory.path_join("M/OPTEMP1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA1.RAW"), roth_directory.path_join("M/RAQUIA1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA2.RAW"), roth_directory.path_join("M/RAQUIA2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA3.RAW"), roth_directory.path_join("M/RAQUIA3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA4.RAW"), roth_directory.path_join("M/RAQUIA4.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA5.RAW"), roth_directory.path_join("M/RAQUIA5.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SALVAT.RAW"), roth_directory.path_join("M/SALVAT.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SOULST2.RAW"), roth_directory.path_join("M/SOULST2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SOULST3.RAW"), roth_directory.path_join("M/SOULST3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY1.RAW"), roth_directory.path_join("M/STUDY1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY2.RAW"), roth_directory.path_join("M/STUDY2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY3.RAW"), roth_directory.path_join("M/STUDY3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY4.RAW"), roth_directory.path_join("M/STUDY4.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TEMPLE1.RAW"), roth_directory.path_join("M/TEMPLE1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1F.RAW"), roth_directory.path_join("M/TGATE1F.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1G.RAW"), roth_directory.path_join("M/TGATE1G.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1H.RAW"), roth_directory.path_join("M/TGATE1H.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1I.RAW"), roth_directory.path_join("M/TGATE1I.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TOWER1.RAW"), roth_directory.path_join("M/TOWER1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/VICAR.RAW"), roth_directory.path_join("M/VICAR.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/VICAR1.RAW"), roth_directory.path_join("M/VICAR1.RAW"))
+	
+	write_config_ini(roth_directory.path_join("CONFIG.INI"), false)
+	
+	var roth_ini_file := FileAccess.open(roth_directory.path_join("ROTH.INI"), FileAccess.WRITE)
+	roth_ini_file.store_string("SpeechSub=ON\n")
+	roth_ini_file.store_string("SpeechAud=ON\n")
+	roth_ini_file.store_string("MovieSub=ON\n")
+	roth_ini_file.store_string("MovieAud=ON\n")
+	roth_ini_file.store_string("VideoMode=8\n")
+	roth_ini_file.store_string("ViewSize=0\n")
+	roth_ini_file.store_string("SoundFXVol=0x100\n")
+	roth_ini_file.store_string("SpeechVol=0xd0\n")
+	roth_ini_file.store_string("MovieVol=0x100\n")
+	roth_ini_file.store_string("MusicVol=0x100\n")
+	roth_ini_file.store_string("MouseSpeed=0x40\n")
+	roth_ini_file.close()
+
+
+func write_config_ini(config_ini_filepath: String, original_game: bool) -> void:
+	if not DirAccess.dir_exists_absolute(config_ini_filepath.get_base_dir()):
+		DirAccess.make_dir_recursive_absolute(config_ini_filepath.get_base_dir())
+	var config_ini_file := FileAccess.open(config_ini_filepath, FileAccess.WRITE)
+	if original_game:
+		config_ini_file.store_string("SourcePath=C:\\DATA\n")
+		config_ini_file.store_string("DestinationPath=C:\\ROTH\n")
+	config_ini_file.store_string("SoundCard=0xe018\n")
+	config_ini_file.store_string("SoundPort=0x220\n")
+	config_ini_file.store_string("SoundIRQ=7\n")
+	config_ini_file.store_string("SoundDMA=5\n")
+	config_ini_file.store_string("MusicCard=0xa009\n")
+	config_ini_file.store_string("MusicPort=0x388\n")
+	config_ini_file.close()
+
+

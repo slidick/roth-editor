@@ -127,6 +127,7 @@ func _on_cutscene_list_item_selected(index: int) -> void:
 	%VideoControlsContainer.show()
 	
 	var cutscene: Dictionary = %CutsceneList.get_item_metadata(index)
+	#print(JSON.stringify(cutscene, '\t'))
 	
 	var vbox := VBoxContainer.new()
 	%CutscenePanel.add_child(vbox)
@@ -323,7 +324,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	vbox_main.add_child(image_hbox)
 	
 	if "inventory_image" in inventory_item and inventory_item["inventory_image"] != 0:
-		var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8+4)
+		var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8)
 		var texture_rect := TextureRect.new()
 		texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -366,6 +367,9 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		if key == "subtitle":
 			continue
 		
+		if key == "commands_section" and inventory_item[key].is_empty():
+			continue
+		
 		var hbox := HBoxContainer.new()
 		
 		vbox.add_child(hbox)
@@ -375,11 +379,97 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		label1.custom_minimum_size.x = 200
 		hbox.add_child(label1)
 		
-		var label2 := Label.new()
-		label2.text = "%s" % [inventory_item[key].string if key == "next_subtitle" or key == "right_click" else inventory_item[key]]
-		#label2.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
-		label2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		hbox.add_child(label2)
+		if key != "commands_section":
+			var label2 := Label.new()
+			label2.text = "%s" % [inventory_item[key]]
+			#label2.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+			label2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			hbox.add_child(label2)
+		else:
+			var hbox2 := HBoxContainer.new()
+			hbox2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			hbox.add_child(hbox2)
+			hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			
+			
+			var vbox_item_list := VBoxContainer.new()
+			var item_list_label := Label.new()
+			item_list_label.text = "Triggers"
+			var item_list := ItemList.new()
+			item_list.custom_minimum_size.x = 150
+			item_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			for trigger: Dictionary in inventory_item[key]:
+				var idx := item_list.add_item("%d" % trigger.trigger)
+				item_list.set_item_metadata(idx, trigger)
+			vbox_item_list.add_child(item_list_label)
+			vbox_item_list.add_child(item_list)
+			hbox2.add_child(vbox_item_list)
+			
+			
+			
+			var tree := Tree.new()
+			tree.columns = 2
+			tree.column_titles_visible = true
+			tree.set_column_title(0, "Opcode")
+			tree.set_column_title(1, "Arg")
+			tree.select_mode = Tree.SELECT_ROW
+			tree.hide_root = true
+			tree.create_item()
+			tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			hbox2.add_child(tree)
+			
+			
+			var panel := PanelContainer.new()
+			hbox2.add_child(panel)
+			panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			
+			
+			
+			item_list.item_selected.connect(func (idx: int) -> void:
+				for tree_item: TreeItem in tree.get_root().get_children():
+					tree_item.free()
+				for command: Dictionary in item_list.get_item_metadata(idx).commands:
+					var tree_item: TreeItem = tree.get_root().create_child()
+					tree_item.set_text(0, "%d" % command.opcode)
+					tree_item.set_text(1, "%d" % command.args)
+			)
+			
+			tree.item_selected.connect(func () -> void:
+				var opcode := int(tree.get_selected().get_text(0))
+				var arg := int(tree.get_selected().get_text(1))
+				for child: Node in panel.get_children():
+					child.queue_free()
+				if opcode == 5 or opcode == 15:
+					var vbox3 := VBoxContainer.new()
+					
+					var label := Label.new()
+					var subtitle := DBase400.get_at_offset(arg)
+					label.text = "%s" % subtitle.string
+					label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+					label.autowrap_mode = TextServer.AUTOWRAP_WORD
+					var color: Array = Das.get_default_palette()[subtitle.font_color]
+					label.add_theme_color_override("font_color", Color(color[0], color[1], color[2]))
+					
+					var scroll2 := ScrollContainer.new()
+					scroll2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+					scroll2.size_flags_vertical = Control.SIZE_EXPAND_FILL
+					scroll2.add_child(label)
+					vbox3.add_child(scroll2)
+					
+					if subtitle.offset != 0:
+					
+						var button := Button.new()
+						button.text = "Play"
+						button.pressed.connect(func () -> void:
+							var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.offset)
+							if entry.is_empty():
+								return
+							Roth.play_audio_buffer(entry.data, entry.sampleRate)
+						)
+						vbox3.add_child(button)
+					panel.add_child(vbox3)
+					
+			)
 
 
 func _on_d_base_200_list_item_selected(index: int) -> void:

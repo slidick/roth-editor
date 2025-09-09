@@ -30,7 +30,7 @@ const DBASE_100_INVENTORY_OFFSET := {
 
 const DBASE100_INVENTORY_ENTRY := {
 	"length": Parser.Type.Word,
-	"unk_word_01": Parser.Type.Word,
+	"object_texture_index": Parser.Type.Word,
 	"closeup_type": Parser.Type.Byte,           # 0x00 - simple object (infinitive looping), 0x09 - play once
 	"item_type": Parser.Type.Byte,
 	"unk_byte_02": Parser.Type.Byte,            # always 0
@@ -38,11 +38,11 @@ const DBASE100_INVENTORY_ENTRY := {
 	"closeup_image": Parser.Type.DWord,         # animated image in inventory
 	"inventory_image": Parser.Type.DWord,       # image in inventory
 	"offset_dbase400": Parser.Type.DWord,
-	"add_length": Parser.Type.Word,
-	"unk_byte_04": Parser.Type.Byte,            # always 0
-	"unk_byte_05": Parser.Type.Byte,
-	"unk_word_06": Parser.Type.Word,
-	"unk_word_07": Parser.Type.Word,
+	#"add_length": Parser.Type.Word,
+	#"unk_byte_04": Parser.Type.Byte,            # always 0
+	#"unk_byte_05": Parser.Type.Byte,
+	#"unk_word_06": Parser.Type.Word,
+	#"unk_word_07": Parser.Type.Word,
 	#"unk_bytes_01"              / Bytes(lambda ctx: ctx.add_length)
 }
 
@@ -70,7 +70,10 @@ static func parse() -> Dictionary:
 	var dbase400_filepath: String = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
 		return {}
-	
+	return parse_files(dbase100_filepath, dbase400_filepath)
+
+
+static func parse_files(dbase100_filepath: String, dbase400_filepath: String) -> Dictionary:
 	var dbase100 := FileAccess.open(dbase100_filepath, FileAccess.READ)
 	var dbase400 := FileAccess.open(dbase400_filepath, FileAccess.READ)
 	
@@ -85,6 +88,7 @@ static func parse() -> Dictionary:
 		if cutscene["offset_dbase400"] != 0:
 			dbase400.seek(cutscene["offset_dbase400"])
 			cutscene["entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			cutscene["entry"].erase("length_str")
 		if cutscene["offset_dbase400_subtitles"] != 0:
 			dbase400.seek(cutscene["offset_dbase400_subtitles"])
 			cutscene["subtitles"] = DBase400.parse_cutscene_subtitle(dbase400, cutscene["offset_dbase400_subtitles"])
@@ -109,23 +113,47 @@ static func parse() -> Dictionary:
 		var position: int = dbase100.get_position()
 		dbase100.seek(offset)
 		var inventory_item := Parser.parse_section(dbase100, DBASE100_INVENTORY_ENTRY)
-		inventory_item["offset"] = offset
-		if inventory_item["add_length"] > 0:
-			inventory_item["additional_data"] = []
-			for j in range(inventory_item["add_length"] / 2):
-				inventory_item["additional_data"].append(dbase100.get_16())
+		#inventory_item["offset"] = offset
+		inventory_item["commands_section"] = []
+		
+		var v1 := dbase100.get_8()
+		var v2 := dbase100.get_8()
+		var v3 := dbase100.get_8() 
+		var command_length := (v3 << 16) + (v2 << 8) + v1
+		var command_trigger := dbase100.get_8()
+		while command_length != 0 and command_trigger != 0:
+			var command := {"trigger": command_trigger, "commands": []}
+			command_length -= 4
+			while command_length > 0:
+				v1 = dbase100.get_8()
+				v2 = dbase100.get_8()
+				v3 = dbase100.get_8() 
+				var command_args := (v3 << 16) + (v2 << 8) + v1
+				var command_opcode := dbase100.get_8()
+				command.commands.append({"opcode": command_opcode, "args": command_args})
+				command_length -= 4
+			v1 = dbase100.get_8()
+			v2 = dbase100.get_8()
+			v3 = dbase100.get_8() 
+			command_length = (v3 << 16) + (v2 << 8) + v1
+			command_trigger = dbase100.get_8()
+			inventory_item["commands_section"].append(command)
+		
+		
+		#if inventory_item["add_length"] > 0:
+			#inventory_item["additional_data"] = []
+			#for j in range(inventory_item["add_length"] / 2):
+				#inventory_item["additional_data"].append(dbase100.get_16())
+		
+		
+		
 		
 		if inventory_item["offset_dbase400"] != 0:
 			dbase400.seek(inventory_item["offset_dbase400"])
 			inventory_item["subtitle"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
-			while dbase400.get_position() % 4 > 0:
-				var _padding := dbase400.get_8()
-			inventory_item["next_subtitle"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
-		
-		if inventory_item["unk_word_06"] != 0:
-			dbase400.seek(inventory_item["unk_word_06"])
-			inventory_item["right_click"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
-		
+		else:
+			inventory_item["subtitle"] = {"string": ""}
+		inventory_item.erase("length")
 		inventory.append(inventory_item)
 		dbase100.seek(position)
 	
@@ -135,6 +163,7 @@ static func parse() -> Dictionary:
 	for i in range(header["nb_dbase100_action"]):
 		var action := {}
 		action["offset"] = dbase100.get_32()
+		action["opcodes"] = []
 		if action["offset"] != 0:
 			var position: int = dbase100.get_position()
 			dbase100.seek(action["offset"])
@@ -149,14 +178,19 @@ static func parse() -> Dictionary:
 			action["length"] = dbase100.get_16()
 			action["unk_word_00"] = dbase100.get_16()
 			if action["length"] != 0:
-				action["opcodes"] = []
 				# Length includes header unless no opcodes??
 				for j in range((action["length"] / 4) - 1):
 					var opcode := Parser.parse_section(dbase100, DBASE_100_OPCODE)
 					opcode["full_value"] = (opcode["value_3"] << 16) + (opcode["value_2"] << 8) + opcode["value_1"]
+					opcode.erase("value_1")
+					opcode.erase("value_2")
+					opcode.erase("value_3")
 					action["opcodes"].append(opcode)
 					
 			dbase100.seek(position)
+		action.erase("offset")
+		action.erase("length")
+		action.erase("unk_word_00")
 		actions.append(action)
 	
 	return {
@@ -165,4 +199,216 @@ static func parse() -> Dictionary:
 		"inventory": inventory,
 		"interfaces": interfaces,
 		"actions": actions,
+	}
+
+
+static func parse_files_at_directory(directory: String) -> Array:
+	var dbase100_filepath: String =  directory.path_join("DBASE100.DAT")
+	if not FileAccess.file_exists(dbase100_filepath):
+		return []
+	var dbase400_filepath: String = directory.path_join("DBASE400.DAT")
+	if not FileAccess.file_exists(dbase400_filepath):
+		return []
+	
+	var results := [
+		parse_files(dbase100_filepath, dbase400_filepath),
+		DBase400.parse_full(dbase400_filepath)
+	]
+	
+	return results
+
+
+static func compile(dbase100: Dictionary) -> PackedByteArray:
+	var section_sizes := calculate_section_sizes_and_offsets(dbase100)
+	var data: PackedByteArray = "DBASE100".to_ascii_buffer()
+	data.resize(section_sizes.total_size)
+	var position: int = 8
+	
+	# Header
+	data.encode_u32(position, section_sizes.total_size)
+	data.encode_u32(position+4, dbase100.header.unk_dword_02)
+	data.encode_u32(position+8, len(dbase100.inventory))
+	data.encode_u32(position+12, section_sizes.inventory_list.starts_at)
+	data.encode_u32(position+16, len(dbase100.actions))
+	data.encode_u32(position+20, section_sizes.actions_list.starts_at)
+	data.encode_u32(position+24, len(dbase100.cutscenes))
+	data.encode_u32(position+28, section_sizes.cutscenes.starts_at)
+	data.encode_u32(position+32, len(dbase100.interfaces))
+	data.encode_u32(position+36, section_sizes.interfaces.starts_at)
+	data.encode_u32(position+40, dbase100.header.unk_dword_11)
+	position += 44
+	
+	
+	
+	# Cutscenes
+	assert(position == section_sizes.cutscenes.starts_at)
+	for cutscene: Dictionary in dbase100.cutscenes:
+		var i: int = 0
+		for value: int in cutscene.name.to_ascii_buffer():
+			data.encode_u8(position, value)
+			position += 1
+			i += 1
+		while i < 8:
+			data.encode_u8(position, 0)
+			position += 1
+			i += 1
+		
+		data.encode_u16(position, 0) # unk_word_01
+		data.encode_u16(position + 2, cutscene.computed_length_subtitles)
+		data.encode_u32(position + 4, cutscene.offset_dbase400)
+		data.encode_u32(position + 8, cutscene.offset_dbase400_subtitles)
+		position += 12
+	
+	
+	
+	# Interface
+	assert(position == section_sizes.interfaces.starts_at)
+	for interface: Dictionary in dbase100.interfaces:
+		data.encode_u32(position, interface.offset)
+		position += 4
+	
+	
+	
+	# Inventory List
+	assert(position == section_sizes.inventory_list.starts_at)
+	position += 4 * len(dbase100.inventory)
+	
+	
+	# Actions List
+	assert(position == section_sizes.actions_list.starts_at)
+	position += 4 * len(dbase100.actions)
+	
+	# Inventory
+	assert(position == section_sizes.inventory.starts_at)
+	for item: Dictionary in dbase100.inventory:
+		item.offset = position
+		var length := 24
+		for action: Dictionary in item.commands_section:
+			length += 4 + (len(action.commands) * 4)
+		data.encode_u16(position, length)
+		data.encode_u16(position + 2, item.object_texture_index)
+		data.encode_u8(position + 4, item.closeup_type)
+		data.encode_u8(position + 5, item.item_type)
+		data.encode_u8(position + 6, 0) # unk_byte_02
+		data.encode_u8(position + 7, 0) # unk_byte_03
+		data.encode_u32(position + 8, item.closeup_image)
+		data.encode_u32(position + 12, item.inventory_image)
+		data.encode_u32(position + 16, item.offset_dbase400)
+		position += 20
+		for action: Dictionary in item.commands_section:
+			var v1 := (4 + len(action.commands) * 4) & 0xFF
+			var v2 := ((4 + len(action.commands) * 4) & 0xFF00) >> 8
+			var v3 := ((4 + len(action.commands) * 4) & 0xFF0000) >> 16
+			data.encode_u8(position, v1)
+			data.encode_u8(position + 1, v2)
+			data.encode_u8(position + 2, v3)
+			data.encode_u8(position + 3, action.trigger)
+			position += 4
+			for command: Dictionary in action.commands:
+				v1 = command.args & 0xFF
+				v2 = (command.args & 0xFF00) >> 8
+				v3 = (command.args & 0xFF0000) >> 16
+				data.encode_u8(position, v1)
+				data.encode_u8(position + 1, v2)
+				data.encode_u8(position + 2, v3)
+				data.encode_u8(position + 3, command.opcode)
+				position += 4
+		data.encode_u32(position, 0x00000000)
+		position += 4
+	
+	
+	# Actions
+	assert(position == section_sizes.actions.starts_at)
+	for action: Dictionary in dbase100.actions:
+		if action.opcodes.is_empty():
+			action.offset = 0
+			continue
+		action.offset = position
+		var length := (len(action.opcodes) * 4) + 4
+		var unk_word_00 := 768
+		data.encode_u16(position, length)
+		data.encode_u16(position + 2, unk_word_00)
+		position += 4
+		for command: Dictionary in action.opcodes:
+			var v1: int = command.full_value & 0xFF
+			var v2: int = (command.full_value & 0xFF00) >> 8
+			var v3: int = (command.full_value & 0xFF0000) >> 16
+			data.encode_u8(position, v1)
+			data.encode_u8(position + 1, v2)
+			data.encode_u8(position + 2, v3)
+			data.encode_u8(position + 3, command.command)
+			position += 4
+	
+	
+	# Inventory List
+	position = section_sizes.inventory_list.starts_at
+	assert(position == section_sizes.inventory_list.starts_at)
+	for item: Dictionary in dbase100.inventory:
+		data.encode_u32(position, item.offset)
+		position += 4
+	
+	# Actions List
+	assert(position == section_sizes.actions_list.starts_at)
+	for action: Dictionary in dbase100.actions:
+		data.encode_u32(position, action.offset)
+		position += 4
+	
+	
+	
+	return data
+
+
+
+static func calculate_section_sizes_and_offsets(dbase100: Dictionary) -> Dictionary:
+	var header := {
+		"starts_at": 0,
+		"size": 52,
+	}
+	var cutscenes := {
+		"starts_at": header.starts_at + header.size,
+		"size": len(dbase100.cutscenes) * 20
+	}
+	var interfaces := {
+		"starts_at": cutscenes.starts_at + cutscenes.size,
+		"size": len(dbase100.interfaces) * 4
+	}
+	var inventory_list := {
+		"starts_at": interfaces.starts_at + interfaces.size,
+		"size": len(dbase100.inventory) * 4,
+	}
+	var actions_list := {
+		"starts_at": inventory_list.starts_at + inventory_list.size,
+		"size": len(dbase100.actions) * 4
+	}
+	
+	
+	var inventory_size: int = 0
+	for item: Dictionary in dbase100.inventory:
+		inventory_size += 24
+		for action: Dictionary in item.commands_section:
+			inventory_size += 4 + (len(action.commands) * 4)
+	
+	var inventory := {
+		"starts_at": actions_list.starts_at + actions_list.size,
+		"size": inventory_size,
+	}
+	
+	var actions_size: int = 0
+	for action: Dictionary in dbase100.actions:
+		if not action.opcodes.is_empty():
+			actions_size += (len(action.opcodes) * 4) + 4
+	var actions := {
+		"starts_at": inventory.starts_at + inventory.size,
+		"size": actions_size,
+	}
+	
+	return {
+		total_size = actions.starts_at + actions.size,
+		header = header,
+		cutscenes = cutscenes,
+		interfaces = interfaces,
+		inventory_list = inventory_list,
+		actions_list = actions_list,
+		inventory = inventory,
+		actions = actions,
 	}

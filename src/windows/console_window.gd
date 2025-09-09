@@ -8,6 +8,15 @@ func _handle_command(command: String) -> void:
 		"maps":
 			for map: Variant in Roth.loaded_maps:
 				Console.print(map)
+		"dbase200":
+			if len(command_array) == 1:
+				print(DBase200.get_animation_offsets())
+				return
+			if len(command_array) != 2:
+				Console.print("Usage: dbase200 [offset]")
+				return
+			var section: Variant = DBase200.get_at_offset(command_array[1].to_int())
+			Console.print("%s" % JSON.stringify(section, '\t'))
 		"dbase300":
 			if len(command_array) == 1:
 				DBase300.parse()

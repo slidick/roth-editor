@@ -3,6 +3,7 @@ extends Control
 
 enum Main {
 	ManageMaps,
+	ManageDBase,
 	Sep0,
 	TestMap,
 	Sep1,
@@ -129,7 +130,9 @@ func take_screenshot() -> void:
 func _on_main_index_pressed(index: int) -> void:
 	match index:
 		Main.ManageMaps:
-			%ManageMaps.toggle()
+			%ManageMaps.toggle(true)
+		Main.ManageDBase:
+			%ManageDbase.toggle(true)
 		Main.Settings:
 			%Settings.toggle(true)
 			#%SelectionInstallationFileDialog.popup_centered_ratio()

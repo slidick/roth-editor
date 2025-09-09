@@ -41,33 +41,75 @@ static func parse(filepath: String) -> Array:
 			break
 	
 	return array_01
+
+
+static func parse_full(filepath: String) -> Dictionary:
+	var file := FileAccess.open(filepath, FileAccess.READ)
+	
+	var _header: String = Parser.parse_section(file, HEADER).header
+	
+	var array_01 := []
+	# First Array -- In Game Subtitles
+	while file.get_position() < file.get_length():
+		var entry: Dictionary = Parser.parse_section(file, ARRAY01_ENTRY)
+		entry.erase("length_str")
+		while file.get_position() % 4 > 0:
+			var _padding := file.get_8()
+		array_01.append(entry)
+		#print("Offset: %s, Length: %s, Color: %s, String: %s" % [entry.offset, entry.length_str, entry.font_color, entry.string])
+		if entry.string.to_lower() == "chullum ashdar in derias.":
+			break
+	
+	#return array_01
 	
 	# Second Array -- Video Subtitles
-	#while file.get_position() < file.get_length():
-		#var length := file.get_16()
-		#var timestamp := file.get_16()
-		#if timestamp == 0xFFFF:
-			#var _padding := file.get_32()
-			#var length_str := file.get_16()
-			#_padding = file.get_16()
-			#var title := ""
-			#for i in range(length_str):
-				#title += String.chr(file.get_8())
+	var array_02 := []
+	var subtitle := {}
+	subtitle["entries"] = []
+	while file.get_position() < file.get_length():
+		var length := file.get_16()
+		var timestamp := file.get_16()
+		if timestamp == 0xFFFF:
+			var _padding := file.get_32()
+			var length_str := file.get_16()
+			_padding = file.get_16()
+			var title := ""
+			for i in range(length_str):
+				title += String.chr(file.get_8())
 			#print("Video title: %s" % title)
-			#while file.get_position() % 2 > 0:
-				#_padding = file.get_8()
-			#continue
-		#if length == 0:
-			#file.seek(file.get_position()-2)
-			#continue
-		#var font_color := file.get_8()
-		#var string := ""
-		##for i in range(length_str-5):
-			##string += String.chr(file.get_8())
-		#string = file.get_line()
-		#while file.get_position() % 2 > 0:
-			#var _padding := file.get_8()
+			while file.get_position() % 4 > 0:
+				_padding = file.get_8()
+			subtitle["title"] = title
+			array_02.append(subtitle)
+			subtitle = {}
+			subtitle["entries"] = []
+			continue
+		if length == 0:
+			file.seek(file.get_position()-4)
+			var entry: Dictionary = Parser.parse_section(file, ARRAY01_ENTRY)
+			entry.erase("length_str")
+			while file.get_position() % 4 > 0:
+				var _padding := file.get_8()
+			array_02.append(entry)
+			continue
+		var font_color := file.get_8()
+		var string := ""
+		#for i in range(length_str-5):
+			#string += String.chr(file.get_8())
+		string = file.get_line()
+		while file.get_position() % 2 > 0:
+			var _padding := file.get_8()
 		#print("Length: %s, Timestamp: %s, Color: %s, String: %s" % [length, timestamp, font_color, string])
+		subtitle["entries"].append({
+			#"length": length,
+			"timestamp": timestamp,
+			"font_color": font_color,
+			"string": string,
+		})
+	return {
+		"game": array_01,
+		"videos": array_02,
+	}
 
 
 static func get_at_offset(offset: int) -> Dictionary:
@@ -77,8 +119,55 @@ static func get_at_offset(offset: int) -> Dictionary:
 	var file := FileAccess.open(filepath, FileAccess.READ)
 	file.seek(offset)
 	var entry := Parser.parse_section(file, ARRAY01_ENTRY)
+	entry.erase("length_str")
 	file.close()
 	return entry
+
+
+static func get_entry_from_file(filepath: String, offset: int) -> Dictionary:
+	if not FileAccess.file_exists(filepath):
+		return {}
+	var file := FileAccess.open(filepath, FileAccess.READ)
+	file.seek(offset)
+	var entry := Parser.parse_section(file, ARRAY01_ENTRY)
+	entry.erase("length_str")
+	file.close()
+	return entry
+
+
+static func get_subtitle_from_file(filepath: String, offset: int) -> Dictionary:
+	if not FileAccess.file_exists(filepath):
+		return {}
+	var file := FileAccess.open(filepath, FileAccess.READ)
+	file.seek(offset)
+	var subtitle := {}
+	subtitle["entries"] = []
+	while file.get_position() < file.get_length():
+		var length := file.get_16()
+		var timestamp := file.get_16()
+		if timestamp == 0xFFFF:
+			print("0xFFFF")
+			break
+			var entry: Dictionary = Parser.parse_section(file, ARRAY01_ENTRY)
+			entry.erase("length_str")
+			while file.get_position() % 2 > 0:
+				file.get_8()
+			subtitle["title_entry"] = entry
+			break
+		if length == 0:
+			file.seek(file.get_position()-2)
+			continue
+		var font_color := file.get_8()
+		var string := file.get_buffer(length-5).get_string_from_ascii()
+		while file.get_position() % 2 > 0:
+			file.get_8()
+		subtitle["entries"].append({
+			"timestamp": timestamp,
+			"font_color": font_color,
+			"string": string,
+		})
+	file.close()
+	return subtitle
 
 
 static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary:
@@ -111,16 +200,25 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 		#for i in range(length_str-5):
 			#string += String.chr(file.get_8())
 		#string = file.get_line()
-		var bytes := PackedByteArray()
-		var byte: int = file.get_8()
-		while byte != 0:
-			bytes.append(byte)
-			byte = file.get_8()
+		var bytes := file.get_buffer(length-5)
+		#var bytes := PackedByteArray()
+		#var byte: int = file.get_8()
+		#while byte != 0:
+			#bytes.append(byte)
+			#byte = file.get_8()
 		string = bytes.get_string_from_ascii()
 		while file.get_position() % 2 > 0:
 			var _padding := file.get_8()
+		#if length != len(string) + 5:
+			#print(length - (len(string) + 5), " ", string)
+			##print({
+				##"length": length,
+				##"timestamp": timestamp,
+				##"font_color": font_color,
+				##"string": string,
+			##})
 		subtitle["entries"].append({
-			"length": length,
+			#"length": length,
 			"timestamp": timestamp,
 			"font_color": font_color,
 			"string": string,
@@ -128,3 +226,85 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 	
 	file.seek(position)
 	return subtitle
+
+
+static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArray:
+	var length: int = 8
+	for entry: Dictionary in dbase400.game:
+		entry["length_str"] = len(entry.string) + 1
+		length += 8 + entry["length_str"]
+		while length % 4 > 0:
+			length += 1
+	for cutscene: Dictionary in dbase100.cutscenes:
+		cutscene.computed_length_subtitles = 0
+		if "subtitles" in cutscene:
+			cutscene.computed_length_subtitles = 4
+			for entry: Dictionary in cutscene.subtitles.entries:
+				entry["length"] = len(entry.string) + 6
+				length += len(entry.string) + 6
+				while length % 2 > 0:
+					length += 1
+					entry["length"] += 1
+				cutscene.computed_length_subtitles += entry["length"]
+			length += 4
+		if "entry" in cutscene:
+			length += 8 + len(cutscene.entry.string) + 1
+			while length % 4 > 0:
+				length += 1
+	
+	
+	var data := "DBASE400".to_ascii_buffer()
+	data.resize(length)
+	
+	var position: int = 8
+	for entry: Dictionary in dbase400.game:
+		data.encode_u32(position, entry.offset)
+		data.encode_u16(position+4, entry.length_str)
+		data.encode_u16(position+6, entry.font_color)
+		position += 8
+		for value: int in entry.string.to_ascii_buffer():
+			data.encode_u8(position, value)
+			position += 1
+		data.encode_u8(position, 0)
+		position += 1
+		while position % 4 > 0:
+			data.encode_u8(position, 0)
+			position += 1
+	
+	
+	for cutscene: Dictionary in dbase100.cutscenes:
+		if "subtitles" in cutscene:
+			for entry: Dictionary in cutscene.subtitles.entries:
+				data.encode_u16(position, entry.length)
+				data.encode_u16(position+2, entry.timestamp)
+				data.encode_u8(position+4, entry.font_color)
+				position += 5
+				for value: int in entry.string.to_ascii_buffer():
+					data.encode_u8(position, value)
+					position += 1
+				data.encode_u8(position, 0)
+				position += 1
+				while position % 2 > 0:
+					data.encode_u8(position, 0)
+					position += 1
+			data.encode_u16(position, 0)
+			data.encode_u16(position+2, 0xFFFF)
+			position += 4
+		if "entry" in cutscene:
+			var name_length: int = len(cutscene.entry.string) + 1
+			data.encode_u32(position, 0) # Dbase500Offset
+			data.encode_u16(position+4, name_length)
+			data.encode_u16(position+6, cutscene.entry.font_color)
+			position += 8
+			for value: int in cutscene.entry.string.to_ascii_buffer():
+				data.encode_u8(position, value)
+				position += 1
+			data.encode_u8(position, 0)
+			position += 1
+			while position % 4 > 0:
+				data.encode_u8(position, 0)
+				position += 1
+	
+	
+	
+	return data

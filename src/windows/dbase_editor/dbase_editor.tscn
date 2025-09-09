@@ -1,0 +1,162 @@
+[gd_scene load_steps=11 format=3 uid="uid://dtbrelqsvvtuh"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_6v7rq"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_fspgq"]
+[ext_resource type="Script" uid="uid://3hog55kqfpxy" path="res://src/windows/dbase_editor/dbase_editor.gd" id="2_g3sly"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_yc78u"]
+[ext_resource type="PackedScene" uid="uid://dgdoob8bqrdx7" path="res://src/windows/dbase_editor/dbase_100_header.tscn" id="5_yc78u"]
+[ext_resource type="PackedScene" uid="uid://f3u4ruk6n31t" path="res://src/windows/dbase_editor/cutscenes.tscn" id="6_k7imk"]
+[ext_resource type="PackedScene" uid="uid://bxh7bquhkgigb" path="res://src/windows/dbase_editor/inventory.tscn" id="6_s0juq"]
+[ext_resource type="PackedScene" uid="uid://bccjtuuhk3gl4" path="res://src/windows/dbase_editor/actions.tscn" id="6_w2o5g"]
+[ext_resource type="PackedScene" uid="uid://dxx86or0adcjx" path="res://src/windows/dbase_editor/interface.tscn" id="7_snwk0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fspgq"]
+
+[node name="DbaseEditor" instance=ExtResource("1_6v7rq")]
+offset_right = 1476.0
+offset_bottom = 831.0
+theme = ExtResource("2_fspgq")
+script = ExtResource("2_g3sly")
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_yc78u")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ListControl" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl" index="0"]
+layout_mode = 2
+text = "Available DBase Packs"
+horizontal_alignment = 1
+
+[node name="DBaseList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+
+[node name="DBasePopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/DBaseList" index="2"]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Rename"
+item_0/id = 0
+item_1/text = "Delete"
+item_1/id = 1
+item_2/text = "Duplicate"
+item_2/id = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl" index="2"]
+layout_mode = 2
+
+[node name="ActivateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Make Active"
+
+[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Edit"
+
+[node name="EditControl" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="DBase100ContentsList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 5
+item_0/text = "Header"
+item_1/text = "Cutscenes"
+item_2/text = "Interface"
+item_3/text = "Items & Monsters"
+item_4/text = "Actions"
+
+[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fspgq")
+current_tab = 0
+tabs_visible = false
+
+[node name="DBase100Header" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="1" instance=ExtResource("5_yc78u")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cutscenes" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="2" instance=ExtResource("6_k7imk")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Interface" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="3" instance=ExtResource("7_snwk0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Inventory" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="4" instance=ExtResource("6_s0juq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Actions" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="5" instance=ExtResource("6_w2o5g")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl" index="1"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(120, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "Back"
+
+[node name="SuccessLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 100, 0, 1)
+text = "Success!"
+horizontal_alignment = 2
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "Save"
+
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/DBaseList" to="." method="_on_d_base_list_item_activated"]
+[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/DBaseList" to="." method="_on_d_base_list_item_clicked"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/DBaseList" to="." method="_on_d_base_list_item_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/DBaseList/DBasePopupMenu" to="." method="_on_d_base_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer/ActivateButton" to="." method="_on_activate_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/VBoxContainer/DBase100ContentsList" to="." method="_on_d_base_100_contents_list_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]

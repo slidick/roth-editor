@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3 uid="uid://bccjtuuhk3gl4"]
+
+[ext_resource type="Script" uid="uid://datm5vblg3i6x" path="res://src/windows/dbase_editor/actions.gd" id="1_r38q4"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_gj8af"]
+
+[node name="Actions" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1003.0
+offset_bottom = -418.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_r38q4")
+metadata/_tab_index = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ActionList" type="ItemList" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+
+[node name="ActionListPopupMenu" type="PopupMenu" parent="VBoxContainer/ActionList"]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Duplicate"
+item_0/id = 0
+item_1/text = "Clear Contents"
+item_1/id = 1
+item_2/text = "Delete"
+item_2/id = 2
+
+[node name="AddActionButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Add Action"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="Tree" type="Tree" parent="VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+column_titles_visible = true
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+script = ExtResource("2_gj8af")
+
+[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree"]
+unique_name_in_owner = true
+item_count = 2
+item_0/text = "Copy"
+item_0/id = 0
+item_1/text = "Delete"
+item_1/id = 1
+
+[node name="EmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree"]
+unique_name_in_owner = true
+auto_translate_mode = 1
+item_count = 2
+item_0/text = "Add"
+item_0/id = 0
+item_1/text = "Paste"
+item_1/id = 1
+
+[node name="AddOpcodeButton" type="Button" parent="VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add Opcode"
+
+[node name="InfoPanel" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[connection signal="item_clicked" from="VBoxContainer/ActionList" to="." method="_on_action_list_item_clicked"]
+[connection signal="item_selected" from="VBoxContainer/ActionList" to="." method="_on_action_list_item_selected"]
+[connection signal="index_pressed" from="VBoxContainer/ActionList/ActionListPopupMenu" to="." method="_on_action_list_popup_menu_index_pressed"]
+[connection signal="pressed" from="VBoxContainer/AddActionButton" to="." method="_on_add_action_button_pressed"]
+[connection signal="empty_clicked" from="VBoxContainer2/Tree" to="." method="_on_tree_empty_clicked"]
+[connection signal="item_edited" from="VBoxContainer2/Tree" to="." method="_on_tree_item_edited"]
+[connection signal="item_mouse_selected" from="VBoxContainer2/Tree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="item_moved" from="VBoxContainer2/Tree" to="." method="_on_tree_item_moved"]
+[connection signal="item_selected" from="VBoxContainer2/Tree" to="." method="_on_tree_item_selected"]
+[connection signal="index_pressed" from="VBoxContainer2/Tree/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="index_pressed" from="VBoxContainer2/Tree/EmptyPopupMenu" to="." method="_on_empty_popup_menu_index_pressed"]
+[connection signal="pressed" from="VBoxContainer2/AddOpcodeButton" to="." method="_on_add_opcode_button_pressed"]
