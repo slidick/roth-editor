@@ -272,6 +272,8 @@ func save_metadata(map_info: Dictionary) -> void:
 	else:
 		json_filepath = ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".json")
 		map_info["filepath_json"] = json_filepath
+	if "filepath" not in map_info:
+		map_info["filepath"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".RAW")
 	
 	var save_info: Dictionary = map_info.duplicate()
 	save_info.erase("filepath")
