@@ -215,6 +215,7 @@ func reorder_faces() -> void:
 	
 	faces = ordered_faces
 	_update_vertices()
+	Roth.get_map(map_info).reorder_faces()
 
 
 func get_vertices() -> Array:

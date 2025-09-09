@@ -287,6 +287,16 @@ func get_sector_floor_height_from_vertex(vertex: Vector2) -> int:
 	return 0
 
 
+func reorder_faces() -> void:
+	var ordered_faces: Array = []
+	for sector: Sector in sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			ordered_faces.append(face)
+	faces.clear()
+	faces = ordered_faces
+	
+
 func get_sector_ceiling_height_from_vertex(vertex: Vector2) -> int:
 	for sector: Sector in sectors:
 		if Geometry2D.is_point_in_polygon(vertex, sector.vertices.slice(0,-1)):
@@ -365,7 +375,7 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			compiled_faces.append(face)
-			face.index = len(compiled_faces) - 1
+			#face.index = len(compiled_faces) - 1
 			
 		sector.data["facesCount"] = len(sector.faces)
 		
