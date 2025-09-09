@@ -138,6 +138,14 @@ func delete_sector() -> void:
 	faces.clear()
 	if node:
 		node.queue_free()
+	
+	var objects_in_sector: Array = []
+	for object: ObjectRoth in Roth.get_map(map_info).objects:
+		if object.sector.get_ref() == self:
+			objects_in_sector.append(object)
+	for object: ObjectRoth in objects_in_sector:
+		object.delete()
+	
 	Roth.get_map(map_info).delete_sector(self)
 
 
