@@ -2,39 +2,43 @@ extends RefCounted
 class_name ObjectRoth
 
 var data: Dictionary = {}
-var index: int = -1
+var index: int :
+	get():
+		return Roth.get_map(map_info).objects.find(self)
 var map_info: Dictionary = {}
 var sectors: Array = []
 var node: ObjectNode3D
 var node_2d: ObjectNode2D
+var sector: WeakRef
 
 
 static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
 	var floor_height: int = 0
-	for sector: Sector in p_object.sectors:
-		if Geometry2D.is_point_in_polygon(p_position, sector.vertices.slice(0,-1)):
-			new_sector_index = sector.index
-			floor_height = sector.data.floorHeight
+	for f_sector: Sector in p_object.sectors:
+		if Geometry2D.is_point_in_polygon(p_position, f_sector.vertices.slice(0,-1)):
+			new_sector_index = f_sector.index
+			floor_height = f_sector.data.floorHeight
 	
 	if new_sector_index == -1:
 		Console.print("Can't paste object outside a sector")
 		return
 	
-	var object := ObjectRoth.new(p_object.data.duplicate(true), Roth.get_map(p_object.map_info).get_next_object_index(), p_object.map_info, p_object.sectors)
+	var object := ObjectRoth.new(p_object.data.duplicate(true), p_object.map_info, p_object.sectors)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.y
 	object.data.posZ = floor_height
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.data.sector_index = new_sector_index
+	object.sector = weakref(object.sectors[new_sector_index])
+	#object.data.sector_index = new_sector_index
 	
 	return object
 
 static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRoth, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
 	var new_sector_index: int = -1
-	for sector: Sector in Roth.get_map(p_map_info).sectors:
-		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), sector.vertices.slice(0,-1)):
-			new_sector_index = sector.index
+	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
+		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), f_sector.vertices.slice(0,-1)):
+			new_sector_index = f_sector.index
 	
 	if "sector_index" in extra_info:
 		new_sector_index = extra_info.sector_index
@@ -42,12 +46,13 @@ static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRo
 		Console.print("Can't paste object outside a sector")
 		return
 	
-	var object := ObjectRoth.new(p_object.data.duplicate(true), Roth.get_map(p_map_info).get_next_object_index(), p_map_info, Roth.get_map(p_map_info).sectors)
+	var object := ObjectRoth.new(p_object.data.duplicate(true), p_map_info, Roth.get_map(p_map_info).sectors)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.z
 	object.data.posZ = p_position.y
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.data.sector_index = new_sector_index
+	object.sector = weakref(object.sectors[new_sector_index])
+	#object.data.sector_index = new_sector_index
 	
 	if extra_info["render_type"] == "fixed":
 		object.data.renderType |= 128
@@ -61,10 +66,10 @@ static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRo
 static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
 	var floor_height: int = 0
-	for sector: Sector in Roth.get_map(p_map_info).sectors:
-		if Geometry2D.is_point_in_polygon(p_position, sector.vertices.slice(0,-1)):
-			new_sector_index = sector.index
-			floor_height = sector.data.floorHeight
+	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
+		if Geometry2D.is_point_in_polygon(p_position, f_sector.vertices.slice(0,-1)):
+			new_sector_index = f_sector.index
+			floor_height = f_sector.data.floorHeight
 	
 	if new_sector_index == -1:
 		Console.print("Can't create object outside a sector")
@@ -84,11 +89,12 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRot
 		"unk0x0E": 0,
 	}
 	
-	var object := ObjectRoth.new(default_data, Roth.get_map(p_map_info).get_next_object_index(), p_map_info, Roth.get_map(p_map_info).sectors)
+	var object := ObjectRoth.new(default_data, p_map_info, Roth.get_map(p_map_info).sectors)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.y
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.data.sector_index = new_sector_index
+	object.sector = weakref(object.sectors[new_sector_index])
+	#object.data.sector_index = new_sector_index
 	
 	return object
 
@@ -96,10 +102,10 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRot
 static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
 	var new_sector_index: int = -1
 	var floor_height: int = 0
-	for sector: Sector in Roth.get_map(p_map_info).sectors:
-		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), sector.vertices.slice(0,-1)):
-			new_sector_index = sector.index
-			floor_height = sector.data.floorHeight
+	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
+		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), f_sector.vertices.slice(0,-1)):
+			new_sector_index = f_sector.index
+			floor_height = f_sector.data.floorHeight
 	
 	if "sector_index" in extra_info:
 		new_sector_index = extra_info.sector_index
@@ -121,12 +127,13 @@ static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_inf
 		"unk0x0E": 0,
 	}
 	
-	var object := ObjectRoth.new(default_data, Roth.get_map(p_map_info).get_next_object_index(), p_map_info, Roth.get_map(p_map_info).sectors)
+	var object := ObjectRoth.new(default_data, p_map_info, Roth.get_map(p_map_info).sectors)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.z
 	object.data.posZ = p_position.y
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.data.sector_index = new_sector_index
+	object.sector = weakref(object.sectors[new_sector_index])
+	#object.data.sector_index = new_sector_index
 	
 	if extra_info["render_type"] == "fixed":
 		object.data.renderType = 128
@@ -135,15 +142,17 @@ static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_inf
 	return object
 
 
-func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_sectors: Array) -> void:
+func _init(p_data: Dictionary, p_map_info: Dictionary, p_sectors: Array, p_sector: Sector = null) -> void:
 	data = p_data
-	index = p_index
+	#index = p_index
 	map_info = p_map_info
 	sectors = p_sectors
+	if p_sector:
+		sector = weakref(p_sector)
 
 
 func duplicate() -> ObjectRoth:
-	return ObjectRoth.new(data.duplicate(true), index, map_info, sectors)
+	return ObjectRoth.new(data.duplicate(true), map_info, sectors)
 
 
 func initialize_mesh() -> Node3D:
@@ -319,7 +328,7 @@ func delete() -> void:
 		node.queue_free()
 	if node_2d:
 		node_2d.queue_free()
-	sectors[data.sector_index].data.objectInformation.erase(data)
+	sector.get_ref().data.objectInformation.erase(data)
 	Roth.get_map(map_info).objects.erase(self)
 
 
@@ -484,7 +493,7 @@ class ObjectNode2D extends Node2D:
 			position.y * Roth.SCALE_2D_WORLD
 		)
 		
-		var current_sector_index: int = ref.data.sector_index
+		var current_sector_index: int = ref.sector.get_ref().index
 		var new_sector_index: int = -1
 		for sector: Sector in ref.sectors:
 			if is_inside(pos, sector):
@@ -514,7 +523,8 @@ class ObjectNode2D extends Node2D:
 			ref.data.posY = int(pos.y)
 			ref.sectors[current_sector_index].data.objectInformation.erase(ref.data)
 			ref.sectors[new_sector_index].data.objectInformation.append(ref.data)
-			ref.data.sector_index = new_sector_index
+			ref.sector = weakref(ref.sectors[new_sector_index])
+			#ref.data.sector_index = new_sector_index
 		
 		ref.initialize_mesh()
 		await get_tree().process_frame

@@ -25,7 +25,11 @@ const CEILING_FLIP_Y = 1 << 11
 
 
 var data: Dictionary
-var index: int
+var index: int :
+	get():
+		return Roth.get_map(map_info).sectors.find(self)
+	set(new_value):
+		pass
 var map_info: Dictionary
 
 var faces: Array = []
@@ -38,9 +42,9 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
-func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_platforms: Array = []) -> void:
+func _init(p_data: Dictionary, p_map_info: Dictionary, p_platforms: Array = []) -> void:
 	data = p_data
-	index = p_index
+	#index = p_index
 	map_info = p_map_info
 	if "intermediateFloorIndex" in data:
 		platform = p_platforms[data.intermediateFloorIndex]
@@ -49,7 +53,7 @@ func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_platforms
 
 
 func duplicate() -> Sector:
-	var new_sector := Sector.new(data.duplicate(true), Roth.get_map(map_info).get_next_sector_index(), map_info)
+	var new_sector := Sector.new(data.duplicate(true), map_info)
 	if platform:
 		new_sector.platform = platform.duplicate(true)
 	new_sector.faces = []

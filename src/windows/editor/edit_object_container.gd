@@ -19,6 +19,8 @@ func _redraw_object(node: Variant = null) -> void:
 
 
 func _reset_edit_object() -> void:
+	%ObjectIndexLabel.text = "Object:"
+	%ObjectSectorIndexLabel.text = "Sector:"
 	%ObjectXEdit.get_line_edit().clear()
 	%ObjectYEdit.get_line_edit().clear()
 	%ObjectZEdit.get_line_edit().clear()
@@ -51,6 +53,7 @@ func load_edit_object(object: ObjectRoth.ObjectMesh3D) -> void:
 	_reset_edit_object()
 	current_object = object.ref
 	%ObjectIndexLabel.text = "Object: %d" % object.ref.index
+	%ObjectSectorIndexLabel.text = "Sector: %d" % object.ref.sector.get_ref().index
 	%ObjectXEdit.get_line_edit().text = "%d" % object.ref.data.posX
 	%ObjectXEdit.set_value_no_signal(object.ref.data.posX)
 	%ObjectYEdit.get_line_edit().text = "%d" % object.ref.data.posY

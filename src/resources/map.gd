@@ -51,34 +51,32 @@ static func load_from_file(p_map_info: Dictionary) -> Map:
 	if map_json.is_empty():
 		return
 	
-	var temp_object_list := []
+	#var temp_object_list := []
 	
 	
 	for i in range(len(map_json.sectorsSection.sectors)):
 		loaded_map.sectors.append( Sector.new( 
 				map_json.sectorsSection.sectors[i],
-				i,
 				loaded_map.map_info,
 				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
 			)
 		)
-		for object: Dictionary in loaded_map.sectors[i].data.objectInformation:
-			object["sector_index"] = i
-			temp_object_list.append(object)
-	
-	for i in range(len(temp_object_list)):
-		loaded_map.objects.append( ObjectRoth.new(
-				temp_object_list[i],
-				i,
-				loaded_map.map_info,
-				loaded_map.sectors
+		for object_data: Dictionary in loaded_map.sectors[i].data.objectInformation:
+			#object["sector_index"] = i
+			#temp_object_list.append(object)
+	#
+		#for i in range(len(temp_object_list)):
+			loaded_map.objects.append( ObjectRoth.new(
+					object_data,
+					loaded_map.map_info,
+					loaded_map.sectors,
+					loaded_map.sectors[i]
+				)
 			)
-		)
 	
 	for i in range(len(map_json.facesSection.faces)):
 		loaded_map.faces.append( Face.new(
 				map_json.facesSection.faces[i],
-				i,
 				loaded_map.map_info,
 				map_json.verticesSection.vertices,
 				loaded_map.sectors,
@@ -93,7 +91,7 @@ static func load_from_file(p_map_info: Dictionary) -> Map:
 		sector.update_faces(loaded_map.faces)
 	
 	for i in range(len(map_json.section7.unkArray01)):
-		loaded_map.sound_effects.append(Section7_1.new(map_json.section7.unkArray01[i], i, loaded_map.map_info))
+		loaded_map.sound_effects.append(Section7_1.new(map_json.section7.unkArray01[i], loaded_map.map_info))
 	
 	if "unkArray02" in map_json.section7:
 		loaded_map.section7_2 = map_json.section7.unkArray02
@@ -111,30 +109,30 @@ static func load_from_file(p_map_info: Dictionary) -> Map:
 	return loaded_map
 
 
-func get_next_face_index() -> int:
-	var count: int = 0
-	for sector: Sector in sectors:
-		for face_ref: WeakRef in sector.faces:
-			count = max(count, face_ref.get_ref().index)
-	return count + 1
+#func get_next_face_index() -> int:
+	#var count: int = -1
+	#for sector: Sector in sectors:
+		#for face_ref: WeakRef in sector.faces:
+			#count = max(count, face_ref.get_ref().index)
+	#return count + 1
 
-func get_next_sector_index() -> int:
-	var count: int = 0
-	for sector: Sector in sectors:
-		count = max(count, sector.index)
-	return count + 1
+#func get_next_sector_index() -> int:
+	#var count: int = -1
+	#for sector: Sector in sectors:
+		#count = max(count, sector.index)
+	#return count + 1
 
-func get_next_object_index() -> int:
-	var count: int = 0
-	for object: ObjectRoth in objects:
-		count = max(count, object.index)
-	return count + 1
+#func get_next_object_index() -> int:
+	#var count: int = -1
+	#for object: ObjectRoth in objects:
+		#count = max(count, object.index)
+	#return count + 1
 
-func get_next_sfx_index() -> int:
-	var count: int = 0
-	for sfx: Section7_1 in sound_effects:
-		count = max(count, sfx.index)
-	return count + 1
+#func get_next_sfx_index() -> int:
+	#var count: int = -1
+	#for sfx: Section7_1 in sound_effects:
+		#count = max(count, sfx.index)
+	#return count + 1
 
 
 func delete_sector(sector_to_delete: Sector) -> void:
@@ -162,7 +160,7 @@ func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 		"objectInformation": [],
 	}
 	
-	var new_sector: Sector = Sector.new(initial_data, get_next_sector_index(), map_info)
+	var new_sector: Sector = Sector.new(initial_data, map_info)
 	sectors.append(new_sector)
 	
 	var v2 := Vector2.ZERO
@@ -181,21 +179,25 @@ func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 	face_1.v2 = v2
 	face_1.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_1))
+	Roth.get_map(map_info).faces.append(face_1)
 	var face_2: Face = Face.create_new_face(map_info, new_sector)
 	face_2.v1 = v2
 	face_2.v2 = Vector2(ending_position)
 	face_2.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_2))
+	Roth.get_map(map_info).faces.append(face_2)
 	var face_3: Face = Face.create_new_face(map_info, new_sector)
 	face_3.v1 = Vector2(ending_position)
 	face_3.v2 = v3
 	face_3.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_3))
+	Roth.get_map(map_info).faces.append(face_3)
 	var face_4: Face = Face.create_new_face(map_info, new_sector)
 	face_4.v1 = v3
 	face_4.v2 = Vector2(starting_position)
 	face_4.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_4))
+	Roth.get_map(map_info).faces.append(face_4)
 	new_sector._update_vertices()
 	node.get_node("Faces").add_child(await face_1.initialize_mesh())
 	node.get_node("Faces").add_child(await face_2.initialize_mesh())
@@ -223,6 +225,8 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	face_2.sister = weakref(face_1)
 	face_1.update_horizontal_fit()
 	face_2.update_horizontal_fit()
+	Roth.get_map(map_info).faces.append(face_1)
+	Roth.get_map(map_info).faces.append(face_2)
 	
 	# Is faces in order?
 	var existing_faces := existing_sector.faces.duplicate()

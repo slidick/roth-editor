@@ -35,7 +35,10 @@ const FLAG8 = 1 << 7 # When combined with STOP_WALK, only stops movement under a
 
 
 var data: Dictionary
-var index: int
+var index: int :
+	get():
+		return Roth.get_map(map_info).faces.find(self)
+
 var map_info: Dictionary
 
 var sector: Sector
@@ -82,9 +85,9 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
-func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_vertices: Array = [], p_sectors: Array = [], p_texture_mappings: Array = []) -> void:
+func _init(p_data: Dictionary, p_map_info: Dictionary, p_vertices: Array = [], p_sectors: Array = [], p_texture_mappings: Array = []) -> void:
 	data = p_data
-	index = p_index
+	#index = p_index
 	map_info = p_map_info
 	
 	if not p_sectors.is_empty():
@@ -102,7 +105,7 @@ func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary, p_vertices:
 
 
 func duplicate() -> Face:
-	var new_face := Face.new(data.duplicate(true), Roth.get_map(map_info).get_next_face_index(), map_info)
+	var new_face := Face.new(data.duplicate(true), map_info)
 	new_face.v1 = Vector2(v1)
 	new_face.v2 = Vector2(v2)
 	new_face.sector = sector
@@ -113,7 +116,7 @@ static func create_new_face(p_map_info: Dictionary, p_sector: Sector) -> Face:
 	var initial_data := {
 		"addCollision": 0,
 	}
-	var new_face := Face.new(initial_data, Roth.get_map(p_map_info).get_next_face_index(), p_map_info)
+	var new_face := Face.new(initial_data, p_map_info)
 	#new_face.v1 = Vector2(v1)
 	#new_face.v2 = Vector2(v2)
 	new_face.sector = p_sector

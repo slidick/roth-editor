@@ -429,10 +429,11 @@ func _on_sister_edit_text_changed(new_text: String) -> void:
 	if new_text.is_empty():
 		current_face.sister = null
 		return
-	var new_sister: Variant = owner.get_face(int(new_text), "Face", current_face.map_info)
-	if not new_sister:
+	var new_sister_index: int = int(new_text)
+	if new_sister_index < 0 or new_sister_index >= len(Roth.get_map(current_face.map_info).faces):
 		current_face.sister = null
 		return
+	var new_sister: Face = Roth.get_map(current_face.map_info).faces[new_sister_index]
 	current_face.sister = weakref(new_sister)
 
 

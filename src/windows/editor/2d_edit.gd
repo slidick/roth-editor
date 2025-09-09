@@ -290,8 +290,10 @@ func _input(event: InputEvent) -> void:
 						var ending_position := (get_global_mouse_position() + global_position)
 						var v2 := Vector2(ending_position.x, starting_position.y)
 						var v3 := Vector2(starting_position.x, ending_position.y)
-						var objects_selected: int = 0
+						var objects_selected: Array = []
 						for object_node: ObjectRoth.ObjectNode2D in  %Objects.get_children():
+							if object_node.circle.selected:
+								objects_selected.append(object_node)
 							if Geometry2D.is_point_in_polygon(object_node.position, [
 								starting_position,
 								v2,
@@ -299,12 +301,15 @@ func _input(event: InputEvent) -> void:
 								v3
 							]):
 								object_node.select()
-								objects_selected += 1
+								objects_selected.append(object_node)
 							else:
 								if not event.shift_pressed:
 									object_node.deselect()
-						if objects_selected != 1:
+									objects_selected.erase(object_node)
+						if len(objects_selected) != 1:
 							%Picker.clear()
+						else:
+							owner.select_face(objects_selected[0].ref.index, "Object", map.map_info.name)
 						start_vertex_select = false
 						start_vertex_select_position = Vector2.ZERO
 						queue_redraw()
@@ -771,6 +776,7 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			object_node.object_copied.connect(_on_sfx_copied)
 			object_node.object_deleted.connect(_on_sfx_deleted)
 			%SFX.add_child(object_node)
+			_on_sfx_selected(object_node, true)
 		1:
 			var new_object := Section7_1.new_from_copied_object(copied_sfx_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_object:
@@ -781,6 +787,7 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			object_node.object_copied.connect(_on_sfx_copied)
 			object_node.object_deleted.connect(_on_sfx_deleted)
 			%SFX.add_child(object_node)
+			_on_sfx_selected(object_node, true)
 
 
 func remove_objects() -> void:

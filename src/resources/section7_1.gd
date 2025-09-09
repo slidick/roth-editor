@@ -2,13 +2,15 @@ extends RefCounted
 class_name Section7_1
 
 var data: Dictionary = {}
-var index: int = -1
+var index: int :
+	get():
+		return Roth.get_map(map_info).sound_effects.find(self)
 var map_info: Dictionary = {}
 var node: SFXNode3D
 
 
 static func new_from_copied_object(p_object: Section7_1, p_position: Vector2) -> Section7_1:	
-	var object := Section7_1.new(p_object.data.duplicate(true), Roth.get_map(p_object.map_info).get_next_sfx_index(), p_object.map_info)
+	var object := Section7_1.new(p_object.data.duplicate(true), p_object.map_info)
 	object.data.unk0x00 = -p_position.x
 	object.data.unk0x02 = p_position.y
 	
@@ -28,20 +30,20 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> Section7_
 		"unk0x10": 0,
 	}
 	
-	var object := Section7_1.new(default_data, Roth.get_map(p_map_info).get_next_sfx_index(), p_map_info)
+	var object := Section7_1.new(default_data, p_map_info)
 	object.data.unk0x00 = -p_position.x
 	object.data.unk0x02 = p_position.y
 	
 	return object
 
 
-func _init(p_data: Dictionary, p_index: int, p_map_info: Dictionary) -> void:
+func _init(p_data: Dictionary, p_map_info: Dictionary) -> void:
 	data = p_data
-	index = p_index
+	#index = p_index
 	map_info = p_map_info
 
 func duplicate() -> Section7_1:
-	return Section7_1.new(data.duplicate(true), index, map_info)
+	return Section7_1.new(data.duplicate(true), map_info)
 
 func initialize_mesh() -> Node3D:
 	if node:

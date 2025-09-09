@@ -67,14 +67,14 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	if event.is_action_pressed("move_object_to_ceiling"):
 		if %EditObjectContainer.current_object:
-			var height: int = Roth.get_map(%EditObjectContainer.current_object.map_info).sectors[%EditObjectContainer.current_object.data.sector_index].data.ceilingHeight
+			var height: int = %EditObjectContainer.current_object.sector.get_ref().data.ceilingHeight
 			%EditObjectContainer.current_object.data.posZ = height
 			%EditObjectContainer.current_object.initialize_mesh()
 			await get_tree().process_frame
 			%Picker.select(%EditObjectContainer.current_object.node)
 	if event.is_action_pressed("move_object_to_floor"):
 		if %EditObjectContainer.current_object:
-			var height: int = Roth.get_map(%EditObjectContainer.current_object.map_info).sectors[%EditObjectContainer.current_object.data.sector_index].data.floorHeight
+			var height: int = %EditObjectContainer.current_object.sector.get_ref().data.floorHeight
 			%EditObjectContainer.current_object.data.posZ = height
 			%EditObjectContainer.current_object.initialize_mesh()
 			await get_tree().process_frame
@@ -449,34 +449,34 @@ func select_face(index: int, type: String, p_map_name: String = "", count: int =
 		select_face(index, type, p_map_name, search_count)
 
 
-func get_face(index: int, type: String, map_info: Dictionary) -> Variant:
-	var map_node: Node3D
-	
-	for i in range(tree_root.get_child_count()):
-		if tree_root.get_child(i).get_text(0) == map_info.name:
-			map_node = tree_root.get_child(i).get_metadata(0)
-	
-	if not map_node:
-		return null
-	
-	match type:
-		"Sector":
-			for sector: Node3D in map_node.get_node("Sectors").get_children():
-				if index == sector.ref.index:
-					return sector.ref
-		"Face":
-			for face: Node3D in map_node.get_node("Faces").get_children():
-				if index == face.ref.index:
-					return face.ref
-		"Object":
-			for object: Node3D in map_node.get_node("Objects").get_children():
-				if index == object.ref.index:
-					return object.ref
-		"SFX":
-			for sfx: Node3D in map_node.get_node("SFX").get_children():
-				if index == sfx.ref.index:
-					return sfx.ref
-	return null
+#func get_face(index: int, type: String, map_info: Dictionary) -> Variant:
+	#var map_node: Node3D
+	#
+	#for i in range(tree_root.get_child_count()):
+		#if tree_root.get_child(i).get_text(0) == map_info.name:
+			#map_node = tree_root.get_child(i).get_metadata(0)
+	#
+	#if not map_node:
+		#return null
+	#
+	#match type:
+		#"Sector":
+			#for sector: Node3D in map_node.get_node("Sectors").get_children():
+				#if index == sector.ref.index:
+					#return sector.ref
+		#"Face":
+			#for face: Node3D in map_node.get_node("Faces").get_children():
+				#if index == face.ref.index:
+					#return face.ref
+		#"Object":
+			#for object: Node3D in map_node.get_node("Objects").get_children():
+				#if index == object.ref.index:
+					#return object.ref
+		#"SFX":
+			#for sfx: Node3D in map_node.get_node("SFX").get_children():
+				#if index == sfx.ref.index:
+					#return sfx.ref
+	#return null
 
 
 func _on_search_result_activated(search_result: Dictionary) -> void:
