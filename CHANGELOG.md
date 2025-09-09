@@ -51,7 +51,7 @@
   - Fix for issue with raw compiler's deduplication of texture maps
     - Originally I was deduping every shared texture map, but that created issues when the texture was modified by the command system (e.g. breaking a window would break all windows)
     - Then I tried not deduping any face with an id, but that created some strange ordering issues as well as just too many texture maps on a couple maps (e.g. only the backside of the fire in STUDY1 would explode)
-    - So now I dedupe every texture except those with a face id AND is used in the command system by certain command types. The checks for now are just the couple that caused issues, but I'm sure there's more than need to be checked for.
+    - So now I dedupe every texture except those with a face id AND is used in the command system by certain command types. The checks for now are just the couple that caused issues, but I'm sure there's more that need to be checked for.
   - Entry commands that are a part of another command chain are no longer shown twice
   - Update 2d line thickness when initially opening a map
   - Texture selection dialog's recent and favorites lists use new rotatable list
