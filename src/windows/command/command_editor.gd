@@ -14,7 +14,7 @@ var previous_search: String
 var search_count: int = 0
 var graph_edit: GraphEdit
 var _is_loading: bool = false
-
+var copy_commands: Array = []
 
 # Threaded loading of the command editor would be ideal so the program wouldn't become unresponsive
 # while loading. However unfortunately, it ends up taking significantly longer to load on a thread.
@@ -341,6 +341,7 @@ func initialize_command_node(p_index: int, p_command_data: Dictionary, p_positio
 	command_node.add_to_entry_list.connect(_on_add_to_entry_list)
 	command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
 	command_node.delete_command.connect(_on_delete_command)
+	command_node.copy_command.connect(_on_copy_command)
 	
 	# Add to graph
 	graph_edit.add_child(command_node)
@@ -396,7 +397,7 @@ func _on_graph_edit_disconnection_request(from_node: StringName, _from_port: int
 		#graph_edit.get_node(str(to_node)).title = "Orphan Command"
 
 
-func add_command(at_position: Vector2) -> void:
+func add_command(at_position: Vector2, p_command: Dictionary = {}) -> CommandNode:
 	var new_index: int = len(command_nodes) + 1
 	
 	var new_command := {
@@ -408,22 +409,48 @@ func add_command(at_position: Vector2) -> void:
 		"index": new_index,
 	}
 	
+	if not p_command.is_empty():
+		new_command = p_command
+		new_command["map_info"] = map.map_info
+		new_command["index"] = new_index
+	
 	var command_node: CommandNode = COMMAND_NODE.instantiate()
 	command_node.initialize(new_index, new_command)
 	
-	var pos:Vector2 = (at_position + graph_edit.scroll_offset) / graph_edit.zoom
-	command_node.position_offset = pos
+	#var pos:Vector2 = (at_position + graph_edit.scroll_offset) / graph_edit.zoom
+	command_node.position_offset = at_position
 	
 	graph_edit.add_child(command_node)
 	#command_node.title = "Orphan Command"
 	command_node.add_to_entry_list.connect(_on_add_to_entry_list)
 	command_node.remove_from_entry_list.connect(_on_remove_from_entry_list)
 	command_node.delete_command.connect(_on_delete_command)
+	command_node.copy_command.connect(_on_copy_command)
 	
 	command_section.allCommands.append(new_command)
 	command_nodes.append(command_node)
 	
 	save_positions()
+	
+	return command_node
+
+
+func paste_commands(p_starting_position: Vector2) -> void:
+	for child: Node in graph_edit.get_children():
+		if child.name == "_connection_layer":
+			continue
+		child.selected = false
+	
+	var added_nodes: Array = []
+	for command: Dictionary in copy_commands:
+		added_nodes.append(add_command(p_starting_position+command.position, command.duplicate(true)))
+	for command_node: CommandNode in added_nodes:
+		if command_node.data.copy_next_command_index >= 0:
+			command_node.next_command_index = command_node.data.copy_next_command_index + added_nodes[0].index
+		command_node.selected = true
+		if command_node.data.add_to_entry:
+			add_to_entry_list(command_node.index)
+			command_node.update_command_base()
 
 
 func _on_add_to_entry_list(index: int) -> void:
@@ -472,8 +499,47 @@ func remove_from_entry_list(index: int) -> void:
 		#command_nodes[index-1].title = "Command"
 
 
+func _on_copy_command(index: int) -> void:
+	copy_commands = []
+	var origin := Vector2.ZERO
+	for child: Node in graph_edit.get_children():
+		if child.name == "_connection_layer":
+			continue
+		if child.selected:
+			var copy_data: Dictionary = child.data.duplicate(true)
+			copy_data.erase("map_info")
+			copy_data.position = child.position_offset
+			copy_commands.append(copy_data)
+			if copy_data.index == index:
+				origin = copy_data.position
+			if copy_data.index in command_section.entryCommandIndexes:
+				copy_data.add_to_entry = true
+			else:
+				copy_data.add_to_entry = false
+	
+	for command: Dictionary in copy_commands:
+		command.copy_next_command_index = copy_commands.map(func(c: Dictionary) -> int: return c.index).find(command.nextCommandIndex)
+		if command.copy_next_command_index == -1:
+			command.nextCommandIndex = 0
+		command.position -= origin
+	
+	#print(JSON.stringify(copy_commands, '\t'))
+
+
 func _on_delete_command(index: int) -> void:
-	delete_command(index)
+	var to_delete: Array = []
+	for child: Node in graph_edit.get_children():
+		if child.name == "_connection_layer":
+			continue
+		if child.selected:
+			to_delete.append(child)
+	
+	if not await Dialog.confirm("Delete %d commands?" % len(to_delete), "Confirm Deletion?", false, Vector2(400,150)):
+		return
+	
+	for child: Node in to_delete:
+		delete_command(child.index)
+	#delete_command(index)
 
 
 func delete_command(index: int) -> void:
@@ -546,7 +612,11 @@ func delete_command(index: int) -> void:
 
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:
-	add_at_position = at_position
+	if copy_commands.is_empty():
+		%GraphPopupMenu.set_item_disabled(1, true)
+	else:
+		%GraphPopupMenu.set_item_disabled(1, false)
+	add_at_position = (at_position + graph_edit.scroll_offset) / graph_edit.zoom
 	%GraphPopupMenu.popup(Rect2i(int(at_position.x + graph_edit.global_position.x), int(at_position.y + graph_edit.global_position.y), 0, 0))
 
 
@@ -555,11 +625,7 @@ func _on_graph_popup_menu_index_pressed(index: int) -> void:
 		0:
 			add_command(add_at_position)
 		1:
-			for child: Node in graph_edit.get_children():
-				if child.name == "_connection_layer":
-					continue
-				if child.selected:
-					delete_command(child.index)
+			paste_commands(add_at_position)
 
 
 func _on_search_edit_text_submitted(new_text: String) -> void:

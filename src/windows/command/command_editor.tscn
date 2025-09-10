@@ -77,7 +77,7 @@ auto_translate_mode = 1
 item_count = 2
 item_0/text = "Add Command"
 item_0/id = 0
-item_1/text = "Delete Selected"
+item_1/text = "Paste Command(s)"
 item_1/id = 1
 
 [node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/Graph"]

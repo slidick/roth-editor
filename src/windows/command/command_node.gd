@@ -4,6 +4,7 @@ class_name CommandNode
 signal add_to_entry_list(index: int)
 signal remove_from_entry_list(index: int)
 signal delete_command(index: int)
+signal copy_command(index: int)
 
 # Modifier Notes:
 # Modifiers seem to always do the same thing for each command type but not all command types support each modifier.
@@ -275,6 +276,7 @@ func _ready() -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		selected = true
 		if index in get_parent().get_parent().get_parent().get_parent().command_section.entryCommandIndexes:
 			%CommandPopupMenu.set_item_disabled(0, true)
 			%CommandPopupMenu.set_item_disabled(1, false)
@@ -425,6 +427,8 @@ func _on_command_popup_menu_index_pressed(_index: int) -> void:
 			remove_from_entry_list.emit(index)
 			update_command_base()
 		2:
+			copy_command.emit(index)
+		3:
 			delete_command.emit(index)
 
 

@@ -21,13 +21,15 @@ script = ExtResource("1_3ggqm")
 
 [node name="CommandPopupMenu" type="PopupMenu" parent="."]
 unique_name_in_owner = true
-item_count = 3
+item_count = 4
 item_0/text = "Add to Entry List"
 item_0/id = 0
 item_1/text = "Remove from Entry List"
 item_1/id = 1
-item_2/text = "Delete Command"
-item_2/id = 2
+item_2/text = "Copy Command(s)"
+item_2/id = 3
+item_3/text = "Delete Command(s)"
+item_3/id = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
