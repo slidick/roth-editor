@@ -344,6 +344,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 						child_item.free()
 					%Map2D.close_map(item.get_metadata(0).map_info)
 					%"Command Editor".close(item.get_metadata(0).map_info.name)
+					Roth.reload_map_info(item.get_metadata(0).map_info)
 					item.free()
 
 
@@ -356,6 +357,7 @@ func close_map(map_info: Dictionary) -> void:
 				child_item.free()
 			%Map2D.close_map(tree_item.get_metadata(0).map_info)
 			%"Command Editor".close(tree_item.get_metadata(0).map_info.name)
+			Roth.reload_map_info(tree_item.get_metadata(0).map_info)
 			tree_item.free()
 
 

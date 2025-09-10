@@ -420,3 +420,20 @@ func check_map_name(title: String) -> String:
 	if len(title) == 0:
 		error = "Name is empty"
 	return error
+
+
+func reload_map_info(map_info: Dictionary) -> void:
+	if "vanilla" in map_info:
+		map_info.erase("command_positions")
+	else:
+		var file_string := FileAccess.get_file_as_string(map_info.filepath_json)
+		if not file_string.is_empty():
+			var file_json: Variant = JSON.parse_string(file_string)
+			if file_json:
+				file_json["filepath"] = map_info.filepath
+				file_json["filepath_json"] = map_info.filepath_json
+				for key: String in map_info:
+					if key in file_json:
+						map_info[key] = file_json[key]
+					else:
+						map_info.erase(key)

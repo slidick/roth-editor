@@ -331,9 +331,9 @@ func initialize_command_node(p_index: int, p_command_data: Dictionary, p_positio
 	
 	# Load position data
 	#if "node_data" in p_command_data:
-	if "command_positions" in map.map_info and p_index in map.map_info.command_positions:
-		command_node.position_offset.x = map.map_info.command_positions[p_index].x
-		command_node.position_offset.y = map.map_info.command_positions[p_index].y
+	if "command_positions" in map.map_info and str(p_index) in map.map_info.command_positions:
+		command_node.position_offset.x = map.map_info.command_positions[str(p_index)].x
+		command_node.position_offset.y = map.map_info.command_positions[str(p_index)].y
 	else:
 		command_node.position_offset = p_position
 	
@@ -356,7 +356,7 @@ func save_positions() -> void:
 		if command_node.name == "_connection_layer":
 			continue
 		#command_node.save_position()
-		positions[command_node.index] = {
+		positions[str(command_node.index)] = {
 			"x": command_node.position_offset.x,
 			"y": command_node.position_offset.y,
 		}
