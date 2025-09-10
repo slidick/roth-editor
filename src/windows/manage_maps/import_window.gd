@@ -17,6 +17,10 @@ func clear() -> void:
 	%ImportButton.disabled = true
 	for child: Node in %MapsContainer.get_children():
 		child.queue_free()
+	%DBaseCheckBox.text = ""
+	%DBaseEdit.clear()
+	%DBaseWarningLabel.hide()
+	%DBaseInvalidLabel.hide()
 	map_data = {}
 
 
@@ -83,17 +87,41 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 	else:
 		%MapsImportContainer.hide()
 	
+	if "dbase_pack" in map_data:
+		%DBaseImportContainer.show()
+		%DBaseCheckBox.text = map_data.dbase_pack.name
+		%DBaseCheckBox.button_pressed = true
+		check_for_dbase_collision(map_data.dbase_pack.name)
+	else:
+		%DBaseImportContainer.hide()
+		%DBaseCheckBox.button_pressed = false
+	
 	check_for_allow_import()
 	
 	toggle(true)
 
 
 func check_for_allow_import() -> void:
+	if %DBaseCheckBox.button_pressed:
+		if not %DBaseEdit.text.is_empty():
+			var err: String = Roth.check_dbase_pack_name(%DBaseEdit.text)
+			if not err.is_empty():
+				%ImportButton.disabled = true
+				%DBaseInvalidLabel.show()
+				return
+			%ImportButton.disabled = false
+			return
+		else:
+			%ImportButton.disabled = false
+			return
+	else:
+		%DBaseInvalidLabel.hide()
 	for child_hbox: HBoxContainer in %MapsContainer.get_children():
 		var checkbox: CheckBox = child_hbox.get_child(0)
 		if checkbox.button_pressed:
 			%ImportButton.disabled = false
 			return
+
 	%ImportButton.disabled = true
 
 
@@ -108,14 +136,47 @@ func _on_import_button_pressed() -> void:
 				map_info["filepath_json"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".json")
 				Roth.close_map.emit(map_info)
 				Roth.save_raw(map_info, map_raw)
-	
+	if %DBaseCheckBox.button_pressed and "dbase_pack" in map_data:
+		var dbase_name: String = map_data.dbase_pack.name
+		if not %DBaseEdit.text.is_empty():
+			dbase_name = %DBaseEdit.text
+		DirAccess.make_dir_recursive_absolute(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_name))
+		var reader := ZIPReader.new()
+		for filename: String in ["DBASE100.DAT", "DBASE200.DAT", "DBASE300.DAT", "DBASE400.DAT", "DBASE500.DAT"]:
+			reader.open(%FileDialog.current_path)
+			var data := reader.read_file(filename)
+			var file := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_name).path_join(filename), FileAccess.WRITE)
+			file.store_buffer(data)
+			file.close()
+		reader.close()
+		if dbase_name not in Roth.dbase_packs.map(func (d: Dictionary) -> String: return d.name):
+			Roth.dbase_packs.append({"name": dbase_name, "active": false})
 	clear()
 	toggle(false)
 	Roth.settings_loaded.emit()
 	await Dialog.information("Successfully imported map data!", "Import Success", false, Vector2(400,170))
-	
 
 
 func _on_cancel_button_pressed() -> void:
 	clear()
 	toggle(false)
+
+
+func _on_dbase_edit_text_changed(new_text: String) -> void:
+	%DBaseInvalidLabel.hide()
+	if new_text.is_empty():
+		check_for_dbase_collision(map_data.dbase_pack.name)
+	else:
+		check_for_dbase_collision(new_text)
+	check_for_allow_import()
+
+
+func check_for_dbase_collision(new_text: String) -> void:
+	if new_text.to_upper() in Roth.dbase_packs.map(func (d: Dictionary) -> String: return d.name.to_upper()):
+		%DBaseWarningLabel.show()
+	else:
+		%DBaseWarningLabel.hide()
+
+
+func _on_d_base_check_box_toggled(_toggled_on: bool) -> void:
+	check_for_allow_import()

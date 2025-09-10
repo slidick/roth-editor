@@ -15,6 +15,14 @@ func _ready() -> void:
 
 
 func export_maps(p_maps: Array) -> void:
+	
+	%DBaseOption.clear()
+	for dbase_info: Dictionary in Roth.dbase_packs:
+		%DBaseOption.add_item(dbase_info.name)
+		%DBaseOption.set_item_metadata(%DBaseOption.item_count-1, dbase_info)
+		if dbase_info.active:
+			%DBaseOption.select(%DBaseOption.item_count-1)
+	
 	for map: Dictionary in p_maps:
 		var tree_item: TreeItem = %MapsTree.get_root().create_child()
 		tree_item.set_text(0, map.name)
@@ -79,6 +87,7 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 		%PresetOption.set_item_text(%PresetOption.selected, info.name)
 	
 	var export_info: Dictionary = info.duplicate()
+	export_info.erase("export_path")
 	export_info.maps = []
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
 		var map_info: Dictionary = tree_item.get_metadata(0).duplicate()
@@ -89,12 +98,22 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 		export_info.maps.append(map_info)
 	
 	
+	var dbase_info: Dictionary = %DBaseOption.get_selected_metadata()
+	if "vanilla" not in dbase_info:
+		export_info["dbase_pack"] = {"name": dbase_info.name}
+		for file: String in ["DBASE100.DAT", "DBASE200.DAT", "DBASE300.DAT", "DBASE400.DAT", "DBASE500.DAT"]:
+			if FileAccess.file_exists(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name).path_join(file)):
+				writer.start_file(file)
+				writer.write_file(FileAccess.get_file_as_bytes(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name).path_join(file)))
+				writer.close_file()
+	
+	
 	writer.start_file("data.json")
 	writer.write_file(JSON.stringify(export_info, '\t').to_utf8_buffer())
 	writer.close_file()
 	writer.close()
 	toggle(false)
-	await Dialog.information("Exported successfully to:\n%s" % %FileDialog.current_path, "Success!", true, Vector2(400, 170), "Close")
+	await Dialog.information("Exported successfully to:\n%s" % %FileDialog.current_path, "Success!", false, Vector2(400, 170), "Close")
 	reset()
 
 
