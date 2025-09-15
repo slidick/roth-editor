@@ -150,7 +150,7 @@ func _on_import_button_pressed() -> void:
 			file.close()
 		reader.close()
 		if dbase_name not in Roth.dbase_packs.map(func (d: Dictionary) -> String: return d.name):
-			Roth.dbase_packs.append({"name": dbase_name, "active": false})
+			Roth.import_dbase_pack(dbase_name)
 	clear()
 	toggle(false)
 	Roth.settings_loaded.emit()

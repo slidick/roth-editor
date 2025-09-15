@@ -59,7 +59,7 @@ func _ready() -> void:
 
 ## Used to save old list of map name -> das files into separate .json files per map
 func migrate_away_from_custom_res() -> void:
-	var locations: Dictionary = Settings.settings.get("locations")
+	var locations: Dictionary = Settings.settings.get("locations", {})
 	if locations and "custom.res" in locations:
 		Console.print("CUSTOM.RES found. Migrating to new format...")
 		
@@ -151,6 +151,49 @@ func load_roth_settings() -> void:
 				res["exe_version"] = NEW_EXE
 			_:
 				res["exe_version"] = 0.0
+		
+		
+		
+		var options: Dictionary = Settings.settings.get("options", {})
+		
+		if options.is_empty():
+			options = { "active_dbase": "Original"}
+			Settings.update_settings("options", options)
+		else:
+			if "active_dbase" not in options:
+				options.active_dbase = "Original"
+				Settings.update_settings("options", options)
+		
+		dbase_packs = [
+			{
+				"name": "Original",
+				"active": false,
+				"vanilla": true,
+			}
+		]
+		for dir in DirAccess.get_directories_at(ROTH_CUSTOM_DBASE_DIRECTORY):
+			var dbase_info := { "name": dir, "active": false }
+			dbase_packs.append(dbase_info)
+		
+		if options.active_dbase not in dbase_packs.map(func (a:Dictionary) -> String: return a.name):
+			options.active_dbase = "Original"
+			Settings.update_settings("options", options)
+		
+		for dbase_info: Dictionary in dbase_packs:
+			if dbase_info.name == options.active_dbase:
+				dbase_info.active = true
+			
+			var dbase_dir: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name)
+			if "vanilla" in dbase_info:
+				dbase_dir = Roth.install_directory.path_join("../DATA")
+			var dbase_100_filename := dbase_dir.path_join("DBASE100.DAT")
+			var dbase_100 := FileAccess.open(dbase_100_filename, FileAccess.READ)
+			dbase_info.merge(Parser.parse_section(dbase_100, DBase100.DBASE100_HEADER))
+			dbase_info.erase("signature")
+			dbase_info.erase("unk_dword_02")
+			dbase_info.erase("unk_dword_11")
+			dbase_100.close()
+	
 	
 	
 	for file in DirAccess.get_files_at(ROTH_CUSTOM_MAP_DIRECTORY):
@@ -164,45 +207,7 @@ func load_roth_settings() -> void:
 					maps.append(file_json)
 	
 	
-	var options: Dictionary = Settings.settings.get("options", {})
-	
-	if options.is_empty():
-		options = { "active_dbase": "Original"}
-		Settings.update_settings("options", options)
-	else:
-		if "active_dbase" not in options:
-			options.active_dbase = "Original"
-			Settings.update_settings("options", options)
-	
-	dbase_packs = [
-		{
-			"name": "Original",
-			"active": false,
-			"vanilla": true,
-		}
-	]
-	for dir in DirAccess.get_directories_at(ROTH_CUSTOM_DBASE_DIRECTORY):
-		var dbase_info := { "name": dir, "active": false }
-		dbase_packs.append(dbase_info)
-	
-	if options.active_dbase not in dbase_packs.map(func (a:Dictionary) -> String: return a.name):
-		options.active_dbase = "Original"
-		Settings.update_settings("options", options)
-	
-	for dbase_info: Dictionary in dbase_packs:
-		if dbase_info.name == options.active_dbase:
-			dbase_info.active = true
-		
-		var dbase_dir: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name)
-		if "vanilla" in dbase_info:
-			dbase_dir = Roth.install_directory.path_join("../DATA")
-		var dbase_100_filename := dbase_dir.path_join("DBASE100.DAT")
-		var dbase_100 := FileAccess.open(dbase_100_filename, FileAccess.READ)
-		dbase_info.merge(Parser.parse_section(dbase_100, DBase100.DBASE100_HEADER))
-		dbase_info.erase("signature")
-		dbase_info.erase("unk_dword_02")
-		dbase_info.erase("unk_dword_11")
-		dbase_100.close()
+
 	
 	#print(JSON.stringify(maps, "\t"))
 	#print(JSON.stringify(dbase_packs, "\t"))
@@ -513,10 +518,10 @@ func check_dbase_pack_name(p_name: String) -> String:
 
 
 func duplicate_dbase_pack(p_dbase_info: Dictionary, new_name: String) -> void:
-	var dbase_info := {
-		"name": new_name,
-		"active": false,
-	}
+	var dbase_info := p_dbase_info.duplicate()
+	dbase_info.name = new_name
+	dbase_info.active = false
+	dbase_info.erase("vanilla")
 	var copy_dir: String = ""
 	var new_dir: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(new_name)
 	DirAccess.make_dir_recursive_absolute(new_dir)
@@ -553,6 +558,23 @@ func delete_dbase_pack(p_dbase_info: Dictionary) -> void:
 				dbase_info.active = true
 				Settings.update_settings("options", {"active_dbase": "Original"})
 	Roth.settings_loaded.emit()
+
+
+func import_dbase_pack(p_dbase_name: String) -> void:
+	var dbase_info := {
+		"name": p_dbase_name,
+		"active": false
+	}
+	var dbase_dir: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name)
+	var dbase_100_filename := dbase_dir.path_join("DBASE100.DAT")
+	var dbase_100 := FileAccess.open(dbase_100_filename, FileAccess.READ)
+	dbase_info.merge(Parser.parse_section(dbase_100, DBase100.DBASE100_HEADER))
+	dbase_info.erase("signature")
+	dbase_info.erase("unk_dword_02")
+	dbase_info.erase("unk_dword_11")
+	dbase_100.close()
+	
+	Roth.dbase_packs.append(dbase_info)
 
 
 func create_dbase_pack(p_dbase_name: String) -> void:

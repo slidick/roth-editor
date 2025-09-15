@@ -21,13 +21,13 @@ panel_style_override = ExtResource("4_xdice")
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 layout_mode = 2
-current_tab = 1
+current_tab = 0
 
 [node name="Commands" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1" instance=ExtResource("5_rtctb")]
-visible = false
 layout_mode = 2
 
 [node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="2"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 

@@ -71,6 +71,9 @@ func _on_settings_loaded() -> void:
 			var tree_item: TreeItem = %MapTree.get_root().create_child()
 			tree_item.set_text(0, map_info.name)
 			tree_item.set_metadata(0, map_info)
+	if not Roth.install_directory.is_empty():
+		%NewMapButton.disabled = false
+		%ImportButton.disabled = false
 
 
 func _on_cancel_button_pressed() -> void:

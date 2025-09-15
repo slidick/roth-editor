@@ -181,15 +181,19 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="NewButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="0"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
+disabled = true
 text = "Create New"
 
 [node name="DuplicateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="1"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
+disabled = true
 text = "Duplicate"
 
 [node name="ActivateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="2"]

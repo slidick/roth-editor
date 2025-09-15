@@ -19,6 +19,8 @@ func _ready() -> void:
 
 
 func _on_settings_loaded() -> void:
+	if not Roth.install_directory.is_empty():
+		%NewButton.disabled = false
 	%DBaseList.clear()
 	for dbase_info: Dictionary in Roth.dbase_packs:
 		var idx: int = %DBaseList.add_item(dbase_info.name+" (Active)" if dbase_info.active else dbase_info.name)
@@ -45,6 +47,7 @@ func _on_d_base_list_item_selected(index: int) -> void:
 	%CutsceneCountLabel.text = str(dbase_info.cutscene_count)
 	%InterfaceCountLabel.text = str(dbase_info.interface_count)
 	%FilesizeLabel.text = str(dbase_info.filesize)
+	%DuplicateButton.disabled = false
 
 
 func _on_d_base_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
@@ -119,6 +122,8 @@ func activate() -> void:
 
 
 func _on_edit_button_pressed() -> void:
+	if Roth.install_directory.is_empty():
+		return
 	var dbase_info: Dictionary = %DBaseList.get_item_metadata(%DBaseList.get_selected_items()[0])
 	if "vanilla" in dbase_info:
 		return
@@ -306,7 +311,8 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 
 
 func _on_duplicate_button_pressed() -> void:
-	duplicate_dbase(%DBaseList.get_selected_items()[0])
+	if len(%DBaseList.get_selected_items()) > 0:
+		duplicate_dbase(%DBaseList.get_selected_items()[0])
 
 
 func _on_new_button_pressed() -> void:
