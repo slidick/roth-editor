@@ -1,17 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://bxh7bquhkgigb"]
+[gd_scene load_steps=4 format=3 uid="uid://bxh7bquhkgigb"]
 
 [ext_resource type="Script" uid="uid://476tw27np1bf" path="res://src/windows/dbase_editor/inventory.gd" id="1_diksd"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_0mebd"]
+[ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="2_s2ad5"]
 
 [node name="Inventory" type="HBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -618.0
-offset_bottom = -304.0
+offset_right = -738.0
+offset_bottom = -518.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 6
 script = ExtResource("1_diksd")
 metadata/_tab_index = 3
 
@@ -42,87 +44,240 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer"]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-text = "Object Texture Index:"
-
-[node name="ObjectTextureIndexEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer"]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer2"]
-custom_minimum_size = Vector2(250, 0)
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
+visible = false
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
-text = "Close-Up Type:"
+text = "Name"
 
-[node name="CloseUpTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer2"]
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+editable = false
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer2"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer3"]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-text = "Item Type:"
-
-[node name="ItemTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer3"]
+[node name="ChangeNameButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Change"
+
+[node name="TypeOption" type="OptionButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 5
+popup/item_0/text = "General"
+popup/item_0/id = 0
+popup/item_1/text = "Weapon"
+popup/item_1/id = 1
+popup/item_2/text = "Magical"
+popup/item_2/id = 2
+popup/item_3/text = "Document"
+popup/item_3/id = 3
+popup/item_4/text = "Info"
+popup/item_4/id = 4
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4"]
+visible = false
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
+text = "Type"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer4"]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-text = "Close-Up Image Offset:"
-
-[node name="CloseUpImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer4"]
+[node name="ItemTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4"]
 unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer5"]
-custom_minimum_size = Vector2(250, 0)
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Inventory Image Offset:"
+text = "Flags"
 
-[node name="InventoryImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer5"]
+[node name="CloseUpTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TypeFlag1CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Player"
+
+[node name="Flag1CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play Once"
+
+[node name="Flag2CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Document"
+
+[node name="Flag3CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Name Change"
+
+[node name="Flag4CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Info"
+
+[node name="TypeFlag3CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Usable"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+
+[node name="Flag5CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Weapon"
+
+[node name="Flag6CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Bullet"
+
+[node name="Flag7CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Examine"
+
+[node name="Flag8CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Monster"
+
+[node name="TypeFlag2CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Stackable"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
 layout_mode = 2
+text = "Object Texture"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer6"]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-text = "Name Offset:"
-
-[node name="NameOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer6"]
+[node name="ObjectTextureIndexEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+keep_editing_on_text_submit = true
+
+[node name="Container" type="Container" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_s2ad5")
+
+[node name="ObjectTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/Container"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
+layout_mode = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+layout_mode = 2
+text = "Inventory Image"
+horizontal_alignment = 1
+
+[node name="InventoryImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+keep_editing_on_text_submit = true
+
+[node name="InventoryTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
+layout_mode = 2
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+layout_mode = 2
+text = "Close-Up Image"
+horizontal_alignment = 1
+
+[node name="CloseUpImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+keep_editing_on_text_submit = true
+
+[node name="CloseUpTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+unique_name_in_owner = true
+visible = false
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer7"]
 layout_mode = 2
@@ -177,7 +332,6 @@ allow_reselect = true
 allow_rmb_select = true
 hide_folding = true
 hide_root = true
-select_mode = 1
 script = ExtResource("2_0mebd")
 
 [node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree"]
@@ -203,22 +357,34 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Add Opcode"
 
-[node name="InfoPanel" type="Control" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
 [connection signal="item_clicked" from="VBoxContainer/InventoryList" to="." method="_on_inventory_list_item_clicked"]
 [connection signal="item_selected" from="VBoxContainer/InventoryList" to="." method="_on_inventory_list_item_selected"]
 [connection signal="index_pressed" from="VBoxContainer/InventoryList/InventoryListPopupMenu" to="." method="_on_inventory_list_popup_menu_index_pressed"]
 [connection signal="pressed" from="VBoxContainer/AddInventoryButton" to="." method="_on_add_inventory_button_pressed"]
-[connection signal="text_changed" from="VBoxContainer2/HBoxContainer/ObjectTextureIndexEdit" to="." method="_on_object_texture_index_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer2/HBoxContainer2/CloseUpTypeEdit" to="." method="_on_close_up_type_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer2/HBoxContainer3/ItemTypeEdit" to="." method="_on_item_type_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer2/HBoxContainer4/CloseUpImageOffsetEdit" to="." method="_on_close_up_image_offset_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer2/HBoxContainer5/InventoryImageOffsetEdit" to="." method="_on_inventory_image_offset_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer2/HBoxContainer6/NameOffsetEdit" to="." method="_on_name_offset_edit_text_changed"]
+[connection signal="gui_input" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3/NameEdit" to="." method="_on_name_edit_gui_input"]
+[connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3/NameEdit" to="." method="_on_name_offset_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3/ChangeNameButton" to="." method="_on_change_name_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3/TypeOption" to="." method="_on_type_option_item_selected"]
+[connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4/ItemTypeEdit" to="." method="_on_item_type_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/CloseUpTypeEdit" to="." method="_on_close_up_type_edit_text_changed"]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/TypeFlag1CheckButton" to="." method="_on_type_flag_check_button_toggled" binds= [4]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/Flag1CheckButton" to="." method="_on_flag_check_button_toggled" binds= [0]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/Flag2CheckButton" to="." method="_on_flag_check_button_toggled" binds= [1]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/Flag3CheckButton" to="." method="_on_flag_check_button_toggled" binds= [2]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/Flag4CheckButton" to="." method="_on_flag_check_button_toggled" binds= [3]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/TypeFlag3CheckButton" to="." method="_on_type_flag_check_button_toggled" binds= [6]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2/Flag5CheckButton" to="." method="_on_flag_check_button_toggled" binds= [4]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2/Flag6CheckButton" to="." method="_on_flag_check_button_toggled" binds= [5]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2/Flag7CheckButton" to="." method="_on_flag_check_button_toggled" binds= [6]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2/Flag8CheckButton" to="." method="_on_flag_check_button_toggled" binds= [7]]
+[connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2/TypeFlag2CheckButton" to="." method="_on_type_flag_check_button_toggled" binds= [5]]
+[connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer2/ObjectTextureIndexEdit" to="." method="_on_object_texture_index_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer2/HBoxContainer8/VBoxContainer2/ObjectTextureIndexEdit" to="." method="_on_object_texture_index_edit_text_submitted"]
+[connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer3/InventoryImageOffsetEdit" to="." method="_on_inventory_image_offset_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer2/HBoxContainer8/VBoxContainer3/InventoryImageOffsetEdit" to="." method="_on_inventory_image_offset_edit_text_submitted"]
+[connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/CloseUpImageOffsetEdit" to="." method="_on_close_up_image_offset_edit_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/CloseUpImageOffsetEdit" to="." method="_on_close_up_image_offset_edit_text_submitted"]
+[connection signal="frame_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]
 [connection signal="empty_clicked" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" to="." method="_on_trigger_tree_empty_clicked"]
 [connection signal="item_edited" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" to="." method="_on_trigger_tree_item_edited"]
 [connection signal="item_mouse_selected" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" to="." method="_on_trigger_tree_item_mouse_selected"]
@@ -228,6 +394,7 @@ mouse_filter = 2
 [connection signal="index_pressed" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree/TriggerEmptyPopupMenu" to="." method="_on_trigger_empty_popup_menu_index_pressed"]
 [connection signal="pressed" from="VBoxContainer2/HBoxContainer7/VBoxContainer/AddTriggerButton" to="." method="_on_add_trigger_button_pressed"]
 [connection signal="empty_clicked" from="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" to="." method="_on_tree_empty_clicked"]
+[connection signal="item_activated" from="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" to="." method="_on_tree_item_activated"]
 [connection signal="item_edited" from="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" to="." method="_on_tree_item_edited"]
 [connection signal="item_mouse_selected" from="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" to="." method="_on_tree_item_mouse_selected"]
 [connection signal="item_moved" from="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" to="." method="_on_tree_item_moved"]

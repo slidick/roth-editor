@@ -35,7 +35,7 @@ func _on_settings_loaded() -> void:
 	#return
 	var i: int = 0
 	for entry: Dictionary in entries:
-		#if entry.offset > 0:
+		if entry.dbase500_offset > 0:
 			var child_item: TreeItem = tree_root.create_child()
 			child_item.set_text(0, entry.string)
 			#child_item.set_text(0, "%d: %s" % [i, entry.string])
@@ -50,10 +50,9 @@ func _on_dialog_list_item_activated() -> void:
 
 
 func play(entry_request: Dictionary) -> void:
-	print(entry_request)
-	if entry_request.offset == 0:
+	if entry_request.dbase500_offset == 0:
 		return
-	var entry: Dictionary = DBase500.get_entry_at_offset(entry_request.offset)
+	var entry: Dictionary = DBase500.get_entry_at_offset(entry_request.dbase500_offset)
 	Roth.play_audio_buffer(entry.data, entry.sampleRate)
 	%Waveform.setup(entry)
 	%HSlider.value = 0

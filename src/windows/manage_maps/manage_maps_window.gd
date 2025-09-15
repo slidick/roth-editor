@@ -58,6 +58,7 @@ func get_selected_maps() -> Array:
 
 
 func _on_settings_loaded() -> void:
+	clear()
 	%MapTree.clear()
 	%MapTree.create_item()
 	for map_info:Dictionary in Roth.maps:

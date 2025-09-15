@@ -5,14 +5,14 @@ const DBASE100_HEADER := {
 	"signature": [Parser.Type.Char,Parser.Type.Char,Parser.Type.Char,Parser.Type.Char,Parser.Type.Char,Parser.Type.Char,Parser.Type.Char,Parser.Type.Char],             # + 0x00
 	"filesize": Parser.Type.DWord,                  # + 0x08
 	"unk_dword_02": Parser.Type.DWord,              # + 0x0C
-	"nb_dbase100_inventory": Parser.Type.DWord,     # + 0x10
-	"dbase100_table_inventory": Parser.Type.DWord,  # + 0x14        // offset
-	"nb_dbase100_action": Parser.Type.DWord,        # + 0x18
-	"dbase100_table_action": Parser.Type.DWord,     # + 0x1C        // offset
-	"nb_dbase400_cutscene": Parser.Type.DWord,      # + 0x20        // nb * 0x14
-	"dbase400_table_cutscene": Parser.Type.DWord,   # + 0x24        // offset
-	"nb_dbase400_interface": Parser.Type.DWord,     # + 0x28        // nb * 0x04
-	"dbase400_table_interface": Parser.Type.DWord,  # + 0x2C        // offset
+	"inventory_count": Parser.Type.DWord,     # + 0x10
+	"inventory_offset": Parser.Type.DWord,  # + 0x14        // offset
+	"action_count": Parser.Type.DWord,        # + 0x18
+	"action_offset": Parser.Type.DWord,     # + 0x1C        // offset
+	"cutscene_count": Parser.Type.DWord,      # + 0x20        // nb * 0x14
+	"cutscene_offset": Parser.Type.DWord,   # + 0x24        // offset
+	"interface_count": Parser.Type.DWord,     # + 0x28        // nb * 0x04
+	"interface_offset": Parser.Type.DWord,  # + 0x2C        // offset
 	"unk_dword_11": Parser.Type.DWord,              # + 0x30
 }
 
@@ -60,7 +60,7 @@ const DBASE_100_OPCODE := {
 	"value_1": Parser.Type.Byte,
 	"value_2": Parser.Type.Byte,
 	"value_3": Parser.Type.Byte,
-	"command": Parser.Type.Byte,
+	"opcode": Parser.Type.Byte,
 }
 
 static func parse() -> Dictionary:
@@ -77,52 +77,72 @@ static func parse_files(dbase100_filepath: String, dbase400_filepath: String) ->
 	var dbase100 := FileAccess.open(dbase100_filepath, FileAccess.READ)
 	var dbase400 := FileAccess.open(dbase400_filepath, FileAccess.READ)
 	
+	var text_offsets: Dictionary = {}
+	var text_entrys: Array = []
+	var subtitle_entrys: Array = []
+	
 	var header := Parser.parse_section(dbase100, DBASE100_HEADER)
 	#print(JSON.stringify(header, '\t', false))
 	
-	assert(dbase100.get_position() == header["dbase400_table_cutscene"])
+	assert(dbase100.get_position() == header["cutscene_offset"])
 	
 	var cutscenes := []
-	for i in range(header["nb_dbase400_cutscene"]):
+	for i in range(header["cutscene_count"]):
 		var cutscene := Parser.parse_section(dbase100, DBASE100_CUTSCENE_ENTRY)
 		if cutscene["offset_dbase400"] != 0:
 			dbase400.seek(cutscene["offset_dbase400"])
-			cutscene["entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
-			cutscene["entry"].erase("length_str")
+			cutscene["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			cutscene["text_entry"].erase("length_str")
+			#text_entrys.append(cutscene["text_entry"])
+		else:
+			cutscene["text_entry"] = {}
 		if cutscene["offset_dbase400_subtitles"] != 0:
 			dbase400.seek(cutscene["offset_dbase400_subtitles"])
 			cutscene["subtitles"] = DBase400.parse_cutscene_subtitle(dbase400, cutscene["offset_dbase400_subtitles"])
+			subtitle_entrys.append(cutscene["subtitles"])
+		else:
+			cutscene["subtitles"] = {}
 		
 		cutscenes.append(cutscene)
 	
-	assert(dbase100.get_position() == header["dbase400_table_interface"])
+	assert(dbase100.get_position() == header["interface_offset"])
 	
 	var interfaces := []
-	for i in range(header["nb_dbase400_interface"]):
+	for i in range(header["interface_count"]):
 		var interface := {}
 		interface["offset"] = dbase100.get_32()
-		dbase400.seek(interface["offset"])
-		interface["subtitle"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+		if interface["offset"] != 0:
+			dbase400.seek(interface["offset"])
+			interface["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			interface["text_entry"].erase("length_str")
+			
+			if interface["offset"] not in text_offsets:
+				text_offsets[interface["offset"]] = interface["text_entry"]
+				text_entrys.append(interface["text_entry"])
+			else:
+				interface["text_entry"] = text_offsets[interface["offset"]]
+		else:
+			interface["text_entry"] = {}
 		interfaces.append(interface)
+		interface.erase("offset")
 	
-	assert(dbase100.get_position() == header["dbase100_table_inventory"])
+	assert(dbase100.get_position() == header["inventory_offset"])
 	
 	var inventory := []
-	for i in range(header["nb_dbase100_inventory"]):
+	for i in range(header["inventory_count"]):
 		var offset: int = dbase100.get_32()
 		var position: int = dbase100.get_position()
 		dbase100.seek(offset)
 		var inventory_item := Parser.parse_section(dbase100, DBASE100_INVENTORY_ENTRY)
-		#inventory_item["offset"] = offset
-		inventory_item["commands_section"] = []
+		inventory_item["actions_section"] = []
 		
 		var v1 := dbase100.get_8()
 		var v2 := dbase100.get_8()
 		var v3 := dbase100.get_8() 
 		var command_length := (v3 << 16) + (v2 << 8) + v1
 		var command_trigger := dbase100.get_8()
-		while command_length != 0 and command_trigger != 0:
-			var command := {"trigger": command_trigger, "commands": []}
+		while command_length != 0:
+			var action := {"trigger": command_trigger, "commands": []}
 			command_length -= 4
 			while command_length > 0:
 				v1 = dbase100.get_8()
@@ -130,68 +150,86 @@ static func parse_files(dbase100_filepath: String, dbase400_filepath: String) ->
 				v3 = dbase100.get_8() 
 				var command_args := (v3 << 16) + (v2 << 8) + v1
 				var command_opcode := dbase100.get_8()
-				command.commands.append({"opcode": command_opcode, "args": command_args})
+				var command := {"opcode": command_opcode, "args": command_args}
+				action.commands.append(command)
 				command_length -= 4
+				if (command_opcode == 5 
+						or command_opcode == 8
+						or command_opcode == 15
+						or command_opcode == 16
+				):
+					dbase400.seek(command_args)
+					command["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+					command["text_entry"].erase("length_str")
+					if command_args not in text_offsets:
+						text_offsets[command_args] = command.text_entry
+						text_entrys.append(command.text_entry)
+					else:
+						command["text_entry"] = text_offsets[command_args]
 			v1 = dbase100.get_8()
 			v2 = dbase100.get_8()
 			v3 = dbase100.get_8() 
 			command_length = (v3 << 16) + (v2 << 8) + v1
 			command_trigger = dbase100.get_8()
-			inventory_item["commands_section"].append(command)
-		
-		
-		#if inventory_item["add_length"] > 0:
-			#inventory_item["additional_data"] = []
-			#for j in range(inventory_item["add_length"] / 2):
-				#inventory_item["additional_data"].append(dbase100.get_16())
-		
-		
-		
-		
+			inventory_item["actions_section"].append(action)
 		if inventory_item["offset_dbase400"] != 0:
 			dbase400.seek(inventory_item["offset_dbase400"])
-			inventory_item["subtitle"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			inventory_item["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			inventory_item["text_entry"].erase("length_str")
+			if inventory_item["offset_dbase400"] not in text_offsets:
+				text_offsets[inventory_item["offset_dbase400"]] = inventory_item["text_entry"]
+				text_entrys.append(inventory_item["text_entry"])
+			else:
+				inventory_item["text_entry"] = text_entrys[text_entrys.find(inventory_item.text_entry)]
 		else:
-			inventory_item["subtitle"] = {"string": ""}
+			inventory_item["text_entry"] = {}
+		
 		inventory_item.erase("length")
 		inventory.append(inventory_item)
 		dbase100.seek(position)
 	
-	assert(dbase100.get_position() == header["dbase100_table_action"])
+	assert(dbase100.get_position() == header["action_offset"])
 	
 	var actions := []
-	for i in range(header["nb_dbase100_action"]):
+	for i in range(header["action_count"]):
 		var action := {}
 		action["offset"] = dbase100.get_32()
-		action["opcodes"] = []
+		action["commands"] = []
 		if action["offset"] != 0:
 			var position: int = dbase100.get_position()
 			dbase100.seek(action["offset"])
-			#var v1: int = dbase100.get_8()
-			#var v2: int = dbase100.get_8()
-			#var v3: int = dbase100.get_8()
-			#var c: int = dbase100.get_8()
-			#var arg: int = (v3 << 16) + (v2 << 8) + v1
-			#if c != 3:
-				#print('C: ', c, ' A: ', arg)
-			#dbase100.seek(action["offset"])
 			action["length"] = dbase100.get_16()
 			action["unk_word_00"] = dbase100.get_16()
 			if action["length"] != 0:
 				# Length includes header unless no opcodes??
 				for j in range((action["length"] / 4) - 1):
-					var opcode := Parser.parse_section(dbase100, DBASE_100_OPCODE)
-					opcode["full_value"] = (opcode["value_3"] << 16) + (opcode["value_2"] << 8) + opcode["value_1"]
-					opcode.erase("value_1")
-					opcode.erase("value_2")
-					opcode.erase("value_3")
-					action["opcodes"].append(opcode)
-					
+					var v1 := dbase100.get_8()
+					var v2 := dbase100.get_8()
+					var v3 := dbase100.get_8() 
+					var command_args := (v3 << 16) + (v2 << 8) + v1
+					var command_opcode := dbase100.get_8()
+					var command := {"opcode": command_opcode, "args": command_args}
+					action["commands"].append(command)
+					if (command.opcode == 5 
+							or command.opcode == 8
+							or command.opcode == 15
+							or command.opcode == 16
+					):
+						dbase400.seek(command.args)
+						command["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+						command["text_entry"].erase("length_str")
+						if command_args not in text_offsets:
+							text_offsets[command_args] = command.text_entry
+							text_entrys.append(command.text_entry)
+						else:
+							command["text_entry"] = text_offsets[command_args]
+						
 			dbase100.seek(position)
 		action.erase("offset")
 		action.erase("length")
 		action.erase("unk_word_00")
 		actions.append(action)
+	
 	
 	return {
 		"header": header,
@@ -199,23 +237,20 @@ static func parse_files(dbase100_filepath: String, dbase400_filepath: String) ->
 		"inventory": inventory,
 		"interfaces": interfaces,
 		"actions": actions,
+		"text_entrys": text_entrys,
+		"subtitle_entrys": subtitle_entrys
 	}
 
 
-static func parse_files_at_directory(directory: String) -> Array:
+static func parse_files_at_directory(directory: String) -> Dictionary:
 	var dbase100_filepath: String =  directory.path_join("DBASE100.DAT")
 	if not FileAccess.file_exists(dbase100_filepath):
-		return []
+		return {}
 	var dbase400_filepath: String = directory.path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
-		return []
+		return {}
 	
-	var results := [
-		parse_files(dbase100_filepath, dbase400_filepath),
-		DBase400.parse_full(dbase400_filepath)
-	]
-	
-	return results
+	return parse_files(dbase100_filepath, dbase400_filepath)
 
 
 static func compile(dbase100: Dictionary) -> PackedByteArray:
@@ -257,6 +292,9 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 		data.encode_u16(position + 2, cutscene.computed_length_subtitles)
 		data.encode_u32(position + 4, cutscene.offset_dbase400)
 		data.encode_u32(position + 8, cutscene.offset_dbase400_subtitles)
+		cutscene.erase("computed_length_subtitles")
+		cutscene.erase("offset_dbase400")
+		#cutscene.erase("offset_dbase400_subtitles")
 		position += 12
 	
 	
@@ -264,7 +302,10 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 	# Interface
 	assert(position == section_sizes.interfaces.starts_at)
 	for interface: Dictionary in dbase100.interfaces:
-		data.encode_u32(position, interface.offset)
+		if not interface.text_entry.is_empty():
+			data.encode_u32(position, interface.text_entry.offset)
+		else:
+			data.encode_u32(position, 0)
 		position += 4
 	
 	
@@ -283,7 +324,7 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 	for item: Dictionary in dbase100.inventory:
 		item.offset = position
 		var length := 24
-		for action: Dictionary in item.commands_section:
+		for action: Dictionary in item.actions_section:
 			length += 4 + (len(action.commands) * 4)
 		data.encode_u16(position, length)
 		data.encode_u16(position + 2, item.object_texture_index)
@@ -293,9 +334,14 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 		data.encode_u8(position + 7, 0) # unk_byte_03
 		data.encode_u32(position + 8, item.closeup_image)
 		data.encode_u32(position + 12, item.inventory_image)
-		data.encode_u32(position + 16, item.offset_dbase400)
+		
+		if not item.text_entry.is_empty():
+			data.encode_u32(position + 16, item.text_entry.offset)
+		else:
+			data.encode_u32(position + 16, 0)
+		
 		position += 20
-		for action: Dictionary in item.commands_section:
+		for action: Dictionary in item.actions_section:
 			var v1 := (4 + len(action.commands) * 4) & 0xFF
 			var v2 := ((4 + len(action.commands) * 4) & 0xFF00) >> 8
 			var v3 := ((4 + len(action.commands) * 4) & 0xFF0000) >> 16
@@ -305,6 +351,16 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 			data.encode_u8(position + 3, action.trigger)
 			position += 4
 			for command: Dictionary in action.commands:
+				if (command.opcode == 5
+						or command.opcode == 8
+						or command.opcode == 15
+						or command.opcode == 16
+				):
+					if not command.text_entry.is_empty():
+						command.args = command.text_entry.offset
+					else:
+						command.args = 0
+				
 				v1 = command.args & 0xFF
 				v2 = (command.args & 0xFF00) >> 8
 				v3 = (command.args & 0xFF0000) >> 16
@@ -320,23 +376,33 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 	# Actions
 	assert(position == section_sizes.actions.starts_at)
 	for action: Dictionary in dbase100.actions:
-		if action.opcodes.is_empty():
+		if action.commands.is_empty():
 			action.offset = 0
 			continue
 		action.offset = position
-		var length := (len(action.opcodes) * 4) + 4
+		var length := (len(action.commands) * 4) + 4
 		var unk_word_00 := 768
 		data.encode_u16(position, length)
 		data.encode_u16(position + 2, unk_word_00)
 		position += 4
-		for command: Dictionary in action.opcodes:
-			var v1: int = command.full_value & 0xFF
-			var v2: int = (command.full_value & 0xFF00) >> 8
-			var v3: int = (command.full_value & 0xFF0000) >> 16
+		for command: Dictionary in action.commands:
+			if (command.opcode == 5
+					or command.opcode == 8
+					or command.opcode == 15
+					or command.opcode == 16
+			):
+				if not command.text_entry.is_empty():
+					command.args = command.text_entry.offset
+				else:
+					command.args = 0
+			
+			var v1: int = command.args & 0xFF
+			var v2: int = (command.args & 0xFF00) >> 8
+			var v3: int = (command.args & 0xFF0000) >> 16
 			data.encode_u8(position, v1)
 			data.encode_u8(position + 1, v2)
 			data.encode_u8(position + 2, v3)
-			data.encode_u8(position + 3, command.command)
+			data.encode_u8(position + 3, command.opcode)
 			position += 4
 	
 	
@@ -345,14 +411,21 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 	assert(position == section_sizes.inventory_list.starts_at)
 	for item: Dictionary in dbase100.inventory:
 		data.encode_u32(position, item.offset)
+		item.erase("offset")
 		position += 4
 	
 	# Actions List
 	assert(position == section_sizes.actions_list.starts_at)
 	for action: Dictionary in dbase100.actions:
 		data.encode_u32(position, action.offset)
+		action.erase("offset")
 		position += 4
 	
+	
+	# Remove offsets from text array
+	if "text_entrys" in dbase100:
+		for text_entry: Dictionary in dbase100.text_entrys:
+			text_entry.erase("offset")
 	
 	
 	return data
@@ -385,7 +458,7 @@ static func calculate_section_sizes_and_offsets(dbase100: Dictionary) -> Diction
 	var inventory_size: int = 0
 	for item: Dictionary in dbase100.inventory:
 		inventory_size += 24
-		for action: Dictionary in item.commands_section:
+		for action: Dictionary in item.actions_section:
 			inventory_size += 4 + (len(action.commands) * 4)
 	
 	var inventory := {
@@ -395,8 +468,8 @@ static func calculate_section_sizes_and_offsets(dbase100: Dictionary) -> Diction
 	
 	var actions_size: int = 0
 	for action: Dictionary in dbase100.actions:
-		if not action.opcodes.is_empty():
-			actions_size += (len(action.opcodes) * 4) + 4
+		if not action.commands.is_empty():
+			actions_size += (len(action.commands) * 4) + 4
 	var actions := {
 		"starts_at": inventory.starts_at + inventory.size,
 		"size": actions_size,

@@ -192,9 +192,20 @@ func load_roth_settings() -> void:
 	for dbase_info: Dictionary in dbase_packs:
 		if dbase_info.name == options.active_dbase:
 			dbase_info.active = true
-
+		
+		var dbase_dir: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name)
+		if "vanilla" in dbase_info:
+			dbase_dir = Roth.install_directory.path_join("../DATA")
+		var dbase_100_filename := dbase_dir.path_join("DBASE100.DAT")
+		var dbase_100 := FileAccess.open(dbase_100_filename, FileAccess.READ)
+		dbase_info.merge(Parser.parse_section(dbase_100, DBase100.DBASE100_HEADER))
+		dbase_info.erase("signature")
+		dbase_info.erase("unk_dword_02")
+		dbase_info.erase("unk_dword_11")
+		dbase_100.close()
 	
 	#print(JSON.stringify(maps, "\t"))
+	#print(JSON.stringify(dbase_packs, "\t"))
 	
 	settings_loaded.emit()
 
@@ -544,6 +555,160 @@ func delete_dbase_pack(p_dbase_info: Dictionary) -> void:
 	Roth.settings_loaded.emit()
 
 
+func create_dbase_pack(p_dbase_name: String) -> void:
+	var dbase := {
+		"actions": [],
+		"cutscenes": [],
+		"header": {
+			"unk_dword_02": 433,
+			"unk_dword_11": 2
+		},
+		"interfaces": [
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Subtitle\'s ON." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Subtitle\'s OFF." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Run mode ON." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Run mode OFF." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "I cannot use that." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Out of power." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "No ammo." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Mouse Buttons A-B." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Mouse Buttons B-A." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "New game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Options" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Quit Game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "OK SAVE!" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "OK LOAD!" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Load a game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Save a game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Restore last save game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "CANCEL" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Volume settings" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Subtitle settings" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "DONE" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Saving ..." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Loading ..." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Master volume" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Sound effects" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Music" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Speech" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Movies" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Speech subtitles on" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Speech subtitles off" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Speech Audio on" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Speech Audio off" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Movie subtitles on" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Movie subtitles off" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Movie audio on" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Movie audio off" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Input name" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Select file to load" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Select file to save" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "OK to replace" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Using %s with %s." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "I cannot use %s with %s." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "I cannot use %s." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Quit to DOS" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Screen settings" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Using %s." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Mouse Speed" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Settings" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Input Settings" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Not available" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Empty slot" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "No name" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Scanning VESA, please wait..." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "OK to start a new game." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Reload game to take effect." } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "VGA 320x200" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Mode-X 320x200" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Mode-X 320x400" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "VESA 320x200" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "VESA 320x400" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "VESA 640x400" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "VESA 640x480" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Options menu" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Insert Original ROTH Boot-CD" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Continue" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Insert ROTH \'Boot-CD\'" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Insert ROTH \'CD - two\'" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Insert ROTH \'CD - three\'" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Insert ROTH \'CD - four\'" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Read error found" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Retry" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Abort video" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Movie clips" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Playback menu" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Screen size" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Play the game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Replay Intro" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Cancel, and don\'t ask again" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Intro" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Making of" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Credits" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "--RotH--^^keys:-^^F1 - Show/Hide weapon^^F2 - Subtitles On/Off^^F5 - Switch Mouse buttons^^F6 - Cycle through screen modes^^CapsLock - RunMode On/Off^^i - Inventory On/Off^^c,v - Adjust gamma^^1-6 - Select weapons^^F10/F9 - Load/Save game 0" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Quit Realms" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Select difficulty level" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Easy" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Normal" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Hard" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Define movment keys" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Walk forward" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Turn left" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Turn right" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Walk backward" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Walk left" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Walk right" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Fire" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Key already used by the game" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Press new key" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Very hard" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<VGA 320x200>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<Mode-X 320x200>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<Mode-X 320x400>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<VESA 320x200>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<VESA 320x400>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<VESA 640x400>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "<VESA 640x480>" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Jump" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Crawl" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Gamma" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Gamma setting" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Arcade level" } },
+			{ "text_entry": { "dbase500_offset": 0, "font_color": 103, "string": "Adventure level" } },
+		],
+		"inventory": [],
+		"subtitle_entrys": [],
+	}
+
+	var directory: String = ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_name)
+	DirAccess.make_dir_recursive_absolute(directory)
+	
+	var dbase100_filepath := directory.path_join("DBASE100.DAT")
+	var dbase400_filepath := directory.path_join("DBASE400.DAT")
+	
+	var data := DBase400.compile(dbase)
+	var file := FileAccess.open(dbase400_filepath, FileAccess.WRITE)
+	file.store_buffer(data)
+	file.close()
+	
+	var data2 := DBase100.compile(dbase)
+	var file2 := FileAccess.open(dbase100_filepath, FileAccess.WRITE)
+	file2.store_buffer(data2)
+	file2.close()
+	
+	var dbase_info := {
+		"name": p_dbase_name,
+		"active": false,
+		"inventory_count": len(dbase.inventory),
+		"action_count": len(dbase.actions),
+		"cutscene_count": len(dbase.cutscenes),
+		"interface_count": len(dbase.interfaces),
+		"filesize": len(data2),
+	}
+	dbase_packs.append(dbase_info)
+	Roth.settings_loaded.emit()
+
+
 func create_install(installation_directory: String, roth_directory: String) -> void:
 	if DirAccess.dir_exists_absolute(roth_directory):
 		return
@@ -703,5 +868,3 @@ func write_config_ini(config_ini_filepath: String, original_game: bool) -> void:
 	config_ini_file.store_string("MusicCard=0xa009\n")
 	config_ini_file.store_string("MusicPort=0x388\n")
 	config_ini_file.close()
-
-

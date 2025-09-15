@@ -61,13 +61,13 @@ func _on_settings_loaded() -> void:
 		# Interfaces
 		for i in range(len(dbase100.interfaces)):
 			var interface: Dictionary = dbase100.interfaces[i]
-			%InterfaceList.add_item("%d: %s" % [(i+1), interface.subtitle.string])
+			%InterfaceList.add_item("%d: %s" % [(i+1), interface.text_entry.string])
 		
 		
 		# Inventory
 		for i in range(len(dbase100.inventory)):
 			var inventory_item: Dictionary = dbase100.inventory[i]
-			var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.subtitle.string])
+			var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.text_entry.string])
 			%InventoryList.set_item_metadata(idx, inventory_item)
 		
 	
@@ -133,7 +133,7 @@ func _on_cutscene_list_item_selected(index: int) -> void:
 	%CutscenePanel.add_child(vbox)
 	
 	var label := Label.new()
-	label.text = "%s" % cutscene.entry.string
+	label.text = "%s" % cutscene.text_entry.string
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	vbox.add_child(label)
 	vbox.add_child(HSeparator.new())
@@ -304,7 +304,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	
 	var title := Label.new()
 	#title.size_flags_horizontal = Control.SIZE_SHRINK_CENTER & Control.SIZE_EXPAND
-	title.text = "%s" % inventory_item.subtitle.string
+	title.text = "%s" % inventory_item.text_entry.string
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
 	var vbox_main := VBoxContainer.new()
@@ -364,10 +364,10 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	vbox_main.add_child(scroll)
 	
 	for key: String in inventory_item:
-		if key == "subtitle":
+		if key == "text_entry":
 			continue
 		
-		if key == "commands_section" and inventory_item[key].is_empty():
+		if key == "actions_section" and inventory_item[key].is_empty():
 			continue
 		
 		var hbox := HBoxContainer.new()
@@ -379,7 +379,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		label1.custom_minimum_size.x = 200
 		hbox.add_child(label1)
 		
-		if key != "commands_section":
+		if key != "actions_section":
 			var label2 := Label.new()
 			label2.text = "%s" % [inventory_item[key]]
 			#label2.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
@@ -456,12 +456,12 @@ func _on_inventory_list_item_selected(index: int) -> void:
 					scroll2.add_child(label)
 					vbox3.add_child(scroll2)
 					
-					if subtitle.offset != 0:
+					if subtitle.dbase500_offset != 0:
 					
 						var button := Button.new()
 						button.text = "Play"
 						button.pressed.connect(func () -> void:
-							var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.offset)
+							var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.dbase500_offset)
 							if entry.is_empty():
 								return
 							Roth.play_audio_buffer(entry.data, entry.sampleRate)

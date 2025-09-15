@@ -3,7 +3,7 @@ class_name DBase400
 
 
 const ARRAY01_ENTRY := {
-	"offset": Parser.Type.DWord,
+	"dbase500_offset": Parser.Type.DWord,
 	"length_str": Parser.Type.Word,
 	"font_color": Parser.Type.Word,
 	"string": Parser.Type.String
@@ -228,17 +228,81 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 	return subtitle
 
 
-static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArray:
+# Array.has() or the 'in' keyword only checks for the same value.
+# This will check for the same ref.
+static func text_entry_in_array(p_text_array: Array, p_text_entry: Dictionary) -> bool:
+	for text_entry: Dictionary in p_text_array:
+		if is_same(text_entry, p_text_entry):
+			return true
+	return false
+
+
+static func compile(dbase100: Dictionary) -> PackedByteArray:
+	
+	# Assemble text array
+	# Even though we have dbase100.text_entrys, we reassemble
+	# so as to not include any orphan text entries
+	var text_array := []
+	for interface: Dictionary in dbase100.interfaces:
+		if (not interface.text_entry.is_empty()
+				and not text_entry_in_array(text_array, interface.text_entry)
+		):
+			text_array.append(interface.text_entry)
+	for inventory_item: Dictionary in dbase100.inventory:
+		if (not inventory_item.text_entry.is_empty()
+				and not text_entry_in_array(text_array, inventory_item.text_entry)
+		):
+			text_array.append(inventory_item.text_entry)
+		for action: Dictionary in inventory_item.actions_section:
+			for command: Dictionary in action.commands:
+				if (command.opcode == 5
+						or command.opcode == 8
+						or command.opcode == 15
+						or command.opcode == 16
+				):
+					if (not command.text_entry.is_empty()
+							and not text_entry_in_array(text_array, command.text_entry)
+					):
+						text_array.append(command.text_entry)
+	for action: Dictionary in dbase100.actions:
+		for command: Dictionary in action.commands:
+			if (command.opcode == 5
+					or command.opcode == 8
+					or command.opcode == 15
+					or command.opcode == 16
+			):
+				if (not command.text_entry.is_empty()
+						and not text_entry_in_array(text_array, command.text_entry)
+				):
+					text_array.append(command.text_entry)
+	
+	# Don't even update text_entrys, reselecting orphans will work fine until reload
+	#dbase100.text_entrys = text_array
+	
+	
+	# Calculate length and offsets
+	# We could do this at the same time we assemble 
+	# but this is simpler
 	var length: int = 8
-	for entry: Dictionary in dbase400.game:
-		entry["length_str"] = len(entry.string) + 1
-		length += 8 + entry["length_str"]
+	for text_entry: Dictionary in text_array:
+		text_entry["offset"] = length
+		text_entry["length_str"] = len(text_entry.string) + 1
+		length += 8 + text_entry["length_str"]
 		while length % 4 > 0:
-			length += 1
+			length +=  1
+	
+	
+	
+	
+	
+	# Calculate subtitle lengths and offsets
 	for cutscene: Dictionary in dbase100.cutscenes:
 		cutscene.computed_length_subtitles = 0
-		if "subtitles" in cutscene:
+		cutscene.offset_dbase400_subtitles = 0
+		cutscene.offset_dbase400 = 0
+		if "subtitles" in cutscene and not cutscene.subtitles.is_empty():
 			cutscene.computed_length_subtitles = 4
+			cutscene.offset_dbase400_subtitles = length
 			for entry: Dictionary in cutscene.subtitles.entries:
 				entry["length"] = len(entry.string) + 6
 				length += len(entry.string) + 6
@@ -247,8 +311,10 @@ static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArr
 					entry["length"] += 1
 				cutscene.computed_length_subtitles += entry["length"]
 			length += 4
-		if "entry" in cutscene:
-			length += 8 + len(cutscene.entry.string) + 1
+		if "text_entry" in cutscene and not cutscene.text_entry.is_empty():
+			cutscene.offset_dbase400 = length
+			cutscene.text_entry["length_str"] = len(cutscene.text_entry.string) + 1
+			length += 8 + cutscene.text_entry["length_str"]
 			while length % 4 > 0:
 				length += 1
 	
@@ -257,12 +323,12 @@ static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArr
 	data.resize(length)
 	
 	var position: int = 8
-	for entry: Dictionary in dbase400.game:
-		data.encode_u32(position, entry.offset)
-		data.encode_u16(position+4, entry.length_str)
-		data.encode_u16(position+6, entry.font_color)
+	for text_entry: Dictionary in text_array:
+		data.encode_u32(position, text_entry.dbase500_offset)
+		data.encode_u16(position+4, text_entry.length_str)
+		data.encode_u16(position+6, text_entry.font_color)
 		position += 8
-		for value: int in entry.string.to_ascii_buffer():
+		for value: int in text_entry.string.to_ascii_buffer():
 			data.encode_u8(position, value)
 			position += 1
 		data.encode_u8(position, 0)
@@ -273,7 +339,7 @@ static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArr
 	
 	
 	for cutscene: Dictionary in dbase100.cutscenes:
-		if "subtitles" in cutscene:
+		if "subtitles" in cutscene and not cutscene.subtitles.is_empty():
 			for entry: Dictionary in cutscene.subtitles.entries:
 				data.encode_u16(position, entry.length)
 				data.encode_u16(position+2, entry.timestamp)
@@ -290,13 +356,13 @@ static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArr
 			data.encode_u16(position, 0)
 			data.encode_u16(position+2, 0xFFFF)
 			position += 4
-		if "entry" in cutscene:
-			var name_length: int = len(cutscene.entry.string) + 1
-			data.encode_u32(position, 0) # Dbase500Offset
-			data.encode_u16(position+4, name_length)
-			data.encode_u16(position+6, cutscene.entry.font_color)
+		if "text_entry" in cutscene and not cutscene.text_entry.is_empty():
+			data.encode_u32(position, cutscene.text_entry.dbase500_offset)
+			data.encode_u16(position+4, cutscene.text_entry.length_str)
+			cutscene.text_entry.erase("length_str")
+			data.encode_u16(position+6, cutscene.text_entry.font_color)
 			position += 8
-			for value: int in cutscene.entry.string.to_ascii_buffer():
+			for value: int in cutscene.text_entry.string.to_ascii_buffer():
 				data.encode_u8(position, value)
 				position += 1
 			data.encode_u8(position, 0)
@@ -305,6 +371,10 @@ static func compile(dbase400: Dictionary, dbase100: Dictionary) -> PackedByteArr
 				data.encode_u8(position, 0)
 				position += 1
 	
+	
+	# Remove length from text array
+	for text_entry: Dictionary in text_array:
+		text_entry.erase("length_str")
 	
 	
 	return data

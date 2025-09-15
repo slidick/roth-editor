@@ -181,7 +181,7 @@ static func get_at_offset(offset: int ) -> Variant:
 			return parse_rle_image(file)
 		FILETYPE_IMG7:
 			return parse_rle_image(file)
-	return {"Error": "Invalid offset."}
+	return
 
 
 static func parse_rle_image(file: FileAccess) -> Image:

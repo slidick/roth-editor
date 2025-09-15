@@ -36,6 +36,9 @@ static func get_entry_at_offset(offset: int) -> Dictionary:
 		
 	var wav_header := Parser.parse_section(file, WAV_HEADER)
 	
+	if wav_header.chunkID != "FFIR":
+		return {}
+	
 	var dpcm_state := 0.0
 	var data_end: int = file.get_position() + wav_header.subChunk2Size
 	var data: Array = []

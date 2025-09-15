@@ -21,30 +21,12 @@ func _on_settings_loaded() -> void:
 	dbase100 = DBase100.parse()
 	if not dbase100.is_empty():
 		# Actions/Commands
-		#var command_counts := {}
 		for i in range(len(dbase100.actions)):
 			var action: Dictionary = dbase100.actions[i]
-			if action.opcodes.is_empty():
+			if action.commands.is_empty():
 				continue
 			var idx: int = %CommandList.add_item("%d" % (i+1))
 			%CommandList.set_item_metadata(idx, action)
-			#if "unk_word_00" in action and action.unk_word_00 != 768:
-				#print(action)
-			#if "length" in action and action.length == 0:
-				#print(action)
-			#print(action)
-			#for opcode: Dictionary in action.opcodes:
-				#if opcode.command not in command_counts:
-					#command_counts[opcode.command] = 1
-				#else:
-					#command_counts[opcode.command] += 1
-				#if opcode.command == 54:
-					#print("C: %s, V: %s" % [i+1, opcode.full_value])
-				#if opcode.command == 28:
-					#print([i+1, opcode.full_value])
-					
-					#print(opcode.full_value)
-		#print(JSON.stringify(command_counts, '\t', true)
 
 
 func _on_command_list_item_selected(index: int) -> void:
@@ -55,11 +37,11 @@ func _on_command_list_item_selected(index: int) -> void:
 	for node: Node in %CommandPanel.get_children():
 		node.queue_free()
 	
-	for opcode: Dictionary in action.opcodes:
+	for command: Dictionary in action.commands:
 		var tree_item: TreeItem = %CommandTree.get_root().create_child()
-		tree_item.set_text(0, "%d" % opcode.command)
-		tree_item.set_metadata(0, opcode)
-		tree_item.set_text(1, "%d" % opcode.full_value)
+		tree_item.set_text(0, "%d" % command.opcode)
+		tree_item.set_metadata(0, command)
+		tree_item.set_text(1, "%d" % command.args)
 
 
 func _on_command_tree_item_selected() -> void:
@@ -71,10 +53,10 @@ func _on_command_tree_item_selected() -> void:
 	
 	var tree_item: TreeItem = %CommandTree.get_selected()
 	var opcode: Dictionary = tree_item.get_metadata(0)
-	match opcode.command:
+	match opcode.opcode:
 		5:
 			var label := Label.new()
-			var subtitle := DBase400.get_at_offset(opcode.full_value)
+			var subtitle := DBase400.get_at_offset(opcode.args)
 			label.text = "%s" % subtitle.string
 			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			label.autowrap_mode = TextServer.AUTOWRAP_WORD
@@ -98,7 +80,7 @@ func _on_command_tree_item_selected() -> void:
 			vbox.add_child(button)
 		7:
 			var label := Label.new()
-			var cutscene: Dictionary = dbase100.cutscenes[opcode.full_value-1]
+			var cutscene: Dictionary = dbase100.cutscenes[opcode.args-1]
 			label.text = "%s" % cutscene.entry.string
 			label.autowrap_mode = TextServer.AUTOWRAP_WORD
 			vbox.add_child(label)
@@ -120,7 +102,7 @@ func _on_command_tree_item_selected() -> void:
 					rich_text.append_text("- [color=%s]%s[/color]\n" % [color, subtitle_line.string])
 		8:
 			var label := Label.new()
-			label.text = "%s" % DBase400.get_at_offset(opcode.full_value).string
+			label.text = "%s" % DBase400.get_at_offset(opcode.args).string
 			vbox.add_child(label)
 
 var previous_search: String
@@ -160,7 +142,7 @@ func _on_command_search_edit_text_submitted(new_text: String) -> void:
 		if action.offset == 0 or action.length == 0:
 			continue
 		for opcode: Dictionary in action.opcodes:
-			if opcode.command == search_type and opcode.full_value == new_text.to_int():
+			if opcode.opcode == search_type and opcode.args == new_text.to_int():
 				
 				if search_amount == 0:
 				
@@ -172,7 +154,7 @@ func _on_command_search_edit_text_submitted(new_text: String) -> void:
 							var tree_item: TreeItem = %CommandTree.get_root().get_first_child()
 							
 							while tree_item:
-								if tree_item.get_text(0) == str(opcode.command) and tree_item.get_text(1) == str(opcode.full_value):
+								if tree_item.get_text(0) == str(opcode.opcode) and tree_item.get_text(1) == str(opcode.args):
 									%CommandTree.set_selected(tree_item, 0)
 									break
 								tree_item = tree_item.get_next()

@@ -142,7 +142,7 @@ const multiPlainImgsHdr := {
 }
 
 static var loaded_das := {}
-
+static var default_palette := []
 
 static func load_das(das_file: String) -> Dictionary:
 	Roth.das_loading_started.emit()
@@ -171,11 +171,13 @@ static func test_for_palette(file_path: String) -> Array:
 
 
 static func get_default_palette(palette_file: String = DEFAULT_PALETTE_FILE) -> Array:
+	if not default_palette.is_empty():
+		return default_palette
 	var file := FileAccess.open(Roth.install_directory.path_join(palette_file), FileAccess.READ)
 	var das_header: Dictionary = _parse_header(file)
-	var palette: Array = _parse_palette(file, das_header.paletteOffset)
+	default_palette = _parse_palette(file, das_header.paletteOffset)
 	file.close()
-	return palette
+	return default_palette
 
 
 static func _parse_header(file: FileAccess) -> Dictionary:
