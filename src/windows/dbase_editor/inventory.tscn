@@ -219,6 +219,23 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ClearObjectTextureButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Clear"
+
+[node name="ChangeObjectTextureButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Select"
+
 [node name="VSeparator2" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
 layout_mode = 2
 
@@ -233,8 +250,10 @@ horizontal_alignment = 1
 
 [node name="InventoryImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 keep_editing_on_text_submit = true
+clear_button_enabled = true
 
 [node name="InventoryTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
 unique_name_in_owner = true
@@ -243,6 +262,23 @@ layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+layout_mode = 2
+
+[node name="ClearInventoryImageButton2" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Clear"
+
+[node name="ChangeInventoryImageButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Select"
 
 [node name="VSeparator3" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
 layout_mode = 2
@@ -258,6 +294,7 @@ horizontal_alignment = 1
 
 [node name="CloseUpImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 keep_editing_on_text_submit = true
@@ -273,6 +310,23 @@ stretch_mode = 5
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
 unique_name_in_owner = true
 visible = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+layout_mode = 2
+
+[node name="ClearCloseUpButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Clear"
+
+[node name="ChangeCloseUpButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(85, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Select"
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
@@ -380,11 +434,17 @@ text = "Add Opcode"
 [connection signal="toggled" from="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2/TypeFlag2CheckButton" to="." method="_on_type_flag_check_button_toggled" binds= [5]]
 [connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer2/ObjectTextureIndexEdit" to="." method="_on_object_texture_index_edit_text_changed"]
 [connection signal="text_submitted" from="VBoxContainer2/HBoxContainer8/VBoxContainer2/ObjectTextureIndexEdit" to="." method="_on_object_texture_index_edit_text_submitted"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer/ClearObjectTextureButton" to="." method="_on_clear_object_texture_button_pressed"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer/ChangeObjectTextureButton" to="." method="_on_change_object_texture_button_pressed"]
 [connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer3/InventoryImageOffsetEdit" to="." method="_on_inventory_image_offset_edit_text_changed"]
 [connection signal="text_submitted" from="VBoxContainer2/HBoxContainer8/VBoxContainer3/InventoryImageOffsetEdit" to="." method="_on_inventory_image_offset_edit_text_submitted"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer/ClearInventoryImageButton2" to="." method="_on_clear_inventory_image_button_2_pressed"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer/ChangeInventoryImageButton" to="." method="_on_change_inventory_image_button_pressed"]
 [connection signal="text_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/CloseUpImageOffsetEdit" to="." method="_on_close_up_image_offset_edit_text_changed"]
 [connection signal="text_submitted" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/CloseUpImageOffsetEdit" to="." method="_on_close_up_image_offset_edit_text_submitted"]
 [connection signal="frame_changed" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer/ClearCloseUpButton" to="." method="_on_clear_close_up_button_pressed"]
+[connection signal="pressed" from="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer/ChangeCloseUpButton" to="." method="_on_change_close_up_button_pressed"]
 [connection signal="empty_clicked" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" to="." method="_on_trigger_tree_empty_clicked"]
 [connection signal="item_edited" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" to="." method="_on_trigger_tree_item_edited"]
 [connection signal="item_mouse_selected" from="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" to="." method="_on_trigger_tree_item_mouse_selected"]

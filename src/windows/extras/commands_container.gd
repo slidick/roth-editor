@@ -72,7 +72,7 @@ func _on_command_tree_item_selected() -> void:
 			var button := Button.new()
 			button.text = "Play"
 			button.pressed.connect(func () -> void:
-				var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.offset)
+				var entry: Dictionary = DBase500.get_entry_at_offset(subtitle.dbase500_offset)
 				if entry.is_empty():
 					return
 				Roth.play_audio_buffer(entry.data, entry.sampleRate)
@@ -81,7 +81,7 @@ func _on_command_tree_item_selected() -> void:
 		7:
 			var label := Label.new()
 			var cutscene: Dictionary = dbase100.cutscenes[opcode.args-1]
-			label.text = "%s" % cutscene.entry.string
+			label.text = "%s" % cutscene.text_entry.string
 			label.autowrap_mode = TextServer.AUTOWRAP_WORD
 			vbox.add_child(label)
 			
@@ -93,7 +93,7 @@ func _on_command_tree_item_selected() -> void:
 			rich_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			vbox.add_child(rich_text)
 			
-			if "subtitles" in cutscene:
+			if "subtitles" in cutscene and "entries" in cutscene.subtitles:
 				var palette: Array = Das.get_default_palette()
 				for subtitle_line: Dictionary in cutscene.subtitles.entries:
 					if subtitle_line.string.is_empty():

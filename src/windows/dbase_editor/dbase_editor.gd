@@ -324,3 +324,26 @@ func _on_new_button_pressed() -> void:
 			return
 		err = Roth.check_dbase_pack_name(results[1])
 	Roth.create_dbase_pack(results[1])
+
+
+func get_hex_preference() -> bool:
+	if %IntegerOption.selected == 1:
+		return true
+	return false
+
+
+func _on_integer_option_item_selected(_index: int) -> void:
+	%Actions.update_integer_preference()
+	%Inventory.update_integer_preference()
+
+
+func ademo_object_selection() -> Dictionary:
+	return await %ObjectSelection.ademo_object_selection()
+
+
+func dbase200_object_selection() -> int:
+	return await %ObjectSelection.dbase200_object_selection()
+
+
+func dbase300_object_selection() -> int:
+	return await %ObjectSelection.dbase300_object_selection()

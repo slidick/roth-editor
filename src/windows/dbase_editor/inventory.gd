@@ -22,6 +22,7 @@ func reset() -> void:
 	%InventoryList.get_v_scroll_bar().value = 0
 	_reset_item()
 
+
 func _reset_item() -> void:
 	for tree_item: TreeItem in %TriggerTree.get_root().get_children():
 		tree_item.free()
@@ -42,6 +43,12 @@ func _reset_item() -> void:
 	%AddTriggerButton.disabled = true
 	%AddOpcodeButton.disabled = true
 	%ChangeNameButton.disabled = true
+	%ChangeObjectTextureButton.disabled = true
+	%ChangeInventoryImageButton.disabled = true
+	%ChangeCloseUpButton.disabled = true
+	%ClearObjectTextureButton.disabled = true
+	%ClearInventoryImageButton2.disabled = true
+	%ClearCloseUpButton.disabled = true
 	
 	%ObjectTextureRect.texture = null
 	%InventoryTextureRect.texture = null
@@ -80,7 +87,10 @@ func load_dbase(p_dbase_data: Dictionary) -> void:
 	
 	for i in range(len(dbase_data["dbase100"].inventory)):
 		var inventory_item: Dictionary = dbase_data["dbase100"].inventory[i]
-		var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), inventory_item.text_entry.string])
+		var item_name: String = "(Empty)"
+		if not inventory_item.text_entry.is_empty():
+			item_name = inventory_item.text_entry.string
+		var idx: int = %InventoryList.add_item("%d: %s" % [(i+1), item_name])
 		%InventoryList.set_item_metadata(idx, inventory_item)
 
 
@@ -145,12 +155,34 @@ func _add_command(p_command: Dictionary = {}) -> void:
 	_update_commands()
 
 
+func update_integer_preference() -> void:
+	if not %TriggerTree.get_selected():
+		return
+	for tree_item: TreeItem in %Tree.get_root().get_children():
+		var command: Dictionary = tree_item.get_metadata(0)
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % command.opcode)
+		else:
+			tree_item.set_text(0, "%d" % command.opcode)
+
+
 func _update_commands() -> void:
 	var action: Dictionary = %TriggerTree.get_selected().get_metadata(0)
 	var commands := []
 	for tree_item: TreeItem in %Tree.get_root().get_children():
 		var command: Dictionary = tree_item.get_metadata(0)
-		command.opcode = int(tree_item.get_text(0))
+		if tree_item.get_text(0).is_valid_hex_number(true):
+			command.opcode = tree_item.get_text(0).hex_to_int()
+		elif tree_item.get_text(0).is_valid_int():
+			command.opcode = tree_item.get_text(0).to_int()
+		else:
+			command.opcode = 0
+		
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % command.opcode)
+		else:
+			tree_item.set_text(0, "%d" % command.opcode)
+		
 		if (	command.opcode == 5
 				or command.opcode == 8
 				or command.opcode == 15
@@ -163,9 +195,13 @@ func _update_commands() -> void:
 				tree_item.set_text(1, "(Empty)")
 				command.text_entry = {}
 		else:
-			if not tree_item.get_text(1).is_valid_int():
-				tree_item.set_text(1, "0")
-			command.args = int(tree_item.get_text(1))
+			if tree_item.get_text(1).is_valid_hex_number(true):
+				command.args = tree_item.get_text(1).hex_to_int()
+			elif tree_item.get_text(1).is_valid_int():
+				command.args = tree_item.get_text(1).to_int()
+			else:
+				command.args = 0
+			tree_item.set_text(1, "%d" % command.args)
 			command.erase("text_entry")
 		commands.append(command)
 	action.commands = commands
@@ -174,7 +210,10 @@ func _update_commands() -> void:
 func _on_inventory_list_item_selected(index: int) -> void:
 	_reset_item()
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(index)
-	%ObjectTextureIndexEdit.text = str(inventory_item.object_texture_index)
+	if inventory_item.object_texture_index >= 512:
+		%ObjectTextureIndexEdit.text = str(inventory_item.object_texture_index-512)
+	else:
+		%ObjectTextureIndexEdit.text = "0"
 	%CloseUpTypeEdit.text = str(inventory_item.closeup_type)
 	%Flag1CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 0)) > 0)
 	%Flag2CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 1)) > 0)
@@ -191,11 +230,18 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	%ObjectTextureIndexEdit.editable = true
 	#%CloseUpTypeEdit.editable = true
 	#%ItemTypeEdit.editable = true
-	%CloseUpImageOffsetEdit.editable = true
-	%InventoryImageOffsetEdit.editable = true
+	#%CloseUpImageOffsetEdit.editable = true
+	#%InventoryImageOffsetEdit.editable = true
 	%ChangeNameButton.disabled = false
 	%AddTriggerButton.disabled = false
 	%AddOpcodeButton.disabled = true
+	%ChangeObjectTextureButton.disabled = false
+	%ChangeInventoryImageButton.disabled = false
+	%ChangeCloseUpButton.disabled = false
+	%ClearObjectTextureButton.disabled = false
+	%ClearInventoryImageButton2.disabled = false
+	%ClearCloseUpButton.disabled = false
+	
 	%Flag1CheckButton.disabled = false
 	%Flag2CheckButton.disabled = false
 	%Flag3CheckButton.disabled = false
@@ -293,7 +339,10 @@ func _on_add_inventory_button_pressed() -> void:
 
 func _on_object_texture_index_edit_text_changed(new_text: String) -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	inventory_item.object_texture_index = int(new_text)
+	if int(new_text) >= 0:
+		inventory_item.object_texture_index = int(new_text) + 512
+	else:
+		inventory_item.object_texture_index = 0
 
 
 func _on_close_up_type_edit_text_changed(new_text: String) -> void:
@@ -329,7 +378,11 @@ func _on_trigger_tree_item_selected() -> void:
 	var selected_item: TreeItem = %TriggerTree.get_selected()
 	for command: Dictionary in selected_item.get_metadata(0).commands:
 		var tree_item: TreeItem = %Tree.get_root().create_child()
-		tree_item.set_text(0, "%d" % command.opcode)
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % command.opcode)
+		else:
+			tree_item.set_text(0, "%d" % command.opcode)
+		
 		tree_item.set_autowrap_mode(1, TextServer.AUTOWRAP_WORD_SMART)
 		if "text_entry" in command:
 			if "string" in command.text_entry:
@@ -519,6 +572,7 @@ func refresh_text(text_entry: Dictionary) -> void:
 		%NameEdit.text = text_entry.string
 		%InventoryList.set_item_text(%InventoryList.get_selected_items()[0], "%d: %s" % [%InventoryList.get_selected_items()[0]+1, text_entry.string])
 
+
 func jump_to_reference(p_reference: Dictionary) -> void:
 	%InventoryList.select(p_reference.index-1)
 	%InventoryList.ensure_current_is_visible()
@@ -558,7 +612,7 @@ func _on_change_name_button_pressed() -> void:
 		%InventoryList.set_item_text(%InventoryList.get_selected_items()[0], "%d: (Empty)" % (%InventoryList.get_selected_items()[0]+1))
 
 
-func _on_close_up_image_offset_edit_text_submitted(_new_text: String) -> void:
+func _on_close_up_image_offset_edit_text_submitted(_new_text: String = "") -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	var video: Variant = DBase300.get_at_offset(inventory_item["closeup_image"]*8)
 	if video:
@@ -573,10 +627,9 @@ func _on_close_up_image_offset_edit_text_submitted(_new_text: String) -> void:
 	else:
 		%AnimatedSprite2D.sprite_frames = null
 		%CloseUpTextureRect.texture = null
-	
 
 
-func _on_inventory_image_offset_edit_text_submitted(_new_text: String) -> void:
+func _on_inventory_image_offset_edit_text_submitted(_new_text: String = "") -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8)
 	if image:
@@ -585,7 +638,7 @@ func _on_inventory_image_offset_edit_text_submitted(_new_text: String) -> void:
 		%InventoryTextureRect.texture = null
 
 
-func _on_object_texture_index_edit_text_submitted(_new_text: String) -> void:
+func _on_object_texture_index_edit_text_submitted(_new_text: String = "") -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	if inventory_item["object_texture_index"] >= 512:
 		var image: Dictionary = Roth.get_index_from_das(inventory_item["object_texture_index"]-512, "M/ADEMO.DAS")
@@ -593,8 +646,12 @@ func _on_object_texture_index_edit_text_submitted(_new_text: String) -> void:
 			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
 		else:
 			%ObjectTextureRect.texture = null
+		%ObjectTextureIndexEdit.text = str(inventory_item["object_texture_index"]-512)
 	else:
 		%ObjectTextureRect.texture = null
+		%ObjectTextureIndexEdit.text = "0"
+	
+	%ObjectTextureIndexEdit.caret_column = 100
 
 
 func _on_flag_check_button_toggled(toggled_on: bool, shift: int) -> void:
@@ -640,3 +697,48 @@ func _on_name_edit_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
 		_on_change_name_button_pressed()
 		get_viewport().set_input_as_handled()
+
+
+func _on_change_close_up_button_pressed() -> void:
+	var offset: int = await owner.dbase300_object_selection()
+	if offset < 0:
+		return
+	%CloseUpImageOffsetEdit.text = str(int(offset / 8.0))
+	_on_close_up_image_offset_edit_text_changed(str(int(offset / 8.0)))
+	_on_close_up_image_offset_edit_text_submitted()
+
+
+func _on_change_inventory_image_button_pressed() -> void:
+	var offset: int = await owner.dbase200_object_selection()
+	if offset < 0:
+		return
+	%InventoryImageOffsetEdit.text = str(int(offset / 8.0))
+	_on_inventory_image_offset_edit_text_changed(str(int(offset / 8.0)))
+	_on_inventory_image_offset_edit_text_submitted()
+
+
+func _on_change_object_texture_button_pressed() -> void:
+	var object: Dictionary = await owner.ademo_object_selection()
+	if object.is_empty():
+		return
+	%ObjectTextureIndexEdit.text = str(object.index)
+	_on_object_texture_index_edit_text_changed(str(object.index))
+	_on_object_texture_index_edit_text_submitted()
+
+
+func _on_clear_object_texture_button_pressed() -> void:
+	%ObjectTextureIndexEdit.text = "0"
+	_on_object_texture_index_edit_text_changed("-1")
+	_on_object_texture_index_edit_text_submitted()
+
+
+func _on_clear_inventory_image_button_2_pressed() -> void:
+	%InventoryImageOffsetEdit.text = "0"
+	_on_inventory_image_offset_edit_text_changed("0")
+	_on_inventory_image_offset_edit_text_submitted()
+
+
+func _on_clear_close_up_button_pressed() -> void:
+	%CloseUpImageOffsetEdit.text = "0"
+	_on_close_up_image_offset_edit_text_changed("0")
+	_on_close_up_image_offset_edit_text_submitted()

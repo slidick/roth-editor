@@ -40,6 +40,50 @@ func wait_for_object_selection(p_das: String) -> Dictionary:
 	return selected_object
 
 
+func ademo_object_selection() -> Dictionary:
+	%FavRecentContainer.hide()
+	%InfoContainer.hide()
+	%RotatableItemList.clear()
+	%RecentItemList.clear()
+	%FavoriteItemList.clear()
+	load_ademo()
+	toggle(true)
+	var item: Dictionary = await item_selected
+	toggle(false)
+	if item.is_empty():
+		return {}
+	
+	return item
+
+
+func dbase200_object_selection() -> int:
+	%FavRecentContainer.hide()
+	%InfoContainer.hide()
+	%RotatableItemList.clear()
+	load_dbase200()
+	toggle(true)
+	var item: Dictionary = await item_selected
+	toggle(false)
+	if item.is_empty():
+		return -1
+	
+	return item.offset
+
+
+func dbase300_object_selection() -> int:
+	%FavRecentContainer.hide()
+	%InfoContainer.hide()
+	%RotatableItemList.clear()
+	load_dbase300()
+	toggle(true)
+	var item: Dictionary = await item_selected
+	toggle(false)
+	if item.is_empty():
+		return -1
+	
+	return item.offset
+
+
 func load_das(p_das: String) -> void:
 	var das := await Roth.get_das(p_das)
 	for texture: Dictionary in das.textures:
@@ -104,10 +148,31 @@ func load_ademo() -> void:
 		%RotatableItemList.set_item_metadata(idx, texture)
 
 
+func load_dbase200() -> void:
+	for item: Dictionary in DBase200.parse_full():
+		var tex := ImageTexture.create_from_image(item.image)
+		
+		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150), Array(["Add to Favorites"], TYPE_STRING, "", null))
+		%RotatableItemList.set_item_metadata(idx, item)
+		%RotatableItemList.set_rotated(idx, false)
+
+
+func load_dbase300() -> void:
+	var offsets: Array = DBase300.get_gdv_offsets()
+	for offset: int in offsets:
+		var gdv: Dictionary = DBase300.get_at_offset(offset)
+		gdv.offset = offset
+		var tex := ImageTexture.create_from_image(gdv.video[0])
+		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150), Array(["Add to Favorites"], TYPE_STRING, "", null))
+		%RotatableItemList.set_item_metadata(idx, gdv)
+		%RotatableItemList.set_rotated(idx, false)
+
+
 func _on_rotatable_item_list_item_activated(index: int) -> void:
 	item_selected.emit(%RotatableItemList.get_item_metadata(index))
 	var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
-	add_to_recent(texture_data)
+	if %FavRecentContainer.visible:
+		add_to_recent(texture_data)
 
 
 func add_to_recent(texture_data: Dictionary) -> void:

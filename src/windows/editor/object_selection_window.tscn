@@ -29,38 +29,39 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 6.8
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="0"]
+[node name="FavRecentContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="0"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="0"]
 layout_mode = 2
 text = "Favorites"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="1"]
 layout_mode = 2
 
-[node name="FavoriteItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer" index="2" instance=ExtResource("5_a2r2s")]
+[node name="FavoriteItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="2" instance=ExtResource("5_a2r2s")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer" index="1"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer" index="1"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="0"]
 layout_mode = 2
 text = "Recents"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer2" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="1"]
 layout_mode = 2
 
-[node name="RecentItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer2" index="2" instance=ExtResource("5_a2r2s")]
+[node name="RecentItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="2" instance=ExtResource("5_a2r2s")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -69,22 +70,23 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_stretch_ratio = 4.5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="1"]
+[node name="InfoContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="1"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.8
 
-[node name="ObjectInfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/ScrollContainer" index="0"]
+[node name="ObjectInfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/InfoContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_context_option_selected"]
-[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_item_activated"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_item_selected"]
-[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer2/RecentItemList" to="." method="_on_recent_item_list_item_activated"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VSplitContainer/VBoxContainer2/RecentItemList" to="." method="_on_recent_item_list_item_selected"]
+[connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_context_option_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_item_activated"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_item_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2/RecentItemList" to="." method="_on_recent_item_list_item_activated"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2/RecentItemList" to="." method="_on_recent_item_list_item_selected"]
 [connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/RotatableItemList" to="." method="_on_rotatable_item_list_context_option_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/RotatableItemList" to="." method="_on_rotatable_item_list_item_activated"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/RotatableItemList" to="." method="_on_rotatable_item_list_item_selected"]

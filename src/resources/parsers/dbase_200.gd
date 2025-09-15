@@ -32,8 +32,13 @@ const IMG_ROW_DEFS := {
 	"pixelRun": Parser.Type.Word,         # the amount of pixels to copy at the offset specified in the field above
 }
 
+static var dbase200: Array = []
 
 static func parse_full() -> Array:
+	
+	if not dbase200.is_empty():
+		return dbase200
+	
 	var dbase200_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE200.DAT")
 	if not FileAccess.file_exists(dbase200_filepath):
 		return []
@@ -43,22 +48,25 @@ static func parse_full() -> Array:
 	var file := FileAccess.open(dbase200_filepath, FileAccess.READ)
 	var _header := Parser.parse_section(file, HEADER)
 	
-	var images := []
+	dbase200 = []
 	while file.get_position() < file.get_length():
 		var _size: int = file.get_32()
 		var rle_image_hdr := Parser.parse_section(file, RLE_IMG_HDR)
 		
 		match rle_image_hdr["imgType"]:
 			IMGTYPE_RLE:
-				images.append(Parser.decode_rle_img(rle_image_hdr, file, palette))
-			IMGTYPE_ROWBGN_LEN:
-				images.append(_decode_row_bgn_img(rle_image_hdr, file, palette))
+				var image: Dictionary = {}
+				image.offset = file.get_position() - 12
+				image.image = Parser.decode_rle_img(rle_image_hdr, file, palette)
+				dbase200.append(image)
+			#IMGTYPE_ROWBGN_LEN:
+				#images.append(_decode_row_bgn_img(rle_image_hdr, file, palette))
 		
 		var pos:int = file.get_position()
 		pos = (pos + 7) & ~7
 		file.seek(pos)
 		
-	return images
+	return dbase200
 
 
 static func get_animation_offsets() -> Array:

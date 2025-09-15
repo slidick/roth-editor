@@ -54,12 +54,34 @@ func _add_command(p_command: Dictionary = {}) -> void:
 	_update_current_action()
 
 
+func update_integer_preference() -> void:
+	if %ActionList.get_selected_items().is_empty():
+		return
+	for tree_item: TreeItem in %Tree.get_root().get_children():
+		var command: Dictionary = tree_item.get_metadata(0)
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % command.opcode)
+		else:
+			tree_item.set_text(0, "%d" % command.opcode)
+
+
 func _update_current_action() -> void:
 	var action: Dictionary = %ActionList.get_item_metadata(%ActionList.get_selected_items()[0])
 	var new_commands := []
 	for tree_item: TreeItem in %Tree.get_root().get_children():
 		var command: Dictionary = tree_item.get_metadata(0)
-		command.opcode = int(tree_item.get_text(0))
+		if tree_item.get_text(0).is_valid_hex_number(true):
+			command.opcode = tree_item.get_text(0).hex_to_int()
+		elif tree_item.get_text(0).is_valid_int():
+			command.opcode = tree_item.get_text(0).to_int()
+		else:
+			command.opcode = 0
+		
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % command.opcode)
+		else:
+			tree_item.set_text(0, "%d" % command.opcode)
+		
 		if (command.opcode == 5
 				or command.opcode == 8
 				or command.opcode == 15
@@ -72,11 +94,16 @@ func _update_current_action() -> void:
 				tree_item.set_text(1, "(Empty)")
 				command.text_entry = {}
 		else:
-			if not tree_item.get_text(1).is_valid_int():
-				tree_item.set_text(1, "0")
-			command.args = int(tree_item.get_text(1))
+			if tree_item.get_text(1).is_valid_hex_number(true):
+				command.args = tree_item.get_text(1).hex_to_int()
+			elif tree_item.get_text(1).is_valid_int():
+				command.args = tree_item.get_text(1).to_int()
+			else:
+				command.args = 0
+			tree_item.set_text(1, "%d" % command.args)
 			command.erase("text_entry")
 		new_commands.append(command)
+		
 	action.commands = new_commands
 
 
@@ -91,7 +118,10 @@ func _on_action_list_item_selected(index: int) -> void:
 
 func _add_tree_item(p_command: Dictionary) -> void:
 	var tree_item: TreeItem = %Tree.get_root().create_child()
-	tree_item.set_text(0, "%d" % p_command.opcode)
+	if owner.get_hex_preference():
+		tree_item.set_text(0, "0x%02X" % p_command.opcode)
+	else:
+		tree_item.set_text(0, "%d" % p_command.opcode)
 	tree_item.set_autowrap_mode(1, TextServer.AUTOWRAP_WORD_SMART)
 	tree_item.set_metadata(0, p_command)
 	if "text_entry" in p_command:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dtbrelqsvvtuh"]
+[gd_scene load_steps=14 format=3 uid="uid://dtbrelqsvvtuh"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_6v7rq"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_fspgq"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dxx86or0adcjx" path="res://src/windows/dbase_editor/interface.tscn" id="7_snwk0"]
 [ext_resource type="PackedScene" uid="uid://cdyj16x3u3s1x" path="res://src/windows/dbase_editor/text.tscn" id="10_snwk0"]
 [ext_resource type="PackedScene" uid="uid://gxfiwph6tqkc" path="res://src/windows/dbase_editor/text_entry_dialog.tscn" id="11_kn3rg"]
+[ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="12_6d4ud"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fspgq"]
 
@@ -31,6 +32,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="ListControl" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl" index="0"]
@@ -212,7 +214,6 @@ text = "Edit"
 
 [node name="EditControl" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="1"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl" index="0"]
@@ -285,7 +286,19 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "Back"
 
-[node name="SuccessLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="1"]
+[node name="IntegerOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+selected = 0
+item_count = 2
+popup/item_0/text = "Decimal"
+popup/item_0/id = 0
+popup/item_1/text = "Hexadecimal"
+popup/item_1/id = 1
+
+[node name="SuccessLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -293,7 +306,7 @@ theme_override_colors/font_color = Color(0, 100, 0, 1)
 text = "Success!"
 horizontal_alignment = 2
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="2"]
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2" index="3"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
@@ -321,6 +334,23 @@ offset_bottom = 175.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ObjectSelection" parent="Control2" index="1" instance=ExtResource("12_6d4ud")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -780.0
+offset_top = -440.0
+offset_right = 780.0
+offset_bottom = 440.0
+grow_horizontal = 2
+grow_vertical = 2
+exclusive = true
+
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_activated"]
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_selected"]
@@ -332,4 +362,5 @@ grow_vertical = 2
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/VBoxContainer/DBase100ContentsList" to="." method="_on_d_base_100_contents_list_item_selected"]
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/IntegerOption" to="." method="_on_integer_option_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
