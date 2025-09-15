@@ -1,3 +1,25 @@
+**0.12.0**
+### New Features
+  - Adds support for copying and pasting multiple commands (#5)
+  - Adds initial support for editing and managing DBASE100.DAT and DBASE400.DAT
+    - Create, duplicate, rename, and delete any number of "DBASE packs"
+    - Set one as active that will be used when launching maps from the editor
+    - A DBASE pack can be included when exporting and importing maps
+    - dbase100.dat and dbase400.dat include:
+      - Item/Weapon/Monster data
+      - Global Command System
+      - Cutscenes: Filenames and titles (subtitle support coming soon)
+      - All text in the game--can be edited where used or in a list of all text
+
+### Bugfixes
+  - Objects no longer get added with incorrect sector values
+  - Objects now get deleted when deleting a sector
+  - Objects no longer get duplicated when splitting a sector they instead get moved to their correct sector (#2)
+  - Objects now get moved to the new sector after merging sectors
+  - Texture dialog now correctly only shows available textures for the face being edited (#3)
+
+---
+
 **0.11.0**
 ### New Features
   #### Command Editor
