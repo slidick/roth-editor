@@ -1,3 +1,13 @@
+**0.13.0**
+### New Features
+  - Browse to select object/inventory/close-up textures
+  - View/edit opcodes as hex
+
+### Bugfixes
+  - Fixed various parsing regressions
+
+---
+
 **0.12.0**
 ### New Features
   - Adds support for copying and pasting multiple commands (#5)

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="roth_editor"
-config/version="0.12.0"
+config/version="0.13.0"
 run/main_scene="uid://dba8cygkkmhat"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.4", "Forward Plus")
