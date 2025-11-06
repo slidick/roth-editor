@@ -142,6 +142,7 @@ func update_horizontal_fit() -> void:
 
 
 func delete() -> void:
+	Roth.get_map(map_info).faces.pop_at(Roth.get_map(map_info).faces.find(self))
 	node.queue_free()
 	sector = null
 
