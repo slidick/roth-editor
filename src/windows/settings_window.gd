@@ -7,6 +7,10 @@ extends BaseWindow
 		"dosbox": {"node": %DosboxEdit, "value": %DosboxEdit.text},
 		"dosbox_config": {"node": %DosboxConfigEdit, "value": %DosboxConfigEdit.text},
 	},
+	"options": {
+		"undo_history": {"node": %UndoHistorySpinBox, "value": %UndoHistorySpinBox.value},
+		"backup_saves": {"node": %BackupSavesSpinBox, "value": %BackupSavesSpinBox.value},
+	}
 }
 @onready var _default_roth_res_dialog_directory: String = %RothResFileDialog.current_dir
 @onready var _default_dosbox_dialog_directory: String = %DosboxFileDialog.current_dir
@@ -28,13 +32,18 @@ func _reset() -> void:
 	for outer_key: String in _things_to_save:
 		var settings: Variant = Settings.settings.get(outer_key)
 		if settings:
-			for key: String in settings as Dictionary:
-				if key in _things_to_save[outer_key]:
+			for key: String in _things_to_save[outer_key]:
+				if key in settings:
+				#if key in _things_to_save[outer_key]:
 					if _things_to_save[outer_key][key].node is LineEdit:
 						_things_to_save[outer_key][key].node.text = settings[key]
 					if _things_to_save[outer_key][key].node is CheckBox:
 						_things_to_save[outer_key][key].node.button_pressed = settings[key]
+					if _things_to_save[outer_key][key].node is SpinBox:
+						_things_to_save[outer_key][key].node.value = settings[key]
 					_things_to_save[outer_key][key].value = settings[key]
+				else:
+					Settings.update_settings(outer_key, {key: _things_to_save[outer_key][key].value})
 		else:
 			var save_data: Dictionary = {}
 			for key: String in _things_to_save[outer_key]:
@@ -42,6 +51,8 @@ func _reset() -> void:
 					_things_to_save[outer_key][key].node.text = _things_to_save[outer_key][key].value
 				if _things_to_save[outer_key][key].node is CheckBox:
 					_things_to_save[outer_key][key].node.button_pressed = _things_to_save[outer_key][key].value
+				if _things_to_save[outer_key][key].node is SpinBox:
+					_things_to_save[outer_key][key].value = _things_to_save[outer_key][key].node.value
 				save_data[key] = _things_to_save[outer_key][key].value
 			Settings.update_settings(outer_key, save_data)
 	
@@ -57,6 +68,8 @@ func _save() -> void:
 				_things_to_save[outer_key][key].value = _things_to_save[outer_key][key].node.text
 			if _things_to_save[outer_key][key].node is CheckBox:
 				_things_to_save[outer_key][key].value = _things_to_save[outer_key][key].node.button_pressed
+			if _things_to_save[outer_key][key].node is SpinBox:
+				_things_to_save[outer_key][key].value = _things_to_save[outer_key][key].node.value
 			save_data[key] = _things_to_save[outer_key][key].value
 		Settings.update_settings(outer_key, save_data)
 	
@@ -64,7 +77,7 @@ func _save() -> void:
 	%SaveButton.disabled = true
 
 
-func _changed(_value:String="") -> void:
+func _changed(_value:Variant = null) -> void:
 	%ResetButton.disabled = false
 	%SaveButton.disabled = false
 

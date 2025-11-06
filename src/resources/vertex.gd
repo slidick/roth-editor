@@ -100,10 +100,12 @@ func _input(event: InputEvent) -> void:
 					else:
 						if dragging:
 							dragging = false
-							drag_started = false
+							
 							if not split_vertex:
 								update_meshes()
-								position_finalized.emit(self)
+								if drag_started:
+									position_finalized.emit(self)
+							drag_started = false
 			else:
 				if mouse_over and event.pressed:
 					start_sector_split.emit(self)

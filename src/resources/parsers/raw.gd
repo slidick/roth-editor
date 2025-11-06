@@ -192,6 +192,20 @@ const OBJECT := {
 	"unk0x0E": Parser.Type.Word,
 }
 
+static func parse_bytes(bytes: PackedByteArray) -> Dictionary:
+	
+	var file: FileAccess = FileAccess.create_temp(FileAccess.WRITE_READ, "roth", "raw")
+	if not file:
+		Console.print("Could not create temp file")
+		return {}
+	
+	file.store_buffer(bytes)
+	file.seek(0)
+	var map: Dictionary = parse(file)
+	file.close()
+	
+	return map
+
 
 static func parse_file(filepath: String) -> Dictionary:
 	#print("Parsing: %s" % filepath)
@@ -200,6 +214,13 @@ static func parse_file(filepath: String) -> Dictionary:
 		Console.print("Error: File not found: %s" % filepath)
 		return {}
 	
+	var map: Dictionary = parse(file)
+	file.close()
+	
+	return map
+
+
+static func parse(file: FileAccess) -> Dictionary:
 	# Header
 	# -------------
 	var header: Dictionary = Parser.parse_section(file, HEADER)
@@ -355,9 +376,6 @@ static func parse_file(filepath: String) -> Dictionary:
 		footer.append(file.get_8())
 	
 	
-	file.close()
-	
-	
 	# Additional Relations
 	# --------------------
 	
@@ -397,7 +415,7 @@ static func parse_file(filepath: String) -> Dictionary:
 	
 	
 	var parsed_file := {}
-	parsed_file["rawrMetadata"] = { "mapName": filepath.get_file().get_basename() }
+	#parsed_file["rawrMetadata"] = { "mapName": filepath.get_file().get_basename() }
 	parsed_file["sectorsSection"] = { "sectors": sectors }
 	parsed_file["facesSection"] = { "faces": faces }
 	parsed_file["faceTextureMappingSection"] = { "mappings": texture_mappings }

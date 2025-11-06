@@ -1,6 +1,11 @@
 extends MarginContainer
 
-var current_object: ObjectRoth
+var current_object: ObjectRoth :
+	set(value):
+		if not %EditObjectTimer.is_stopped():
+			%EditObjectTimer.stop()
+			%EditObjectTimer.timeout.emit()
+		current_object = value
 var object_das: String
 var object_index: int
 
@@ -139,53 +144,64 @@ func update_texture() -> void:
 func _on_object_x_edit_value_changed(value: float) -> void:
 	current_object.data.posX = value
 	_redraw_object(%ObjectXEdit)
+	%EditObjectTimer.start()
 
 
 func _on_object_y_edit_value_changed(value: float) -> void:
 	current_object.data.posY = value
 	_redraw_object(%ObjectYEdit)
+	%EditObjectTimer.start()
 
 
 func _on_object_z_edit_value_changed(value: float) -> void:
 	current_object.data.posZ = value
 	_redraw_object(%ObjectZEdit)
+	%EditObjectTimer.start()
 
 
 func _on_object_rotation_edit_value_changed(value: float) -> void:
 	current_object.data.rotation = value
 	_redraw_object(%ObjectRotationEdit)
+	%EditObjectTimer.start()
 
 
 func _on_object_texture_index_edit_value_changed(value: float) -> void:
 	current_object.data.textureIndex = value
 	update_texture()
 	_redraw_object(%ObjectTextureIndexEdit)
+	%EditObjectTimer.start()
 
 
 func _on_object_texture_source_edit_value_changed(value: float) -> void:
 	current_object.data.textureSource = value
 	update_texture()
 	_redraw_object(%ObjectTextureSourceEdit)
+	%EditObjectTimer.start()
 
 
 func _on_object_unk_0x_07_edit_value_changed(value: float) -> void:
 	current_object.data.unk0x07 = value
+	%EditObjectTimer.start()
 
 
 func _on_object_lighting_edit_value_changed(value: float) -> void:
 	current_object.data.lighting = value
+	%EditObjectTimer.start()
 
 
 func _on_object_render_type_edit_value_changed(value: float) -> void:
 	current_object.data.renderType = value
+	%EditObjectTimer.start()
 
 
 func _on_object_unk_0x_0c_edit_value_changed(value: float) -> void:
 	current_object.data.unk0x0C = value
+	%EditObjectTimer.start()
 
 
 func _on_object_unk_0x_0e_edit_value_changed(value: float) -> void:
 	current_object.data.unk0x0E = value
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
@@ -195,6 +211,7 @@ func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
 	else:
 		current_object.data.unk0x07 &= ~(1 << 0)
 		%RenderStyleLabel.text = "Render Style"
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_2_toggled(toggled_on: bool) -> void:
@@ -202,6 +219,7 @@ func _on_object_flag_button_2_toggled(toggled_on: bool) -> void:
 		current_object.data.unk0x07 |= (1 << 1)
 	else:
 		current_object.data.unk0x07 &= ~(1 << 1)
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_3_toggled(toggled_on: bool) -> void:
@@ -209,6 +227,7 @@ func _on_object_flag_button_3_toggled(toggled_on: bool) -> void:
 		current_object.data.unk0x07 |= (1 << 2)
 	else:
 		current_object.data.unk0x07 &= ~(1 << 2)
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_4_toggled(toggled_on: bool) -> void:
@@ -216,6 +235,7 @@ func _on_object_flag_button_4_toggled(toggled_on: bool) -> void:
 		current_object.data.unk0x07 |= (1 << 3)
 	else:
 		current_object.data.unk0x07 &= ~(1 << 3)
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_5_toggled(toggled_on: bool) -> void:
@@ -224,6 +244,7 @@ func _on_object_flag_button_5_toggled(toggled_on: bool) -> void:
 	else:
 		current_object.data.unk0x07 &= ~(1 << 4)
 	_redraw_object()
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_6_toggled(toggled_on: bool) -> void:
@@ -231,6 +252,7 @@ func _on_object_flag_button_6_toggled(toggled_on: bool) -> void:
 		current_object.data.unk0x07 |= (1 << 5)
 	else:
 		current_object.data.unk0x07 &= ~(1 << 5)
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_7_toggled(toggled_on: bool) -> void:
@@ -238,6 +260,7 @@ func _on_object_flag_button_7_toggled(toggled_on: bool) -> void:
 		current_object.data.unk0x07 |= (1 << 6)
 	else:
 		current_object.data.unk0x07 &= ~(1 << 6)
+	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_8_toggled(toggled_on: bool) -> void:
@@ -245,6 +268,7 @@ func _on_object_flag_button_8_toggled(toggled_on: bool) -> void:
 		current_object.data.unk0x07 |= (1 << 7)
 	else:
 		current_object.data.unk0x07 &= ~(1 << 7)
+	%EditObjectTimer.start()
 
 
 func _on_render_directional_check_box_toggled(toggled_on: bool) -> void:
@@ -253,6 +277,7 @@ func _on_render_directional_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_object.data.renderType &= ~(1 << 7)
 	_redraw_object()
+	%EditObjectTimer.start()
 
 
 func _on_browse_objects_button_pressed() -> void:
@@ -276,3 +301,9 @@ func _on_browse_objects_button_pressed() -> void:
 	current_object.data.textureSource = source
 	update_texture()
 	_redraw_object()
+	%EditObjectTimer.start()
+
+
+func _on_edit_object_timer_timeout() -> void:
+	if current_object:
+		Roth.editor_action.emit(current_object.map_info, "Edit Object")

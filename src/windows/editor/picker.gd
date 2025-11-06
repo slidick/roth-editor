@@ -84,6 +84,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				if paste_options.get("face_flags"):
 					moused_over_node.get_parent().ref.data.addCollision = copied_face_data.addCollision
 				moused_over_node.get_parent().ref.initialize_mesh()
+				Roth.editor_action.emit(moused_over_node.get_parent().ref.map_info, "Paste Face Properties")
 			elif moused_over_node.get_parent().ref is Sector and copied_sector_data:
 				if paste_options.get("ceiling_texture"):
 					moused_over_node.get_parent().ref.data.ceilingTextureIndex = copied_sector_data.ceilingTextureIndex
@@ -119,6 +120,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					if face.sister:
 						face.sister.get_ref().initialize_mesh()
 					face.initialize_mesh()
+				Roth.editor_action.emit(moused_over_node.get_parent().ref.map_info, "Paste Sector Properties")
 
 
 func _process(_delta: float) -> void:
@@ -225,7 +227,7 @@ func clear() -> void:
 	_reset_edits()
 
 func select(node: Node3D, highlight: bool = true) -> void:
-	_reset_edits()
+	_reset_edits(node)
 	
 	if highlight:
 		if not node is MeshInstance3D:
@@ -405,15 +407,19 @@ func add_texture(texture_index: int, das_name: String) -> void:
 		%EditContainer.add_child(texture_rect)
 
 
-func _reset_edits() -> void:
+func _reset_edits(node: Node3D = null) -> void:
 	%EditFaceContainer.hide()
 	%EditSectorContainer.hide()
 	%EditObjectContainer.hide()
 	%EditSFXContainer.hide()
-	%EditFaceContainer.current_face = null
-	%EditSectorContainer.current_sector = null
-	%EditObjectContainer.current_object = null
-	%EditSFXContainer.current_object = null
+	if node and node.ref != %EditFaceContainer.current_face:
+		%EditFaceContainer.current_face = null
+	if node and node.ref != %EditSectorContainer.current_sector:
+		%EditSectorContainer.current_sector = null
+	if node and node.ref != %EditObjectContainer.current_object:
+		%EditObjectContainer.current_object = null
+	if node and node.ref != %EditSFXContainer.current_object:
+		%EditSFXContainer.current_object = null
 
 
 func redraw_selected_node(node: Variant = null) -> void:

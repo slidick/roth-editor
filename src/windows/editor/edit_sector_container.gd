@@ -1,7 +1,11 @@
 extends MarginContainer
 
-var current_sector: Sector
-
+var current_sector: Sector :
+	set(value):
+		if not %EditSectorTimer.is_stopped():
+			%EditSectorTimer.stop()
+			%EditSectorTimer.timeout.emit()
+		current_sector = value
 
 func _reset_edit_sector() -> void:
 	%SectorIndexLabel.text = ""
@@ -208,6 +212,7 @@ func _on_roof_height_edit_value_changed(value: float) -> void:
 	%RoofHeightEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%RoofHeightEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_floor_height_edit_value_changed(value: float) -> void:
@@ -217,14 +222,17 @@ func _on_floor_height_edit_value_changed(value: float) -> void:
 	%FloorHeightEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%FloorHeightEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_glow_edit_value_changed(value: float) -> void:
 	current_sector.data.lighting = value
+	%EditSectorTimer.start()
 
 
 func _on_floor_trigger_id_edit_value_changed(value: float) -> void:
 	current_sector.data.floorTriggerID = value
+	%EditSectorTimer.start()
 
 
 func _on_candle_check_box_toggled(toggled_on: bool) -> void:
@@ -232,10 +240,12 @@ func _on_candle_check_box_toggled(toggled_on: bool) -> void:
 		current_sector.data.textureFit |= (Sector.CANDLE)
 	else:
 		current_sector.data.textureFit &= ~(Sector.CANDLE)
+	%EditSectorTimer.start()
 
 
 func _on_unk_0x_04_edit_value_changed(value: float) -> void:
 	current_sector.data.unk0x04 = value
+	%EditSectorTimer.start()
 
 
 func _on_lightning_check_box_toggled(toggled_on: bool) -> void:
@@ -243,6 +253,7 @@ func _on_lightning_check_box_toggled(toggled_on: bool) -> void:
 		current_sector.data.textureFit |= (Sector.LIGHTNING)
 	else:
 		current_sector.data.textureFit &= ~(Sector.LIGHTNING)
+	%EditSectorTimer.start()
 
 
 func _on_texture_height_override_edit_value_changed(value: float) -> void:
@@ -252,6 +263,7 @@ func _on_texture_height_override_edit_value_changed(value: float) -> void:
 	%TextureHeightOverrideEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%TextureHeightOverrideEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_roof_offset_x_edit_value_changed(value: float) -> void:
@@ -261,6 +273,7 @@ func _on_roof_offset_x_edit_value_changed(value: float) -> void:
 	%RoofOffsetXEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%RoofOffsetXEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_roof_offset_y_edit_value_changed(value: float) -> void:
@@ -270,6 +283,7 @@ func _on_roof_offset_y_edit_value_changed(value: float) -> void:
 	%RoofOffsetYEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%RoofOffsetYEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_floor_offset_x_edit_value_changed(value: float) -> void:
@@ -279,6 +293,7 @@ func _on_floor_offset_x_edit_value_changed(value: float) -> void:
 	%FloorOffsetXEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%FloorOffsetXEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_floor_offset_y_edit_value_changed(value: float) -> void:
@@ -288,6 +303,7 @@ func _on_floor_offset_y_edit_value_changed(value: float) -> void:
 	%FloorOffsetYEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%FloorOffsetYEdit.get_line_edit().caret_column = caret
+	%EditSectorTimer.start()
 
 
 func _on_roof_scale_option_item_selected(index: int) -> void:
@@ -305,6 +321,7 @@ func _on_roof_scale_option_item_selected(index: int) -> void:
 			current_sector.data.textureFit |= Sector.CEILING_A
 			current_sector.data.textureFit |= Sector.CEILING_B
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_floor_scale_option_item_selected(index: int) -> void:
@@ -322,6 +339,7 @@ func _on_floor_scale_option_item_selected(index: int) -> void:
 			current_sector.data.textureFit |= Sector.FLOOR_A
 			current_sector.data.textureFit |= Sector.FLOOR_B
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_roof_texture_option_item_selected(index: int) -> void:
@@ -335,6 +353,7 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 		current_sector.data.ceilingTextureIndex = palette_index + 65280
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_sector.map_info.das)
 		%Texture.show_texture(das, true)
@@ -345,10 +364,12 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 		current_sector.data.ceilingTextureIndex = texture_index
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 3:
 		current_sector.data.ceilingTextureIndex = Roth.get_map(current_sector.map_info).metadata.skyTexture
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 4:
 		%RoofTextureOption.select(0)
 
@@ -364,6 +385,7 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 		current_sector.data.floorTextureIndex = palette_index + 65280
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_sector.map_info.das)
 		%Texture.show_texture(das, true)
@@ -374,10 +396,12 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 		current_sector.data.floorTextureIndex = texture_index
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 3:
 		current_sector.data.floorTextureIndex = Roth.get_map(current_sector.map_info).metadata.skyTexture
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 4:
 		%FloorTextureOption.select(0)
 
@@ -388,6 +412,7 @@ func _on_roof_flip_x_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_sector.data.unk0x16 &= ~(Sector.CEILING_FLIP_X)
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_roof_flip_y_check_box_toggled(toggled_on: bool) -> void:
@@ -396,6 +421,7 @@ func _on_roof_flip_y_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_sector.data.unk0x16 &= ~(Sector.CEILING_FLIP_Y)
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_floor_flip_x_check_box_toggled(toggled_on: bool) -> void:
@@ -404,6 +430,7 @@ func _on_floor_flip_x_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_sector.data.unk0x16 &= ~(Sector.FLOOR_FLIP_X)
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_floor_flip_y_check_box_toggled(toggled_on: bool) -> void:
@@ -412,11 +439,13 @@ func _on_floor_flip_y_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_sector.data.unk0x16 &= ~(Sector.FLOOR_FLIP_Y)
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_platform_floor_height_edit_value_changed(value: float) -> void:
 	current_sector.platform.floorHeight = value
 	%Picker.redraw_selected_node(%PlatformFloorHeightEdit)
+	%EditSectorTimer.start()
 
 
 func _on_platform_floor_scale_option_item_selected(index: int) -> void:
@@ -434,11 +463,13 @@ func _on_platform_floor_scale_option_item_selected(index: int) -> void:
 			current_sector.platform.floorTextureScale |= Sector.FLOOR_A
 			current_sector.platform.floorTextureScale |= Sector.FLOOR_B
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_platform_roof_height_edit_value_changed(value: float) -> void:
 	current_sector.platform.ceilingHeight = value
 	%Picker.redraw_selected_node(%PlatformRoofHeightEdit)
+	%EditSectorTimer.start()
 
 
 func _on_platform_roof_scale_option_item_selected(index: int) -> void:
@@ -456,6 +487,7 @@ func _on_platform_roof_scale_option_item_selected(index: int) -> void:
 			current_sector.platform.floorTextureScale |= Sector.CEILING_A
 			current_sector.platform.floorTextureScale |= Sector.CEILING_B
 	%Picker.redraw_selected_node()
+	%EditSectorTimer.start()
 
 
 func _on_platform_floor_texture_option_item_selected(index: int) -> void:
@@ -468,6 +500,7 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 		current_sector.platform.floorTextureIndex = palette_index + 65280
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_sector.map_info.das)
 		%Texture.show_texture(das, true)
@@ -477,10 +510,12 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 		current_sector.platform.floorTextureIndex = texture_index
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 3:
 		current_sector.platform.floorTextureIndex = Roth.get_map(current_sector.map_info).metadata.skyTexture
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 4:
 		%PlatformFloorTextureOption.select(0)
 
@@ -488,11 +523,13 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 func _on_platform_floor_offset_x_edit_value_changed(value: float) -> void:
 	current_sector.platform.floorTextureShiftX = value
 	%Picker.redraw_selected_node(%PlatformFloorOffsetXEdit)
+	%EditSectorTimer.start()
 
 
 func _on_platform_floor_offset_y_edit_value_changed(value: float) -> void:
 	current_sector.platform.floorTextureShiftY = value
 	%Picker.redraw_selected_node(%PlatformFloorOffsetYEdit)
+	%EditSectorTimer.start()
 
 
 func _on_platform_roof_texture_option_item_selected(index: int) -> void:
@@ -505,6 +542,7 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 		current_sector.platform.ceilingTextureIndex = palette_index + 65280
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_sector.map_info.das)
 		%Texture.show_texture(das, true)
@@ -514,10 +552,12 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 		current_sector.platform.ceilingTextureIndex = texture_index
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 3:
 		current_sector.platform.ceilingTextureIndex = Roth.get_map(current_sector.map_info).metadata.skyTexture
 		load_edit_sector(current_sector)
 		%Picker.redraw_selected_node()
+		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 4:
 		%PlatformRoofTextureOption.select(0)
 
@@ -525,11 +565,13 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 func _on_platform_roof_offset_x_edit_value_changed(value: float) -> void:
 	current_sector.platform.ceilingTextureShiftX = value
 	%Picker.redraw_selected_node(%PlatformRoofOffsetXEdit)
+	%EditSectorTimer.start()
 
 
 func _on_platform_roof_offset_y_edit_value_changed(value: float) -> void:
 	current_sector.platform.ceilingTextureShiftY = value
 	%Picker.redraw_selected_node(%PlatformRoofOffsetYEdit)
+	%EditSectorTimer.start()
 
 
 func _on_platform_check_button_toggled(toggled_on: bool) -> void:
@@ -559,6 +601,7 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 		current_sector.platform = {}
 	load_edit_sector(current_sector)
 	%Picker.redraw_selected_node(%PlatformRoofOffsetYEdit)
+	%EditSectorTimer.start()
 
 
 func _on_select_faces_button_pressed() -> void:
@@ -568,3 +611,8 @@ func _on_select_faces_button_pressed() -> void:
 func _on_select_faces_popup_menu_index_pressed(index: int) -> void:
 	var face_node: Node3D = %SelectFacesPopupMenu.get_item_metadata(index)
 	%Picker.select(face_node, true)
+
+
+func _on_edit_sector_timer_timeout() -> void:
+	if current_sector:
+		Roth.editor_action.emit(current_sector.map_info, "Edit Sector")

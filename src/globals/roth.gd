@@ -13,6 +13,8 @@ signal das_loading_finished(das: Dictionary)
 signal gdv_loading_updated(progress: float)
 @warning_ignore("unused_signal")
 signal close_map(map_info: Dictionary)
+@warning_ignore("unused_signal")
+signal editor_action(p_map_info: Dictionary, p_name: String)
 
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
@@ -23,6 +25,7 @@ var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
 const OLD_EXE: float = 3.925
 const NEW_EXE: float = 3.983
+const SEQUENTIAL_UNDO_TIMEOUT: float = 1.5
 
 var res: Dictionary = {}
 var maps: Array = []
@@ -215,8 +218,7 @@ func load_roth_settings() -> void:
 	settings_loaded.emit()
 
 
-## Does an initial partial load of a map. [br]
-## Once loaded, maps are not unloaded.
+## Does an initial partial load of a map.
 func get_map(map_info: Dictionary) -> Map:
 	# Check if map is already loaded
 	if map_info.name in loaded_maps:

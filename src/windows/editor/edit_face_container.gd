@@ -1,7 +1,13 @@
 extends MarginContainer
 
-var current_face: Face
-
+var current_face: Face :
+	set(value):
+		if current_face == value:
+			return
+		if not %EditFaceTimer.is_stopped():
+			%EditFaceTimer.stop()
+			%EditFaceTimer.timeout.emit()
+		current_face = value
 
 func _reset_edit_face() -> void:
 	%FaceIndexLabel.text = ""
@@ -152,6 +158,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		current_face.texture_data.lowerTextureIndex = palette_index + 32768
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_face.map_info.das)
 		%Texture.show_texture(das)
@@ -162,10 +169,12 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		current_face.texture_data.lowerTextureIndex = texture_index
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 3:
 		current_face.texture_data.lowerTextureIndex = Roth.get_map(current_face.map_info).metadata.skyTexture
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 4:
 		%BottomTextureOption.select(0)
 
@@ -181,6 +190,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		current_face.texture_data.midTextureIndex = palette_index + 32768
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_face.map_info.das)
 		%Texture.show_texture(das)
@@ -191,10 +201,12 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		current_face.texture_data.midTextureIndex = texture_index
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 3:
 		current_face.texture_data.midTextureIndex = Roth.get_map(current_face.map_info).metadata.skyTexture
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 4:
 		%MidTextureOption.select(0)
 
@@ -210,6 +222,7 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		current_face.texture_data.upperTextureIndex = palette_index + 32768
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(current_face.map_info.das)
 		%Texture.show_texture(das)
@@ -220,10 +233,12 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		current_face.texture_data.upperTextureIndex = texture_index
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 3:
 		current_face.texture_data.upperTextureIndex = Roth.get_map(current_face.map_info).metadata.skyTexture
 		load_edit_face(current_face)
 		%Picker.redraw_selected_node()
+		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 4:
 		%TopTextureOption.select(0)
 
@@ -234,6 +249,7 @@ func _on_transparency_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 0)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_flip_x_check_box_toggled(toggled_on: bool) -> void:
@@ -242,6 +258,7 @@ func _on_flip_x_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 1)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_image_fit_check_box_toggled(toggled_on: bool) -> void:
@@ -250,6 +267,7 @@ func _on_image_fit_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 2)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_fixed_size_transparency_check_box_toggled(toggled_on: bool) -> void:
@@ -258,6 +276,7 @@ func _on_fixed_size_transparency_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 3)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_no_reflect_check_box_toggled(toggled_on: bool) -> void:
@@ -266,6 +285,7 @@ func _on_no_reflect_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 4)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_half_pixel_check_box_toggled(toggled_on: bool) -> void:
@@ -274,6 +294,7 @@ func _on_half_pixel_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 5)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_edge_map_check_box_toggled(toggled_on: bool) -> void:
@@ -282,6 +303,7 @@ func _on_edge_map_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 6)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_draw_from_bottom_check_box_toggled(toggled_on: bool) -> void:
@@ -290,6 +312,7 @@ func _on_draw_from_bottom_check_box_toggled(toggled_on: bool) -> void:
 	else:
 		current_face.texture_data.unk0x08 &= ~(1 << 7)
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_stop_walk_check_box_toggled(toggled_on: bool) -> void:
@@ -297,6 +320,7 @@ func _on_stop_walk_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 0)
 	else:
 		current_face.data.addCollision &= ~(1 << 0)
+	%EditFaceTimer.start()
 
 
 func _on_stop_alen_check_box_toggled(toggled_on: bool) -> void:
@@ -304,6 +328,7 @@ func _on_stop_alen_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 1)
 	else:
 		current_face.data.addCollision &= ~(1 << 1)
+	%EditFaceTimer.start()
 
 
 func _on_flag_3_check_box_toggled(toggled_on: bool) -> void:
@@ -311,6 +336,7 @@ func _on_flag_3_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 2)
 	else:
 		current_face.data.addCollision &= ~(1 << 2)
+	%EditFaceTimer.start()
 
 
 func _on_room_blk_check_box_toggled(toggled_on: bool) -> void:
@@ -318,6 +344,7 @@ func _on_room_blk_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 3)
 	else:
 		current_face.data.addCollision &= ~(1 << 3)
+	%EditFaceTimer.start()
 
 
 func _on_flag_5_check_box_toggled(toggled_on: bool) -> void:
@@ -325,6 +352,7 @@ func _on_flag_5_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 4)
 	else:
 		current_face.data.addCollision &= ~(1 << 4)
+	%EditFaceTimer.start()
 
 
 func _on_flag_6_check_box_toggled(toggled_on: bool) -> void:
@@ -332,6 +360,7 @@ func _on_flag_6_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 5)
 	else:
 		current_face.data.addCollision &= ~(1 << 5)
+	%EditFaceTimer.start()
 
 
 func _on_flag_7_check_box_toggled(toggled_on: bool) -> void:
@@ -339,6 +368,7 @@ func _on_flag_7_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 6)
 	else:
 		current_face.data.addCollision &= ~(1 << 6)
+	%EditFaceTimer.start()
 
 
 func _on_flag_8_check_box_toggled(toggled_on: bool) -> void:
@@ -346,6 +376,7 @@ func _on_flag_8_check_box_toggled(toggled_on: bool) -> void:
 		current_face.data.addCollision |= (1 << 7)
 	else:
 		current_face.data.addCollision &= ~(1 << 7)
+	%EditFaceTimer.start()
 
 
 func _on_additional_check_button_toggled(toggled_on: bool) -> void:
@@ -369,6 +400,7 @@ func _on_additional_check_button_toggled(toggled_on: bool) -> void:
 		current_face.texture_data.additionalMetadata.shiftTextureY = 0
 		current_face.texture_data.additionalMetadata.unk0x0C = 0
 		%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_x_shift_edit_value_changed(value: float) -> void:
@@ -378,6 +410,7 @@ func _on_x_shift_edit_value_changed(value: float) -> void:
 	%XShiftEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%XShiftEdit.get_line_edit().caret_column = caret
+	%EditFaceTimer.start()
 
 
 func _on_y_shift_edit_value_changed(value: float) -> void:
@@ -387,18 +420,22 @@ func _on_y_shift_edit_value_changed(value: float) -> void:
 	%YShiftEdit.get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%YShiftEdit.get_line_edit().caret_column = caret
+	%EditFaceTimer.start()
 
 
 func _on_x_0c_edit_text_changed(new_text: String) -> void:
 	current_face.texture_data.additionalMetadata.unk0x0C = int(new_text)
+	%EditFaceTimer.start()
 
 
 func _on_unk_0x_00_edit_value_changed(value: float) -> void:
 	current_face.texture_data.unk0x00 = int(value)
+	%EditFaceTimer.start()
 
 
 func _on_type_edit_value_changed(value: float) -> void:
 	current_face.texture_data.type = int(value)
+	%EditFaceTimer.start()
 
 
 func _on_unk_0x_00_type_edit_value_changed(value: float) -> void:
@@ -409,6 +446,7 @@ func _on_unk_0x_00_type_edit_value_changed(value: float) -> void:
 	%"Unk0x00+TypeEdit".get_line_edit().grab_focus()
 	await get_tree().process_frame
 	%"Unk0x00+TypeEdit".get_line_edit().caret_column = caret
+	%EditFaceTimer.start()
 
 
 func _on_auto_button_pressed() -> void:
@@ -435,6 +473,7 @@ func _on_sister_edit_text_changed(new_text: String) -> void:
 		return
 	var new_sister: Face = Roth.get_map(current_face.map_info).faces[new_sister_index]
 	current_face.sister = weakref(new_sister)
+	%EditFaceTimer.start()
 
 
 func _on_flip_face_button_pressed() -> void:
@@ -442,8 +481,14 @@ func _on_flip_face_button_pressed() -> void:
 	current_face.v1 = Vector2(current_face.v2)
 	current_face.v2 = v1
 	%Picker.redraw_selected_node()
+	%EditFaceTimer.start()
 
 
 func _on_face_debug_button_pressed() -> void:
 	#print(current_face.texture_data)
 	Das._get_index_from_das(current_face.texture_data.midTextureIndex, current_face.map_info.das)
+
+
+func _on_edit_face_timer_timeout() -> void:
+	if current_face:
+		Roth.editor_action.emit(current_face.map_info, "Edit Face")

@@ -29,10 +29,16 @@ func _ready() -> void:
 	Roth.map_loading_finished.connect(_on_map_loaded)
 	Roth.map_loading_completely_finished.connect(_on_map_completely_loaded)
 	Roth.close_map.connect(close_map)
+	Roth.editor_action.connect(add_to_undo_redo)
 	tree_root = %MapsTree.create_item()
 	%MapsTree.set_column_title(0, "Maps")
 	%MapContainer.hide()
 	%EditorHeader.hide()
+	
+	%EditFaceTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditSectorTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditObjectTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditSFXTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 
 
 func test_map() -> void:
@@ -206,6 +212,8 @@ func load_map(map_info: Dictionary) -> void:
 	
 	if tree_root.get_child_count() == 1:
 		first_load = true
+	
+	add_to_undo_redo(map_info, "Map Opened")
 
 
 func _on_map_loaded(map_info: Dictionary) -> void:
@@ -343,16 +351,17 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				return
 			%Map2D.setup(Roth.get_map(selected[0].get_metadata(0).ref.map_info))
 		MapMenu.Close:
-			for item: TreeItem in selected:
-				if await Dialog.confirm("Close map?\n %s" % item.get_metadata(0).map_info.name, "Confirm Close", false):
-					item.get_metadata(0).queue_free()
-					Roth.loaded_maps.erase(item.get_metadata(0).map_info.name)
-					for child_item: TreeItem in item.get_children():
-						child_item.free()
-					%Map2D.close_map(item.get_metadata(0).map_info)
-					%"Command Editor".close(item.get_metadata(0).map_info.name)
-					Roth.reload_map_info(item.get_metadata(0).map_info)
-					item.free()
+			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).map_info.name))], "Confirm Close", false):
+				for item: TreeItem in selected:
+					close_map(item.get_metadata(0).map_info)
+					#item.get_metadata(0).queue_free()
+					#Roth.loaded_maps.erase(item.get_metadata(0).map_info.name)
+					#for child_item: TreeItem in item.get_children():
+						#child_item.free()
+					#%Map2D.close_map(item.get_metadata(0).map_info)
+					#%"Command Editor".close(item.get_metadata(0).map_info.name)
+					#Roth.reload_map_info(item.get_metadata(0).map_info)
+					#item.free()
 
 
 func close_map(map_info: Dictionary) -> void:
@@ -365,6 +374,7 @@ func close_map(map_info: Dictionary) -> void:
 			%Map2D.close_map(tree_item.get_metadata(0).map_info)
 			%"Command Editor".close(tree_item.get_metadata(0).map_info.name)
 			Roth.reload_map_info(tree_item.get_metadata(0).map_info)
+			close_undo_redo(tree_item.get_metadata(0).map_info)
 			tree_item.free()
 
 
@@ -565,10 +575,10 @@ func _on_tab_bar_tab_changed(tab: int) -> void:
 	match tab:
 		0:
 			%MapPanelContainer.show()
-			%EditInfoContainer.show()
+			%InspectorSidePanel.show()
 		1:
 			%MapPanelContainer.hide()
-			%EditInfoContainer.hide()
+			%InspectorSidePanel.hide()
 
 
 func _on_3d_object_context_menu_index_pressed(index: int) -> void:
@@ -590,3 +600,109 @@ func copy_object(object: ObjectRoth) -> void:
 
 func _on_paste_options_button_pressed() -> void:
 	%PasteOptions.toggle(true)
+
+
+var undo_stacks: Dictionary = {}
+var undo_positions: Dictionary = {}
+var undo_lists: Dictionary = {}
+func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
+	
+	if p_map_info not in undo_stacks:
+		undo_stacks[p_map_info] = []
+		undo_positions[p_map_info] = 0
+		undo_lists[p_map_info] = ItemList.new()
+		undo_lists[p_map_info].name = p_map_info.name
+		%HistoryTabContainer.add_child(undo_lists[p_map_info])
+		undo_lists[p_map_info].item_selected.connect(func (index: int) -> void:
+			undo_positions[p_map_info] = len(undo_stacks[p_map_info]) - index
+			var undo_state: Dictionary = undo_stacks[p_map_info][ undo_positions[p_map_info] - 1]
+			var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
+			if not map:
+				return
+			replace_map(map)
+		)
+	
+	if Settings.settings.get("options", {}).get("undo_history", 50) != 0:
+	
+		var action: Dictionary = {
+			"name": p_name,
+			"map_info": p_map_info,
+			"bytes": Roth.get_map(p_map_info).compile(),
+		}
+		
+		while undo_positions[p_map_info] < len(undo_stacks[p_map_info]):
+			undo_stacks[p_map_info].pop_back()
+		
+		undo_stacks[p_map_info].append(action)
+		undo_positions[p_map_info] += 1
+	
+	while len(undo_stacks[p_map_info]) > Settings.settings.get("options", {}).get("undo_history", 50):
+		undo_stacks[p_map_info].pop_front()
+	
+	undo_lists[p_map_info].clear()
+	for i in range(len(undo_stacks[p_map_info])-1, -1, -1):
+		undo_lists[p_map_info].add_item(undo_stacks[p_map_info][i].name)
+	if undo_lists[p_map_info].item_count > 0:
+		undo_lists[p_map_info].select(0)
+
+
+func close_undo_redo(p_map_info: Dictionary) -> void:
+	undo_stacks.erase(p_map_info)
+	undo_positions.erase(p_map_info)
+	undo_lists[p_map_info].queue_free()
+	undo_lists.erase(p_map_info)
+
+
+func replace_map(map: Map) -> void:
+	for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map.map_info:
+			
+			var old_map_node: Node3D = tree_item.get_metadata(0)
+			
+			var sectors_node := Node3D.new()
+			sectors_node.name = "Sectors"
+			for sector: Sector in map.sectors:
+				var mesh := await sector.initialize_mesh()
+				sectors_node.add_child(mesh)
+			
+			var faces_node := Node3D.new()
+			faces_node.name = "Faces"
+			for face: Face in map.faces:
+				var mesh := await face.initialize_mesh()
+				faces_node.add_child(mesh)
+			
+			var objects_node := Node3D.new()
+			objects_node.name = "Objects"
+			for object: ObjectRoth in map.objects:
+				var mesh := object.initialize_mesh()
+				objects_node.add_child(mesh)
+			
+			var sfx_node := Node3D.new()
+			sfx_node.name = "SFX"
+			for sfx: Section7_1 in map.sound_effects:
+				var mesh := sfx.initialize_mesh()
+				sfx_node.add_child(mesh)
+			
+			
+			
+			var map_node := Map.MapNode3D.new()
+			map_node.ref = map
+			map_node.map_info = map.map_info
+			map_node.add_child(sectors_node)
+			map_node.add_child(faces_node)
+			map_node.add_child(objects_node)
+			map_node.add_child(sfx_node)
+			map_node.name = map.map_info.name
+			map_node.visible = old_map_node.visible
+			map_node.process_mode = old_map_node.process_mode
+			%Maps.add_child(map_node)
+			map.node = map_node
+			
+			tree_item.set_metadata(0, map_node)
+			
+			Roth.loaded_maps[map.map_info.name] = map
+			
+			old_map_node.queue_free()
+			
+			if %Map2D.close_map(map.map_info, false):
+				%Map2D.setup(map, false)

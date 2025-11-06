@@ -39,21 +39,27 @@ var commands_section := {
 var node: MapNode3D
 var editor_metadata := {}
 
-static func load_from_file(p_map_info: Dictionary) -> Map:
-	var filepath: String = p_map_info.filepath
-	Console.print("Loading map: %s" % filepath)
-	
-	var loaded_map := Map.new()
-	
-	loaded_map.map_info = p_map_info
-	
-	var map_json: Dictionary = Raw.parse_file(filepath)
+
+static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) -> Map:
+	var map_json: Dictionary = Raw.parse_bytes(p_bytes)
 	if map_json.is_empty():
 		return
+	return load_from_dict(p_map_info, map_json)
+
+
+static func load_from_file(p_map_info: Dictionary) -> Map:
+	Console.print("Loading map: %s" % p_map_info.filepath)
+	var map_json: Dictionary = Raw.parse_file(p_map_info.filepath)
+	if map_json.is_empty():
+		return
+	return load_from_dict(p_map_info, map_json)
+
+
+static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
+	var loaded_map := Map.new()
+	loaded_map.map_info = p_map_info
 	
 	#var temp_object_list := []
-	
-	
 	for i in range(len(map_json.sectorsSection.sectors)):
 		loaded_map.sectors.append( Sector.new( 
 				map_json.sectorsSection.sectors[i],
@@ -139,6 +145,7 @@ func delete_sector(sector_to_delete: Sector) -> void:
 	if sector_to_delete.node:
 		sector_to_delete.node.queue_free()
 	sectors.erase(sector_to_delete)
+
 
 func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 	var initial_data := {
@@ -399,6 +406,7 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 			face.data["sectorIndex"] = i
 			if face.sister:
 				face.data["sisterFaceIndex"] = face.sister.get_ref().index
+				assert(face.data["sisterFaceIndex"] != -1)
 			else:
 				face.data.erase("sisterFaceIndex")
 	

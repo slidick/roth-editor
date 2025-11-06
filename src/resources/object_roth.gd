@@ -428,9 +428,11 @@ class ObjectNode2D extends Node2D:
 					else:
 						if dragging:
 							dragging = false
-							drag_started = false
-							update_position(false)
-							object_drag_ended.emit(self)
+							if drag_started:
+								drag_started = false
+								update_position(false)
+								object_drag_ended.emit(self)
+			
 			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
 				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
 				circle.selected = true

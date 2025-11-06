@@ -123,7 +123,52 @@ access = 2
 filters = PackedStringArray("*.conf")
 use_native_dialog = true
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5"]
+layout_mode = 2
+text = "
+Options"
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6"]
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="0"]
+custom_minimum_size = Vector2(224.08, 0)
+layout_mode = 2
+text = "Undo History Per Map"
+horizontal_alignment = 2
+
+[node name="UndoHistorySpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+value = 50.0
+rounded = true
+update_on_text_changed = true
+custom_arrow_step = 10.0
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="0"]
+custom_minimum_size = Vector2(224.08, 0)
+layout_mode = 2
+text = "Backup Saves"
+horizontal_alignment = 2
+
+[node name="BackupSavesSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+value = 5.0
+rounded = true
+allow_greater = true
+update_on_text_changed = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9"]
 layout_mode = 2
 size_flags_vertical = 10
 
@@ -147,5 +192,7 @@ text = "Save"
 [connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/DosboxConfigEdit" to="." method="_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/DosboxConfigButton" to="." method="_on_dosbox_config_button_pressed"]
 [connection signal="file_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/DosboxConfigButton/DosboxConfigFileDialog" to="." method="_on_dosbox_config_file_dialog_file_selected"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5/UndoHistorySpinBox" to="." method="_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6/BackupSavesSpinBox" to="." method="_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4/ResetButton" to="." method="_reset"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4/SaveButton" to="." method="_save"]

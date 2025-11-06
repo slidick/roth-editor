@@ -120,6 +120,9 @@ class SFXNode2D extends Node2D:
 	signal object_selected(object: SFXNode2D, tell_3d: bool)
 	signal object_copied(object: Section7_1)
 	signal object_deleted(object: Section7_1)
+	@warning_ignore("unused_signal")
+	signal object_dragged(object: Section7_1)
+	signal object_drag_ended(object: Section7_1)
 	
 	const DRAGGING_THRESHOLD: float = 2.0
 	
@@ -179,6 +182,7 @@ class SFXNode2D extends Node2D:
 						if drag_started:
 							drag_started = false
 							update_position()
+							object_drag_ended.emit(self)
 			
 			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
 				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
