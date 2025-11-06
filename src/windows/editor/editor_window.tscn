@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=38 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
@@ -20,23 +20,24 @@
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
 [ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/editor/array_02_window.tscn" id="15_d740k"]
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="20_12tai"]
+[ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/editor/paste_options_dialog.tscn" id="21_dyevs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rysh3"]
 bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kytel"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dyevs"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tep3q"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_12tai"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ddibi"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_12tai"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_afexc"]
 content_margin_left = 20.0
 content_margin_right = 20.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tep3q"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dyevs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_y8pqo"]
 
@@ -144,7 +145,7 @@ allow_rmb_select = true
 hide_root = true
 select_mode = 2
 
-[node name="MapsTreeMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/MapsTree" index="5"]
+[node name="MapsTreeMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/MapsTree" index="4"]
 unique_name_in_owner = true
 item_count = 10
 item_0/text = "Save"
@@ -262,6 +263,11 @@ rounded = true
 update_on_text_changed = true
 custom_arrow_step = 8.0
 
+[node name="PasteOptionsButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="12"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Paste Options"
+
 [node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer" index="1"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -288,13 +294,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 theme_override_font_sizes/font_size = 36
-theme_override_styles/tab_focus = SubResource("StyleBoxEmpty_dyevs")
-theme_override_styles/tab_disabled = SubResource("StyleBoxEmpty_tep3q")
-theme_override_styles/tabbar_background = SubResource("StyleBoxEmpty_ddibi")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_12tai")
-theme_override_styles/tab_selected = SubResource("StyleBoxEmpty_afexc")
-theme_override_styles/tab_hovered = SubResource("StyleBoxEmpty_afexc")
+theme_override_styles/tabbar_background = SubResource("StyleBoxEmpty_ddibi")
 theme_override_styles/tab_unselected = SubResource("StyleBoxEmpty_afexc")
+theme_override_styles/tab_hovered = SubResource("StyleBoxEmpty_afexc")
+theme_override_styles/tab_selected = SubResource("StyleBoxEmpty_afexc")
+theme_override_styles/tab_disabled = SubResource("StyleBoxEmpty_tep3q")
+theme_override_styles/tab_focus = SubResource("StyleBoxEmpty_dyevs")
 tab_alignment = 1
 current_tab = 0
 tabs_visible = false
@@ -585,10 +591,12 @@ size_flags_horizontal = 3
 
 [node name="SelectSisterButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/EditInfoContainer/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/HBoxContainer/Control" index="0"]
 unique_name_in_owner = true
-layout_mode = 2
-offset_left = 4.0
-offset_right = 125.0
-offset_bottom = 32.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 text = "Sister"
 
@@ -1966,6 +1974,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="TabBar" type="TabBar" parent="Contents/VBoxContainer/MainContainer/EditorHeader" index="0"]
 unique_name_in_owner = true
@@ -2080,6 +2089,22 @@ grow_horizontal = 2
 grow_vertical = 2
 exclusive = true
 
+[node name="PasteOptions" parent="Dialogs" index="5" instance=ExtResource("21_dyevs")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -326.5
+offset_right = 300.0
+offset_bottom = 326.5
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="3DObjectContextMenu" type="PopupMenu" parent="." index="3"]
 unique_name_in_owner = true
 item_count = 2
@@ -2110,6 +2135,7 @@ item_1/disabled = true
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer/GridEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_grid_edit_value_changed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2/SnapCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_check_box_toggled"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2/SnapEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_edit_value_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/PasteOptionsButton" to="." method="_on_paste_options_button_pressed"]
 [connection signal="focus_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_entered"]
 [connection signal="focus_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_exited"]
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]

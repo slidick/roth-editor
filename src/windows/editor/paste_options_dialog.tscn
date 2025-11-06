@@ -1,0 +1,242 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqhl386iytr5w"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3ihqj"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_hs5n2"]
+[ext_resource type="Script" uid="uid://0yu2cel048p1" path="res://src/windows/editor/paste_options_dialog.gd" id="3_eyilo"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_tk4xa"]
+
+[node name="PasteOptionsDialog" instance=ExtResource("1_3ihqj")]
+offset_bottom = 500.0
+theme = ExtResource("2_hs5n2")
+script = ExtResource("3_eyilo")
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_tk4xa")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="TabContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FaceContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="0"]
+layout_mode = 2
+text = "Face Options"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="1"]
+layout_mode = 2
+
+[node name="LowerTextureButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Lower Texture"
+alignment = 2
+
+[node name="MidTextureButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Mid Texture"
+alignment = 2
+
+[node name="UpperTextureButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Upper Texture"
+alignment = 2
+
+[node name="TextureXShiftButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Texture X-Shift"
+alignment = 2
+
+[node name="TextureYShiftButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="6"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Texture Y-Shift"
+alignment = 2
+
+[node name="FaceTextureFlagsButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="7"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Texture Flags"
+alignment = 2
+
+[node name="FaceFlagsButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="8"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Face Flags"
+alignment = 2
+
+[node name="FaceIDButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/FaceContainer" index="9"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Face ID"
+alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="1"]
+layout_mode = 2
+
+[node name="SectorContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="0"]
+layout_mode = 2
+text = "Sector Options"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="1"]
+layout_mode = 2
+
+[node name="FloorTextureButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Floor Texture"
+alignment = 2
+
+[node name="FloorXShiftButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Floor X-Shift"
+alignment = 2
+
+[node name="FloorYShiftButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Floor Y-Shift"
+alignment = 2
+
+[node name="FloorHeightButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Floor Height"
+alignment = 2
+
+[node name="CeilingTextureButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="6"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Ceiling Texture"
+alignment = 2
+
+[node name="CeilingXShiftButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="7"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ceiling X-Shift"
+alignment = 2
+
+[node name="CeilingYShiftButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="8"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ceiling Y-Shift"
+alignment = 2
+
+[node name="CeilingHeightButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="9"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ceiling Height"
+alignment = 2
+
+[node name="SectorFlipButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="10"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Sector Flip"
+alignment = 2
+
+[node name="SectorFlagsButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="11"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Sector Flags"
+alignment = 2
+
+[node name="GlowButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="12"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Glow"
+alignment = 2
+
+[node name="TextureHeightOverrideButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="13"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Texture Height Override"
+alignment = 2
+
+[node name="SectorIDButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="14"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Sector ID"
+alignment = 2
+
+[node name="PlatformButton" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer/SectorContainer" index="15"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "Platform
+"
+alignment = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="PasteButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Save"
+
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/PasteButton" to="." method="_on_paste_button_pressed"]

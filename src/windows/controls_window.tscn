@@ -45,6 +45,7 @@ Hold Right Mouse:  Mouselook
 Left Mouse:  Select
 C: Copy Texture
 V: Paste Texture
+Alt+V: Edit Paste Options
 Z: Open Context Menu
 PgUp: Move Selected Object to Ceiling
 PgDown: Move Selected Object to Floor

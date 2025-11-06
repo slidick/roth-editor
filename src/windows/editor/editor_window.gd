@@ -62,9 +62,13 @@ func test_map() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if not %Camera3D.has_focus:
+		return
+	
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouse and %Camera3D.has_focus == true:
 		%SubViewport.push_input(event)
 		get_viewport().set_input_as_handled()
+	
 	if event.is_action_pressed("move_object_to_ceiling"):
 		if %EditObjectContainer.current_object:
 			var height: int = %EditObjectContainer.current_object.sector.get_ref().data.ceilingHeight
@@ -125,6 +129,9 @@ func _input(event: InputEvent) -> void:
 					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 					get_viewport().warp_mouse(pos)
 				%"3DObjectContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+	
+	if Input.is_action_just_pressed("paste_options_dialog"):
+		%PasteOptions.toggle(true)
 
 
 func load_map(map_info: Dictionary) -> void:
@@ -579,3 +586,7 @@ func copy_object(object: ObjectRoth) -> void:
 	copied_object_data = object
 	%"3DContextMenu".set_item_disabled(1, false)
 	%ObjectContextPopupMenu.set_item_disabled(1, false)
+
+
+func _on_paste_options_button_pressed() -> void:
+	%PasteOptions.toggle(true)

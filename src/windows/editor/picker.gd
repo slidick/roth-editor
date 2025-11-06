@@ -13,7 +13,9 @@ var has_focus: bool = false :
 				moused_over_node.get_parent().material_overlay = null
 var picking_enabled: bool = true
 var copied_face_texture_data: Dictionary = {}
-var copied_sector_texture_data: Dictionary = {}
+var copied_face_data: Dictionary = {}
+var copied_sector_data: Dictionary = {}
+var copied_platform_data: Dictionary = {}
 
 func _ready() -> void:
 	highlight_material = StandardMaterial3D.new()
@@ -46,6 +48,77 @@ func _unhandled_input(event: InputEvent) -> void:
 				moused_over_node.get_parent().material_overlay = null
 				moused_over_node = null
 			deselect()
+	
+	if Input.is_action_pressed("copy_texture"):
+		if moused_over_node:
+			if moused_over_node.get_parent().ref is Face:
+				copied_face_texture_data = moused_over_node.get_parent().ref.texture_data.duplicate()
+				copied_face_data = moused_over_node.get_parent().ref.data.duplicate()
+			elif moused_over_node.get_parent().ref is Sector:
+				copied_sector_data = moused_over_node.get_parent().ref.data.duplicate()
+				copied_platform_data = moused_over_node.get_parent().ref.platform.duplicate()
+	
+	if Input.is_action_pressed("paste_texture", true):
+		if moused_over_node:
+			var paste_options: Dictionary = Settings.settings.get("3d_paste_options")
+			if moused_over_node.get_parent().ref is Face and copied_face_texture_data:
+				if paste_options.get("lower_texture"):
+					moused_over_node.get_parent().ref.texture_data.lowerTextureIndex = copied_face_texture_data.lowerTextureIndex
+				if paste_options.get("mid_texture"):
+					moused_over_node.get_parent().ref.texture_data.midTextureIndex = copied_face_texture_data.midTextureIndex
+				if paste_options.get("upper_texture"):
+					moused_over_node.get_parent().ref.texture_data.upperTextureIndex = copied_face_texture_data.upperTextureIndex
+				if "additionalMetadata" in copied_face_texture_data and (copied_face_texture_data.type & 0x80) > 0:
+					if "additionalMetadata" not in moused_over_node.get_parent().ref.texture_data:
+						moused_over_node.get_parent().ref.texture_data.additionalMetadata = { "shiftTextureX": 0, "shiftTextureY": 0, "unk0x0C": 0 }
+					if moused_over_node.get_parent().ref.texture_data.type & 0x80 == 0:
+						moused_over_node.get_parent().ref.texture_data.type += 0x80
+					if paste_options.get("texture_x_shift"):
+						moused_over_node.get_parent().ref.texture_data.additionalMetadata.shiftTextureX = copied_face_texture_data.additionalMetadata.shiftTextureX
+					if paste_options.get("texture_y_shift"):
+						moused_over_node.get_parent().ref.texture_data.additionalMetadata.shiftTextureY = copied_face_texture_data.additionalMetadata.shiftTextureY
+					if paste_options.get("face_id"):
+						moused_over_node.get_parent().ref.texture_data.additionalMetadata.unk0x0C = copied_face_texture_data.additionalMetadata.unk0x0C
+				if paste_options.get("face_texture_flags"):
+					moused_over_node.get_parent().ref.texture_data.unk0x08 = copied_face_texture_data.unk0x08
+				if paste_options.get("face_flags"):
+					moused_over_node.get_parent().ref.data.addCollision = copied_face_data.addCollision
+				moused_over_node.get_parent().ref.initialize_mesh()
+			elif moused_over_node.get_parent().ref is Sector and copied_sector_data:
+				if paste_options.get("ceiling_texture"):
+					moused_over_node.get_parent().ref.data.ceilingTextureIndex = copied_sector_data.ceilingTextureIndex
+				if paste_options.get("ceiling_x_shift"):
+					moused_over_node.get_parent().ref.data.ceilingTextureShiftX = copied_sector_data.ceilingTextureShiftX
+				if paste_options.get("ceiling_y_shift"):
+					moused_over_node.get_parent().ref.data.ceilingTextureShiftY = copied_sector_data.ceilingTextureShiftY
+				if paste_options.get("ceiling_height"):
+					moused_over_node.get_parent().ref.data.ceilingHeight = copied_sector_data.ceilingHeight
+				if paste_options.get("floor_texture"):
+					moused_over_node.get_parent().ref.data.floorTextureIndex = copied_sector_data.floorTextureIndex
+				if paste_options.get("floor_x_shift"):
+					moused_over_node.get_parent().ref.data.floorTextureShiftX = copied_sector_data.floorTextureShiftX
+				if paste_options.get("floor_y_shift"):
+					moused_over_node.get_parent().ref.data.floorTextureShiftY = copied_sector_data.floorTextureShiftY
+				if paste_options.get("floor_height"):
+					moused_over_node.get_parent().ref.data.floorHeight = copied_sector_data.floorHeight
+				if paste_options.get("sector_flip"):
+					moused_over_node.get_parent().ref.data.unk0x16 = copied_sector_data.unk0x16
+				if paste_options.get("sector_flags"):
+					moused_over_node.get_parent().ref.data.textureFit = copied_sector_data.textureFit
+				if paste_options.get("glow"):
+					moused_over_node.get_parent().ref.data.lighting = copied_sector_data.lighting
+				if paste_options.get("texture_height_override"):
+					moused_over_node.get_parent().ref.data.textureMapOverride = copied_sector_data.textureMapOverride
+				if paste_options.get("sector_id"):
+					moused_over_node.get_parent().ref.data.floorTriggerID = copied_sector_data.floorTriggerID
+				if paste_options.get("platform"):
+					moused_over_node.get_parent().ref.platform = copied_platform_data.duplicate()
+				moused_over_node.get_parent().ref.initialize_mesh()
+				for face_ref: WeakRef in moused_over_node.get_parent().ref.faces:
+					var face: Face = face_ref.get_ref()
+					if face.sister:
+						face.sister.get_ref().initialize_mesh()
+					face.initialize_mesh()
 
 
 func _process(_delta: float) -> void:
@@ -102,26 +175,6 @@ func _process(_delta: float) -> void:
 				highlight_material.billboard_mode = BaseMaterial3D.BILLBOARD_FIXED_Y
 			else:
 				highlight_material.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED
-		
-		if Input.is_action_just_pressed("copy_texture"):
-			if moused_over_node:
-				if moused_over_node.get_parent().ref is Face:
-					copied_face_texture_data = moused_over_node.get_parent().ref.texture_data.duplicate()
-				elif moused_over_node.get_parent().ref is Sector:
-					copied_sector_texture_data = moused_over_node.get_parent().ref.data.duplicate()
-		
-		if Input.is_action_just_pressed("paste_texture"):
-			if moused_over_node:
-				if moused_over_node.get_parent().ref is Face and copied_face_texture_data:
-					moused_over_node.get_parent().ref.texture_data.midTextureIndex = copied_face_texture_data.midTextureIndex
-					moused_over_node.get_parent().ref.texture_data.upperTextureIndex = copied_face_texture_data.upperTextureIndex
-					moused_over_node.get_parent().ref.texture_data.lowerTextureIndex = copied_face_texture_data.lowerTextureIndex
-					moused_over_node.get_parent().ref.initialize_mesh()
-				elif moused_over_node.get_parent().ref is Sector and copied_sector_texture_data:
-					moused_over_node.get_parent().ref.data.ceilingTextureIndex = copied_sector_texture_data.ceilingTextureIndex
-					moused_over_node.get_parent().ref.data.floorTextureIndex = copied_sector_texture_data.floorTextureIndex
-					moused_over_node.get_parent().ref.initialize_mesh()
-				
 		
 		if Input.is_action_just_pressed("select_face"):
 			if selected_node and selected_node != moused_over_node:
