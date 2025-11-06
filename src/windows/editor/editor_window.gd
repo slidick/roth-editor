@@ -309,8 +309,8 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			map.map_info.name = new_map_name
 			map.map_info.filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(new_map_name + ".RAW")
 			map.map_info.erase("vanilla")
-			Roth.save_map(map)
 			Roth.loaded_maps[map.map_info.name] = map
+			Roth.save_map(map)
 			selected[0].set_text(0, new_map_name)
 			map.name_changed.emit(new_map_name)
 			#Roth.load_roth_settings()
