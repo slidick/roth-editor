@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=48 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
@@ -56,6 +56,40 @@ adjustment_brightness = 1.62
 adjustment_contrast = 1.52
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uyfwr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dyevs"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.47058824, 0.6862745, 0.9098039, 0.1764706)
+border_width_left = 1
+border_width_right = 1
+border_color = Color(0.175, 0.175, 0.175, 1)
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tep3q"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.47058824, 0.6862745, 0.9098039, 0.1764706)
+border_width_left = 1
+border_width_right = 1
+border_color = Color(0.175, 0.175, 0.175, 1)
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y0aww"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.47058824, 0.6862745, 0.9098039, 0.38039216)
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.75)
+corner_detail = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8go8f"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_w2pak"]
 
@@ -526,10 +560,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.05
 theme_override_styles/panel = SubResource("StyleBoxEmpty_uyfwr")
-current_tab = 1
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_dyevs")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_tep3q")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_y0aww")
+theme_override_styles/tab_focus = SubResource("StyleBoxEmpty_8go8f")
+current_tab = 0
 
 [node name="Inspector" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="1"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.05
@@ -970,6 +1007,7 @@ one_shot = true
 
 [node name="EditSectorContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit" index="1"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
@@ -2022,6 +2060,7 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="History" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="2"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
 metadata/_tab_index = 1
