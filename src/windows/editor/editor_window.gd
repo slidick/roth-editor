@@ -309,7 +309,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				return
 			
 			Console.print("Saving file as: %s" % new_map_name)
-			
+			var old_map_name: String = selected[0].get_metadata(0).map_info.name
 			var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
 			Roth.loaded_maps.erase(map.map_info.name)
 			Roth.maps.erase(map.map_info)
@@ -322,8 +322,10 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			Roth.save_map(map)
 			selected[0].set_text(0, new_map_name)
 			map.name_changed.emit(new_map_name)
+			
 			#Roth.load_roth_settings()
 			Roth.settings_loaded.emit()
+			rename_undo_redo(old_map_name, new_map_name)
 		MapMenu.EditMetadata:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
@@ -607,16 +609,15 @@ var undo_stacks: Dictionary = {}
 var undo_positions: Dictionary = {}
 var undo_lists: Dictionary = {}
 func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
-	
-	if p_map_info not in undo_stacks:
-		undo_stacks[p_map_info] = []
-		undo_positions[p_map_info] = 0
-		undo_lists[p_map_info] = ItemList.new()
-		undo_lists[p_map_info].name = p_map_info.name
-		%HistoryTabContainer.add_child(undo_lists[p_map_info])
-		undo_lists[p_map_info].item_selected.connect(func (index: int) -> void:
-			undo_positions[p_map_info] = len(undo_stacks[p_map_info]) - index
-			var undo_state: Dictionary = undo_stacks[p_map_info][ undo_positions[p_map_info] - 1]
+	if p_map_info.name not in undo_stacks:
+		undo_stacks[p_map_info.name] = []
+		undo_positions[p_map_info.name] = 0
+		undo_lists[p_map_info.name] = ItemList.new()
+		undo_lists[p_map_info.name].name = p_map_info.name
+		%HistoryTabContainer.add_child(undo_lists[p_map_info.name])
+		undo_lists[p_map_info.name].item_selected.connect(func (index: int) -> void:
+			undo_positions[p_map_info.name] = len(undo_stacks[p_map_info.name]) - index
+			var undo_state: Dictionary = undo_stacks[p_map_info.name][ undo_positions[p_map_info.name] - 1]
 			var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
 			if not map:
 				return
@@ -631,32 +632,46 @@ func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 			"bytes": Roth.get_map(p_map_info).compile(),
 		}
 		
-		while undo_positions[p_map_info] < len(undo_stacks[p_map_info]):
-			undo_stacks[p_map_info].pop_back()
+		while undo_positions[p_map_info.name] < len(undo_stacks[p_map_info.name]):
+			undo_stacks[p_map_info.name].pop_back()
 		
-		undo_stacks[p_map_info].append(action)
-		undo_positions[p_map_info] += 1
+		undo_stacks[p_map_info.name].append(action)
+		undo_positions[p_map_info.name] += 1
 	
-	while len(undo_stacks[p_map_info]) > Settings.settings.get("options", {}).get("undo_history", 50):
-		undo_stacks[p_map_info].pop_front()
+	while len(undo_stacks[p_map_info.name]) > Settings.settings.get("options", {}).get("undo_history", 50):
+		undo_stacks[p_map_info.name].pop_front()
 	
-	undo_lists[p_map_info].clear()
-	for i in range(len(undo_stacks[p_map_info])-1, -1, -1):
-		undo_lists[p_map_info].add_item(undo_stacks[p_map_info][i].name)
-	if undo_lists[p_map_info].item_count > 0:
-		undo_lists[p_map_info].select(0)
+	undo_lists[p_map_info.name].clear()
+	for i in range(len(undo_stacks[p_map_info.name])-1, -1, -1):
+		undo_lists[p_map_info.name].add_item(undo_stacks[p_map_info.name][i].name)
+	if undo_lists[p_map_info.name].item_count > 0:
+		undo_lists[p_map_info.name].select(0)
 
 
 func close_undo_redo(p_map_info: Dictionary) -> void:
-	undo_stacks.erase(p_map_info)
-	undo_positions.erase(p_map_info)
-	undo_lists[p_map_info].queue_free()
-	undo_lists.erase(p_map_info)
+	undo_stacks.erase(p_map_info.name)
+	undo_positions.erase(p_map_info.name)
+	if p_map_info.name in undo_lists:
+		undo_lists[p_map_info.name].queue_free()
+	undo_lists.erase(p_map_info.name)
+
+
+func rename_undo_redo(p_old_map_name: String, p_new_map_name: String) -> void:
+	undo_stacks[p_new_map_name] = undo_stacks[p_old_map_name]
+	undo_positions[p_new_map_name] = undo_positions[p_old_map_name]
+	undo_lists[p_new_map_name] = undo_lists[p_old_map_name]
+	undo_lists[p_new_map_name].name = p_new_map_name
+	undo_stacks.erase(p_old_map_name)
+	undo_positions.erase(p_old_map_name)
+	undo_lists.erase(p_old_map_name)
+
 
 
 func replace_map(map: Map) -> void:
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
 		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map.map_info:
+			
+			Roth.loaded_maps[map.map_info.name] = map
 			
 			var old_map_node: Node3D = tree_item.get_metadata(0)
 			
@@ -701,7 +716,7 @@ func replace_map(map: Map) -> void:
 			
 			tree_item.set_metadata(0, map_node)
 			
-			Roth.loaded_maps[map.map_info.name] = map
+			
 			
 			old_map_node.queue_free()
 			
