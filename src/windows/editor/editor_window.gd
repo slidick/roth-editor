@@ -316,6 +316,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			Roth.maps.append(map.map_info.duplicate())
 			map.map_info.name = new_map_name
 			map.map_info.filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(new_map_name + ".RAW")
+			map.map_info.erase("filepath_json")
 			map.map_info.erase("vanilla")
 			Roth.loaded_maps[map.map_info.name] = map
 			Roth.save_map(map)
