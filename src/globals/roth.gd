@@ -308,6 +308,28 @@ func save_map(map: Map, directory: String = ROTH_CUSTOM_MAP_DIRECTORY, player_da
 
 func save_raw(map_info: Dictionary, raw_map: PackedByteArray, directory: String = ROTH_CUSTOM_MAP_DIRECTORY) -> void:
 	var raw_filepath := directory.path_join(map_info.name.to_upper() + ".RAW")
+	
+	if directory == ROTH_CUSTOM_MAP_DIRECTORY and FileAccess.file_exists(raw_filepath):
+		var json_filepath: = directory.path_join(map_info.name.to_upper() + ".json")
+		var count: int = 1
+		while FileAccess.file_exists(raw_filepath + ".%d" % count):
+			count += 1
+		count -= 1
+		for i in range(count, 0, -1):
+			DirAccess.rename_absolute(raw_filepath + ".%d" % i, raw_filepath + ".%d" % (i+1))
+			DirAccess.rename_absolute(json_filepath + ".%d" % i, json_filepath + ".%d" % (i+1))
+		
+		DirAccess.rename_absolute(raw_filepath, raw_filepath + ".1")
+		DirAccess.rename_absolute(json_filepath, json_filepath + ".1")
+		
+		count += 1
+		while count > Settings.settings.get("options", {}).get("backup_saves", 5):
+			DirAccess.remove_absolute(raw_filepath + ".%d" % count)
+			DirAccess.remove_absolute(json_filepath + ".%d" % count)
+			count -= 1
+			if count < 1:
+				break
+	
 	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
 	file.store_buffer(raw_map)
 	file.close()
