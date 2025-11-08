@@ -1,3 +1,28 @@
+**0.14.0**
+### New Features
+  - Undo / Redo
+    - New panel on the right side called history keeps a list of editor actions to undo
+    - Separate list kept for each open map
+    - Configurable number of steps to remember for each map from Main -> Settings; default 50
+    - Does NOT include command editor
+  - Automatic Backups
+    - When saving, previous saves will be kept to ensure better loss protection
+    - Amount of saves to keep is configurable from Main -> Settings; default 5
+    - Restores must be done manually
+  - 3D View
+    - Copy with 'c' key now copies all properties of a face or sector when highlighting
+    - Pasting with 'v' key now pastes flag data as well as texture ids by default
+      - Paste options are configurable by pressing the button at the bottom left or by using key combo 'Alt+v' while in 3d viewport
+
+### Bugfixes
+  - Multiple Save-as regressions have been fixed
+  - Deleting faces/sectors regression has been fixed
+
+### Known issues
+  - The right-click context menu for objects and sfx in the 2d editor scales in proportion to the zoom level. This is a known regression with Godot 4.5
+
+---
+
 **0.13.0**
 ### New Features
   - Browse to select object/inventory/close-up textures
