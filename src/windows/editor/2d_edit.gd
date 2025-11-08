@@ -127,23 +127,23 @@ func _input(event: InputEvent) -> void:
 		await get_tree().process_frame # Fixes weird double input bug somehow caused from the confirmation dialog
 		if selected_face and selected_face.sister:
 			if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
-				map.merge_sectors(selected_face)
+				Roth.get_map(selected_face.map_info).merge_sectors(selected_face)
 				hovered_face = null
-				selected_face = null
 				hovered_sector = null
-				owner.select_face(selected_sector.index, "Sector", map.map_info.name)
+				Roth.editor_action.emit(selected_face.map_info, "Delete Double-Sided Face")
+				owner.select_face(selected_sector.index, "Sector", selected_sector.map_info.name)
+				selected_face = null
 				queue_redraw()
-				Roth.editor_action.emit(map.map_info, "Delete Double-Sided Face")
 		
 		elif not selected_face and selected_sector:
 			if await Dialog.confirm("Delete selected sector?", "Confirm Deletion", false):
 				selected_sector.delete_sector()
 				hovered_sector = null
-				selected_sector = null
 				hovered_face = null
-				queue_redraw()
+				Roth.editor_action.emit(selected_sector.map_info, "Delete Sector")
 				%Picker.deselect()
-				Roth.editor_action.emit(map.map_info, "Delete Sector")
+				selected_sector = null
+				queue_redraw()
 	
 	
 	if %SectorCheckBox.button_pressed:
