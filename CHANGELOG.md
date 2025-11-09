@@ -1,3 +1,18 @@
+**0.15.0**
+### New Features
+  - 2D View
+    - When splitting sectors, the split line will automatically snap to valid vertices
+    - Vertices size will scale with zoom level
+
+### Bugfixes
+  - Splitting sectors now added to undo history
+  - Splitting faces now added to undo history
+  - Splitting faces index regression fixed
+  - Undo history map name now changed when using Save-As
+  - Selecting sectors in the 3d view will no longer create a highlight of the sector in the 2d view when its map isn't loaded in the 2d view
+
+---
+
 **0.14.0**
 ### New Features
   - Undo / Redo
