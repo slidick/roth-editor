@@ -1,6 +1,5 @@
 extends Node2D
 
-var drag: bool = false
 var sectors: Array = []
 var minimum_x: float = 0
 var minimum_y: float = 0
@@ -44,22 +43,11 @@ func _draw() -> void:
 				if face.sector.data.floorHeight != face.sister.get_ref().sector.data.floorHeight:
 					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.BLUE, 1.0, true)
 				else:
-					continue
-					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.BLACK, 1.0, true)
-			else:
-				continue
-				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.WHITE, 1.0, true)
+					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.STEEL_BLUE, 1.0, true)
 	for sector: Sector in sectors:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
-			if face.sister:
-				if face.sector.data.floorHeight != face.sister.get_ref().sector.data.floorHeight:
-					continue
-					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.BLUE, 1.0, true)
-				else:
-					continue
-					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.BLACK, 1.0, true)
-			else:
+			if not face.sister:
 				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.WHITE, 1.0, true)
 	
 	var center := Vector2(
