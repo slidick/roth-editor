@@ -24,19 +24,26 @@ var dragging_amount := Vector2.ZERO
 var allow_move: bool = false
 var is_selected: bool = false
 var face_vertex_move := []
+var shape: RectangleShape2D
+var initial_zoom: float = 1.0
+var map_info: Dictionary = {}
 
-func _init(p_coordinate: Vector2, p_data: Dictionary, p_allow_move: bool, p_split_vertex: bool = false) -> void:
+func _init(p_map_info: Dictionary, p_coordinate: Vector2, p_data: Dictionary, p_allow_move: bool, p_initial_zoom: float, p_split_vertex: bool = false) -> void:
+	map_info = p_map_info
 	coordinate = Vector2(p_coordinate)
 	sectors = p_data.sectors
 	faces = p_data.faces
 	split_vertex = p_split_vertex
 	allow_move = p_allow_move
+	initial_zoom = p_initial_zoom
+
 
 func _ready() -> void:
 	polygon = BorderPolygon2D.new()
 	var draw_size := DRAW_SIZE
 	if split_vertex:
 		draw_size /= 2
+	draw_size *= initial_zoom * 30
 	polygon.polygon = [Vector2(-draw_size, -draw_size), Vector2(draw_size, -draw_size), Vector2(draw_size, draw_size), Vector2(-draw_size, draw_size) ]
 	if not split_vertex:
 		polygon.color = Color.DIM_GRAY
@@ -46,7 +53,7 @@ func _ready() -> void:
 	add_child(polygon)
 	position.x = coordinate.x / Roth.SCALE_2D_WORLD
 	position.y = coordinate.y / Roth.SCALE_2D_WORLD
-	var shape := RectangleShape2D.new()
+	shape = RectangleShape2D.new()
 	shape.size.x = draw_size * 2
 	shape.size.y = draw_size * 2
 	var collision := CollisionShape2D.new()
@@ -56,6 +63,18 @@ func _ready() -> void:
 	area.mouse_entered.connect(_on_mouse_entered)
 	area.mouse_exited.connect(_on_mouse_exited)
 	add_child(area)
+
+
+func redraw(p_zoom_level: float) -> void:
+	var draw_size := DRAW_SIZE
+	if split_vertex:
+		draw_size /= 2
+	draw_size *= p_zoom_level * 30
+	polygon.polygon = [Vector2(-draw_size, -draw_size), Vector2(draw_size, -draw_size), Vector2(draw_size, draw_size), Vector2(-draw_size, draw_size) ]
+	if split_vertex:
+		draw_size *= 2
+	shape.size.x = draw_size * 2
+	shape.size.y = draw_size * 2
 
 
 func _on_mouse_entered() -> void:
@@ -227,7 +246,8 @@ func split_face() -> void:
 		new_faces[1].initialize_mesh()
 	
 	vertex_deleted.emit()
-	
+	Roth.editor_action.emit(map_info, "Split Face")
+
 
 class BorderPolygon2D extends Polygon2D:
 	var border_color := Color.BLACK

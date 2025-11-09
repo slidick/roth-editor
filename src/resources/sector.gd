@@ -197,6 +197,7 @@ func split_face(face_to_split: Face) -> Face:
 			face.sister.get_ref().initialize_mesh()
 		face.update_horizontal_fit()
 		face.initialize_mesh()
+	reorder_faces()
 	return new_face
 
 

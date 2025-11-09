@@ -1,13 +1,13 @@
 extends Node2D
 
+
 const COLOR_GRID := Color(0.498039, 1, 0.831373, 0.2)
 const COLOR_AXIS := Color(1, 0.270588, 0, 0.2)
-const ZOOM_SPEED := 0.95
-const DRAG_SENSITIVITY := 1
-const MAX_ZOOM := 100
-const MIN_ZOOM := 0.2
+const ZOOM_SPEED : float = 0.95
+const MAX_ZOOM : int = 100
+const MIN_ZOOM : float = 0.2
 
-var zoom_toward_mouse := true
+
 var line_width: float = 0.1
 var map: Variant
 var minimum_x: float = 0
@@ -26,7 +26,6 @@ var has_focus: bool = false :
 			if hovered_face and hovered_face != selected_face:
 				hovered_face = null
 				queue_redraw()
-				
 var mouse_drag_enabled: bool = false
 var zooming: bool = false
 var hovered_sector: Variant = null
@@ -46,10 +45,10 @@ var skip_sector_hover_prev: int = 0
 var start_vertex_select: bool = false 
 var start_vertex_select_position := Vector2.ZERO
 var copied_sfx_data: Section7_1
-var mouse_paste_position: Vector2
-var dragging_vertex := false
+var mouse_paste_position := Vector2.ZERO
+var dragging_vertex: bool = false
+var grid_size := Vector2.ONE
 
-@onready var grid_size: Vector2 = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
 func _ready() -> void:
 	timer = Timer.new()
@@ -71,6 +70,8 @@ func _ready() -> void:
 	
 	if %SnapCheckBox.button_pressed:
 		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
+	
+	grid_size = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
 
 
 func _notification(what: int) -> void:
@@ -91,7 +92,7 @@ func _process(_delta: float) -> void:
 	var mouse_x: float = get_global_mouse_position().x + global_position.x
 	var mouse_y: float = get_global_mouse_position().y + global_position.y
 	%CoordinatesLabel.text = "(%d, %d)" % [mouse_x * Roth.SCALE_2D_WORLD, mouse_y * Roth.SCALE_2D_WORLD]
-	%ViewportBorder2.self_modulate.a = 1.0
+	#%ViewportBorder2.self_modulate.a = 1.0
 
 
 func _input(event: InputEvent) -> void:
@@ -112,39 +113,21 @@ func _input(event: InputEvent) -> void:
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
 		zooming = true
 		update_camera_zoom()
-		var changed: bool = update_line_width(additional_zoom)
-		if changed:
-			queue_redraw()
+		update_line_width(additional_zoom)
+		queue_redraw()
 	
 	if event.is_action_pressed("next_sector_hover"):
 		skip_sector_hover += 1
 		check_for_hover()
 	
-	if event.is_action_pressed("unmerge_vertex"):
-		unmerge_vertex()
+	if event.is_action_pressed("unmerge_vertices"):
+		unmerge_vertices()
 	
 	if event.is_action_pressed("delete_selected"):
-		await get_tree().process_frame # Fixes weird double input bug somehow caused from the confirmation dialog
 		if selected_face and selected_face.sister:
-			if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
-				Roth.get_map(selected_face.map_info).merge_sectors(selected_face)
-				hovered_face = null
-				hovered_sector = null
-				Roth.editor_action.emit(selected_face.map_info, "Delete Double-Sided Face")
-				owner.select_face(selected_sector.index, "Sector", selected_sector.map_info.name)
-				selected_face = null
-				queue_redraw()
-		
+			delete_selected_face()
 		elif not selected_face and selected_sector:
-			if await Dialog.confirm("Delete selected sector?", "Confirm Deletion", false):
-				selected_sector.delete_sector()
-				hovered_sector = null
-				hovered_face = null
-				Roth.editor_action.emit(selected_sector.map_info, "Delete Sector")
-				%Picker.deselect()
-				selected_sector = null
-				queue_redraw()
-	
+			delete_selected_sector()
 	
 	if %SectorCheckBox.button_pressed:
 		if event is InputEventMouseMotion:
@@ -156,8 +139,8 @@ func _input(event: InputEvent) -> void:
 	
 	if mouse_drag_enabled:
 		if event is InputEventMouseMotion:
-			%Camera2D.position.x -= event.relative.x * DRAG_SENSITIVITY / %Camera2D.zoom.x
-			%Camera2D.position.y -= event.relative.y * DRAG_SENSITIVITY / %Camera2D.zoom.x
+			%Camera2D.position.x -= event.relative.x / %Camera2D.zoom.x
+			%Camera2D.position.y -= event.relative.y / %Camera2D.zoom.y
 	
 	if start_box_draw:
 		if event is InputEventMouseMotion:
@@ -183,7 +166,8 @@ func _input(event: InputEvent) -> void:
 			queue_redraw()
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			start_sector_split = false
-			check_for_split()
+			var nearest_vertex: VertexNode = find_nearest_vertex(get_global_mouse_position() + global_position)
+			check_for_split(nearest_vertex)
 			queue_redraw()
 	
 	if event is InputEventMouseButton:
@@ -237,7 +221,7 @@ func _input(event: InputEvent) -> void:
 						start_box_draw = false
 						start_box_position = Vector2.ZERO
 						queue_redraw()
-						add_vertices(false)
+						show_vertices(false)
 						
 						for sector: Sector in map.sectors:
 							for face_ref: WeakRef in sector.faces:
@@ -251,7 +235,7 @@ func _input(event: InputEvent) -> void:
 										new_face.sister = weakref(face)
 										face.initialize_mesh()
 										new_face.initialize_mesh()
-										add_vertices(false)
+										show_vertices(false)
 										queue_redraw()
 						
 						Roth.editor_action.emit(map.map_info, "Draw Box Sector")
@@ -400,88 +384,17 @@ func _draw() -> void:
 	draw_vertex_select()
 	draw_sector_split()
 
-func draw_box() -> void:
-	if not start_box_draw:
-		return
-	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
-	var size: Vector2 = current_mouse - start_box_position
-	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, line_width, true)
 
-func draw_vertex_select() -> void:
-	if not start_vertex_select:
-		return
-	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
-	draw_dashed_line(start_vertex_select_position, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
-	draw_dashed_line(start_vertex_select_position, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
-	draw_dashed_line(current_mouse, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
-	draw_dashed_line(current_mouse, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
+#region Camera
 
-func draw_sector_split() -> void:
-	if not start_sector_split or not start_sector_split_vertex:
-		return
-	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
-	draw_line(start_sector_split_vertex.coordinate / Roth.SCALE_2D_WORLD, current_mouse, Color.GHOST_WHITE, line_width, true)
-	
-
-func setup(p_map: Map, p_reset_camera: bool = true) -> void:
-	if map:
-		close_map(map.map_info)
-	map = p_map
-	%MapNameLabel.text = map.map_info.name.to_upper()
-	if not map.name_changed.is_connected(_on_map_name_changed):
-		map.name_changed.connect(_on_map_name_changed)
-	if p_reset_camera:
-		update_bounds()
-		update_camera_center()
-	update_camera_zoom()
-	update_line_width(additional_zoom)
-	_on_sector_check_box_toggled(%SectorCheckBox.button_pressed)
-	_on_object_check_box_toggled(%ObjectCheckBox.button_pressed)
-	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
-	_on_vertex_check_box_toggled(%VertexCheckBox.button_pressed)
-	queue_redraw()
-
-
-func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
-	if map and map.map_info == map_info:
-		if map.name_changed.is_connected(_on_map_name_changed):
-			map.name_changed.disconnect(_on_map_name_changed)
-		map = null
-		%MapNameLabel.text = "No Map Loaded"
-		selected_face = null
-		selected_sector = null
-		hovered_face = null
-		hovered_sector = null
-		zooming = false
-		holding_mouse = false
-		%Picker.deselect()
-		if p_reset_camera:
-			default_bounds()
-			update_camera_center()
-			additional_zoom = 1
-			update_camera_zoom()
-		queue_redraw()
-		for child: Node2D in %Objects.get_children():
-			child.queue_free()
-		for child: Node2D in %SFX.get_children():
-			child.queue_free()
-		for child: Node2D in %Vertices.get_children():
-			child.queue_free()
-		return true
-	return false
-
-
-func _on_map_name_changed(new_map_name: String) -> void:
-	%MapNameLabel.text = new_map_name
-
-
-func default_bounds() -> void:
+func default_camera_bounds() -> void:
 	minimum_x = -409.6
 	maximum_x = 409.6
 	minimum_y = -409.6
 	maximum_y = 409.6
 
-func update_bounds() -> void:
+
+func update_camera_bounds() -> void:
 	minimum_x = 10000
 	minimum_y = 10000
 	maximum_x = -10000
@@ -489,7 +402,7 @@ func update_bounds() -> void:
 	if not map:
 		return
 	if not map.sectors:
-		default_bounds()
+		default_camera_bounds()
 		return
 	for sector: Sector in map.sectors:
 		for face_ref: WeakRef in sector.faces:
@@ -527,8 +440,13 @@ func update_camera_zoom() -> void:
 	
 	var mouse_pos := get_global_mouse_position()
 	%Camera2D.zoom = Vector2(zoom, zoom) * additional_zoom
+	
+	# Ensures zoom to mouse works at high speed
+	if zooming:
+		await get_tree().process_frame
+		
 	var new_mouse_pos := get_global_mouse_position()
-	if zooming and zoom_toward_mouse:
+	if zooming:
 		%Camera2D.position += mouse_pos - new_mouse_pos
 		zooming = false
 	
@@ -536,6 +454,9 @@ func update_camera_zoom() -> void:
 		prev_viewport_size = %Camera2D.get_viewport().size
 		update_line_width(additional_zoom)
 
+#endregion
+
+#region Draw
 
 func update_line_width(x: float) -> bool:
 	var prev_line_width: float = line_width
@@ -557,6 +478,9 @@ func update_line_width(x: float) -> bool:
 		line_width =  1
 	else:
 		line_width =  2
+	
+	if prev_line_width != line_width:
+		update_vertex_size()
 	
 	return prev_line_width != line_width
 
@@ -590,8 +514,8 @@ func draw_grid() -> void:
 func draw_sectors() -> void:
 	if not map or not map.sectors:
 		return
+	
 	for sector: Sector in map.sectors:
-
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			if face.sister:
@@ -639,7 +563,92 @@ func draw_sectors() -> void:
 		draw_line(Vector2(selected_face.v1.x/Roth.SCALE_2D_WORLD, selected_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(selected_face.v2.x/Roth.SCALE_2D_WORLD, selected_face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
 
 
-func add_objects() -> void:
+func draw_box() -> void:
+	if not start_box_draw:
+		return
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
+	var size: Vector2 = current_mouse - start_box_position
+	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, line_width, true)
+
+
+func draw_vertex_select() -> void:
+	if not start_vertex_select:
+		return
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
+	draw_dashed_line(start_vertex_select_position, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(start_vertex_select_position, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(current_mouse, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(current_mouse, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
+
+
+func draw_sector_split() -> void:
+	if not start_sector_split or not start_sector_split_vertex:
+		return
+	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
+	var nearest_vertex: VertexNode = find_nearest_vertex(current_mouse)
+	if nearest_vertex:
+		draw_line(start_sector_split_vertex.coordinate / Roth.SCALE_2D_WORLD, nearest_vertex.global_position, Color.MAGENTA, line_width, true)
+
+#endregion
+
+#region Map
+
+func setup(p_map: Map, p_reset_camera: bool = true) -> void:
+	if map:
+		close_map(map.map_info)
+	map = p_map
+	%MapNameLabel.text = map.map_info.name.to_upper()
+	if not map.name_changed.is_connected(_on_map_name_changed):
+		map.name_changed.connect(_on_map_name_changed)
+	if p_reset_camera:
+		update_camera_bounds()
+		update_camera_center()
+	update_camera_zoom()
+	update_line_width(additional_zoom)
+	_on_sector_check_box_toggled(%SectorCheckBox.button_pressed)
+	_on_object_check_box_toggled(%ObjectCheckBox.button_pressed)
+	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
+	_on_vertex_check_box_toggled(%VertexCheckBox.button_pressed)
+	queue_redraw()
+
+
+func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
+	if map and map.map_info == map_info:
+		if map.name_changed.is_connected(_on_map_name_changed):
+			map.name_changed.disconnect(_on_map_name_changed)
+		map = null
+		%MapNameLabel.text = "No Map Loaded"
+		selected_face = null
+		selected_sector = null
+		hovered_face = null
+		hovered_sector = null
+		zooming = false
+		holding_mouse = false
+		%Picker.deselect()
+		if p_reset_camera:
+			default_camera_bounds()
+			update_camera_center()
+			additional_zoom = 1
+			update_camera_zoom()
+		queue_redraw()
+		for child: Node2D in %Objects.get_children():
+			child.queue_free()
+		for child: Node2D in %SFX.get_children():
+			child.queue_free()
+		for child: Node2D in %Vertices.get_children():
+			child.queue_free()
+		return true
+	return false
+
+
+func _on_map_name_changed(new_map_name: String) -> void:
+	%MapNameLabel.text = new_map_name
+
+#endregion
+
+#region Objects
+
+func show_objects() -> void:
 	if not map:
 		return
 	for child: Node in %Objects.get_children():
@@ -653,19 +662,11 @@ func add_objects() -> void:
 		object_node.object_drag_ended.connect(_on_object_drag_ended)
 		%Objects.add_child(object_node)
 
-func add_sfx() -> void:
-	if not map:
-		return
-	for child: Node in %SFX.get_children():
+
+func hide_objects() -> void:
+	for child: Node in %Objects.get_children():
 		child.queue_free()
-	for sfx: Section7_1 in map.sound_effects:
-		var sfx_node: Section7_1.SFXNode2D = sfx.get_node_2d()
-		sfx_node.object_selected.connect(_on_sfx_selected)
-		sfx_node.object_copied.connect(_on_sfx_copied)
-		sfx_node.object_deleted.connect(_on_sfx_deleted)
-		sfx_node.object_dragged.connect(_on_sfx_dragged)
-		sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
-		%SFX.add_child(sfx_node)
+
 
 func redraw_object(object: ObjectRoth) -> void:
 	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
@@ -681,18 +682,6 @@ func redraw_object(object: ObjectRoth) -> void:
 			%Objects.add_child(new_object_node)
 			new_object_node.select()
 
-
-func redraw_sfx(object: Section7_1) -> void:
-	for object_node: Section7_1.SFXNode2D in %SFX.get_children():
-		if object.index == object_node.ref.index:
-			object_node.queue_free()
-			var new_object_node: Section7_1.SFXNode2D = object.get_node_2d()
-			new_object_node.object_selected.connect(_on_sfx_selected)
-			new_object_node.object_copied.connect(_on_sfx_copied)
-			new_object_node.object_deleted.connect(_on_sfx_deleted)
-			%SFX.add_child(new_object_node)
-			new_object_node.select()
-	
 
 func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool) -> void:
 	selected_sector = null
@@ -749,6 +738,56 @@ func add_object_to_2d_map(new_object: ObjectRoth, p_select: bool = false) -> voi
 	_on_object_selected(object_node, p_select)
 
 
+func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object_node != object:
+			object_node.end_drag()
+	Roth.editor_action.emit(map.map_info, "Move Objects")
+
+
+func _on_object_dragged(node_dragged: ObjectRoth.ObjectNode2D, relative: Vector2) -> void:
+	dragging_vertex = true
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object_node != node_dragged:
+			object_node.move(relative)
+
+
+#endregion
+
+#region SFX
+
+func show_sfx() -> void:
+	if not map:
+		return
+	for child: Node in %SFX.get_children():
+		child.queue_free()
+	for sfx: Section7_1 in map.sound_effects:
+		var sfx_node: Section7_1.SFXNode2D = sfx.get_node_2d()
+		sfx_node.object_selected.connect(_on_sfx_selected)
+		sfx_node.object_copied.connect(_on_sfx_copied)
+		sfx_node.object_deleted.connect(_on_sfx_deleted)
+		sfx_node.object_dragged.connect(_on_sfx_dragged)
+		sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
+		%SFX.add_child(sfx_node)
+
+
+func hide_sfx() -> void:
+	for child: Node in %SFX.get_children():
+		child.queue_free()
+
+
+func redraw_sfx(object: Section7_1) -> void:
+	for object_node: Section7_1.SFXNode2D in %SFX.get_children():
+		if object.index == object_node.ref.index:
+			object_node.queue_free()
+			var new_object_node: Section7_1.SFXNode2D = object.get_node_2d()
+			new_object_node.object_selected.connect(_on_sfx_selected)
+			new_object_node.object_copied.connect(_on_sfx_copied)
+			new_object_node.object_deleted.connect(_on_sfx_deleted)
+			%SFX.add_child(new_object_node)
+			new_object_node.select()
+
+
 func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void:
 	selected_sector = null
 	selected_face = null
@@ -800,17 +839,166 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			Roth.editor_action.emit(map.map_info, "Paste SFX")
 
 
-func remove_objects() -> void:
-	for child: Node in %Objects.get_children():
+func _on_sfx_dragged(_object: Section7_1.SFXNode2D) -> void:
+	pass
+
+
+func _on_sfx_drag_ended(_object: Section7_1.SFXNode2D) -> void:
+	#for object_node: Section7_1.SFXNode2D in %SFX.get_children():
+		#if object_node != object:
+			#object_node.end_drag()
+	Roth.editor_action.emit(map.map_info, "Move SFX")
+
+#endregion
+
+#region Vertices
+
+func show_vertices(allow_move: bool) -> void:
+	if not map:
+		return
+	hide_vertices()
+	last_allow_move = allow_move
+	var vertices := {}
+	var split_vertices := {}
+	for sector: Sector in map.sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			if face.v1 not in vertices:
+				vertices[face.v1] = {"faces": [face], "sectors": []}
+			else:
+				if face not in vertices[face.v1].faces:
+					vertices[face.v1].faces.append(face)
+			if sector not in vertices[face.v1].sectors:
+				vertices[face.v1].sectors.append(sector)
+				
+			if face.v2 not in vertices:
+				vertices[face.v2] = { "faces": [face], "sectors": []}
+			else:
+				if face not in vertices[face.v2].faces:
+					vertices[face.v2].faces.append(face)
+			if sector not in vertices[face.v2].sectors:
+				vertices[face.v2].sectors.append(sector)
+			
+			var split_vertex := (face.v1 + face.v2) / 2
+			if split_vertex not in split_vertices:
+				split_vertices[split_vertex] = {"faces": [face], "sectors": []}
+			else:
+				if face not in split_vertices[split_vertex].faces:
+					split_vertices[split_vertex].faces.append(face)
+			if sector not in split_vertices[split_vertex].sectors:
+				split_vertices[split_vertex].sectors.append(sector)
+	
+	for vertex: Vector2 in split_vertices:
+		var vertex_node := VertexNode.new(map.map_info, vertex, split_vertices[vertex], allow_move, line_width, true)
+		#vertex_node.position_updated.connect(queue_redraw)
+		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+		%Vertices.add_child(vertex_node)
+	for vertex: Vector2 in vertices:
+		var vertex_node := VertexNode.new(map.map_info, vertex, vertices[vertex], allow_move, line_width)
+		vertex_node.position_updated.connect(_on_vertex_position_updated)
+		vertex_node.position_finalized.connect(_on_vertex_position_finalized)
+		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+		vertex_node.start_sector_split.connect(_on_sector_split)
+		vertex_node.vertex_dragged.connect(_on_vertex_dragged)
+		vertex_node.single_vertex_selected.connect(_on_vertex_selected)
+		%Vertices.add_child(vertex_node)
+
+
+func hide_vertices() -> void:
+	for child: Node in %Vertices.get_children():
 		child.queue_free()
 
 
+func _on_vertex_position_updated() -> void:
+	queue_redraw()
+	for child: Node in %Vertices.get_children():
+		if child.split_vertex:
+			child.redraw_split_vertex()
 
-func remove_sfx() -> void:
-	for child: Node in %SFX.get_children():
-		child.queue_free()
+
+func _on_vertex_position_finalized(vertex: VertexNode) -> void:
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != vertex:
+			vertex_node.finalize_move()
+	
+	
+	
+	#var delete_vertex: bool = false
+	for face: Face in vertex.faces:
+		if face.face_length == 0:
+			face.sector.delete_face(face)
+			show_vertices(true)
+			Roth.editor_action.emit(map.map_info, "Merge Vertices")
+			return
+	
+	for sector: Sector in map.sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			for vertex_face: Face in vertex.faces:
+				if face.sister and face.sister.get_ref() == vertex_face:
+					pass
+				elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
+					face.sister = weakref(vertex_face)
+					vertex_face.sister = weakref(face)
+					face.initialize_mesh()
+					vertex_face.initialize_mesh()
+					show_vertices(true)
+					queue_redraw()
+					Roth.editor_action.emit(map.map_info, "Merge Faces")
+					return
+	
+	Roth.editor_action.emit(map.map_info, "Move Vertices")
 
 
+func _on_vertex_deleted() -> void:
+	show_vertices(last_allow_move)
+	queue_redraw()
+
+
+func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
+	dragging_vertex = true
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != node_dragged:
+			vertex_node.move(relative)
+
+
+func _on_sector_split(starting_vertex_node: VertexNode) -> void:
+	start_sector_split = true
+	start_sector_split_vertex = starting_vertex_node
+
+
+func _on_vertex_selected(vertex_node_selected: VertexNode) -> void:
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != vertex_node_selected and not vertex_node.split_vertex:
+			vertex_node.deselect()
+
+
+func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
+	var minimum: float = 1000000.0
+	var closest: VertexNode
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node.split_vertex:
+			continue
+		for sector: Sector in start_sector_split_vertex.sectors:
+			if sector not in vertex_node.sectors:
+				continue
+			else:
+				var skip: bool = false
+				for face: Face in start_sector_split_vertex.faces:
+					if face in vertex_node.faces:
+						skip = true
+						break
+				if skip:
+					continue
+				var distance_squared := (vertex_node.global_position - p_mouse_position).length_squared()
+				if distance_squared < minimum:
+					minimum = distance_squared
+					closest = vertex_node
+	return closest
+
+#endregion
+
+#region Helper
 
 func is_mouse_inside(sector: Sector) -> bool:
 	var polygon_path_finder := PolygonPathFinder.new()
@@ -855,6 +1043,7 @@ func check_for_hover() -> void:
 	hovered_face = null
 	queue_redraw()
 
+
 func check_for_face_hover(sector: Sector) -> void:
 	var found: bool = false
 	var smallest_distance: float = 100.0
@@ -873,6 +1062,7 @@ func check_for_face_hover(sector: Sector) -> void:
 	if not found:
 		hovered_face = null
 		queue_redraw()
+
 
 func select(object: Variant) -> void:
 	if object is Face and object.map_info == map.map_info:
@@ -899,7 +1089,7 @@ func select(object: Variant) -> void:
 		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
 			sfx_node.deselect()
 		queue_redraw()
-		
+
 
 func distance_to_face(mouse_position: Vector2, face: Face) -> float:
 	var x1: float = face.v1.x
@@ -926,19 +1116,9 @@ func distance_to_face(mouse_position: Vector2, face: Face) -> float:
 	# Return distance to the nearest point
 	return sqrt((mouse_position.x - nearest_x) * (mouse_position.x - nearest_x) + (mouse_position.y - nearest_y) * (mouse_position.y - nearest_y));
 
+#endregion
 
-func _on_grid_check_box_toggled(toggled_on: bool) -> void:
-	queue_redraw()
-	if toggled_on:
-		%GridEdit.editable = true
-	else:
-		%GridEdit.editable = false
-
-
-func _on_grid_edit_value_changed(value: float) -> void:
-	grid_size = Vector2.ONE * value / Roth.SCALE_2D_WORLD
-	queue_redraw()
-
+#region Options
 
 func _on_sector_check_box_toggled(toggled_on: bool) -> void:
 	queue_redraw()
@@ -953,15 +1133,43 @@ func _on_sector_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_object_check_box_toggled(toggled_on: bool) -> void:
 	if toggled_on:
-		add_objects()
+		show_objects()
 	else:
-		remove_objects()
+		hide_objects()
+
 
 func _on_sfx_check_box_toggled(toggled_on: bool) -> void:
 	if toggled_on:
-		add_sfx()
+		show_sfx()
 	else:
-		remove_sfx()
+		hide_sfx()
+
+
+func _on_vertex_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		show_vertices(true)
+	else:
+		hide_vertices()
+
+
+func _on_box_check_box_toggled(_toggled_on: bool) -> void:
+	if _toggled_on:
+		show_vertices(false)
+	else:
+		hide_vertices()
+
+
+func _on_grid_check_box_toggled(toggled_on: bool) -> void:
+	queue_redraw()
+	if toggled_on:
+		%GridEdit.editable = true
+	else:
+		%GridEdit.editable = false
+
+
+func _on_grid_edit_value_changed(value: float) -> void:
+	grid_size = Vector2.ONE * value / Roth.SCALE_2D_WORLD
+	queue_redraw()
 
 
 func _on_snap_check_box_toggled(toggled_on: bool) -> void:
@@ -976,179 +1184,35 @@ func _on_snap_check_box_toggled(toggled_on: bool) -> void:
 func _on_snap_edit_value_changed(value: float) -> void:
 	snap = value / Roth.SCALE_2D_WORLD
 
+#endregion
 
-func _on_vertex_check_box_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		add_vertices(true)
-	else:
-		remove_vertices()
+#region Map Actions
 
-
-func add_vertices(allow_move: bool) -> void:
-	if not map:
-		return
-	remove_vertices()
-	last_allow_move = allow_move
-	var vertices := {}
-	var split_vertices := {}
-	for sector: Sector in map.sectors:
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			if face.v1 not in vertices:
-				vertices[face.v1] = {"faces": [face], "sectors": []}
-			else:
-				if face not in vertices[face.v1].faces:
-					vertices[face.v1].faces.append(face)
-			if sector not in vertices[face.v1].sectors:
-				vertices[face.v1].sectors.append(sector)
-				
-			if face.v2 not in vertices:
-				vertices[face.v2] = { "faces": [face], "sectors": []}
-			else:
-				if face not in vertices[face.v2].faces:
-					vertices[face.v2].faces.append(face)
-			if sector not in vertices[face.v2].sectors:
-				vertices[face.v2].sectors.append(sector)
-			
-			var split_vertex := (face.v1 + face.v2) / 2
-			if split_vertex not in split_vertices:
-				split_vertices[split_vertex] = {"faces": [face], "sectors": []}
-			else:
-				if face not in split_vertices[split_vertex].faces:
-					split_vertices[split_vertex].faces.append(face)
-			if sector not in split_vertices[split_vertex].sectors:
-				split_vertices[split_vertex].sectors.append(sector)
-	
-	for vertex: Vector2 in split_vertices:
-		var vertex_node := VertexNode.new(vertex, split_vertices[vertex], allow_move, true)
-		#vertex_node.position_updated.connect(queue_redraw)
-		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
-		%Vertices.add_child(vertex_node)
-	for vertex: Vector2 in vertices:
-		var vertex_node := VertexNode.new(vertex, vertices[vertex], allow_move)
-		vertex_node.position_updated.connect(_on_vertex_position_updated)
-		vertex_node.position_finalized.connect(_on_vertex_position_finalized)
-		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
-		vertex_node.start_sector_split.connect(_on_sector_split)
-		vertex_node.vertex_dragged.connect(_on_vertex_dragged)
-		vertex_node.single_vertex_selected.connect(_on_vertex_selected)
-		%Vertices.add_child(vertex_node)
+func delete_selected_face() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
+		Roth.get_map(selected_face.map_info).merge_sectors(selected_face)
+		hovered_sector = null
+		hovered_face = null
+		Roth.editor_action.emit(selected_face.map_info, "Delete Double-Sided Face")
+		owner.select_face(selected_sector.index, "Sector", selected_sector.map_info.name)
+		selected_face = null
+		queue_redraw()
 
 
+func delete_selected_sector() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete selected sector?", "Confirm Deletion", false):
+		selected_sector.delete_sector()
+		hovered_sector = null
+		hovered_face = null
+		Roth.editor_action.emit(selected_sector.map_info, "Delete Sector")
+		%Picker.deselect()
+		selected_sector = null
+		queue_redraw()
 
 
-func remove_vertices() -> void:
-	for child: Node in %Vertices.get_children():
-		child.queue_free()
-
-func _on_vertex_position_updated() -> void:
-	queue_redraw()
-	for child: Node in %Vertices.get_children():
-		if child.split_vertex:
-			child.redraw_split_vertex()
-
-
-func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
-	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		if object_node != object:
-			object_node.end_drag()
-	Roth.editor_action.emit(map.map_info, "Move Objects")
-
-
-func _on_sfx_dragged(_object: Section7_1.SFXNode2D) -> void:
-	pass
-
-func _on_sfx_drag_ended(_object: Section7_1.SFXNode2D) -> void:
-	#for object_node: Section7_1.SFXNode2D in %SFX.get_children():
-		#if object_node != object:
-			#object_node.end_drag()
-	Roth.editor_action.emit(map.map_info, "Move SFX")
-
-
-func _on_vertex_position_finalized(vertex: VertexNode) -> void:
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node != vertex:
-			vertex_node.finalize_move()
-	
-	
-	
-	#var delete_vertex: bool = false
-	for face: Face in vertex.faces:
-		if face.face_length == 0:
-			face.sector.delete_face(face)
-			add_vertices(true)
-			Roth.editor_action.emit(map.map_info, "Merge Vertices")
-			return
-	
-	for sector: Sector in map.sectors:
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			for vertex_face: Face in vertex.faces:
-				if face.sister and face.sister.get_ref() == vertex_face:
-					pass
-				elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
-					face.sister = weakref(vertex_face)
-					vertex_face.sister = weakref(face)
-					face.initialize_mesh()
-					vertex_face.initialize_mesh()
-					add_vertices(true)
-					queue_redraw()
-					Roth.editor_action.emit(map.map_info, "Merge Faces")
-					return
-	
-	Roth.editor_action.emit(map.map_info, "Move Vertices")
-
-
-
-func _on_vertex_deleted() -> void:
-	add_vertices(last_allow_move)
-	queue_redraw()
-
-
-func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
-	dragging_vertex = true
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node != node_dragged:
-			vertex_node.move(relative)
-
-func _on_object_dragged(node_dragged: ObjectRoth.ObjectNode2D, relative: Vector2) -> void:
-	dragging_vertex = true
-	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		if object_node != node_dragged:
-			object_node.move(relative)
-
-
-func _on_box_check_box_toggled(_toggled_on: bool) -> void:
-	if _toggled_on:
-		add_vertices(false)
-	else:
-		remove_vertices()
-
-
-func _on_sector_split(starting_vertex_node: VertexNode) -> void:
-	start_sector_split = true
-	start_sector_split_vertex = starting_vertex_node
-
-func check_for_split() -> void:
-	for child: VertexNode in %Vertices.get_children():
-		if not child.split_vertex:
-			if child.mouse_over:
-				for face: Face in start_sector_split_vertex.faces:
-					if face in child.faces:
-						return
-				for sector: Sector in start_sector_split_vertex.sectors:
-					if sector in child.sectors:
-						map.split_sector(sector, start_sector_split_vertex, child)
-						queue_redraw()
-						add_vertices(last_allow_move)
-
-func _on_vertex_selected(vertex_node_selected: VertexNode) -> void:
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node != vertex_node_selected and not vertex_node.split_vertex:
-			vertex_node.deselect()
-
-
-func unmerge_vertex() -> void:
+func unmerge_vertices() -> void:
 	var selected_vertices := []
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node.is_selected and not vertex_node.split_vertex:
@@ -1190,7 +1254,7 @@ func unmerge_vertex() -> void:
 		
 		
 		for vertex: Vector2 in vertices:
-			var vertex_node := VertexNode.new(vertex, vertices[vertex], last_allow_move)
+			var vertex_node := VertexNode.new(map.map_info, vertex, vertices[vertex], last_allow_move, line_width)
 			vertex_node.position_updated.connect(_on_vertex_position_updated)
 			vertex_node.position_finalized.connect(_on_vertex_position_finalized)
 			vertex_node.vertex_deleted.connect(_on_vertex_deleted)
@@ -1200,3 +1264,25 @@ func unmerge_vertex() -> void:
 			%Vertices.add_child(vertex_node)
 	
 	Roth.editor_action.emit(map.map_info, "Unmerge Vertices")
+
+
+func check_for_split(nearest_vertex: VertexNode) -> void:
+	if not nearest_vertex:
+		return
+	for face: Face in start_sector_split_vertex.faces:
+		if face in nearest_vertex.faces:
+			return
+	for sector: Sector in start_sector_split_vertex.sectors:
+		if sector in nearest_vertex.sectors:
+			map.split_sector(sector, start_sector_split_vertex, nearest_vertex)
+			Roth.editor_action.emit(map.map_info, "Split Sector")
+			queue_redraw()
+			show_vertices(last_allow_move)
+
+
+func update_vertex_size() -> void:
+	if %VertexCheckBox.button_pressed or %BoxCheckBox.button_pressed:
+		for vertex_node: VertexNode in %Vertices.get_children():
+			vertex_node.redraw(line_width)
+
+#endregion
