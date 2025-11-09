@@ -23,6 +23,15 @@ var previous_search: String
 var search_count: int = 0
 var copied_object_data: ObjectRoth
 var first_load: bool = false
+var undo_stacks: Dictionary = {}
+var undo_positions: Dictionary = {}
+var undo_lists: Dictionary = {}
+var hovered_sector: Variant = null
+var hovered_face: Variant = null
+var selected_faces: Array = []
+var selected_sectors: Array = []
+var selected_objects: Array = []
+var selected_sfx: Array = []
 
 func _ready() -> void:
 	super._ready()
@@ -40,6 +49,94 @@ func _ready() -> void:
 	%EditObjectTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 	%EditSFXTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 
+
+func _input(event: InputEvent) -> void:
+	if %Camera3D.has_focus:
+	
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouse and %Camera3D.has_focus == true:
+			%SubViewport.push_input(event)
+			get_viewport().set_input_as_handled()
+		
+		if event.is_action_pressed("move_object_to_ceiling"):
+			if %EditObjectContainer.current_object:
+				var height: int = %EditObjectContainer.current_object.sector.get_ref().data.ceilingHeight
+				%EditObjectContainer.current_object.data.posZ = height
+				%EditObjectContainer.current_object.initialize_mesh()
+				await get_tree().process_frame
+				select_resource(%EditObjectContainer.current_object, true)
+		if event.is_action_pressed("move_object_to_floor"):
+			if %EditObjectContainer.current_object:
+				var height: int = %EditObjectContainer.current_object.sector.get_ref().data.floorHeight
+				%EditObjectContainer.current_object.data.posZ = height
+				%EditObjectContainer.current_object.initialize_mesh()
+				await get_tree().process_frame
+				select_resource(%EditObjectContainer.current_object, true)
+		if event.is_action_pressed("open_3d_context_menu"):
+			var viewport := %Map3D.get_viewport()
+			var mouse_position := viewport.get_mouse_position()
+			var viewport_size: Vector2i = viewport.size
+			if viewport.get("content_scale_size"):
+				viewport_size = viewport.content_scale_size
+			if ((mouse_position.x < 0 or
+					mouse_position.y < 0 or
+					mouse_position.x > viewport_size.x or
+					mouse_position.y > viewport_size.y) and 
+					Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
+			):
+				return
+			var camera := viewport.get_camera_3d()
+			var origin_position: Vector2 = mouse_position
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				origin_position = viewport_size / 2
+			var origin := camera.project_ray_origin(origin_position)
+			var direction := camera.project_ray_normal(origin_position)
+			var ray_length := camera.far
+			var end := origin + direction * ray_length
+			var space_state: PhysicsDirectSpaceState3D = %Map3D.get_world_3d().direct_space_state
+			var query := PhysicsRayQueryParameters3D.create(origin, end)
+			var result: Dictionary = space_state.intersect_ray(query)
+			if result:
+				if (result.collider.get_parent().ref is Face
+					or result.collider.get_parent().ref is Sector
+				):
+					context_collision = result
+					var pos: Vector2 = get_viewport().get_mouse_position()
+					if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+						pos = %SubViewportContainer.global_position
+						pos += %SubViewportContainer.size / 2
+						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+						get_viewport().warp_mouse(pos)
+						
+					%"3DContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+				if result.collider.get_parent().ref is ObjectRoth:
+					context_collision = result
+					var pos: Vector2 = get_viewport().get_mouse_position()
+					if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+						pos = %SubViewportContainer.global_position
+						pos += %SubViewportContainer.size / 2
+						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+						get_viewport().warp_mouse(pos)
+					%"3DObjectContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+		
+		if Input.is_action_just_pressed("paste_options_dialog"):
+			%PasteOptions.toggle(true)
+	
+	if %Map3D.has_focus or %Map2D.has_focus:
+		if event.is_action_pressed("delete_selected"):
+			if len(selected_faces) == 1 and selected_faces[0].sister:
+				delete_selected_face()
+			elif selected_faces.is_empty() and not selected_sectors.is_empty():
+				delete_selected_sector()
+		if event.is_action_pressed("merge_sectors"):
+			if len(selected_sectors) > 1 and len(selected_faces) == 0:
+				merge_selected_sectors()
+
+
+func _on_paste_options_button_pressed() -> void:
+	%PasteOptions.toggle(true)
+
+
+#region Map / Viewports
 
 func test_map() -> void:
 	var map: Map = %Map2D.map
@@ -67,77 +164,22 @@ func test_map() -> void:
 	Roth.test_run_maps(maps, player_data)
 
 
-func _input(event: InputEvent) -> void:
-	if not %Camera3D.has_focus:
-		return
-	
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouse and %Camera3D.has_focus == true:
-		%SubViewport.push_input(event)
-		get_viewport().set_input_as_handled()
-	
-	if event.is_action_pressed("move_object_to_ceiling"):
-		if %EditObjectContainer.current_object:
-			var height: int = %EditObjectContainer.current_object.sector.get_ref().data.ceilingHeight
-			%EditObjectContainer.current_object.data.posZ = height
-			%EditObjectContainer.current_object.initialize_mesh()
-			await get_tree().process_frame
-			%Picker.select(%EditObjectContainer.current_object.node)
-	if event.is_action_pressed("move_object_to_floor"):
-		if %EditObjectContainer.current_object:
-			var height: int = %EditObjectContainer.current_object.sector.get_ref().data.floorHeight
-			%EditObjectContainer.current_object.data.posZ = height
-			%EditObjectContainer.current_object.initialize_mesh()
-			await get_tree().process_frame
-			%Picker.select(%EditObjectContainer.current_object.node)
-	if event.is_action_pressed("open_3d_context_menu"):
-		var viewport := %Picker.get_viewport()
-		var mouse_position := viewport.get_mouse_position()
-		var viewport_size: Vector2i = viewport.size
-		if viewport.get("content_scale_size"):
-			viewport_size = viewport.content_scale_size
-		if ((mouse_position.x < 0 or
-				mouse_position.y < 0 or
-				mouse_position.x > viewport_size.x or
-				mouse_position.y > viewport_size.y) and 
-				Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
-		):
-			return
-		var camera := viewport.get_camera_3d()
-		var origin_position: Vector2 = mouse_position
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			origin_position = viewport_size / 2
-		var origin := camera.project_ray_origin(origin_position)
-		var direction := camera.project_ray_normal(origin_position)
-		var ray_length := camera.far
-		var end := origin + direction * ray_length
-		var space_state: PhysicsDirectSpaceState3D = %Picker.get_world_3d().direct_space_state
-		var query := PhysicsRayQueryParameters3D.create(origin, end)
-		var result: Dictionary = space_state.intersect_ray(query)
-		if result:
-			if (result.collider.get_parent().ref is Face
-				or result.collider.get_parent().ref is Sector
-			):
-				context_collision = result
-				var pos: Vector2 = get_viewport().get_mouse_position()
-				if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-					pos = %SubViewportContainer.global_position
-					pos += %SubViewportContainer.size / 2
-					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-					get_viewport().warp_mouse(pos)
-					
-				%"3DContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
-			if result.collider.get_parent().ref is ObjectRoth:
-				context_collision = result
-				var pos: Vector2 = get_viewport().get_mouse_position()
-				if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-					pos = %SubViewportContainer.global_position
-					pos += %SubViewportContainer.size / 2
-					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-					get_viewport().warp_mouse(pos)
-				%"3DObjectContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
-	
-	if Input.is_action_just_pressed("paste_options_dialog"):
-		%PasteOptions.toggle(true)
+func close_map(map_info: Dictionary) -> void:
+	for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map_info:
+			tree_item.get_metadata(0).queue_free()
+			Roth.loaded_maps.erase(tree_item.get_metadata(0).map_info.name)
+			for child_item: TreeItem in tree_item.get_children():
+				child_item.free()
+			%Map2D.close_map(tree_item.get_metadata(0).map_info)
+			selected_faces.clear()
+			selected_sectors.clear()
+			hovered_face = null
+			hovered_sector = null
+			%"Command Editor".close(tree_item.get_metadata(0).map_info.name)
+			Roth.reload_map_info(tree_item.get_metadata(0).map_info)
+			close_undo_redo(tree_item.get_metadata(0).map_info)
+			tree_item.free()
 
 
 func load_map(map_info: Dictionary) -> void:
@@ -246,7 +288,7 @@ func _on_map_completely_loaded() -> void:
 
 func _on_sub_viewport_container_focus_entered() -> void:
 	%Camera3D.has_focus = true
-	%Picker.has_focus = true
+	%Map3D.has_focus = true
 	%ViewportBorder.self_modulate.a = 1.0
 
 
@@ -254,9 +296,57 @@ func _on_sub_viewport_container_focus_exited() -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		return
 	%Camera3D.has_focus = false
-	%Picker.has_focus = false
+	%Map3D.has_focus = false
 	%ViewportBorder.self_modulate.a = 0.0
 
+
+func _on_sub_viewport_container_mouse_entered() -> void:
+	%SubViewportContainer.grab_focus()
+
+
+func _on_sub_viewport_container_mouse_exited() -> void:
+	%SubViewportContainer.release_focus()
+
+
+func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		%SubViewportContainer.grab_focus()
+
+
+func _on_sub_viewport_container_2d_mouse_entered() -> void:
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
+	%Map2D.has_focus = true
+	%ViewportBorder2.self_modulate.a = 1.0
+	%SubViewportContainer2D.grab_focus()
+	if Input.get_mouse_button_mask() & MOUSE_BUTTON_MASK_LEFT == 0:
+		%SubViewportContainer2D.grab_click_focus()
+
+
+func _on_sub_viewport_container_2d_mouse_exited() -> void:
+	%Map2D.has_focus = false
+	%ViewportBorder2.self_modulate.a = 0.0
+	if hovered_sector:
+		hovered_sector = null
+		%Map2D.queue_redraw()
+	if hovered_face:
+		hovered_face = null
+		%Map2D.queue_redraw()
+
+
+func _on_tab_bar_tab_changed(tab: int) -> void:
+	%EditorTab.current_tab = tab
+	match tab:
+		0:
+			%MapPanelContainer.show()
+			%InspectorSidePanel.show()
+		1:
+			%MapPanelContainer.hide()
+			%InspectorSidePanel.hide()
+
+#endregion
+
+#region MapTree
 
 func _on_maps_tree_button_clicked(item: TreeItem, _column: int, id: int, _mouse_button_index: int) -> void:
 	if item.get_metadata(0).visible:
@@ -266,11 +356,6 @@ func _on_maps_tree_button_clicked(item: TreeItem, _column: int, id: int, _mouse_
 		item.set_button(0, id, EYE_ICON)
 		item.get_metadata(0).process_mode = PROCESS_MODE_INHERIT
 	item.get_metadata(0).visible = not item.get_metadata(0).visible
-
-
-func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		%SubViewportContainer.grab_focus()
 
 
 func _on_maps_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
@@ -366,24 +451,13 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 					#Roth.reload_map_info(item.get_metadata(0).map_info)
 					#item.free()
 
+#endregion
 
-func close_map(map_info: Dictionary) -> void:
-	for tree_item: TreeItem in %MapsTree.get_root().get_children():
-		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map_info:
-			tree_item.get_metadata(0).queue_free()
-			Roth.loaded_maps.erase(tree_item.get_metadata(0).map_info.name)
-			for child_item: TreeItem in tree_item.get_children():
-				child_item.free()
-			%Map2D.close_map(tree_item.get_metadata(0).map_info)
-			%"Command Editor".close(tree_item.get_metadata(0).map_info.name)
-			Roth.reload_map_info(tree_item.get_metadata(0).map_info)
-			close_undo_redo(tree_item.get_metadata(0).map_info)
-			tree_item.free()
-
+#region Search
 
 func _on_search_text_submitted(search_text: String) -> void:
 	if search_text.is_empty():
-		%Picker.deselect()
+		%Map3D.deselect()
 		return
 	
 	if search_text == previous_search:
@@ -396,111 +470,6 @@ func _on_search_text_submitted(search_text: String) -> void:
 	select_face(int(search_text), type, "", search_count)
 
 
-func _on_search_option_item_selected(_index: int) -> void:
-	search_count = 0
-	previous_search = ""
-
-
-func select_face(index: int, type: String, p_map_name: String = "", count: int = 0) -> void:
-	var maps_available := []
-	
-	for i in range(tree_root.get_child_count()):
-		if p_map_name.is_empty():
-			if tree_root.get_child(i).get_metadata(0).visible:
-				maps_available.append(tree_root.get_child(i).get_metadata(0))
-		else:
-			if tree_root.get_child(i).get_text(0) == p_map_name:
-				maps_available.append(tree_root.get_child(i).get_metadata(0))
-	
-	for map_node: Node3D in maps_available:
-		match type:
-			"Sector":
-				for sector: Node3D in map_node.get_node("Sectors").get_children():
-					if index == sector.ref.index:
-						%Picker.select(sector)
-						return
-			"Sector ID":
-				for sector: Node3D in map_node.get_node("Sectors").get_children():
-					if index == sector.ref.data.floorTriggerID:
-						if count == 0:
-							%Picker.select(sector)
-							return
-						count -= 1
-			"Face":
-				for face: Node3D in map_node.get_node("Faces").get_children():
-					if index == face.ref.index:
-						if face.get_child_count() > 0:
-							%Picker.select(face.get_child(0))
-							return
-			"Face ID":
-				for face: Node3D in map_node.get_node("Faces").get_children():
-					if ("additionalMetadata" in face.ref.texture_data
-						and index == face.ref.texture_data.additionalMetadata.unk0x0C
-					):
-						if face.get_child_count() > 0:
-							if count == 0:
-								%Picker.select(face.get_child(0))
-								return
-							count -= 1
-			"Object":
-				for object: Node3D in map_node.get_node("Objects").get_children():
-					if index == object.ref.index:
-						%Picker.select(object)
-			"Object ID":
-				for object: Node3D in map_node.get_node("Objects").get_children():
-					if index == object.ref.data.unk0x0E:
-						if count == 0:
-							%Picker.select(object)
-							return
-						count -= 1
-			"SFX":
-				for sfx: Node3D in map_node.get_node("SFX").get_children():
-					if index == sfx.ref.index:
-						%Picker.select(sfx)
-			"SFX ID":
-				for sfx: Node3D in map_node.get_node("SFX").get_children():
-					if index == sfx.ref.data.unk0x06:
-						if count == 0:
-							%Picker.select(sfx)
-							return
-						count -= 1
-				
-	if search_count > 0:
-		search_count = 0
-		previous_search = str(index)
-		select_face(index, type, p_map_name, search_count)
-
-
-#func get_face(index: int, type: String, map_info: Dictionary) -> Variant:
-	#var map_node: Node3D
-	#
-	#for i in range(tree_root.get_child_count()):
-		#if tree_root.get_child(i).get_text(0) == map_info.name:
-			#map_node = tree_root.get_child(i).get_metadata(0)
-	#
-	#if not map_node:
-		#return null
-	#
-	#match type:
-		#"Sector":
-			#for sector: Node3D in map_node.get_node("Sectors").get_children():
-				#if index == sector.ref.index:
-					#return sector.ref
-		#"Face":
-			#for face: Node3D in map_node.get_node("Faces").get_children():
-				#if index == face.ref.index:
-					#return face.ref
-		#"Object":
-			#for object: Node3D in map_node.get_node("Objects").get_children():
-				#if index == object.ref.index:
-					#return object.ref
-		#"SFX":
-			#for sfx: Node3D in map_node.get_node("SFX").get_children():
-				#if index == sfx.ref.index:
-					#return sfx.ref
-	#return null
-
-
 func _on_search_result_activated(search_result: Dictionary) -> void:
 	await Roth.load_maps([search_result.map_info])
 	%Search.text = str(search_result.index)
@@ -510,13 +479,13 @@ func _on_search_result_activated(search_result: Dictionary) -> void:
 	select_face(search_result.index, search_result.type, search_result.map_info.name)
 
 
-func _on_sub_viewport_container_mouse_entered() -> void:
-	%SubViewportContainer.grab_focus()
+func _on_search_option_item_selected(_index: int) -> void:
+	search_count = 0
+	previous_search = ""
 
+#endregion
 
-func _on_sub_viewport_container_mouse_exited() -> void:
-	%SubViewportContainer.release_focus()
-
+#region Objects
 
 func _on_3d_context_menu_index_pressed(index: int) -> void:
 	match index:
@@ -545,7 +514,7 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 				return
 			Roth.get_map(map_info).add_object(new_object)
 			%Map2D.add_object_to_2d_map(new_object, false)
-			%Picker.select(new_object.node)
+			select_resource(new_object, true)
 		1:
 			var map_info: Dictionary = context_collision.collider.get_parent().ref.map_info
 			var extra_info: Dictionary = {
@@ -570,18 +539,7 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 				return
 			Roth.get_map(map_info).add_object(new_object)
 			%Map2D.add_object_to_2d_map(new_object, true)
-			%Picker.select(new_object.node)
-
-
-func _on_tab_bar_tab_changed(tab: int) -> void:
-	%EditorTab.current_tab = tab
-	match tab:
-		0:
-			%MapPanelContainer.show()
-			%InspectorSidePanel.show()
-		1:
-			%MapPanelContainer.hide()
-			%InspectorSidePanel.hide()
+			select_resource(new_object, true)
 
 
 func _on_3d_object_context_menu_index_pressed(index: int) -> void:
@@ -592,7 +550,7 @@ func _on_3d_object_context_menu_index_pressed(index: int) -> void:
 		1:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
 			object.delete()
-			%Picker.deselect()
+			%Map3D.deselect()
 
 
 func copy_object(object: ObjectRoth) -> void:
@@ -600,14 +558,10 @@ func copy_object(object: ObjectRoth) -> void:
 	%"3DContextMenu".set_item_disabled(1, false)
 	%ObjectContextPopupMenu.set_item_disabled(1, false)
 
+#endregion
 
-func _on_paste_options_button_pressed() -> void:
-	%PasteOptions.toggle(true)
+#region Undo/Redo
 
-
-var undo_stacks: Dictionary = {}
-var undo_positions: Dictionary = {}
-var undo_lists: Dictionary = {}
 func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 	if p_map_info.name not in undo_stacks:
 		undo_stacks[p_map_info.name] = []
@@ -631,6 +585,10 @@ func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 			"map_info": p_map_info,
 			"bytes": Roth.get_map(p_map_info).compile(),
 		}
+		
+		# Check if state is same as previous state
+		if not undo_stacks[p_map_info.name].is_empty() and action.bytes == undo_stacks[p_map_info.name][-1].bytes:
+			return
 		
 		while undo_positions[p_map_info.name] < len(undo_stacks[p_map_info.name]):
 			undo_stacks[p_map_info.name].pop_back()
@@ -664,7 +622,6 @@ func rename_undo_redo(p_old_map_name: String, p_new_map_name: String) -> void:
 	undo_stacks.erase(p_old_map_name)
 	undo_positions.erase(p_old_map_name)
 	undo_lists.erase(p_old_map_name)
-
 
 
 func replace_map(map: Map) -> void:
@@ -716,9 +673,248 @@ func replace_map(map: Map) -> void:
 			
 			tree_item.set_metadata(0, map_node)
 			
+			tree_item.get_child(0).set_metadata(0, objects_node)
+			tree_item.get_child(1).set_metadata(0, sfx_node)
 			
 			
 			old_map_node.queue_free()
 			
 			if %Map2D.close_map(map.map_info, false):
 				%Map2D.setup(map, false)
+
+#endregion
+
+#region Editor Functions
+
+func select_face(index: int, type: String, p_map_name: String = "", count: int = 0, deselect_others: bool = true) -> void:
+	var maps_available := []
+	
+	for i in range(tree_root.get_child_count()):
+		if p_map_name.is_empty():
+			if tree_root.get_child(i).get_metadata(0).visible:
+				maps_available.append(tree_root.get_child(i).get_metadata(0))
+		else:
+			if tree_root.get_child(i).get_text(0) == p_map_name:
+				maps_available.append(tree_root.get_child(i).get_metadata(0))
+	
+	for map_node: Node3D in maps_available:
+		match type:
+			"Sector":
+				for sector: Node3D in map_node.get_node("Sectors").get_children():
+					if index == sector.ref.index:
+						select_resource(sector.ref, deselect_others)
+						return
+			"Sector ID":
+				for sector: Node3D in map_node.get_node("Sectors").get_children():
+					if index == sector.ref.data.floorTriggerID:
+						if count == 0:
+							select_resource(sector.ref, deselect_others)
+							return
+						count -= 1
+			"Face":
+				for face: Node3D in map_node.get_node("Faces").get_children():
+					if index == face.ref.index:
+						if face.get_child_count() > 0:
+							select_resource(face.get_child(0).ref, deselect_others)
+							return
+			"Face ID":
+				for face: Node3D in map_node.get_node("Faces").get_children():
+					if ("additionalMetadata" in face.ref.texture_data
+						and index == face.ref.texture_data.additionalMetadata.unk0x0C
+					):
+						if face.get_child_count() > 0:
+							if count == 0:
+								select_resource(face.get_child(0).ref, deselect_others)
+								return
+							count -= 1
+			"Object":
+				for object: Node3D in map_node.get_node("Objects").get_children():
+					if index == object.ref.index:
+						select_resource(object.ref, deselect_others)
+			"Object ID":
+				for object: Node3D in map_node.get_node("Objects").get_children():
+					if index == object.ref.data.unk0x0E:
+						if count == 0:
+							select_resource(object.ref, deselect_others)
+							return
+						count -= 1
+			"SFX":
+				for sfx: Node3D in map_node.get_node("SFX").get_children():
+					if index == sfx.ref.index:
+						select_resource(sfx.ref, deselect_others)
+			"SFX ID":
+				for sfx: Node3D in map_node.get_node("SFX").get_children():
+					if index == sfx.ref.data.unk0x06:
+						if count == 0:
+							select_resource(sfx.ref, deselect_others)
+							return
+						count -= 1
+				
+	if search_count > 0:
+		search_count = 0
+		previous_search = str(index)
+		select_face(index, type, p_map_name, search_count)
+
+
+func select_resource(resource: RefCounted, deselect_others: bool = true) -> void:
+	%EditFaceContainer.clear()
+	%EditSectorContainer.clear()
+	%EditObjectContainer.clear()
+	%EditSFXContainer.clear()
+	if not resource:
+		selected_faces.clear()
+		selected_sectors.clear()
+		selected_objects.clear()
+		selected_sfx.clear()
+		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+			object_node.deselect()
+		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+			sfx_node.deselect()
+		%Arrow3D.clear_target()
+		%Map2D.update_selections()
+		%Map3D.update_selections()
+		return
+	
+	if resource is ObjectRoth:
+		selected_faces.clear()
+		selected_sectors.clear()
+		selected_sfx.clear()
+		if deselect_others:
+			selected_objects.clear()
+		if resource not in selected_objects:
+			selected_objects.append(resource)
+		%EditObjectContainer.update_selections()
+	elif resource is Section7_1:
+		
+		selected_faces.clear()
+		selected_sectors.clear()
+		selected_objects.clear()
+		if deselect_others:
+			selected_sfx.clear()
+		if resource not in selected_sfx:
+			selected_sfx.append(resource)
+		%EditSFXContainer.update_selections()
+	elif resource is Face:
+		selected_objects.clear()
+		selected_sfx.clear()
+		if deselect_others:
+			selected_faces.clear()
+			selected_sectors.clear()
+			selected_faces.append(resource)
+			selected_sectors.append(resource.sector)
+		else:
+			if resource not in selected_faces:
+				selected_faces.append(resource)
+			if len(selected_faces) > 1:
+				selected_sectors.clear()
+			elif len(selected_faces) == 1:
+				selected_sectors.clear()
+				selected_sectors.append(selected_faces[0].sector)
+		%EditFaceContainer.update_selections()
+	elif resource is Sector:
+		selected_faces.clear()
+		selected_objects.clear()
+		selected_sfx.clear()
+		hovered_face = null
+		if deselect_others:
+			selected_sectors.clear()
+		if resource not in selected_sectors:
+			selected_sectors.append(resource)
+		%EditSectorContainer.update_selections()
+	
+	%Arrow3D.set_target(resource)
+	%Map2D.update_selections()
+	%Map3D.update_selections()
+	
+
+
+func deselect_resource(resource: RefCounted) -> void:
+	if resource is Face:
+		selected_faces.erase(resource)
+		if len(selected_faces) == 1:
+			selected_sectors.clear()
+			selected_sectors.append(selected_faces[0].sector)
+		elif len(selected_faces) == 0:
+			selected_sectors.clear()
+		%EditFaceContainer.update_selections()
+	elif resource is Sector:
+		selected_sectors.erase(resource)
+		%EditSectorContainer.update_selections()
+	elif resource is ObjectRoth:
+		selected_objects.erase(resource)
+		%EditObjectContainer.update_selections()
+	elif resource is Section7_1:
+		selected_sfx.erase(resource)
+		%EditSFXContainer.update_selections()
+	%Arrow3D.unset_target(resource)
+	%Map2D.update_selections()
+	%Map3D.update_selections()
+
+
+func redraw(redraw_list: Array) -> void:
+	for resource: Variant in redraw_list:
+		resource.initialize_mesh()
+		if resource is Sector:
+			for face_ref: WeakRef in resource.faces:
+				var face: Face = face_ref.get_ref()
+				if face.sister:
+					face.sister.get_ref().initialize_mesh()
+				face.initialize_mesh()
+	%Map2D.queue_redraw()
+	%Map3D.update_selections()
+
+
+func delete_selected_face() -> void:
+	assert(len(selected_faces) == 1)
+	assert(len(selected_sectors) == 1)
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
+		Roth.get_map(selected_faces[0].map_info).merge_sectors(selected_faces[0])
+		Roth.editor_action.emit(selected_faces[0].map_info, "Delete Double-Sided Face")
+		hovered_face = null
+		select_resource(selected_sectors[0])
+
+
+func delete_selected_sector() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete selected sector%s?" % ("s" if len(selected_sectors) > 1 else ""), "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for sector: Sector in selected_sectors:
+			sector.delete_sector()
+			if sector.map_info not in map_groups:
+				map_groups[sector.map_info] = []
+			map_groups[sector.map_info].append(sector)
+		for map_info: Dictionary in map_groups:
+			Roth.editor_action.emit(map_info, "Delete Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+		select_resource(null)
+
+func merge_selected_sectors() -> void:
+	var all_sector_faces: Array = []
+	for sector: Sector in selected_sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			all_sector_faces.append(face)
+	var map_info: Dictionary = selected_sectors[0].map_info
+	var found: bool = true
+	while found:
+		found = false
+		for sector: Sector in selected_sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				if face.sister:
+					var face_sister: Face = face.sister.get_ref()
+					if face_sister in all_sector_faces:
+						selected_sectors.erase(face_sister.sector)
+						Roth.get_map(face_sister.map_info).merge_sectors(face)
+						found = true
+						hovered_face = null
+						hovered_sector = null
+						%Map2D.update_selections()
+						%Map3D.update_selections()
+						break
+			if found:
+				break
+	
+	Roth.editor_action.emit(map_info, "Merge Multiple Sectors")
+	
+#endregion

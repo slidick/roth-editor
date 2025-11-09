@@ -16,23 +16,14 @@ var maximum_x: float = 0
 var maximum_y: float = 0
 var additional_zoom: float = 1
 var prev_viewport_size := Vector2i.ZERO
-var has_focus: bool = false :
-	set(value):
-		has_focus = value
-		if has_focus == false:
-			if hovered_sector and hovered_sector != selected_sector:
-				hovered_sector = null
-				queue_redraw()
-			if hovered_face and hovered_face != selected_face:
-				hovered_face = null
-				queue_redraw()
+var has_focus: bool = false
 var mouse_drag_enabled: bool = false
 var zooming: bool = false
-var hovered_sector: Variant = null
-var selected_sector: Variant = null
-var hovered_face: Variant = null
-var selected_face: Variant = null
-var holding_mouse: bool = false
+
+
+var holding_left_mouse: bool = false
+var holding_right_mouse: bool = false
+var holding_shift: bool = false
 var snap: float = 0.1
 var timer: Timer
 var start_box_draw: bool = false 
@@ -89,6 +80,10 @@ func _notification(what: int) -> void:
 func _process(_delta: float) -> void:
 	if not has_focus:
 		return
+	if holding_left_mouse or holding_right_mouse:
+		timer.wait_time = 0.01
+	else:
+		timer.wait_time = 0.1
 	var mouse_x: float = get_global_mouse_position().x + global_position.x
 	var mouse_y: float = get_global_mouse_position().y + global_position.y
 	%CoordinatesLabel.text = "(%d, %d)" % [mouse_x * Roth.SCALE_2D_WORLD, mouse_y * Roth.SCALE_2D_WORLD]
@@ -98,6 +93,7 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if not map:
 		return
+	
 	
 	if event.is_action_pressed("map_2d_zoom_in"):
 		additional_zoom /= ZOOM_SPEED
@@ -123,24 +119,19 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("unmerge_vertices"):
 		unmerge_vertices()
 	
-	if event.is_action_pressed("delete_selected"):
-		if selected_face and selected_face.sister:
-			delete_selected_face()
-		elif not selected_face and selected_sector:
-			delete_selected_sector()
-	
 	if %SectorCheckBox.button_pressed:
 		if event is InputEventMouseMotion:
-			if not hovered_sector:
-				if timer.is_stopped():
-					timer.start()
-			else:
-				check_for_hover()
+			#if not hovered_sector:
+			if timer.is_stopped():
+				timer.start()
+			#else:
+				#check_for_hover()
 	
 	if mouse_drag_enabled:
 		if event is InputEventMouseMotion:
 			%Camera2D.position.x -= event.relative.x / %Camera2D.zoom.x
 			%Camera2D.position.y -= event.relative.y / %Camera2D.zoom.y
+			await get_tree().process_frame
 	
 	if start_box_draw:
 		if event is InputEventMouseMotion:
@@ -173,34 +164,39 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if %SectorCheckBox.button_pressed:
-					if event.pressed and hovered_face and selected_face and hovered_face == selected_face:
-						selected_face = null
-						selected_sector = null
-						queue_redraw()
-						%Picker.deselect()
-					elif event.pressed and hovered_face:
-						owner.select_face(hovered_face.index, "Face", map.map_info.name)
-						selected_face = hovered_face
-						selected_sector = hovered_sector
-						queue_redraw()
-					elif event.pressed and hovered_sector and selected_sector and hovered_sector == selected_sector and not selected_face:
-						selected_sector = null
-						selected_face = null
-						queue_redraw()
-						%Picker.deselect()
-					elif event.pressed and hovered_sector:
-						owner.select_face(hovered_sector.index, "Sector", map.map_info.name)
-						selected_sector = hovered_sector
-						selected_face = null
-						queue_redraw()
+				if %SectorCheckBox.button_pressed and not event.shift_pressed:
+					if event.pressed and owner.hovered_face and not owner.selected_faces.is_empty() and owner.hovered_face in owner.selected_faces:
+						owner.select_resource(null)
+					elif event.pressed and owner.hovered_face:
+						owner.select_resource(owner.hovered_face)
+					elif event.pressed and owner.hovered_sector and not owner.selected_sectors.is_empty() and owner.hovered_sector in owner.selected_sectors and owner.selected_faces.is_empty():
+						owner.select_resource(null)
+					elif event.pressed and owner.hovered_sector and len(owner.selected_faces) <= 1:
+						owner.select_resource(owner.hovered_sector)
 					if event.pressed:
-						holding_mouse = true
+						holding_left_mouse = true
 						skip_sector_hover = 0
 						skip_sector_hover_prev = 0
 					else:
-						holding_mouse = false
-						
+						holding_left_mouse = false
+				elif %SectorCheckBox.button_pressed and event.shift_pressed:
+					if event.pressed and owner.hovered_face and owner.hovered_face not in owner.selected_faces:
+						owner.select_resource(owner.hovered_face, false)
+					elif event.pressed and owner.hovered_face and owner.hovered_face in owner.selected_faces and len(owner.selected_faces) == 1:
+						owner.deselect_resource(owner.hovered_face)
+					elif event.pressed and owner.hovered_sector and len(owner.selected_faces) <= 1 and owner.hovered_sector not in owner.selected_sectors:
+						owner.select_resource(owner.hovered_sector, false)
+					elif event.pressed and owner.hovered_sector and owner.hovered_sector in owner.selected_sectors:
+						pass
+						#owner.deselect_resource(owner.hovered_sector)
+					if event.pressed:
+						holding_left_mouse = true
+						holding_shift = true
+						skip_sector_hover = 0
+						skip_sector_hover_prev = 0
+					else:
+						holding_left_mouse = false
+						holding_shift = false
 				elif %BoxCheckBox.button_pressed == true and not event.shift_pressed:
 					if event.pressed:
 						start_box_draw = true
@@ -242,7 +238,7 @@ func _input(event: InputEvent) -> void:
 						
 				elif %ObjectCheckBox.button_pressed:
 					if event.pressed:
-						var objects_selected: int = 0
+						#var objects_selected: int = 0
 						var object_index: int = -1
 						var leave: bool = false
 						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
@@ -251,13 +247,13 @@ func _input(event: InputEvent) -> void:
 								if event.shift_pressed:
 									object_node.toggle_selected()
 							if object_node.circle.selected:
-								objects_selected += 1
+								#objects_selected += 1
 								object_index = object_node.ref.index
 						if leave:
-							if objects_selected != 1:
-								%Picker.clear()
-							else:
-								owner.select_face(object_index, "Object", map.map_info.name)
+							#if objects_selected != 1:
+								#%Map3D.clear()
+							#else:
+							owner.select_face(object_index, "Object", map.map_info.name)
 							return
 						start_vertex_select = true
 						start_vertex_select_position = (get_global_mouse_position() + global_position)
@@ -290,10 +286,15 @@ func _input(event: InputEvent) -> void:
 								if not event.shift_pressed:
 									object_node.deselect()
 									objects_selected.erase(object_node)
-						if len(objects_selected) != 1:
-							%Picker.clear()
+						#if len(objects_selected) != 1:
+							#%Map3D.clear()
+						#else:
+						if objects_selected.is_empty():
+							owner.select_resource(null)
 						else:
-							owner.select_face(objects_selected[0].ref.index, "Object", map.map_info.name)
+							for object: ObjectRoth.ObjectNode2D in objects_selected:
+								owner.select_resource(object.ref, false)
+								#owner.select_face(objects_selected[0].ref.index, "Object", map.map_info.name)
 						start_vertex_select = false
 						start_vertex_select_position = Vector2.ZERO
 						queue_redraw()
@@ -347,33 +348,31 @@ func _input(event: InputEvent) -> void:
 					queue_redraw()
 			
 			MOUSE_BUTTON_RIGHT:
-				if %ObjectCheckBox.button_pressed:
+				if %SectorCheckBox.button_pressed:
+					if event.pressed and owner.hovered_sector and owner.hovered_sector in owner.selected_sectors and len(owner.selected_faces) != 1:
+						owner.deselect_resource(owner.hovered_sector)
+					elif event.pressed and owner.hovered_face and owner.hovered_face in owner.selected_faces:
+						owner.deselect_resource(owner.hovered_face)
+					if event.pressed and event.shift_pressed:
+						holding_right_mouse = true
+						holding_shift = true
+					else:
+						holding_right_mouse = false
+						holding_shift = false
+				elif %ObjectCheckBox.button_pressed:
 					if event.pressed:
 						mouse_paste_position = Vector2(
 							get_global_mouse_position().x + global_position.x,
 							get_global_mouse_position().y + global_position.y
 						)
 						%ObjectContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
-				if %SFXCheckBox.button_pressed:
+				elif %SFXCheckBox.button_pressed:
 					if event.pressed:
 						mouse_paste_position = Vector2(
 							get_global_mouse_position().x + global_position.x,
 							get_global_mouse_position().y + global_position.y
 						)
 						%SFXContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
-
-
-func _on_sub_viewport_container_mouse_entered() -> void:
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		return
-	has_focus = true
-	%ViewportBorder2.self_modulate.a = 1.0
-	%SubViewportContainer2D.grab_focus()
-
-
-func _on_sub_viewport_container_mouse_exited() -> void:
-	has_focus = false
-	%ViewportBorder2.self_modulate.a = 0.0
 
 
 func _draw() -> void:
@@ -529,8 +528,11 @@ func draw_sectors() -> void:
 			if not face.sister:
 				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.WHITE, line_width, true)
 	
-	if hovered_sector:
-		for face_ref: WeakRef in hovered_sector.faces:
+	if not %SectorCheckBox.button_pressed:
+		return
+	
+	if owner.hovered_sector and len(owner.selected_faces) <= 1:
+		for face_ref: WeakRef in owner.hovered_sector.faces:
 			var face: Face = face_ref.get_ref()
 			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
 			var direction: Vector2 = (face.v2 - face.v1).normalized()
@@ -540,11 +542,13 @@ func draw_sectors() -> void:
 				(face.v1.x + face.v2.x) / 2,
 				(face.v1.y + face.v2.y) / 2
 			)
-			var v_center_2: Vector2 = v_center + perendicular * 10
+			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
 			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
 	
-	if selected_sector:
-		for face_ref: WeakRef in selected_sector.faces:
+	for sector: Sector in owner.selected_sectors:
+		if sector.map_info != map.map_info:
+			continue
+		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.ORANGE, line_width*2, true)
 			var direction: Vector2 = (face.v2 - face.v1).normalized()
@@ -554,13 +558,36 @@ func draw_sectors() -> void:
 				(face.v1.x + face.v2.x) / 2,
 				(face.v1.y + face.v2.y) / 2
 			)
-			var v_center_2: Vector2 = v_center + perendicular * 10
+			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
 			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.ORANGE, line_width*2, true)
 	
-	if hovered_face:
-		draw_line(Vector2(hovered_face.v1.x/Roth.SCALE_2D_WORLD, hovered_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(hovered_face.v2.x/Roth.SCALE_2D_WORLD, hovered_face.v2.y/Roth.SCALE_2D_WORLD), Color.WEB_PURPLE, line_width*2, true)
-	if selected_face:
-		draw_line(Vector2(selected_face.v1.x/Roth.SCALE_2D_WORLD, selected_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(selected_face.v2.x/Roth.SCALE_2D_WORLD, selected_face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
+	if owner.hovered_face:
+		draw_line(Vector2(owner.hovered_face.v1.x/Roth.SCALE_2D_WORLD, owner.hovered_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(owner.hovered_face.v2.x/Roth.SCALE_2D_WORLD, owner.hovered_face.v2.y/Roth.SCALE_2D_WORLD), Color.WEB_PURPLE, line_width*2, true)
+		var direction: Vector2 = (owner.hovered_face.v2 - owner.hovered_face.v1).normalized()
+		var perendicular := Vector2(direction.y, -direction.x)
+		
+		var v_center := Vector2(
+			(owner.hovered_face.v1.x + owner.hovered_face.v2.x) / 2,
+			(owner.hovered_face.v1.y + owner.hovered_face.v2.y) / 2
+		)
+		var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+		draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.WEB_PURPLE, line_width*2, true)
+	
+	#if selected_face:
+		#draw_line(Vector2(selected_face.v1.x/Roth.SCALE_2D_WORLD, selected_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(selected_face.v2.x/Roth.SCALE_2D_WORLD, selected_face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
+	
+	for face: Face in owner.selected_faces:
+		if face.map_info != map.map_info:
+			continue
+		draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
+		var direction: Vector2 = (face.v2 - face.v1).normalized()
+		var perendicular := Vector2(direction.y, -direction.x)
+		var v_center := Vector2(
+			(face.v1.x + face.v2.x) / 2,
+			(face.v1.y + face.v2.y) / 2
+		)
+		var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+		draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.PURPLE, line_width*2, true)
 
 
 func draw_box() -> void:
@@ -618,13 +645,11 @@ func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
 			map.name_changed.disconnect(_on_map_name_changed)
 		map = null
 		%MapNameLabel.text = "No Map Loaded"
-		selected_face = null
-		selected_sector = null
-		hovered_face = null
-		hovered_sector = null
 		zooming = false
-		holding_mouse = false
-		%Picker.deselect()
+		holding_left_mouse = false
+		holding_right_mouse = false
+		holding_shift = false
+		owner.select_resource(null)
 		if p_reset_camera:
 			default_camera_bounds()
 			update_camera_center()
@@ -656,6 +681,7 @@ func show_objects() -> void:
 	for object: ObjectRoth in map.objects:
 		var object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
 		object_node.object_selected.connect(_on_object_selected)
+		object_node.object_deselected.connect(_on_object_deselected)
 		object_node.object_copied.connect(_on_object_copied)
 		object_node.object_deleted.connect(_on_object_deleted)
 		object_node.object_dragged.connect(_on_object_dragged)
@@ -684,8 +710,8 @@ func redraw_object(object: ObjectRoth) -> void:
 
 
 func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool) -> void:
-	selected_sector = null
-	selected_face = null
+	owner.selected_sectors.clear()
+	owner.selected_faces.clear()
 	queue_redraw()
 	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		if object != selected_object:
@@ -695,6 +721,11 @@ func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool
 	if tell_3d:
 		owner.select_face(selected_object.ref.index, "Object", map.map_info.name)
 
+func _on_object_deselected(all_objects: bool) -> void:
+	if all_objects:
+		for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
+			object.deselect()
+		owner.select_resource(null)
 
 func _on_object_copied(object: ObjectRoth) -> void:
 	owner.copy_object(object)
@@ -704,7 +735,7 @@ func _on_object_deleted(deleted_object: ObjectRoth) -> void:
 	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		if object != deleted_object and object.circle.selected:
 			object.ref.delete()
-	%Picker.deselect()
+	owner.select_resource(null)
 
 
 func _on_object_context_popup_menu_index_pressed(index: int) -> void:
@@ -789,8 +820,8 @@ func redraw_sfx(object: Section7_1) -> void:
 
 
 func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void:
-	selected_sector = null
-	selected_face = null
+	owner.selected_sectors.clear()
+	owner.selected_faces.clear()
 	queue_redraw()
 	for sfx: Section7_1.SFXNode2D in %SFX.get_children():
 		if sfx != selected_sfx:
@@ -808,7 +839,7 @@ func _on_sfx_copied(object: Section7_1) -> void:
 
 func _on_sfx_deleted(object: Section7_1) -> void:
 	map.sound_effects.erase(object)
-	%Picker.deselect()
+	owner.select_resource(null)
 
 
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
@@ -923,34 +954,81 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 	
 	
 	
-	#var delete_vertex: bool = false
-	for face: Face in vertex.faces:
-		if face.face_length == 0:
-			face.sector.delete_face(face)
-			show_vertices(true)
+	var bad_merge_sectors: Array = []
+	var unique_sectors: Array = []
+	var bad_face_merge: bool = false
+	for vertex_face: Face in vertex.faces:
+		if vertex_face.sector not in unique_sectors:
+			unique_sectors.append(vertex_face.sector)
+		for vertex_face_2_ref: WeakRef in vertex_face.sector.faces:
+			var vertex_face_2: Face = vertex_face_2_ref.get_ref()
+			if vertex_face.v1 == vertex_face_2.v2 and vertex_face.v2 == vertex_face_2.v1 and vertex_face.sector == vertex_face_2.sector:
+				bad_face_merge = true
+				print("Incorrect Face Merge")
+	
+	for sector: Sector in unique_sectors:
+		if Utility.are_points_collinear_2d(sector.get_vertices()):
+			print("Sector Merge Wanted")
+			bad_merge_sectors.append(sector)
+	
+	
+	
+	var faces_merged: bool = false
+	var sectors_merged: bool = false
+	var vertices_merged: bool = false
+	
+	if bad_merge_sectors.is_empty() and not bad_face_merge:
+		for sector: Sector in map.sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				for vertex_face: Face in vertex.faces:
+					if face.sister and face.sister.get_ref() == vertex_face:
+						pass
+					elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
+						face.sister = weakref(vertex_face)
+						vertex_face.sister = weakref(face)
+						face.initialize_mesh()
+						vertex_face.initialize_mesh()
+						faces_merged = true
+	elif not bad_merge_sectors.is_empty():
+		for sector: Sector in bad_merge_sectors:
+			for face: WeakRef in sector.faces:
+				if face.get_ref() in vertex.faces:
+					if face.get_ref().sister:
+						print("Sector Merge Happened")
+						map.merge_sectors(face.get_ref().sister.get_ref())
+						break
+		sectors_merged = true
+	
+	
+	
+	if faces_merged:
+		show_vertices(last_allow_move)
+		queue_redraw()
+		Roth.editor_action.emit(map.map_info, "Merge Faces")
+	else:
+		for face: Face in vertex.faces:
+			if face.face_length == 0 and face.sector:
+				face.sector.delete_face(face)
+				vertices_merged = true
+				break
+		
+		if sectors_merged:
+			show_vertices(last_allow_move)
+			queue_redraw()
+			Roth.editor_action.emit(map.map_info, "Merge Sectors")
+		elif vertices_merged:
+			show_vertices(last_allow_move)
+			queue_redraw()
 			Roth.editor_action.emit(map.map_info, "Merge Vertices")
-			return
-	
-	for sector: Sector in map.sectors:
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			for vertex_face: Face in vertex.faces:
-				if face.sister and face.sister.get_ref() == vertex_face:
-					pass
-				elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
-					face.sister = weakref(vertex_face)
-					vertex_face.sister = weakref(face)
-					face.initialize_mesh()
-					vertex_face.initialize_mesh()
-					show_vertices(true)
-					queue_redraw()
-					Roth.editor_action.emit(map.map_info, "Merge Faces")
-					return
-	
-	Roth.editor_action.emit(map.map_info, "Move Vertices")
+		elif bad_face_merge:
+			vertex.revert_last_position()
+		else:
+			Roth.editor_action.emit(map.map_info, "Move Vertices")
 
 
 func _on_vertex_deleted() -> void:
+	Roth.editor_action.emit(map.map_info, "Delete Vertex")
 	show_vertices(last_allow_move)
 	queue_redraw()
 
@@ -1000,9 +1078,20 @@ func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 
 #region Helper
 
+func update_selections() -> void:
+	%Map2D.queue_redraw()
+	#for object: ObjectRoth in owner.selected_objects:
+		#object.node_2d.sele
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object_node.ref in owner.selected_objects:
+			object_node.select()
+		else:
+			object_node.deselect()
+
 func is_mouse_inside(sector: Sector) -> bool:
 	var polygon_path_finder := PolygonPathFinder.new()
 	var points := sector.vertices.slice(0,-1)
+	points = sector.vertices
 	var connections := []
 	for i in range(len(points)-1):
 		connections.append(i)
@@ -1014,11 +1103,12 @@ func is_mouse_inside(sector: Sector) -> bool:
 
 
 func check_for_hover() -> void:
-	if not map:
+	if not map or not has_focus:
 		return
 	if skip_sector_hover == skip_sector_hover_prev:
-		if hovered_sector and is_mouse_inside(hovered_sector):
-			check_for_face_hover(hovered_sector)
+		if owner.hovered_sector and is_mouse_inside(owner.hovered_sector):
+			if len(owner.selected_sectors) <= 1:
+				check_for_face_hover(owner.hovered_sector)
 			return
 	skip_sector_hover_prev = skip_sector_hover
 	var sectors_to_skip: int = skip_sector_hover
@@ -1027,68 +1117,48 @@ func check_for_hover() -> void:
 			if sectors_to_skip > 0:
 				sectors_to_skip -= 1
 				continue
+			if len(owner.selected_faces) <= 1:
+				if owner.hovered_sector != sector:
+					owner.hovered_sector = sector
+					if holding_left_mouse:
+						owner.select_resource(owner.hovered_sector, not holding_shift)
+					elif holding_right_mouse:
+						owner.deselect_resource(owner.hovered_sector)
+					queue_redraw()
 			check_for_face_hover(sector)
-			if hovered_sector != sector:
-				hovered_sector = sector
-				if holding_mouse:
-					selected_sector = hovered_sector
-					owner.select_face(selected_sector.index, "Sector", map.map_info.name)
-				queue_redraw()
 			return
 	if skip_sector_hover > 0:
 		skip_sector_hover = 0
 		check_for_hover()
 		return
-	hovered_sector = null
-	hovered_face = null
+	owner.hovered_sector = null
+	owner.hovered_face = null
 	queue_redraw()
 
 
 func check_for_face_hover(sector: Sector) -> void:
+	if len(owner.selected_sectors) > 1:
+		return
 	var found: bool = false
 	var smallest_distance: float = 100.0
 	for face_ref: WeakRef in sector.faces:
 		var face: Face = face_ref.get_ref()
 		var distance: float = distance_to_face((get_global_mouse_position() + global_position) * Roth.SCALE_2D_WORLD, face)
-		if distance < smallest_distance and distance < 100 / %Camera2D.zoom.x:
+		if distance < smallest_distance and distance < max(100 / %Camera2D.zoom.x, 8):
 			smallest_distance = distance
 			found = true
-			if hovered_face != face:
-				hovered_face = face
-				if holding_mouse:
-					selected_face = hovered_face
-					owner.select_face(selected_face.index, "Face", map.map_info.name)
+			if owner.hovered_face != face:
+				owner.hovered_face = face
+				if holding_left_mouse and len(owner.selected_sectors) == 0:
+					owner.select_resource(owner.hovered_face, not holding_shift)
+				elif holding_right_mouse:
+					owner.deselect_resource(owner.hovered_face)
 				queue_redraw()
 	if not found:
-		hovered_face = null
+		owner.hovered_face = null
 		queue_redraw()
 
 
-func select(object: Variant) -> void:
-	if object is Face and object.map_info == map.map_info:
-		selected_face = object
-		selected_sector = object.sector
-		queue_redraw()
-	elif object is Sector and object.map_info == map.map_info:
-		selected_sector = object
-		selected_face = null
-		queue_redraw()
-	elif object is ObjectRoth and object.map_info == map.map_info:
-		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-			if object_node.ref.index == object.index:
-				object_node.select_single()
-	elif object is Section7_1 and object.map_info == map.map_info:
-		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
-			if sfx_node.ref.index == object.index:
-				sfx_node.select()
-	else:
-		selected_face = null
-		selected_sector = null
-		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-			object_node.deselect()
-		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
-			sfx_node.deselect()
-		queue_redraw()
 
 
 func distance_to_face(mouse_position: Vector2, face: Face) -> float:
@@ -1120,15 +1190,8 @@ func distance_to_face(mouse_position: Vector2, face: Face) -> float:
 
 #region Options
 
-func _on_sector_check_box_toggled(toggled_on: bool) -> void:
+func _on_sector_check_box_toggled(_toggled_on: bool) -> void:
 	queue_redraw()
-	if toggled_on:
-		pass
-	else:
-		selected_face = null
-		selected_sector = null
-		hovered_face = null
-		hovered_sector = null
 
 
 func _on_object_check_box_toggled(toggled_on: bool) -> void:
@@ -1188,28 +1251,7 @@ func _on_snap_edit_value_changed(value: float) -> void:
 
 #region Map Actions
 
-func delete_selected_face() -> void:
-	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
-	if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
-		Roth.get_map(selected_face.map_info).merge_sectors(selected_face)
-		hovered_sector = null
-		hovered_face = null
-		Roth.editor_action.emit(selected_face.map_info, "Delete Double-Sided Face")
-		owner.select_face(selected_sector.index, "Sector", selected_sector.map_info.name)
-		selected_face = null
-		queue_redraw()
 
-
-func delete_selected_sector() -> void:
-	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
-	if await Dialog.confirm("Delete selected sector?", "Confirm Deletion", false):
-		selected_sector.delete_sector()
-		hovered_sector = null
-		hovered_face = null
-		Roth.editor_action.emit(selected_sector.map_info, "Delete Sector")
-		%Picker.deselect()
-		selected_sector = null
-		queue_redraw()
 
 
 func unmerge_vertices() -> void:
@@ -1218,6 +1260,10 @@ func unmerge_vertices() -> void:
 		if vertex_node.is_selected and not vertex_node.split_vertex:
 			selected_vertices.append(vertex_node.coordinate)
 			vertex_node.queue_free()
+	
+	if selected_vertices.is_empty():
+		return
+	
 	
 	for sector: Sector in map.sectors:
 		var vertices := {}
@@ -1276,7 +1322,7 @@ func check_for_split(nearest_vertex: VertexNode) -> void:
 		if sector in nearest_vertex.sectors:
 			map.split_sector(sector, start_sector_split_vertex, nearest_vertex)
 			Roth.editor_action.emit(map.map_info, "Split Sector")
-			queue_redraw()
+			owner.select_resource(sector)
 			show_vertices(last_allow_move)
 
 

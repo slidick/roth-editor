@@ -239,6 +239,18 @@ class SFXNode2D extends Node2D:
 
 class SFXNode3D extends Node3D:
 	var ref: Section7_1
+	func highlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+	func unhighlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
+	func select() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = Roth.SELECTED_MATERIAL
+	func deselect() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
 
 class SFXMesh3D extends MeshInstance3D:
 	var ref: Section7_1

@@ -55,31 +55,6 @@ var texture_data: Dictionary
 
 var node: Node3D
 
-static func are_points_collinear(points_list: Array) -> bool:
-	# Check if there are fewer than 3 points, which can only form a line
-	if len(points_list) < 3:
-		return true
-	
-	# Iterate over all possible triplets
-	for i in range(len(points_list)):
-		for j in range(i + 1, len(points_list)):
-			for k in range(j + 1, len(points_list)):
-				var vector1: Vector3 = (points_list[j] - points_list[i])
-				var vector2: Vector3 = (points_list[k] - points_list[i])
-				
-				# Compute the cross product of vector1 and vector2
-				var cross_product: Vector3 = vector1.cross(vector2)
-				
-				# Check if the magnitude of the cross product is close to zero
-				if cross_product.length() < 0.0001:
-					continue
-				
-				# If any triplet is not collinear, return False
-				return false
-	
-	# If all triplets are collinear, return True
-	return true
-
 
 static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
@@ -142,6 +117,7 @@ func update_horizontal_fit() -> void:
 
 
 func delete() -> void:
+	assert(Roth.get_map(map_info).faces.find(self) != -1)
 	Roth.get_map(map_info).faces.pop_at(Roth.get_map(map_info).faces.find(self))
 	node.queue_free()
 	sector = null
@@ -315,7 +291,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	
 	
 	
-	if texture in mapping and "additionalMetadata" in texture_data and not check_flag(texture_data.unk0x08, IMAGE_FIT):
+	if texture in mapping and "additionalMetadata" in texture_data and (texture_data.type & 128) > 0 and not check_flag(texture_data.unk0x08, IMAGE_FIT):
 		if texture_data.additionalMetadata.shiftTextureX != 0:
 				if texture_data.additionalMetadata.shiftTextureX > 0:
 					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureX) / texture_width
@@ -345,7 +321,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 			material.uv1_offset.x += 1
 	
 	
-	if are_points_collinear(vertices):
+	if Utility.are_points_collinear(vertices):
 		Console.print("Face forms a straight line (has no height): %s" % index)
 		static_body.queue_free()
 		collision_shape.queue_free()
@@ -533,6 +509,18 @@ func _initialize_meshes() -> void:
 
 class Face3D extends Node3D:
 	var ref: Face
+	func highlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+	func unhighlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
+	func select() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = Roth.SELECTED_MATERIAL
+	func deselect() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
 
 class FaceMesh3D extends MeshInstance3D:
 	var ref: Face

@@ -109,7 +109,7 @@ func delete_vertex(vertex_node: VertexNode) -> void:
 	var current_vertices := get_vertices()
 	var next_index := current_vertices.find(vertex_to_delete) + 1
 	if next_index == -1:
-		print("ERROR")
+		Console.print("ERROR Deleting Vertex")
 		return
 	
 	face_to_change.v2 = current_vertices[next_index % len(current_vertices)]
@@ -131,7 +131,7 @@ func delete_vertex(vertex_node: VertexNode) -> void:
 func delete_sector() -> void:
 	for face_ref: WeakRef in faces:
 		var face: Face = face_ref.get_ref()
-		if face.sister:
+		if face.sister and face.sister.get_ref().sister and face.sister.get_ref().sister.get_ref() == face:
 			face.sister.get_ref().sister = null
 			face.sister.get_ref().initialize_mesh()
 		face.delete()
@@ -158,7 +158,6 @@ func delete_face(face_to_delete: Face) -> void:
 			face_to_delete_ref = face_ref
 		else:
 			remaining_faces.append(face_ref)
-	
 	if len(remaining_faces) < 3:
 		delete_sector()
 		return
@@ -219,7 +218,7 @@ func reorder_faces() -> void:
 				break
 		
 		if not found_next:
-			print("ERROR: Couldn't connect faces to form sector.")
+			Console.print("WARN: Couldn't connect faces to form sector.")
 			return
 	
 	faces = ordered_faces
@@ -510,9 +509,11 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 				material.uv1_offset.y *= -1
 	
 	
-	
-	
-	if not collision_points.is_empty():
+	if Utility.are_points_collinear(collision_points):
+		Console.print("Sector forms a straight line: %s" % index)
+		static_body.queue_free()
+		collision_shape.queue_free()
+	else:
 		convex_polygon_shape.points = collision_points
 		collision_shape.shape = convex_polygon_shape
 		static_body.add_child(collision_shape)
@@ -564,5 +565,18 @@ func _initialize_meshes() -> void:
 
 class Sector3D extends Node3D:
 	var ref: Sector
+	func highlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+	func unhighlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
+	func select() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = Roth.SELECTED_MATERIAL
+	func deselect() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
+
 class SectorMesh3D extends MeshInstance3D:
 	var ref: Sector

@@ -157,7 +157,6 @@ func _input(event: InputEvent) -> void:
 			update_attached_faces()
 
 func delete() -> void:
-	print("Delete vertex")
 	for sector: Sector in sectors:
 		sector.delete_vertex(self)
 	vertex_deleted.emit()
@@ -195,6 +194,12 @@ func finalize_move() -> void:
 	if is_selected:
 		drag_started = false
 		update_meshes()
+
+func revert_last_position() -> void:
+	dragging = false
+	drag_started = false
+	position = start_drag_position
+	update_attached_faces()
 
 func update_attached_faces() -> void:
 	var new_coordinate := position * Roth.SCALE_2D_WORLD

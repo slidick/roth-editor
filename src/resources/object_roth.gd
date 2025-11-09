@@ -359,6 +359,7 @@ class CircleDraw2D extends Node2D:
 class ObjectNode2D extends Node2D:
 	
 	signal object_selected(object: ObjectNode2D, tell_3d: bool)
+	signal object_deselected(all: bool)
 	signal object_copied(object: ObjectRoth)
 	signal object_deleted(object: ObjectRoth)
 	signal object_dragged(object: ObjectNode2D, relative: Vector2)
@@ -414,6 +415,7 @@ class ObjectNode2D extends Node2D:
 				dragging = false
 				drag_started = false
 				position = start_drag_position
+				get_viewport().set_input_as_handled()
 		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				if not event.shift_pressed:
@@ -425,6 +427,7 @@ class ObjectNode2D extends Node2D:
 							if not circle.selected:
 								circle.selected = true
 								object_selected.emit(self, true)
+							get_viewport().set_input_as_handled()
 					else:
 						if dragging:
 							dragging = false
@@ -432,11 +435,14 @@ class ObjectNode2D extends Node2D:
 								drag_started = false
 								update_position(false)
 								object_drag_ended.emit(self)
-			
+							else:
+								object_deselected.emit(true)
+							get_viewport().set_input_as_handled()
 			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
 				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
 				circle.selected = true
 				#object_selected.emit(self, true)
+				get_viewport().set_input_as_handled()
 			
 		if event is InputEventMouseMotion and dragging:
 			dragging_amount += event.relative
@@ -449,7 +455,7 @@ class ObjectNode2D extends Node2D:
 				var relative: Vector2 = global_position - mouse.snappedf(get_parent().get_parent().snap)
 				global_position -= relative
 				object_dragged.emit(self, relative)
-				
+			get_viewport().set_input_as_handled()
 	
 	
 	func _on_popup_menu_index_pressed(index: int) -> void:
@@ -548,6 +554,24 @@ class ObjectNode2D extends Node2D:
 
 class ObjectNode3D extends Node3D:
 	var ref: ObjectRoth
+	func highlight() -> void:
+		for child: MeshInstance3D in get_children():
+			if not ((ref.data.renderType & (1<<7)) > 0):
+				child.material_overlay = Roth.HIGHLIGHT_FIXED_Y_MATERIAL
+			else:
+				child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+	func unhighlight() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
+	func select() -> void:
+		for child: MeshInstance3D in get_children():
+			if not ((ref.data.renderType & (1<<7)) > 0):
+				child.material_overlay = Roth.SELECTED_FIXED_Y_MATERIAL
+			else:
+				child.material_overlay = Roth.SELECTED_MATERIAL
+	func deselect() -> void:
+		for child: MeshInstance3D in get_children():
+			child.material_overlay = null
 
 class ObjectMesh3D extends MeshInstance3D:
 	var ref: ObjectRoth

@@ -27,6 +27,11 @@ const OLD_EXE: float = 3.925
 const NEW_EXE: float = 3.983
 const SEQUENTIAL_UNDO_TIMEOUT: float = 1.5
 
+const HIGHLIGHT_MATERIAL: StandardMaterial3D = preload("uid://b3vv75mwnat5k")
+const SELECTED_MATERIAL: StandardMaterial3D = preload("uid://bcwfrjbr5vhmi")
+const HIGHLIGHT_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://dhsattf813kya")
+const SELECTED_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://b5iarhl24whsd")
+
 var res: Dictionary = {}
 var maps: Array = []
 var das_files: Array = []

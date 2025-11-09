@@ -1,29 +1,9 @@
 extends MarginContainer
 
-var current_object: ObjectRoth :
-	set(value):
-		if not %EditObjectTimer.is_stopped():
-			%EditObjectTimer.stop()
-			%EditObjectTimer.timeout.emit()
-		current_object = value
-var object_das: String
-var object_index: int
-
-func _redraw_object(node: Variant = null) -> void:
-	var caret: int = 0
-	if node:
-		caret = node.get_line_edit().caret_column
-	current_object.initialize_mesh()
-	await get_tree().process_frame
-	%Picker.select(current_object.node)
-	%Map2D.redraw_object(current_object)
-	if node:
-		node.get_line_edit().grab_focus()
-		await get_tree().process_frame
-		node.get_line_edit().caret_column = caret
+var last_selection_length: int = -1
 
 
-func _reset_edit_object() -> void:
+func clear() -> void:
 	%ObjectIndexLabel.text = "Object:"
 	%ObjectSectorIndexLabel.text = "Sector:"
 	%ObjectXEdit.get_line_edit().clear()
@@ -32,9 +12,7 @@ func _reset_edit_object() -> void:
 	%ObjectRotationEdit.get_line_edit().clear()
 	%ObjectTextureIndexEdit.get_line_edit().clear()
 	%ObjectTextureSourceEdit.get_line_edit().clear()
-	%ObjectUnk0x07Edit.get_line_edit().clear()
 	%ObjectLightingEdit.get_line_edit().clear()
-	%ObjectRenderTypeEdit.get_line_edit().clear()
 	%ObjectUnk0x0CEdit.get_line_edit().clear()
 	%ObjectUnk0x0EEdit.get_line_edit().clear()
 	%TextureNameLabel.text = ""
@@ -48,77 +26,142 @@ func _reset_edit_object() -> void:
 	%ObjectFlagButton6.set_pressed_no_signal(false)
 	%ObjectFlagButton7.set_pressed_no_signal(false)
 	%ObjectFlagButton8.set_pressed_no_signal(false)
+	%ObjectFlagButton1.indeterminate = false
+	%ObjectFlagButton2.indeterminate = false
+	%ObjectFlagButton3.indeterminate = false
+	%ObjectFlagButton4.indeterminate = false
+	%ObjectFlagButton5.indeterminate = false
+	%ObjectFlagButton6.indeterminate = false
+	%ObjectFlagButton7.indeterminate = false
+	%ObjectFlagButton8.indeterminate = false
 	%RenderDirectionalCheckBox.set_pressed_no_signal(true)
 	%RenderBillboardCheckBox.set_pressed_no_signal(false)
 	%RenderStyleLabel.text = "Render Style"
-	%EditObjectContainer.show()
+	%EditObjectContainer.hide()
+	last_selection_length = 0
 
 
-func load_edit_object(object: ObjectRoth.ObjectMesh3D) -> void:
-	_reset_edit_object()
-	current_object = object.ref
-	%ObjectIndexLabel.text = "Object: %d" % object.ref.index
-	%ObjectSectorIndexLabel.text = "Sector: %d" % object.ref.sector.get_ref().index
-	%ObjectXEdit.get_line_edit().text = "%d" % object.ref.data.posX
-	%ObjectXEdit.set_value_no_signal(object.ref.data.posX)
-	%ObjectYEdit.get_line_edit().text = "%d" % object.ref.data.posY
-	%ObjectYEdit.set_value_no_signal(object.ref.data.posY)
-	%ObjectZEdit.get_line_edit().text = "%d" % object.ref.data.posZ
-	%ObjectZEdit.set_value_no_signal(object.ref.data.posZ)
-	%ObjectRotationEdit.get_line_edit().text = "%d" % object.ref.data.rotation
-	%ObjectRotationEdit.set_value_no_signal(object.ref.data.rotation)
-	%ObjectTextureIndexEdit.get_line_edit().text = "%d" % object.ref.data.textureIndex
-	%ObjectTextureIndexEdit.set_value_no_signal(object.ref.data.textureIndex)
-	%ObjectTextureSourceEdit.get_line_edit().text = "%d" % object.ref.data.textureSource
-	%ObjectTextureSourceEdit.set_value_no_signal(object.ref.data.textureSource)
-	%ObjectUnk0x07Edit.get_line_edit().text = "%d" % object.ref.data.unk0x07
-	%ObjectUnk0x07Edit.set_value_no_signal(object.ref.data.unk0x07)
-	%ObjectLightingEdit.get_line_edit().text = "%d" % object.ref.data.lighting
-	%ObjectLightingEdit.set_value_no_signal(object.ref.data.lighting)
-	%ObjectRenderTypeEdit.get_line_edit().text = "%d" % object.ref.data.renderType
-	%ObjectRenderTypeEdit.set_value_no_signal(object.ref.data.renderType)
-	%ObjectUnk0x0CEdit.get_line_edit().text = "%d" % object.ref.data.unk0x0C
-	%ObjectUnk0x0CEdit.set_value_no_signal(object.ref.data.unk0x0C)
-	%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.ref.data.unk0x0E
-	%ObjectUnk0x0EEdit.set_value_no_signal(object.ref.data.unk0x0E)
-	%ObjectFlagButton1.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<0)) > 0)
-	%ObjectFlagButton2.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<1)) > 0)
-	%ObjectFlagButton3.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<2)) > 0)
-	%ObjectFlagButton4.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<3)) > 0)
-	%ObjectFlagButton5.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<4)) > 0)
-	%ObjectFlagButton6.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<5)) > 0)
-	%ObjectFlagButton7.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<6)) > 0)
-	%ObjectFlagButton8.set_pressed_no_signal((object.ref.data.unk0x07 & (1<<7)) > 0)
+func update_selections() -> void:
+	clear()
+	if len(owner.selected_objects) == 0:
+		return
 	
-	if (object.ref.data.renderType & (1<<7)) > 0:
+	%EditObjectContainer.show()
+	last_selection_length = len(owner.selected_objects)
+	var object: ObjectRoth = owner.selected_objects[0]
+	
+	if len(owner.selected_objects) == 1:
+		%ObjectIndexLabel.text = "Object: %d" % object.index
+		%ObjectSectorIndexLabel.show()
+		%ObjectSectorIndexLabel.text = "Sector: %d" % object.sector.get_ref().index
+	
+	elif len(owner.selected_objects) > 1:
+		%ObjectIndexLabel.text = "Object: %d Selected" % len(owner.selected_objects)
+		%ObjectSectorIndexLabel.hide()
+	
+	
+	%ObjectXEdit.get_line_edit().text = "%d" % object.data.posX
+	%ObjectXEdit.set_value_no_signal(object.data.posX)
+	%ObjectYEdit.get_line_edit().text = "%d" % object.data.posY
+	%ObjectYEdit.set_value_no_signal(object.data.posY)
+	%ObjectZEdit.get_line_edit().text = "%d" % object.data.posZ
+	%ObjectZEdit.set_value_no_signal(object.data.posZ)
+	%ObjectRotationEdit.get_line_edit().text = "%d" % object.data.rotation
+	%ObjectRotationEdit.set_value_no_signal(object.data.rotation)
+	%ObjectTextureIndexEdit.get_line_edit().text = "%d" % object.data.textureIndex
+	%ObjectTextureIndexEdit.set_value_no_signal(object.data.textureIndex)
+	%ObjectTextureSourceEdit.get_line_edit().text = "%d" % object.data.textureSource
+	%ObjectTextureSourceEdit.set_value_no_signal(object.data.textureSource)
+	%ObjectLightingEdit.get_line_edit().text = "%d" % object.data.lighting
+	%ObjectLightingEdit.set_value_no_signal(object.data.lighting)
+	%ObjectUnk0x0CEdit.get_line_edit().text = "%d" % object.data.unk0x0C
+	%ObjectUnk0x0CEdit.set_value_no_signal(object.data.unk0x0C)
+	%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.data.unk0x0E
+	%ObjectUnk0x0EEdit.set_value_no_signal(object.data.unk0x0E)
+	%ObjectFlagButton1.set_pressed_no_signal((object.data.unk0x07 & (1<<0)) > 0)
+	%ObjectFlagButton2.set_pressed_no_signal((object.data.unk0x07 & (1<<1)) > 0)
+	%ObjectFlagButton3.set_pressed_no_signal((object.data.unk0x07 & (1<<2)) > 0)
+	%ObjectFlagButton4.set_pressed_no_signal((object.data.unk0x07 & (1<<3)) > 0)
+	%ObjectFlagButton5.set_pressed_no_signal((object.data.unk0x07 & (1<<4)) > 0)
+	%ObjectFlagButton6.set_pressed_no_signal((object.data.unk0x07 & (1<<5)) > 0)
+	%ObjectFlagButton7.set_pressed_no_signal((object.data.unk0x07 & (1<<6)) > 0)
+	%ObjectFlagButton8.set_pressed_no_signal((object.data.unk0x07 & (1<<7)) > 0)
+	
+	if (object.data.renderType & (1<<7)) > 0:
 		%RenderBillboardCheckBox.set_pressed_no_signal(false)
 		%RenderDirectionalCheckBox.set_pressed_no_signal(true)
 	else:
 		%RenderBillboardCheckBox.set_pressed_no_signal(true)
 		%RenderDirectionalCheckBox.set_pressed_no_signal(false)
-	if (object.ref.data.unk0x07 & (1<<0)) > 0:
+	if (object.data.unk0x07 & (1<<0)) > 0:
 		%RenderStyleLabel.text = "Collision Style"
 	else:
 		%RenderStyleLabel.text = "Render Style"
-		
+	
+	update_texture(object)
 	
 	
-	update_texture()
+	for each_object: ObjectRoth in owner.selected_objects:
+		if each_object.data.posX != object.data.posX:
+			%ObjectXEdit.get_line_edit().clear()
+		if each_object.data.posY != object.data.posY:
+			%ObjectYEdit.get_line_edit().clear()
+		if each_object.data.posZ != object.data.posZ:
+			%ObjectZEdit.get_line_edit().clear()
+		if each_object.data.rotation != object.data.rotation:
+			%ObjectRotationEdit.get_line_edit().clear()
+		if each_object.data.textureIndex != object.data.textureIndex:
+			%ObjectTextureIndexEdit.get_line_edit().clear()
+			%TextureNameLabel.text = ""
+			%TextureDescLabel.text = ""
+			%ObjectTexture.texture = null
+		if each_object.data.textureSource != object.data.textureSource:
+			%ObjectTextureSourceEdit.get_line_edit().clear()
+			%TextureNameLabel.text = ""
+			%TextureDescLabel.text = ""
+			%ObjectTexture.texture = null
+		if each_object.data.lighting != object.data.lighting:
+			%ObjectLightingEdit.get_line_edit().clear()
+		if each_object.data.unk0x0C != object.data.unk0x0C:
+			%ObjectUnk0x0CEdit.get_line_edit().clear()
+		if each_object.data.unk0x0E != object.data.unk0x0E:
+			%ObjectUnk0x0EEdit.get_line_edit().clear()
+		if ((each_object.data.renderType & (1<<7)) > 0) != ((object.data.renderType & (1<<7)) > 0):
+			%RenderBillboardCheckBox.set_pressed_no_signal(false)
+			%RenderDirectionalCheckBox.set_pressed_no_signal(false)
+		if ((each_object.data.unk0x07 & (1<<0)) > 0) != ((object.data.unk0x07 & (1<<0)) > 0):
+			%ObjectFlagButton1.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<1)) > 0) != ((object.data.unk0x07 & (1<<1)) > 0):
+			%ObjectFlagButton2.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<2)) > 0) != ((object.data.unk0x07 & (1<<2)) > 0):
+			%ObjectFlagButton3.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<3)) > 0) != ((object.data.unk0x07 & (1<<3)) > 0):
+			%ObjectFlagButton4.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<4)) > 0) != ((object.data.unk0x07 & (1<<4)) > 0):
+			%ObjectFlagButton5.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<5)) > 0) != ((object.data.unk0x07 & (1<<5)) > 0):
+			%ObjectFlagButton6.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<6)) > 0) != ((object.data.unk0x07 & (1<<6)) > 0):
+			%ObjectFlagButton7.indeterminate = true
+		if ((each_object.data.unk0x07 & (1<<7)) > 0) != ((object.data.unk0x07 & (1<<7)) > 0):
+			%ObjectFlagButton8.indeterminate = true
 
 
-func update_texture() -> void:
-	if current_object.data.textureSource == 0:
-		object_das = current_object.map_info.das
-		object_index = current_object.data.textureIndex + 4096
-	elif current_object.data.textureSource == 1:
-		object_das = current_object.map_info.das
-		object_index = current_object.data.textureIndex + 4096 + 256
-	elif current_object.data.textureSource == 2:
+func update_texture(object: ObjectRoth) -> void:
+	var object_das: String = ""
+	var object_index: int = -1
+	if object.data.textureSource == 0:
+		object_das = object.map_info.das
+		object_index = object.data.textureIndex + 4096
+	elif object.data.textureSource == 1:
+		object_das = object.map_info.das
+		object_index = object.data.textureIndex + 4096 + 256
+	elif object.data.textureSource == 2:
 		object_das = "M/ADEMO.DAS"
-		object_index = current_object.data.textureIndex
-	elif current_object.data.textureSource == 3:
+		object_index = object.data.textureIndex
+	elif object.data.textureSource == 3:
 		object_das = "M/ADEMO.DAS"
-		object_index = current_object.data.textureIndex + 256
+		object_index = object.data.textureIndex + 256
 	else:
 		%TextureNameLabel.text = "Invalid Source"
 		%TextureDescLabel.text = ""
@@ -142,168 +185,205 @@ func update_texture() -> void:
 
 
 func _on_object_x_edit_value_changed(value: float) -> void:
-	current_object.data.posX = value
-	_redraw_object(%ObjectXEdit)
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.posX = value
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_y_edit_value_changed(value: float) -> void:
-	current_object.data.posY = value
-	_redraw_object(%ObjectYEdit)
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.posY = value
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_z_edit_value_changed(value: float) -> void:
-	current_object.data.posZ = value
-	_redraw_object(%ObjectZEdit)
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.posZ = value
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_rotation_edit_value_changed(value: float) -> void:
-	current_object.data.rotation = value
-	_redraw_object(%ObjectRotationEdit)
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.rotation = value
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_texture_index_edit_value_changed(value: float) -> void:
-	current_object.data.textureIndex = value
-	update_texture()
-	_redraw_object(%ObjectTextureIndexEdit)
+	var i: int = 0
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.textureIndex = value
+		if i == 0:
+			update_texture(object)
+			i += 1
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_texture_source_edit_value_changed(value: float) -> void:
-	current_object.data.textureSource = value
-	update_texture()
-	_redraw_object(%ObjectTextureSourceEdit)
-	%EditObjectTimer.start()
-
-
-func _on_object_unk_0x_07_edit_value_changed(value: float) -> void:
-	current_object.data.unk0x07 = value
+	var i: int = 0
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.textureSource = value
+		if i == 0:
+			update_texture(object)
+			i += 1
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_lighting_edit_value_changed(value: float) -> void:
-	current_object.data.lighting = value
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.lighting = value
 	%EditObjectTimer.start()
 
 
 func _on_object_render_type_edit_value_changed(value: float) -> void:
-	current_object.data.renderType = value
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.renderType = value
 	%EditObjectTimer.start()
 
 
 func _on_object_unk_0x_0c_edit_value_changed(value: float) -> void:
-	current_object.data.unk0x0C = value
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.unk0x0C = value
 	%EditObjectTimer.start()
 
 
 func _on_object_unk_0x_0e_edit_value_changed(value: float) -> void:
-	current_object.data.unk0x0E = value
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.unk0x0E = value
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 0)
-		%RenderStyleLabel.text = "Collision Style"
-	else:
-		current_object.data.unk0x07 &= ~(1 << 0)
-		%RenderStyleLabel.text = "Render Style"
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 0)
+			%RenderStyleLabel.text = "Collision Style"
+		else:
+			object.data.unk0x07 &= ~(1 << 0)
+			%RenderStyleLabel.text = "Render Style"
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_2_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 1)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 1)
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 1)
+		else:
+			object.data.unk0x07 &= ~(1 << 1)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_3_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 2)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 2)
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 2)
+		else:
+			object.data.unk0x07 &= ~(1 << 2)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_4_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 3)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 3)
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 3)
+		else:
+			object.data.unk0x07 &= ~(1 << 3)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_5_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 4)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 4)
-	_redraw_object()
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 4)
+		else:
+			object.data.unk0x07 &= ~(1 << 4)
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_6_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 5)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 5)
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 5)
+		else:
+			object.data.unk0x07 &= ~(1 << 5)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_7_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 6)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 6)
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 6)
+		else:
+			object.data.unk0x07 &= ~(1 << 6)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_8_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.unk0x07 |= (1 << 7)
-	else:
-		current_object.data.unk0x07 &= ~(1 << 7)
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.unk0x07 |= (1 << 7)
+		else:
+			object.data.unk0x07 &= ~(1 << 7)
 	%EditObjectTimer.start()
 
 
 func _on_render_directional_check_box_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		current_object.data.renderType |= (1 << 7)
-	else:
-		current_object.data.renderType &= ~(1 << 7)
-	_redraw_object()
+	if not toggled_on:
+		return
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.renderType |= (1 << 7)
+	owner.redraw(owner.selected_objects)
+	%EditObjectTimer.start()
+
+
+func _on_render_billboard_check_box_toggled(toggled_on: bool) -> void:
+	if not toggled_on:
+		return
+	for object: ObjectRoth in owner.selected_objects:
+		if toggled_on:
+			object.data.renderType &= ~(1 << 7)
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_browse_objects_button_pressed() -> void:
-	var object: Dictionary = await %ObjectSelection.wait_for_object_selection(current_object.map_info.das)
-	if object.is_empty():
+	var new_object: Dictionary = await %ObjectSelection.wait_for_object_selection(owner.selected_objects[0].map_info.das)
+	if new_object.is_empty():
 		return
-	var source := 0
-	var index := 0
-	if object.das.get_file().get_basename() == "ADEMO":
-		source = 2
-		index = object.index
-		if object.index >= 256:
-			source = 3
-			index -= 256
-	else:
-		source = 0
-		if object.index >= 4352:
-			source = 1
-		index = object.index - 4096
-	current_object.data.textureIndex = index
-	current_object.data.textureSource = source
-	update_texture()
-	_redraw_object()
+	var i: int = 0
+	for object: ObjectRoth in owner.selected_objects:
+		var source := 0
+		var index := 0
+		if new_object.das.get_file().get_basename() == "ADEMO":
+			source = 2
+			index = object.index
+			if new_object.index >= 256:
+				source = 3
+				index -= 256
+		else:
+			source = 0
+			index = new_object.index - 4096
+			if new_object.index >= 4352:
+				source = 1
+				index -= 256
+		object.data.textureIndex = index
+		object.data.textureSource = source
+		if i == 0:
+			update_texture(object)
+			i += 1
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_edit_object_timer_timeout() -> void:
-	if current_object:
-		Roth.editor_action.emit(current_object.map_info, "Edit Object")
+	if last_selection_length == 1:
+		Roth.editor_action.emit(owner.selected_objects[0].map_info, "Edit Object")
+	elif last_selection_length > 1:
+		Roth.editor_action.emit(owner.selected_objects[0].map_info, "Edit Objects")
