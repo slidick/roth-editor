@@ -875,19 +875,19 @@ func check_for_face_hover(sector: Sector) -> void:
 		queue_redraw()
 
 func select(object: Variant) -> void:
-	if object is Face:
+	if object is Face and object.map_info == map.map_info:
 		selected_face = object
 		selected_sector = object.sector
 		queue_redraw()
-	elif object is Sector:
+	elif object is Sector and object.map_info == map.map_info:
 		selected_sector = object
 		selected_face = null
 		queue_redraw()
-	elif object is ObjectRoth:
+	elif object is ObjectRoth and object.map_info == map.map_info:
 		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 			if object_node.ref.index == object.index:
 				object_node.select_single()
-	elif object is Section7_1:
+	elif object is Section7_1 and object.map_info == map.map_info:
 		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
 			if sfx_node.ref.index == object.index:
 				sfx_node.select()
