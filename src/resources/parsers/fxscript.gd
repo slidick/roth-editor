@@ -26,9 +26,11 @@ const SND_NAME_ENTRY := {
 	"name": Parser.Type.String,
 	"desc": Parser.Type.String,
 }
-
+static var vanilla_entries: Array = []
 
 static func get_sfx_entries() -> Array:
+	if not vanilla_entries.is_empty():
+		return vanilla_entries
 	var sfx_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("FXSCRIPT.SFX")
 	if not FileAccess.file_exists(sfx_filepath):
 		return []
@@ -54,7 +56,8 @@ static func get_sfx_entries() -> Array:
 		entries.append(sound_name_entry.merged(snds_fat_entry))
 	
 	assert(len(entries) == number_sounds)
-	return entries
+	vanilla_entries = entries
+	return vanilla_entries
 
 
 static func get_from_entry(entry: Dictionary) -> Dictionary:
@@ -70,3 +73,10 @@ static func get_from_entry(entry: Dictionary) -> Dictionary:
 		frame = Parser.unsigned16_to_signed(int(frame))
 		data.append(Vector2.ONE * (frame/pow(2,15)) )
 	return entry.merged({"data": data})
+
+
+static func get_from_index(index: int) -> Dictionary:
+	var entries: Array = get_sfx_entries()
+	if index < len(entries):
+		return get_from_entry(entries[index])
+	return {}

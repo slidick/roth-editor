@@ -113,3 +113,8 @@ func _on_edit_sfx_timer_timeout() -> void:
 		Roth.editor_action.emit(owner.selected_sfx[0].map_info, "Edit SFX")
 	elif last_selection_length > 1:
 		Roth.editor_action.emit(owner.selected_sfx[0].map_info, "Edit SFXs")
+
+
+func _on_sfx_play_button_pressed() -> void:
+	var data := FXScript.get_from_index(%SFXSoundIndexEdit.value)
+	Roth.play_audio_entry(data)
