@@ -33,8 +33,8 @@ var start_sector_split_vertex: VertexNode
 var last_allow_move: bool = false
 var skip_sector_hover: int = 0
 var skip_sector_hover_prev: int = 0
-var start_vertex_select: bool = false 
-var start_vertex_select_position := Vector2.ZERO
+var start_box_select: bool = false 
+var start_box_select_position := Vector2.ZERO
 var copied_sfx_data: Section7_1
 var mouse_paste_position := Vector2.ZERO
 var dragging_vertex: bool = false
@@ -87,13 +87,11 @@ func _process(_delta: float) -> void:
 	var mouse_x: float = get_global_mouse_position().x + global_position.x
 	var mouse_y: float = get_global_mouse_position().y + global_position.y
 	%CoordinatesLabel.text = "(%d, %d)" % [mouse_x * Roth.SCALE_2D_WORLD, mouse_y * Roth.SCALE_2D_WORLD]
-	#%ViewportBorder2.self_modulate.a = 1.0
 
 
 func _input(event: InputEvent) -> void:
 	if not map:
 		return
-	
 	
 	if event.is_action_pressed("map_2d_zoom_in"):
 		additional_zoom /= ZOOM_SPEED
@@ -119,19 +117,17 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("unmerge_vertices"):
 		unmerge_vertices()
 	
-	if %SectorCheckBox.button_pressed:
-		if event is InputEventMouseMotion:
-			#if not hovered_sector:
-			if timer.is_stopped():
-				timer.start()
-			#else:
-				#check_for_hover()
-	
 	if mouse_drag_enabled:
 		if event is InputEventMouseMotion:
 			%Camera2D.position.x -= event.relative.x / %Camera2D.zoom.x
 			%Camera2D.position.y -= event.relative.y / %Camera2D.zoom.y
-			await get_tree().process_frame
+	
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_MIDDLE:
+		if event.pressed:
+			mouse_drag_enabled = true
+		else:
+			mouse_drag_enabled = false
+			queue_redraw()
 	
 	if start_box_draw:
 		if event is InputEventMouseMotion:
@@ -141,12 +137,12 @@ func _input(event: InputEvent) -> void:
 			start_box_position = Vector2.ZERO
 			queue_redraw()
 	
-	if start_vertex_select:
+	if start_box_select:
 		if event is InputEventMouseMotion:
 			queue_redraw()
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-			start_vertex_select = false
-			start_vertex_select_position = Vector2.ZERO
+			start_box_select = false
+			start_box_select_position = Vector2.ZERO
 			queue_redraw()
 	
 	if start_sector_split:
@@ -161,218 +157,253 @@ func _input(event: InputEvent) -> void:
 			check_for_split(nearest_vertex)
 			queue_redraw()
 	
+	handle_sector_mode_event(event)
+	handle_draw_mode_event(event)
+	handle_object_mode_event(event)
+	handle_vertex_mode_event(event)
+	handle_sfx_mode_event(event)
+
+
+func handle_sector_mode_event(event: InputEvent) -> void:
+	if not %SectorCheckBox.button_pressed:
+		return
+	
+	if event is InputEventMouseMotion:
+		if timer.is_stopped():
+			timer.start()
+	
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if %SectorCheckBox.button_pressed and not event.shift_pressed:
-					if event.pressed and owner.hovered_face and not owner.selected_faces.is_empty() and owner.hovered_face in owner.selected_faces:
-						owner.select_resource(null)
-					elif event.pressed and owner.hovered_face:
-						owner.select_resource(owner.hovered_face)
-					elif event.pressed and owner.hovered_sector and not owner.selected_sectors.is_empty() and owner.hovered_sector in owner.selected_sectors and owner.selected_faces.is_empty():
-						owner.select_resource(null)
-					elif event.pressed and owner.hovered_sector and len(owner.selected_faces) <= 1:
-						owner.select_resource(owner.hovered_sector)
+				if not event.shift_pressed:
 					if event.pressed:
 						holding_left_mouse = true
 						skip_sector_hover = 0
 						skip_sector_hover_prev = 0
+						if owner.hovered_face and not owner.selected_faces.is_empty() and owner.hovered_face in owner.selected_faces:
+							owner.select_resource(null)
+						elif owner.hovered_face:
+							owner.select_resource(owner.hovered_face)
+						elif owner.hovered_sector and not owner.selected_sectors.is_empty() and owner.hovered_sector in owner.selected_sectors and owner.selected_faces.is_empty():
+							owner.select_resource(null)
+						elif owner.hovered_sector and len(owner.selected_faces) <= 1:
+							owner.select_resource(owner.hovered_sector)
 					else:
 						holding_left_mouse = false
-				elif %SectorCheckBox.button_pressed and event.shift_pressed:
-					if event.pressed and owner.hovered_face and owner.hovered_face not in owner.selected_faces:
-						owner.select_resource(owner.hovered_face, false)
-					elif event.pressed and owner.hovered_face and owner.hovered_face in owner.selected_faces and len(owner.selected_faces) == 1:
-						owner.deselect_resource(owner.hovered_face)
-					elif event.pressed and owner.hovered_sector and len(owner.selected_faces) <= 1 and owner.hovered_sector not in owner.selected_sectors:
-						owner.select_resource(owner.hovered_sector, false)
-					elif event.pressed and owner.hovered_sector and owner.hovered_sector in owner.selected_sectors:
-						pass
-						#owner.deselect_resource(owner.hovered_sector)
+				if event.shift_pressed:
 					if event.pressed:
-						holding_left_mouse = true
 						holding_shift = true
-						skip_sector_hover = 0
-						skip_sector_hover_prev = 0
+						holding_left_mouse = true
+						if owner.hovered_face and owner.hovered_face not in owner.selected_faces:
+							owner.select_resource(owner.hovered_face, false)
+						elif owner.hovered_face and owner.hovered_face in owner.selected_faces and len(owner.selected_faces) == 1:
+							owner.deselect_resource(owner.hovered_face)
+						elif owner.hovered_sector and len(owner.selected_faces) <= 1 and owner.hovered_sector not in owner.selected_sectors:
+							owner.select_resource(owner.hovered_sector, false)
+						elif owner.hovered_sector and owner.hovered_sector in owner.selected_sectors:
+							#owner.deselect_resource(owner.hovered_sector)
+							pass
 					else:
-						holding_left_mouse = false
 						holding_shift = false
-				elif %BoxCheckBox.button_pressed == true and not event.shift_pressed:
+						holding_left_mouse = false
+			MOUSE_BUTTON_RIGHT:
+				if not event.shift_pressed:
 					if event.pressed:
-						start_box_draw = true
-						start_box_position = (get_global_mouse_position() + global_position).snappedf(snap)
+						if owner.hovered_sector and owner.hovered_sector in owner.selected_sectors and len(owner.selected_faces) != 1:
+							owner.deselect_resource(owner.hovered_sector)
+						elif owner.hovered_face and owner.hovered_face in owner.selected_faces:
+							owner.deselect_resource(owner.hovered_face)
+				if event.shift_pressed:
+					if event.pressed:
+						holding_shift = true
+						holding_right_mouse = true
 					else:
-						if start_box_draw == false:
-							return
-						
-						if (start_box_position.x == (get_global_mouse_position() + global_position).snappedf(snap).x or 
-								start_box_position.y == (get_global_mouse_position() + global_position).snappedf(snap).y
-						):
-							start_box_draw = false
-							start_box_position = Vector2.ZERO
-							queue_redraw()
-							return
-						
-						var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
+						holding_shift = false
+						holding_right_mouse = false
+
+
+func handle_draw_mode_event(event: InputEvent) -> void:
+	if not %BoxCheckBox.button_pressed:
+		return
+	
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					start_box_draw = true
+					start_box_position = (get_global_mouse_position() + global_position).snappedf(snap)
+				else:
+					if start_box_draw == false:
+						return
+					
+					if (start_box_position.x == (get_global_mouse_position() + global_position).snappedf(snap).x or 
+							start_box_position.y == (get_global_mouse_position() + global_position).snappedf(snap).y
+					):
 						start_box_draw = false
 						start_box_position = Vector2.ZERO
 						queue_redraw()
-						show_vertices(false)
-						
-						for sector: Sector in map.sectors:
-							for face_ref: WeakRef in sector.faces:
-								var face: Face = face_ref.get_ref()
-								for new_face_ref: WeakRef in new_sector.faces:
-									var new_face: Face = new_face_ref.get_ref()
-									if face.sister and face.sister.get_ref() == new_face:
-										pass
-									elif new_face.v2 == face.v1 and new_face.v1 == face.v2:
-										face.sister = weakref(new_face)
-										new_face.sister = weakref(face)
-										face.initialize_mesh()
-										new_face.initialize_mesh()
-										show_vertices(false)
-										queue_redraw()
-						
-						Roth.editor_action.emit(map.map_info, "Draw Box Sector")
-						
-				elif %ObjectCheckBox.button_pressed:
-					if event.pressed:
-						#var objects_selected: int = 0
-						var object_index: int = -1
-						var leave: bool = false
-						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-							if object_node.mouse_over:
-								leave = true
-								if event.shift_pressed:
-									object_node.toggle_selected()
-							if object_node.circle.selected:
-								#objects_selected += 1
-								object_index = object_node.ref.index
-						if leave:
-							#if objects_selected != 1:
-								#%Map3D.clear()
-							#else:
-							owner.select_face(object_index, "Object", map.map_info.name)
-							return
-						start_vertex_select = true
-						start_vertex_select_position = (get_global_mouse_position() + global_position)
-					else:
-						if start_vertex_select == false:
-							for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-								if object_node.mouse_over or dragging_vertex:
-									return
-							for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-								object_node.deselect()
-							return
-						dragging_vertex = false
-						var starting_position := start_vertex_select_position
-						var ending_position := (get_global_mouse_position() + global_position)
-						var v2 := Vector2(ending_position.x, starting_position.y)
-						var v3 := Vector2(starting_position.x, ending_position.y)
-						var objects_selected: Array = []
-						for object_node: ObjectRoth.ObjectNode2D in  %Objects.get_children():
-							if object_node.circle.selected:
-								objects_selected.append(object_node)
-							if Geometry2D.is_point_in_polygon(object_node.position, [
-								starting_position,
-								v2,
-								ending_position,
-								v3
-							]):
-								object_node.select()
-								objects_selected.append(object_node)
-							else:
-								if not event.shift_pressed:
-									object_node.deselect()
-									objects_selected.erase(object_node)
-						#if len(objects_selected) != 1:
+						return
+					
+					var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
+					start_box_draw = false
+					start_box_position = Vector2.ZERO
+					queue_redraw()
+					show_vertices(false)
+					
+					# Check for merges
+					for sector: Sector in map.sectors:
+						for face_ref: WeakRef in sector.faces:
+							var face: Face = face_ref.get_ref()
+							for new_face_ref: WeakRef in new_sector.faces:
+								var new_face: Face = new_face_ref.get_ref()
+								if face.sister and face.sister.get_ref() == new_face:
+									pass
+								elif new_face.v2 == face.v1 and new_face.v1 == face.v2:
+									face.sister = weakref(new_face)
+									new_face.sister = weakref(face)
+									face.initialize_mesh()
+									new_face.initialize_mesh()
+									show_vertices(false)
+									queue_redraw()
+					
+					Roth.editor_action.emit(map.map_info, "Draw Box Sector")
+
+
+func handle_object_mode_event(event: InputEvent) -> void:
+	if not %ObjectCheckBox.button_pressed:
+		return
+	
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					#var objects_selected: int = 0
+					var object_index: int = -1
+					var leave: bool = false
+					for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+						if object_node.mouse_over:
+							leave = true
+							if event.shift_pressed:
+								object_node.toggle_selected()
+						if object_node.circle.selected:
+							#objects_selected += 1
+							object_index = object_node.ref.index
+					if leave:
+						#if objects_selected != 1:
 							#%Map3D.clear()
 						#else:
-						if objects_selected.is_empty():
-							owner.select_resource(null)
-						else:
-							for object: ObjectRoth.ObjectNode2D in objects_selected:
-								owner.select_resource(object.ref, false)
-								#owner.select_face(objects_selected[0].ref.index, "Object", map.map_info.name)
-						start_vertex_select = false
-						start_vertex_select_position = Vector2.ZERO
-						queue_redraw()
-				
-				elif %VertexCheckBox.button_pressed:
-					if event.pressed:
-						for vertex_node: VertexNode in %Vertices.get_children():
-							if vertex_node.mouse_over:
-								if event.shift_pressed:
-									vertex_node.toggle_selected()
-								return
-						
-						if not start_sector_split:
-							start_vertex_select = true
-							start_vertex_select_position = (get_global_mouse_position() + global_position)
-					else:
-						if start_vertex_select == false:
-							for vertex_node: VertexNode in %Vertices.get_children():
-								if vertex_node.mouse_over or dragging_vertex:
-									return
-							for vertex_node: VertexNode in %Vertices.get_children():
-								if not vertex_node.split_vertex:
-									vertex_node.deselect()
-							return
-						dragging_vertex = false
-						var starting_position := start_vertex_select_position
-						var ending_position := (get_global_mouse_position() + global_position)
-						var v2 := Vector2(ending_position.x, starting_position.y)
-						var v3 := Vector2(starting_position.x, ending_position.y)
-						
-						for vertex_node: VertexNode in  %Vertices.get_children():
-							if not vertex_node.split_vertex and Geometry2D.is_point_in_polygon(vertex_node.position, [
-								starting_position,
-								v2,
-								ending_position,
-								v3
-							]):
-								vertex_node.select()
-							elif not vertex_node.split_vertex:
-								if not event.shift_pressed:
-									vertex_node.deselect()
-						start_vertex_select = false
-						start_vertex_select_position = Vector2.ZERO
-						queue_redraw()
-				
-			MOUSE_BUTTON_MIDDLE:
-				if event.pressed:
-					mouse_drag_enabled = true
+						owner.select_face(object_index, "Object", map.map_info.name)
+						return
+					start_box_select = true
+					start_box_select_position = (get_global_mouse_position() + global_position)
 				else:
-					mouse_drag_enabled = false
-					queue_redraw()
-			
-			MOUSE_BUTTON_RIGHT:
-				if %SectorCheckBox.button_pressed:
-					if event.pressed and owner.hovered_sector and owner.hovered_sector in owner.selected_sectors and len(owner.selected_faces) != 1:
-						owner.deselect_resource(owner.hovered_sector)
-					elif event.pressed and owner.hovered_face and owner.hovered_face in owner.selected_faces:
-						owner.deselect_resource(owner.hovered_face)
-					if event.pressed and event.shift_pressed:
-						holding_right_mouse = true
-						holding_shift = true
+					if start_box_select == false:
+						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+							if object_node.mouse_over or dragging_vertex:
+								return
+						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+							object_node.deselect()
+						return
+					dragging_vertex = false
+					var starting_position := start_box_select_position
+					var ending_position := (get_global_mouse_position() + global_position)
+					var v2 := Vector2(ending_position.x, starting_position.y)
+					var v3 := Vector2(starting_position.x, ending_position.y)
+					var objects_selected: Array = []
+					for object_node: ObjectRoth.ObjectNode2D in  %Objects.get_children():
+						if object_node.circle.selected:
+							objects_selected.append(object_node)
+						if Geometry2D.is_point_in_polygon(object_node.position, [
+							starting_position,
+							v2,
+							ending_position,
+							v3
+						]):
+							object_node.select()
+							objects_selected.append(object_node)
+						else:
+							if not event.shift_pressed:
+								object_node.deselect()
+								objects_selected.erase(object_node)
+					#if len(objects_selected) != 1:
+						#%Map3D.clear()
+					#else:
+					if objects_selected.is_empty():
+						owner.select_resource(null)
 					else:
-						holding_right_mouse = false
-						holding_shift = false
-				elif %ObjectCheckBox.button_pressed:
-					if event.pressed:
-						mouse_paste_position = Vector2(
-							get_global_mouse_position().x + global_position.x,
-							get_global_mouse_position().y + global_position.y
-						)
-						%ObjectContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
-				elif %SFXCheckBox.button_pressed:
-					if event.pressed:
-						mouse_paste_position = Vector2(
-							get_global_mouse_position().x + global_position.x,
-							get_global_mouse_position().y + global_position.y
-						)
-						%SFXContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+						for object: ObjectRoth.ObjectNode2D in objects_selected:
+							owner.select_resource(object.ref, false)
+							#owner.select_face(objects_selected[0].ref.index, "Object", map.map_info.name)
+					start_box_select = false
+					start_box_select_position = Vector2.ZERO
+					queue_redraw()
+			MOUSE_BUTTON_RIGHT:
+				if event.pressed:
+					mouse_paste_position = Vector2(
+						get_global_mouse_position().x + global_position.x,
+						get_global_mouse_position().y + global_position.y
+					)
+					%ObjectContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+
+
+func handle_vertex_mode_event(event: InputEvent) -> void:
+	if not %VertexCheckBox.button_pressed:
+		return
+	
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					for vertex_node: VertexNode in %Vertices.get_children():
+						if vertex_node.mouse_over:
+							if event.shift_pressed:
+								vertex_node.toggle_selected()
+							return
+					
+					if not start_sector_split:
+						start_box_select = true
+						start_box_select_position = (get_global_mouse_position() + global_position)
+				else:
+					if start_box_select == false:
+						for vertex_node: VertexNode in %Vertices.get_children():
+							if vertex_node.mouse_over or dragging_vertex:
+								return
+						for vertex_node: VertexNode in %Vertices.get_children():
+							if not vertex_node.split_vertex:
+								vertex_node.deselect()
+						return
+					dragging_vertex = false
+					var starting_position := start_box_select_position
+					var ending_position := (get_global_mouse_position() + global_position)
+					var v2 := Vector2(ending_position.x, starting_position.y)
+					var v3 := Vector2(starting_position.x, ending_position.y)
+					
+					for vertex_node: VertexNode in  %Vertices.get_children():
+						if not vertex_node.split_vertex and Geometry2D.is_point_in_polygon(vertex_node.position, [
+							starting_position,
+							v2,
+							ending_position,
+							v3
+						]):
+							vertex_node.select()
+						elif not vertex_node.split_vertex:
+							if not event.shift_pressed:
+								vertex_node.deselect()
+					start_box_select = false
+					start_box_select_position = Vector2.ZERO
+					queue_redraw()
+
+
+func handle_sfx_mode_event(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_RIGHT:
+				if event.pressed:
+					mouse_paste_position = Vector2(
+						get_global_mouse_position().x + global_position.x,
+						get_global_mouse_position().y + global_position.y
+					)
+					%SFXContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
 
 
 func _draw() -> void:
@@ -603,13 +634,13 @@ func draw_box() -> void:
 
 
 func draw_vertex_select() -> void:
-	if not start_vertex_select:
+	if not start_box_select:
 		return
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position)
-	draw_dashed_line(start_vertex_select_position, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
-	draw_dashed_line(start_vertex_select_position, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
-	draw_dashed_line(current_mouse, Vector2(current_mouse.x, start_vertex_select_position.y), Color.GRAY, line_width, 1.0, true, true)
-	draw_dashed_line(current_mouse, Vector2(start_vertex_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(start_box_select_position, Vector2(current_mouse.x, start_box_select_position.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(start_box_select_position, Vector2(start_box_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(current_mouse, Vector2(current_mouse.x, start_box_select_position.y), Color.GRAY, line_width, 1.0, true, true)
+	draw_dashed_line(current_mouse, Vector2(start_box_select_position.x, current_mouse.y), Color.GRAY, line_width, 1.0, true, true)
 
 
 func draw_sector_split() -> void:
