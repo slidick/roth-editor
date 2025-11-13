@@ -134,9 +134,9 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="0"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "unk0x10"
+text = "Light Ambience"
 
-[node name="unk0x10Edit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="1"]
+[node name="LightAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -160,9 +160,9 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="0"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "Light Ambience"
+text = "Candle Ambience"
 
-[node name="LightAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="1"]
+[node name="CandleAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -173,9 +173,9 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="0"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "unk0x16"
+text = "Use Candle Shade"
 
-[node name="unk0x16Edit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="1"]
+[node name="UseCandleShadeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

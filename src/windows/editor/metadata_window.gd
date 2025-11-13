@@ -18,10 +18,13 @@ func show_metadata(metadata: Dictionary) -> Array:
 	%PlayerHeightEdit.text = "%d" % metadata.playerHeight
 	%MaxClimbEdit.text = "%d" % metadata.maxClimb
 	%MinimumFitEdit.text = "%d" % metadata.minFit
-	%unk0x10Edit.text = "%d" % metadata.unk0x10
+	%LightAmbienceEdit.text = "%d" % metadata.unk0x10
 	%CandleGlowEdit.text = "%d" % metadata.candleGlow
-	%LightAmbienceEdit.text = "%d" % metadata.lightAmbience
-	%unk0x16Edit.text = "%d" % metadata.unk0x16
+	%CandleAmbienceEdit.text = "%d" % metadata.lightAmbience
+	if metadata.unk0x16 == 255:
+		%UseCandleShadeCheckBox.button_pressed = true
+	else:
+		%UseCandleShadeCheckBox.button_pressed = false
 	%SkyTextureEdit.text = "%d" % metadata.skyTexture
 	%unk0x1AEdit.text = "%d" % metadata.unk0x1A
 	toggle(true)
@@ -44,10 +47,13 @@ func _on_save_button_pressed() -> void:
 	metadata.playerHeight = int(%PlayerHeightEdit.text)
 	metadata.maxClimb = int(%MaxClimbEdit.text)
 	metadata.minFit = int(%MinimumFitEdit.text)
-	metadata.unk0x10 = int(%unk0x10Edit.text)
+	metadata.unk0x10 = int(%LightAmbienceEdit.text)
 	metadata.candleGlow = int(%CandleGlowEdit.text)
-	metadata.lightAmbience = int(%LightAmbienceEdit.text)
-	metadata.unk0x16 = int(%unk0x16Edit.text)
+	metadata.lightAmbience = int(%CandleAmbienceEdit.text)
+	if %UseCandleShadeCheckBox.button_pressed:
+		metadata.unk0x16 = 255
+	else:
+		metadata.unk0x16 = 0
 	metadata.skyTexture = int(%SkyTextureEdit.text)
 	metadata.unk0x1A = int(%unk0x1AEdit.text)
 	finished.emit([true, metadata])
