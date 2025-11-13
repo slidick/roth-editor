@@ -515,6 +515,8 @@ func draw_sectors() -> void:
 		return
 	
 	for sector: Sector in map.sectors:
+		if sector.hidden:
+			continue
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			if face.sister:
@@ -546,6 +548,8 @@ func draw_sectors() -> void:
 			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
 	
 	for sector: Sector in owner.selected_sectors:
+		if sector.hidden:
+			continue
 		if sector.map_info != map.map_info:
 			continue
 		for face_ref: WeakRef in sector.faces:
@@ -678,7 +682,10 @@ func show_objects() -> void:
 		return
 	for child: Node in %Objects.get_children():
 		child.queue_free()
+	await get_tree().process_frame
 	for object: ObjectRoth in map.objects:
+		if object.sector.get_ref().hidden:
+			continue
 		var object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
 		object_node.object_selected.connect(_on_object_selected)
 		object_node.object_deselected.connect(_on_object_deselected)
@@ -1113,6 +1120,8 @@ func check_for_hover() -> void:
 	skip_sector_hover_prev = skip_sector_hover
 	var sectors_to_skip: int = skip_sector_hover
 	for sector: Sector in map.sectors:
+		if sector.hidden:
+			continue
 		if is_mouse_inside(sector):
 			if sectors_to_skip > 0:
 				sectors_to_skip -= 1

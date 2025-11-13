@@ -44,7 +44,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				copied_sector_data = moused_over_resource.data.duplicate()
 				copied_platform_data = moused_over_resource.platform.duplicate()
 	
-	if event.is_action_pressed("paste_texture", true):
+	if event.is_action_pressed("paste_texture", true, true):
 		if moused_over_resource:
 			var paste_options: Dictionary = Settings.settings.get("3d_paste_options")
 			if moused_over_resource is Face and copied_face_texture_data:
@@ -108,7 +108,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				owner.redraw([moused_over_resource])
 				%EditSectorContainer.update_selections()
 				Roth.editor_action.emit(moused_over_resource.map_info, "Paste Sector Properties")
-	if event.is_action_pressed("toggle_selection_highlight"):
+	if event.is_action_pressed("toggle_selection_highlight", false, true):
 		show_selection_highlight = not show_selection_highlight
 		if moused_over_resource:
 			moused_over_resource.node.unhighlight()

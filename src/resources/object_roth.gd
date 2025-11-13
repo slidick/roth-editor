@@ -160,6 +160,8 @@ func initialize_mesh() -> Node3D:
 		for child: Node in node.get_children():
 			child.queue_free()
 		#_initialize_mesh()
+		if sector.get_ref().hidden:
+			return
 		_initialize_mesh_actual()
 		return
 	

@@ -54,6 +54,7 @@ var face_length: float :
 var texture_data: Dictionary
 
 var node: Node3D
+var hidden: bool = false
 
 
 static func check_flag(byte_value: int, flag: int) -> bool:
@@ -353,6 +354,8 @@ func initialize_mesh() -> Node3D:
 	if node:
 		for child: Node in node.get_children():
 			child.queue_free()
+		if hidden:
+			return
 		await _initialize_meshes()
 		return
 	
