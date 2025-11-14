@@ -279,12 +279,11 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 						start_box_deselect = true
 						start_box_select_position = (get_global_mouse_position() + global_position)
 					return
-				if not event.shift_pressed:
-					if event.pressed:
-						if owner.hovered_sector and owner.hovered_sector in owner.selected_sectors and len(owner.selected_faces) != 1:
-							owner.deselect_resource(owner.hovered_sector)
-						elif owner.hovered_face and owner.hovered_face in owner.selected_faces:
-							owner.deselect_resource(owner.hovered_face)
+				if event.pressed:
+					if owner.hovered_sector and owner.hovered_sector in owner.selected_sectors and len(owner.selected_faces) != 1:
+						owner.deselect_resource(owner.hovered_sector)
+					elif owner.hovered_face and owner.hovered_face in owner.selected_faces:
+						owner.deselect_resource(owner.hovered_face)
 				if event.shift_pressed:
 					if event.pressed:
 						holding_shift = true
@@ -1294,6 +1293,7 @@ func check_for_hover() -> void:
 						if holding_left_mouse:
 							owner.select_resource(owner.hovered_sector, not holding_shift)
 						elif holding_right_mouse:
+							print("Q")
 							owner.deselect_resource(owner.hovered_sector)
 						queue_redraw()
 				check_for_face_hover(sector)
