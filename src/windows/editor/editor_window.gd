@@ -565,7 +565,8 @@ func _on_3d_object_context_menu_index_pressed(index: int) -> void:
 		1:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
 			object.delete()
-			%Map3D.deselect()
+			select_resource(null)
+			Roth.editor_action.emit(object.map_info, "Delete Object")
 
 
 func copy_objects(object_list: Array) -> void:
