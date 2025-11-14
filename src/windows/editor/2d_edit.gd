@@ -157,6 +157,12 @@ func _input(event: InputEvent) -> void:
 			check_for_split(nearest_vertex)
 			queue_redraw()
 	
+	if event is InputEventKey and event.keycode == KEY_SHIFT:
+		if event.pressed:
+			holding_shift = true
+		else:
+			holding_shift = false
+	
 	handle_sector_mode_event(event)
 	handle_draw_mode_event(event)
 	handle_object_mode_event(event)
