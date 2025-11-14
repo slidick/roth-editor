@@ -37,6 +37,7 @@ var start_box_select: bool = false
 var start_box_select_position := Vector2.ZERO
 var mouse_paste_position := Vector2.ZERO
 var context_menu_object: ObjectRoth
+var context_menu_sfx: SFX
 var dragging_something: bool = false
 var grid_size := Vector2.ONE
 
@@ -452,6 +453,7 @@ func handle_sfx_mode_event(event: InputEvent) -> void:
 						if moused_over_sfx not in owner.selected_sfx:
 							owner.select_resource(moused_over_sfx, not event.shift_pressed)
 						%OnSFXContextPopupMenu.popup(Rect2(get_viewport().get_parent().global_position.x + event.global_position.x, get_viewport().get_parent().global_position.y + event.global_position.y, 0, 0))
+						context_menu_sfx = moused_over_sfx
 						return
 					mouse_paste_position = Vector2(
 						get_global_mouse_position().x + global_position.x,
@@ -805,7 +807,6 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 				add_object_to_2d_map(new_object)
 				owner.select_resource(new_object, false)
 			Roth.editor_action.emit(map.map_info, "Paste Object%s" % ("s" if len(owner.copied_object_data) > 1 else ""))
-			
 
 
 func _on_on_object_context_popup_menu_index_pressed(index: int) -> void:
@@ -821,7 +822,6 @@ func _on_on_object_context_popup_menu_index_pressed(index: int) -> void:
 				object.delete()
 			Roth.editor_action.emit(map.map_info, "Delete Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
 			owner.select_resource(null)
-			
 
 
 func add_object_to_2d_map(new_object: ObjectRoth) -> void:
@@ -880,17 +880,26 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			add_sfx_to_2d_map(new_sfx)
 			Roth.editor_action.emit(map.map_info, "Add SFX")
 		1:
-			var new_sfx := SFX.new_from_copied_object(owner.copied_sfx_data[0], mouse_paste_position * Roth.SCALE_2D_WORLD)
-			if not new_sfx:
-				return
-			map.add_sfx(new_sfx)
-			add_sfx_to_2d_map(new_sfx)
-			Roth.editor_action.emit(map.map_info, "Paste SFX")
+			owner.select_resource(null)
+			var origin := Vector2(-owner.copied_sfx_data[0].data.unk0x00, owner.copied_sfx_data[0].data.unk0x02)
+			for each_sfx: SFX in owner.copied_sfx_data:
+				var offset := origin - Vector2(-each_sfx.data.unk0x00, each_sfx.data.unk0x02)
+				var new_sfx := SFX.new_from_copied_object(each_sfx, (mouse_paste_position * Roth.SCALE_2D_WORLD) - offset)
+				if not each_sfx:
+					continue
+				map.add_sfx(new_sfx)
+				add_sfx_to_2d_map(new_sfx)
+				owner.select_resource(new_sfx, false)
+			Roth.editor_action.emit(map.map_info, "Paste SFX%s" % ("s" if len(owner.copied_sfx_data) > 1 else ""))
 
 
 func _on_on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
+			if context_menu_sfx not in owner.selected_sfx:
+				return
+			owner.selected_sfx.erase(context_menu_sfx)
+			owner.selected_sfx.insert(0, context_menu_sfx)
 			owner.copy_sfx(owner.selected_sfx)
 		1:
 			for sfx: SFX in owner.selected_sfx:
