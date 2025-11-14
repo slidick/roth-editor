@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if target:
+	if target and target.node and target.node.get_child_count() > 0:
 		target_position = target.node.get_child(0).global_position
 	elif not target_position:
 		return
