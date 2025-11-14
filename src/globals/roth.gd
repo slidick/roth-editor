@@ -26,6 +26,7 @@ var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 const OLD_EXE: float = 3.925
 const NEW_EXE: float = 3.983
 const SEQUENTIAL_UNDO_TIMEOUT: float = 1.5
+const DRAGGING_THRESHOLD: float = 2.0
 
 const HIGHLIGHT_MATERIAL: StandardMaterial3D = preload("uid://b3vv75mwnat5k")
 const SELECTED_MATERIAL: StandardMaterial3D = preload("uid://bcwfrjbr5vhmi")

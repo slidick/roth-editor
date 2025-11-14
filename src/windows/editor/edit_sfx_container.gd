@@ -13,6 +13,7 @@ func clear() -> void:
 	%SFXUnk0x0CEdit.get_line_edit().clear()
 	%SFXUnk0x0EEdit.get_line_edit().clear()
 	%SFXUnk0x10Edit.get_line_edit().clear()
+	%SFXPlayButton.show()
 	%EditSFXContainer.hide()
 	last_selection_length = 0
 
@@ -27,11 +28,11 @@ func update_selections() -> void:
 	var sfx: Section7_1 = owner.selected_sfx[0]
 	
 	if len(owner.selected_sfx) == 1:
-		pass
+		%SFXIndexLabel.text = "SFX: %d" % sfx.index
+		
 	elif len(owner.selected_sfx) > 1:
-		pass
+		%SFXIndexLabel.text = "SFX: %d Selected" % len(owner.selected_sfx)
 	
-	%SFXIndexLabel.text = "SFX: %d" % sfx.index
 	%SFXPosXEdit.get_line_edit().text = "%d" % sfx.data.unk0x00
 	%SFXPosXEdit.set_value_no_signal(sfx.data.unk0x00)
 	%SFXPosYEdit.get_line_edit().text = "%d" % sfx.data.unk0x02
@@ -50,6 +51,28 @@ func update_selections() -> void:
 	%SFXUnk0x0EEdit.set_value_no_signal(sfx.data.unk0x0E)
 	%SFXUnk0x10Edit.get_line_edit().text = "%d" % sfx.data.unk0x10
 	%SFXUnk0x10Edit.set_value_no_signal(sfx.data.unk0x10)
+	
+	
+	for each_sfx: Section7_1 in owner.selected_sfx:
+		if each_sfx.data.unk0x00 != sfx.data.unk0x00:
+			%SFXPosXEdit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x02 != sfx.data.unk0x02:
+			%SFXPosYEdit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x04 != sfx.data.unk0x04:
+			%SFXSoundIndexEdit.get_line_edit().clear.call_deferred()
+			%SFXPlayButton.hide()
+		if each_sfx.data.unk0x06 != sfx.data.unk0x06:
+			%SFXUnk0x06Edit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x08 != sfx.data.unk0x08:
+			%SFXUnk0x08Edit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x0A != sfx.data.unk0x0A:
+			%SFXUnk0x0AEdit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x0C != sfx.data.unk0x0C:
+			%SFXUnk0x0CEdit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x0E != sfx.data.unk0x0E:
+			%SFXUnk0x0EEdit.get_line_edit().clear.call_deferred()
+		if each_sfx.data.unk0x10 != sfx.data.unk0x10:
+			%SFXUnk0x10Edit.get_line_edit().clear.call_deferred()
 
 
 func _on_sfx_pos_x_edit_value_changed(value: float) -> void:

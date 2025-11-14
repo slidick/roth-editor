@@ -34,6 +34,7 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 	
 	return object
 
+
 static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRoth, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
 	var new_sector_index: int = -1
 	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
@@ -144,7 +145,6 @@ static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_inf
 
 func _init(p_data: Dictionary, p_map_info: Dictionary, p_sectors: Array, p_sector: Sector = null) -> void:
 	data = p_data
-	#index = p_index
 	map_info = p_map_info
 	sectors = p_sectors
 	if p_sector:
@@ -359,15 +359,8 @@ class CircleDraw2D extends Node2D:
 
 
 class ObjectNode2D extends Node2D:
-	
-	signal object_selected(object: ObjectNode2D, tell_3d: bool)
-	signal object_deselected(all: bool)
-	signal object_copied(object: ObjectRoth)
-	signal object_deleted(object: ObjectRoth)
 	signal object_dragged(object: ObjectNode2D, relative: Vector2)
 	signal object_drag_ended(object: ObjectNode2D)
-	
-	const DRAGGING_THRESHOLD: float = 2.0
 	
 	var ref: ObjectRoth
 	var circle: CircleDraw2D
@@ -375,7 +368,6 @@ class ObjectNode2D extends Node2D:
 	var dragging: bool = false
 	var drag_started: bool = false
 	var dragging_amount := Vector2.ZERO
-	var popup_menu: PopupMenu
 	var start_drag_position: Vector2
 	
 	func _init(p_ref: ObjectRoth) -> void:
@@ -395,13 +387,6 @@ class ObjectNode2D extends Node2D:
 		area.mouse_entered.connect(_on_mouse_entered)
 		area.mouse_exited.connect(_on_mouse_exited)
 		add_child(area)
-		
-		popup_menu = PopupMenu.new()
-		popup_menu.add_item("Copy")
-		popup_menu.add_item("Delete")
-		popup_menu.index_pressed.connect(_on_popup_menu_index_pressed)
-		add_child(popup_menu)
-		
 	
 	func _on_mouse_entered() -> void:
 		mouse_over = true
@@ -426,29 +411,17 @@ class ObjectNode2D extends Node2D:
 							dragging = true
 							dragging_amount = Vector2.ZERO
 							drag_started = false
-							if not circle.selected:
-								circle.selected = true
-								object_selected.emit(self, true)
-							get_viewport().set_input_as_handled()
 					else:
 						if dragging:
 							dragging = false
 							if drag_started:
 								drag_started = false
-								update_position(false)
+								update_position()
 								object_drag_ended.emit(self)
-							else:
-								object_deselected.emit(true)
-							get_viewport().set_input_as_handled()
-			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
-				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
-				circle.selected = true
-				#object_selected.emit(self, true)
-				get_viewport().set_input_as_handled()
-			
+		
 		if event is InputEventMouseMotion and dragging:
 			dragging_amount += event.relative
-			if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
+			if dragging_amount.length() > Roth.DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
 				if drag_started == false:
 					drag_started = true
 					start_drag_position = position
@@ -459,31 +432,11 @@ class ObjectNode2D extends Node2D:
 				object_dragged.emit(self, relative)
 			get_viewport().set_input_as_handled()
 	
-	
-	func _on_popup_menu_index_pressed(index: int) -> void:
-		match index:
-			0:
-				object_copied.emit(ref.duplicate())
-			1:
-				ref.delete()
-				object_deleted.emit(ref)
-	
-	
 	func deselect() -> void:
 		circle.selected = false
 	
 	func select() -> void:
 		circle.selected = true
-	
-	func select_single() -> void:
-		circle.selected = true
-		object_selected.emit(self, false)
-	
-	func toggle_selected() -> void:
-		if circle.selected:
-			deselect()
-		else:
-			select()
 	
 	func move(relative: Vector2) -> void:
 		if circle.selected:
@@ -495,9 +448,9 @@ class ObjectNode2D extends Node2D:
 	func end_drag() -> void:
 		if circle.selected:
 			drag_started = false
-			update_position(false)
+			update_position()
 	
-	func update_position(_select: bool = true) -> void:
+	func update_position() -> void:
 		var pos := Vector2(
 			position.x * Roth.SCALE_2D_WORLD,
 			position.y * Roth.SCALE_2D_WORLD
@@ -506,7 +459,7 @@ class ObjectNode2D extends Node2D:
 		var current_sector_index: int = ref.sector.get_ref().index
 		var new_sector_index: int = -1
 		for sector: Sector in ref.sectors:
-			if is_inside(pos, sector):
+			if Geometry2D.is_point_in_polygon(pos, sector.vertices.slice(0,-1)):
 				new_sector_index = sector.index
 		
 		for object: Dictionary in ref.sectors[new_sector_index].data.objectInformation:
@@ -534,25 +487,9 @@ class ObjectNode2D extends Node2D:
 			ref.sectors[current_sector_index].data.objectInformation.erase(ref.data)
 			ref.sectors[new_sector_index].data.objectInformation.append(ref.data)
 			ref.sector = weakref(ref.sectors[new_sector_index])
-			#ref.data.sector_index = new_sector_index
 		
 		ref.initialize_mesh()
-		await get_tree().process_frame
-		if _select:
-			object_selected.emit(self, true)
 
-
-	func is_inside(point: Vector2, sector: Sector) -> bool:
-		var polygon_path_finder := PolygonPathFinder.new()
-		var points := sector.vertices.slice(0,-1)
-		var connections := []
-		for i in range(len(points)-1):
-			connections.append(i)
-			connections.append(i+1)
-		connections.append(len(points)-1)
-		connections.append(0)
-		polygon_path_finder.setup(points, connections)
-		return polygon_path_finder.is_point_inside(point)
 
 class ObjectNode3D extends Node3D:
 	var ref: ObjectRoth
@@ -575,8 +512,10 @@ class ObjectNode3D extends Node3D:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
 
+
 class ObjectMesh3D extends MeshInstance3D:
 	var ref: ObjectRoth
+
 
 class StaticBodyObject3D extends StaticBody3D:
 	var follow: bool = false

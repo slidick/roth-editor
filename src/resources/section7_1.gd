@@ -7,6 +7,7 @@ var index: int :
 		return Roth.get_map(map_info).sound_effects.find(self)
 var map_info: Dictionary = {}
 var node: SFXNode3D
+var node_2d: SFXNode2D
 
 
 static func new_from_copied_object(p_object: Section7_1, p_position: Vector2) -> Section7_1:	
@@ -85,9 +86,16 @@ func _initialize_mesh() -> void:
 
 
 func get_node_2d() -> Node2D:
-	var sfx_node := SFXNode2D.new(self)
-	return sfx_node
+	if not node_2d:
+		node_2d = SFXNode2D.new(self)
+	return node_2d
 
+func delete() -> void:
+	if node:
+		node.queue_free()
+	if node_2d:
+		node_2d.queue_free()
+	Roth.get_map(map_info).sound_effects.erase(self)
 
 
 class CircleDraw2D extends Node2D:
@@ -117,14 +125,8 @@ class CircleDraw2D extends Node2D:
 
 
 class SFXNode2D extends Node2D:
-	signal object_selected(object: SFXNode2D, tell_3d: bool)
-	signal object_copied(object: Section7_1)
-	signal object_deleted(object: Section7_1)
-	@warning_ignore("unused_signal")
 	signal object_dragged(object: Section7_1)
 	signal object_drag_ended(object: Section7_1)
-	
-	const DRAGGING_THRESHOLD: float = 2.0
 	
 	var ref: Section7_1
 	var circle: CircleDraw2D
@@ -132,7 +134,7 @@ class SFXNode2D extends Node2D:
 	var dragging: bool = false
 	var drag_started: bool = false
 	var dragging_amount := Vector2.ZERO
-	var popup_menu: PopupMenu
+	var start_drag_position: Vector2
 	
 	func _init(p_ref: Section7_1) -> void:
 		ref = p_ref
@@ -151,12 +153,6 @@ class SFXNode2D extends Node2D:
 		area.mouse_entered.connect(_on_mouse_entered)
 		area.mouse_exited.connect(_on_mouse_exited)
 		add_child(area)
-		
-		popup_menu = PopupMenu.new()
-		popup_menu.add_item("Copy")
-		popup_menu.add_item("Delete")
-		popup_menu.index_pressed.connect(_on_popup_menu_index_pressed)
-		add_child(popup_menu)
 	
 	func _on_mouse_entered() -> void:
 		mouse_over = true
@@ -167,50 +163,58 @@ class SFXNode2D extends Node2D:
 		circle.highlighted = false
 	
 	func _input(event: InputEvent) -> void:
+		if event is InputEventKey:
+			if drag_started and event.keycode == KEY_ESCAPE and event.pressed:
+				dragging = false
+				drag_started = false
+				position = start_drag_position
+				get_viewport().set_input_as_handled()
 		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if event.pressed:
-					if mouse_over:
-						dragging = true
-						dragging_amount = Vector2.ZERO
-						drag_started = false
-						circle.selected = true
-						object_selected.emit(self, true)
-				else:
-					if dragging:
-						dragging = false
-						if drag_started:
+				if not event.shift_pressed:
+					if event.pressed:
+						if mouse_over:
+							dragging = true
+							dragging_amount = Vector2.ZERO
 							drag_started = false
-							update_position()
-							object_drag_ended.emit(self)
-			
-			if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and mouse_over:
-				popup_menu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
-				circle.selected = true
-				object_selected.emit(self, true)
+					else:
+						if dragging:
+							dragging = false
+							if drag_started:
+								drag_started = false
+								update_position()
+								object_drag_ended.emit(self)
 		
 		if event is InputEventMouseMotion and dragging:
 			dragging_amount += event.relative
-			if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
-				drag_started = true
+			if dragging_amount.length() > Roth.DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
+				if drag_started == false:
+					drag_started = true
+					start_drag_position = position
+				
 				var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
-				global_position = mouse.snappedf(get_parent().get_parent().snap)
-	
-	func _on_popup_menu_index_pressed(index: int) -> void:
-		match index:
-			0:
-				object_copied.emit(ref.duplicate())
-			1:
-				object_deleted.emit(ref)
-				ref.node.queue_free()
-				queue_free()
+				var relative: Vector2 = global_position - mouse.snappedf(get_parent().get_parent().snap)
+				global_position -= relative
+				object_dragged.emit(self, relative)
+			get_viewport().set_input_as_handled()
 	
 	func deselect() -> void:
 		circle.selected = false
 	
 	func select() -> void:
 		circle.selected = true
-		object_selected.emit(self, false)
+	
+	func move(relative: Vector2) -> void:
+		if circle.selected:
+			if drag_started == false:
+				drag_started = true
+				start_drag_position = position
+			global_position -= relative
+	
+	func end_drag() -> void:
+		if circle.selected:
+			drag_started = false
+			update_position()
 	
 	func update_position() -> void:
 		var pos := Vector2(
@@ -220,21 +224,6 @@ class SFXNode2D extends Node2D:
 		ref.data.unk0x00 = -int(pos.x)
 		ref.data.unk0x02 = int(pos.y)
 		ref.initialize_mesh()
-		await get_tree().process_frame
-		object_selected.emit(self, true)
-
-
-	func is_inside(point: Vector2, sector: Sector) -> bool:
-		var polygon_path_finder := PolygonPathFinder.new()
-		var points := sector.vertices.slice(0,-1)
-		var connections := []
-		for i in range(len(points)-1):
-			connections.append(i)
-			connections.append(i+1)
-		connections.append(len(points)-1)
-		connections.append(0)
-		polygon_path_finder.setup(points, connections)
-		return polygon_path_finder.is_point_inside(point)
 
 
 class SFXNode3D extends Node3D:
@@ -251,6 +240,7 @@ class SFXNode3D extends Node3D:
 	func deselect() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
+
 
 class SFXMesh3D extends MeshInstance3D:
 	var ref: Section7_1

@@ -35,9 +35,8 @@ var skip_sector_hover: int = 0
 var skip_sector_hover_prev: int = 0
 var start_box_select: bool = false 
 var start_box_select_position := Vector2.ZERO
-var copied_sfx_data: Section7_1
 var mouse_paste_position := Vector2.ZERO
-var dragging_vertex: bool = false
+var dragging_something: bool = false
 var grid_size := Vector2.ONE
 
 
@@ -88,6 +87,7 @@ func _process(_delta: float) -> void:
 	var mouse_y: float = get_global_mouse_position().y + global_position.y
 	%CoordinatesLabel.text = "(%d, %d)" % [mouse_x * Roth.SCALE_2D_WORLD, mouse_y * Roth.SCALE_2D_WORLD]
 
+#region Input
 
 func _input(event: InputEvent) -> void:
 	if not map:
@@ -277,67 +277,58 @@ func handle_object_mode_event(event: InputEvent) -> void:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
 				if event.pressed:
-					#var objects_selected: int = 0
-					var object_index: int = -1
-					var leave: bool = false
+					var moused_over_object: ObjectRoth
 					for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 						if object_node.mouse_over:
-							leave = true
+							moused_over_object = object_node.ref
+					if moused_over_object:
+						if moused_over_object in owner.selected_objects:
 							if event.shift_pressed:
-								object_node.toggle_selected()
-						if object_node.circle.selected:
-							#objects_selected += 1
-							object_index = object_node.ref.index
-					if leave:
-						#if objects_selected != 1:
-							#%Map3D.clear()
-						#else:
-						owner.select_face(object_index, "Object", map.map_info.name)
+								owner.deselect_resource(moused_over_object)
+						else:
+							owner.select_resource(moused_over_object, not event.shift_pressed)
 						return
 					start_box_select = true
 					start_box_select_position = (get_global_mouse_position() + global_position)
 				else:
 					if start_box_select == false:
-						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-							if object_node.mouse_over or dragging_vertex:
-								return
-						for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-							object_node.deselect()
 						return
-					dragging_vertex = false
+					dragging_something = false
 					var starting_position := start_box_select_position
 					var ending_position := (get_global_mouse_position() + global_position)
 					var v2 := Vector2(ending_position.x, starting_position.y)
 					var v3 := Vector2(starting_position.x, ending_position.y)
-					var objects_selected: Array = []
+					var objects_in_selection: Array = []
 					for object_node: ObjectRoth.ObjectNode2D in  %Objects.get_children():
-						if object_node.circle.selected:
-							objects_selected.append(object_node)
 						if Geometry2D.is_point_in_polygon(object_node.position, [
 							starting_position,
 							v2,
 							ending_position,
 							v3
 						]):
-							object_node.select()
-							objects_selected.append(object_node)
-						else:
-							if not event.shift_pressed:
-								object_node.deselect()
-								objects_selected.erase(object_node)
-					#if len(objects_selected) != 1:
-						#%Map3D.clear()
-					#else:
-					if objects_selected.is_empty():
-						owner.select_resource(null)
+							objects_in_selection.append(object_node)
+					
+					if objects_in_selection.is_empty():
+						if not event.shift_pressed:
+							owner.select_resource(null)
 					else:
-						for object: ObjectRoth.ObjectNode2D in objects_selected:
+						if not event.shift_pressed:
+							owner.select_resource(null)
+						for object: ObjectRoth.ObjectNode2D in objects_in_selection:
 							owner.select_resource(object.ref, false)
-							#owner.select_face(objects_selected[0].ref.index, "Object", map.map_info.name)
 					start_box_select = false
 					start_box_select_position = Vector2.ZERO
 					queue_redraw()
 			MOUSE_BUTTON_RIGHT:
+				var moused_over_object: ObjectRoth
+				for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+					if object_node.mouse_over:
+						moused_over_object = object_node.ref
+				if moused_over_object:
+					if moused_over_object not in owner.selected_objects:
+						owner.select_resource(moused_over_object, not event.shift_pressed)
+					%OnObjectContextPopupMenu.popup(Rect2(get_viewport().get_parent().global_position.x + event.global_position.x, get_viewport().get_parent().global_position.y + event.global_position.y, 0, 0))
+					return
 				if event.pressed:
 					mouse_paste_position = Vector2(
 						get_global_mouse_position().x + global_position.x,
@@ -366,13 +357,13 @@ func handle_vertex_mode_event(event: InputEvent) -> void:
 				else:
 					if start_box_select == false:
 						for vertex_node: VertexNode in %Vertices.get_children():
-							if vertex_node.mouse_over or dragging_vertex:
+							if vertex_node.mouse_over or dragging_something:
 								return
 						for vertex_node: VertexNode in %Vertices.get_children():
 							if not vertex_node.split_vertex:
 								vertex_node.deselect()
 						return
-					dragging_vertex = false
+					dragging_something = false
 					var starting_position := start_box_select_position
 					var ending_position := (get_global_mouse_position() + global_position)
 					var v2 := Vector2(ending_position.x, starting_position.y)
@@ -395,25 +386,72 @@ func handle_vertex_mode_event(event: InputEvent) -> void:
 
 
 func handle_sfx_mode_event(event: InputEvent) -> void:
+	if not %SFXCheckBox.button_pressed:
+		return
 	if event is InputEventMouseButton:
 		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					var moused_over_sfx: Section7_1
+					for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+						if sfx_node.mouse_over:
+							moused_over_sfx = sfx_node.ref
+					if moused_over_sfx:
+						if moused_over_sfx in owner.selected_sfx:
+							if event.shift_pressed:
+								owner.deselect_resource(moused_over_sfx)
+						else:
+							owner.select_resource(moused_over_sfx, not event.shift_pressed)
+						return
+					start_box_select = true
+					start_box_select_position = (get_global_mouse_position() + global_position)
+				else:
+					if start_box_select == false:
+						return
+					dragging_something = false
+					var starting_position := start_box_select_position
+					var ending_position := (get_global_mouse_position() + global_position)
+					var v2 := Vector2(ending_position.x, starting_position.y)
+					var v3 := Vector2(starting_position.x, ending_position.y)
+					var sfx_in_selection: Array = []
+					for sfx_node: Section7_1.SFXNode2D in  %SFX.get_children():
+						if Geometry2D.is_point_in_polygon(sfx_node.position, [
+							starting_position,
+							v2,
+							ending_position,
+							v3
+						]):
+							sfx_in_selection.append(sfx_node)
+					
+					if sfx_in_selection.is_empty():
+						if not event.shift_pressed:
+							owner.select_resource(null)
+					else:
+						if not event.shift_pressed:
+							owner.select_resource(null)
+						for sfx_node: Section7_1.SFXNode2D in sfx_in_selection:
+							owner.select_resource(sfx_node.ref, false)
+					start_box_select = false
+					start_box_select_position = Vector2.ZERO
+					queue_redraw()
 			MOUSE_BUTTON_RIGHT:
 				if event.pressed:
+					var moused_over_sfx: Section7_1
+					for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+						if sfx_node.mouse_over:
+							moused_over_sfx = sfx_node.ref
+					if moused_over_sfx:
+						if moused_over_sfx not in owner.selected_sfx:
+							owner.select_resource(moused_over_sfx, not event.shift_pressed)
+						%OnSFXContextPopupMenu.popup(Rect2(get_viewport().get_parent().global_position.x + event.global_position.x, get_viewport().get_parent().global_position.y + event.global_position.y, 0, 0))
+						return
 					mouse_paste_position = Vector2(
 						get_global_mouse_position().x + global_position.x,
 						get_global_mouse_position().y + global_position.y
 					)
 					%SFXContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
 
-
-func _draw() -> void:
-	draw_grid()
-	draw_sectors()
-	update_camera_zoom()
-	draw_box()
-	draw_vertex_select()
-	draw_sector_split()
-
+#endregion
 
 #region Camera
 
@@ -487,6 +525,15 @@ func update_camera_zoom() -> void:
 #endregion
 
 #region Draw
+
+func _draw() -> void:
+	draw_grid()
+	draw_sectors()
+	update_camera_zoom()
+	draw_box()
+	draw_vertex_select()
+	draw_sector_split()
+
 
 func update_line_width(x: float) -> bool:
 	var prev_line_width: float = line_width
@@ -718,10 +765,6 @@ func show_objects() -> void:
 		if object.sector.get_ref().hidden:
 			continue
 		var object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
-		object_node.object_selected.connect(_on_object_selected)
-		object_node.object_deselected.connect(_on_object_deselected)
-		object_node.object_copied.connect(_on_object_copied)
-		object_node.object_deleted.connect(_on_object_deleted)
 		object_node.object_dragged.connect(_on_object_dragged)
 		object_node.object_drag_ended.connect(_on_object_drag_ended)
 		%Objects.add_child(object_node)
@@ -732,50 +775,6 @@ func hide_objects() -> void:
 		child.queue_free()
 
 
-func redraw_object(object: ObjectRoth) -> void:
-	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		if object.index == object_node.ref.index:
-			object_node.queue_free()
-			await get_tree().process_frame
-			var new_object_node: ObjectRoth.ObjectNode2D = object.get_node_2d()
-			new_object_node.object_selected.connect(_on_object_selected)
-			new_object_node.object_copied.connect(_on_object_copied)
-			new_object_node.object_deleted.connect(_on_object_deleted)
-			new_object_node.object_dragged.connect(_on_object_dragged)
-			new_object_node.object_drag_ended.connect(_on_object_drag_ended)
-			%Objects.add_child(new_object_node)
-			new_object_node.select()
-
-
-func _on_object_selected(selected_object: ObjectRoth.ObjectNode2D, tell_3d: bool) -> void:
-	owner.selected_sectors.clear()
-	owner.selected_faces.clear()
-	queue_redraw()
-	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		if object != selected_object:
-			object.deselect()
-	for sfx: Section7_1.SFXNode2D in %SFX.get_children():
-		sfx.deselect()
-	if tell_3d:
-		owner.select_face(selected_object.ref.index, "Object", map.map_info.name)
-
-func _on_object_deselected(all_objects: bool) -> void:
-	if all_objects:
-		for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
-			object.deselect()
-		owner.select_resource(null)
-
-func _on_object_copied(object: ObjectRoth) -> void:
-	owner.copy_object(object)
-
-
-func _on_object_deleted(deleted_object: ObjectRoth) -> void:
-	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		if object != deleted_object and object.circle.selected:
-			object.ref.delete()
-	owner.select_resource(null)
-
-
 func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
@@ -783,28 +782,43 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 			if not new_object:
 				return
 			map.add_object(new_object)
-			add_object_to_2d_map(new_object, true)
+			add_object_to_2d_map(new_object)
 			Roth.editor_action.emit(map.map_info, "Add Object")
 		1:
-			var new_object := ObjectRoth.new_from_copied_object(owner.copied_object_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			var new_object := ObjectRoth.new_from_copied_object(owner.copied_object_data[0], mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_object:
 				return
 			map.add_object(new_object)
-			add_object_to_2d_map(new_object, true)
+			add_object_to_2d_map(new_object)
 			Roth.editor_action.emit(map.map_info, "Paste Object")
 
 
-func add_object_to_2d_map(new_object: ObjectRoth, p_select: bool = false) -> void:
+func _on_on_object_context_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			owner.copy_objects(owner.selected_objects)
+		1:
+			for object: ObjectRoth in owner.selected_objects:
+				object.delete()
+			Roth.editor_action.emit(map.map_info, "Delete Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
+			owner.select_resource(null)
+			
+
+
+func add_object_to_2d_map(new_object: ObjectRoth) -> void:
 	if not %ObjectCheckBox.button_pressed:
 		return
 	var object_node: ObjectRoth.ObjectNode2D = new_object.get_node_2d()
-	object_node.object_selected.connect(_on_object_selected)
-	object_node.object_copied.connect(_on_object_copied)
-	object_node.object_deleted.connect(_on_object_deleted)
 	object_node.object_dragged.connect(_on_object_dragged)
 	object_node.object_drag_ended.connect(_on_object_drag_ended)
 	%Objects.add_child(object_node)
-	_on_object_selected(object_node, p_select)
+
+
+func _on_object_dragged(node_dragged: ObjectRoth.ObjectNode2D, relative: Vector2) -> void:
+	dragging_something = true
+	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+		if object_node != node_dragged:
+			object_node.move(relative)
 
 
 func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
@@ -812,14 +826,7 @@ func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
 		if object_node != object:
 			object_node.end_drag()
 	Roth.editor_action.emit(map.map_info, "Move Objects")
-
-
-func _on_object_dragged(node_dragged: ObjectRoth.ObjectNode2D, relative: Vector2) -> void:
-	dragging_vertex = true
-	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		if object_node != node_dragged:
-			object_node.move(relative)
-
+	%Map3D.update_selections()
 
 #endregion
 
@@ -830,11 +837,9 @@ func show_sfx() -> void:
 		return
 	for child: Node in %SFX.get_children():
 		child.queue_free()
+	await get_tree().process_frame
 	for sfx: Section7_1 in map.sound_effects:
 		var sfx_node: Section7_1.SFXNode2D = sfx.get_node_2d()
-		sfx_node.object_selected.connect(_on_sfx_selected)
-		sfx_node.object_copied.connect(_on_sfx_copied)
-		sfx_node.object_deleted.connect(_on_sfx_deleted)
 		sfx_node.object_dragged.connect(_on_sfx_dragged)
 		sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
 		%SFX.add_child(sfx_node)
@@ -845,78 +850,57 @@ func hide_sfx() -> void:
 		child.queue_free()
 
 
-func redraw_sfx(object: Section7_1) -> void:
-	for object_node: Section7_1.SFXNode2D in %SFX.get_children():
-		if object.index == object_node.ref.index:
-			object_node.queue_free()
-			var new_object_node: Section7_1.SFXNode2D = object.get_node_2d()
-			new_object_node.object_selected.connect(_on_sfx_selected)
-			new_object_node.object_copied.connect(_on_sfx_copied)
-			new_object_node.object_deleted.connect(_on_sfx_deleted)
-			%SFX.add_child(new_object_node)
-			new_object_node.select()
-
-
-func _on_sfx_selected(selected_sfx: Section7_1.SFXNode2D, tell_3d: bool) -> void:
-	owner.selected_sectors.clear()
-	owner.selected_faces.clear()
-	queue_redraw()
-	for sfx: Section7_1.SFXNode2D in %SFX.get_children():
-		if sfx != selected_sfx:
-			sfx.deselect()
-	for object: ObjectRoth.ObjectNode2D in %Objects.get_children():
-		object.deselect()
-	if tell_3d:
-		owner.select_face(selected_sfx.ref.index, "SFX", map.map_info.name)
-
-
-func _on_sfx_copied(object: Section7_1) -> void:
-	copied_sfx_data = object
-	%SFXContextPopupMenu.set_item_disabled(1, false)
-
-
-func _on_sfx_deleted(object: Section7_1) -> void:
-	map.sound_effects.erase(object)
-	owner.select_resource(null)
-
-
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var new_object := Section7_1.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
-			if not new_object:
+			var new_sfx := Section7_1.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			if not new_sfx:
 				return
-			map.add_sfx(new_object)
-			var object_node: Section7_1.SFXNode2D = new_object.get_node_2d()
-			object_node.object_selected.connect(_on_sfx_selected)
-			object_node.object_copied.connect(_on_sfx_copied)
-			object_node.object_deleted.connect(_on_sfx_deleted)
-			%SFX.add_child(object_node)
-			_on_sfx_selected(object_node, true)
+			map.add_sfx(new_sfx)
+			add_sfx_to_2d_map(new_sfx)
 			Roth.editor_action.emit(map.map_info, "Add SFX")
 		1:
-			var new_object := Section7_1.new_from_copied_object(copied_sfx_data, mouse_paste_position * Roth.SCALE_2D_WORLD)
-			if not new_object:
+			var new_sfx := Section7_1.new_from_copied_object(owner.copied_sfx_data[0], mouse_paste_position * Roth.SCALE_2D_WORLD)
+			if not new_sfx:
 				return
-			map.add_sfx(new_object)
-			var object_node: Section7_1.SFXNode2D = new_object.get_node_2d()
-			object_node.object_selected.connect(_on_sfx_selected)
-			object_node.object_copied.connect(_on_sfx_copied)
-			object_node.object_deleted.connect(_on_sfx_deleted)
-			%SFX.add_child(object_node)
-			_on_sfx_selected(object_node, true)
+			map.add_sfx(new_sfx)
+			add_sfx_to_2d_map(new_sfx)
 			Roth.editor_action.emit(map.map_info, "Paste SFX")
 
 
-func _on_sfx_dragged(_object: Section7_1.SFXNode2D) -> void:
-	pass
+func _on_on_sfx_context_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			owner.copy_sfx(owner.selected_sfx)
+		1:
+			for sfx: Section7_1 in owner.selected_sfx:
+				sfx.delete()
+			Roth.editor_action.emit(map.map_info, "Delete SFX%s" % ("s" if len(owner.selected_sfx) > 1 else ""))
+			owner.select_resource(null)
 
 
-func _on_sfx_drag_ended(_object: Section7_1.SFXNode2D) -> void:
-	#for object_node: Section7_1.SFXNode2D in %SFX.get_children():
-		#if object_node != object:
-			#object_node.end_drag()
+func _on_sfx_dragged(node_dragged: Section7_1.SFXNode2D, relative: Vector2) -> void:
+	dragging_something = true
+	for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+		if sfx_node != node_dragged:
+			sfx_node.move(relative)
+
+
+func _on_sfx_drag_ended(object: Section7_1.SFXNode2D) -> void:
+	for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+		if sfx_node != object:
+			sfx_node.end_drag()
 	Roth.editor_action.emit(map.map_info, "Move SFX")
+	%Map3D.update_selections()
+
+
+func add_sfx_to_2d_map(new_sfx: Section7_1) -> void:
+	if not %SFXCheckBox.button_pressed:
+		return
+	var sfx_node: Section7_1.SFXNode2D = new_sfx.get_node_2d()
+	sfx_node.object_dragged.connect(_on_sfx_dragged)
+	sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
+	%SFX.add_child(sfx_node)
 
 #endregion
 
@@ -1038,8 +1022,6 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 						break
 		sectors_merged = true
 	
-	
-	
 	if faces_merged:
 		show_vertices(last_allow_move)
 		queue_redraw()
@@ -1072,13 +1054,19 @@ func _on_vertex_deleted() -> void:
 
 
 func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
-	dragging_vertex = true
+	dragging_something = true
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != node_dragged:
 			vertex_node.move(relative)
 
 
 func _on_sector_split(starting_vertex_node: VertexNode) -> void:
+	var selected_vertices_count: int = 0
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node.is_selected:
+			selected_vertices_count += 1
+	if selected_vertices_count != 0:
+		return
 	start_sector_split = true
 	start_sector_split_vertex = starting_vertex_node
 
@@ -1110,6 +1098,9 @@ func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 				if distance_squared < minimum:
 					minimum = distance_squared
 					closest = vertex_node
+	var distance_from_start_vertex := (start_sector_split_vertex.global_position - p_mouse_position).length_squared()
+	if distance_from_start_vertex < minimum:
+		return
 	return closest
 
 #endregion
@@ -1118,33 +1109,28 @@ func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 
 func update_selections() -> void:
 	%Map2D.queue_redraw()
-	#for object: ObjectRoth in owner.selected_objects:
-		#object.node_2d.sele
 	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		if object_node.ref in owner.selected_objects:
 			object_node.select()
 		else:
 			object_node.deselect()
+	for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+		if sfx_node.ref in owner.selected_sfx:
+			sfx_node.select()
+		else:
+			sfx_node.deselect()
 
-func is_mouse_inside(sector: Sector) -> bool:
-	var polygon_path_finder := PolygonPathFinder.new()
+
+func is_mouse_inside_sector(sector: Sector) -> bool:
 	var points := sector.vertices.slice(0,-1)
-	points = sector.vertices
-	var connections := []
-	for i in range(len(points)-1):
-		connections.append(i)
-		connections.append(i+1)
-	connections.append(len(points)-1)
-	connections.append(0)
-	polygon_path_finder.setup(points, connections)
-	return polygon_path_finder.is_point_inside((get_global_mouse_position() + global_position) * Roth.SCALE_2D_WORLD )
+	return Geometry2D.is_point_in_polygon((get_global_mouse_position() + global_position) * Roth.SCALE_2D_WORLD, points)
 
 
 func check_for_hover() -> void:
 	if not map or not has_focus:
 		return
 	if skip_sector_hover == skip_sector_hover_prev:
-		if owner.hovered_sector and is_mouse_inside(owner.hovered_sector):
+		if owner.hovered_sector and is_mouse_inside_sector(owner.hovered_sector):
 			if len(owner.selected_sectors) <= 1:
 				check_for_face_hover(owner.hovered_sector)
 			return
@@ -1153,7 +1139,7 @@ func check_for_hover() -> void:
 	for sector: Sector in map.sectors:
 		if sector.hidden:
 			continue
-		if is_mouse_inside(sector):
+		if is_mouse_inside_sector(sector):
 			if sectors_to_skip > 0:
 				sectors_to_skip -= 1
 				continue
@@ -1197,8 +1183,6 @@ func check_for_face_hover(sector: Sector) -> void:
 	if not found:
 		owner.hovered_face = null
 		queue_redraw()
-
-
 
 
 func distance_to_face(mouse_position: Vector2, face: Face) -> float:
@@ -1355,6 +1339,7 @@ func unmerge_vertices() -> void:
 func check_for_split(nearest_vertex: VertexNode) -> void:
 	if not nearest_vertex:
 		return
+	
 	for face: Face in start_sector_split_vertex.faces:
 		if face in nearest_vertex.faces:
 			return

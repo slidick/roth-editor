@@ -21,7 +21,8 @@ var tree_root: TreeItem
 var context_collision: Dictionary
 var previous_search: String
 var search_count: int = 0
-var copied_object_data: ObjectRoth
+var copied_object_data: Array
+var copied_sfx_data: Array
 var first_load: bool = false
 var undo_stacks: Dictionary = {}
 var undo_positions: Dictionary = {}
@@ -58,19 +59,25 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		
 		if event.is_action_pressed("move_object_to_ceiling"):
-			if %EditObjectContainer.current_object:
-				var height: int = %EditObjectContainer.current_object.sector.get_ref().data.ceilingHeight
-				%EditObjectContainer.current_object.data.posZ = height
-				%EditObjectContainer.current_object.initialize_mesh()
-				await get_tree().process_frame
-				select_resource(%EditObjectContainer.current_object, true)
+			var map_infos: Array = []
+			for object: ObjectRoth in selected_objects:
+				object.data.posZ = object.sector.get_ref().data.ceilingHeight
+				redraw(selected_objects)
+				%EditObjectContainer.update_selections()
+				if object.map_info not in map_infos:
+					map_infos.append(object.map_info)
+			for map_info: Dictionary in map_infos:
+				Roth.editor_action.emit(map_info, "Snap to Ceiling")
 		if event.is_action_pressed("move_object_to_floor"):
-			if %EditObjectContainer.current_object:
-				var height: int = %EditObjectContainer.current_object.sector.get_ref().data.floorHeight
-				%EditObjectContainer.current_object.data.posZ = height
-				%EditObjectContainer.current_object.initialize_mesh()
-				await get_tree().process_frame
-				select_resource(%EditObjectContainer.current_object, true)
+			var map_infos: Array = []
+			for object: ObjectRoth in selected_objects:
+				object.data.posZ = object.sector.get_ref().data.floorHeight
+				redraw(selected_objects)
+				%EditObjectContainer.update_selections()
+				if object.map_info not in map_infos:
+					map_infos.append(object.map_info)
+			for map_info: Dictionary in map_infos:
+				Roth.editor_action.emit(map_info, "Snap to Floor")
 		if event.is_action_pressed("open_3d_context_menu"):
 			var viewport := %Map3D.get_viewport()
 			var mouse_position := viewport.get_mouse_position()
@@ -519,8 +526,9 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 			if not new_object:
 				return
 			Roth.get_map(map_info).add_object(new_object)
-			%Map2D.add_object_to_2d_map(new_object, false)
+			%Map2D.add_object_to_2d_map(new_object)
 			select_resource(new_object, true)
+			Roth.editor_action.emit(new_object.map_info, "Add Object")
 		1:
 			var map_info: Dictionary = context_collision.collider.get_parent().ref.map_info
 			var extra_info: Dictionary = {
@@ -540,29 +548,38 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 					pos += (context_collision.normal * 2)
 			elif context_collision.collider.get_parent().ref is Sector:
 				extra_info["sector_index"] = context_collision.collider.get_parent().ref.index
-			var new_object := ObjectRoth.new_from_copied_object_3d(map_info, copied_object_data, pos, extra_info)
+			var new_object := ObjectRoth.new_from_copied_object_3d(map_info, copied_object_data[0], pos, extra_info)
 			if not new_object:
 				return
 			Roth.get_map(map_info).add_object(new_object)
-			%Map2D.add_object_to_2d_map(new_object, true)
+			%Map2D.add_object_to_2d_map(new_object)
 			select_resource(new_object, true)
+			Roth.editor_action.emit(new_object.map_info, "Paste Object")
 
 
 func _on_3d_object_context_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
-			copy_object(object)
+			copy_objects([object])
 		1:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
 			object.delete()
 			%Map3D.deselect()
 
 
-func copy_object(object: ObjectRoth) -> void:
-	copied_object_data = object
+func copy_objects(object_list: Array) -> void:
+	copied_object_data.clear()
+	for object: ObjectRoth in object_list:
+		copied_object_data.append(object.duplicate())
 	%"3DContextMenu".set_item_disabled(1, false)
 	%ObjectContextPopupMenu.set_item_disabled(1, false)
+
+func copy_sfx(sfx_list: Array) -> void:
+	copied_sfx_data.clear()
+	for sfx: Section7_1 in sfx_list:
+		copied_sfx_data.append(sfx.duplicate())
+	%SFXContextPopupMenu.set_item_disabled(1, false)
 
 #endregion
 
