@@ -854,12 +854,13 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 
 func deselect_resource(resource: RefCounted) -> void:
 	if resource is Face:
-		selected_faces.erase(resource)
-		if len(selected_faces) == 1:
-			selected_sectors.clear()
-			selected_sectors.append(selected_faces[0].sector)
-		elif len(selected_faces) == 0:
-			selected_sectors.clear()
+		if resource in selected_faces:
+			selected_faces.erase(resource)
+			if len(selected_faces) == 1:
+				selected_sectors.clear()
+				selected_sectors.append(selected_faces[0].sector)
+			elif len(selected_faces) == 0:
+				selected_sectors.clear()
 		%EditFaceContainer.update_selections()
 	elif resource is Sector:
 		selected_sectors.erase(resource)
