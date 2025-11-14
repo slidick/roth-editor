@@ -270,6 +270,13 @@ func get_vertices() -> Array:
 	return ordered_vertices.slice(0,-1)
 
 
+func get_center() -> Vector2:
+	var total := Vector2.ZERO
+	for vertex: Vector2 in vertices.slice(0,-1):
+		total += vertex
+	return total / (len(vertices) - 1)
+
+
 func is_convex() -> bool:
 	var ordered_vertices := get_vertices()
 	 # Get the number of vertices

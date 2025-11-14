@@ -33,13 +33,15 @@ var start_sector_split_vertex: VertexNode
 var last_allow_move: bool = false
 var skip_sector_hover: int = 0
 var skip_sector_hover_prev: int = 0
-var start_box_select: bool = false 
+var start_box_select: bool = false
+var start_box_deselect: bool = false
 var start_box_select_position := Vector2.ZERO
 var mouse_paste_position := Vector2.ZERO
 var context_menu_object: ObjectRoth
 var context_menu_sfx: SFX
 var dragging_something: bool = false
 var grid_size := Vector2.ONE
+var highlight_sectors: Array = []
 
 
 func _ready() -> void:
@@ -145,6 +147,8 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 			start_box_select = false
 			start_box_select_position = Vector2.ZERO
+			start_box_deselect = false
+			highlight_sectors.clear()
 			queue_redraw()
 	
 	if start_sector_split:
@@ -183,6 +187,37 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
+				if not event.pressed and start_box_select:
+					var starting_position := start_box_select_position
+					var ending_position := (get_global_mouse_position() + global_position)
+					var v2 := Vector2(ending_position.x, starting_position.y)
+					var v3 := Vector2(starting_position.x, ending_position.y)
+					var sectors_in_selection: Array = []
+					for sector: Sector in map.sectors:
+						if Geometry2D.is_point_in_polygon(sector.get_center()/Roth.SCALE_2D_WORLD, [
+							starting_position,
+							v2,
+							ending_position,
+							v3
+						]):
+							sectors_in_selection.append(sector)
+					if sectors_in_selection.is_empty():
+						if not event.shift_pressed:
+							owner.select_resource(null)
+					else:
+						if not event.shift_pressed:
+							owner.select_resource(null)
+						for sector: Sector in sectors_in_selection:
+							owner.select_resource(sector, false)
+					start_box_select = false
+					highlight_sectors.clear()
+					start_box_select_position = Vector2.ZERO
+					queue_redraw()
+				if event.ctrl_pressed:
+					if event.pressed:
+						start_box_select = true
+						start_box_select_position = (get_global_mouse_position() + global_position)
+					return
 				if not event.shift_pressed:
 					if event.pressed:
 						holding_left_mouse = true
@@ -196,6 +231,8 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 							owner.select_resource(null)
 						elif owner.hovered_sector and len(owner.selected_faces) <= 1:
 							owner.select_resource(owner.hovered_sector)
+						elif not owner.hovered_sector:
+							owner.select_resource(null)
 					else:
 						holding_left_mouse = false
 				if event.shift_pressed:
@@ -215,6 +252,33 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 						holding_shift = false
 						holding_left_mouse = false
 			MOUSE_BUTTON_RIGHT:
+				if not event.pressed and start_box_deselect:
+					var starting_position := start_box_select_position
+					var ending_position := (get_global_mouse_position() + global_position)
+					var v2 := Vector2(ending_position.x, starting_position.y)
+					var v3 := Vector2(starting_position.x, ending_position.y)
+					var sectors_in_selection: Array = []
+					for sector: Sector in map.sectors:
+						if Geometry2D.is_point_in_polygon(sector.get_center()/Roth.SCALE_2D_WORLD, [
+							starting_position,
+							v2,
+							ending_position,
+							v3
+						]):
+							sectors_in_selection.append(sector)
+					for sector: Sector in sectors_in_selection:
+						owner.deselect_resource(sector)
+					start_box_select = false
+					start_box_deselect = false
+					highlight_sectors.clear()
+					start_box_select_position = Vector2.ZERO
+					queue_redraw()
+				if event.ctrl_pressed:
+					if event.pressed:
+						start_box_select = true
+						start_box_deselect = true
+						start_box_select_position = (get_global_mouse_position() + global_position)
+					return
 				if not event.shift_pressed:
 					if event.pressed:
 						if owner.hovered_sector and owner.hovered_sector in owner.selected_sectors and len(owner.selected_faces) != 1:
@@ -635,10 +699,30 @@ func draw_sectors() -> void:
 			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
 			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
 	
+	for sector: Sector in highlight_sectors:
+		if sector.hidden:
+			continue
+		if sector.map_info != map.map_info:
+			continue
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
+			var direction: Vector2 = (face.v2 - face.v1).normalized()
+			var perendicular := Vector2(direction.y, -direction.x)
+			
+			var v_center := Vector2(
+				(face.v1.x + face.v2.x) / 2,
+				(face.v1.y + face.v2.y) / 2
+			)
+			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
+	
 	for sector: Sector in owner.selected_sectors:
 		if sector.hidden:
 			continue
 		if sector.map_info != map.map_info:
+			continue
+		if start_box_deselect and sector in highlight_sectors:
 			continue
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
@@ -741,6 +825,9 @@ func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
 		holding_left_mouse = false
 		holding_right_mouse = false
 		holding_shift = false
+		start_box_select = false
+		start_box_deselect = false
+		highlight_sectors.clear()
 		owner.select_resource(null)
 		if p_reset_camera:
 			default_camera_bounds()
@@ -1158,37 +1245,67 @@ func is_mouse_inside_sector(sector: Sector) -> bool:
 func check_for_hover() -> void:
 	if not map or not has_focus:
 		return
-	if skip_sector_hover == skip_sector_hover_prev:
-		if owner.hovered_sector and is_mouse_inside_sector(owner.hovered_sector):
-			if len(owner.selected_sectors) <= 1:
-				check_for_face_hover(owner.hovered_sector)
-			return
-	skip_sector_hover_prev = skip_sector_hover
-	var sectors_to_skip: int = skip_sector_hover
-	for sector: Sector in map.sectors:
-		if sector.hidden:
-			continue
-		if is_mouse_inside_sector(sector):
-			if sectors_to_skip > 0:
-				sectors_to_skip -= 1
+	if start_box_select and not start_box_deselect:
+		highlight_sectors.clear()
+		var starting_position := start_box_select_position
+		var ending_position := (get_global_mouse_position() + global_position)
+		var v2 := Vector2(ending_position.x, starting_position.y)
+		var v3 := Vector2(starting_position.x, ending_position.y)
+		for sector: Sector in map.sectors:
+			if Geometry2D.is_point_in_polygon(sector.get_center()/Roth.SCALE_2D_WORLD, [
+				start_box_select_position,
+				v2,
+				ending_position,
+				v3
+			]):
+				highlight_sectors.append(sector)
+	elif start_box_deselect:
+		highlight_sectors.clear()
+		var starting_position := start_box_select_position
+		var ending_position := (get_global_mouse_position() + global_position)
+		var v2 := Vector2(ending_position.x, starting_position.y)
+		var v3 := Vector2(starting_position.x, ending_position.y)
+		for sector: Sector in map.sectors:
+			if Geometry2D.is_point_in_polygon(sector.get_center()/Roth.SCALE_2D_WORLD, [
+				start_box_select_position,
+				v2,
+				ending_position,
+				v3
+			]) and sector in owner.selected_sectors:
+				highlight_sectors.append(sector)
+	else:
+		if skip_sector_hover == skip_sector_hover_prev:
+			if owner.hovered_sector and is_mouse_inside_sector(owner.hovered_sector):
+				if len(owner.selected_sectors) <= 1:
+					check_for_face_hover(owner.hovered_sector)
+				return
+		skip_sector_hover_prev = skip_sector_hover
+		var sectors_to_skip: int = skip_sector_hover
+		for sector: Sector in map.sectors:
+			if sector.hidden:
 				continue
-			if len(owner.selected_faces) <= 1:
-				if owner.hovered_sector != sector:
-					owner.hovered_sector = sector
-					if holding_left_mouse:
-						owner.select_resource(owner.hovered_sector, not holding_shift)
-					elif holding_right_mouse:
-						owner.deselect_resource(owner.hovered_sector)
-					queue_redraw()
-			check_for_face_hover(sector)
+			if is_mouse_inside_sector(sector):
+				if sectors_to_skip > 0:
+					sectors_to_skip -= 1
+					continue
+				if len(owner.selected_faces) <= 1:
+					if owner.hovered_sector != sector:
+						owner.hovered_sector = sector
+						if holding_left_mouse:
+							owner.select_resource(owner.hovered_sector, not holding_shift)
+						elif holding_right_mouse:
+							owner.deselect_resource(owner.hovered_sector)
+						queue_redraw()
+				check_for_face_hover(sector)
+				return
+		if skip_sector_hover > 0:
+			skip_sector_hover = 0
+			check_for_hover()
 			return
-	if skip_sector_hover > 0:
-		skip_sector_hover = 0
-		check_for_hover()
-		return
-	owner.hovered_sector = null
-	owner.hovered_face = null
-	queue_redraw()
+		owner.hovered_sector = null
+		owner.hovered_face = null
+		queue_redraw()
+
 
 
 func check_for_face_hover(sector: Sector) -> void:
