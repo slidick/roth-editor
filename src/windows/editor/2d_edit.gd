@@ -768,6 +768,7 @@ func show_objects() -> void:
 		object_node.object_dragged.connect(_on_object_dragged)
 		object_node.object_drag_ended.connect(_on_object_drag_ended)
 		%Objects.add_child(object_node)
+	update_selections()
 
 
 func hide_objects() -> void:
@@ -843,6 +844,7 @@ func show_sfx() -> void:
 		sfx_node.object_dragged.connect(_on_sfx_dragged)
 		sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
 		%SFX.add_child(sfx_node)
+	update_selections()
 
 
 func hide_sfx() -> void:
