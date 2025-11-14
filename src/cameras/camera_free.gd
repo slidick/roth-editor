@@ -38,7 +38,7 @@ func _process(delta: float) -> void:
 			translate(direction * _velocity * delta)
 	
 	if get_node_or_null("%PositionLabel"):
-		%PositionLabel.text = "(%d, %d)" % [global_position.x * Roth.SCALE_3D_WORLD, global_position.z * Roth.SCALE_3D_WORLD]
+		%PositionLabel.text = "(%d, %d, %d)" % [global_position.x * Roth.SCALE_3D_WORLD, global_position.z * Roth.SCALE_3D_WORLD, global_position.y * Roth.SCALE_3D_WORLD]
 
 
 func _input(event: InputEvent) -> void:
