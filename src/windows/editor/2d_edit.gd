@@ -36,6 +36,7 @@ var skip_sector_hover_prev: int = 0
 var start_box_select: bool = false 
 var start_box_select_position := Vector2.ZERO
 var mouse_paste_position := Vector2.ZERO
+var context_menu_object: ObjectRoth
 var dragging_something: bool = false
 var grid_size := Vector2.ONE
 
@@ -334,6 +335,7 @@ func handle_object_mode_event(event: InputEvent) -> void:
 					if moused_over_object not in owner.selected_objects:
 						owner.select_resource(moused_over_object, not event.shift_pressed)
 					%OnObjectContextPopupMenu.popup(Rect2(get_viewport().get_parent().global_position.x + event.global_position.x, get_viewport().get_parent().global_position.y + event.global_position.y, 0, 0))
+					context_menu_object = moused_over_object
 					return
 				if event.pressed:
 					mouse_paste_position = Vector2(
@@ -792,17 +794,27 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 			add_object_to_2d_map(new_object)
 			Roth.editor_action.emit(map.map_info, "Add Object")
 		1:
-			var new_object := ObjectRoth.new_from_copied_object(owner.copied_object_data[0], mouse_paste_position * Roth.SCALE_2D_WORLD)
-			if not new_object:
-				return
-			map.add_object(new_object)
-			add_object_to_2d_map(new_object)
-			Roth.editor_action.emit(map.map_info, "Paste Object")
+			owner.select_resource(null)
+			var origin := Vector2(-owner.copied_object_data[0].data.posX, owner.copied_object_data[0].data.posY)
+			for each_object: ObjectRoth in owner.copied_object_data:
+				var offset := origin - Vector2(-each_object.data.posX, each_object.data.posY)
+				var new_object := ObjectRoth.new_from_copied_object(each_object, (mouse_paste_position * Roth.SCALE_2D_WORLD) - offset)
+				if not new_object:
+					continue
+				map.add_object(new_object)
+				add_object_to_2d_map(new_object)
+				owner.select_resource(new_object, false)
+			Roth.editor_action.emit(map.map_info, "Paste Object%s" % ("s" if len(owner.copied_object_data) > 1 else ""))
+			
 
 
 func _on_on_object_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
+			if context_menu_object not in owner.selected_objects:
+				return
+			owner.selected_objects.erase(context_menu_object)
+			owner.selected_objects.insert(0, context_menu_object)
 			owner.copy_objects(owner.selected_objects)
 		1:
 			for object: ObjectRoth in owner.selected_objects:
