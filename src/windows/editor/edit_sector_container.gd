@@ -231,23 +231,23 @@ func update_selections() -> void:
 			%FloorScaleOption.select(-1)
 		
 		if each_sector.data.lighting != sector.data.lighting:
-			%GlowEdit.get_line_edit().clear()
+			%GlowEdit.get_line_edit().clear.call_deferred()
 		if each_sector.data.floorTriggerID != sector.data.floorTriggerID:
-			%FloorTriggerIDEdit.get_line_edit().clear()
+			%FloorTriggerIDEdit.get_line_edit().clear.call_deferred()
 		if ((each_sector.data.textureFit & Sector.CANDLE) > 0) != ((sector.data.textureFit & Sector.CANDLE) > 0):
 			%CandleCheckBox.indeterminate = true
 		if ((each_sector.data.textureFit & Sector.LIGHTNING) > 0) != ((sector.data.textureFit & Sector.LIGHTNING) > 0):
 			%LightningCheckBox.indeterminate = true
 		if each_sector.data.textureMapOverride != sector.data.textureMapOverride:
-			%TextureHeightOverrideEdit.get_line_edit().clear()
+			%TextureHeightOverrideEdit.get_line_edit().clear.call_deferred()
 		if each_sector.data.ceilingTextureShiftX != sector.data.ceilingTextureShiftX:
-			%RoofOffsetXEdit.get_line_edit().clear()
+			%RoofOffsetXEdit.get_line_edit().clear.call_deferred()
 		if each_sector.data.ceilingTextureShiftY != sector.data.ceilingTextureShiftY:
-			%RoofOffsetYEdit.get_line_edit().clear()
+			%RoofOffsetYEdit.get_line_edit().clear.call_deferred()
 		if each_sector.data.floorTextureShiftX != sector.data.floorTextureShiftX:
-			%FloorOffsetXEdit.get_line_edit().clear()
+			%FloorOffsetXEdit.get_line_edit().clear.call_deferred()
 		if each_sector.data.floorTextureShiftY != sector.data.floorTextureShiftY:
-			%FloorOffsetYEdit.get_line_edit().clear()
+			%FloorOffsetYEdit.get_line_edit().clear.call_deferred()
 		if ((each_sector.data.unk0x16 & Sector.CEILING_FLIP_X) > 0) != ((sector.data.unk0x16 & Sector.CEILING_FLIP_X) > 0):
 			%RoofFlipXCheckBox.indeterminate = true
 		if ((each_sector.data.unk0x16 & Sector.CEILING_FLIP_Y) > 0) != ((sector.data.unk0x16 & Sector.CEILING_FLIP_Y) > 0):
@@ -267,7 +267,7 @@ func update_selections() -> void:
 			%PlatformContainer.hide()
 		elif sector.platform:
 			if each_sector.platform.ceilingHeight != sector.platform.ceilingHeight:
-				%PlatformRoofHeightEdit.get_line_edit().clear()
+				%PlatformRoofHeightEdit.get_line_edit().clear.call_deferred()
 			var platform_ceiling_a: int = sector.platform.floorTextureScale & Sector.CEILING_A > 0
 			var platform_ceiling_b: int = sector.platform.floorTextureScale & Sector.CEILING_B > 0
 			var each_platform_ceiling_a: int = each_sector.platform.floorTextureScale & Sector.CEILING_A > 0
@@ -276,7 +276,7 @@ func update_selections() -> void:
 				%PlatformRoofScaleOption.select(-1)
 			
 			if each_sector.platform.floorHeight != sector.platform.floorHeight:
-				%PlatformFloorHeightEdit.get_line_edit().clear()
+				%PlatformFloorHeightEdit.get_line_edit().clear.call_deferred()
 			var platform_floor_a: int = sector.platform.floorTextureScale & Sector.FLOOR_A > 0
 			var platform_floor_b: int = sector.platform.floorTextureScale & Sector.FLOOR_B > 0
 			var each_platform_floor_a: int = each_sector.platform.floorTextureScale & Sector.FLOOR_A > 0
@@ -290,13 +290,13 @@ func update_selections() -> void:
 				%PlatformFloorTextureOption.clear()
 			
 			if each_sector.platform.ceilingTextureShiftX != sector.platform.ceilingTextureShiftX:
-				%PlatformRoofOffsetXEdit.get_line_edit().clear()
+				%PlatformRoofOffsetXEdit.get_line_edit().clear.call_deferred()
 			if each_sector.platform.ceilingTextureShiftY != sector.platform.ceilingTextureShiftY:
-				%PlatformRoofOffsetYEdit.get_line_edit().clear()
+				%PlatformRoofOffsetYEdit.get_line_edit().clear.call_deferred()
 			if each_sector.platform.floorTextureShiftX != sector.platform.floorTextureShiftX:
-				%PlatformFloorOffsetXEdit.get_line_edit().clear()
+				%PlatformFloorOffsetXEdit.get_line_edit().clear.call_deferred()
 			if each_sector.platform.floorTextureShiftY != sector.platform.floorTextureShiftY:
-				%PlatformFloorOffsetYEdit.get_line_edit().clear()
+				%PlatformFloorOffsetYEdit.get_line_edit().clear.call_deferred()
 	
 	%RoofTextureOption.add_item("--------")
 	%RoofTextureOption.add_item("Sky")

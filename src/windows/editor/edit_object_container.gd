@@ -103,29 +103,29 @@ func update_selections() -> void:
 	
 	for each_object: ObjectRoth in owner.selected_objects:
 		if each_object.data.posX != object.data.posX:
-			%ObjectXEdit.get_line_edit().clear()
+			%ObjectXEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.posY != object.data.posY:
-			%ObjectYEdit.get_line_edit().clear()
+			%ObjectYEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.posZ != object.data.posZ:
-			%ObjectZEdit.get_line_edit().clear()
+			%ObjectZEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.rotation != object.data.rotation:
-			%ObjectRotationEdit.get_line_edit().clear()
+			%ObjectRotationEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.textureIndex != object.data.textureIndex:
-			%ObjectTextureIndexEdit.get_line_edit().clear()
+			%ObjectTextureIndexEdit.get_line_edit().clear.call_deferred()
 			%TextureNameLabel.text = ""
 			%TextureDescLabel.text = ""
 			%ObjectTexture.texture = null
 		if each_object.data.textureSource != object.data.textureSource:
-			%ObjectTextureSourceEdit.get_line_edit().clear()
+			%ObjectTextureSourceEdit.get_line_edit().clear.call_deferred()
 			%TextureNameLabel.text = ""
 			%TextureDescLabel.text = ""
 			%ObjectTexture.texture = null
 		if each_object.data.lighting != object.data.lighting:
-			%ObjectLightingEdit.get_line_edit().clear()
+			%ObjectLightingEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.unk0x0C != object.data.unk0x0C:
-			%ObjectUnk0x0CEdit.get_line_edit().clear()
+			%ObjectUnk0x0CEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.unk0x0E != object.data.unk0x0E:
-			%ObjectUnk0x0EEdit.get_line_edit().clear()
+			%ObjectUnk0x0EEdit.get_line_edit().clear.call_deferred()
 		if ((each_object.data.renderType & (1<<7)) > 0) != ((object.data.renderType & (1<<7)) > 0):
 			%RenderBillboardCheckBox.set_pressed_no_signal(false)
 			%RenderDirectionalCheckBox.set_pressed_no_signal(false)

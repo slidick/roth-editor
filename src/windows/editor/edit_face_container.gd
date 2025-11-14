@@ -199,7 +199,7 @@ func update_selections() -> void:
 			%Flag8CheckBox.indeterminate = true
 			
 		if (each_face.texture_data.unk0x00 + ((face.texture_data.type & ~(1<<7))<<8)) != (face.texture_data.unk0x00 + ((face.texture_data.type & ~(1<<7))<<8)):
-			%"Unk0x00+TypeEdit".get_line_edit().clear()
+			%"Unk0x00+TypeEdit".get_line_edit().clear.call_deferred()
 		if each_face.texture_data.upperTextureIndex != face.texture_data.upperTextureIndex:
 			%TopTextureOption.clear()
 		if each_face.texture_data.midTextureIndex != face.texture_data.midTextureIndex:
@@ -208,8 +208,8 @@ func update_selections() -> void:
 			%BottomTextureOption.clear()
 		
 		if not "additionalMetadata" in each_face.texture_data or each_face.texture_data.type & 128 == 0:
-			%XShiftEdit.get_line_edit().clear()
-			%YShiftEdit.get_line_edit().clear()
+			%XShiftEdit.get_line_edit().clear.call_deferred()
+			%YShiftEdit.get_line_edit().clear.call_deferred()
 			%"0x0CEdit".text = ""
 			%XShiftEdit.editable = false
 			%YShiftEdit.editable = false
@@ -217,9 +217,9 @@ func update_selections() -> void:
 			%AdditionalCheckButton.set_pressed_no_signal(false)
 		elif "additionalMetadata" in face.texture_data:
 			if each_face.texture_data.additionalMetadata.shiftTextureX != face.texture_data.additionalMetadata.shiftTextureX:
-				%XShiftEdit.get_line_edit().clear()
+				%XShiftEdit.get_line_edit().clear.call_deferred()
 			if each_face.texture_data.additionalMetadata.shiftTextureY != face.texture_data.additionalMetadata.shiftTextureY:
-				%YShiftEdit.get_line_edit().clear()
+				%YShiftEdit.get_line_edit().clear.call_deferred()
 			if each_face.texture_data.additionalMetadata.unk0x0C != face.texture_data.additionalMetadata.unk0x0C:
 				%"0x0CEdit".text = ""
 	
