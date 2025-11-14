@@ -60,8 +60,8 @@ func update_selections() -> void:
 		%ObjectSectorIndexLabel.hide()
 	
 	
-	%ObjectXEdit.get_line_edit().text = "%d" % object.data.posX
-	%ObjectXEdit.set_value_no_signal(object.data.posX)
+	%ObjectXEdit.get_line_edit().text = "%d" % -object.data.posX
+	%ObjectXEdit.set_value_no_signal(-object.data.posX)
 	%ObjectYEdit.get_line_edit().text = "%d" % object.data.posY
 	%ObjectYEdit.set_value_no_signal(object.data.posY)
 	%ObjectZEdit.get_line_edit().text = "%d" % object.data.posZ
@@ -186,7 +186,7 @@ func update_texture(object: ObjectRoth) -> void:
 
 func _on_object_x_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
-		object.data.posX = value
+		object.data.posX = -value
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
