@@ -42,7 +42,7 @@ func set_target(resource: RefCounted) -> void:
 		var node_pos: Vector2 = calculate_center(resource.get_vertices())
 		var node_z: int = (resource.data.ceilingHeight + resource.data.floorHeight) / 2
 		target_position = Vector3(node_pos.x / Roth.SCALE_3D_WORLD, node_z / Roth.SCALE_3D_WORLD, node_pos.y / Roth.SCALE_3D_WORLD)
-	elif resource is ObjectRoth or resource is Section7_1:
+	elif resource is ObjectRoth or resource is SFX:
 		target = resource
 	else:
 		target = resource

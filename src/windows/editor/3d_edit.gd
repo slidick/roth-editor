@@ -179,7 +179,7 @@ func _process(_delta: float) -> void:
 					pass
 				elif moused_over_resource is not ObjectRoth and len(owner.selected_objects) >= amount:
 					pass
-				elif moused_over_resource is not Section7_1 and len(owner.selected_sfx) >= amount:
+				elif moused_over_resource is not SFX and len(owner.selected_sfx) >= amount:
 					pass
 				else:
 					if show_selection_highlight:
@@ -195,7 +195,7 @@ func _process(_delta: float) -> void:
 					deselect_all()
 				elif moused_over_resource is not ObjectRoth and len(owner.selected_objects) >= 2:
 					deselect_all()
-				elif moused_over_resource is not Section7_1 and len(owner.selected_sfx) >= 2:
+				elif moused_over_resource is not SFX and len(owner.selected_sfx) >= 2:
 					deselect_all()
 				else:
 					show_selection_highlight = true
@@ -213,7 +213,7 @@ func _process(_delta: float) -> void:
 				elif moused_over_resource is ObjectRoth:
 					if len(owner.selected_sectors) == 0 and len(owner.selected_faces) == 0 and len(owner.selected_sfx) == 0:
 						owner.select_resource(moused_over_resource, false)
-				elif moused_over_resource is Section7_1:
+				elif moused_over_resource is SFX:
 					if len(owner.selected_sectors) == 0 and len(owner.selected_faces) == 0 and len(owner.selected_objects) == 0:
 						owner.select_resource(moused_over_resource, false)
 				
@@ -231,7 +231,7 @@ func _process(_delta: float) -> void:
 				elif moused_over_resource is ObjectRoth:
 					if len(owner.selected_objects) >= 1:
 						owner.select_resource(moused_over_resource, false)
-				elif moused_over_resource is Section7_1:
+				elif moused_over_resource is SFX:
 					if len(owner.selected_sfx) >= 1:
 						owner.select_resource(moused_over_resource, false)
 		if Input.is_action_pressed("deselect_additional_face"):
@@ -266,7 +266,7 @@ func update_selections() -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.node.select()
 		selected_nodes.append(object.node)
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.node.select()
 		selected_nodes.append(sfx.node)
 

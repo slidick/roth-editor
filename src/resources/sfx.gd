@@ -1,5 +1,5 @@
 extends RefCounted
-class_name Section7_1
+class_name SFX
 
 var data: Dictionary = {}
 var index: int :
@@ -10,15 +10,15 @@ var node: SFXNode3D
 var node_2d: SFXNode2D
 
 
-static func new_from_copied_object(p_object: Section7_1, p_position: Vector2) -> Section7_1:	
-	var object := Section7_1.new(p_object.data.duplicate(true), p_object.map_info)
+static func new_from_copied_object(p_object: SFX, p_position: Vector2) -> SFX:	
+	var object := SFX.new(p_object.data.duplicate(true), p_object.map_info)
 	object.data.unk0x00 = -p_position.x
 	object.data.unk0x02 = p_position.y
 	
 	return object
 
 
-static func new_object(p_map_info: Dictionary, p_position: Vector2) -> Section7_1:
+static func new_object(p_map_info: Dictionary, p_position: Vector2) -> SFX:
 	var default_data := {
 		"unk0x00": 0,
 		"unk0x02": 0,
@@ -31,7 +31,7 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> Section7_
 		"unk0x10": 0,
 	}
 	
-	var object := Section7_1.new(default_data, p_map_info)
+	var object := SFX.new(default_data, p_map_info)
 	object.data.unk0x00 = -p_position.x
 	object.data.unk0x02 = p_position.y
 	
@@ -43,8 +43,8 @@ func _init(p_data: Dictionary, p_map_info: Dictionary) -> void:
 	#index = p_index
 	map_info = p_map_info
 
-func duplicate() -> Section7_1:
-	return Section7_1.new(data.duplicate(true), map_info)
+func duplicate() -> SFX:
+	return SFX.new(data.duplicate(true), map_info)
 
 func initialize_mesh() -> Node3D:
 	if node:
@@ -125,10 +125,10 @@ class CircleDraw2D extends Node2D:
 
 
 class SFXNode2D extends Node2D:
-	signal object_dragged(object: Section7_1)
-	signal object_drag_ended(object: Section7_1)
+	signal object_dragged(object: SFX)
+	signal object_drag_ended(object: SFX)
 	
-	var ref: Section7_1
+	var ref: SFX
 	var circle: CircleDraw2D
 	var mouse_over: bool = false
 	var dragging: bool = false
@@ -136,7 +136,7 @@ class SFXNode2D extends Node2D:
 	var dragging_amount := Vector2.ZERO
 	var start_drag_position: Vector2
 	
-	func _init(p_ref: Section7_1) -> void:
+	func _init(p_ref: SFX) -> void:
 		ref = p_ref
 		position = Vector2(
 			-ref.data.unk0x00 / Roth.SCALE_2D_WORLD,
@@ -227,7 +227,7 @@ class SFXNode2D extends Node2D:
 
 
 class SFXNode3D extends Node3D:
-	var ref: Section7_1
+	var ref: SFX
 	func highlight() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
@@ -243,4 +243,4 @@ class SFXNode3D extends Node3D:
 
 
 class SFXMesh3D extends MeshInstance3D:
-	var ref: Section7_1
+	var ref: SFX

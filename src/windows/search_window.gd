@@ -209,7 +209,7 @@ func search() -> void:
 			or search_field == "unk0x0E_snd"
 	):
 		search_field = search_field.trim_suffix("_snd")
-		for sound: Section7_1 in sfx:
+		for sound: SFX in sfx:
 			if compare(int(sound.data[search_field]), search_value, operator):
 				results.append({"type": "SFX", "value": sound})
 	elif (

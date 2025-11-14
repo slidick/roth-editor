@@ -97,7 +97,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 		sector.update_faces(loaded_map.faces)
 	
 	for i in range(len(map_json.section7.unkArray01)):
-		loaded_map.sound_effects.append(Section7_1.new(map_json.section7.unkArray01[i], loaded_map.map_info))
+		loaded_map.sound_effects.append(SFX.new(map_json.section7.unkArray01[i], loaded_map.map_info))
 	
 	if "unkArray02" in map_json.section7:
 		loaded_map.section7_2 = map_json.section7.unkArray02
@@ -136,7 +136,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 
 #func get_next_sfx_index() -> int:
 	#var count: int = -1
-	#for sfx: Section7_1 in sound_effects:
+	#for sfx: SFX in sound_effects:
 		#count = max(count, sfx.index)
 	#return count + 1
 
@@ -290,7 +290,7 @@ func add_object(new_object: ObjectRoth) -> void:
 	var object_node_3d: Node3D = new_object.initialize_mesh()
 	node.get_node("Objects").add_child(object_node_3d)
 
-func add_sfx(new_object: Section7_1) -> void:
+func add_sfx(new_object: SFX) -> void:
 	sound_effects.append(new_object)
 	var object_node_3d: Node3D = new_object.initialize_mesh()
 	node.get_node("SFX").add_child(object_node_3d)
@@ -475,7 +475,7 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
 	json["verticesSection"] = { "vertices": vertices }
 	json["commandsSection"] = commands_section
-	json["section7"] = { "unkArray01": sound_effects.map(func (sfx: Section7_1) -> Dictionary: return sfx.data) }
+	json["section7"] = { "unkArray01": sound_effects.map(func (sfx: SFX) -> Dictionary: return sfx.data) }
 	if section7_2:
 		json["section7"]["unkArray02"] = section7_2
 	

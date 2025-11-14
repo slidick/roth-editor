@@ -392,8 +392,8 @@ func handle_sfx_mode_event(event: InputEvent) -> void:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
 				if event.pressed:
-					var moused_over_sfx: Section7_1
-					for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+					var moused_over_sfx: SFX
+					for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 						if sfx_node.mouse_over:
 							moused_over_sfx = sfx_node.ref
 					if moused_over_sfx:
@@ -414,7 +414,7 @@ func handle_sfx_mode_event(event: InputEvent) -> void:
 					var v2 := Vector2(ending_position.x, starting_position.y)
 					var v3 := Vector2(starting_position.x, ending_position.y)
 					var sfx_in_selection: Array = []
-					for sfx_node: Section7_1.SFXNode2D in  %SFX.get_children():
+					for sfx_node: SFX.SFXNode2D in  %SFX.get_children():
 						if Geometry2D.is_point_in_polygon(sfx_node.position, [
 							starting_position,
 							v2,
@@ -429,15 +429,15 @@ func handle_sfx_mode_event(event: InputEvent) -> void:
 					else:
 						if not event.shift_pressed:
 							owner.select_resource(null)
-						for sfx_node: Section7_1.SFXNode2D in sfx_in_selection:
+						for sfx_node: SFX.SFXNode2D in sfx_in_selection:
 							owner.select_resource(sfx_node.ref, false)
 					start_box_select = false
 					start_box_select_position = Vector2.ZERO
 					queue_redraw()
 			MOUSE_BUTTON_RIGHT:
 				if event.pressed:
-					var moused_over_sfx: Section7_1
-					for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+					var moused_over_sfx: SFX
+					for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 						if sfx_node.mouse_over:
 							moused_over_sfx = sfx_node.ref
 					if moused_over_sfx:
@@ -838,8 +838,8 @@ func show_sfx() -> void:
 	for child: Node in %SFX.get_children():
 		child.queue_free()
 	await get_tree().process_frame
-	for sfx: Section7_1 in map.sound_effects:
-		var sfx_node: Section7_1.SFXNode2D = sfx.get_node_2d()
+	for sfx: SFX in map.sound_effects:
+		var sfx_node: SFX.SFXNode2D = sfx.get_node_2d()
 		sfx_node.object_dragged.connect(_on_sfx_dragged)
 		sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
 		%SFX.add_child(sfx_node)
@@ -853,14 +853,14 @@ func hide_sfx() -> void:
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var new_sfx := Section7_1.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			var new_sfx := SFX.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_sfx:
 				return
 			map.add_sfx(new_sfx)
 			add_sfx_to_2d_map(new_sfx)
 			Roth.editor_action.emit(map.map_info, "Add SFX")
 		1:
-			var new_sfx := Section7_1.new_from_copied_object(owner.copied_sfx_data[0], mouse_paste_position * Roth.SCALE_2D_WORLD)
+			var new_sfx := SFX.new_from_copied_object(owner.copied_sfx_data[0], mouse_paste_position * Roth.SCALE_2D_WORLD)
 			if not new_sfx:
 				return
 			map.add_sfx(new_sfx)
@@ -873,31 +873,31 @@ func _on_on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 		0:
 			owner.copy_sfx(owner.selected_sfx)
 		1:
-			for sfx: Section7_1 in owner.selected_sfx:
+			for sfx: SFX in owner.selected_sfx:
 				sfx.delete()
 			Roth.editor_action.emit(map.map_info, "Delete SFX%s" % ("s" if len(owner.selected_sfx) > 1 else ""))
 			owner.select_resource(null)
 
 
-func _on_sfx_dragged(node_dragged: Section7_1.SFXNode2D, relative: Vector2) -> void:
+func _on_sfx_dragged(node_dragged: SFX.SFXNode2D, relative: Vector2) -> void:
 	dragging_something = true
-	for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+	for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 		if sfx_node != node_dragged:
 			sfx_node.move(relative)
 
 
-func _on_sfx_drag_ended(object: Section7_1.SFXNode2D) -> void:
-	for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+func _on_sfx_drag_ended(object: SFX.SFXNode2D) -> void:
+	for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 		if sfx_node != object:
 			sfx_node.end_drag()
 	Roth.editor_action.emit(map.map_info, "Move SFX")
 	%Map3D.update_selections()
 
 
-func add_sfx_to_2d_map(new_sfx: Section7_1) -> void:
+func add_sfx_to_2d_map(new_sfx: SFX) -> void:
 	if not %SFXCheckBox.button_pressed:
 		return
-	var sfx_node: Section7_1.SFXNode2D = new_sfx.get_node_2d()
+	var sfx_node: SFX.SFXNode2D = new_sfx.get_node_2d()
 	sfx_node.object_dragged.connect(_on_sfx_dragged)
 	sfx_node.object_drag_ended.connect(_on_sfx_drag_ended)
 	%SFX.add_child(sfx_node)
@@ -1114,7 +1114,7 @@ func update_selections() -> void:
 			object_node.select()
 		else:
 			object_node.deselect()
-	for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+	for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 		if sfx_node.ref in owner.selected_sfx:
 			sfx_node.select()
 		else:

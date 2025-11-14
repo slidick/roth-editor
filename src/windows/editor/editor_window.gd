@@ -225,7 +225,7 @@ func load_map(map_info: Dictionary) -> void:
 	
 	var sfx_node := Node3D.new()
 	sfx_node.name = "SFX"
-	for sfx: Section7_1 in map.sound_effects:
+	for sfx: SFX in map.sound_effects:
 		var mesh := sfx.initialize_mesh()
 		sfx_node.add_child(mesh)
 	
@@ -577,7 +577,7 @@ func copy_objects(object_list: Array) -> void:
 
 func copy_sfx(sfx_list: Array) -> void:
 	copied_sfx_data.clear()
-	for sfx: Section7_1 in sfx_list:
+	for sfx: SFX in sfx_list:
 		copied_sfx_data.append(sfx.duplicate())
 	%SFXContextPopupMenu.set_item_disabled(1, false)
 
@@ -675,7 +675,7 @@ func replace_map(map: Map) -> void:
 			
 			var sfx_node := Node3D.new()
 			sfx_node.name = "SFX"
-			for sfx: Section7_1 in map.sound_effects:
+			for sfx: SFX in map.sound_effects:
 				var mesh := sfx.initialize_mesh()
 				sfx_node.add_child(mesh)
 			
@@ -791,7 +791,7 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 		selected_sfx.clear()
 		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 			object_node.deselect()
-		for sfx_node: Section7_1.SFXNode2D in %SFX.get_children():
+		for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 			sfx_node.deselect()
 		%Arrow3D.clear_target()
 		%Map2D.update_selections()
@@ -807,7 +807,7 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 		if resource not in selected_objects:
 			selected_objects.append(resource)
 		%EditObjectContainer.update_selections()
-	elif resource is Section7_1:
+	elif resource is SFX:
 		
 		selected_faces.clear()
 		selected_sectors.clear()
@@ -866,7 +866,7 @@ func deselect_resource(resource: RefCounted) -> void:
 	elif resource is ObjectRoth:
 		selected_objects.erase(resource)
 		%EditObjectContainer.update_selections()
-	elif resource is Section7_1:
+	elif resource is SFX:
 		selected_sfx.erase(resource)
 		%EditSFXContainer.update_selections()
 	%Arrow3D.unset_target(resource)

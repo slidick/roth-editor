@@ -25,7 +25,7 @@ func update_selections() -> void:
 	
 	%EditSFXContainer.show()
 	last_selection_length = len(owner.selected_sfx)
-	var sfx: Section7_1 = owner.selected_sfx[0]
+	var sfx: SFX = owner.selected_sfx[0]
 	
 	if len(owner.selected_sfx) == 1:
 		%SFXIndexLabel.text = "SFX: %d" % sfx.index
@@ -53,7 +53,7 @@ func update_selections() -> void:
 	%SFXUnk0x10Edit.set_value_no_signal(sfx.data.unk0x10)
 	
 	
-	for each_sfx: Section7_1 in owner.selected_sfx:
+	for each_sfx: SFX in owner.selected_sfx:
 		if each_sfx.data.unk0x00 != sfx.data.unk0x00:
 			%SFXPosXEdit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.unk0x02 != sfx.data.unk0x02:
@@ -76,57 +76,57 @@ func update_selections() -> void:
 
 
 func _on_sfx_pos_x_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x00 = value
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_pos_y_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x02 = value
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_sound_index_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x04 = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_06_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x06 = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_08_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x08 = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_0a_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x0A = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_0c_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x0C = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_0e_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x0E = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_10_edit_value_changed(value: float) -> void:
-	for sfx: Section7_1 in owner.selected_sfx:
+	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x10 = value
 	%EditSFXTimer.start()
 
