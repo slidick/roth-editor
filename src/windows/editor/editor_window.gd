@@ -623,7 +623,7 @@ func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 		}
 		
 		# Check if state is same as previous state
-		if not undo_stacks[p_map_info.name].is_empty() and action.bytes == undo_stacks[p_map_info.name][-1].bytes:
+		if not undo_stacks[p_map_info.name].is_empty() and action.bytes == undo_stacks[p_map_info.name][undo_positions[p_map_info.name]-1].bytes:
 			return
 		
 		while undo_positions[p_map_info.name] < len(undo_stacks[p_map_info.name]):
