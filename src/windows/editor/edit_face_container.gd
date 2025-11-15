@@ -3,8 +3,8 @@ extends MarginContainer
 var last_selection_length: int = 0
 
 
-func clear() -> void:
-	if not %EditFaceTimer.is_stopped():
+func clear(p_force_timeout: bool = true) -> void:
+	if p_force_timeout and not %EditFaceTimer.is_stopped():
 		%EditFaceTimer.stop()
 		%EditFaceTimer.timeout.emit()
 	%FaceIndexLabel.text = ""
@@ -55,8 +55,8 @@ func clear() -> void:
 	last_selection_length = 0
 
 
-func update_selections() -> void:
-	clear()
+func update_selections(p_force_timeout: bool = true) -> void:
+	clear(p_force_timeout)
 	if len(owner.selected_faces) == 0:
 		return
 	
@@ -247,7 +247,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 			return
 		for face: Face in owner.selected_faces:
 			face.texture_data.lowerTextureIndex = palette_index + 32768
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 2:
@@ -259,13 +259,13 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 			return
 		for face: Face in owner.selected_faces:
 			face.texture_data.lowerTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 3:
 		for face: Face in owner.selected_faces:
 			face.texture_data.lowerTextureIndex = Roth.get_map(face.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 4:
@@ -282,7 +282,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 			return
 		for face: Face in owner.selected_faces:
 			face.texture_data.midTextureIndex = palette_index + 32768
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 2:
@@ -294,13 +294,13 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 			return
 		for face: Face in owner.selected_faces:
 			face.texture_data.midTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 3:
 		for face: Face in owner.selected_faces:
 			face.texture_data.midTextureIndex = Roth.get_map(face.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 4:
@@ -317,7 +317,7 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 			return
 		for face: Face in owner.selected_faces:
 			face.texture_data.upperTextureIndex = palette_index + 32768
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 2:
@@ -329,13 +329,13 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 			return
 		for face: Face in owner.selected_faces:
 			face.texture_data.upperTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 3:
 		for face: Face in owner.selected_faces:
 			face.texture_data.upperTextureIndex = Roth.get_map(face.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 4:
@@ -516,7 +516,7 @@ func _on_additional_check_button_toggled(toggled_on: bool) -> void:
 			#face.texture_data.additionalMetadata.shiftTextureY = 0
 			#face.texture_data.additionalMetadata.unk0x0C = 0
 	owner.redraw(owner.selected_faces)
-	update_selections()
+	update_selections(false)
 	%EditFaceTimer.start()
 
 

@@ -3,8 +3,8 @@ extends MarginContainer
 var last_selection_length: int = 0
 
 
-func clear() -> void:
-	if not %EditSectorTimer.is_stopped():
+func clear(p_force_timeout: bool = true) -> void:
+	if p_force_timeout and not %EditSectorTimer.is_stopped():
 		%EditSectorTimer.stop()
 		%EditSectorTimer.timeout.emit()
 	%SectorIndexLabel.text = ""
@@ -57,8 +57,8 @@ func clear() -> void:
 	#%RoofHeightEdit.custom_arrow_step = %RelativeAmountBox.value
 
 
-func update_selections() -> void:
-	clear()
+func update_selections(p_force_timeout: bool = true) -> void:
+	clear(p_force_timeout)
 	if len(owner.selected_sectors) == 0:
 		return
 	
@@ -444,7 +444,7 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.data.ceilingTextureIndex = palette_index + 65280
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 2:
@@ -456,13 +456,13 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.data.ceilingTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 3:
 		for sector: Sector in owner.selected_sectors:
 			sector.data.ceilingTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 4:
@@ -479,7 +479,7 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.data.floorTextureIndex = palette_index + 65280
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 2:
@@ -491,13 +491,13 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.data.floorTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 3:
 		for sector: Sector in owner.selected_sectors:
 			sector.data.floorTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 4:
@@ -605,7 +605,7 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.platform.floorTextureIndex = palette_index + 65280
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 2:
@@ -616,13 +616,13 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.platform.floorTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 3:
 		for sector: Sector in owner.selected_sectors:
 			sector.platform.floorTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 4:
@@ -652,7 +652,7 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.platform.ceilingTextureIndex = palette_index + 65280
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 2:
@@ -663,13 +663,13 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 			return
 		for sector: Sector in owner.selected_sectors:
 			sector.platform.ceilingTextureIndex = texture_index
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 3:
 		for sector: Sector in owner.selected_sectors:
 			sector.platform.ceilingTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
-		update_selections()
+		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 4:
@@ -716,7 +716,7 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 					sister.texture_data.type = (int(value) >> 8) | (sister.texture_data.type & (1<<7))
 		else:
 			sector.platform = {}
-	update_selections()
+	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -740,7 +740,7 @@ func _on_edit_sector_timer_timeout() -> void:
 func _on_lower_roof_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight -= %RelativeAmountBox.value
-	update_selections()
+	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -748,7 +748,7 @@ func _on_lower_roof_button_pressed() -> void:
 func _on_raise_roof_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight += %RelativeAmountBox.value
-	update_selections()
+	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -756,7 +756,7 @@ func _on_raise_roof_button_pressed() -> void:
 func _on_lower_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight -= %RelativeAmountBox.value
-	update_selections()
+	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -764,7 +764,7 @@ func _on_lower_floor_button_pressed() -> void:
 func _on_raise_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight += %RelativeAmountBox.value
-	update_selections()
+	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
