@@ -24,6 +24,7 @@ var zooming: bool = false
 var holding_left_mouse: bool = false
 var holding_right_mouse: bool = false
 var holding_shift: bool = false
+var holding_ctrl: bool = false
 var snap: float = 0.1
 var timer: Timer
 var start_box_draw: bool = false 
@@ -168,6 +169,18 @@ func _input(event: InputEvent) -> void:
 			holding_shift = true
 		else:
 			holding_shift = false
+	
+	if event is InputEventKey and event.keycode == KEY_CTRL:
+		if event.pressed:
+			owner.hovered_sector = null
+			owner.hovered_face = null
+			holding_ctrl = true
+			queue_redraw()
+		else:
+			holding_ctrl = false
+			check_for_hover()
+			queue_redraw()
+	
 	
 	handle_sector_mode_event(event)
 	handle_draw_mode_event(event)
@@ -824,6 +837,7 @@ func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
 		holding_left_mouse = false
 		holding_right_mouse = false
 		holding_shift = false
+		holding_ctrl = false
 		start_box_select = false
 		start_box_deselect = false
 		highlight_sectors.clear()
@@ -1273,7 +1287,7 @@ func check_for_hover() -> void:
 				v3
 			]) and sector in owner.selected_sectors:
 				highlight_sectors.append(sector)
-	else:
+	elif not holding_ctrl:
 		if skip_sector_hover == skip_sector_hover_prev:
 			if owner.hovered_sector and is_mouse_inside_sector(owner.hovered_sector):
 				if len(owner.selected_sectors) <= 1:
