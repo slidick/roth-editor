@@ -931,6 +931,7 @@ func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
 		if object_node != object:
 			object_node.end_drag()
 	Roth.editor_action.emit(map.map_info, "Move Objects")
+	%EditObjectContainer.update_selections()
 	%Map3D.update_selections()
 
 #endregion
