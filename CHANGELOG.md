@@ -1,3 +1,47 @@
+**0.16.0**
+### New Features
+  - Multi Selection and Editing for Sectors, Faces, Objects, and SFX
+    - Edit many sectors, faces, objects, or sound effects at once
+    - Shift-click to add to selection; may also drag to select
+    - In 3d view once an item is selected, only items of the same type will be selectable while holding shift
+    - Shift-middle-click to deselect in 3d
+    - Shift-right-click to deselect in 2d
+    - Ctrl-click in 2d to start sector box select; Hold shift as well to add to selection
+    - Ctrl-right-click in 2d to start sector box deselect
+    - Additional buttons for floor and ceiling height adjustments allow for relative changes of all selected
+    - Any values shared between the selected items will be shown; Different values will be blanked out
+  - Multi Object/SFX copy and pasting
+    - Copy and paste groups of objects in both the 2d and 3d view
+  - Multi Sector Merging
+    - Merge sectors more easily by selecting and pressing 'm'
+  - Hideable Sectors
+    - Ctrl+h hides selected Sectors
+    - Shift+Ctrl+h hides all but selected Sectors
+    - Alt+h restores hidden sectors
+  - Temporarily hide 3d highlight by pressing 'h'
+  - SFX preview button in sfx edit panel
+
+
+### Bugfixes
+  - Add missing items to undo history
+    - Deleting single vertex
+    - Deleting objects and sfx
+    - Pasting sfx
+    - Creating and pasting objects in 3d view
+  - Improvements to face merging
+    - Incompatible merges shouldn't be allowed
+    - Certain merges that result in the loss of a sector should properly merge the sectors
+  - Selection highlights no longer flash when altering properties
+  - Fixed not being able to hide objects and sfx in 3d view after an undo
+  - When pasting faces, recalculate horizontal fit
+  - Fixed issue with oversized object/sfx context menu
+  - When splitting a sector, require moving the mouse halfway to another vertex before allowing a split
+  - After using mouselook in 3d view, you no longer have to click to regain focus in the 2d view
+  - Fixed incorrect x positon values for objects in edit panel
+  - Draw missing lines in map preview
+
+---
+
 **0.15.0**
 ### New Features
   - 2D View
