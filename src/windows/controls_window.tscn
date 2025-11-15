@@ -5,8 +5,8 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_gpbl2"]
 
 [node name="ControlsWindow" instance=ExtResource("1_nlodr")]
-offset_right = 348.0
-offset_bottom = 313.0
+offset_right = 1079.0
+offset_bottom = 998.0
 theme = ExtResource("2_iwfyu")
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_gpbl2")
@@ -35,6 +35,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="2"]
 layout_mode = 2
+size_flags_vertical = 1
 theme_override_font_sizes/font_size = 36
 text = "WASD:  Move & Strafe
 Q & E:  Lower & Higher
@@ -43,6 +44,8 @@ F: Toggle Arrow
 Mouse Wheel:  Change Max Speed
 Hold Right Mouse:  Mouselook
 Left Mouse:  Select
+Shift+LeftMouse: Add to Selection
+Shift+MiddleMouse: Deselect
 C: Copy Texture
 V: Paste Texture
 Alt+V: Edit Paste Options
@@ -53,24 +56,6 @@ F1:  Lock/Unlock Mouselook
 F2:  Toggle Collision Shapes
 F3:  Toggle Mouse Select
 "
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="3"]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer3" index="0"]
-layout_mode = 2
-text = "Editor"
-
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer3" index="1"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer3" index="2"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "F11:  Toggle Fullscreen
-R: Run Maps"
 
 [node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1"]
 layout_mode = 2
@@ -105,7 +90,7 @@ size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="0"]
 layout_mode = 2
-text = "Face"
+text = "Sector / Face"
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="1"]
 layout_mode = 2
@@ -114,8 +99,14 @@ layout_mode = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Left Click: Select
+Shift+LeftMouse: Add to Selection
+Shift+RightMouse: Deselect
+Ctrl+LeftMouse: Box Select
+Ctrl+Shift+LeftMouse: Add to Box Select
+Ctrl+RightMouse: Box Deselect
 N: Cycle overlapping sectors
 Del: Delete Sector or Double-sided face
+M: Merge Sectors
 "
 
 [node name="VBoxContainer5" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="2"]
@@ -155,4 +146,23 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
-text = "Left Click: Draw new sector"
+text = "Left Click: Draw new sector
+"
+
+[node name="VBoxContainer6" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="4"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="0"]
+layout_mode = 2
+text = "Editor"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "F11:  Toggle Fullscreen
+R: Run Maps"
