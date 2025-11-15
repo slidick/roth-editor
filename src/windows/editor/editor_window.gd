@@ -116,6 +116,8 @@ func _input(event: InputEvent) -> void:
 						
 					%"3DContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
 				if result.collider.get_parent().ref is ObjectRoth:
+					if result.collider.get_parent().ref not in selected_objects:
+						select_resource(result.collider.get_parent().ref, not event.shift_pressed)
 					context_collision = result
 					var pos: Vector2 = get_viewport().get_mouse_position()
 					if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -548,20 +550,30 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 					pos += (context_collision.normal * 2)
 			elif context_collision.collider.get_parent().ref is Sector:
 				extra_info["sector_index"] = context_collision.collider.get_parent().ref.index
-			var new_object := ObjectRoth.new_from_copied_object_3d(map_info, copied_object_data[0], pos, extra_info)
-			if not new_object:
-				return
-			Roth.get_map(map_info).add_object(new_object)
-			%Map2D.add_object_to_2d_map(new_object)
-			select_resource(new_object, true)
-			Roth.editor_action.emit(new_object.map_info, "Paste Object")
+			
+			select_resource(null)
+			var origin := Vector3(-copied_object_data[0].data.posX, copied_object_data[0].data.posZ, copied_object_data[0].data.posY)
+			for each_object: ObjectRoth in copied_object_data:
+				var offset := origin - Vector3(-each_object.data.posX, each_object.data.posZ, each_object.data.posY)
+				extra_info.rotation = each_object.data.rotation
+				var new_object := ObjectRoth.new_from_copied_object_3d(map_info, copied_object_data[0], pos - offset, extra_info)
+				if not new_object:
+					continue
+				Roth.get_map(map_info).add_object(new_object)
+				%Map2D.add_object_to_2d_map(new_object)
+				select_resource(new_object, false)
+			Roth.editor_action.emit(map_info, "Paste Object%s" % ("s" if len(copied_object_data) > 1 else ""))
 
 
 func _on_3d_object_context_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
-			copy_objects([object])
+			if object not in selected_objects:
+				return
+			selected_objects.erase(object)
+			selected_objects.insert(0, object)
+			copy_objects(selected_objects)
 		1:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
 			object.delete()

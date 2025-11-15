@@ -38,11 +38,11 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRoth, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
 	var new_sector_index: int = -1
 	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
-		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), f_sector.vertices.slice(0,-1)):
+		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.z), f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 	
-	if "sector_index" in extra_info:
-		new_sector_index = extra_info.sector_index
+	#if "sector_index" in extra_info:
+		#new_sector_index = extra_info.sector_index
 	if new_sector_index == -1:
 		Console.print("Can't paste object outside a sector")
 		return
@@ -493,22 +493,30 @@ class ObjectNode2D extends Node2D:
 
 class ObjectNode3D extends Node3D:
 	var ref: ObjectRoth
+	var _highlighted: bool = false
+	var _selected: bool = false
 	func highlight() -> void:
-		for child: MeshInstance3D in get_children():
-			if not ((ref.data.renderType & (1<<7)) > 0):
-				child.material_overlay = Roth.HIGHLIGHT_FIXED_Y_MATERIAL
-			else:
-				child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+		if not _selected:
+			_highlighted = true
+			for child: MeshInstance3D in get_children():
+				if not ((ref.data.renderType & (1<<7)) > 0):
+					child.material_overlay = Roth.HIGHLIGHT_FIXED_Y_MATERIAL
+				else:
+					child.material_overlay = Roth.HIGHLIGHT_MATERIAL
 	func unhighlight() -> void:
-		for child: MeshInstance3D in get_children():
-			child.material_overlay = null
+		if _highlighted and not _selected:
+			_highlighted = false
+			for child: MeshInstance3D in get_children():
+				child.material_overlay = null
 	func select() -> void:
+		_selected = true
 		for child: MeshInstance3D in get_children():
 			if not ((ref.data.renderType & (1<<7)) > 0):
 				child.material_overlay = Roth.SELECTED_FIXED_Y_MATERIAL
 			else:
 				child.material_overlay = Roth.SELECTED_MATERIAL
 	func deselect() -> void:
+		_selected = false
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
 
