@@ -15,6 +15,7 @@ var search_count: int = 0
 var graph_edit: GraphEdit
 var _is_loading: bool = false
 var copy_commands: Array = []
+var apply_offset := Vector2.ZERO
 
 # Threaded loading of the command editor would be ideal so the program wouldn't become unresponsive
 # while loading. However unfortunately, it ends up taking significantly longer to load on a thread.
@@ -48,23 +49,40 @@ func load_command_editor_threaded(p_map: Map) -> void:
 	%ProgressBar.hide()
 
 
-func load_command_editor(p_map: Map) -> void:
+func load_command_editor(p_map: Map, p_reset_camera: bool = true) -> void:
 	%MapLabel.text = p_map.map_info.name
+	%CloseButton.show()
 	map = p_map
+	var default_zoom: float = 0.5
+	apply_offset = Vector2(-5, -5)
 	if not map.name_changed.is_connected(_on_map_name_changed):
 		map.name_changed.connect(_on_map_name_changed)
 	if command_section != p_map.commands_section:
 		command_section = p_map.commands_section
 		if graph_edit:
+			if not p_reset_camera:
+				default_zoom = graph_edit.zoom
+				apply_offset = graph_edit.scroll_offset
 			graph_edit.queue_free()
 			await graph_edit.tree_exited
 		init_graph_edit()
+		
+		# There's a severe issue with applying scroll offsets. The graph_edit needs to be visible for
+		# a couple frames before it will correctly apply. This is my hacky work-around
+		graph_edit.visibility_changed.connect(func () -> void:
+			if graph_edit.is_visible_in_tree():
+				if not apply_offset.is_zero_approx():
+					await get_tree().process_frame
+					graph_edit.scroll_offset = apply_offset
+					apply_offset = Vector2.ZERO
+		)
+		
 		if graph_edit and not graph_edit.is_inside_tree():
-			%Graph.add_child(graph_edit)
+			%Graph.add_child.call_deferred(graph_edit)
 			# BUGFIX: The next three lines work around a graphical bug related to the connection lines
-			await get_tree().process_frame
-			graph_edit.zoom = 0.5
-			graph_edit.scroll_offset = Vector2(-5, -5)
+			await graph_edit.ready
+			graph_edit.zoom = default_zoom
+			graph_edit.scroll_offset = apply_offset
 
 
 func _loading_update(percentage: float) -> void:
@@ -87,6 +105,7 @@ func close(p_map_name: String) -> void:
 			if map.name_changed.is_connected(_on_map_name_changed):
 				map.name_changed.disconnect(_on_map_name_changed)
 			map = null
+			%CloseButton.hide()
 
 
 func init_graph_edit() -> void:
@@ -784,3 +803,9 @@ func _on_search_options_item_selected(_index: int) -> void:
 
 func _on_graph_edit_end_node_move() -> void:
 	save_positions()
+
+
+func _on_close_button_pressed() -> void:
+	if map:
+		Roth.editor_action.emit(map.map_info, "Edit Commands")
+		close(map.map_info.name)

@@ -355,6 +355,8 @@ func _on_tab_bar_tab_changed(tab: int) -> void:
 		0:
 			%MapPanelContainer.show()
 			%InspectorSidePanel.show()
+			if %"Command Editor".map:
+				Roth.editor_action.emit(%"Command Editor".map.map_info, "Edit Commands")
 		1:
 			%MapPanelContainer.hide()
 			%InspectorSidePanel.hide()
@@ -666,7 +668,7 @@ func replace_map(map: Map) -> void:
 			
 			Roth.loaded_maps[map.map_info.name] = map
 			
-			var old_map_node: Node3D = tree_item.get_metadata(0)
+			var old_map_node: Map.MapNode3D = tree_item.get_metadata(0)
 			
 			var sectors_node := Node3D.new()
 			sectors_node.name = "Sectors"
@@ -717,6 +719,9 @@ func replace_map(map: Map) -> void:
 			
 			if %Map2D.close_map(map.map_info, false):
 				%Map2D.setup(map, false)
+			
+			if old_map_node.ref.commands_section != map.commands_section and %"Command Editor".map and %"Command Editor".map.map_info == map.map_info:
+				%"Command Editor".load_command_editor(map, false)
 
 #endregion
 

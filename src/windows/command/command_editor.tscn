@@ -8,6 +8,7 @@ offset_right = 1554.0
 offset_bottom = 858.0
 theme = ExtResource("1_8pnp2")
 theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 script = ExtResource("2_u488m")
@@ -15,12 +16,28 @@ script = ExtResource("2_u488m")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="MapLabel" type="Label" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="MapLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 36
 text = "No Commands Loaded"
 horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Close"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -88,6 +105,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="text_submitted" from="VBoxContainer/HBoxContainer2/SearchEdit" to="." method="_on_search_edit_text_submitted"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer2/SearchOptions" to="." method="_on_search_options_item_selected"]
 [connection signal="index_pressed" from="VBoxContainer/Graph/GraphPopupMenu" to="." method="_on_graph_popup_menu_index_pressed"]
