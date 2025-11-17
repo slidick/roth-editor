@@ -256,7 +256,7 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 	if not %SectorCheckBox.button_pressed:
 		return
 	
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and not mouse_drag_enabled:
 		if timer.is_stopped():
 			timer.start()
 	
