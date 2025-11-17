@@ -23,6 +23,12 @@ var previous_search: String
 var search_count: int = 0
 var copied_object_data: Array
 var copied_sfx_data: Array
+var copied_sector_data: Array
+var paste_sectors_mode: bool = false
+var original_copied_sector_center := Vector2.ZERO
+var original_pasted_sector_data: Array = []
+var current_copied_sector_center := Vector2.ZERO
+var current_pasted_sector_data: Array = []
 var first_load: bool = false
 var undo_stacks: Dictionary = {}
 var undo_positions: Dictionary = {}
@@ -145,6 +151,15 @@ func _input(event: InputEvent) -> void:
 			hide_non_selected_sectors()
 		if event.is_action_pressed("show_hidden_sectors"):
 			show_hidden_sectors()
+	if %Map2D.has_focus:
+		if event.is_action_pressed("copy_sectors", false, true):
+			copy_selected_sectors()
+		if event.is_action_pressed("start_paste_sectors", false, true):
+			enter_paste_sectors_mode()
+		if event.is_action_pressed("cancel_paste_sectors"):
+			cancel_paste_sectors_mode()
+		if event.is_action_pressed("complete_paste_sectors"):
+			complete_paste_sectors_mode()
 
 
 func _on_paste_options_button_pressed() -> void:
@@ -866,7 +881,6 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 	%Arrow3D.set_target(resource)
 	%Map2D.update_selections()
 	%Map3D.update_selections()
-	
 
 
 func deselect_resource(resource: RefCounted) -> void:
@@ -929,6 +943,7 @@ func delete_selected_sector() -> void:
 		for map_info: Dictionary in map_groups:
 			Roth.editor_action.emit(map_info, "Delete Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
 		select_resource(null)
+
 
 func merge_selected_sectors() -> void:
 	var all_sector_faces: Array = []
@@ -1031,5 +1046,53 @@ func show_hidden_sectors() -> void:
 		%Map2D.show_objects()
 	#%Map2D.update_selections()
 	#%Map3D.update_selections()
+
+
+func copy_selected_sectors() -> void:
+	if selected_sectors.is_empty():
+		return
+	copied_sector_data.clear()
+	original_copied_sector_center = Vector2.ZERO
+	var count: int = 0
+	for sector: Sector in selected_sectors:
+		copied_sector_data.append(sector.duplicate(true))
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			original_copied_sector_center += face.v1
+			original_copied_sector_center += face.v2
+			count += 2
+	original_copied_sector_center /= count
+	current_copied_sector_center = original_copied_sector_center
+
+
+func enter_paste_sectors_mode() -> void:
+	if not %SectorCheckBox.button_pressed:
+		return
+	paste_sectors_mode = true
+	current_copied_sector_center = original_copied_sector_center
+	original_pasted_sector_data.clear()
+	current_pasted_sector_data.clear()
+	
+	for sector: Sector in copied_sector_data:
+		original_pasted_sector_data.append(sector.duplicate(true))
+		current_pasted_sector_data.append(sector.duplicate(true))
+	%Map2D.queue_redraw()
+
+
+func cancel_paste_sectors_mode() -> void:
+	if not paste_sectors_mode:
+		return
+	paste_sectors_mode = false
+	%Map2D.queue_redraw()
+
+
+func complete_paste_sectors_mode() -> void:
+	if not paste_sectors_mode:
+		return
+	var new_data := []
+	for sector: Sector in current_pasted_sector_data:
+		new_data.append(sector.duplicate(true))
+	%Map2D.map.add_copied_sectors(new_data, copied_sector_data)
+	Roth.editor_action.emit(%Map2D.map.map_info, "Paste Sectors")
 
 #endregion

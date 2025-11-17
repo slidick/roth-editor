@@ -25,6 +25,7 @@ var holding_left_mouse: bool = false
 var holding_right_mouse: bool = false
 var holding_shift: bool = false
 var holding_ctrl: bool = false
+var holding_alt: bool = false
 var snap: float = 0.1
 var timer: Timer
 var start_box_draw: bool = false 
@@ -181,12 +182,74 @@ func _input(event: InputEvent) -> void:
 			check_for_hover()
 			queue_redraw()
 	
+	if event is InputEventKey and event.keycode == KEY_ALT:
+		if event.pressed:
+			holding_alt = true
+			queue_redraw()
+		else:
+			holding_alt = false
 	
+	handle_paste_sectors_mode_event(event)
 	handle_sector_mode_event(event)
 	handle_draw_mode_event(event)
 	handle_object_mode_event(event)
 	handle_vertex_mode_event(event)
 	handle_sfx_mode_event(event)
+
+
+func handle_paste_sectors_mode_event(event: InputEvent) -> void:
+	if not owner.paste_sectors_mode or not %SectorCheckBox.button_pressed:
+		return
+	if event is InputEventKey and event.keycode == KEY_ALT:
+		if event.pressed:
+			for i in range(len(owner.current_pasted_sector_data)):
+				for j in range(len(owner.current_pasted_sector_data[i].faces)):
+					owner.original_pasted_sector_data[i].faces[j].v1 = owner.current_pasted_sector_data[i].faces[j].v1
+					owner.original_pasted_sector_data[i].faces[j].v2 = owner.current_pasted_sector_data[i].faces[j].v2
+				for j in range(len(owner.copied_sector_data[i].data.objectInformation)):
+					owner.original_pasted_sector_data[i].data.objectInformation[j].posX = owner.current_pasted_sector_data[i].data.objectInformation[j].posX
+					owner.original_pasted_sector_data[i].data.objectInformation[j].posY = owner.current_pasted_sector_data[i].data.objectInformation[j].posY
+		else:
+			%"2DManipLabel".text = ""
+	if event is InputEventMouseMotion and event.alt_pressed:
+		var mouse: Vector2 = ((get_global_mouse_position() + global_position)*Roth.SCALE_2D_WORLD)
+		var offset: Vector2 = (mouse - owner.current_copied_sector_center) / 10
+		var rotation_deg: float = offset.x + offset.y
+		var rotation_snap: float = 1.0
+		if event.ctrl_pressed:
+			rotation_snap = 15
+		var rotation_amount := deg_to_rad(snapped(rotation_deg, rotation_snap))
+		%"2DManipLabel".text = "Rotate: %d°" % snapped(rotation_deg, rotation_snap)
+		var translation := Transform2D(rotation_amount, Vector2.ZERO)
+		for i in range(len(owner.copied_sector_data)):
+			for j in range(len(owner.copied_sector_data[i].faces)):
+				owner.current_pasted_sector_data[i].faces[j].v1 = translation * (owner.original_pasted_sector_data[i].faces[j].v1 - owner.current_copied_sector_center) + owner.current_copied_sector_center
+				owner.current_pasted_sector_data[i].faces[j].v2 = translation * (owner.original_pasted_sector_data[i].faces[j].v2 - owner.current_copied_sector_center) + owner.current_copied_sector_center
+			for j in range(len(owner.copied_sector_data[i].data.objectInformation)):
+				var point := Vector2(-owner.original_pasted_sector_data[i].data.objectInformation[j].posX, owner.original_pasted_sector_data[i].data.objectInformation[j].posY)
+				point = translation * (point - owner.current_copied_sector_center) + owner.current_copied_sector_center
+				owner.current_pasted_sector_data[i].data.objectInformation[j].posX = -point.x
+				owner.current_pasted_sector_data[i].data.objectInformation[j].posY = point.y
+		queue_redraw()
+		return
+	if event is InputEventMouseMotion or (holding_ctrl and not holding_alt):
+		var mouse: Vector2 = ((get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
+		if holding_ctrl:
+			if abs(mouse.x - owner.original_copied_sector_center.x) < abs(mouse.y - owner.original_copied_sector_center.y):
+				mouse.x = owner.original_copied_sector_center.x
+			else:
+				mouse.y = owner.original_copied_sector_center.y
+		var offset: Vector2 = mouse - owner.current_copied_sector_center
+		
+		for sector: Sector in owner.current_pasted_sector_data:
+			for face: Face in sector.faces:
+				face.v1 += offset
+				face.v2 += offset
+			for object_data: Dictionary in sector.data.objectInformation:
+				object_data.posX += -offset.x
+				object_data.posY += offset.y
+		owner.current_copied_sector_center = mouse
+		queue_redraw()
 
 
 func handle_sector_mode_event(event: InputEvent) -> void:
@@ -776,6 +839,23 @@ func draw_sectors() -> void:
 		)
 		var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
 		draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.PURPLE, line_width*2, true)
+	
+	if owner.paste_sectors_mode:
+		for sector: Sector in owner.current_pasted_sector_data:
+			for face: Face in sector.faces:
+				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.FUCHSIA, line_width*2, true)
+				var direction: Vector2 = (face.v2 - face.v1).normalized()
+				var perendicular := Vector2(direction.y, -direction.x)
+				
+				var v_center := Vector2(
+					(face.v1.x + face.v2.x) / 2,
+					(face.v1.y + face.v2.y) / 2
+				)
+				var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+				draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.FUCHSIA, line_width*2, true)
+		if holding_ctrl and not holding_alt:
+			draw_dashed_line(owner.original_copied_sector_center/Roth.SCALE_2D_WORLD, owner.current_copied_sector_center/Roth.SCALE_2D_WORLD, Color.GRAY, line_width, 2.0, false, true)
+			
 
 
 func draw_box() -> void:
@@ -1375,7 +1455,9 @@ func distance_to_face(mouse_position: Vector2, face: Face) -> float:
 
 #region Options
 
-func _on_sector_check_box_toggled(_toggled_on: bool) -> void:
+func _on_sector_check_box_toggled(toggled_on: bool) -> void:
+	if not toggled_on:
+		owner.paste_sectors_mode = false
 	queue_redraw()
 
 

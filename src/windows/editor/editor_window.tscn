@@ -518,6 +518,17 @@ unique_name_in_owner = true
 offset_right = 40.0
 offset_bottom = 24.0
 
+[node name="2DManipLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/CanvasLayer" index="1"]
+unique_name_in_owner = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 2
+
 [node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="1"]
 unique_name_in_owner = true
 

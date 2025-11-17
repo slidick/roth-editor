@@ -47,17 +47,26 @@ func _init(p_data: Dictionary, p_map_info: Dictionary, p_platforms: Array = []) 
 	data = p_data
 	#index = p_index
 	map_info = p_map_info
-	if "intermediateFloorIndex" in data:
+	if "intermediateFloorIndex" in data and not p_platforms.is_empty():
 		platform = p_platforms[data.intermediateFloorIndex]
 	#if "objectInformation" in data:
 		#objects = data.objectInformation
 
 
-func duplicate() -> Sector:
+func duplicate(p_faces: bool = false) -> Sector:
 	var new_sector := Sector.new(data.duplicate(true), map_info)
 	if platform:
 		new_sector.platform = platform.duplicate(true)
-	new_sector.faces = []
+	if p_faces:
+		for face: Variant in faces:
+			var new_face: Face
+			if face is WeakRef:
+				new_face = face.get_ref().duplicate()
+			else:
+				new_face = face.duplicate()
+			new_face.sector = new_sector
+			new_sector.faces.append(new_face)
+		new_sector.vertices = vertices.duplicate()
 	return new_sector
 
 
@@ -329,6 +338,82 @@ func is_object_inside(object: ObjectRoth) -> bool:
 	connections.append(0)
 	polygon_path_finder.setup(points, connections)
 	return polygon_path_finder.is_point_inside(point)
+
+
+func get_floor_scale() -> float:
+	var floor_a: int = 0
+	var floor_b: int = 0
+	if check_flag(data.textureFit, FLOOR_A):
+		floor_a = 1
+	if check_flag(data.textureFit, FLOOR_B):
+		floor_b = 1
+	var scale: float = 1.0
+	if floor_a == 0 and floor_b == 0:
+		scale = 2
+	if floor_a == 1 and floor_b == 0:
+		scale = 1
+	if floor_a == 0 and floor_b == 1:
+		scale = 0.5
+	if floor_a == 1 and floor_b == 1:
+		scale = 0.25
+	return scale
+
+
+func get_ceiling_scale() -> float:
+	var floor_a: int = 0
+	var floor_b: int = 0
+	if check_flag(data.textureFit, CEILING_A):
+		floor_a = 1
+	if check_flag(data.textureFit, CEILING_B):
+		floor_b = 1
+	var scale: float = 1.0
+	if floor_a == 0 and floor_b == 0:
+		scale = 2
+	if floor_a == 1 and floor_b == 0:
+		scale = 1
+	if floor_a == 0 and floor_b == 1:
+		scale = 0.5
+	if floor_a == 1 and floor_b == 1:
+		scale = 0.25
+	return scale
+
+
+func get_floor_platform_scale() -> float:
+	var floor_a: int = 0
+	var floor_b: int = 0
+	if check_flag(platform.floorTextureScale, FLOOR_A):
+		floor_a = 1
+	if check_flag(platform.floorTextureScale, FLOOR_B):
+		floor_b = 1
+	var scale: float = 1.0
+	if floor_a == 0 and floor_b == 0:
+		scale = 2
+	if floor_a == 1 and floor_b == 0:
+		scale = 1
+	if floor_a == 0 and floor_b == 1:
+		scale = 0.5
+	if floor_a == 1 and floor_b == 1:
+		scale = 0.25
+	return scale
+
+
+func get_ceiling_platform_scale() -> float:
+	var floor_a: int = 0
+	var floor_b: int = 0
+	if check_flag(platform.floorTextureScale, CEILING_A):
+		floor_a = 1
+	if check_flag(platform.floorTextureScale, CEILING_B):
+		floor_b = 1
+	var scale: float = 1.0
+	if floor_a == 0 and floor_b == 0:
+		scale = 2
+	if floor_a == 1 and floor_b == 0:
+		scale = 1
+	if floor_a == 0 and floor_b == 1:
+		scale = 0.5
+	if floor_a == 1 and floor_b == 1:
+		scale = 0.25
+	return scale
 
 
 func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, is_ceiling: bool, texture_shift_x: int, texture_shift_y: int, is_platform: bool) -> SectorMesh3D:

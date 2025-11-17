@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not has_focus:
 		return
 	
-	if event.is_action_pressed("copy_texture"):
+	if event.is_action_pressed("copy_texture", false, true):
 		if moused_over_resource:
 			if moused_over_resource is Face:
 				copied_face_texture_data = moused_over_resource.texture_data.duplicate()
@@ -44,7 +44,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				copied_sector_data = moused_over_resource.data.duplicate()
 				copied_platform_data = moused_over_resource.platform.duplicate()
 	
-	if event.is_action_pressed("paste_texture", true, true):
+	if event.is_action_pressed("paste_texture", false, true):
 		if moused_over_resource:
 			var paste_options: Dictionary = Settings.settings.get("3d_paste_options")
 			if moused_over_resource is Face and copied_face_texture_data:

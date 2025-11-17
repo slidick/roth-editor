@@ -55,6 +55,7 @@ var texture_data: Dictionary
 
 var node: Node3D
 var hidden: bool = false
+var has_copied_sister: bool = false
 
 
 static func check_flag(byte_value: int, flag: int) -> bool:
@@ -86,6 +87,8 @@ func duplicate() -> Face:
 	new_face.v2 = Vector2(v2)
 	new_face.sector = sector
 	new_face.texture_data = texture_data.duplicate(true)
+	if sister or has_copied_sister:
+		new_face.has_copied_sister = true
 	return new_face
 
 static func create_new_face(p_map_info: Dictionary, p_sector: Sector) -> Face:

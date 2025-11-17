@@ -224,6 +224,65 @@ func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 	return new_sector
 
 
+func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
+	for i in range(len(sector_data)):
+		var sector: Sector = sector_data[i]
+		var new_faces: Array = []
+		var sector_center := Vector2.ZERO
+		var original_center := Vector2.ZERO
+		var count: int = 0
+		for j in range(len(sector.faces)):
+			var face: Face = sector.faces[j]
+			face.v1 = face.v1.snappedf(1)
+			face.v2 = face.v2.snappedf(1)
+			face.map_info = map_info
+			faces.append(face)
+			new_faces.append(weakref(face))
+			node.get_node("Faces").add_child(await face.initialize_mesh())
+			sector_center += face.v1
+			sector_center += face.v2
+			original_center += original_data[i].faces[j].v1
+			original_center += original_data[i].faces[j].v2
+			count += 2
+		sector_center /= count
+		original_center /= count
+		sector.faces = new_faces
+		sector.map_info = map_info
+		sector._update_vertices()
+		var shift: Vector2 = original_center - sector_center
+		sector.data.floorTextureShiftX = int((shift.x * sector.get_floor_scale() + sector.data.floorTextureShiftX)) & 0xFF
+		sector.data.floorTextureShiftY = int((-shift.y * sector.get_floor_scale() + sector.data.floorTextureShiftY)) & 0xFF
+		sector.data.ceilingTextureShiftX = int((shift.x * sector.get_ceiling_scale() + sector.data.ceilingTextureShiftX)) & 0xFF
+		sector.data.ceilingTextureShiftY = int((-shift.y * sector.get_ceiling_scale()  + sector.data.ceilingTextureShiftY)) & 0xFF
+		if sector.platform:
+			sector.platform.floorTextureShiftX = int((shift.x * sector.get_floor_platform_scale() + sector.platform.floorTextureShiftX)) & 0xFF
+			sector.platform.floorTextureShiftY = int((-shift.y * sector.get_floor_platform_scale() + sector.platform.floorTextureShiftY)) & 0xFF
+			sector.platform.ceilingTextureShiftX = int((shift.x * sector.get_ceiling_platform_scale() + sector.platform.ceilingTextureShiftX)) & 0xFF
+			sector.platform.ceilingTextureShiftY = int((-shift.y * sector.get_ceiling_platform_scale()  + sector.platform.ceilingTextureShiftY)) & 0xFF
+		node.get_node("Sectors").add_child(await sector.initialize_mesh())
+		
+		for object_data: Dictionary in sector.data.objectInformation:
+			var object_roth: ObjectRoth = ObjectRoth.new(object_data, map_info, sectors, sector)
+			add_object(object_roth)
+		
+		sectors.append(sector)
+	
+	# Assign sisters
+	for sector: Sector in sector_data:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			if face.has_copied_sister:
+				for sector_sister: Sector in sector_data:
+					for face_sister_ref: WeakRef in sector_sister.faces:
+						var face_sister: Face = face_sister_ref.get_ref()
+						if face.v2.is_equal_approx(face_sister.v1) and face.v1.is_equal_approx(face_sister.v2):
+							face.sister = weakref(face_sister)
+							face_sister.sister = weakref(face)
+							face.initialize_mesh()
+							face_sister.initialize_mesh()
+	reorder_faces()
+
+
 func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_node_2: VertexNode) -> void:
 	#Console.print("Splitting sector")
 	
