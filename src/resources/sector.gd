@@ -454,6 +454,8 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 		# Hack around strange failure on some small sectors
 		if len(p_vertices) == 5:
 			verts = [0,1,2,0,2,3]
+		elif len(p_vertices) == 4:
+			verts = [0,1,2]
 		else:
 			Console.print("Sector couldn't triangulate polygon: %s, vertices: %s, verts: %s" % [index, p_vertices, verts])
 			static_body.queue_free()
