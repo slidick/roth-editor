@@ -3,6 +3,7 @@ extends Node2D
 
 const COLOR_GRID := Color(0.498039, 1, 0.831373, 0.2)
 const COLOR_AXIS := Color(1, 0.270588, 0, 0.2)
+const COLOR_AXIS_EDGE := Color(0.52, 0.434, 0.179, 1.0)
 const ZOOM_SPEED : float = 0.95
 const MAX_ZOOM : int = 100
 const MIN_ZOOM : float = 0.2
@@ -735,6 +736,15 @@ func draw_grid() -> void:
 	for y in range(0, ((vp_size.y * 2 / camera.zoom.y) / grid_size.y) + 1):
 		draw_line(Vector2(leftmost, top), Vector2(rightmost, top), COLOR_AXIS if top == 0 else COLOR_GRID, line_width*0.95, true)
 		top += grid_size.y
+	
+	if leftmost < (-32768/Roth.SCALE_2D_WORLD):
+		draw_line(Vector2(-32768/Roth.SCALE_2D_WORLD, min(bottommost, 32768/Roth.SCALE_2D_WORLD)), Vector2(-32768/Roth.SCALE_2D_WORLD, max(topmost, -32768/Roth.SCALE_2D_WORLD)), COLOR_AXIS_EDGE, line_width*0.95, true)
+	if rightmost > (32768/Roth.SCALE_2D_WORLD):
+		draw_line(Vector2(32768/Roth.SCALE_2D_WORLD, min(bottommost, 32768/Roth.SCALE_2D_WORLD)), Vector2(32768/Roth.SCALE_2D_WORLD, max(topmost, -32768/Roth.SCALE_2D_WORLD)), COLOR_AXIS_EDGE, line_width*0.95, true)
+	if topmost < (-32768/Roth.SCALE_2D_WORLD):
+		draw_line(Vector2(max(leftmost, -32768/Roth.SCALE_2D_WORLD), -32768/Roth.SCALE_2D_WORLD), Vector2(min(rightmost, 32768/Roth.SCALE_2D_WORLD), -32768/Roth.SCALE_2D_WORLD), COLOR_AXIS_EDGE, line_width*0.95, true)
+	if bottommost > (32768/Roth.SCALE_2D_WORLD):
+		draw_line(Vector2(max(leftmost, -32768/Roth.SCALE_2D_WORLD), 32768/Roth.SCALE_2D_WORLD), Vector2(min(rightmost, 32768/Roth.SCALE_2D_WORLD), 32768/Roth.SCALE_2D_WORLD), COLOR_AXIS_EDGE, line_width*0.95, true)
 
 
 func draw_sectors() -> void:
