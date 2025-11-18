@@ -3,7 +3,7 @@ class_name VertexNode
 
 signal position_updated
 signal position_finalized(vertex: VertexNode)
-signal vertex_deleted
+signal vertex_deleted(add_to_history: bool)
 signal start_sector_split(vertex: VertexNode)
 signal vertex_dragged(vertex: VertexNode, relative: Vector2)
 signal single_vertex_selected(vertex: VertexNode)
@@ -250,7 +250,7 @@ func split_face() -> void:
 		new_faces[0].initialize_mesh()
 		new_faces[1].initialize_mesh()
 	
-	vertex_deleted.emit()
+	vertex_deleted.emit(false)
 	Roth.editor_action.emit(map_info, "Split Face")
 
 

@@ -1269,8 +1269,9 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 			Roth.editor_action.emit(map.map_info, "Move Vertices")
 
 
-func _on_vertex_deleted() -> void:
-	Roth.editor_action.emit(map.map_info, "Delete Vertex")
+func _on_vertex_deleted(p_add_to_history: bool = true) -> void:
+	if p_add_to_history:
+		Roth.editor_action.emit(map.map_info, "Delete Vertex")
 	show_vertices(last_allow_move)
 	queue_redraw()
 
