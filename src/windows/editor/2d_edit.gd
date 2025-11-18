@@ -1177,6 +1177,7 @@ func show_vertices(allow_move: bool) -> void:
 	for sector: Sector in map.sectors:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
+			face.v1 = face.v1.snappedf(2.0)
 			if face.v1 not in vertices:
 				vertices[face.v1] = {"faces": [face], "sectors": []}
 			else:
@@ -1185,6 +1186,7 @@ func show_vertices(allow_move: bool) -> void:
 			if sector not in vertices[face.v1].sectors:
 				vertices[face.v1].sectors.append(sector)
 				
+			face.v2 = face.v2.snappedf(2.0)
 			if face.v2 not in vertices:
 				vertices[face.v2] = { "faces": [face], "sectors": []}
 			else:
