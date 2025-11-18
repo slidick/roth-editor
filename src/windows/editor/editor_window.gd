@@ -1022,22 +1022,22 @@ func hide_selected_sectors() -> void:
 
 
 func hide_non_selected_sectors() -> void:
-	var maps: Array = []
+	var map: Map = %Map2D.map
+	if not map:
+		return
+	
 	var hidden_sectors: Array = []
-	for i in range(tree_root.get_child_count()):
-		var map: Map = tree_root.get_child(i).get_metadata(0).ref
-		maps.append(map)
-		for sector: Sector in map.sectors:
-			if sector not in selected_sectors:
-				sector.hidden = true
-				hidden_sectors.append(sector)
-				for face_ref: WeakRef in sector.faces:
-					var face: Face = face_ref.get_ref()
-					face.hidden = true
-	for map: Map in maps:
-		for object: ObjectRoth in map.objects:
-			if object.sector.get_ref().hidden:
-				object.initialize_mesh()
+	for sector: Sector in map.sectors:
+		if sector not in selected_sectors:
+			sector.hidden = true
+			hidden_sectors.append(sector)
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				face.hidden = true
+	
+	for object: ObjectRoth in map.objects:
+		if object.sector.get_ref().hidden:
+			object.initialize_mesh()
 	redraw(hidden_sectors)
 	selected_sectors.clear()
 	hovered_sector = null
@@ -1048,28 +1048,26 @@ func hide_non_selected_sectors() -> void:
 
 
 func show_hidden_sectors() -> void:
+	var map: Map = %Map2D.map
+	if not map:
+		return
 	var hidden_sectors: Array = []
-	for i in range(tree_root.get_child_count()):
-		var map: Map = tree_root.get_child(i).get_metadata(0).ref
-		for object: ObjectRoth in map.objects:
-			if object.sector.get_ref().hidden:
-				object.sector.get_ref().hidden = false
-				object.initialize_mesh()
-				object.sector.get_ref().hidden = true
-		for sector: Sector in map.sectors:
-			if sector.hidden:
-				hidden_sectors.append(sector)
-				sector.hidden = false
-				for face_ref: WeakRef in sector.faces:
-					var face: Face = face_ref.get_ref()
-					face.hidden = false
-					#if face.sister:
-						#face.sister.get_ref().hidden = false
+	
+	for object: ObjectRoth in map.objects:
+		if object.sector.get_ref().hidden:
+			object.sector.get_ref().hidden = false
+			object.initialize_mesh()
+			object.sector.get_ref().hidden = true
+	for sector: Sector in map.sectors:
+		if sector.hidden:
+			hidden_sectors.append(sector)
+			sector.hidden = false
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				face.hidden = false
 	redraw(hidden_sectors)
 	if %ObjectCheckBox.button_pressed:
 		%Map2D.show_objects()
-	#%Map2D.update_selections()
-	#%Map3D.update_selections()
 
 
 func copy_selected_sectors() -> void:
