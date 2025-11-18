@@ -142,7 +142,7 @@ func _input(event: InputEvent) -> void:
 			if len(selected_faces) == 1 and selected_faces[0].sister:
 				delete_selected_face()
 			elif selected_faces.is_empty() and not selected_sectors.is_empty():
-				delete_selected_sector()
+				delete_selected_sectors()
 		if event.is_action_pressed("merge_sectors"):
 			if len(selected_sectors) > 1 and len(selected_faces) == 0:
 				merge_selected_sectors()
@@ -161,6 +161,8 @@ func _input(event: InputEvent) -> void:
 			cancel_paste_sectors_mode()
 		if event.is_action_pressed("complete_paste_sectors"):
 			complete_paste_sectors_mode()
+		if event.is_action_pressed("cut_sectors", false, true):
+			cut_selected_sectors()
 
 
 func _on_paste_options_button_pressed() -> void:
@@ -948,18 +950,23 @@ func delete_selected_face() -> void:
 		select_resource(selected_sectors[0])
 
 
-func delete_selected_sector() -> void:
+func delete_selected_sectors() -> void:
 	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
 	if await Dialog.confirm("Delete selected sector%s?" % ("s" if len(selected_sectors) > 1 else ""), "Confirm Deletion", false):
-		var map_groups: Dictionary = {}
-		for sector: Sector in selected_sectors:
-			sector.delete_sector()
-			if sector.map_info not in map_groups:
-				map_groups[sector.map_info] = []
-			map_groups[sector.map_info].append(sector)
+		var map_groups: Dictionary = _delete_selected_sectors()
 		for map_info: Dictionary in map_groups:
 			Roth.editor_action.emit(map_info, "Delete Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
 		select_resource(null)
+
+
+func _delete_selected_sectors() -> Dictionary:
+	var map_groups: Dictionary = {}
+	for sector: Sector in selected_sectors:
+		sector.delete_sector()
+		if sector.map_info not in map_groups:
+			map_groups[sector.map_info] = []
+		map_groups[sector.map_info].append(sector)
+	return map_groups
 
 
 func merge_selected_sectors() -> void:
@@ -1080,6 +1087,13 @@ func copy_selected_sectors() -> void:
 			count += 2
 	original_copied_sector_center /= count
 	current_copied_sector_center = original_copied_sector_center
+
+
+func cut_selected_sectors() -> void:
+	copy_selected_sectors()
+	var map_groups: Dictionary = _delete_selected_sectors()
+	for map_info: Dictionary in map_groups:
+		Roth.editor_action.emit(map_info, "Cut Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
 
 
 func enter_paste_sectors_mode() -> void:
