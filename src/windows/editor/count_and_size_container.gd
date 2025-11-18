@@ -42,16 +42,19 @@ func recalculate() -> void:
 	for sector: Sector in map.sectors:
 		if sector.platform:
 			platforms_count += 1
-			
+	
 	%PlatformsCountLabel.text = "%d" % platforms_count
-	%PlatformsSizeLabel.text =  "%d" % (platforms_count * 14 + 2)
+	var platforms_size: int = platforms_count * 14
+	if platforms_count > 0:
+		platforms_size += 2
+	%PlatformsSizeLabel.text =  "%d" % platforms_size
 	
 	var total: int = (
 		(len(map.sectors) * 26) +
 		(len(map.faces) * 12) +
 		(texture_counts[0] * 10) +
 		(texture_counts[1] * 4) +
-		(platforms_count * 14 + 2)
+		platforms_size
 	)
 	
 	%SizeTotalLabel.text = "%d" % total
