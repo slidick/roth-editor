@@ -430,7 +430,6 @@ class ObjectNode2D extends Node2D:
 				var relative: Vector2 = global_position - mouse.snappedf(get_parent().get_parent().snap)
 				global_position -= relative
 				object_dragged.emit(self, relative)
-			get_viewport().set_input_as_handled()
 	
 	func deselect() -> void:
 		circle.selected = false
