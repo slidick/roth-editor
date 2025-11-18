@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://db0dxik1y7uol"]
+
+[ext_resource type="Script" uid="uid://dc85uh7pn5t62" path="res://src/windows/editor/status_bar.gd" id="1_08ng6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wknxc"]
+content_margin_left = 2.0
+bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
+border_width_top = 2
+border_color = Color(0.54800653, 0.77247435, 0.9302837, 1)
+
+[node name="StatusBar" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 32)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wknxc")
+script = ExtResource("1_08ng6")
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
