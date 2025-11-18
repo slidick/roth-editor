@@ -164,8 +164,20 @@ func _input(event: InputEvent) -> void:
 			complete_paste_sectors_mode()
 		if event.is_action_pressed("cut_sectors", false, true):
 			cut_selected_sectors()
-		if event.is_action_pressed("pin_paste", false, true):
+		if event.is_action_pressed("pin_paste"):
 			pin_paste = not pin_paste
+		if event.is_action_pressed("reset_paste_position"):
+			if paste_sectors_mode:
+				var offset: Vector2 = original_copied_sector_center - current_copied_sector_center
+				for sector: Sector in current_pasted_sector_data:
+					for face: Face in sector.faces:
+						face.v1 += offset
+						face.v2 += offset
+					for object_data: Dictionary in sector.data.objectInformation:
+						object_data.posX += -offset.x
+						object_data.posY += offset.y
+				current_copied_sector_center = original_copied_sector_center
+				%Map2D.queue_redraw()
 
 
 func _on_paste_options_button_pressed() -> void:
