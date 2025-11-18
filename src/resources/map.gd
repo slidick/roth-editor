@@ -447,6 +447,37 @@ func find_bad_sectors() -> Array:
 	return []
 
 
+func get_texture_mappings_counts() -> Array:
+	var command_52_face_ids := []
+	for command: Dictionary in commands_section.allCommands:
+		if command.commandBase in [46, 52]:
+			if command.args[1] != 0:
+				if command.args[1] not in command_52_face_ids:
+					command_52_face_ids.append(command.args[1])
+			else:
+				var face_ids: Array = get_triggering_ids(commands_section, command.index)
+				for face_id: int in face_ids:
+					if face_id not in command_52_face_ids:
+						command_52_face_ids.append(face_id)
+	
+	var texture_additional_count: int = 0
+	var texture_mappings: Array = []
+	for sector: Sector in sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			if face.texture_data not in texture_mappings:
+				texture_mappings.append(face.texture_data)
+				if "additionalMetadata" in face.texture_data:
+					texture_additional_count += 1
+			else:
+				# Map command 52 can't modify face flags if the texture mapping is assigned to more than one face
+				var texture_mapping: Dictionary = texture_mappings[texture_mappings.find(face.texture_data)]
+				if "additionalMetadata" in texture_mapping and texture_mapping.additionalMetadata.unk0x0C in command_52_face_ids:
+					texture_mappings.append(face.texture_data)
+					texture_additional_count += 1
+	return [len(texture_mappings), texture_additional_count]
+
+
 func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
 	
@@ -558,6 +589,10 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
 	
 	var section_sizes: Dictionary = calculate_section_sizes_and_offsets(json)
+	
+	if section_sizes.verticesSection.startsAt > 65535:
+		return []
+	
 	var buffer := PackedByteArray()
 	buffer.resize(section_sizes.footer.startsAt + section_sizes.footer.size)
 	

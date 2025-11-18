@@ -915,6 +915,7 @@ func setup(p_map: Map, p_reset_camera: bool = true) -> void:
 	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
 	_on_vertex_check_box_toggled(%VertexCheckBox.button_pressed)
 	queue_redraw()
+	%CountAndSizeContainer.recalculate()
 
 
 func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
@@ -931,6 +932,7 @@ func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
 		start_box_select = false
 		start_box_deselect = false
 		highlight_sectors.clear()
+		%CountAndSizeContainer.recalculate()
 		owner.select_resource(null)
 		if p_reset_camera:
 			default_camera_bounds()

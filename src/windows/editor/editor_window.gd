@@ -33,6 +33,7 @@ var first_load: bool = false
 var undo_stacks: Dictionary = {}
 var undo_positions: Dictionary = {}
 var undo_lists: Dictionary = {}
+var compilation_failure_warning_given: Dictionary = {}
 var hovered_sector: Variant = null
 var hovered_face: Variant = null
 var selected_faces: Array = []
@@ -616,11 +617,14 @@ func copy_sfx(sfx_list: Array) -> void:
 #region Undo/Redo
 
 func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
+	%CountAndSizeContainer.recalculate()
+	
 	if p_map_info.name not in undo_stacks:
 		undo_stacks[p_map_info.name] = []
 		undo_positions[p_map_info.name] = 0
 		undo_lists[p_map_info.name] = ItemList.new()
 		undo_lists[p_map_info.name].name = p_map_info.name
+		compilation_failure_warning_given[p_map_info.name] = false
 		%HistoryTabContainer.add_child(undo_lists[p_map_info.name])
 		undo_lists[p_map_info.name].item_selected.connect(func (index: int) -> void:
 			undo_positions[p_map_info.name] = len(undo_stacks[p_map_info.name]) - index
@@ -638,6 +642,14 @@ func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 			"map_info": p_map_info,
 			"bytes": Roth.get_map(p_map_info).compile(),
 		}
+		
+		# Check if map actually compiles, if not give a warning
+		if action.bytes.is_empty():
+			if not compilation_failure_warning_given[p_map_info.name]:
+				compilation_failure_warning_given[p_map_info.name] = true
+				Dialog.information("Map %s is too large!\nMap cannot be saved!\nUndo history will not be recorded until corrected!" % p_map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
+			return
+		compilation_failure_warning_given[p_map_info.name] = false
 		
 		# Check if state is same as previous state
 		if not undo_stacks[p_map_info.name].is_empty() and action.bytes == undo_stacks[p_map_info.name][undo_positions[p_map_info.name]-1].bytes:
@@ -665,6 +677,7 @@ func close_undo_redo(p_map_info: Dictionary) -> void:
 	if p_map_info.name in undo_lists:
 		undo_lists[p_map_info.name].queue_free()
 	undo_lists.erase(p_map_info.name)
+	compilation_failure_warning_given.erase(p_map_info.name)
 
 
 func rename_undo_redo(p_old_map_name: String, p_new_map_name: String) -> void:
@@ -732,11 +745,15 @@ func replace_map(map: Map) -> void:
 			
 			old_map_node.queue_free()
 			
+			var folded: bool = %CountAndSizeContainer.folded
 			if %Map2D.close_map(map.map_info, false):
 				%Map2D.setup(map, false)
+				%CountAndSizeContainer.folded = folded
 			
 			if old_map_node.ref.commands_section != map.commands_section and %"Command Editor".map and %"Command Editor".map.map_info == map.map_info:
 				%"Command Editor".load_command_editor(map, false)
+			
+			compilation_failure_warning_given[map.map_info.name] = false
 
 #endregion
 

@@ -1,13 +1,15 @@
-[gd_scene load_steps=49 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=58 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
 [ext_resource type="Script" uid="uid://bihs4h46r2f3u" path="res://src/windows/editor/editor_window.gd" id="3_v1i8b"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_v1i8b"]
+[ext_resource type="StyleBox" uid="uid://dhe24x1qdxeoo" path="res://src/themes/side_panel.tres" id="5_3aa3u"]
 [ext_resource type="Script" uid="uid://dybtxpsisv4p1" path="res://src/windows/editor/cross_hair.gd" id="6_rysh3"]
 [ext_resource type="Script" uid="uid://cgov2cxbe7e85" path="res://src/cameras/camera_free.gd" id="7_e4nci"]
 [ext_resource type="PackedScene" uid="uid://clbdnv0bq58oe" path="res://src/ui/arrow_3d.tscn" id="7_rysh3"]
 [ext_resource type="Script" uid="uid://bb6x1yts7r6sm" path="res://src/windows/editor/3d_edit.gd" id="8_kqd67"]
+[ext_resource type="Script" uid="uid://b0dqary0n80ei" path="res://src/windows/editor/count_and_size_container.gd" id="9_ddibi"]
 [ext_resource type="Script" uid="uid://bg8a1j6sb2ctl" path="res://src/windows/editor/2d_edit.gd" id="9_kytel"]
 [ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/editor/palette_window.tscn" id="9_y8pqo"]
 [ext_resource type="Script" uid="uid://mi4etip4nmsx" path="res://src/windows/editor/edit_object_container.gd" id="10_2yf5m"]
@@ -23,10 +25,32 @@
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="20_12tai"]
 [ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/editor/paste_options_dialog.tscn" id="21_dyevs"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rysh3"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf4qd"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_afexc"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
+border_width_bottom = 2
+border_color = Color(0.6715853, 0.80813575, 0.9533995, 0.38039216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6txe1"]
+bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tv4rk"]
 bg_color = Color(0.469846, 0.68618, 0.909316, 0.380392)
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kytel"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ddibi"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+color = Color(0.5, 0.5, 0.5, 1)
+thickness = 2
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_12tai"]
 
@@ -55,6 +79,33 @@ volumetric_fog_anisotropy = -0.66
 volumetric_fog_detail_spread = 0.840896
 adjustment_brightness = 1.62
 adjustment_contrast = 1.52
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3aa3u"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.6032303, 0.6360055, 0.9096041, 0.4627451)
+border_width_right = 4
+border_color = Color(0.3308485, 0.3420051, 0.7071149, 0.4627451)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uyfwr"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.3881814, 0.40592736, 0.77918726, 0.4627451)
+border_width_right = 4
+border_color = Color(0.3308485, 0.3420051, 0.7071149, 0.4627451)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8go8f"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12572601, 0.094868325, 0.20250013, 0.4627451)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uyfwr"]
 
@@ -199,13 +250,16 @@ text = "No map loaded."
 [node name="MapContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 8
+theme_override_constants/autohide = 0
+dragger_visibility = 2
 
 [node name="MapPanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.6
-theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+theme_override_styles/panel = ExtResource("5_3aa3u")
 
 [node name="VSplitContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer" index="0"]
 layout_mode = 2
@@ -217,6 +271,10 @@ size_flags_vertical = 3
 focus_mode = 0
 theme_override_constants/draw_guides = 0
 theme_override_constants/draw_relationship_lines = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_sf4qd")
+theme_override_styles/title_button_normal = SubResource("StyleBoxFlat_afexc")
+theme_override_styles/title_button_pressed = SubResource("StyleBoxFlat_6txe1")
+theme_override_styles/title_button_hover = SubResource("StyleBoxFlat_tv4rk")
 column_titles_visible = true
 allow_rmb_select = true
 hide_root = true
@@ -349,6 +407,9 @@ text = "Paste Options"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 8
+theme_override_constants/autohide = 0
+dragger_visibility = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer" index="0"]
 layout_mode = 2
@@ -362,7 +423,10 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer" index="1"]
+clip_contents = true
 layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_ddibi")
 
 [node name="EditorTab" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer" index="2"]
 unique_name_in_owner = true
@@ -387,25 +451,30 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-theme_override_constants/separation = 0
+theme_override_constants/separation = 8
+theme_override_constants/autohide = 0
 metadata/_tab_index = 0
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer" index="0"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
 ratio = 1.3333
 alignment_horizontal = 0
 
-[node name="ViewportBorder" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer" index="0"]
+[node name="ViewportBorder" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer" index="0"]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.736966, 0.860665, 0.934149, 1)
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder" index="0"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder" index="0"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -423,25 +492,25 @@ focus_mode = 2
 stretch = true
 mouse_target = true
 
-[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" index="0"]
+[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" index="0"]
 unique_name_in_owner = true
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(480, 359)
+size = Vector2i(479, 358)
 render_target_update_mode = 4
 
-[node name="Map3D" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport" index="0"]
+[node name="Map3D" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport" index="0"]
 unique_name_in_owner = true
 script = ExtResource("8_kqd67")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="0"]
+[node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="0"]
 
-[node name="PositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/CanvasLayer" index="0"]
+[node name="PositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/CanvasLayer" index="0"]
 unique_name_in_owner = true
 offset_right = 1.0
 offset_bottom = 23.0
 
-[node name="CrossHair" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/CanvasLayer" index="1"]
+[node name="CrossHair" type="Control" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/CanvasLayer" index="1"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(10, 10)
@@ -459,24 +528,216 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_rysh3")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="1"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="1"]
 environment = SubResource("Environment_kc8ui")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="2"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="2"]
 transform = Transform3D(-0.866025, -0.469846, 0.17101, 0, 0.34202, 0.939692, -0.5, 0.813798, -0.296198, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Camera3D" type="Camera3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="3"]
+[node name="Camera3D" type="Camera3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="3"]
 unique_name_in_owner = true
 script = ExtResource("7_e4nci")
 
-[node name="Arrow3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/Camera3D" index="0" instance=ExtResource("7_rysh3")]
+[node name="Arrow3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/Camera3D" index="0" instance=ExtResource("7_rysh3")]
 unique_name_in_owner = true
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1, -2)
 enabled = false
 
-[node name="Maps" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="4"]
+[node name="Maps" type="Node3D" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="4"]
 unique_name_in_owner = true
+
+[node name="CountAndSizeContainer" type="FoldableContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+theme_override_styles/title_panel = SubResource("StyleBoxFlat_3aa3u")
+theme_override_styles/title_hover_panel = SubResource("StyleBoxFlat_uyfwr")
+theme_override_styles/title_collapsed_panel = SubResource("StyleBoxFlat_3aa3u")
+theme_override_styles/title_collapsed_hover_panel = SubResource("StyleBoxFlat_uyfwr")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8go8f")
+folded = true
+title = "Size"
+script = ExtResource("9_ddibi")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer" index="0"]
+visible = false
+layout_mode = 2
+
+[node name="CountMapNameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Map Name"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer" index="0"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="Count" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer" index="1"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Count"
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer" index="2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Size"
+
+[node name="Total" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer" index="3"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Total"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Sectors:"
+
+[node name="SectorsCountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer2" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer2" index="2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "26"
+
+[node name="SectorsSizeTotalLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer2" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="4"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer3" index="0"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Faces:"
+
+[node name="FacesCountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer3" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer3" index="2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "12"
+
+[node name="FacesSizeTotalLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer3" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="5"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer4" index="0"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Textures:"
+
+[node name="TexturesCountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer4" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer4" index="2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "10"
+
+[node name="TexturesSizeTotalLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer4" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="6"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer7" index="0"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Textures w/
+Additional Data:"
+
+[node name="TexturesAdditionalCountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer7" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer7" index="2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "4"
+
+[node name="TexturesAdditionalSizeTotal" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer7" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="7"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer5" index="0"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Platforms:"
+
+[node name="PlatformsCountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer5" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer5" index="2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "14"
+
+[node name="PlatformsSizeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer5" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="8"]
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="9"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer6" index="0"]
+custom_minimum_size = Vector2(244, 0)
+layout_mode = 2
+text = "Must be Less Than:"
+
+[node name="Size" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer6" index="1"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "65474"
+
+[node name="SizeTotalLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/HBoxContainer6" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="RecalculateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" index="10"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recalculate"
 
 [node name="ViewportBorder2" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor" index="1"]
 unique_name_in_owner = true
@@ -497,6 +758,8 @@ offset_left = 3.0
 offset_top = 3.0
 offset_right = -3.0
 offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 focus_mode = 2
@@ -508,7 +771,7 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(1131, 544)
+size = Vector2i(1142, 544)
 render_target_update_mode = 4
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="0"]
@@ -584,7 +847,7 @@ metadata/_tab_index = 0
 
 [node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector" index="0"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+theme_override_styles/panel = ExtResource("5_3aa3u")
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/PanelContainer" index="0"]
 layout_mode = 2
@@ -639,7 +902,7 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+theme_override_styles/panel = ExtResource("5_3aa3u")
 
 [node name="EditFaceContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit" index="0"]
 unique_name_in_owner = true
@@ -2053,7 +2316,7 @@ one_shot = true
 [node name="History" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="2"]
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rysh3")
+theme_override_styles/panel = ExtResource("5_3aa3u")
 metadata/_tab_index = 1
 
 [node name="HistoryTabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel/History" index="0"]
@@ -2267,11 +2530,12 @@ item_1/id = 1
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2/SnapCheckBox" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_check_box_toggled"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2/SnapEdit" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_edit_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/PasteOptionsButton" to="." method="_on_paste_options_button_pressed"]
-[connection signal="focus_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_entered"]
-[connection signal="focus_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_exited"]
-[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]
-[connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
-[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
+[connection signal="focus_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_entered"]
+[connection signal="focus_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_exited"]
+[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]
+[connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
+[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer/RecalculateButton" to="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/CountAndSizeContainer/VBoxContainer" method="_on_recalculate_button_pressed"]
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D" to="." method="_on_sub_viewport_container_2d_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D" to="." method="_on_sub_viewport_container_2d_mouse_exited"]
 [connection signal="text_submitted" from="Contents/VBoxContainer/MainContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/PanelContainer/MarginContainer/HBoxContainer/Search" to="." method="_on_search_text_submitted"]
