@@ -245,11 +245,11 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 		
 		for sector: Sector in owner.current_pasted_sector_data:
 			for face: Face in sector.faces:
-				face.v1 += offset
-				face.v2 += offset
+				face.v1 = (face.v1 + offset).snappedf(2)
+				face.v2 = (face.v2 + offset).snappedf(2)
 			for object_data: Dictionary in sector.data.objectInformation:
-				object_data.posX += -offset.x
-				object_data.posY += offset.y
+				object_data.posX = snappedf(object_data.posX - offset.x, 2)
+				object_data.posY = snappedf(object_data.posY + offset.y, 2)
 		owner.current_copied_sector_center = mouse
 		queue_redraw()
 	if owner.pin_paste and has_focus:
