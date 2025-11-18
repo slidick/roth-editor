@@ -233,8 +233,8 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 		var count: int = 0
 		for j in range(len(sector.faces)):
 			var face: Face = sector.faces[j]
-			face.v1 = face.v1.snappedf(1)
-			face.v2 = face.v2.snappedf(1)
+			face.v1 = face.v1.snappedf(2)
+			face.v2 = face.v2.snappedf(2)
 			face.map_info = map_info
 			faces.append(face)
 			new_faces.append(weakref(face))
