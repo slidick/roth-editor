@@ -1123,5 +1123,10 @@ func complete_paste_sectors_mode() -> void:
 		new_data.append(sector.duplicate(true))
 	%Map2D.map.add_copied_sectors(new_data, copied_sector_data)
 	Roth.editor_action.emit(%Map2D.map.map_info, "Paste Sectors")
+	select_resource(null)
+	for sector: Sector in new_data:
+		select_resource(sector, false)
+	paste_sectors_mode = false
+	get_viewport().set_input_as_handled()
 
 #endregion

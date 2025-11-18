@@ -180,7 +180,8 @@ func _input(event: InputEvent) -> void:
 			queue_redraw()
 		else:
 			holding_ctrl = false
-			check_for_hover()
+			if not owner.paste_sectors_mode:
+				check_for_hover()
 			queue_redraw()
 	
 	if event is InputEventKey and event.keycode == KEY_ALT:
@@ -254,7 +255,7 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 
 
 func handle_sector_mode_event(event: InputEvent) -> void:
-	if not %SectorCheckBox.button_pressed:
+	if not %SectorCheckBox.button_pressed or owner.paste_sectors_mode:
 		return
 	
 	if event is InputEventMouseMotion and not mouse_drag_enabled:
