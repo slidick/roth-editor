@@ -234,7 +234,7 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 				owner.current_pasted_sector_data[i].data.objectInformation[j].posY = point.y
 		queue_redraw()
 		return
-	if event is InputEventMouseMotion or (holding_ctrl and not holding_alt):
+	if (event is InputEventMouseMotion or (holding_ctrl and not holding_alt)) and not owner.pin_paste:
 		var mouse: Vector2 = ((get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
 		if holding_ctrl:
 			if abs(mouse.x - owner.original_copied_sector_center.x) < abs(mouse.y - owner.original_copied_sector_center.y):
@@ -252,6 +252,43 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 				object_data.posY += offset.y
 		owner.current_copied_sector_center = mouse
 		queue_redraw()
+	if owner.pin_paste and has_focus:
+		if event.is_action_pressed("ui_up", true):
+			for sector: Sector in owner.current_pasted_sector_data:
+				for face: Face in sector.faces:
+					face.v1.y -= 2
+					face.v2.y -= 2
+				for object_data: Dictionary in sector.data.objectInformation:
+					object_data.posY -= 2
+			queue_redraw()
+			get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_down", true):
+			for sector: Sector in owner.current_pasted_sector_data:
+				for face: Face in sector.faces:
+					face.v1.y += 2
+					face.v2.y += 2
+				for object_data: Dictionary in sector.data.objectInformation:
+					object_data.posY += 2
+			queue_redraw()
+			get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_left", true):
+			for sector: Sector in owner.current_pasted_sector_data:
+				for face: Face in sector.faces:
+					face.v1.x -= 2
+					face.v2.x -= 2
+				for object_data: Dictionary in sector.data.objectInformation:
+					object_data.posX += 2
+			queue_redraw()
+			get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_right", true):
+			for sector: Sector in owner.current_pasted_sector_data:
+				for face: Face in sector.faces:
+					face.v1.x += 2
+					face.v2.x += 2
+				for object_data: Dictionary in sector.data.objectInformation:
+					object_data.posX -= 2
+			queue_redraw()
+			get_viewport().set_input_as_handled()
 
 
 func handle_sector_mode_event(event: InputEvent) -> void:

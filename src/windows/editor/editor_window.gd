@@ -25,6 +25,7 @@ var copied_object_data: Array
 var copied_sfx_data: Array
 var copied_sector_data: Array
 var paste_sectors_mode: bool = false
+var pin_paste: bool = false
 var original_copied_sector_center := Vector2.ZERO
 var original_pasted_sector_data: Array = []
 var current_copied_sector_center := Vector2.ZERO
@@ -163,6 +164,8 @@ func _input(event: InputEvent) -> void:
 			complete_paste_sectors_mode()
 		if event.is_action_pressed("cut_sectors", false, true):
 			cut_selected_sectors()
+		if event.is_action_pressed("pin_paste", false, true):
+			pin_paste = not pin_paste
 
 
 func _on_paste_options_button_pressed() -> void:
@@ -1101,6 +1104,7 @@ func enter_paste_sectors_mode() -> void:
 	current_copied_sector_center = original_copied_sector_center
 	original_pasted_sector_data.clear()
 	current_pasted_sector_data.clear()
+	pin_paste = false
 	
 	for sector: Sector in copied_sector_data:
 		original_pasted_sector_data.append(sector.duplicate(true))
