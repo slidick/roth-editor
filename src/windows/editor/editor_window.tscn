@@ -378,7 +378,7 @@ max_value = 4096.0
 value = 1024.0
 rounded = true
 update_on_text_changed = true
-custom_arrow_step = 8.0
+custom_arrow_step = 128.0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="11"]
 layout_mode = 2
@@ -392,11 +392,11 @@ text = "Snap"
 [node name="SnapEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
+min_value = 2.0
 max_value = 4096.0
+step = 2.0
 value = 16.0
 rounded = true
-update_on_text_changed = true
-custom_arrow_step = 8.0
 
 [node name="PasteOptionsButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="12"]
 layout_mode = 2

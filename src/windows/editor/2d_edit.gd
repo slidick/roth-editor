@@ -27,7 +27,7 @@ var holding_right_mouse: bool = false
 var holding_shift: bool = false
 var holding_ctrl: bool = false
 var holding_alt: bool = false
-var snap: float = 0.1
+var snap: float = 0.2
 var timer: Timer
 var start_box_draw: bool = false 
 var start_box_position := Vector2.ZERO
@@ -1562,7 +1562,7 @@ func _on_snap_check_box_toggled(toggled_on: bool) -> void:
 		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
 		%SnapEdit.editable = true
 	else:
-		snap = 0.1
+		snap = 0.2
 		%SnapEdit.editable = false
 
 
