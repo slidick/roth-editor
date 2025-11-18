@@ -952,6 +952,7 @@ func setup(p_map: Map, p_reset_camera: bool = true) -> void:
 	_on_object_check_box_toggled(%ObjectCheckBox.button_pressed)
 	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
 	_on_vertex_check_box_toggled(%VertexCheckBox.button_pressed)
+	_on_box_check_box_toggled(%BoxCheckBox.button_pressed)
 	queue_redraw()
 	%CountAndSizeContainer.recalculate()
 
@@ -1537,7 +1538,8 @@ func _on_box_check_box_toggled(_toggled_on: bool) -> void:
 	if _toggled_on:
 		show_vertices(false)
 	else:
-		hide_vertices()
+		if not %VertexCheckBox.button_pressed:
+			hide_vertices()
 
 
 func _on_grid_check_box_toggled(toggled_on: bool) -> void:
