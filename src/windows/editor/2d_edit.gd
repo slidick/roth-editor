@@ -40,6 +40,7 @@ var start_box_select: bool = false
 var start_box_deselect: bool = false
 var start_box_select_position := Vector2.ZERO
 var mouse_paste_position := Vector2.ZERO
+var mouse_rotation_position := Vector2i.ZERO
 var context_menu_object: ObjectRoth
 var context_menu_sfx: SFX
 var dragging_something: bool = false
@@ -188,6 +189,7 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			holding_alt = true
 			queue_redraw()
+			mouse_rotation_position = DisplayServer.mouse_get_position()
 		else:
 			holding_alt = false
 	
@@ -214,8 +216,7 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 		else:
 			%"2DManipLabel".text = ""
 	if event is InputEventMouseMotion and event.alt_pressed:
-		var mouse: Vector2 = ((get_global_mouse_position() + global_position)*Roth.SCALE_2D_WORLD)
-		var offset: Vector2 = (mouse - owner.current_copied_sector_center) / 10
+		var offset: Vector2 = (DisplayServer.mouse_get_position() - mouse_rotation_position)
 		var rotation_deg: float = offset.x + offset.y
 		var rotation_snap: float = 1.0
 		if event.ctrl_pressed:
