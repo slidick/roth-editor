@@ -355,7 +355,7 @@ class CircleDraw2D extends Node2D:
 			color = Color.MEDIUM_PURPLE
 		draw_circle(Vector2.ZERO, radius, color)
 		var angle_degrees: float = Roth.object_rotation_to_degrees(roth_rotation)
-		draw_line(Vector2.ZERO, Vector2(cos(deg_to_rad(angle_degrees)), sin(deg_to_rad(angle_degrees))) * 1.5, color, 0.1)
+		draw_line(Vector2.ZERO, Vector2(cos(deg_to_rad(angle_degrees)), sin(deg_to_rad(angle_degrees))) * 2.0, color, 0.2)
 
 
 class ObjectNode2D extends Node2D:
