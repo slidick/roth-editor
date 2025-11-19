@@ -1289,13 +1289,13 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 			unique_sectors.append(vertex_face.sector)
 		for vertex_face_2_ref: WeakRef in vertex_face.sector.faces:
 			var vertex_face_2: Face = vertex_face_2_ref.get_ref()
-			if vertex_face.v1 == vertex_face_2.v2 and vertex_face.v2 == vertex_face_2.v1 and vertex_face.sector == vertex_face_2.sector:
+			if vertex_face.v1.is_equal_approx(vertex_face_2.v2) and vertex_face.v2.is_equal_approx(vertex_face_2.v1) and vertex_face.sector == vertex_face_2.sector:
 				bad_face_merge = true
-				print("Incorrect Face Merge")
+				#print("Incorrect Face Merge")
 	
 	for sector: Sector in unique_sectors:
 		if Utility.are_points_collinear_2d(sector.get_vertices()):
-			print("Sector Merge Wanted")
+			#print("Sector Merge Wanted")
 			bad_merge_sectors.append(sector)
 	
 	
@@ -1322,7 +1322,7 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 			for face: WeakRef in sector.faces:
 				if face.get_ref() in vertex.faces:
 					if face.get_ref().sister:
-						print("Sector Merge Happened")
+						#print("Sector Merge Happened")
 						map.merge_sectors(face.get_ref().sister.get_ref())
 						break
 		sectors_merged = true
