@@ -787,7 +787,7 @@ func draw_grid() -> void:
 
 
 func draw_sectors() -> void:
-	if not map or not map.sectors:
+	if not map:
 		return
 	
 	for sector: Sector in map.sectors:
