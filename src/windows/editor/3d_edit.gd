@@ -272,6 +272,8 @@ func update_selections() -> void:
 
 
 func deselect_all() -> void:
+	if moused_over_resource:
+		moused_over_resource.node.unhighlight()
 	moused_over_resource = null
 	show_selection_highlight = true
 	owner.select_resource(null)
