@@ -192,6 +192,7 @@ func _input(event: InputEvent) -> void:
 			mouse_rotation_position = DisplayServer.mouse_get_position()
 		else:
 			holding_alt = false
+			%"2DManipLabel".text = ""
 	
 	handle_paste_sectors_mode_event(event)
 	handle_sector_mode_event(event)
@@ -214,8 +215,6 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 					owner.original_pasted_sector_data[i].data.objectInformation[j].posX = owner.current_pasted_sector_data[i].data.objectInformation[j].posX
 					owner.original_pasted_sector_data[i].data.objectInformation[j].posY = owner.current_pasted_sector_data[i].data.objectInformation[j].posY
 					owner.original_pasted_sector_data[i].data.objectInformation[j].rotation = owner.current_pasted_sector_data[i].data.objectInformation[j].rotation
-		else:
-			%"2DManipLabel".text = ""
 	if event is InputEventMouseMotion and event.alt_pressed:
 		var offset: Vector2 = (DisplayServer.mouse_get_position() - mouse_rotation_position)
 		var rotation_deg: float = offset.x + offset.y
@@ -460,6 +459,24 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 
 func handle_object_mode_event(event: InputEvent) -> void:
 	if not %ObjectCheckBox.button_pressed:
+		return
+	
+	if event is InputEventKey and event.keycode == KEY_ALT and not owner.selected_objects.is_empty():
+		if event.pressed:
+			for object: ObjectRoth in owner.selected_objects:
+				object.data.original_rotation = object.data.rotation
+		else:
+			%EditObjectContainer.update_selections()
+	if holding_alt and event is InputEventMouseMotion and not owner.selected_objects.is_empty():
+		var offset: Vector2 = (DisplayServer.mouse_get_position() - mouse_rotation_position)
+		var rotation_deg: float = offset.x + offset.y
+		var rotation_snap: float = 1.0
+		if event.ctrl_pressed:
+			rotation_snap = 15
+		%"2DManipLabel".text = "Rotate: %d°" % snapped(rotation_deg, rotation_snap)
+		for object: ObjectRoth in owner.selected_objects:
+			object.data.rotation = int(object.data.original_rotation+Roth.object_relative_degrees_to_rotation(snapped(rotation_deg, rotation_snap))) & 0xFF
+		owner.redraw(owner.selected_objects)
 		return
 	
 	if event is InputEventMouseButton:
