@@ -457,14 +457,24 @@ maps {
 	OS.execute(dosbox_bin, dosbox_args)
 
 
-## Converts from game rotation to degrees
-func rotation_to_degrees(rotation: float) -> int:
+## Converts from player game rotation to degrees
+func player_rotation_to_degrees(rotation: float) -> int:
 	return int(-180 + (90 * (rotation / 128)))
 
 
-## Converts from degrees to game rotation
-func degrees_to_rotation(degrees: float) -> int:
+## Converts from player degrees to game rotation
+func player_degrees_to_rotation(degrees: float) -> int:
 	return int(((degrees + 180) * 128) / 90)
+
+
+## Converts from object game rotation to degrees
+func object_rotation_to_degrees(rotation: int) -> int:
+	return int(((rotation / 256.0) * 360) - 90)
+
+
+## Converts from relative rotation degrees to relative game object rotation
+func object_relative_degrees_to_rotation(degrees: float) -> int:
+	return int((256.0/360) * (degrees))
 
 
 ## Plays audio by passing an array of Vector2 and a sample rate

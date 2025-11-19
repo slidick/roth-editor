@@ -66,4 +66,4 @@ func _on_set_current_location_button_pressed() -> void:
 	%StartingPositionXEdit.text = "%d" % -player_position.x
 	%StartingPositionYEdit.text = "%d" % player_position.z
 	%StartingPositionZEdit.text = "%d" % player_position.y
-	%StartingRotationEdit.text = "%d" % Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
+	%StartingRotationEdit.text = "%d" % Roth.player_degrees_to_rotation(%Camera3D.global_rotation_degrees.y)

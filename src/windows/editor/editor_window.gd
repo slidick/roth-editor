@@ -202,7 +202,7 @@ func test_map() -> void:
 	var player_position: Vector3 = %Camera3D.global_position
 	player_position.y -= 1.2
 	player_position *= Roth.SCALE_3D_WORLD
-	var player_rotation: int = Roth.degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
+	var player_rotation: int = Roth.player_degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
 	
 	var player_data: Dictionary = {
 		"position": player_position,
@@ -329,7 +329,7 @@ func _on_map_completely_loaded() -> void:
 		%Camera3D.global_position.y += 1.2
 		%Camera3D.rotation_degrees = Vector3(
 			0,
-			Roth.rotation_to_degrees(%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["rotation"]),
+			Roth.player_rotation_to_degrees(%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["rotation"]),
 			0,
 		)
 
