@@ -441,11 +441,7 @@ func find_bad_sectors() -> Array:
 	for sector: Sector in sectors:
 		if not sector.is_convex():
 			bad_sectors.append(sector)
-	if len(bad_sectors) > 0:
-		var array := bad_sectors.map(func (a:Sector) -> int: return a.index)
-		#await Dialog.confirm("Sectors are concave and will render improperly:\n%s" % ", ".join(array), "Error: Concave sectors", false)
-		return array
-	return []
+	return bad_sectors
 
 
 func get_texture_mappings_counts() -> Array:

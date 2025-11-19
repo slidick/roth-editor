@@ -35,3 +35,13 @@ func _handle_command(command: String) -> void:
 			Console.print("%s" % section)
 		"save_hmps":
 			DBase300.save_hmps()
+		"concave":
+			var map_2d: Node = get_tree().get_root().find_child("Map2D", true, false)
+			if map_2d and map_2d.map:
+				var map: Map = map_2d.map
+				var sectors: Array = map.find_bad_sectors()
+				var editor: Node = get_tree().get_root().find_child("Editor", true, false)
+				if editor:
+					editor.select_resource(null)
+					for sector: Sector in sectors:
+						editor.select_resource(sector, false)
