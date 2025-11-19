@@ -490,7 +490,7 @@ func handle_object_mode_event(event: InputEvent) -> void:
 		
 		for object: ObjectRoth in owner.selected_objects:
 			object.data.rotation = int(object.data.original_rotation+Roth.object_relative_degrees_to_rotation(snapped(rotation_deg, rotation_snap))) & 0xFF
-			if holding_ctrl:
+			if holding_shift:
 				var point := Vector2(-object.data.original_pos_x, object.data.original_pos_y)
 				point = translation * (point - mouse_object_rotation_center) + mouse_object_rotation_center
 				object.data.posX = -point.x
