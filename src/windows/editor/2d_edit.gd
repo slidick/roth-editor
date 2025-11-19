@@ -213,6 +213,7 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 				for j in range(len(owner.copied_sector_data[i].data.objectInformation)):
 					owner.original_pasted_sector_data[i].data.objectInformation[j].posX = owner.current_pasted_sector_data[i].data.objectInformation[j].posX
 					owner.original_pasted_sector_data[i].data.objectInformation[j].posY = owner.current_pasted_sector_data[i].data.objectInformation[j].posY
+					owner.original_pasted_sector_data[i].data.objectInformation[j].rotation = owner.current_pasted_sector_data[i].data.objectInformation[j].rotation
 		else:
 			%"2DManipLabel".text = ""
 	if event is InputEventMouseMotion and event.alt_pressed:
@@ -233,6 +234,7 @@ func handle_paste_sectors_mode_event(event: InputEvent) -> void:
 				point = translation * (point - owner.current_copied_sector_center) + owner.current_copied_sector_center
 				owner.current_pasted_sector_data[i].data.objectInformation[j].posX = -point.x
 				owner.current_pasted_sector_data[i].data.objectInformation[j].posY = point.y
+				owner.current_pasted_sector_data[i].data.objectInformation[j].rotation = owner.original_pasted_sector_data[i].data.objectInformation[j].rotation+Roth.object_relative_degrees_to_rotation(snapped(rotation_deg, rotation_snap))
 		queue_redraw()
 		return
 	if (event is InputEventMouseMotion or (holding_ctrl and not holding_alt)) and not owner.pin_paste:

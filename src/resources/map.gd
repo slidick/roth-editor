@@ -262,6 +262,7 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 		node.get_node("Sectors").add_child(await sector.initialize_mesh())
 		
 		for object_data: Dictionary in sector.data.objectInformation:
+			object_data.rotation = object_data.rotation & 0xFF
 			var object_roth: ObjectRoth = ObjectRoth.new(object_data, map_info, sectors, sector)
 			add_object(object_roth)
 		
