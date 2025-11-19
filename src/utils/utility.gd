@@ -38,3 +38,29 @@ static func are_points_collinear_2d(points_list: Array) -> bool:
 			continue
 		return false
 	return true
+
+
+static func distance_to_face(position: Vector2, face: Face) -> float:
+	var x1: float = face.v1.x
+	var y1: float = face.v1.y
+	var x2: float = face.v2.x
+	var y2: float = face.v2.y
+
+	# Vector from line segment start to end
+	var line_vec_x: float = x2 - x1
+	var line_vec_y: float = y2 - y1
+	var line_length: float = sqrt(line_vec_x * line_vec_x + line_vec_y * line_vec_y)
+
+	# If the line segment has zero length, return distance to either endpoint
+	if (line_length == 0):
+		return sqrt((position.x - x1) * (position.x - x1) + (position.y - y1) * (position.y - y1))
+
+	# Calculate projection of position point onto the line
+	var t: float = max(0, min(1, ((position.x - x1) * line_vec_x + (position.y - y1) * line_vec_y) / (line_length * line_length)));
+
+	# Find the nearest point on the line segment
+	var nearest_x: float = x1 + t * line_vec_x;
+	var nearest_y: float = y1 + t * line_vec_y;
+
+	# Return distance to the nearest point
+	return sqrt((position.x - nearest_x) * (position.x - nearest_x) + (position.y - nearest_y) * (position.y - nearest_y));

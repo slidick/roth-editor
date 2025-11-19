@@ -461,18 +461,30 @@ class ObjectNode2D extends Node2D:
 		)
 		
 		var current_sector_index: int = ref.sector.get_ref().index
+		var closest_sector_index: int = -1
 		var new_sector_index: int = -1
+		var closest_distance: float = INF
 		for sector: Sector in ref.sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				var distance: float = Utility.distance_to_face(pos, face)
+				if distance < closest_distance:
+					closest_distance = distance
+					closest_sector_index = sector.index
+			
 			if Geometry2D.is_point_in_polygon(pos, sector.vertices.slice(0,-1)):
 				new_sector_index = sector.index
 		
-		for object: Dictionary in ref.sectors[new_sector_index].data.objectInformation:
-			if object.posX == -int(pos.x) and object.posY == int(pos.y):
-				position = Vector2(
-					-ref.data.posX / Roth.SCALE_2D_WORLD,
-					ref.data.posY / Roth.SCALE_2D_WORLD
-				)
-				return
+		if new_sector_index == -1:
+			new_sector_index = closest_sector_index
+		
+		#for object: Dictionary in ref.sectors[new_sector_index].data.objectInformation:
+			#if object.posX == -int(pos.x) and object.posY == int(pos.y):
+				#position = Vector2(
+					#-ref.data.posX / Roth.SCALE_2D_WORLD,
+					#ref.data.posY / Roth.SCALE_2D_WORLD
+				#)
+				#return
 				
 		
 		if new_sector_index == -1:
@@ -482,12 +494,12 @@ class ObjectNode2D extends Node2D:
 			)
 			return
 		
-		if new_sector_index == current_sector_index:
-			ref.data.posX = -int(pos.x)
-			ref.data.posY = int(pos.y)
-		else:
-			ref.data.posX = -int(pos.x)
-			ref.data.posY = int(pos.y)
+		ref.data.posX = -int(pos.x)
+		ref.data.posY = int(pos.y)
+		
+		
+		
+		if current_sector_index != new_sector_index:
 			ref.sectors[current_sector_index].data.objectInformation.erase(ref.data)
 			ref.sectors[new_sector_index].data.objectInformation.append(ref.data)
 			ref.sector = weakref(ref.sectors[new_sector_index])

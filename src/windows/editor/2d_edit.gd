@@ -1506,7 +1506,7 @@ func check_for_face_hover(sector: Sector) -> void:
 	var smallest_distance: float = 100.0
 	for face_ref: WeakRef in sector.faces:
 		var face: Face = face_ref.get_ref()
-		var distance: float = distance_to_face((get_global_mouse_position() + global_position) * Roth.SCALE_2D_WORLD, face)
+		var distance: float = Utility.distance_to_face((get_global_mouse_position() + global_position) * Roth.SCALE_2D_WORLD, face)
 		if distance < smallest_distance and distance < max(100 / %Camera2D.zoom.x, 8):
 			smallest_distance = distance
 			found = true
@@ -1520,32 +1520,6 @@ func check_for_face_hover(sector: Sector) -> void:
 	if not found:
 		owner.hovered_face = null
 		queue_redraw()
-
-
-func distance_to_face(mouse_position: Vector2, face: Face) -> float:
-	var x1: float = face.v1.x
-	var y1: float = face.v1.y
-	var x2: float = face.v2.x
-	var y2: float = face.v2.y
-
-	# Vector from line segment start to end
-	var line_vec_x: float = x2 - x1
-	var line_vec_y: float = y2 - y1
-	var line_length: float = sqrt(line_vec_x * line_vec_x + line_vec_y * line_vec_y)
-
-	# If the line segment has zero length, return distance to either endpoint
-	if (line_length == 0):
-		return sqrt((mouse_position.x - x1) * (mouse_position.x - x1) + (mouse_position.y - y1) * (mouse_position.y - y1))
-
-	# Calculate projection of mouse_position point onto the line
-	var t: float = max(0, min(1, ((mouse_position.x - x1) * line_vec_x + (mouse_position.y - y1) * line_vec_y) / (line_length * line_length)));
-
-	# Find the nearest point on the line segment
-	var nearest_x: float = x1 + t * line_vec_x;
-	var nearest_y: float = y1 + t * line_vec_y;
-
-	# Return distance to the nearest point
-	return sqrt((mouse_position.x - nearest_x) * (mouse_position.x - nearest_x) + (mouse_position.y - nearest_y) * (mouse_position.y - nearest_y));
 
 #endregion
 
