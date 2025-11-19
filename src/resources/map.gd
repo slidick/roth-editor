@@ -110,7 +110,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 		loaded_map.commands_section.allCommands[i]["map_info"] = p_map_info
 		loaded_map.commands_section.allCommands[i]["index"] = i+1
 	
-	if p_map_info.vanilla and p_map_info.name == "RAQUIA2":
+	if "vanilla" in p_map_info and p_map_info.name == "RAQUIA2":
 		for sector: Sector in loaded_map.sectors:
 			for face_ref: WeakRef in sector.faces:
 				var face: Face = face_ref.get_ref()
