@@ -41,6 +41,7 @@ var start_box_deselect: bool = false
 var start_box_select_position := Vector2.ZERO
 var mouse_paste_position := Vector2.ZERO
 var mouse_rotation_position := Vector2i.ZERO
+var mouse_object_rotation_center := Vector2.ZERO
 var context_menu_object: ObjectRoth
 var context_menu_sfx: SFX
 var dragging_something: bool = false
@@ -190,6 +191,11 @@ func _input(event: InputEvent) -> void:
 			holding_alt = true
 			queue_redraw()
 			mouse_rotation_position = DisplayServer.mouse_get_position()
+			if not owner.selected_objects.is_empty():
+				mouse_object_rotation_center = Vector2.ZERO
+				for object: ObjectRoth in owner.selected_objects:
+					mouse_object_rotation_center += Vector2(-object.data.posX, object.data.posY)
+				mouse_object_rotation_center /= len(owner.selected_objects)
 		else:
 			holding_alt = false
 			%"2DManipLabel".text = ""
@@ -465,8 +471,13 @@ func handle_object_mode_event(event: InputEvent) -> void:
 		if event.pressed:
 			for object: ObjectRoth in owner.selected_objects:
 				object.data.original_rotation = object.data.rotation
+				object.data.original_pos_x = object.data.posX
+				object.data.original_pos_y = object.data.posY
 		else:
+			for object: ObjectRoth in owner.selected_objects:
+				object.node_2d.update_position()
 			%EditObjectContainer.update_selections()
+			Roth.editor_action.emit(map.map_info, "Rotate Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
 	if holding_alt and event is InputEventMouseMotion and not owner.selected_objects.is_empty():
 		var offset: Vector2 = (DisplayServer.mouse_get_position() - mouse_rotation_position)
 		var rotation_deg: float = offset.x + offset.y
@@ -474,9 +485,20 @@ func handle_object_mode_event(event: InputEvent) -> void:
 		if event.ctrl_pressed:
 			rotation_snap = 15
 		%"2DManipLabel".text = "Rotate: %d°" % snapped(rotation_deg, rotation_snap)
+		var rotation_amount := deg_to_rad(snapped(rotation_deg, rotation_snap))
+		var translation := Transform2D(rotation_amount, Vector2.ZERO)
+		
 		for object: ObjectRoth in owner.selected_objects:
 			object.data.rotation = int(object.data.original_rotation+Roth.object_relative_degrees_to_rotation(snapped(rotation_deg, rotation_snap))) & 0xFF
+			if holding_ctrl:
+				var point := Vector2(-object.data.original_pos_x, object.data.original_pos_y)
+				point = translation * (point - mouse_object_rotation_center) + mouse_object_rotation_center
+				object.data.posX = -point.x
+				object.data.posY = point.y
+				object.node_2d.redraw()
 		owner.redraw(owner.selected_objects)
+	
+	if holding_alt:
 		return
 	
 	if event is InputEventMouseButton:

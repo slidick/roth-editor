@@ -388,6 +388,12 @@ class ObjectNode2D extends Node2D:
 		area.mouse_exited.connect(_on_mouse_exited)
 		add_child(area)
 	
+	func redraw() -> void:
+		position = Vector2(
+			-ref.data.posX / Roth.SCALE_2D_WORLD,
+			ref.data.posY / Roth.SCALE_2D_WORLD
+		)
+	
 	func _on_mouse_entered() -> void:
 		mouse_over = true
 		circle.highlighted = true
