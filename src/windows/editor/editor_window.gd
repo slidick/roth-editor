@@ -1103,10 +1103,13 @@ func copy_selected_sectors() -> void:
 
 
 func cut_selected_sectors() -> void:
+	if not %SectorCheckBox.button_pressed or selected_sectors.is_empty():
+		return
 	copy_selected_sectors()
 	var map_groups: Dictionary = _delete_selected_sectors()
 	for map_info: Dictionary in map_groups:
 		Roth.editor_action.emit(map_info, "Cut Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+	enter_paste_sectors_mode()
 
 
 func enter_paste_sectors_mode() -> void:
