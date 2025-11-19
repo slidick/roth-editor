@@ -57,7 +57,7 @@ func load_command_editor(p_map: Map, p_reset_camera: bool = true) -> void:
 	apply_offset = Vector2(-5, -5)
 	if not map.name_changed.is_connected(_on_map_name_changed):
 		map.name_changed.connect(_on_map_name_changed)
-	if command_section != p_map.commands_section:
+	if not is_same(command_section, p_map.commands_section):
 		command_section = p_map.commands_section
 		if graph_edit:
 			if not p_reset_camera:

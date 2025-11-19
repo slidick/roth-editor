@@ -767,7 +767,7 @@ func replace_map(map: Map) -> void:
 				%Map2D.setup(map, false)
 				%CountAndSizeContainer.folded = folded
 			
-			if old_map_node.ref.commands_section != map.commands_section and %"Command Editor".map and %"Command Editor".map.map_info == map.map_info:
+			if not is_same(old_map_node.ref.commands_section, map.commands_section) and %"Command Editor".map and %"Command Editor".map.map_info == map.map_info:
 				%"Command Editor".load_command_editor(map, false)
 			
 			compilation_failure_warning_given[map.map_info.name] = false
