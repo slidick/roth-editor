@@ -950,6 +950,12 @@ func redraw(redraw_list: Array) -> void:
 				if face.sister:
 					face.sister.get_ref().initialize_mesh()
 				face.initialize_mesh()
+		if resource is Object:
+			if %ObjectCheckBox.button_pressed:
+				for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+					if object_node.ref == resource:
+						object_node.circle.roth_rotation = resource.data.rotation
+						object_node.circle.queue_redraw()
 	%Map2D.queue_redraw()
 	%Map3D.update_selections()
 
