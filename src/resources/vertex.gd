@@ -5,6 +5,7 @@ signal vertex_deleted
 signal face_split
 signal start_sector_split(vertex: VertexNode)
 signal vertex_dragged(vertex: VertexNode, relative: Vector2)
+signal vertex_drag_canceled
 signal vertex_drag_ended(vertex: VertexNode)
 
 
@@ -104,7 +105,7 @@ func _input(event: InputEvent) -> void:
 			drag_started = false
 			position = start_drag_position
 			update_attached_faces()
-			vertex_dragged.emit(self, Vector2.ZERO)
+			vertex_drag_canceled.emit()
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if not event.shift_pressed:

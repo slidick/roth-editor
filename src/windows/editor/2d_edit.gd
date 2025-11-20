@@ -46,6 +46,7 @@ var context_menu_object: ObjectRoth
 var context_menu_sfx: SFX
 var grid_size := Vector2.ONE
 var highlight_sectors: Array = []
+var vertex_drag_amount := Vector2.ZERO
 
 
 func _ready() -> void:
@@ -1254,6 +1255,7 @@ func show_vertices(allow_move: bool) -> void:
 		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 		vertex_node.start_sector_split.connect(_on_sector_split)
 		vertex_node.vertex_dragged.connect(_on_vertex_dragged)
+		vertex_node.vertex_drag_canceled.connect(_on_vertex_drag_canceled)
 		vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 		%Vertices.add_child(vertex_node)
 
@@ -1287,6 +1289,8 @@ func _on_sector_split(starting_vertex_node: VertexNode) -> void:
 
 
 func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
+	vertex_drag_amount += (-relative * Roth.SCALE_2D_WORLD).snappedf(2)
+	%"2DManipLabel".text = "%s" % vertex_drag_amount
 	queue_redraw()
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != node_dragged:
@@ -1296,10 +1300,22 @@ func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
 			vertex_node.redraw_split_vertex()
 
 
+func _on_vertex_drag_canceled() -> void:
+	vertex_drag_amount = Vector2.ZERO
+	%"2DManipLabel".text = ""
+	queue_redraw()
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node.split_vertex:
+			vertex_node.redraw_split_vertex()
+
+
 func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != vertex:
 			vertex_node.drag_ended()
+	
+	vertex_drag_amount = Vector2.ZERO
+	%"2DManipLabel".text = ""
 	
 	var bad_merge_sectors: Array = []
 	var unique_sectors: Array = []
