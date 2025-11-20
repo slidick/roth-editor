@@ -135,8 +135,9 @@ func _input(event: InputEvent) -> void:
 			if mouse_over and event.pressed and split_vertex:
 				split_face()
 	
-	if allow_move and event is InputEventMouseMotion and dragging and not split_vertex:
-		dragging_amount += event.relative
+	if allow_move and (event is InputEventMouseMotion or (event is InputEventKey and event.keycode == KEY_CTRL)) and dragging and not split_vertex:
+		if event is InputEventMouseMotion:
+			dragging_amount += event.relative
 		if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
 			if drag_started == false:
 				drag_started = true
@@ -149,6 +150,11 @@ func _input(event: InputEvent) -> void:
 						face_vertex_move.append("v2")
 						
 			var mouse: Vector2 = get_global_mouse_position() + get_parent().get_parent().global_position
+			if event.ctrl_pressed or (event is InputEventKey and event.keycode == KEY_CTRL and event.pressed):
+				if abs(mouse.x - start_drag_position.x) < abs(mouse.y - start_drag_position.y):
+					mouse.x = start_drag_position.x
+				else:
+					mouse.y = start_drag_position.y
 			var relative: Vector2 = global_position - mouse.snappedf(get_parent().get_parent().snap)
 			global_position -= relative
 			update_attached_faces()
