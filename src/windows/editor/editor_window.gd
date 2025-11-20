@@ -41,6 +41,7 @@ var selected_faces: Array = []
 var selected_sectors: Array = []
 var selected_objects: Array = []
 var selected_sfx: Array = []
+var selected_vertex_nodes: Array = []
 
 func _ready() -> void:
 	super._ready()
@@ -846,16 +847,18 @@ func select_face(index: int, type: String, p_map_name: String = "", count: int =
 		select_face(index, type, p_map_name, search_count)
 
 
-func select_resource(resource: RefCounted, deselect_others: bool = true) -> void:
+func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 	%EditFaceContainer.clear()
 	%EditSectorContainer.clear()
 	%EditObjectContainer.clear()
 	%EditSFXContainer.clear()
+	#%EditVertexContainer.clear()
 	if not resource:
 		selected_faces.clear()
 		selected_sectors.clear()
 		selected_objects.clear()
 		selected_sfx.clear()
+		selected_vertex_nodes.clear()
 		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 			object_node.deselect()
 		for sfx_node: SFX.SFXNode2D in %SFX.get_children():
@@ -869,16 +872,17 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 		selected_faces.clear()
 		selected_sectors.clear()
 		selected_sfx.clear()
+		selected_vertex_nodes.clear()
 		if deselect_others:
 			selected_objects.clear()
 		if resource not in selected_objects:
 			selected_objects.append(resource)
 		%EditObjectContainer.update_selections()
 	elif resource is SFX:
-		
 		selected_faces.clear()
 		selected_sectors.clear()
 		selected_objects.clear()
+		selected_vertex_nodes.clear()
 		if deselect_others:
 			selected_sfx.clear()
 		if resource not in selected_sfx:
@@ -887,6 +891,7 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 	elif resource is Face:
 		selected_objects.clear()
 		selected_sfx.clear()
+		selected_vertex_nodes.clear()
 		if deselect_others:
 			selected_faces.clear()
 			selected_sectors.clear()
@@ -905,19 +910,30 @@ func select_resource(resource: RefCounted, deselect_others: bool = true) -> void
 		selected_faces.clear()
 		selected_objects.clear()
 		selected_sfx.clear()
+		selected_vertex_nodes.clear()
 		hovered_face = null
 		if deselect_others:
 			selected_sectors.clear()
 		if resource not in selected_sectors:
 			selected_sectors.append(resource)
 		%EditSectorContainer.update_selections()
+	elif resource is VertexNode:
+		selected_sectors.clear()
+		selected_faces.clear()
+		selected_objects.clear()
+		selected_sfx.clear()
+		if deselect_others:
+			selected_vertex_nodes.clear()
+		if resource not in selected_vertex_nodes and not resource.split_vertex:
+			selected_vertex_nodes.append(resource)
+			#%EditVertexContainer.update_selections()
 	
 	%Arrow3D.set_target(resource)
 	%Map2D.update_selections()
 	%Map3D.update_selections()
 
 
-func deselect_resource(resource: RefCounted) -> void:
+func deselect_resource(resource: Variant) -> void:
 	if resource is Face:
 		if resource in selected_faces:
 			selected_faces.erase(resource)
@@ -936,6 +952,9 @@ func deselect_resource(resource: RefCounted) -> void:
 	elif resource is SFX:
 		selected_sfx.erase(resource)
 		%EditSFXContainer.update_selections()
+	elif resource is VertexNode:
+		selected_vertex_nodes.erase(resource)
+		#%EditVertexContainer.update_selections()
 	%Arrow3D.unset_target(resource)
 	%Map2D.update_selections()
 	%Map3D.update_selections()

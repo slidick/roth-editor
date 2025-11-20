@@ -44,7 +44,6 @@ var mouse_rotation_position := Vector2i.ZERO
 var mouse_object_rotation_center := Vector2.ZERO
 var context_menu_object: ObjectRoth
 var context_menu_sfx: SFX
-var dragging_something: bool = false
 var grid_size := Vector2.ONE
 var highlight_sectors: Array = []
 
@@ -521,7 +520,6 @@ func handle_object_mode_event(event: InputEvent) -> void:
 				else:
 					if start_box_select == false:
 						return
-					dragging_something = false
 					var starting_position := start_box_select_position
 					var ending_position := (get_global_mouse_position() + global_position)
 					var v2 := Vector2(ending_position.x, starting_position.y)
@@ -574,30 +572,28 @@ func handle_vertex_mode_event(event: InputEvent) -> void:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
 				if event.pressed:
+					var moused_over_vertex: VertexNode
 					for vertex_node: VertexNode in %Vertices.get_children():
 						if vertex_node.mouse_over:
+							moused_over_vertex = vertex_node
+					if moused_over_vertex:
+						if moused_over_vertex in owner.selected_vertex_nodes:
 							if event.shift_pressed:
-								vertex_node.toggle_selected()
-							return
-					
+								owner.deselect_resource(moused_over_vertex)
+						else:
+							owner.select_resource(moused_over_vertex, not event.shift_pressed)
+						return
 					if not start_sector_split:
 						start_box_select = true
 						start_box_select_position = (get_global_mouse_position() + global_position)
 				else:
 					if start_box_select == false:
-						for vertex_node: VertexNode in %Vertices.get_children():
-							if vertex_node.mouse_over or dragging_something:
-								return
-						for vertex_node: VertexNode in %Vertices.get_children():
-							if not vertex_node.split_vertex:
-								vertex_node.deselect()
 						return
-					dragging_something = false
 					var starting_position := start_box_select_position
 					var ending_position := (get_global_mouse_position() + global_position)
 					var v2 := Vector2(ending_position.x, starting_position.y)
 					var v3 := Vector2(starting_position.x, ending_position.y)
-					
+					var vertices_in_selection: Array = []
 					for vertex_node: VertexNode in  %Vertices.get_children():
 						if not vertex_node.split_vertex and Geometry2D.is_point_in_polygon(vertex_node.position, [
 							starting_position,
@@ -605,10 +601,16 @@ func handle_vertex_mode_event(event: InputEvent) -> void:
 							ending_position,
 							v3
 						]):
-							vertex_node.select()
-						elif not vertex_node.split_vertex:
-							if not event.shift_pressed:
-								vertex_node.deselect()
+							vertices_in_selection.append(vertex_node)
+					
+					if vertices_in_selection.is_empty():
+						if not event.shift_pressed:
+							owner.select_resource(null)
+					else:
+						if not event.shift_pressed:
+							owner.select_resource(null)
+						for vertex_node: VertexNode in vertices_in_selection:
+							owner.select_resource(vertex_node, false)
 					start_box_select = false
 					start_box_select_position = Vector2.ZERO
 					queue_redraw()
@@ -637,7 +639,6 @@ func handle_sfx_mode_event(event: InputEvent) -> void:
 				else:
 					if start_box_select == false:
 						return
-					dragging_something = false
 					var starting_position := start_box_select_position
 					var ending_position := (get_global_mouse_position() + global_position)
 					var v2 := Vector2(ending_position.x, starting_position.y)
@@ -1107,7 +1108,6 @@ func add_object_to_2d_map(new_object: ObjectRoth) -> void:
 
 
 func _on_object_dragged(node_dragged: ObjectRoth.ObjectNode2D, relative: Vector2) -> void:
-	dragging_something = true
 	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		if object_node != node_dragged:
 			object_node.move(relative)
@@ -1183,7 +1183,6 @@ func _on_on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 
 
 func _on_sfx_dragged(node_dragged: SFX.SFXNode2D, relative: Vector2) -> void:
-	dragging_something = true
 	for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 		if sfx_node != node_dragged:
 			sfx_node.move(relative)
@@ -1248,17 +1247,14 @@ func show_vertices(allow_move: bool) -> void:
 	
 	for vertex: Vector2 in split_vertices:
 		var vertex_node := VertexNode.new(map.map_info, vertex, split_vertices[vertex], allow_move, line_width, true)
-		#vertex_node.position_updated.connect(queue_redraw)
-		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+		vertex_node.face_split.connect(_on_face_split)
 		%Vertices.add_child(vertex_node)
 	for vertex: Vector2 in vertices:
 		var vertex_node := VertexNode.new(map.map_info, vertex, vertices[vertex], allow_move, line_width)
-		vertex_node.position_updated.connect(_on_vertex_position_updated)
-		vertex_node.position_finalized.connect(_on_vertex_position_finalized)
 		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 		vertex_node.start_sector_split.connect(_on_sector_split)
 		vertex_node.vertex_dragged.connect(_on_vertex_dragged)
-		vertex_node.single_vertex_selected.connect(_on_vertex_selected)
+		vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 		%Vertices.add_child(vertex_node)
 
 
@@ -1267,19 +1263,43 @@ func hide_vertices() -> void:
 		child.queue_free()
 
 
-func _on_vertex_position_updated() -> void:
+func _on_vertex_deleted() -> void:
+	Roth.editor_action.emit(map.map_info, "Delete Vertex")
+	show_vertices(last_allow_move)
 	queue_redraw()
-	for child: Node in %Vertices.get_children():
-		if child.split_vertex:
-			child.redraw_split_vertex()
 
 
-func _on_vertex_position_finalized(vertex: VertexNode) -> void:
+func _on_face_split() -> void:
+	Roth.editor_action.emit(map.map_info, "Split Face")
+	show_vertices(last_allow_move)
+	queue_redraw()
+
+
+func _on_sector_split(starting_vertex_node: VertexNode) -> void:
+	var selected_vertices_count: int = 0
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node.is_selected:
+			selected_vertices_count += 1
+	if selected_vertices_count != 0:
+		return
+	start_sector_split = true
+	start_sector_split_vertex = starting_vertex_node
+
+
+func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
+	queue_redraw()
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node != node_dragged:
+			vertex_node.move(relative)
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node.split_vertex:
+			vertex_node.redraw_split_vertex()
+
+
+func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != vertex:
-			vertex_node.finalize_move()
-	
-	
+			vertex_node.drag_ended()
 	
 	var bad_merge_sectors: Array = []
 	var unique_sectors: Array = []
@@ -1297,8 +1317,6 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 		if Utility.are_points_collinear_2d(sector.get_vertices()):
 			#print("Sector Merge Wanted")
 			bad_merge_sectors.append(sector)
-	
-	
 	
 	var faces_merged: bool = false
 	var sectors_merged: bool = false
@@ -1352,37 +1370,6 @@ func _on_vertex_position_finalized(vertex: VertexNode) -> void:
 			Roth.editor_action.emit(map.map_info, "Move Vertices")
 
 
-func _on_vertex_deleted(p_add_to_history: bool = true) -> void:
-	if p_add_to_history:
-		Roth.editor_action.emit(map.map_info, "Delete Vertex")
-	show_vertices(last_allow_move)
-	queue_redraw()
-
-
-func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
-	dragging_something = true
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node != node_dragged:
-			vertex_node.move(relative)
-
-
-func _on_sector_split(starting_vertex_node: VertexNode) -> void:
-	var selected_vertices_count: int = 0
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node.is_selected:
-			selected_vertices_count += 1
-	if selected_vertices_count != 0:
-		return
-	start_sector_split = true
-	start_sector_split_vertex = starting_vertex_node
-
-
-func _on_vertex_selected(vertex_node_selected: VertexNode) -> void:
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node != vertex_node_selected and not vertex_node.split_vertex:
-			vertex_node.deselect()
-
-
 func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 	var minimum: float = 1000000.0
 	var closest: VertexNode
@@ -1425,6 +1412,11 @@ func update_selections() -> void:
 			sfx_node.select()
 		else:
 			sfx_node.deselect()
+	for vertex_node: VertexNode in %Vertices.get_children():
+		if vertex_node in owner.selected_vertex_nodes:
+			vertex_node.select()
+		else:
+			vertex_node.deselect()
 
 
 func is_mouse_inside_sector(sector: Sector) -> bool:
@@ -1496,7 +1488,6 @@ func check_for_hover() -> void:
 		owner.hovered_sector = null
 		owner.hovered_face = null
 		queue_redraw()
-
 
 
 func check_for_face_hover(sector: Sector) -> void:
@@ -1589,9 +1580,6 @@ func _on_snap_edit_value_changed(value: float) -> void:
 
 #region Map Actions
 
-
-
-
 func unmerge_vertices() -> void:
 	var selected_vertices := []
 	for vertex_node: VertexNode in %Vertices.get_children():
@@ -1601,7 +1589,6 @@ func unmerge_vertices() -> void:
 	
 	if selected_vertices.is_empty():
 		return
-	
 	
 	for sector: Sector in map.sectors:
 		var vertices := {}
@@ -1636,15 +1623,12 @@ func unmerge_vertices() -> void:
 							face.initialize_mesh()
 							queue_redraw()
 		
-		
 		for vertex: Vector2 in vertices:
 			var vertex_node := VertexNode.new(map.map_info, vertex, vertices[vertex], last_allow_move, line_width)
-			vertex_node.position_updated.connect(_on_vertex_position_updated)
-			vertex_node.position_finalized.connect(_on_vertex_position_finalized)
 			vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 			vertex_node.start_sector_split.connect(_on_sector_split)
 			vertex_node.vertex_dragged.connect(_on_vertex_dragged)
-			vertex_node.single_vertex_selected.connect(_on_vertex_selected)
+			vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 			%Vertices.add_child(vertex_node)
 	
 	Roth.editor_action.emit(map.map_info, "Unmerge Vertices")

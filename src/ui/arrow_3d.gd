@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if target and target.node and target.node.get_child_count() > 0:
+	if target and "node" in target and target.node and target.node.get_child_count() > 0:
 		target_position = target.node.get_child(0).global_position
 	elif not target_position:
 		return
@@ -30,7 +30,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				show()
 
 
-func set_target(resource: RefCounted) -> void:
+func set_target(resource: Variant) -> void:
 	clear_target()
 	if not resource:
 		return
@@ -42,6 +42,15 @@ func set_target(resource: RefCounted) -> void:
 		var node_pos: Vector2 = calculate_center(resource.get_vertices())
 		var node_z: int = (resource.data.ceilingHeight + resource.data.floorHeight) / 2
 		target_position = Vector3(node_pos.x / Roth.SCALE_3D_WORLD, node_z / Roth.SCALE_3D_WORLD, node_pos.y / Roth.SCALE_3D_WORLD)
+	elif resource is VertexNode:
+		var min_height: float = INF
+		var max_height: float = -INF
+		for face: Face in resource.faces:
+			if face.sector.data.floorHeight < min_height:
+				min_height = face.sector.data.floorHeight
+			if face.sector.data.ceilingHeight > max_height:
+				max_height = face.sector.data.ceilingHeight
+		target_position = Vector3(resource.coordinate.x / Roth.SCALE_3D_WORLD, ((min_height+max_height)/2) / Roth.SCALE_3D_WORLD, resource.coordinate.y / Roth.SCALE_3D_WORLD)
 	elif resource is ObjectRoth or resource is SFX:
 		target = resource
 	else:
@@ -56,7 +65,7 @@ func clear_target() -> void:
 	hide()
 
 
-func unset_target(resource: RefCounted) -> void:
+func unset_target(resource: Variant) -> void:
 	if resource == target:
 		clear_target()
 
