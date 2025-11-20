@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=60 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
 [ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/utils/tri_state_check_box.gd" id="13_tep3q"]
 [ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/editor/array_02_window.tscn" id="15_d740k"]
+[ext_resource type="Script" uid="uid://bibnsjvit8256" path="res://src/windows/editor/edit_vertex_container.gd" id="19_afexc"]
 [ext_resource type="PackedScene" uid="uid://db0dxik1y7uol" path="res://src/windows/editor/status_bar.tscn" id="19_sf4qd"]
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="20_12tai"]
 [ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/editor/paste_options_dialog.tscn" id="21_dyevs"]
@@ -2318,6 +2319,22 @@ update_on_text_changed = true
 unique_name_in_owner = true
 wait_time = 1.5
 one_shot = true
+
+[node name="EditVertexContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("19_afexc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditVertexContainer" index="0"]
+layout_mode = 2
+
+[node name="VertexPositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditVertexContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="History" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="2"]
 visible = false

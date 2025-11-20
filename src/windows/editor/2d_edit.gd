@@ -1313,6 +1313,7 @@ func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node.split_vertex:
 			vertex_node.redraw_split_vertex()
+	%EditVertexContainer.update_selections()
 
 
 func _on_vertex_drag_canceled() -> void:

@@ -853,7 +853,7 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 	%EditSectorContainer.clear()
 	%EditObjectContainer.clear()
 	%EditSFXContainer.clear()
-	#%EditVertexContainer.clear()
+	%EditVertexContainer.clear()
 	if not resource:
 		selected_faces.clear()
 		selected_sectors.clear()
@@ -927,7 +927,7 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 			selected_vertex_nodes.clear()
 		if resource not in selected_vertex_nodes and not resource.split_vertex:
 			selected_vertex_nodes.append(resource)
-			#%EditVertexContainer.update_selections()
+			%EditVertexContainer.update_selections()
 	
 	%Arrow3D.set_target(resource)
 	%Map2D.update_selections()
@@ -955,7 +955,7 @@ func deselect_resource(resource: Variant) -> void:
 		%EditSFXContainer.update_selections()
 	elif resource is VertexNode:
 		selected_vertex_nodes.erase(resource)
-		#%EditVertexContainer.update_selections()
+		%EditVertexContainer.update_selections()
 	%Arrow3D.unset_target(resource)
 	%Map2D.update_selections()
 	%Map3D.update_selections()
