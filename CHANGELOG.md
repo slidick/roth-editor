@@ -1,3 +1,46 @@
+**0.17.0**
+### New Features
+  - Sector cutting, copying, and pasting
+    - Standard Ctrl+x,c,v keys
+    - Use left-click or enter to paste
+    - Follows the mouse
+    - Use 'p' key to pin and use arrow keys for finer control
+    - Use '0' key to move to original position
+      - Use to paste to a new map and ensure it's in the correct position for transitions
+    - Ability to rotate by holding alt and moving the mouse
+      - Hold ctrl to snap to 15 degree increments
+    - Hold ctrl to snap movement to axis
+    - Copies and rotates objects with sector
+    - Automatically shifts floor, ceiling, and platform textures to keep alignments
+      - Doesn't work when rotating
+  - Rotate the way selected objects face by holding alt and moving the mouse
+    - Hold ctrl as well to snap to 15 degree increments
+    - Hold shift as well to rotate multiple objects as a group
+  - Display vertex position
+  - Display relative vertex movement amount
+  - Lock vertex movement to axis with ctrl
+  - Information about allowed map size
+    - Added panel showing total of sectors, faces, textures, and platforms that make a valid map file
+    - Give warning when going over this limit
+  - Draw map border at "max" value +-32768
+  - New Tools menu with option to highlight concave sectors
+  - Added hardcoded quickfix for RAQUIA2
+  - Added command changes to undo history
+  - Objects can now be placed on other objects
+  - Objects can now be placed outside of sectors
+    - The nearest sector will be used as object owner
+
+### Bugfixes
+  - Certain edit panel actions were getting added to the undo history too quickly
+  - When performing actions in the edit panel that result in no change, undo history now properly compares to the current state in the list rather than the latest before adding
+  - Face merge fix in last update wasn't quite implemented correctly
+  - Only hide and unhide sectors for map loaded in 2d view
+  - Fix splitting face showing as delete vertex in history
+  - Fix panning view while dragging objects and sfx not working
+  - Fix canceling object and sfx dragging with ESC reverting each one one at a time
+
+---
+
 **0.16.0**
 ### New Features
   - Multi Selection and Editing for Sectors, Faces, Objects, and SFX
