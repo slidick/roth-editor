@@ -142,8 +142,11 @@ func delete_sector() -> void:
 	for face_ref: WeakRef in faces:
 		var face: Face = face_ref.get_ref()
 		if face.sister and face.sister.get_ref().sister and face.sister.get_ref().sister.get_ref() == face:
-			face.sister.get_ref().sister = null
-			face.sister.get_ref().initialize_mesh()
+			if face == face.sister.get_ref():
+				Console.print("Warn: Face equals sister %d" % face.index)
+			else:
+				face.sister.get_ref().sister = null
+				face.sister.get_ref().initialize_mesh()
 		face.delete()
 	faces.clear()
 	if node:

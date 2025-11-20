@@ -276,7 +276,7 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 				for sector_sister: Sector in sector_data:
 					for face_sister_ref: WeakRef in sector_sister.faces:
 						var face_sister: Face = face_sister_ref.get_ref()
-						if face.v2.is_equal_approx(face_sister.v1) and face.v1.is_equal_approx(face_sister.v2):
+						if face.v2.is_equal_approx(face_sister.v1) and face.v1.is_equal_approx(face_sister.v2) and face != face_sister:
 							face.sister = weakref(face_sister)
 							face_sister.sister = weakref(face)
 							face.initialize_mesh()
