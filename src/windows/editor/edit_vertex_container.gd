@@ -2,6 +2,7 @@ extends MarginContainer
 
 func clear() -> void:
 	%VertexPositionLabel.text = ""
+	%EditVertexContainer.hide()
 
 func update_selections() -> void:
 	clear()
