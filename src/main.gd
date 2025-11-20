@@ -12,6 +12,10 @@ enum Main {
 	Quit,
 }
 
+enum Tools {
+	ConcaveSectors,
+}
+
 enum WindowID {
 	Editor,
 	Search,
@@ -31,6 +35,7 @@ func _ready() -> void:
 	var shortcut := Shortcut.new()
 	shortcut.events.append(input)
 	%Main.set_item_shortcut(Main.TestMap, shortcut, true)
+	%Tools.set_item_checked(Tools.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
 
 
 func _process(_delta: float) -> void:
@@ -135,11 +140,21 @@ func _on_main_index_pressed(index: int) -> void:
 			%ManageDbase.toggle(true)
 		Main.Settings:
 			%Settings.toggle(true)
-			#%SelectionInstallationFileDialog.popup_centered_ratio()
 		Main.Quit:
 			quit()
 		Main.TestMap:
 			%Editor.test_map()
+
+
+func _on_tools_index_pressed(index: int) -> void:
+	match index:
+		Tools.ConcaveSectors:
+			var checked: bool = not %Tools.is_item_checked(Tools.ConcaveSectors)
+			Settings.update_settings("options", {"highlight_concave_sectors": checked })
+			%Tools.set_item_checked(Tools.ConcaveSectors, checked)
+			var map_2d: Node = find_child("Map2D", true, false)
+			if map_2d:
+				map_2d.queue_redraw()
 
 
 func _on_windows_index_pressed(index: int) -> void:

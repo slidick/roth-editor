@@ -435,7 +435,7 @@ func merge_sectors(double_sided_face: Face) -> void:
 		face.update_horizontal_fit()
 
 
-func find_bad_sectors() -> Array:
+func find_concave_sectors() -> Array:
 	var bad_sectors := []
 	# Check for concave sectors.
 	for sector: Sector in sectors:

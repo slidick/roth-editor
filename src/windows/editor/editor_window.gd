@@ -636,6 +636,7 @@ func copy_sfx(sfx_list: Array) -> void:
 
 func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 	%CountAndSizeContainer.recalculate()
+	%Map2D.update_concave_sectors()
 	
 	if p_map_info.name not in undo_stacks:
 		undo_stacks[p_map_info.name] = []

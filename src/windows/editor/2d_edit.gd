@@ -47,6 +47,7 @@ var context_menu_sfx: SFX
 var grid_size := Vector2.ONE
 var highlight_sectors: Array = []
 var vertex_drag_amount := Vector2.ZERO
+var concave_sectors: Array = []
 
 
 func _ready() -> void:
@@ -849,93 +850,12 @@ func draw_sectors() -> void:
 			if not face.sister:
 				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.WHITE, line_width, true)
 	
-	if not %SectorCheckBox.button_pressed:
-		return
+	if %SectorCheckBox.button_pressed:
 	
-	if owner.hovered_sector and len(owner.selected_faces) <= 1:
-		for face_ref: WeakRef in owner.hovered_sector.faces:
-			var face: Face = face_ref.get_ref()
-			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
-			var direction: Vector2 = (face.v2 - face.v1).normalized()
-			var perendicular := Vector2(direction.y, -direction.x)
-			
-			var v_center := Vector2(
-				(face.v1.x + face.v2.x) / 2,
-				(face.v1.y + face.v2.y) / 2
-			)
-			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
-			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
-	
-	for sector: Sector in highlight_sectors:
-		if sector.hidden:
-			continue
-		if sector.map_info != map.map_info:
-			continue
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
-			var direction: Vector2 = (face.v2 - face.v1).normalized()
-			var perendicular := Vector2(direction.y, -direction.x)
-			
-			var v_center := Vector2(
-				(face.v1.x + face.v2.x) / 2,
-				(face.v1.y + face.v2.y) / 2
-			)
-			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
-			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
-	
-	for sector: Sector in owner.selected_sectors:
-		if sector.hidden:
-			continue
-		if sector.map_info != map.map_info:
-			continue
-		if start_box_deselect and sector in highlight_sectors:
-			continue
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.ORANGE, line_width*2, true)
-			var direction: Vector2 = (face.v2 - face.v1).normalized()
-			var perendicular := Vector2(direction.y, -direction.x)
-			
-			var v_center := Vector2(
-				(face.v1.x + face.v2.x) / 2,
-				(face.v1.y + face.v2.y) / 2
-			)
-			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
-			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.ORANGE, line_width*2, true)
-	
-	if owner.hovered_face:
-		draw_line(Vector2(owner.hovered_face.v1.x/Roth.SCALE_2D_WORLD, owner.hovered_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(owner.hovered_face.v2.x/Roth.SCALE_2D_WORLD, owner.hovered_face.v2.y/Roth.SCALE_2D_WORLD), Color.WEB_PURPLE, line_width*2, true)
-		var direction: Vector2 = (owner.hovered_face.v2 - owner.hovered_face.v1).normalized()
-		var perendicular := Vector2(direction.y, -direction.x)
-		
-		var v_center := Vector2(
-			(owner.hovered_face.v1.x + owner.hovered_face.v2.x) / 2,
-			(owner.hovered_face.v1.y + owner.hovered_face.v2.y) / 2
-		)
-		var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
-		draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.WEB_PURPLE, line_width*2, true)
-	
-	#if selected_face:
-		#draw_line(Vector2(selected_face.v1.x/Roth.SCALE_2D_WORLD, selected_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(selected_face.v2.x/Roth.SCALE_2D_WORLD, selected_face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
-	
-	for face: Face in owner.selected_faces:
-		if face.map_info != map.map_info:
-			continue
-		draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
-		var direction: Vector2 = (face.v2 - face.v1).normalized()
-		var perendicular := Vector2(direction.y, -direction.x)
-		var v_center := Vector2(
-			(face.v1.x + face.v2.x) / 2,
-			(face.v1.y + face.v2.y) / 2
-		)
-		var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
-		draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.PURPLE, line_width*2, true)
-	
-	if owner.paste_sectors_mode:
-		for sector: Sector in owner.current_pasted_sector_data:
-			for face: Face in sector.faces:
-				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.FUCHSIA, line_width*2, true)
+		if owner.hovered_sector and len(owner.selected_faces) <= 1:
+			for face_ref: WeakRef in owner.hovered_sector.faces:
+				var face: Face = face_ref.get_ref()
+				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
 				var direction: Vector2 = (face.v2 - face.v1).normalized()
 				var perendicular := Vector2(direction.y, -direction.x)
 				
@@ -944,10 +864,95 @@ func draw_sectors() -> void:
 					(face.v1.y + face.v2.y) / 2
 				)
 				var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
-				draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.FUCHSIA, line_width*2, true)
-		if holding_ctrl and not holding_alt:
-			draw_dashed_line(owner.original_copied_sector_center/Roth.SCALE_2D_WORLD, owner.current_copied_sector_center/Roth.SCALE_2D_WORLD, Color.GRAY, line_width, 2.0, false, true)
+				draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
+		
+		for sector: Sector in highlight_sectors:
+			if sector.hidden:
+				continue
+			if sector.map_info != map.map_info:
+				continue
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
+				var direction: Vector2 = (face.v2 - face.v1).normalized()
+				var perendicular := Vector2(direction.y, -direction.x)
+				
+				var v_center := Vector2(
+					(face.v1.x + face.v2.x) / 2,
+					(face.v1.y + face.v2.y) / 2
+				)
+				var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+				draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.CORAL, line_width*2, true)
+		
+		for sector: Sector in owner.selected_sectors:
+			if sector.hidden:
+				continue
+			if sector.map_info != map.map_info:
+				continue
+			if start_box_deselect and sector in highlight_sectors:
+				continue
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.ORANGE, line_width*2, true)
+				var direction: Vector2 = (face.v2 - face.v1).normalized()
+				var perendicular := Vector2(direction.y, -direction.x)
+				
+				var v_center := Vector2(
+					(face.v1.x + face.v2.x) / 2,
+					(face.v1.y + face.v2.y) / 2
+				)
+				var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+				draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.ORANGE, line_width*2, true)
+		
+		if owner.hovered_face:
+			draw_line(Vector2(owner.hovered_face.v1.x/Roth.SCALE_2D_WORLD, owner.hovered_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(owner.hovered_face.v2.x/Roth.SCALE_2D_WORLD, owner.hovered_face.v2.y/Roth.SCALE_2D_WORLD), Color.WEB_PURPLE, line_width*2, true)
+			var direction: Vector2 = (owner.hovered_face.v2 - owner.hovered_face.v1).normalized()
+			var perendicular := Vector2(direction.y, -direction.x)
 			
+			var v_center := Vector2(
+				(owner.hovered_face.v1.x + owner.hovered_face.v2.x) / 2,
+				(owner.hovered_face.v1.y + owner.hovered_face.v2.y) / 2
+			)
+			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.WEB_PURPLE, line_width*2, true)
+		
+		#if selected_face:
+			#draw_line(Vector2(selected_face.v1.x/Roth.SCALE_2D_WORLD, selected_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(selected_face.v2.x/Roth.SCALE_2D_WORLD, selected_face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
+		
+		for face: Face in owner.selected_faces:
+			if face.map_info != map.map_info:
+				continue
+			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
+			var direction: Vector2 = (face.v2 - face.v1).normalized()
+			var perendicular := Vector2(direction.y, -direction.x)
+			var v_center := Vector2(
+				(face.v1.x + face.v2.x) / 2,
+				(face.v1.y + face.v2.y) / 2
+			)
+			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.PURPLE, line_width*2, true)
+		
+		if owner.paste_sectors_mode:
+			for sector: Sector in owner.current_pasted_sector_data:
+				for face: Face in sector.faces:
+					draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.FUCHSIA, line_width*2, true)
+					var direction: Vector2 = (face.v2 - face.v1).normalized()
+					var perendicular := Vector2(direction.y, -direction.x)
+					
+					var v_center := Vector2(
+						(face.v1.x + face.v2.x) / 2,
+						(face.v1.y + face.v2.y) / 2
+					)
+					var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
+					draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.FUCHSIA, line_width*2, true)
+			if holding_ctrl and not holding_alt:
+				draw_dashed_line(owner.original_copied_sector_center/Roth.SCALE_2D_WORLD, owner.current_copied_sector_center/Roth.SCALE_2D_WORLD, Color.GRAY, line_width, 2.0, false, true)
+	
+	if Settings.settings.get("options", {}).get("highlight_concave_sectors", false):
+		for sector: Sector in concave_sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.RED, line_width*2, true)
 
 
 func draw_box() -> void:
@@ -999,6 +1004,7 @@ func setup(p_map: Map, p_reset_camera: bool = true) -> void:
 	_on_box_check_box_toggled(%BoxCheckBox.button_pressed)
 	queue_redraw()
 	%CountAndSizeContainer.recalculate()
+	update_concave_sectors()
 
 
 func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
@@ -1016,6 +1022,7 @@ func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
 		start_box_deselect = false
 		highlight_sectors.clear()
 		%CountAndSizeContainer.recalculate()
+		update_concave_sectors()
 		owner.select_resource(null)
 		if p_reset_camera:
 			default_camera_bounds()
@@ -1035,6 +1042,14 @@ func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
 
 func _on_map_name_changed(new_map_name: String) -> void:
 	%MapNameLabel.text = new_map_name
+
+
+func update_concave_sectors() -> void:
+	concave_sectors.clear()
+	if not map:
+		return
+	concave_sectors = map.find_concave_sectors()
+	queue_redraw()
 
 #endregion
 
