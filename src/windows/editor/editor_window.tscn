@@ -1303,34 +1303,25 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="0"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Heights"
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="1"]
+[node name="RelativeAmountControls" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="1"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
-[node name="RelativeAmountControls" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/Control" index="0"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/Control/RelativeAmountControls" index="0"]
-custom_minimum_size = Vector2(60, 0)
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/RelativeAmountControls" index="0"]
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 text = "Step:"
 horizontal_alignment = 2
 
-[node name="RelativeAmountBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/Control/RelativeAmountControls" index="1"]
+[node name="RelativeAmountBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/RelativeAmountControls" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 theme_override_constants/buttons_width = 2
 theme_override_constants/set_min_buttons_width_from_icons = 1
 min_value = 1.0
@@ -1339,10 +1330,6 @@ value = 20.0
 rounded = true
 allow_greater = true
 update_on_text_changed = true
-
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5" index="2"]
-layout_mode = 2
-text = "Scale"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="3"]
 layout_mode = 2
@@ -1356,43 +1343,24 @@ max_value = 32767.0
 update_on_text_changed = true
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="1"]
-custom_minimum_size = Vector2(90, 0)
+custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 text = "Roof"
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="2"]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-
-[node name="RelativeRoofControls" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/Control" index="0"]
+[node name="RelativeRoofControls" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="2"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="LowerRoofButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/Control/RelativeRoofControls" index="0"]
+[node name="LowerRoofButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RelativeRoofControls" index="0"]
 layout_mode = 2
 size_flags_vertical = 4
 text = "-"
 
-[node name="RaiseRoofButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/Control/RelativeRoofControls" index="1"]
+[node name="RaiseRoofButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RelativeRoofControls" index="1"]
 layout_mode = 2
 size_flags_vertical = 4
 text = "+"
-
-[node name="RoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer" index="3"]
-unique_name_in_owner = true
-layout_mode = 2
-selected = 1
-item_count = 4
-popup/item_0/text = "1:2"
-popup/item_0/id = 0
-popup/item_1/text = "1:1"
-popup/item_1/id = 1
-popup/item_2/text = "2:1"
-popup/item_2/id = 2
-popup/item_3/text = "4:1"
-popup/item_3/id = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="4"]
 layout_mode = 2
@@ -1406,43 +1374,23 @@ max_value = 32767.0
 update_on_text_changed = true
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="1"]
-custom_minimum_size = Vector2(90, 0)
+custom_minimum_size = Vector2(144, 0)
 layout_mode = 2
 text = "Floor"
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="2"]
-custom_minimum_size = Vector2(70, 0)
+[node name="RelativeFloorControls" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="2"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RelativeFloorControls" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/Control" index="0"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="LowerFloorButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/Control/RelativeFloorControls" index="0"]
+[node name="LowerFloorButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/RelativeFloorControls" index="0"]
 layout_mode = 2
 size_flags_vertical = 4
 text = "-"
 
-[node name="RaiseFloorButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/Control/RelativeFloorControls" index="1"]
+[node name="RaiseFloorButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/RelativeFloorControls" index="1"]
 layout_mode = 2
 size_flags_vertical = 4
 text = "+"
-
-[node name="FloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2" index="3"]
-unique_name_in_owner = true
-layout_mode = 2
-selected = 1
-item_count = 4
-popup/item_0/text = "1:2"
-popup/item_0/id = 0
-popup/item_1/text = "1:1"
-popup/item_1/id = 1
-popup/item_2/text = "2:1"
-popup/item_2/id = 2
-popup/item_3/text = "4:1"
-popup/item_3/id = 3
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="5"]
 layout_mode = 2
@@ -1524,25 +1472,29 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="0"]
-custom_minimum_size = Vector2(190, 0)
+custom_minimum_size = Vector2(139, 0)
 layout_mode = 2
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="1"]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-text = "X"
+text = "X Shift"
 
 [node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="2"]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-text = "Y"
+text = "Y Shift"
+
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer4" index="3"]
+layout_mode = 2
+text = "Scale"
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="11"]
 layout_mode = 2
 
 [node name="RoofTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
 text_overrun_behavior = 1
 fit_to_longest_item = false
@@ -1566,12 +1518,26 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
+[node name="RoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer6" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
 [node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="12"]
 layout_mode = 2
 
 [node name="FloorTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
 text_overrun_behavior = 1
 fit_to_longest_item = false
@@ -1594,6 +1560,20 @@ layout_mode = 2
 max_value = 255.0
 rounded = true
 update_on_text_changed = true
+
+[node name="FloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer7" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
 
 [node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="13"]
 layout_mode = 2
@@ -1670,10 +1650,6 @@ text = "Heights"
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer14" index="2"]
-layout_mode = 2
-text = "Scale"
-
 [node name="HBoxContainer13" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="2"]
 layout_mode = 2
 
@@ -1693,20 +1669,6 @@ text = "Floor"
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13" index="2"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-
-[node name="PlatformFloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13" index="3"]
-unique_name_in_owner = true
-layout_mode = 2
-selected = 1
-item_count = 4
-popup/item_0/text = "1:2"
-popup/item_0/id = 0
-popup/item_1/text = "1:1"
-popup/item_1/id = 1
-popup/item_2/text = "2:1"
-popup/item_2/id = 2
-popup/item_3/text = "4:1"
-popup/item_3/id = 3
 
 [node name="HBoxContainer12" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="3"]
 layout_mode = 2
@@ -1728,20 +1690,6 @@ text = "Roof"
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 
-[node name="PlatformRoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12" index="3"]
-unique_name_in_owner = true
-layout_mode = 2
-selected = 1
-item_count = 4
-popup/item_0/text = "1:2"
-popup/item_0/id = 0
-popup/item_1/text = "1:1"
-popup/item_1/id = 1
-popup/item_2/text = "2:1"
-popup/item_2/id = 2
-popup/item_3/text = "4:1"
-popup/item_3/id = 3
-
 [node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="4"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -1755,29 +1703,35 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="0"]
+custom_minimum_size = Vector2(139, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="1"]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-text = "X:"
+text = "X Shift"
 
 [node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="2"]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-text = "Y:"
+text = "Y Shift"
+
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer17" index="3"]
+layout_mode = 2
+text = "Scale"
 
 [node name="HBoxContainer16" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="7"]
 layout_mode = 2
 
 [node name="PlatformFloorTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
+text_overrun_behavior = 1
 fit_to_longest_item = false
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="1"]
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "FLR"
 
@@ -1795,16 +1749,32 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
+[node name="PlatformFloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
 [node name="HBoxContainer15" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer" index="8"]
 layout_mode = 2
 
 [node name="PlatformRoofTextureOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
+text_overrun_behavior = 1
 fit_to_longest_item = false
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="1"]
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "ROF"
 
@@ -1821,6 +1791,20 @@ layout_mode = 2
 max_value = 255.0
 rounded = true
 update_on_text_changed = true
+
+[node name="PlatformRoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer15" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
 
 [node name="EditSectorTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" index="1"]
 unique_name_in_owner = true
@@ -2601,15 +2585,13 @@ item_1/id = 1
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/EditFaceTimer" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_edit_face_timer_timeout"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_select_faces_button_pressed"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton/SelectFacesPopupMenu" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_select_faces_popup_menu_index_pressed"]
-[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/Control/RelativeAmountControls/RelativeAmountBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_relative_amount_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer5/RelativeAmountControls/RelativeAmountBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_relative_amount_box_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RoofHeightEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_roof_height_edit_value_changed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/Control/RelativeRoofControls/LowerRoofButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_lower_roof_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/Control/RelativeRoofControls/RaiseRoofButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_raise_roof_button_pressed"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RoofScaleOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_roof_scale_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RelativeRoofControls/LowerRoofButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_lower_roof_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer/RelativeRoofControls/RaiseRoofButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_raise_roof_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/FloorHeightEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_floor_height_edit_value_changed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/Control/RelativeFloorControls/LowerFloorButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_lower_floor_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/Control/RelativeFloorControls/RaiseFloorButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_raise_floor_button_pressed"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/FloorScaleOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_floor_scale_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/RelativeFloorControls/LowerFloorButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_lower_floor_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer2/RelativeFloorControls/RaiseFloorButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_raise_floor_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3/GlowEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_glow_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer3/FloorTriggerIDEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_floor_trigger_id_edit_value_changed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer8/CandleCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_candle_check_box_toggled"]
@@ -2627,9 +2609,7 @@ item_1/id = 1
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer11/FloorFlipYCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_floor_flip_y_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer18/PlatformCheckButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_check_button_toggled"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13/PlatformFloorHeightEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_floor_height_edit_value_changed"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer13/PlatformFloorScaleOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_floor_scale_option_item_selected"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12/PlatformRoofHeightEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_roof_height_edit_value_changed"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer12/PlatformRoofScaleOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_roof_scale_option_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16/PlatformFloorTextureOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_floor_texture_option_item_selected"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16/PlatformFloorOffsetXEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_floor_offset_x_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/PlatformContainer/HBoxContainer16/PlatformFloorOffsetYEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_platform_floor_offset_y_edit_value_changed"]
