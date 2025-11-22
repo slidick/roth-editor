@@ -254,7 +254,7 @@ func update_selections() -> void:
 	selected_nodes.clear()
 	if not show_selection_highlight:
 		return
-	if moused_over_resource:
+	if moused_over_resource and moused_over_resource.node:
 		moused_over_resource.node.highlight()
 	if len(owner.selected_faces) == 0:
 		for sector: Sector in owner.selected_sectors:
