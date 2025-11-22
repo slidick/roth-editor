@@ -503,12 +503,12 @@ func _on_additional_check_button_toggled(toggled_on: bool) -> void:
 					"shiftTextureY": 0,
 					"unk0x0C": 0,
 				}
-			face.texture_data.type += 0x80
+			face.texture_data.type |= 0x80
 			%XShiftEdit.editable = true
 			%YShiftEdit.editable = true
 			%"0x0CEdit".editable = true
 		else:
-			face.texture_data.type -= 0x80
+			face.texture_data.type &= ~0x80
 			%XShiftEdit.editable = false
 			%YShiftEdit.editable = false
 			%"0x0CEdit".editable = false
