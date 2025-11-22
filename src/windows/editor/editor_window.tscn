@@ -1141,7 +1141,7 @@ text = "Horizontal Fit:"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-max_value = 32768.0
+max_value = 32767.0
 rounded = true
 update_on_text_changed = true
 
