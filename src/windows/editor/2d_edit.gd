@@ -1310,9 +1310,7 @@ func _on_vertex_dragged(node_dragged: VertexNode, relative: Vector2) -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node != node_dragged:
 			vertex_node.move(relative)
-	for vertex_node: VertexNode in %Vertices.get_children():
-		if vertex_node.split_vertex:
-			vertex_node.redraw_split_vertex()
+	redraw_split_vertices()
 	%EditVertexContainer.update_selections()
 
 
@@ -1320,6 +1318,10 @@ func _on_vertex_drag_canceled() -> void:
 	vertex_drag_amount = Vector2.ZERO
 	%"2DManipLabel".text = ""
 	queue_redraw()
+	redraw_split_vertices()
+
+
+func redraw_split_vertices() -> void:
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node.split_vertex:
 			vertex_node.redraw_split_vertex()
@@ -1398,6 +1400,8 @@ func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 			Roth.editor_action.emit(map.map_info, "Merge Vertices")
 		elif bad_face_merge:
 			vertex.revert_last_position()
+			queue_redraw()
+			redraw_split_vertices()
 		else:
 			Roth.editor_action.emit(map.map_info, "Move Vertices")
 
