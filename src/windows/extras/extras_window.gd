@@ -138,7 +138,7 @@ func _on_cutscene_list_item_selected(index: int) -> void:
 	vbox.add_child(label)
 	vbox.add_child(HSeparator.new())
 	
-	if "subtitles" in cutscene:
+	if not cutscene.subtitles.is_empty():
 		var rich_text := RichTextLabel.new()
 		rich_text.bbcode_enabled = true
 		rich_text.selection_enabled = true
