@@ -464,12 +464,12 @@ func get_texture_mappings_counts() -> Array:
 			var face: Face = face_ref.get_ref()
 			if face.texture_data not in texture_mappings:
 				texture_mappings.append(face.texture_data)
-				if "additionalMetadata" in face.texture_data:
+				if "additionalMetadata" in face.texture_data and face.texture_data.type & 128 > 0:
 					texture_additional_count += 1
 			else:
 				# Map command 52 can't modify face flags if the texture mapping is assigned to more than one face
 				var texture_mapping: Dictionary = texture_mappings[texture_mappings.find(face.texture_data)]
-				if "additionalMetadata" in texture_mapping and texture_mapping.additionalMetadata.unk0x0C in command_52_face_ids:
+				if "additionalMetadata" in texture_mapping and face.texture_data.type & 128 > 0 and texture_mapping.additionalMetadata.unk0x0C in command_52_face_ids:
 					texture_mappings.append(face.texture_data)
 					texture_additional_count += 1
 	return [len(texture_mappings), texture_additional_count]
