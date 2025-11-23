@@ -60,7 +60,9 @@ static func parse_section_value(file: FileAccess, type: Variant) -> Variant:
 		TYPE_ARRAY:
 			var value: String = ""
 			for sub: String in type:
-				value += String.chr(file.call(sub))
+				var c: int = file.call(sub)
+				if c != 0:
+					value += String.chr(c)
 			return value
 		TYPE_STRING:
 			var call_string: String = type.trim_suffix("_signed")
