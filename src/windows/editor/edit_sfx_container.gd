@@ -141,3 +141,10 @@ func _on_edit_sfx_timer_timeout() -> void:
 func _on_sfx_play_button_pressed() -> void:
 	var data := FXScript.get_from_index(%SFXSoundIndexEdit.value-1)
 	Roth.play_audio_entry(data)
+
+
+func _on_select_sfx_button_pressed() -> void:
+	var sfx_entry: Dictionary = await %SFXSelector.select_sfx()
+	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx_entry.index)
+	%SFXSoundIndexEdit.set_value_no_signal(sfx_entry.index)
+	_on_sfx_sound_index_edit_value_changed(sfx_entry.index)

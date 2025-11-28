@@ -140,10 +140,43 @@ layout_mode = 2
 theme_override_colors/font_color = Color(100, 0, 0, 1)
 text = "DBase name in invalid!"
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="8"]
+[node name="SFXImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="8"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MapsImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="9"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="0"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+text = "SFX Pack:"
+
+[node name="SFXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+
+[node name="SFXEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+placeholder_text = "Change name"
+
+[node name="SFXWarningLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(100, 0, 0, 1)
+text = "SFX name in use and will be overwritten!"
+
+[node name="SFXInvalidLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="4"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(100, 0, 0, 1)
+text = "SFX name in invalid!"
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="9"]
+layout_mode = 2
+
+[node name="MapsImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="10"]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -183,6 +216,8 @@ use_native_dialog = true
 
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer/DBaseCheckBox" to="." method="_on_d_base_check_box_toggled"]
 [connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer/DBaseEdit" to="." method="_on_dbase_edit_text_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer/SFXCheckBox" to="." method="_on_sfx_check_box_toggled"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer/SFXEdit" to="." method="_on_sfx_edit_text_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/ImportButton" to="." method="_on_import_button_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

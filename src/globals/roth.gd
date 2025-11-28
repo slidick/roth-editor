@@ -20,6 +20,7 @@ const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
 var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
 var ROTH_CUSTOM_DBASE_DIRECTORY: String = OS.get_user_data_dir().path_join("dbase")
+var ROTH_CUSTOM_SFX_DIRECTORY: String = OS.get_user_data_dir().path_join("sfx")
 var ROTH_CUSTOM_INSTALL_DIRECTORY: String = OS.get_user_data_dir().path_join("install")
 var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
@@ -37,6 +38,7 @@ var res: Dictionary = {}
 var maps: Array = []
 var das_files: Array = []
 var dbase_packs: Array = []
+var sfx_packs: Array = []
 var install_directory: String = ""
 var loaded_maps: Dictionary = {}
 var loaded_das: Dictionary = {}
@@ -53,51 +55,17 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_MAP_DIRECTORY)
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_DBASE_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DBASE_DIRECTORY)
-	
-	#Settings.update_settings("locations", {"custom.res": ROTH_CUSTOM_MAP_DIRECTORY.path_join("custom.res")})
+	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_SFX_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_SFX_DIRECTORY)
 	
 	das_loading_updated.connect(_on_das_loading_updated)
 	Settings.settings_updated.connect(_on_settings_updated)
-	
-	migrate_away_from_custom_res()
 	
 	# Wait for the scene to be ready so other nodes have time to connect to this nodes settings_loaded signal
 	await get_tree().get_root().ready
 	load_roth_settings()
 
-
-## Used to save old list of map name -> das files into separate .json files per map
-func migrate_away_from_custom_res() -> void:
-	var locations: Dictionary = Settings.settings.get("locations", {})
-	if locations and "custom.res" in locations:
-		Console.print("CUSTOM.RES found. Migrating to new format...")
-		
-		# Cycle through custom.res, saving in new format
-		if FileAccess.file_exists(locations.get("custom.res")):
-			var file := FileAccess.open(locations.get("custom.res"), FileAccess.READ)
-			while file.get_position() < file.get_length():
-				var line: String = file.get_line()
-				var line_split: Array = line.split(" ")
-				var map_info: Dictionary = {
-					"name": line_split[0].get_file().get_basename().to_upper(),
-					"das": (line_split[1]+".das").to_upper(),
-				}
-				save_metadata(map_info)
-		
-		# Remove old files
-		if FileAccess.file_exists(locations["custom.res"]):
-			DirAccess.remove_absolute(locations["custom.res"])
-		if FileAccess.file_exists(ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res")):
-			DirAccess.remove_absolute(ROTH_CUSTOM_MAP_DIRECTORY.path_join("test.res"))
-		
-		# Remove entry from settings file
-		locations.erase("custom.res")
-		Settings._save_settings()
-
-
-func _on_das_loading_updated(progress: float, das_file: String) -> void:
-	map_loading_updated.emit("Loading textures: %s" % das_file, progress)
-
+#region Settings
 
 func _on_settings_updated(key: String) -> void:
 	if key == "locations":
@@ -165,13 +133,12 @@ func load_roth_settings() -> void:
 		
 		var options: Dictionary = Settings.settings.get("options", {})
 		
-		if options.is_empty():
-			options = { "active_dbase": "Original"}
+		if "active_dbase" not in options:
+			options.active_dbase = "Original"
 			Settings.update_settings("options", options)
-		else:
-			if "active_dbase" not in options:
-				options.active_dbase = "Original"
-				Settings.update_settings("options", options)
+		if "active_sfx" not in options:
+			options.active_sfx = "Original"
+			Settings.update_settings("options", options)
 		
 		dbase_packs = [
 			{
@@ -202,7 +169,33 @@ func load_roth_settings() -> void:
 			dbase_info.erase("unk_dword_02")
 			dbase_info.erase("unk_dword_11")
 			dbase_100.close()
-	
+		
+		# SFX Packs
+		sfx_packs = [
+			{
+				"name": "Original",
+				"active": false,
+				"vanilla": true,
+			}
+		]
+		for dir in DirAccess.get_directories_at(ROTH_CUSTOM_SFX_DIRECTORY):
+			var sfx_info := { "name": dir, "active": false }
+			sfx_packs.append(sfx_info)
+		
+		if options.active_sfx not in sfx_packs.map(func (a:Dictionary) -> String: return a.name):
+			options.active_sfx = "Original"
+			Settings.update_settings("options", options)
+		
+		for sfx_info: Dictionary in sfx_packs:
+			if sfx_info.name == options.active_sfx:
+				sfx_info.active = true
+			
+			var sfx_dir: String = ROTH_CUSTOM_SFX_DIRECTORY.path_join(sfx_info.name)
+			var fxscript_filename := sfx_dir.path_join("FXSCRIPT.SFX")
+			if "vanilla" in sfx_info:
+				sfx_dir = Roth.install_directory.path_join("../DATA/DATA")
+				fxscript_filename = sfx_dir.path_join("FX22.SFX")
+			sfx_info.merge(FXScript.get_info(fxscript_filename))
 	
 	
 	for file in DirAccess.get_files_at(ROTH_CUSTOM_MAP_DIRECTORY):
@@ -223,6 +216,9 @@ func load_roth_settings() -> void:
 	
 	settings_loaded.emit()
 
+#endregion
+
+#region Map Functions
 
 ## Does an initial partial load of a map.
 func get_map(map_info: Dictionary) -> Map:
@@ -282,28 +278,6 @@ func create_new_map(map_info: Dictionary) -> void:
 	Roth.settings_loaded.emit()
 	loaded_maps[map_info.name] = map
 	#load_maps([map_info])
-
-
-## Return or load the requested das_file. [br]
-## Das files stay loaded after initial load.
-func get_das(das_file: String) -> Dictionary:
-	if das_file in loaded_das:
-		return loaded_das[das_file]
-	elif das_file in loading_das:
-		return await das_loading_finished
-	else:
-		loading_das[das_file] = true
-		loaded_das[das_file] = await Das.load_das(das_file)
-		loading_das.erase(das_file)
-		return loaded_das[das_file]
-
-
-## Directly get a single image from a das file by index
-func get_index_from_das(index:int, das_file: String) -> Dictionary:
-	if das_file in loaded_das:
-		if index in loaded_das[das_file]:
-			return loaded_das[das_file][index]
-	return Das._get_index_from_das(index, das_file)
 
 
 ## Takes a map and saves it to raw format, optionally overriding directory and player starting data
@@ -378,7 +352,7 @@ func test_run_maps(maps_to_run: Array, player_data: Dictionary = {}) -> void:
 		return
 	
 	# Delete and create temporary run directory
-	remove_dir_recursive(ROTH_TEMP_DIRECTORY)
+	Utility.remove_dir_recursive(ROTH_TEMP_DIRECTORY)
 	DirAccess.make_dir_recursive_absolute(ROTH_TEMP_DIRECTORY)
 	
 	# Save the maps into temporary directory
@@ -405,16 +379,26 @@ maps {
 	# Create custom install directory if using non vanilla dbase
 	var roth_directory: String
 	var current_dbase: Dictionary
+	var current_sfx: Dictionary
 	for dbase_info: Dictionary in dbase_packs:
 		if dbase_info.active:
 			current_dbase = dbase_info
-	if "vanilla" not in current_dbase:
+	for sfx_info: Dictionary in sfx_packs:
+		if sfx_info.active:
+			current_sfx = sfx_info
+	if "vanilla" not in current_dbase or "vanilla" not in current_sfx:
 		create_install(Roth.install_directory.path_join(".."), ROTH_CUSTOM_INSTALL_DIRECTORY)
 		roth_directory = ROTH_CUSTOM_INSTALL_DIRECTORY
-		for file: String in DirAccess.get_files_at(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name)):
-			var filepath := ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name).path_join(file)
-			var dest_filepath := ROTH_CUSTOM_INSTALL_DIRECTORY.path_join(file)
-			DirAccess.copy_absolute(filepath, dest_filepath)
+		if "vanilla" not in current_dbase:
+			for file: String in DirAccess.get_files_at(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name)):
+				var filepath := ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name).path_join(file)
+				var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join(file)
+				DirAccess.copy_absolute(filepath, dest_filepath)
+		if "vanilla" not in current_sfx:
+			for file: String in DirAccess.get_files_at(ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name)):
+				var filepath := ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name).path_join(file)
+				var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join("DATA").path_join(file)
+				DirAccess.copy_absolute(filepath, dest_filepath)
 	else:
 		roth_directory = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
 	
@@ -455,51 +439,6 @@ maps {
 	#Console.print("Executing: %s" % dosbox_bin)
 	#Console.print(dosbox_args)
 	OS.execute(dosbox_bin, dosbox_args)
-
-
-## Converts from player game rotation to degrees
-func player_rotation_to_degrees(rotation: float) -> int:
-	return int(-180 + (90 * (rotation / 128)))
-
-
-## Converts from player degrees to game rotation
-func player_degrees_to_rotation(degrees: float) -> int:
-	return int(((degrees + 180) * 128) / 90)
-
-
-## Converts from object game rotation to degrees
-func object_rotation_to_degrees(rotation: int) -> int:
-	return int(((rotation / 256.0) * 360) - 90)
-
-
-## Converts from relative rotation degrees to relative game object rotation
-func object_relative_degrees_to_rotation(degrees: float) -> int:
-	return int((256.0/360) * (degrees))
-
-
-## Plays audio by passing an array of Vector2 and a sample rate
-func play_audio_buffer(buffer: PackedVector2Array, sample_rate: int) -> void:
-	audio_player.play_buffer(buffer, sample_rate)
-
-
-## Plays audio by passing an entry returned from FXScript.get_from_entry
-func play_audio_entry(entry: Dictionary) -> void:
-	audio_player.play_entry(entry)
-
-
-## Stops audio
-func stop_audio_buffer() -> void:
-	audio_player.stop_buffer()
-
-
-## Helper function removes a directory recursively
-func remove_dir_recursive(directory: String) -> void:
-	if DirAccess.dir_exists_absolute(directory):
-		for dir in DirAccess.get_directories_at(directory):
-			remove_dir_recursive(directory.path_join(dir))
-		for file in DirAccess.get_files_at(directory):
-			DirAccess.remove_absolute(directory.path_join(file))
-		DirAccess.remove_absolute(directory)
 
 
 ## Helper function to query the user for a valid name for a map
@@ -547,6 +486,248 @@ func reload_map_info(map_info: Dictionary) -> void:
 					else:
 						map_info.erase(key)
 
+#endregion
+
+#region DAS Functions
+
+func _on_das_loading_updated(progress: float, das_file: String) -> void:
+	map_loading_updated.emit("Loading textures: %s" % das_file, progress)
+
+
+## Return or load the requested das_file. [br]
+## Das files stay loaded after initial load.
+func get_das(das_file: String) -> Dictionary:
+	if das_file in loaded_das:
+		return loaded_das[das_file]
+	elif das_file in loading_das:
+		return await das_loading_finished
+	else:
+		loading_das[das_file] = true
+		loaded_das[das_file] = await Das.load_das(das_file)
+		loading_das.erase(das_file)
+		return loaded_das[das_file]
+
+
+## Directly get a single image from a das file by index
+func get_index_from_das(index:int, das_file: String) -> Dictionary:
+	if das_file in loaded_das:
+		if index in loaded_das[das_file]:
+			return loaded_das[das_file][index]
+	return Das._get_index_from_das(index, das_file)
+
+#endregion
+
+#region Rotation Functions
+
+## Converts from player game rotation to degrees
+func player_rotation_to_degrees(rotation: float) -> int:
+	return int(-180 + (90 * (rotation / 128)))
+
+
+## Converts from player degrees to game rotation
+func player_degrees_to_rotation(degrees: float) -> int:
+	return int(((degrees + 180) * 128) / 90)
+
+
+## Converts from object game rotation to degrees
+func object_rotation_to_degrees(rotation: int) -> int:
+	return int(((rotation / 256.0) * 360) - 90)
+
+
+## Converts from relative rotation degrees to relative game object rotation
+func object_relative_degrees_to_rotation(degrees: float) -> int:
+	return int((256.0/360) * (degrees))
+
+#endregion
+
+#region Audio Functions
+
+## Plays audio by passing an array of Vector2 and a sample rate
+func play_audio_buffer(buffer: PackedVector2Array, sample_rate: int) -> void:
+	audio_player.play_buffer(buffer, sample_rate)
+
+
+## Plays audio by passing an entry returned from FXScript.get_from_entry
+func play_audio_entry(entry: Dictionary) -> void:
+	audio_player.play_entry(entry)
+
+
+## Stops audio
+func stop_audio_buffer() -> void:
+	audio_player.stop_buffer()
+
+#endregion
+
+#region Install
+
+func create_install(installation_directory: String, roth_directory: String) -> void:
+	var quick_refresh: bool = false
+	if DirAccess.dir_exists_absolute(roth_directory):
+		quick_refresh = true
+	
+	#remove_dir_recursive(roth_directory)
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("DATA"))
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("DIGI"))
+	#DirAccess.make_dir_recursive_absolute(roth_directory.path_join("GDV"))
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("M"))
+	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("MIDI"))
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE100.DAT"), roth_directory.path_join("DBASE100.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE200.DAT"), roth_directory.path_join("DBASE200.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE300.DAT"), roth_directory.path_join("DBASE300.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE400.DAT"), roth_directory.path_join("DBASE400.DAT"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE500.DAT"), roth_directory.path_join("DBASE500.DAT"))
+	
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FXSCRIPT.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FX22.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
+	
+	if quick_refresh:
+		return
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DOS4GW.EXE"), roth_directory.path_join("DOS4GW.EXE"))
+	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.RES")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/ROTH.RES"), roth_directory.path_join("ROTH.RES"))
+	elif FileAccess.file_exists(installation_directory.path_join("DATA/INSTALL/ROTH.RES")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/INSTALL/ROTH.RES"), roth_directory.path_join("ROTH.RES"))
+	else:
+		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
+		return
+	
+	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.EXE")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/ROTH.EXE"), roth_directory.path_join("ROTH.EXE"))
+	elif FileAccess.file_exists(installation_directory.path_join("DATA/INSTALL/ROTH.EXE")):
+		DirAccess.copy_absolute(installation_directory.path_join("DATA/INSTALL/ROTH.EXE"), roth_directory.path_join("ROTH.EXE"))
+	else:
+		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
+		return
+	
+	var seek_value: int = 0
+	if (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f0f93c7931b9a678469095d3d7f54c04" or 
+			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "c11ab446c6d92e4e89d557864aa62997"):
+		seek_value = 145767
+	elif (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "d56e7641e8f5d4ec3144bb1c140a7677" or 
+			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f588469eb868373a339bebb5fba5a9bb"):
+		seek_value = 147338
+	else:
+		print(FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")))
+		return
+	
+	# Patch the EXE to read the GDV files from G:\
+	var roth_exe_file := FileAccess.open(roth_directory.path_join("ROTH.EXE"), FileAccess.READ_WRITE)
+	roth_exe_file.seek(seek_value)
+	roth_exe_file.store_8(0x47)
+	roth_exe_file.store_8(0x3A)
+	roth_exe_file.store_8(0x5C)
+	roth_exe_file.store_8(0x00)
+	roth_exe_file.close()
+	
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/ICONS.ALL"), roth_directory.path_join("DATA/ICONS.ALL"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/BACKDROP.RAW"), roth_directory.path_join("DATA/BACKDROP.RAW"))
+	
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FILELIST.TXT"), roth_directory.path_join("DATA/FILELIST.TXT"))
+	var filelist_file := FileAccess.open(roth_directory.path_join("DATA/FILELIST.TXT"), FileAccess.WRITE)
+	filelist_file.close()
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DIGI/HMIDET.386"), roth_directory.path_join("DIGI/HMIDET.386"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DIGI/HMIDRV.386"), roth_directory.path_join("DIGI/HMIDRV.386"))
+	
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/DRUM.BNK"), roth_directory.path_join("MIDI/DRUM.BNK"))
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/GRAVIS.INI"), roth_directory.path_join("MIDI/GRAVIS.INI"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/HMIMDRV.386"), roth_directory.path_join("MIDI/HMIMDRV.386"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/MELODIC.BNK"), roth_directory.path_join("MIDI/MELODIC.BNK"))
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/MT32MAP.MTX"), roth_directory.path_join("MIDI/MT32MAP.MTX"))
+	
+	
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ADEMO.DAS"), roth_directory.path_join("M/ADEMO.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO.DAS"), roth_directory.path_join("M/DEMO.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO1.DAS"), roth_directory.path_join("M/DEMO1.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO2.DAS"), roth_directory.path_join("M/DEMO2.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO3.DAS"), roth_directory.path_join("M/DEMO3.DAS"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO4.DAS"), roth_directory.path_join("M/DEMO4.DAS"))
+	
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ABAGATE2.RAW"), roth_directory.path_join("M/ABAGATE2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AELF.RAW"), roth_directory.path_join("M/AELF.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ANUBIS.RAW"), roth_directory.path_join("M/ANUBIS.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AQUA1.RAW"), roth_directory.path_join("M/AQUA1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AQUA2.RAW"), roth_directory.path_join("M/AQUA2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS.RAW"), roth_directory.path_join("M/CAVERNS.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS2.RAW"), roth_directory.path_join("M/CAVERNS2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS3.RAW"), roth_directory.path_join("M/CAVERNS3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CHURCH1.RAW"), roth_directory.path_join("M/CHURCH1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DOMINION.RAW"), roth_directory.path_join("M/DOMINION.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DOPPLE.RAW"), roth_directory.path_join("M/DOPPLE.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ELOHIM1.RAW"), roth_directory.path_join("M/ELOHIM1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/GNARL1.RAW"), roth_directory.path_join("M/GNARL1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/GRAVE.RAW"), roth_directory.path_join("M/GRAVE.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/LRINTH.RAW"), roth_directory.path_join("M/LRINTH.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/LRINTH1.RAW"), roth_directory.path_join("M/LRINTH1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS3.RAW"), roth_directory.path_join("M/MAS3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS4.RAW"), roth_directory.path_join("M/MAS4.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS6.RAW"), roth_directory.path_join("M/MAS6.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS7.RAW"), roth_directory.path_join("M/MAS7.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAUSO1EA.RAW"), roth_directory.path_join("M/MAUSO1EA.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAUSO1EB.RAW"), roth_directory.path_join("M/MAUSO1EB.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAZE.RAW"), roth_directory.path_join("M/MAZE.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/OPTEMP1.RAW"), roth_directory.path_join("M/OPTEMP1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA1.RAW"), roth_directory.path_join("M/RAQUIA1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA2.RAW"), roth_directory.path_join("M/RAQUIA2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA3.RAW"), roth_directory.path_join("M/RAQUIA3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA4.RAW"), roth_directory.path_join("M/RAQUIA4.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA5.RAW"), roth_directory.path_join("M/RAQUIA5.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SALVAT.RAW"), roth_directory.path_join("M/SALVAT.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SOULST2.RAW"), roth_directory.path_join("M/SOULST2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SOULST3.RAW"), roth_directory.path_join("M/SOULST3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY1.RAW"), roth_directory.path_join("M/STUDY1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY2.RAW"), roth_directory.path_join("M/STUDY2.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY3.RAW"), roth_directory.path_join("M/STUDY3.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY4.RAW"), roth_directory.path_join("M/STUDY4.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TEMPLE1.RAW"), roth_directory.path_join("M/TEMPLE1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1F.RAW"), roth_directory.path_join("M/TGATE1F.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1G.RAW"), roth_directory.path_join("M/TGATE1G.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1H.RAW"), roth_directory.path_join("M/TGATE1H.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1I.RAW"), roth_directory.path_join("M/TGATE1I.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TOWER1.RAW"), roth_directory.path_join("M/TOWER1.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/VICAR.RAW"), roth_directory.path_join("M/VICAR.RAW"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/VICAR1.RAW"), roth_directory.path_join("M/VICAR1.RAW"))
+	
+	write_config_ini(roth_directory.path_join("CONFIG.INI"), false)
+	
+	var roth_ini_file := FileAccess.open(roth_directory.path_join("ROTH.INI"), FileAccess.WRITE)
+	roth_ini_file.store_string("SpeechSub=ON\n")
+	roth_ini_file.store_string("SpeechAud=ON\n")
+	roth_ini_file.store_string("MovieSub=ON\n")
+	roth_ini_file.store_string("MovieAud=ON\n")
+	roth_ini_file.store_string("VideoMode=8\n")
+	roth_ini_file.store_string("ViewSize=0\n")
+	roth_ini_file.store_string("SoundFXVol=0x100\n")
+	roth_ini_file.store_string("SpeechVol=0xd0\n")
+	roth_ini_file.store_string("MovieVol=0x100\n")
+	roth_ini_file.store_string("MusicVol=0x100\n")
+	roth_ini_file.store_string("MouseSpeed=0x40\n")
+	roth_ini_file.close()
+
+
+func write_config_ini(config_ini_filepath: String, original_game: bool) -> void:
+	if not DirAccess.dir_exists_absolute(config_ini_filepath.get_base_dir()):
+		DirAccess.make_dir_recursive_absolute(config_ini_filepath.get_base_dir())
+	var config_ini_file := FileAccess.open(config_ini_filepath, FileAccess.WRITE)
+	if original_game:
+		config_ini_file.store_string("SourcePath=C:\\DATA\n")
+		config_ini_file.store_string("DestinationPath=C:\\ROTH\n")
+	config_ini_file.store_string("SoundCard=0xe018\n")
+	config_ini_file.store_string("SoundPort=0x220\n")
+	config_ini_file.store_string("SoundIRQ=7\n")
+	config_ini_file.store_string("SoundDMA=5\n")
+	config_ini_file.store_string("MusicCard=0xa009\n")
+	config_ini_file.store_string("MusicPort=0x388\n")
+	config_ini_file.close()
+
+#endregion
+
+#region DBASE Packs
 
 func check_dbase_pack_name(p_name: String) -> String:
 	var error := ""
@@ -575,6 +756,7 @@ func duplicate_dbase_pack(p_dbase_info: Dictionary, new_name: String) -> void:
 				copy_dir.path_join("DBASE%d.DAT" % i),
 				new_dir.path_join("DBASE%d.DAT" % i)
 			)
+	
 	dbase_packs.append(dbase_info)
 	Roth.settings_loaded.emit()
 
@@ -590,7 +772,7 @@ func rename_dbase_pack(p_dbase_info: Dictionary, new_name: String) -> void:
 
 func delete_dbase_pack(p_dbase_info: Dictionary) -> void:
 	if DirAccess.dir_exists_absolute(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name)):
-		remove_dir_recursive(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name))
+		Utility.remove_dir_recursive(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name))
 	dbase_packs.erase(p_dbase_info)
 	if p_dbase_info.active:
 		for dbase_info: Dictionary in dbase_packs:
@@ -770,163 +952,105 @@ func create_dbase_pack(p_dbase_name: String) -> void:
 	dbase_packs.append(dbase_info)
 	Roth.settings_loaded.emit()
 
+#endregion
 
-func create_install(installation_directory: String, roth_directory: String) -> void:
-	if DirAccess.dir_exists_absolute(roth_directory):
-		return
-	#remove_dir_recursive(roth_directory)
-	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("DATA"))
-	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("DIGI"))
-	#DirAccess.make_dir_recursive_absolute(roth_directory.path_join("GDV"))
-	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("M"))
-	DirAccess.make_dir_recursive_absolute(roth_directory.path_join("MIDI"))
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE100.DAT"), roth_directory.path_join("DBASE100.DAT"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE200.DAT"), roth_directory.path_join("DBASE200.DAT"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE300.DAT"), roth_directory.path_join("DBASE300.DAT"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE400.DAT"), roth_directory.path_join("DBASE400.DAT"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE500.DAT"), roth_directory.path_join("DBASE500.DAT"))
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DOS4GW.EXE"), roth_directory.path_join("DOS4GW.EXE"))
-	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.RES")):
-		DirAccess.copy_absolute(installation_directory.path_join("DATA/ROTH.RES"), roth_directory.path_join("ROTH.RES"))
-	elif FileAccess.file_exists(installation_directory.path_join("DATA/INSTALL/ROTH.RES")):
-		DirAccess.copy_absolute(installation_directory.path_join("DATA/INSTALL/ROTH.RES"), roth_directory.path_join("ROTH.RES"))
-	else:
-		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
-		return
-	
-	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.EXE")):
-		DirAccess.copy_absolute(installation_directory.path_join("DATA/ROTH.EXE"), roth_directory.path_join("ROTH.EXE"))
-	elif FileAccess.file_exists(installation_directory.path_join("DATA/INSTALL/ROTH.EXE")):
-		DirAccess.copy_absolute(installation_directory.path_join("DATA/INSTALL/ROTH.EXE"), roth_directory.path_join("ROTH.EXE"))
-	else:
-		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
-		return
-	
-	var seek_value: int = 0
-	if (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f0f93c7931b9a678469095d3d7f54c04" or 
-			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "c11ab446c6d92e4e89d557864aa62997"):
-		seek_value = 145767
-	elif (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "d56e7641e8f5d4ec3144bb1c140a7677" or 
-			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f588469eb868373a339bebb5fba5a9bb"):
-		seek_value = 147338
-	else:
-		print(FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")))
-		return
-	
-	# Patch the EXE to read the GDV files from G:\
-	var roth_exe_file := FileAccess.open(roth_directory.path_join("ROTH.EXE"), FileAccess.READ_WRITE)
-	roth_exe_file.seek(seek_value)
-	roth_exe_file.store_8(0x47)
-	roth_exe_file.store_8(0x3A)
-	roth_exe_file.store_8(0x5C)
-	roth_exe_file.store_8(0x00)
-	roth_exe_file.close()
-	
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/ICONS.ALL"), roth_directory.path_join("DATA/ICONS.ALL"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/BACKDROP.RAW"), roth_directory.path_join("DATA/BACKDROP.RAW"))
-	
-	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FILELIST.TXT"), roth_directory.path_join("DATA/FILELIST.TXT"))
-	var filelist_file := FileAccess.open(roth_directory.path_join("DATA/FILELIST.TXT"), FileAccess.WRITE)
-	filelist_file.close()
-	
-	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FXSCRIPT.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FX22.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DIGI/HMIDET.386"), roth_directory.path_join("DIGI/HMIDET.386"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DIGI/HMIDRV.386"), roth_directory.path_join("DIGI/HMIDRV.386"))
-	
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/DRUM.BNK"), roth_directory.path_join("MIDI/DRUM.BNK"))
-	#DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/GRAVIS.INI"), roth_directory.path_join("MIDI/GRAVIS.INI"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/HMIMDRV.386"), roth_directory.path_join("MIDI/HMIMDRV.386"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/MELODIC.BNK"), roth_directory.path_join("MIDI/MELODIC.BNK"))
-	#DirAccess.copy_absolute(installation_directory.path_join("DATA/MIDI/MT32MAP.MTX"), roth_directory.path_join("MIDI/MT32MAP.MTX"))
-	
-	
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ADEMO.DAS"), roth_directory.path_join("M/ADEMO.DAS"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO.DAS"), roth_directory.path_join("M/DEMO.DAS"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO1.DAS"), roth_directory.path_join("M/DEMO1.DAS"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO2.DAS"), roth_directory.path_join("M/DEMO2.DAS"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO3.DAS"), roth_directory.path_join("M/DEMO3.DAS"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DEMO4.DAS"), roth_directory.path_join("M/DEMO4.DAS"))
-	
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ABAGATE2.RAW"), roth_directory.path_join("M/ABAGATE2.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AELF.RAW"), roth_directory.path_join("M/AELF.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ANUBIS.RAW"), roth_directory.path_join("M/ANUBIS.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AQUA1.RAW"), roth_directory.path_join("M/AQUA1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/AQUA2.RAW"), roth_directory.path_join("M/AQUA2.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS.RAW"), roth_directory.path_join("M/CAVERNS.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS2.RAW"), roth_directory.path_join("M/CAVERNS2.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CAVERNS3.RAW"), roth_directory.path_join("M/CAVERNS3.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/CHURCH1.RAW"), roth_directory.path_join("M/CHURCH1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DOMINION.RAW"), roth_directory.path_join("M/DOMINION.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/DOPPLE.RAW"), roth_directory.path_join("M/DOPPLE.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/ELOHIM1.RAW"), roth_directory.path_join("M/ELOHIM1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/GNARL1.RAW"), roth_directory.path_join("M/GNARL1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/GRAVE.RAW"), roth_directory.path_join("M/GRAVE.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/LRINTH.RAW"), roth_directory.path_join("M/LRINTH.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/LRINTH1.RAW"), roth_directory.path_join("M/LRINTH1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS3.RAW"), roth_directory.path_join("M/MAS3.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS4.RAW"), roth_directory.path_join("M/MAS4.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS6.RAW"), roth_directory.path_join("M/MAS6.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAS7.RAW"), roth_directory.path_join("M/MAS7.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAUSO1EA.RAW"), roth_directory.path_join("M/MAUSO1EA.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAUSO1EB.RAW"), roth_directory.path_join("M/MAUSO1EB.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/MAZE.RAW"), roth_directory.path_join("M/MAZE.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/OPTEMP1.RAW"), roth_directory.path_join("M/OPTEMP1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA1.RAW"), roth_directory.path_join("M/RAQUIA1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA2.RAW"), roth_directory.path_join("M/RAQUIA2.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA3.RAW"), roth_directory.path_join("M/RAQUIA3.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA4.RAW"), roth_directory.path_join("M/RAQUIA4.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/RAQUIA5.RAW"), roth_directory.path_join("M/RAQUIA5.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SALVAT.RAW"), roth_directory.path_join("M/SALVAT.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SOULST2.RAW"), roth_directory.path_join("M/SOULST2.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/SOULST3.RAW"), roth_directory.path_join("M/SOULST3.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY1.RAW"), roth_directory.path_join("M/STUDY1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY2.RAW"), roth_directory.path_join("M/STUDY2.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY3.RAW"), roth_directory.path_join("M/STUDY3.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/STUDY4.RAW"), roth_directory.path_join("M/STUDY4.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TEMPLE1.RAW"), roth_directory.path_join("M/TEMPLE1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1F.RAW"), roth_directory.path_join("M/TGATE1F.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1G.RAW"), roth_directory.path_join("M/TGATE1G.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1H.RAW"), roth_directory.path_join("M/TGATE1H.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TGATE1I.RAW"), roth_directory.path_join("M/TGATE1I.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/TOWER1.RAW"), roth_directory.path_join("M/TOWER1.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/VICAR.RAW"), roth_directory.path_join("M/VICAR.RAW"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/M/VICAR1.RAW"), roth_directory.path_join("M/VICAR1.RAW"))
-	
-	write_config_ini(roth_directory.path_join("CONFIG.INI"), false)
-	
-	var roth_ini_file := FileAccess.open(roth_directory.path_join("ROTH.INI"), FileAccess.WRITE)
-	roth_ini_file.store_string("SpeechSub=ON\n")
-	roth_ini_file.store_string("SpeechAud=ON\n")
-	roth_ini_file.store_string("MovieSub=ON\n")
-	roth_ini_file.store_string("MovieAud=ON\n")
-	roth_ini_file.store_string("VideoMode=8\n")
-	roth_ini_file.store_string("ViewSize=0\n")
-	roth_ini_file.store_string("SoundFXVol=0x100\n")
-	roth_ini_file.store_string("SpeechVol=0xd0\n")
-	roth_ini_file.store_string("MovieVol=0x100\n")
-	roth_ini_file.store_string("MusicVol=0x100\n")
-	roth_ini_file.store_string("MouseSpeed=0x40\n")
-	roth_ini_file.close()
+#region SFX Packs
+
+func check_sfx_pack_name(p_name: String) -> String:
+	var error := ""
+	if p_name.to_lower() in sfx_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		error = "Name already in use."
+	if not p_name.is_valid_filename():
+		error = "Can't contain the following: : / \\ ? * \" | % < >"
+	return error
 
 
-func write_config_ini(config_ini_filepath: String, original_game: bool) -> void:
-	if not DirAccess.dir_exists_absolute(config_ini_filepath.get_base_dir()):
-		DirAccess.make_dir_recursive_absolute(config_ini_filepath.get_base_dir())
-	var config_ini_file := FileAccess.open(config_ini_filepath, FileAccess.WRITE)
-	if original_game:
-		config_ini_file.store_string("SourcePath=C:\\DATA\n")
-		config_ini_file.store_string("DestinationPath=C:\\ROTH\n")
-	config_ini_file.store_string("SoundCard=0xe018\n")
-	config_ini_file.store_string("SoundPort=0x220\n")
-	config_ini_file.store_string("SoundIRQ=7\n")
-	config_ini_file.store_string("SoundDMA=5\n")
-	config_ini_file.store_string("MusicCard=0xa009\n")
-	config_ini_file.store_string("MusicPort=0x388\n")
-	config_ini_file.close()
+func duplicate_sfx_pack(p_sfx_info: Dictionary, new_name: String) -> void:
+	var sfx_info := p_sfx_info.duplicate()
+	sfx_info.name = new_name
+	sfx_info.active = false
+	sfx_info.erase("vanilla")
+	var copy_dir: String = ""
+	var new_dir: String = ROTH_CUSTOM_SFX_DIRECTORY.path_join(new_name)
+	DirAccess.make_dir_recursive_absolute(new_dir)
+	if "vanilla" in p_sfx_info:
+		copy_dir = Roth.install_directory.path_join("../DATA")
+		DirAccess.copy_absolute(
+			copy_dir.path_join("DATA/FX22.SFX"),
+			new_dir.path_join("FXSCRIPT.SFX")
+		)
+	else:
+		copy_dir = ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_info.name)
+		DirAccess.copy_absolute(
+			copy_dir.path_join("FXSCRIPT.SFX"),
+			new_dir.path_join("FXSCRIPT.SFX")
+		)
+	
+	sfx_packs.append(sfx_info)
+	Roth.settings_loaded.emit()
+
+
+func rename_sfx_pack(p_sfx_info: Dictionary, new_name: String) -> void:
+	DirAccess.rename_absolute(
+		ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_info.name),
+		ROTH_CUSTOM_SFX_DIRECTORY.path_join(new_name)
+	)
+	p_sfx_info.name = new_name
+	Roth.settings_loaded.emit()
+
+
+func delete_sfx_pack(p_sfx_info: Dictionary) -> void:
+	if DirAccess.dir_exists_absolute(ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_info.name)):
+		Utility.remove_dir_recursive(ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_info.name))
+	sfx_packs.erase(p_sfx_info)
+	if p_sfx_info.active:
+		for sfx_info: Dictionary in sfx_packs:
+			if sfx_info.name == "Original":
+				sfx_info.active = true
+				Settings.update_settings("options", {"active_dbase": "Original"})
+	Roth.settings_loaded.emit()
+
+
+func import_sfx_pack(p_sfx_name: String) -> void:
+	var sfx_info := {
+		"name": p_sfx_name,
+		"active": false
+	}
+	var sfx_dir: String = ROTH_CUSTOM_SFX_DIRECTORY.path_join(sfx_info.name)
+	var fxscript_filename := sfx_dir.path_join("FXSCRIPT.SFX")
+	sfx_info.merge(FXScript.get_info(fxscript_filename))
+	
+	Roth.sfx_packs.append(sfx_info)
+
+
+func create_sfx_pack(p_sfx_name: String) -> void:
+	var fxscript := {
+		"entries": []
+	}
+	
+	var directory: String = ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_name)
+	DirAccess.make_dir_recursive_absolute(directory)
+	var fxscript_filepath := directory.path_join("FXSCRIPT.SFX")
+	
+	var data := FXScript.compile(fxscript)
+	var file := FileAccess.open(fxscript_filepath, FileAccess.WRITE)
+	file.store_buffer(data)
+	file.close()
+	
+	var sfx_info := {
+		"name": p_sfx_name,
+		"active": false,
+		"count": 0,
+		"filesize": len(data),
+	}
+	sfx_packs.append(sfx_info)
+	Roth.settings_loaded.emit()
+
+
+func get_active_sfx_info() -> Dictionary:
+	for sfx_info: Dictionary in Roth.sfx_packs:
+		if sfx_info.active:
+			return sfx_info
+	return {}
+
+#endregion

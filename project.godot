@@ -21,6 +21,11 @@ boot_splash/use_filter=false
 boot_splash/image="uid://bnn4mwlgk3fre"
 config/icon="uid://dova0a1l7g8pf"
 
+[audio]
+
+driver/enable_input=true
+driver/mix_rate=22050
+
 [autoload]
 
 Settings="*res://addons/settings_system/settings.gd"

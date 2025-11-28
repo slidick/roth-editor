@@ -14,7 +14,7 @@ func _ready() -> void:
 	Roth.settings_loaded.connect(_on_settings_loaded)
 	%ListControl.show()
 	%EditControl.hide()
-	window_title = "Manage DBASE Files"
+	window_title = "Manage DBASE Packs"
 	%SuccessLabel.modulate.a = 0.0
 
 
@@ -183,7 +183,6 @@ func _on_save_button_pressed() -> void:
 	var file2 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE100.DAT"), FileAccess.WRITE)
 	file2.store_buffer(data2)
 	file2.close()
-	
 	
 	# Update metadata
 	var dbase_info: Dictionary = dbase_data["dbase_info"]

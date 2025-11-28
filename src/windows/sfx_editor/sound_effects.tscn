@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwfryqyo2a04c"]
+
+[ext_resource type="Script" uid="uid://b1yc47ntibfsq" path="res://src/windows/sfx_editor/sound_effects.gd" id="1_qx2kp"]
+
+[node name="SoundEffects" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qx2kp")
+metadata/_tab_index = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Search..."
+clear_button_enabled = true
+
+[node name="Tree" type="Tree" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+column_titles_visible = true
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+
+[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer/Tree"]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Edit"
+item_0/id = 0
+item_1/text = "Clear"
+item_1/id = 1
+item_2/text = "Delete"
+item_2/id = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ShuffleButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Shuffle"
+
+[node name="NewButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Add"
+
+[connection signal="text_changed" from="VBoxContainer/SearchEdit" to="." method="_on_search_edit_text_changed"]
+[connection signal="item_activated" from="VBoxContainer/Tree" to="." method="_on_tree_item_activated"]
+[connection signal="item_edited" from="VBoxContainer/Tree" to="." method="_on_tree_item_edited"]
+[connection signal="item_mouse_selected" from="VBoxContainer/Tree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="item_selected" from="VBoxContainer/Tree" to="." method="_on_tree_item_selected"]
+[connection signal="index_pressed" from="VBoxContainer/Tree/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/NewButton" to="." method="_on_new_button_pressed"]
