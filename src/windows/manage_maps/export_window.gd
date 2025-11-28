@@ -101,7 +101,7 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 	var dbase_info: Dictionary = %DBaseOption.get_selected_metadata()
 	if "vanilla" not in dbase_info:
 		export_info["dbase_pack"] = {"name": dbase_info.name}
-		for file: String in ["DBASE100.DAT", "DBASE200.DAT", "DBASE300.DAT", "DBASE400.DAT", "DBASE500.DAT"]:
+		for file: String in ["DBASE100.DAT", "DBASE200.DAT", "DBASE300.DAT", "DBASE400.DAT", "DBASE500.DAT", "FXSCRIPT.SFX"]:
 			if FileAccess.file_exists(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name).path_join(file)):
 				writer.start_file(file)
 				writer.write_file(FileAccess.get_file_as_bytes(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name).path_join(file)))
