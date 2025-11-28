@@ -4,6 +4,7 @@ extends Control
 enum Main {
 	ManageMaps,
 	ManageDBase,
+	ManageSFX,
 	Sep0,
 	TestMap,
 	Sep1,
@@ -138,6 +139,8 @@ func _on_main_index_pressed(index: int) -> void:
 			%ManageMaps.toggle(true)
 		Main.ManageDBase:
 			%ManageDbase.toggle(true)
+		Main.ManageSFX:
+			%ManageSFX.toggle(true)
 		Main.Settings:
 			%Settings.toggle(true)
 		Main.Quit:

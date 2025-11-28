@@ -23,6 +23,13 @@ func export_maps(p_maps: Array) -> void:
 		if dbase_info.active:
 			%DBaseOption.select(%DBaseOption.item_count-1)
 	
+	%SFXOption.clear()
+	for sfx_info: Dictionary in Roth.sfx_packs:
+		%SFXOption.add_item(sfx_info.name)
+		%SFXOption.set_item_metadata(%SFXOption.item_count-1, sfx_info)
+		if sfx_info.active:
+			%SFXOption.select(%SFXOption.item_count-1)
+	
 	for map: Dictionary in p_maps:
 		var tree_item: TreeItem = %MapsTree.get_root().create_child()
 		tree_item.set_text(0, map.name)
@@ -106,6 +113,15 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 				writer.start_file(file)
 				writer.write_file(FileAccess.get_file_as_bytes(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name).path_join(file)))
 				writer.close_file()
+	
+	
+	var sfx_info: Dictionary = %SFXOption.get_selected_metadata()
+	if "vanilla" not in sfx_info:
+		export_info["sfx_pack"] = {"name": sfx_info.name}
+		if FileAccess.file_exists(sfx_info.filepath):
+			writer.start_file("FXSCRIPT.SFX")
+			writer.write_file(FileAccess.get_file_as_bytes(sfx_info.filepath))
+			writer.close_file()
 	
 	
 	writer.start_file("data.json")

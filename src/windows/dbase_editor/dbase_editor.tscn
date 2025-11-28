@@ -313,11 +313,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "Save"
 
-[node name="Control2" type="Control" parent="." index="2"]
+[node name="SubWindows" type="Control" parent="." index="2"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="EditTextEntry" parent="Control2" index="0" instance=ExtResource("11_kn3rg")]
+[node name="EditTextEntry" parent="SubWindows" index="0" instance=ExtResource("11_kn3rg")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(820, 350)
@@ -334,7 +334,7 @@ offset_bottom = 175.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ObjectSelection" parent="Control2" index="1" instance=ExtResource("12_6d4ud")]
+[node name="ObjectSelection" parent="SubWindows" index="1" instance=ExtResource("12_6d4ud")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

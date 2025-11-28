@@ -21,6 +21,10 @@ func clear() -> void:
 	%DBaseEdit.clear()
 	%DBaseWarningLabel.hide()
 	%DBaseInvalidLabel.hide()
+	%SFXCheckBox.text = ""
+	%SFXEdit.clear()
+	%SFXWarningLabel.hide()
+	%SFXInvalidLabel.hide()
 	map_data = {}
 
 
@@ -96,6 +100,15 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 		%DBaseImportContainer.hide()
 		%DBaseCheckBox.button_pressed = false
 	
+	if "sfx_pack" in map_data:
+		%SFXImportContainer.show()
+		%SFXCheckBox.text = map_data.sfx_pack.name
+		%SFXCheckBox.button_pressed = true
+		check_for_sfx_collision(map_data.sfx_pack.name)
+	else:
+		%SFXImportContainer.hide()
+		%SFXCheckBox.button_pressed = false
+	
 	check_for_allow_import()
 	
 	toggle(true)
@@ -116,6 +129,22 @@ func check_for_allow_import() -> void:
 			return
 	else:
 		%DBaseInvalidLabel.hide()
+	
+	if %SFXCheckBox.button_pressed:
+		if not %SFXEdit.text.is_empty():
+			var err: String = Roth.check_sfx_pack_name(%SFXEdit.text)
+			if not err.is_empty():
+				%ImportButton.disabled = true
+				%SFXInvalidLabel.show()
+				return
+			%ImportButton.disabled = false
+			return
+		else:
+			%ImportButton.disabled = false
+			return
+	else:
+		%SFXInvalidLabel.hide()
+	
 	for child_hbox: HBoxContainer in %MapsContainer.get_children():
 		var checkbox: CheckBox = child_hbox.get_child(0)
 		if checkbox.button_pressed:
@@ -151,6 +180,20 @@ func _on_import_button_pressed() -> void:
 		reader.close()
 		if dbase_name not in Roth.dbase_packs.map(func (d: Dictionary) -> String: return d.name):
 			Roth.import_dbase_pack(dbase_name)
+	if %SFXCheckBox.button_pressed and "sfx_pack" in map_data:
+		var sfx_name: String = map_data.sfx_pack.name
+		if not %SFXEdit.text.is_empty():
+			sfx_name = %SFXEdit.text
+		DirAccess.make_dir_recursive_absolute(Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(sfx_name))
+		var reader := ZIPReader.new()
+		reader.open(%FileDialog.current_path)
+		var data := reader.read_file("FXSCRIPT.SFX")
+		var file := FileAccess.open(Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(sfx_name).path_join("FXSCRIPT.SFX"), FileAccess.WRITE)
+		file.store_buffer(data)
+		file.close()
+		reader.close()
+		if sfx_name not in Roth.sfx_packs.map(func (d: Dictionary) -> String: return d.name):
+			Roth.import_sfx_pack(sfx_name)
 	clear()
 	toggle(false)
 	Roth.settings_loaded.emit()
@@ -171,6 +214,15 @@ func _on_dbase_edit_text_changed(new_text: String) -> void:
 	check_for_allow_import()
 
 
+func _on_sfx_edit_text_changed(new_text: String) -> void:
+	%SFXInvalidLabel.hide()
+	if new_text.is_empty():
+		check_for_sfx_collision(map_data.sfx_pack.name)
+	else:
+		check_for_sfx_collision(new_text)
+	check_for_allow_import()
+
+
 func check_for_dbase_collision(new_text: String) -> void:
 	if new_text.to_upper() in Roth.dbase_packs.map(func (d: Dictionary) -> String: return d.name.to_upper()):
 		%DBaseWarningLabel.show()
@@ -178,5 +230,16 @@ func check_for_dbase_collision(new_text: String) -> void:
 		%DBaseWarningLabel.hide()
 
 
+func check_for_sfx_collision(new_text: String) -> void:
+	if new_text.to_upper() in Roth.sfx_packs.map(func (d: Dictionary) -> String: return d.name.to_upper()):
+		%SFXWarningLabel.show()
+	else:
+		%SFXWarningLabel.hide()
+
+
 func _on_d_base_check_box_toggled(_toggled_on: bool) -> void:
+	check_for_allow_import()
+
+
+func _on_sfx_check_box_toggled(_toggled_on: bool) -> void:
 	check_for_allow_import()

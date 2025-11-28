@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://d06ghcmejei5d"]
+[gd_scene load_steps=61 format=3 uid="uid://d06ghcmejei5d"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_3db0t"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_x08gi"]
@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://db0dxik1y7uol" path="res://src/windows/editor/status_bar.tscn" id="19_sf4qd"]
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="20_12tai"]
 [ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/editor/paste_options_dialog.tscn" id="21_dyevs"]
+[ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="27_6txe1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf4qd"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
@@ -2137,7 +2138,6 @@ one_shot = true
 
 [node name="EditSFXContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit" index="3"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
@@ -2210,6 +2210,10 @@ update_on_text_changed = true
 unique_name_in_owner = true
 layout_mode = 2
 text = "Play"
+
+[node name="SelectSFXButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2" index="3"]
+layout_mode = 2
+text = "Select"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="5"]
 layout_mode = 2
@@ -2478,6 +2482,21 @@ offset_bottom = 326.5
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="SFXSelector" parent="Dialogs" index="6" instance=ExtResource("27_6txe1")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -473.75
+offset_top = -343.5
+offset_right = 473.75
+offset_bottom = 343.5
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="3DObjectContextMenu" type="PopupMenu" parent="." index="3"]
 unique_name_in_owner = true
 item_count = 2
@@ -2644,6 +2663,7 @@ item_1/id = 1
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer/SFXPosYEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_pos_y_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2/SFXSoundIndexEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_sound_index_edit_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2/SFXPlayButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_play_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2/SelectSFXButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_select_sfx_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer3/SFXUnk0x06Edit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_06_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer4/SFXUnk0x08Edit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_08_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer5/SFXUnk0x0AEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0a_edit_value_changed"]
