@@ -64,3 +64,12 @@ static func distance_to_face(position: Vector2, face: Face) -> float:
 
 	# Return distance to the nearest point
 	return sqrt((position.x - nearest_x) * (position.x - nearest_x) + (position.y - nearest_y) * (position.y - nearest_y));
+
+
+static func remove_dir_recursive(directory: String) -> void:
+	if DirAccess.dir_exists_absolute(directory):
+		for dir in DirAccess.get_directories_at(directory):
+			remove_dir_recursive(directory.path_join(dir))
+		for file in DirAccess.get_files_at(directory):
+			DirAccess.remove_absolute(directory.path_join(file))
+		DirAccess.remove_absolute(directory)
