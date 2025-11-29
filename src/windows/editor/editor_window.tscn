@@ -2200,7 +2200,9 @@ text = "Sound Index:"
 [node name="SFXSoundIndexEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
+min_value = 1.0
 max_value = 65535.0
+value = 1.0
 rounded = true
 update_on_text_changed = true
 

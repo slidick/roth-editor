@@ -37,8 +37,8 @@ func update_selections() -> void:
 	%SFXPosXEdit.set_value_no_signal(sfx.data.unk0x00)
 	%SFXPosYEdit.get_line_edit().text = "%d" % sfx.data.unk0x02
 	%SFXPosYEdit.set_value_no_signal(sfx.data.unk0x02)
-	%SFXSoundIndexEdit.get_line_edit().text = "%d" % sfx.data.unk0x04
-	%SFXSoundIndexEdit.set_value_no_signal(sfx.data.unk0x04)
+	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx.data.unk0x04+1)
+	%SFXSoundIndexEdit.set_value_no_signal(sfx.data.unk0x04+1)
 	%SFXUnk0x06Edit.get_line_edit().text = "%d" % sfx.data.unk0x06
 	%SFXUnk0x06Edit.set_value_no_signal(sfx.data.unk0x06)
 	%SFXUnk0x08Edit.get_line_edit().text = "%d" % sfx.data.unk0x08
@@ -91,7 +91,7 @@ func _on_sfx_pos_y_edit_value_changed(value: float) -> void:
 
 func _on_sfx_sound_index_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x04 = value
+		sfx.data.unk0x04 = (value-1)
 	%EditSFXTimer.start()
 
 
@@ -139,5 +139,5 @@ func _on_edit_sfx_timer_timeout() -> void:
 
 
 func _on_sfx_play_button_pressed() -> void:
-	var data := FXScript.get_from_index(%SFXSoundIndexEdit.value)
+	var data := FXScript.get_from_index(%SFXSoundIndexEdit.value-1)
 	Roth.play_audio_entry(data)
