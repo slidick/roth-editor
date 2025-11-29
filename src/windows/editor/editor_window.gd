@@ -508,7 +508,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 
 func _on_search_text_submitted(search_text: String) -> void:
 	if search_text.is_empty():
-		%Map3D.deselect()
+		select_resource(null)
 		return
 	
 	if search_text == previous_search:
