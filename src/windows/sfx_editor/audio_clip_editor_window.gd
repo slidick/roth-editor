@@ -31,10 +31,13 @@ func edit_audio(p_audio_entry: Dictionary) -> Dictionary:
 	audio_entry = p_audio_entry.duplicate(true)
 	%Waveform.setup(FXScript.convert_to_playable_entry(audio_entry), true)
 	toggle(true)
+	if not get_window().files_dropped.is_connected(_on_files_dropped):
+		get_window().files_dropped.connect(_on_files_dropped)
 	await get_tree().process_frame
 	update_length()
-	
 	var new_entry: Dictionary = await done
+	if get_window().files_dropped.is_connected(_on_files_dropped):
+		get_window().files_dropped.disconnect(_on_files_dropped)
 	toggle(false)
 	return new_entry
 
@@ -55,6 +58,11 @@ func update_length() -> void:
 	start_index = int(len(audio_entry.raw_data)/2.0*start_percent)
 	end_index = int(len(audio_entry.raw_data)/2.0*end_percent)
 	%LengthLabel.text = "Length: %.2fs" % ((end_index - start_index)/ sample_rate)
+
+
+func _on_files_dropped(files: Array) -> void:
+	if len(files) > 0:
+		_on_file_dialog_file_selected(files[0])
 
 
 func _on_stop_button_pressed() -> void:
