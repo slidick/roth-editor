@@ -1,3 +1,33 @@
+**0.18.0**
+### New Features
+  - Sound Effects editing and changing now available
+    - Duplicate and edit the original sounds or create a new sfx pack from scratch
+    - Change names and descriptions
+    - Double-click on index to preview the sound
+    - Right-click to edit, clear, or delete
+    - Editor accepts 16bit wav files. Will be automatically downsampled to 22khz
+    - Simple features like trimming, amplitude adjustment, and reversing available
+    - Ability to record directly from a microphone
+    - Can change a sound effect to an existing sound effect
+    - Shuffle all sound effects for some crazy fun
+    - Filter by name and description
+  - Add sound effect selection dialog to sfx nodes
+
+### Bugfixes
+  - Fixed broken GDV playback
+  - Fixed editing multiple faces and changing their additional data toggle being broken
+  - Fixed incorrect horizontal fit max value
+  - Redraw lines after denying a vertex merge
+  - Fixed incorrect calculation of map size
+
+---
+
+**0.17.1**
+### Bugfixes
+  - Fix usability bug in edit panel
+
+---
+
 **0.17.0**
 ### New Features
   - Sector cutting, copying, and pasting
