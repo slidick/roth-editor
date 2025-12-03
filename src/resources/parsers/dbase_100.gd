@@ -250,7 +250,11 @@ static func parse_files_at_directory(directory: String) -> Dictionary:
 	if not FileAccess.file_exists(dbase400_filepath):
 		return {}
 	
-	return parse_files(dbase100_filepath, dbase400_filepath)
+	var dbase_data: Dictionary = parse_files(dbase100_filepath, dbase400_filepath)
+	dbase_data.directory = directory
+	DBase500.add_entries_to_dbase(dbase_data)
+	
+	return dbase_data
 
 
 static func compile(dbase100: Dictionary) -> PackedByteArray:

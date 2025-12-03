@@ -33,7 +33,7 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_denbt")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="Main" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
 clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -41,26 +41,27 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main" index="0"]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer" index="0"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="NameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="0"]
+[node name="NameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="0"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="1"]
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="1"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="StartMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/Control" index="0"]
+[node name="StartMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control" index="0"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 32.0
@@ -71,7 +72,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_prwse")
 
-[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/Control/StartMarker" index="0"]
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/StartMarker" index="0"]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -82,7 +83,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.21611851, 0.4915222, 0.34274763, 1)
 
-[node name="EndMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/Control" index="1"]
+[node name="EndMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control" index="1"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 32.0
@@ -93,7 +94,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_prwse")
 
-[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/Control/EndMarker" index="0"]
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/EndMarker" index="0"]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -104,7 +105,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.1201851, 0.30128837, 0.20325923, 1)
 
-[node name="Waveform" type="Panel" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="2"]
+[node name="Waveform" type="Panel" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 350)
 layout_mode = 2
@@ -113,54 +114,54 @@ size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_oa4cw")
 script = ExtResource("5_oa4cw")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="3"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="3"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2" index="0"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="AmpDownButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="0"]
+[node name="AmpDownButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="0"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Amplitude Down"
 
-[node name="AmpUpButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="1"]
+[node name="AmpUpButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="1"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Amplitude Up"
 
-[node name="ReverseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="2"]
+[node name="ReverseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Reverse"
 
-[node name="StopButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="3"]
+[node name="StopButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="3"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("6_prwse")
 
-[node name="PlayButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="4"]
+[node name="PlayButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="4"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 icon = ExtResource("7_3yom7")
 
-[node name="RecordButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="5"]
+[node name="RecordButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="5"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 icon = ExtResource("9_3yom7")
 
-[node name="LengthLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="6"]
+[node name="LengthLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="6"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
@@ -169,17 +170,17 @@ size_flags_vertical = 0
 size_flags_stretch_ratio = 1.52
 vertical_alignment = 2
 
-[node name="BrowseFilesystemButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="7"]
+[node name="BrowseFilesystemButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="7"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Browse FileSystem"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="4"]
 layout_mode = 2
 
-[node name="DeviceOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="0"]
+[node name="DeviceOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -187,30 +188,30 @@ text_overrun_behavior = 1
 fit_to_longest_item = false
 allow_reselect = true
 
-[node name="BrowseExistingButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="1"]
+[node name="BrowseExistingButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3" index="1"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Browse Exisiting"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer" index="1"]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
 
-[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="1"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Reset"
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2"]
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -242,20 +243,20 @@ unique_name_in_owner = true
 stream = SubResource("AudioStreamMicrophone_3yom7")
 bus = &"Record"
 
-[connection signal="moved" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/Control/StartMarker" to="." method="_on_start_marker_moved"]
-[connection signal="moved" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/Control/EndMarker" to="." method="_on_end_marker_moved"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/AmpDownButton" to="." method="_on_amp_down_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/AmpUpButton" to="." method="_on_amp_up_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/ReverseButton" to="." method="_on_reverse_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/StopButton" to="." method="_on_stop_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/RecordButton" to="." method="_on_record_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/BrowseFilesystemButton" to="." method="_on_browse_filesystem_button_pressed"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3/DeviceOption" to="." method="_on_device_option_item_selected"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3/BrowseExistingButton" to="." method="_on_browse_existing_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/ResetButton" to="." method="_on_reset_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="moved" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/StartMarker" to="." method="_on_start_marker_moved"]
+[connection signal="moved" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/EndMarker" to="." method="_on_end_marker_moved"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/AmpDownButton" to="." method="_on_amp_down_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/AmpUpButton" to="." method="_on_amp_up_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/ReverseButton" to="." method="_on_reverse_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/RecordButton" to="." method="_on_record_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/BrowseFilesystemButton" to="." method="_on_browse_filesystem_button_pressed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3/DeviceOption" to="." method="_on_device_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3/BrowseExistingButton" to="." method="_on_browse_existing_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="RecordTimer" to="." method="_on_record_timer_timeout"]

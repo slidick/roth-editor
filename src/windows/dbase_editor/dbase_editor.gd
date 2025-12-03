@@ -5,7 +5,7 @@ var dbase_data: Dictionary = {}
 var original_dbase_data: Dictionary = {}
 var save_tween: Tween
 var previous_tab: int = 0
-
+var audio_changed: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -136,7 +136,7 @@ func _on_edit_button_pressed() -> void:
 	dbase_data["dbase100"] = results
 	
 	original_dbase_data = dbase_data.duplicate(true)
-	
+	audio_changed = false
 	window_title = "Editing DBASE - %s" % dbase_data["dbase_info"].name
 	
 	%DBase100Header.load_dbase(dbase_data)
@@ -172,6 +172,12 @@ func _on_cancel_button_pressed() -> void:
 
 
 func _on_save_button_pressed() -> void:
+	if audio_changed:
+		var data3 := DBase500.compile(dbase_data["dbase100"])
+		var file3 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE500.DAT"), FileAccess.WRITE)
+		file3.store_buffer(data3)
+		file3.close()
+	
 	var data := DBase400.compile(dbase_data["dbase100"])
 	
 	var file := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE400.DAT"), FileAccess.WRITE)
@@ -200,6 +206,7 @@ func _on_save_button_pressed() -> void:
 	
 	
 	original_dbase_data = dbase_data.duplicate(true)
+	audio_changed = false
 	
 	if save_tween:
 		save_tween.kill()

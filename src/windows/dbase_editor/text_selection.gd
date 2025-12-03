@@ -2,12 +2,15 @@ extends BaseWindow
 
 signal selection_done(text_entry: Dictionary)
 
-func make_selection(dbase_data: Dictionary) -> Dictionary:
-	%Text.load_dbase(dbase_data, true)
+func make_selection(dbase_data: Dictionary, p_audio_selection: bool = false) -> Dictionary:
+	%Text.load_dbase(dbase_data, true, p_audio_selection)
 	toggle(true)
 	var text_entry: Dictionary = await selection_done
 	toggle(false)
-	return text_entry
+	if p_audio_selection:
+		return text_entry.dbase500
+	else:
+		return text_entry
 
 
 func _fade_out() -> void:

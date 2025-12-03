@@ -45,3 +45,5 @@ func _handle_command(command: String) -> void:
 					editor.select_resource(null)
 					for sector: Sector in sectors:
 						editor.select_resource(sector, false)
+		"clear_audio":
+			Roth.audio_player.playback = null

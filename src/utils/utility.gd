@@ -73,3 +73,20 @@ static func remove_dir_recursive(directory: String) -> void:
 		for file in DirAccess.get_files_at(directory):
 			DirAccess.remove_absolute(directory.path_join(file))
 		DirAccess.remove_absolute(directory)
+
+
+static func init_delta_table() -> Array:
+	var delta_table := []
+	delta_table.resize(256)
+	delta_table[0] = 0
+	var delta := 0
+	var code := 64
+	var step := 45
+	for i in range(1, 254, 2):
+		delta += (code >> 5)
+		code += step
+		step += 2
+		delta_table[i] = delta
+		delta_table[i+1] = -delta
+	delta_table[255] = delta + (code >> 5)
+	return delta_table

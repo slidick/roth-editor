@@ -196,6 +196,9 @@ static func compile(fxscript: Dictionary) -> PackedByteArray:
 static func convert_to_playable_entry(entry: Dictionary, start_index: int = 0, end_index: int = -1) -> Dictionary:
 	if end_index == -1:
 		end_index = len(entry.raw_data) - 1
+	if "type" not in entry:
+		entry.type = 3
+		entry.raw_data = AudioFunctions.convert_to_pcm(entry.raw_data)
 	var raw_data: PackedByteArray = entry.raw_data.slice(start_index*2, end_index*2)
 	var data: Array = []
 	for i in range(0, len(raw_data), 2):
