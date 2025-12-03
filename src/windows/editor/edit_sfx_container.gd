@@ -92,6 +92,7 @@ func _on_sfx_pos_y_edit_value_changed(value: float) -> void:
 func _on_sfx_sound_index_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		sfx.data.unk0x04 = (value-1)
+	%SFXPlayButton.show()
 	%EditSFXTimer.start()
 
 
