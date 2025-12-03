@@ -237,11 +237,7 @@ static func text_entry_in_array(p_text_array: Array, p_text_entry: Dictionary) -
 	return false
 
 
-static func compile(dbase100: Dictionary) -> PackedByteArray:
-	
-	# Assemble text array
-	# Even though we have dbase100.text_entrys, we reassemble
-	# so as to not include any orphan text entries
+static func assemble_text_array(dbase100: Dictionary) -> Array:
 	var text_array := []
 	for interface: Dictionary in dbase100.interfaces:
 		if (not interface.text_entry.is_empty()
@@ -275,6 +271,16 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 						and not text_entry_in_array(text_array, command.text_entry)
 				):
 					text_array.append(command.text_entry)
+	return text_array
+
+
+static func compile(dbase100: Dictionary) -> PackedByteArray:
+	
+	# Assemble text array
+	# Even though we have dbase100.text_entrys, we reassemble
+	# so as to not include any orphan text entries
+	var text_array := assemble_text_array(dbase100)
+	
 	
 	# Don't even update text_entrys, reselecting orphans will work fine until reload
 	#dbase100.text_entrys = text_array
@@ -311,12 +317,13 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 					entry["length"] += 1
 				cutscene.computed_length_subtitles += entry["length"]
 			length += 4
-		if "text_entry" in cutscene and not cutscene.text_entry.is_empty():
+		if "text_entry" in cutscene and "string" in cutscene.text_entry:
 			cutscene.offset_dbase400 = length
 			cutscene.text_entry["length_str"] = len(cutscene.text_entry.string) + 1
 			length += 8 + cutscene.text_entry["length_str"]
 			while length % 4 > 0:
 				length += 1
+			cutscene.text_entry.dbase500_offset = 0
 	
 	
 	var data := "DBASE400".to_ascii_buffer()
@@ -324,6 +331,8 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 	
 	var position: int = 8
 	for text_entry: Dictionary in text_array:
+		if "dbase500_offset" not in text_entry:
+			text_entry.dbase500_offset = 0
 		data.encode_u32(position, text_entry.dbase500_offset)
 		data.encode_u16(position+4, text_entry.length_str)
 		data.encode_u16(position+6, text_entry.font_color)
@@ -356,7 +365,7 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 			data.encode_u16(position, 0)
 			data.encode_u16(position+2, 0xFFFF)
 			position += 4
-		if "text_entry" in cutscene and not cutscene.text_entry.is_empty():
+		if "text_entry" in cutscene and "string" in cutscene.text_entry:
 			data.encode_u32(position, cutscene.text_entry.dbase500_offset)
 			data.encode_u16(position+4, cutscene.text_entry.length_str)
 			cutscene.text_entry.erase("length_str")

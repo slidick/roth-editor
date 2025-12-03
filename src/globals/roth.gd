@@ -929,6 +929,12 @@ func create_dbase_pack(p_dbase_name: String) -> void:
 	
 	var dbase100_filepath := directory.path_join("DBASE100.DAT")
 	var dbase400_filepath := directory.path_join("DBASE400.DAT")
+	var dbase500_filepath := directory.path_join("DBASE500.DAT")
+	
+	var data3: = DBase500.compile(dbase)
+	var file3 := FileAccess.open(dbase500_filepath, FileAccess.WRITE)
+	file3.store_buffer(data3)
+	file3.close()
 	
 	var data := DBase400.compile(dbase)
 	var file := FileAccess.open(dbase400_filepath, FileAccess.WRITE)

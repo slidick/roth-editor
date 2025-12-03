@@ -68,7 +68,7 @@ static func parse_file(file: FileAccess) -> Dictionary:
 		palette = Das.get_default_palette()
 	
 	# Audio Init
-	var delta_table := DBase500._init_delta_table()
+	var delta_table := Utility.init_delta_table()
 	var audio: Array = []
 	var left_state: float = 0
 	var right_state: float = 0

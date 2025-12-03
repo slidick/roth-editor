@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://gxfiwph6tqkc"]
+[gd_scene load_steps=8 format=3 uid="uid://gxfiwph6tqkc"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_xo436"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_o4g3v"]
@@ -6,6 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ng8ic"]
 [ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/editor/palette_window.tscn" id="4_o7ktg"]
 [ext_resource type="PackedScene" uid="uid://vh534r141vnm" path="res://src/windows/dbase_editor/text_selection.tscn" id="6_hp3o2"]
+[ext_resource type="PackedScene" uid="uid://c4n3x17743rei" path="res://src/windows/sfx_editor/audio_clip_editor_window.tscn" id="7_xpkcl"]
 
 [node name="TextEntryDialog" instance=ExtResource("1_xo436")]
 offset_right = 800.0
@@ -65,22 +66,35 @@ custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Audio:"
 
-[node name="AudioOffsetEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="1"]
+[node name="PlayAudioButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="1"]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "DBase500 Offset"
-
-[node name="PlayAudioButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="2"]
-unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Play"
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="3"]
+[node name="StopAudioButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Stop"
+
+[node name="EditAudioButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Edit"
+
+[node name="ClearAudioButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Clear"
+
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" index="5"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InvalidOffsetLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/Control" index="0"]
+[node name="EmptyLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/Control" index="0"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -95,8 +109,7 @@ offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(100, 0, 0, 1)
-text = "Invalid Offset"
+text = "(Empty)"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2"]
 layout_mode = 2
@@ -170,6 +183,7 @@ text = "Save"
 [node name="Control2" type="Control" parent="." index="2"]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="PaletteWindow" parent="Control2" index="0" instance=ExtResource("4_o7ktg")]
 unique_name_in_owner = true
@@ -194,9 +208,27 @@ header = false
 unique_name_in_owner = true
 layout_mode = 1
 
+[node name="AudioClipEditor" parent="Control2" index="2" instance=ExtResource("7_xpkcl")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -580.5
+offset_top = -382.0
+offset_right = 580.5
+offset_bottom = 382.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/TextEdit" to="." method="_on_text_edit_gui_input"]
-[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/AudioOffsetEdit" to="." method="_on_audio_offset_edit_text_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/PlayAudioButton" to="." method="_on_play_audio_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/StopAudioButton" to="." method="_on_stop_audio_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/EditAudioButton" to="." method="_on_edit_audio_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3/ClearAudioButton" to="." method="_on_clear_audio_button_pressed"]
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/ColorRect" to="." method="_on_color_rect_gui_input"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ReferencesContainer/ReferencesList" to="." method="_on_references_list_item_activated"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ReferencesContainer/MakeUniqueButton" to="." method="_on_make_unique_button_pressed"]

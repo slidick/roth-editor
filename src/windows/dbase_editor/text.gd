@@ -4,26 +4,31 @@ signal text_entry_selected(text_entry: Dictionary)
 
 var dbase_data: Dictionary = {}
 var is_selection_window: bool = false
+var is_audio_selection_window: bool = false
 
 func reset() -> void:
 	dbase_data = {}
 	is_selection_window = false
+	is_audio_selection_window = false
 	%Tree.clear()
 	%Tree.create_item()
 	%SearchEdit.text = ""
 	%Tree.scroll_to_item(%Tree.get_root())
 
 
-func load_dbase(p_dbase_data: Dictionary, p_is_selection_window: bool = false) -> void:
+func load_dbase(p_dbase_data: Dictionary, p_is_selection_window: bool = false, p_is_audio_selection_windows: bool = false) -> void:
 	reset()
 	dbase_data = p_dbase_data
 	is_selection_window = p_is_selection_window
+	is_audio_selection_window = p_is_audio_selection_windows
 	search()
 
 func search(filter: String = "") -> void:
 	%Tree.clear()
 	%Tree.create_item()
 	for text_entry: Dictionary in dbase_data["dbase100"].text_entrys:
+		if is_audio_selection_window and ("dbase500" not in text_entry or "raw_data" not in text_entry.dbase500):
+			continue
 		if not filter.is_empty():
 			if text_entry.string.to_lower().find(filter.to_lower()) == -1:
 				continue
