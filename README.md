@@ -55,6 +55,7 @@ Also available is support for editing some of the additional game files. Go to *
 The following files are currently supported:
 - DBASE100.DAT
 - DBASE400.DAT
+- DBASE500.DAT
 - FXSCRIPT.SFX
 
 See the [DBase Section](#dbase-editor-features) and [SFX Section](#sfx-editor-features) for more details

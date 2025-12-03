@@ -1,3 +1,25 @@
+**0.19.0**
+### New Features
+  - Dialog Editing
+    - Change dialog audio using the same audio clip editor that was just added for the sound effects
+    - Dialogs are accessed through the DBase editor
+    - Find a text entry, double-click to open, then click the Edit audio button
+    - Browse, drag, or record directly
+
+### Bug Fixes
+  - Fixed being able to resize windows through other windows
+
+---
+
+**0.18.1**
+### New Features
+  - Add drag and drop support to audio clip editor
+
+### Bugfixes
+   - Fixed open SFX selector breaking editor
+
+---
+
 **0.18.0**
 ### New Features
   - Sound Effects editing and changing now available
