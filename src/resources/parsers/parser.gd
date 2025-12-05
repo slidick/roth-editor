@@ -136,3 +136,30 @@ static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette:
 	var image := Image.create_from_data(rle_image_hdr.width, rle_image_hdr.height, false, Image.FORMAT_RGBA8, decoded_sprite_buffer)
 	
 	return image
+
+
+static func encode_rle_img(input_image: Dictionary) -> PackedByteArray:
+	var data: PackedByteArray = []
+	data.resize(8)
+	data.encode_u32(0, 3)
+	data.encode_u16(4, input_image.width)
+	data.encode_u16(6, input_image.height)
+	
+	var repeat: int = 1
+	var last_byte: int = input_image.data[0]
+	
+	for i: int in range(1, len(input_image.data), 1):
+		var byte: int = input_image.data[i]
+		if byte == last_byte and repeat < 15:
+			repeat += 1
+		else:
+			if repeat > 1 or last_byte >= 0xF0:
+				data.append(0xF0 | repeat)
+			data.append(last_byte)
+			last_byte = byte
+			repeat = 1
+	if repeat > 1 or last_byte >= 0xF0:
+		data.append(0xF0 | repeat)
+		data.append(last_byte)
+	
+	return data

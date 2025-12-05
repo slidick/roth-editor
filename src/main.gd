@@ -5,6 +5,7 @@ enum Main {
 	ManageMaps,
 	ManageDBase,
 	ManageSFX,
+	ExportBackdrop,
 	Sep0,
 	TestMap,
 	Sep1,
@@ -141,6 +142,8 @@ func _on_main_index_pressed(index: int) -> void:
 			%ManageDbase.toggle(true)
 		Main.ManageSFX:
 			%ManageSFX.toggle(true)
+		Main.ExportBackdrop:
+			%BackdropExporter.toggle(true)
 		Main.Settings:
 			%Settings.toggle(true)
 		Main.Quit:
