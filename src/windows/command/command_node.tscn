@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg2itg1120pon"]
+[gd_scene format=3 uid="uid://bg2itg1120pon"]
 
 [ext_resource type="Script" uid="uid://dc3d5e26qqvpa" path="res://src/windows/command/command_node.gd" id="1_3ggqm"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_yh8bj"]
 
-[node name="CommandNode" type="GraphNode"]
+[node name="CommandNode" type="GraphNode" unique_id=1537494821]
 offset_top = 439.0
 offset_right = 380.0
 offset_bottom = 939.0
@@ -19,7 +19,7 @@ slot/0/right_icon = null
 slot/0/draw_stylebox = true
 script = ExtResource("1_3ggqm")
 
-[node name="CommandPopupMenu" type="PopupMenu" parent="."]
+[node name="CommandPopupMenu" type="PopupMenu" parent="." unique_id=1292575500]
 unique_name_in_owner = true
 item_count = 4
 item_0/text = "Add to Entry List"
@@ -31,7 +31,7 @@ item_2/id = 3
 item_3/text = "Delete Command(s)"
 item_3/id = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1154053233]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 2
@@ -39,60 +39,60 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=143789869]
 layout_mode = 2
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=747878826]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1962627273]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer" unique_id=86492601]
 layout_mode = 2
 text = "Index:"
 
-[node name="CommandIndexEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
+[node name="CommandIndexEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer" unique_id=386024088]
 unique_name_in_owner = true
 layout_mode = 2
 editable = false
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1767477643]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2" unique_id=1360031354]
 layout_mode = 2
 text = "Next:"
 
-[node name="CommandNextCommandIndexEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+[node name="CommandNextCommandIndexEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2" unique_id=1582347678]
 unique_name_in_owner = true
 layout_mode = 2
 editable = false
 
-[node name="CommandBaseOption" type="OptionButton" parent="MarginContainer/VBoxContainer"]
+[node name="CommandBaseOption" type="OptionButton" parent="MarginContainer/VBoxContainer" unique_id=1212058583]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text_overrun_behavior = 3
 fit_to_longest_item = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1742287697]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=2125922597]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Modifier:"
 
-[node name="CommandModifierEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="CommandModifierEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=2116980527]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="ModifierMenuButton" type="MenuButton" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="ModifierMenuButton" type="MenuButton" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=686647384]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Change"
@@ -122,15 +122,15 @@ popup/item_7/text = "Unknown"
 popup/item_7/checkable = 1
 popup/item_7/id = 7
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1397286411]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=515674628]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="MapNameLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="MapNameLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=702076366]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -138,31 +138,31 @@ size_flags_vertical = 6
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MapNameButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="MapNameButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1173773137]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Change"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=509374899]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=716687457]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2" unique_id=2110088663]
 custom_minimum_size = Vector2(194, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Arg1Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg1Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=2101950412]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg1Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container"]
+[node name="Arg1Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container" unique_id=479372532]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -170,17 +170,17 @@ mouse_filter = 0
 text = "Arg1:"
 text_overrun_behavior = 3
 
-[node name="Arg1Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container"]
+[node name="Arg1Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1Container" unique_id=247779178]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 editable = false
 
-[node name="Arg1bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg1bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1245957692]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg1bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer"]
+[node name="Arg1bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer" unique_id=296392133]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -188,16 +188,16 @@ mouse_filter = 0
 text = "Arg1b:"
 text_overrun_behavior = 3
 
-[node name="Arg1bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer"]
+[node name="Arg1bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg1bContainer" unique_id=2010010695]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg2Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg2Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1625763206]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg2Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container"]
+[node name="Arg2Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container" unique_id=307958099]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -205,16 +205,16 @@ mouse_filter = 0
 text = "Arg 2:"
 text_overrun_behavior = 3
 
-[node name="Arg2Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container"]
+[node name="Arg2Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2Container" unique_id=75313029]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg2bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg2bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=212708911]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg2bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer"]
+[node name="Arg2bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer" unique_id=1315119928]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -222,16 +222,16 @@ mouse_filter = 0
 text = "Arg 2b:"
 text_overrun_behavior = 3
 
-[node name="Arg2bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer"]
+[node name="Arg2bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg2bContainer" unique_id=1293572500]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg3Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg3Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1938149891]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg3Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container"]
+[node name="Arg3Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container" unique_id=1947155786]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -239,16 +239,16 @@ mouse_filter = 0
 text = "Arg3:"
 text_overrun_behavior = 3
 
-[node name="Arg3Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container"]
+[node name="Arg3Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3Container" unique_id=1703365197]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg3bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg3bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1786707291]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg3bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer"]
+[node name="Arg3bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer" unique_id=406565705]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -256,16 +256,16 @@ mouse_filter = 0
 text = "Arg3b:"
 text_overrun_behavior = 3
 
-[node name="Arg3bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer"]
+[node name="Arg3bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg3bContainer" unique_id=873389238]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg4Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg4Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1141635775]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg4Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container"]
+[node name="Arg4Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container" unique_id=1124324740]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -273,16 +273,16 @@ mouse_filter = 0
 text = "Arg4:"
 text_overrun_behavior = 3
 
-[node name="Arg4Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container"]
+[node name="Arg4Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4Container" unique_id=981105938]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg4bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg4bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=379852082]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg4bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer"]
+[node name="Arg4bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer" unique_id=113502681]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -290,16 +290,16 @@ mouse_filter = 0
 text = "Arg4b:"
 text_overrun_behavior = 3
 
-[node name="Arg4bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer"]
+[node name="Arg4bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg4bContainer" unique_id=877345447]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg5Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg5Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1834430464]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg5Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container"]
+[node name="Arg5Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container" unique_id=1679752103]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -307,16 +307,16 @@ mouse_filter = 0
 text = "Arg5:"
 text_overrun_behavior = 3
 
-[node name="Arg5Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container"]
+[node name="Arg5Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5Container" unique_id=1016933358]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg5bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg5bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=901391554]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg5bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer"]
+[node name="Arg5bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer" unique_id=1789370302]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -324,16 +324,16 @@ mouse_filter = 0
 text = "Arg5b:"
 text_overrun_behavior = 3
 
-[node name="Arg5bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer"]
+[node name="Arg5bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg5bContainer" unique_id=1355969351]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg6Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg6Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=564082058]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg6Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container"]
+[node name="Arg6Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container" unique_id=1051919059]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -341,16 +341,16 @@ mouse_filter = 0
 text = "Arg6:"
 text_overrun_behavior = 3
 
-[node name="Arg6Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container"]
+[node name="Arg6Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6Container" unique_id=1102070734]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg6bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg6bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=2038565513]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg6bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer"]
+[node name="Arg6bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer" unique_id=1776164109]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -358,16 +358,16 @@ mouse_filter = 0
 text = "Arg6b:"
 text_overrun_behavior = 3
 
-[node name="Arg6bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer"]
+[node name="Arg6bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg6bContainer" unique_id=1381238034]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg7Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg7Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1826583172]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg7Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container"]
+[node name="Arg7Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container" unique_id=279052114]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -375,16 +375,16 @@ mouse_filter = 0
 text = "Arg7:"
 text_overrun_behavior = 3
 
-[node name="Arg7Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container"]
+[node name="Arg7Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7Container" unique_id=1383671937]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg7bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg7bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=1917658949]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg7bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer"]
+[node name="Arg7bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer" unique_id=1223729757]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -392,16 +392,16 @@ mouse_filter = 0
 text = "Arg7b:"
 text_overrun_behavior = 3
 
-[node name="Arg7bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer"]
+[node name="Arg7bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg7bContainer" unique_id=1374898412]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg8Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg8Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=31171635]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg8Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container"]
+[node name="Arg8Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container" unique_id=194229661]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -409,16 +409,16 @@ mouse_filter = 0
 text = "Arg8:"
 text_overrun_behavior = 3
 
-[node name="Arg8Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container"]
+[node name="Arg8Range" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8Container" unique_id=2013647607]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="Arg8bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer"]
+[node name="Arg8bContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer" unique_id=2014644078]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Arg8bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer"]
+[node name="Arg8bLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer" unique_id=110473216]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -426,17 +426,17 @@ mouse_filter = 0
 text = "Arg8b:"
 text_overrun_behavior = 3
 
-[node name="Arg8bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer"]
+[node name="Arg8bRange" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer2/VBoxContainer/Arg8bContainer" unique_id=1352514891]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=963566759]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer" unique_id=174694985]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -445,123 +445,123 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="FlagsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer"]
+[node name="FlagsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer" unique_id=987993915]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 1
 
-[node name="FlagButton1" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton1" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=2133013954]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 1"
 text_overrun_behavior = 3
 
-[node name="FlagButton2" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton2" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=627139181]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 2"
 text_overrun_behavior = 3
 
-[node name="FlagButton3" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton3" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=1536013690]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 3"
 text_overrun_behavior = 3
 
-[node name="FlagButton4" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton4" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=280216269]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 4"
 text_overrun_behavior = 3
 
-[node name="FlagButton5" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton5" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=1453712904]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 5"
 text_overrun_behavior = 3
 
-[node name="FlagButton6" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton6" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=1627839098]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 6"
 text_overrun_behavior = 3
 
-[node name="FlagButton7" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton7" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=851450195]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 7"
 text_overrun_behavior = 3
 
-[node name="FlagButton8" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagButton8" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=610548418]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 8"
 text_overrun_behavior = 3
 
-[node name="FlagsContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer"]
+[node name="FlagsContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer" unique_id=440481214]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="FlagButton9" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton9" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=826915770]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 9"
 text_overrun_behavior = 3
 
-[node name="FlagButton10" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton10" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=2090318908]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 10"
 text_overrun_behavior = 3
 
-[node name="FlagButton11" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton11" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=538541089]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 11"
 text_overrun_behavior = 3
 
-[node name="FlagButton12" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton12" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=1565108517]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 12"
 text_overrun_behavior = 3
 
-[node name="FlagButton13" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton13" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=1412425695]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 13"
 text_overrun_behavior = 3
 
-[node name="FlagButton14" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton14" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=94925139]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 14"
 text_overrun_behavior = 3
 
-[node name="FlagButton15" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton15" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=386327189]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 text = "Flag 15"
 text_overrun_behavior = 3
 
-[node name="FlagButton16" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2"]
+[node name="FlagButton16" type="CheckButton" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ScrollContainer/MarginContainer/FlagsContainer/FlagsContainer2" unique_id=758367403]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

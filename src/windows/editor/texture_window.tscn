@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://h7epeqaiukln"]
+[gd_scene format=3 uid="uid://h7epeqaiukln"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_abgak"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_gmem8"]
@@ -8,7 +8,7 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_gmem8"]
 
-[node name="TextureWindow" instance=ExtResource("1_abgak")]
+[node name="TextureWindow" unique_id=338359225 instance=ExtResource("1_abgak")]
 offset_right = 1380.0
 offset_bottom = 860.0
 theme = ExtResource("2_gmem8")
@@ -17,96 +17,96 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_hdfxv")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=955208904]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HSplitContainer2" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="HSplitContainer2" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1047293254]
 layout_mode = 2
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2" index="0"]
+[node name="VSplitContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2" index="0" unique_id=2041928607]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer" index="0" unique_id=699446772]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer" index="0" unique_id=281017995]
 layout_mode = 2
 text = "Favorites"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer" index="1" unique_id=691255116]
 layout_mode = 2
 
-[node name="FavoriteItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer" index="2" instance=ExtResource("5_toa2c")]
+[node name="FavoriteItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer" index="2" unique_id=62281949 instance=ExtResource("5_toa2c")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer" index="1"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer" index="1" unique_id=931252547]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer2" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer2" index="0" unique_id=1967742244]
 layout_mode = 2
 text = "Recent"
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer2" index="1"]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer2" index="1" unique_id=1195001477]
 layout_mode = 2
 
-[node name="RecentItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer2" index="2" instance=ExtResource("5_toa2c")]
+[node name="RecentItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/VSplitContainer/VBoxContainer2" index="2" unique_id=434092156 instance=ExtResource("5_toa2c")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2" index="1"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2" index="1" unique_id=1261040567]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 6.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer" index="0"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer" index="0" unique_id=1343840730]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.2
 
-[node name="WallOptions" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2" index="0"]
+[node name="WallOptions" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2" index="0" unique_id=2082717725]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AllCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="0"]
+[node name="AllCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="0" unique_id=884647062]
 layout_mode = 2
 button_pressed = true
 button_group = SubResource("ButtonGroup_gmem8")
 text = "All"
 
-[node name="TileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="1"]
+[node name="TileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="1" unique_id=1282615009]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_gmem8")
 text = "Vertically Tileable"
 
-[node name="HorzTileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="2"]
+[node name="HorzTileableCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="2" unique_id=1007663766]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_gmem8")
 text = "Horizontally Tileable"
 
-[node name="BothCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="3"]
+[node name="BothCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/WallOptions" index="3" unique_id=478939690]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_gmem8")
 text = "Both"
 
-[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2" index="1" instance=ExtResource("5_toa2c")]
+[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2" index="1" unique_id=1771753084 instance=ExtResource("5_toa2c")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer" index="1"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer" index="1" unique_id=1397547472]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/ScrollContainer" index="0"]
+[node name="InfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/ScrollContainer" index="0" unique_id=620855899]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

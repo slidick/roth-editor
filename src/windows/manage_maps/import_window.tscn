@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://be7yk2ubuv2c8"]
+[gd_scene format=3 uid="uid://be7yk2ubuv2c8"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_e8q2p"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_1t22c"]
 [ext_resource type="Script" uid="uid://occsflulappm" path="res://src/windows/manage_maps/import_window.gd" id="2_klefu"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_8nn16"]
 
-[node name="ImportWindow" instance=ExtResource("1_e8q2p")]
+[node name="ImportWindow" unique_id=524475424 instance=ExtResource("1_e8q2p")]
 offset_right = 1024.0
 offset_bottom = 666.0
 theme = ExtResource("2_1t22c")
@@ -18,191 +18,191 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_8nn16")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1557765918]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1507930886]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1830712502]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="0" unique_id=1833776110]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=573567673]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Name:"
 
-[node name="NameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="NameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1838936522]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="1"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="1" unique_id=465847951]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1401831452]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Version:"
 
-[node name="VersionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="VersionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=10096864]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="2" unique_id=1786928773]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=1616414495]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Title:"
 
-[node name="TitleLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="1"]
+[node name="TitleLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=1301241478]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="3"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="3" unique_id=1193101609]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer4" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=1071422475]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Initial Release:"
 
-[node name="ReleaseLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer4" index="1"]
+[node name="ReleaseLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=469624909]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="4" unique_id=745226083]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer5" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=826752863]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Description:"
 
-[node name="DescriptionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer5" index="1"]
+[node name="DescriptionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer5" index="1" unique_id=1785810614]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="5"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="5" unique_id=1064835101]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer6" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer6" index="0" unique_id=1978830568]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Story:"
 
-[node name="StoryLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer6" index="1"]
+[node name="StoryLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer6" index="1" unique_id=983324675]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="6"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="6" unique_id=1726799672]
 layout_mode = 2
 
-[node name="DBaseImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="7"]
+[node name="DBaseImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="7" unique_id=375157455]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="0" unique_id=872091744]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "DBase Pack:"
 
-[node name="DBaseCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="1"]
+[node name="DBaseCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="1" unique_id=1907076693]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 
-[node name="DBaseEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="2"]
+[node name="DBaseEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="2" unique_id=309406168]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "Change name"
 
-[node name="DBaseWarningLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="3"]
+[node name="DBaseWarningLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="3" unique_id=438155880]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(100, 0, 0, 1)
 text = "DBase name in use and will be overwritten!"
 
-[node name="DBaseInvalidLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="4"]
+[node name="DBaseInvalidLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/DBaseImportContainer" index="4" unique_id=205859823]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(100, 0, 0, 1)
 text = "DBase name in invalid!"
 
-[node name="SFXImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="8"]
+[node name="SFXImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="8" unique_id=2077697414]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="0" unique_id=1030292615]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "SFX Pack:"
 
-[node name="SFXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="1"]
+[node name="SFXCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="1" unique_id=1363134799]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 
-[node name="SFXEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="2"]
+[node name="SFXEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="2" unique_id=1815946766]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "Change name"
 
-[node name="SFXWarningLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="3"]
+[node name="SFXWarningLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="3" unique_id=1958935467]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(100, 0, 0, 1)
 text = "SFX name in use and will be overwritten!"
 
-[node name="SFXInvalidLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="4"]
+[node name="SFXInvalidLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/SFXImportContainer" index="4" unique_id=373849002]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(100, 0, 0, 1)
 text = "SFX name in invalid!"
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="9"]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="9" unique_id=243386560]
 layout_mode = 2
 
-[node name="MapsImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="10"]
+[node name="MapsImportContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer" index="10" unique_id=869260161]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/MapsImportContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/MapsImportContainer" index="0" unique_id=756804318]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Maps to Import:"
 
-[node name="MapsContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/MapsImportContainer" index="1"]
+[node name="MapsContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/MapsImportContainer" index="1" unique_id=341365798]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1954697959]
 layout_mode = 2
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=2015244132]
 layout_mode = 2
 text = "Cancel"
 
-[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1605759140]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Import"
 
-[node name="FileDialog" type="FileDialog" parent="." index="2"]
+[node name="FileDialog" type="FileDialog" parent="." index="2" unique_id=536520695]
 unique_name_in_owner = true
 title = "Import Map"
 initial_position = 2

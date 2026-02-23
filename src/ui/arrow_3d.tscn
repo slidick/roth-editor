@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://clbdnv0bq58oe"]
+[gd_scene format=3 uid="uid://clbdnv0bq58oe"]
 
 [ext_resource type="Script" uid="uid://divo0oos0xcmp" path="res://src/ui/arrow_3d.gd" id="1_g73mc"]
 
@@ -11,19 +11,19 @@ metallic = 0.5
 roughness = 0.5
 disable_receive_shadows = true
 
-[node name="CSGCombiner3D" type="CSGCombiner3D"]
+[node name="CSGCombiner3D" type="CSGCombiner3D" unique_id=136199217]
 material_override = SubResource("StandardMaterial3D_1g744")
 cast_shadow = 0
 operation = 1
 script = ExtResource("1_g73mc")
 
-[node name="LeftPoint" type="CSGBox3D" parent="."]
+[node name="LeftPoint" type="CSGBox3D" parent="." unique_id=1831173302]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -0.106, 0, -0.392)
 size = Vector3(0.2, 0.2, 0.5)
 
-[node name="RightPoint" type="CSGBox3D" parent="."]
+[node name="RightPoint" type="CSGBox3D" parent="." unique_id=221635350]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0.106, 0, -0.392)
 size = Vector3(0.2, 0.2, 0.5)
 
-[node name="Base" type="CSGBox3D" parent="."]
+[node name="Base" type="CSGBox3D" parent="." unique_id=1646564060]
 size = Vector3(0.2, 0.2, 1)

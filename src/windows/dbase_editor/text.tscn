@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdyj16x3u3s1x"]
+[gd_scene format=3 uid="uid://cdyj16x3u3s1x"]
 
 [ext_resource type="Script" uid="uid://ksuc4oa65rxe" path="res://src/windows/dbase_editor/text.gd" id="1_jtjpg"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_1u102"]
 
-[node name="Text" type="Control"]
+[node name="Text" type="Control" unique_id=5649499]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_jtjpg")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=412321748]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,13 +25,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 metadata/_tab_index = 5
 
-[node name="SearchEdit" type="LineEdit" parent="VBoxContainer"]
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer" unique_id=1760617909]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Search..."
 clear_button_enabled = true
 
-[node name="Tree" type="Tree" parent="VBoxContainer"]
+[node name="Tree" type="Tree" parent="VBoxContainer" unique_id=26091743]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

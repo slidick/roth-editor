@@ -1,31 +1,31 @@
-[gd_scene load_steps=2 format=3 uid="uid://b688jp3monkmt"]
+[gd_scene format=3 uid="uid://b688jp3monkmt"]
 
 [ext_resource type="Script" uid="uid://bp7gn3qh024hs" path="res://src/windows/extras/commands_container.gd" id="1_h6prd"]
 
-[node name="Commands" type="MarginContainer"]
+[node name="Commands" type="MarginContainer" unique_id=600388550]
 offset_right = 855.0
 offset_bottom = 473.0
 script = ExtResource("1_h6prd")
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=938977135]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=399925734]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1019515322]
 layout_mode = 2
 text = "Search:"
 
-[node name="CommandSearchEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+[node name="CommandSearchEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=961815566]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 keep_editing_on_text_submit = true
 caret_blink = true
 
-[node name="CommandSearchOption" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="CommandSearchOption" type="OptionButton" parent="VBoxContainer/HBoxContainer" unique_id=1376882552]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -45,22 +45,22 @@ popup/item_5/id = 5
 popup/item_6/text = "Callback ID"
 popup/item_6/id = 6
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1908457963]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CommandList" type="ItemList" parent="VBoxContainer/HBoxContainer2"]
+[node name="CommandList" type="ItemList" parent="VBoxContainer/HBoxContainer2" unique_id=400622462]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 allow_reselect = true
 auto_width = true
 
-[node name="SplitContainer" type="SplitContainer" parent="VBoxContainer/HBoxContainer2"]
+[node name="SplitContainer" type="SplitContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1482689438]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CommandTree" type="Tree" parent="VBoxContainer/HBoxContainer2/SplitContainer"]
+[node name="CommandTree" type="Tree" parent="VBoxContainer/HBoxContainer2/SplitContainer" unique_id=669693449]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -72,7 +72,7 @@ hide_folding = true
 hide_root = true
 select_mode = 1
 
-[node name="CommandPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer2/SplitContainer"]
+[node name="CommandPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer2/SplitContainer" unique_id=65676831]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2

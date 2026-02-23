@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwqbfmf1jcvvm"]
+[gd_scene format=3 uid="uid://bwqbfmf1jcvvm"]
 
 [ext_resource type="StyleBox" uid="uid://bxb0wg00e7qct" path="res://src/themes/loading_bar_background.tres" id="1_dd7hf"]
 [ext_resource type="Script" uid="uid://dvw1ym85q7blq" path="res://src/windows/extras/das_container.gd" id="1_vbttp"]
 [ext_resource type="StyleBox" uid="uid://bh13lqgmbc0m1" path="res://src/themes/loading_bar_fill.tres" id="2_vbttp"]
 
-[node name="DasContainer" type="MarginContainer"]
+[node name="DasContainer" type="MarginContainer" unique_id=1086321370]
 offset_right = 624.0
 offset_bottom = 425.0
 theme_override_constants/margin_left = 5
@@ -13,29 +13,29 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 script = ExtResource("1_vbttp")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1331856525]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1712249731]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=235548534]
 layout_mode = 2
 text = "DAS File:"
 
-[node name="DASFiles" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="DASFiles" type="OptionButton" parent="VBoxContainer/HBoxContainer" unique_id=328758111]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 allow_reselect = true
 
-[node name="LoadButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="LoadButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1473553995]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Load"
 
-[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer" unique_id=1864771488]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -43,21 +43,21 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_styles/background = ExtResource("1_dd7hf")
 theme_override_styles/fill = ExtResource("2_vbttp")
 
-[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=1198116526]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Textures" type="HSplitContainer" parent="VBoxContainer/TabContainer"]
+[node name="Textures" type="HSplitContainer" parent="VBoxContainer/TabContainer" unique_id=167617092]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures" unique_id=61762173]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TextureLayoutOption" type="OptionButton" parent="VBoxContainer/TabContainer/Textures/VBoxContainer"]
+[node name="TextureLayoutOption" type="OptionButton" parent="VBoxContainer/TabContainer/Textures/VBoxContainer" unique_id=939037403]
 unique_name_in_owner = true
 layout_mode = 2
 flat = true
@@ -68,7 +68,7 @@ popup/item_0/id = 0
 popup/item_1/text = "Grid View"
 popup/item_1/id = 1
 
-[node name="TextureList" type="ItemList" parent="VBoxContainer/TabContainer/Textures/VBoxContainer"]
+[node name="TextureList" type="ItemList" parent="VBoxContainer/TabContainer/Textures/VBoxContainer" unique_id=1738569550]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -81,27 +81,27 @@ theme_override_colors/guide_color = Color(0, 0, 0, 0)
 theme_override_constants/v_separation = 10
 fixed_icon_size = Vector2i(25, 25)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Textures"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Textures" unique_id=791663901]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="TextureContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer"]
+[node name="TextureContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer" unique_id=687610699]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Control" type="ScrollContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer"]
+[node name="Control" type="ScrollContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer" unique_id=384029800]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="DataContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer/Control"]
+[node name="DataContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer/Control" unique_id=488428416]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Header" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+[node name="Header" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=897667434]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -110,25 +110,25 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Header"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Header" unique_id=1141233569]
 layout_mode = 2
 
-[node name="DasInfoContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Header/ScrollContainer"]
+[node name="DasInfoContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Header/ScrollContainer" unique_id=1521786403]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Load Errors" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+[node name="Load Errors" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=163155920]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Load Errors"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Load Errors" unique_id=1827973720]
 layout_mode = 2
 horizontal_scroll_mode = 2
 
-[node name="Errors" type="RichTextLabel" parent="VBoxContainer/TabContainer/Load Errors/ScrollContainer"]
+[node name="Errors" type="RichTextLabel" parent="VBoxContainer/TabContainer/Load Errors/ScrollContainer" unique_id=84319588]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

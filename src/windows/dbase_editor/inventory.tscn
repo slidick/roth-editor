@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bxh7bquhkgigb"]
+[gd_scene format=3 uid="uid://bxh7bquhkgigb"]
 
 [ext_resource type="Script" uid="uid://476tw27np1bf" path="res://src/windows/dbase_editor/inventory.gd" id="1_diksd"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_0mebd"]
 [ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="2_s2ad5"]
 
-[node name="Inventory" type="HBoxContainer"]
+[node name="Inventory" type="HBoxContainer" unique_id=1960510221]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,17 +17,17 @@ theme_override_constants/separation = 6
 script = ExtResource("1_diksd")
 metadata/_tab_index = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1163835509]
 layout_mode = 2
 
-[node name="InventoryList" type="ItemList" parent="VBoxContainer"]
+[node name="InventoryList" type="ItemList" parent="VBoxContainer" unique_id=477662337]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
 
-[node name="InventoryListPopupMenu" type="PopupMenu" parent="VBoxContainer/InventoryList"]
+[node name="InventoryListPopupMenu" type="PopupMenu" parent="VBoxContainer/InventoryList" unique_id=1539093687]
 unique_name_in_owner = true
 item_count = 2
 item_0/text = "Duplicate"
@@ -35,44 +35,44 @@ item_0/id = 0
 item_1/text = "Delete"
 item_1/id = 1
 
-[node name="AddInventoryButton" type="Button" parent="VBoxContainer"]
+[node name="AddInventoryButton" type="Button" parent="VBoxContainer" unique_id=892912071]
 layout_mode = 2
 text = "Add Item"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=5066165]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer2" unique_id=1948879649]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8" unique_id=2046507666]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer" unique_id=952653417]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3" unique_id=380233191]
 visible = false
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "Name"
 
-[node name="NameEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3" unique_id=1054845349]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="ChangeNameButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
+[node name="ChangeNameButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3" unique_id=1612921970]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Change"
 
-[node name="TypeOption" type="OptionButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3"]
+[node name="TypeOption" type="OptionButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer3" unique_id=2136069022]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -88,129 +88,129 @@ popup/item_3/id = 3
 popup/item_4/text = "Info"
 popup/item_4/id = 4
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer" unique_id=510282579]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4" unique_id=1594309698]
 visible = false
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "Type"
 horizontal_alignment = 1
 
-[node name="ItemTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4"]
+[node name="ItemTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer4" unique_id=4215584]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer2/HBoxContainer8/VBoxContainer" unique_id=642955994]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer" unique_id=1284088590]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2" unique_id=603590005]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1572690641]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1767574108]
 layout_mode = 2
 text = "Flags"
 
-[node name="CloseUpTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="CloseUpTypeEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=325554871]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="TypeFlag1CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="TypeFlag1CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=297669931]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Player"
 
-[node name="Flag1CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Flag1CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=873511721]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Play Once"
 
-[node name="Flag2CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Flag2CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=224010966]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Document"
 
-[node name="Flag3CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Flag3CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=247878175]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Name Change"
 
-[node name="Flag4CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Flag4CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1866292143]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Info"
 
-[node name="TypeFlag3CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="TypeFlag3CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=746655243]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Usable"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2" unique_id=1347264468]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 
-[node name="Flag5CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+[node name="Flag5CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=2037401337]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Weapon"
 
-[node name="Flag6CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+[node name="Flag6CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=1619074759]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Bullet"
 
-[node name="Flag7CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+[node name="Flag7CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=1024468981]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Examine"
 
-[node name="Flag8CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+[node name="Flag8CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=188832831]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Monster"
 
-[node name="TypeFlag2CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+[node name="TypeFlag2CheckButton" type="CheckButton" parent="VBoxContainer2/HBoxContainer8/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=1478132757]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Stackable"
 
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer2/HBoxContainer8" unique_id=1024996452]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8" unique_id=1963071587]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2" unique_id=1515130194]
 layout_mode = 2
 text = "Object Texture"
 horizontal_alignment = 1
 
-[node name="ObjectTextureIndexEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
+[node name="ObjectTextureIndexEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2" unique_id=1567710153]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 keep_editing_on_text_submit = true
 
-[node name="Container" type="Container" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
+[node name="Container" type="Container" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2" unique_id=531824963]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("2_s2ad5")
 
-[node name="ObjectTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/Container"]
+[node name="ObjectTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/Container" unique_id=221610296]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
@@ -219,43 +219,43 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2" unique_id=927413581]
 layout_mode = 2
 
-[node name="ClearObjectTextureButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer"]
+[node name="ClearObjectTextureButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer" unique_id=430965644]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Clear"
 
-[node name="ChangeObjectTextureButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer"]
+[node name="ChangeObjectTextureButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer2/HBoxContainer" unique_id=141131946]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Select"
 
-[node name="VSeparator2" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer2/HBoxContainer8" unique_id=1871901274]
 layout_mode = 2
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8" unique_id=108679623]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3" unique_id=361878162]
 layout_mode = 2
 text = "Inventory Image"
 horizontal_alignment = 1
 
-[node name="InventoryImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+[node name="InventoryImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3" unique_id=491388810]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 keep_editing_on_text_submit = true
 clear_button_enabled = true
 
-[node name="InventoryTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+[node name="InventoryTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3" unique_id=467932894]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
@@ -263,43 +263,43 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3" unique_id=1435461892]
 layout_mode = 2
 
-[node name="ClearInventoryImageButton2" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer"]
+[node name="ClearInventoryImageButton2" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer" unique_id=812017525]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Clear"
 
-[node name="ChangeInventoryImageButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer"]
+[node name="ChangeInventoryImageButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer3/HBoxContainer" unique_id=692300212]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Select"
 
-[node name="VSeparator3" type="VSeparator" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer2/HBoxContainer8" unique_id=627730773]
 layout_mode = 2
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer8" unique_id=1739775609]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4" unique_id=1118356324]
 layout_mode = 2
 text = "Close-Up Image"
 horizontal_alignment = 1
 
-[node name="CloseUpImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+[node name="CloseUpImageOffsetEdit" type="LineEdit" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4" unique_id=1907675033]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 keep_editing_on_text_submit = true
 
-[node name="CloseUpTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+[node name="CloseUpTextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4" unique_id=337376082]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
@@ -307,36 +307,36 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4" unique_id=893231545]
 unique_name_in_owner = true
 visible = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4" unique_id=891344192]
 layout_mode = 2
 
-[node name="ClearCloseUpButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer"]
+[node name="ClearCloseUpButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer" unique_id=616305848]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Clear"
 
-[node name="ChangeCloseUpButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer"]
+[node name="ChangeCloseUpButton" type="Button" parent="VBoxContainer2/HBoxContainer8/VBoxContainer4/HBoxContainer" unique_id=1514418922]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Select"
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer2" unique_id=742675856]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer7"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer7" unique_id=532600115]
 layout_mode = 2
 
-[node name="TriggerTree" type="Tree" parent="VBoxContainer2/HBoxContainer7/VBoxContainer"]
+[node name="TriggerTree" type="Tree" parent="VBoxContainer2/HBoxContainer7/VBoxContainer" unique_id=703335577]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -349,7 +349,7 @@ hide_root = true
 select_mode = 1
 script = ExtResource("2_0mebd")
 
-[node name="TriggerPopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree"]
+[node name="TriggerPopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" unique_id=645899136]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -358,7 +358,7 @@ item_0/id = 0
 item_1/text = "Delete"
 item_1/id = 1
 
-[node name="TriggerEmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree"]
+[node name="TriggerEmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer/TriggerTree" unique_id=836377141]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -367,16 +367,16 @@ item_0/id = 0
 item_1/text = "Paste"
 item_1/id = 1
 
-[node name="AddTriggerButton" type="Button" parent="VBoxContainer2/HBoxContainer7/VBoxContainer"]
+[node name="AddTriggerButton" type="Button" parent="VBoxContainer2/HBoxContainer7/VBoxContainer" unique_id=694652886]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add Trigger"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer7"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer2/HBoxContainer7" unique_id=1928167997]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Tree" type="Tree" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2"]
+[node name="Tree" type="Tree" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2" unique_id=399705644]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -388,7 +388,7 @@ hide_folding = true
 hide_root = true
 script = ExtResource("2_0mebd")
 
-[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree"]
+[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" unique_id=972708326]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -397,7 +397,7 @@ item_0/id = 0
 item_1/text = "Delete"
 item_1/id = 1
 
-[node name="EmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree"]
+[node name="EmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2/Tree" unique_id=886720368]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -406,7 +406,7 @@ item_0/id = 0
 item_1/text = "Paste"
 item_1/id = 1
 
-[node name="AddOpcodeButton" type="Button" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2"]
+[node name="AddOpcodeButton" type="Button" parent="VBoxContainer2/HBoxContainer7/VBoxContainer2" unique_id=407809583]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add Opcode"

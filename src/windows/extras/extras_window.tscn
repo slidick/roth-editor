@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dq8sxf6oabjnm"]
+[gd_scene format=3 uid="uid://dq8sxf6oabjnm"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_uerpl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5d3u0"]
@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://ctfactna67ath" path="res://src/windows/extras/dialog_container.tscn" id="8_kuqxe"]
 [ext_resource type="PackedScene" uid="uid://bwqbfmf1jcvvm" path="res://src/windows/extras/das_container.tscn" id="9_jct1s"]
 
-[node name="ExtrasWindow" instance=ExtResource("1_uerpl")]
+[node name="ExtrasWindow" unique_id=1798603554 instance=ExtResource("1_uerpl")]
 offset_right = 1247.0
 offset_bottom = 671.0
 theme = ExtResource("2_5d3u0")
@@ -19,33 +19,33 @@ script = ExtResource("2_d2ulm")
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_xdice")
 
-[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1425024318]
 layout_mode = 2
 current_tab = 0
 
-[node name="Commands" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1" instance=ExtResource("5_rtctb")]
+[node name="Commands" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1" unique_id=255095649 instance=ExtResource("5_rtctb")]
 layout_mode = 2
 
-[node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="2"]
+[node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="2" unique_id=331652790]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory" index="0" unique_id=759785491]
 layout_mode = 2
 
-[node name="InventoryList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer" index="0"]
+[node name="InventoryList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer" index="0" unique_id=1225148793]
 unique_name_in_owner = true
 layout_mode = 2
 allow_reselect = true
 allow_rmb_select = true
 auto_width = true
 
-[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer" index="1"]
+[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer" index="1" unique_id=1521802342]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InventoryPanel" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/PanelContainer" index="0"]
+[node name="InventoryPanel" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Inventory/HBoxContainer/PanelContainer" index="0" unique_id=175151599]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -53,15 +53,15 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Cutscenes" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="3"]
+[node name="Cutscenes" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="3" unique_id=980979499]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes" index="0" unique_id=1403144337]
 layout_mode = 2
 
-[node name="CutsceneList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="0"]
+[node name="CutsceneList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="0" unique_id=1468906040]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
@@ -69,102 +69,102 @@ allow_reselect = true
 allow_rmb_select = true
 auto_width = true
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="1"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer" index="1" unique_id=752314973]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CutscenePanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer" index="0"]
+[node name="CutscenePanel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer" index="0" unique_id=1243912489]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer" index="1"]
+[node name="PanelContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer" index="1" unique_id=122736492]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer" index="0" unique_id=872545203]
 layout_mode = 2
 
-[node name="VideoTitleLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="0"]
+[node name="VideoTitleLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="0" unique_id=299248152]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="1" unique_id=514964290]
 layout_mode = 2
 
-[node name="VideoRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="2"]
+[node name="VideoRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="2" unique_id=591883823]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VideoTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoRect" index="0"]
+[node name="VideoTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoRect" index="0" unique_id=829361104]
 unique_name_in_owner = true
 
-[node name="VideoLoadingBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="3"]
+[node name="VideoLoadingBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="3" unique_id=422148173]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="4" unique_id=885748250]
 layout_mode = 2
 
-[node name="VideoSlider" type="HSlider" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="VideoSlider" type="HSlider" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1047569257]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 0.0
 
-[node name="VideoDragLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="VideoDragLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1" unique_id=960232502]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VideoControlsContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="5"]
+[node name="VideoControlsContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer" index="5" unique_id=467571669]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PlayVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="0"]
+[node name="PlayVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="0" unique_id=1342525667]
 layout_mode = 2
 icon = ExtResource("5_kfkbs")
 
-[node name="PauseVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="1"]
+[node name="PauseVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="1" unique_id=1055176130]
 layout_mode = 2
 icon = ExtResource("6_kuqxe")
 
-[node name="StopVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="2"]
+[node name="StopVideoButton" type="Button" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="2" unique_id=479054477]
 layout_mode = 2
 icon = ExtResource("6_sgd02")
 
-[node name="VideoTimeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="3"]
+[node name="VideoTimeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer" index="3" unique_id=1689649569]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 text = "00:00/0:00"
 
-[node name="Interface" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="4"]
+[node name="Interface" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="4" unique_id=1084979933]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Interface" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Interface" index="0" unique_id=991900316]
 layout_mode = 2
 
-[node name="InterfaceList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Interface/HBoxContainer" index="0"]
+[node name="InterfaceList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Interface/HBoxContainer" index="0" unique_id=819568255]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Animations" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="5"]
+[node name="Animations" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="5" unique_id=1403917222]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations" index="0" unique_id=28448753]
 layout_mode = 2
 
-[node name="DBase200List" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="0"]
+[node name="DBase200List" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="0" unique_id=1567218255]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
@@ -172,24 +172,24 @@ allow_reselect = true
 allow_rmb_select = true
 auto_width = true
 
-[node name="DBase200Panel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="1"]
+[node name="DBase200Panel" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer" index="1" unique_id=1751589628]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AnimationTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations" index="1"]
+[node name="AnimationTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Animations" index="1" unique_id=126775399]
 unique_name_in_owner = true
 wait_time = 0.1
 
-[node name="Icons" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="6"]
+[node name="Icons" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="6" unique_id=70841924]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons" index="0" unique_id=1367951721]
 layout_mode = 2
 
-[node name="IconList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer" index="0"]
+[node name="IconList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/Icons/HBoxContainer" index="0" unique_id=1172528120]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
@@ -200,36 +200,36 @@ max_columns = 0
 icon_mode = 0
 fixed_icon_size = Vector2i(100, 100)
 
-[node name="SFX" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="7"]
+[node name="SFX" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="7" unique_id=365472171]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/SFX" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer/SFX" index="0" unique_id=777300995]
 layout_mode = 2
 
-[node name="SFXList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/SFX/HBoxContainer" index="0"]
+[node name="SFXList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/TabContainer/SFX/HBoxContainer" index="0" unique_id=698179955]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Backdrop" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="8"]
+[node name="Backdrop" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="8" unique_id=554875251]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 
-[node name="BackdropRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Backdrop" index="0"]
+[node name="BackdropRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/TabContainer/Backdrop" index="0" unique_id=284722998]
 unique_name_in_owner = true
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Dialog" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="9" instance=ExtResource("8_kuqxe")]
+[node name="Dialog" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="9" unique_id=1106838998 instance=ExtResource("8_kuqxe")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 8
 
-[node name="Textures" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="10" instance=ExtResource("9_jct1s")]
+[node name="Textures" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="10" unique_id=1127521271 instance=ExtResource("9_jct1s")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 9

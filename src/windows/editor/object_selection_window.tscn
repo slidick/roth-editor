@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://jjbbemd4pjs3"]
+[gd_scene format=3 uid="uid://jjbbemd4pjs3"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_vjf0r"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_0liay"]
@@ -6,7 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ldnej"]
 [ext_resource type="PackedScene" uid="uid://d0qwk04pu2mgq" path="res://src/utils/rotatable_item_list.tscn" id="5_a2r2s"]
 
-[node name="ObjectSelectionWindow" instance=ExtResource("1_vjf0r")]
+[node name="ObjectSelectionWindow" unique_id=1401260369 instance=ExtResource("1_vjf0r")]
 offset_right = 1560.0
 offset_bottom = 880.0
 theme = ExtResource("2_0liay")
@@ -14,69 +14,69 @@ script = ExtResource("3_a2r2s")
 minimize_style = "fade_out"
 panel_style_override = ExtResource("4_ldnej")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=2071747502]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=621994560]
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="0"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="0" unique_id=1119309400]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 6.8
 
-[node name="FavRecentContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="0"]
+[node name="FavRecentContainer" type="VSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="0" unique_id=1731907898]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer" index="0" unique_id=1019801752]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="0" unique_id=209860254]
 layout_mode = 2
 text = "Favorites"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="1" unique_id=342822479]
 layout_mode = 2
 
-[node name="FavoriteItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="2" instance=ExtResource("5_a2r2s")]
+[node name="FavoriteItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer" index="2" unique_id=2062848590 instance=ExtResource("5_a2r2s")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer" index="1"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer" index="1" unique_id=1351894962]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="0" unique_id=250839998]
 layout_mode = 2
 text = "Recents"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="1" unique_id=475992886]
 layout_mode = 2
 
-[node name="RecentItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="2" instance=ExtResource("5_a2r2s")]
+[node name="RecentItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2" index="2" unique_id=491085943 instance=ExtResource("5_a2r2s")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="1" instance=ExtResource("5_a2r2s")]
+[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="1" unique_id=1164461198 instance=ExtResource("5_a2r2s")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_stretch_ratio = 4.5
 
-[node name="InfoContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="1"]
+[node name="InfoContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="1" unique_id=1952668669]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.8
 
-[node name="ObjectInfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/InfoContainer" index="0"]
+[node name="ObjectInfoContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/InfoContainer" index="0" unique_id=1456077506]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

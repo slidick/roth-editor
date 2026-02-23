@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://osgu4pclsqcs"]
+[gd_scene format=3 uid="uid://osgu4pclsqcs"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_os4qn"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_vlo3g"]
@@ -17,7 +17,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
 
-[node name="ManageMapsWindow" instance=ExtResource("1_os4qn")]
+[node name="ManageMapsWindow" unique_id=1530350823 instance=ExtResource("1_os4qn")]
 offset_right = 1290.0
 offset_bottom = 805.0
 theme = ExtResource("2_vlo3g")
@@ -26,25 +26,25 @@ exclusive = true
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_fy7uo")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=843433278]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=987018237]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=686393576]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1161687080]
 layout_mode = 2
 
-[node name="MapTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0"]
+[node name="MapTree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=1935653374]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -59,7 +59,7 @@ allow_rmb_select = true
 hide_root = true
 select_mode = 2
 
-[node name="MapPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" index="5"]
+[node name="MapPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" index="5" unique_id=1139488808]
 unique_name_in_owner = true
 item_count = 2
 item_0/text = "Rename Map"
@@ -67,16 +67,16 @@ item_0/id = 0
 item_1/text = "Delete Map"
 item_1/id = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1685122453]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Panel" type="Panel" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0"]
+[node name="Panel" type="Panel" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=1188494252]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_a6cut")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel" index="0"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel" index="0" unique_id=56268648]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -90,15 +90,15 @@ grow_vertical = 2
 size_flags_vertical = 3
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer" index="0"]
+[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer" index="0" unique_id=306755383]
 handle_input_locally = false
 size = Vector2i(1058, 536)
 render_target_update_mode = 4
 
-[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="0"]
+[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="0" unique_id=1553784041]
 unique_name_in_owner = true
 
-[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport/Camera2D" index="0"]
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport/Camera2D" index="0" unique_id=1846242899]
 offset_left = -8000.0
 offset_top = -8000.0
 offset_right = 8000.0
@@ -107,112 +107,112 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.199622, 0.246742, 0.296914, 1)
 
-[node name="Map" type="Node2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="1"]
+[node name="Map" type="Node2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="1" unique_id=869076936]
 unique_name_in_owner = true
 script = ExtResource("5_a6cut")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1" unique_id=1246995720]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1096812494]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=638476634]
 layout_mode = 2
 text = "Map Name:"
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1" unique_id=996082620]
 layout_mode = 2
 text = "Sectors:"
 
-[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2"]
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2" unique_id=185247291]
 layout_mode = 2
 text = "Faces:"
 
-[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="3"]
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="3" unique_id=427284809]
 layout_mode = 2
 text = "Vertices:"
 
-[node name="Label5" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="4"]
+[node name="Label5" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="4" unique_id=715125389]
 layout_mode = 2
 text = "Objects:"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=2132523725]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="MapName" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0"]
+[node name="MapName" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=1433936983]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Sectors" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="1"]
+[node name="Sectors" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="1" unique_id=627358300]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Faces" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="2"]
+[node name="Faces" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=1293801140]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Vertices" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="3"]
+[node name="Vertices" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="3" unique_id=1330623976]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Objects" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="4"]
+[node name="Objects" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="4" unique_id=1356657840]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="2"]
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="2" unique_id=264574993]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="3"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="3" unique_id=48652603]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="0" unique_id=622598558]
 layout_mode = 2
 text = "DAS File:"
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="1"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="1" unique_id=733849355]
 layout_mode = 2
 text = "Commands:"
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="4"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="4" unique_id=652903820]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="DASFile" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="0"]
+[node name="DASFile" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="0" unique_id=1544398248]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Commands" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="1"]
+[node name="Commands" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="1" unique_id=707923710]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 2
 
-[node name="Control2" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="5"]
+[node name="Control2" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="5" unique_id=1334044694]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
 mouse_filter = 2
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1412848635]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=2120722402]
 layout_mode = 2
 
-[node name="NewMapButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="NewMapButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1512522683]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -220,14 +220,14 @@ size_flags_horizontal = 6
 disabled = true
 text = "New Map"
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=70969196]
 visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Cancel
 "
 
-[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2"]
+[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1690409886]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -236,32 +236,32 @@ disabled = true
 text = "Import Map
 "
 
-[node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="3"]
+[node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="3" unique_id=479801140]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Export Selected"
 
-[node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="4"]
+[node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="4" unique_id=1798164462]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Run Selected"
 
-[node name="OpenButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="5"]
+[node name="OpenButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="5" unique_id=1952445414]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Edit Selected"
 
-[node name="Dialogs" type="Control" parent="." index="2"]
+[node name="Dialogs" type="Control" parent="." index="2" unique_id=2137666810]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="NewMap" parent="Dialogs" index="0" instance=ExtResource("6_yjel5")]
+[node name="NewMap" parent="Dialogs" index="0" unique_id=871067230 instance=ExtResource("6_yjel5")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -277,7 +277,7 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Export" parent="Dialogs" index="1" instance=ExtResource("7_x7qhk")]
+[node name="Export" parent="Dialogs" index="1" unique_id=2063992590 instance=ExtResource("7_x7qhk")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -293,7 +293,7 @@ offset_bottom = 348.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Import" parent="Dialogs" index="2" instance=ExtResource("8_lah0d")]
+[node name="Import" parent="Dialogs" index="2" unique_id=115071097 instance=ExtResource("8_lah0d")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://vh534r141vnm"]
+[gd_scene format=3 uid="uid://vh534r141vnm"]
 
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_ps4qa"]
 [ext_resource type="Script" uid="uid://cdsh6nrvuhiow" path="res://src/windows/dbase_editor/text_selection.gd" id="2_oahmu"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_lmbxk"]
 [ext_resource type="PackedScene" uid="uid://cdyj16x3u3s1x" path="res://src/windows/dbase_editor/text.tscn" id="4_vlpec"]
 
-[node name="TextSelection" type="PanelContainer"]
+[node name="TextSelection" type="PanelContainer" unique_id=1424259392]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -27,11 +27,11 @@ focus_border_color = Color(0.0745098, 0.466667, 0.686275, 1)
 panel_color = Color(0, 0.301961, 0.529412, 1)
 panel_style_override = ExtResource("3_lmbxk")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1893822244]
 show_behind_parent = true
 layout_mode = 2
 
-[node name="Background" type="Panel" parent="Control"]
+[node name="Background" type="Panel" parent="Control" unique_id=472283864]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -44,25 +44,25 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
 
-[node name="Contents" type="MarginContainer" parent="."]
+[node name="Contents" type="MarginContainer" parent="." unique_id=1243548032]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents" unique_id=114931422]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="HeaderContainer" type="MarginContainer" parent="Contents/VBoxContainer"]
+[node name="HeaderContainer" type="MarginContainer" parent="Contents/VBoxContainer" unique_id=889704670]
 layout_mode = 2
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/HeaderContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/HeaderContainer" unique_id=1783336254]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer" unique_id=2519982]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 3
@@ -70,11 +70,11 @@ theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
-[node name="WindowTitle" type="Label" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer"]
+[node name="WindowTitle" type="Label" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer" unique_id=565150808]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 
-[node name="MarginContainer2" type="MarginContainer" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer" unique_id=706842911]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 3
@@ -82,24 +82,24 @@ theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer/MarginContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer/MarginContainer2" unique_id=653130992]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="MaximizeButton" type="Button" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="MaximizeButton" type="Button" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer/MarginContainer2/HBoxContainer" unique_id=1446761892]
 layout_mode = 2
 text = "[ ]"
 
-[node name="CloseButton" type="Button" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="CloseButton" type="Button" parent="Contents/VBoxContainer/HeaderContainer/HBoxContainer/MarginContainer2/HBoxContainer" unique_id=1009012913]
 layout_mode = 2
 text = "X"
 
-[node name="MainContainer" type="PanelContainer" parent="Contents/VBoxContainer"]
+[node name="MainContainer" type="PanelContainer" parent="Contents/VBoxContainer" unique_id=1469737958]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 1
 
-[node name="Text" parent="Contents/VBoxContainer/MainContainer" instance=ExtResource("4_vlpec")]
+[node name="Text" parent="Contents/VBoxContainer/MainContainer" unique_id=1892996457 instance=ExtResource("4_vlpec")]
 unique_name_in_owner = true
 layout_mode = 2
 

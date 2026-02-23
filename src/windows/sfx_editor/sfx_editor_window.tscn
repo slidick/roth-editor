@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cg7cw5eoa4pcd"]
+[gd_scene format=3 uid="uid://cg7cw5eoa4pcd"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_wbsbi"]
 [ext_resource type="Script" uid="uid://bcflwjiklc2uo" path="res://src/windows/sfx_editor/sfx_editor_window.gd" id="2_7qk70"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c4n3x17743rei" path="res://src/windows/sfx_editor/audio_clip_editor_window.tscn" id="6_bp70a"]
 [ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="7_xyr4a"]
 
-[node name="SFXEditorWindow" instance=ExtResource("1_wbsbi")]
+[node name="SFXEditorWindow" unique_id=1114986034 instance=ExtResource("1_wbsbi")]
 offset_right = 954.0
 offset_bottom = 677.0
 theme = ExtResource("2_kvtwo")
@@ -16,48 +16,48 @@ script = ExtResource("2_7qk70")
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_rq1sk")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1679254212]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ListContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="ListContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=439370852]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="0"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="0" unique_id=622755148]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2" index="0" unique_id=1982228957]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_top = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer" index="0" unique_id=1644852291]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer" index="0" unique_id=1778817467]
 layout_mode = 2
 size_flags_vertical = 8
 text = "Available SFX Packs"
 horizontal_alignment = 1
 
-[node name="SFXPackList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer" index="1"]
+[node name="SFXPackList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer" index="1" unique_id=556321244]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
 
-[node name="SFXPackPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer/SFXPackList" index="2"]
+[node name="SFXPackPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer/SFXPackList" index="2" unique_id=1158291543]
 unique_name_in_owner = true
 item_count = 3
 item_0/text = "Rename"
@@ -67,70 +67,70 @@ item_1/id = 1
 item_2/text = "Duplicate"
 item_2/id = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2" index="1"]
+[node name="MarginContainer2" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2" index="1" unique_id=783597913]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_top = 80
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2" index="0" unique_id=762894402]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer" index="0" unique_id=1134852098]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer" index="0" unique_id=1575962737]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 8
 text = "Name:"
 
-[node name="SFXPackNameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer" index="1"]
+[node name="SFXPackNameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer" index="1" unique_id=1087329718]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
 horizontal_alignment = 1
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer" index="1"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer" index="1" unique_id=1018624567]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer2" index="0" unique_id=1231892708]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 8
 text = "SFX Count:"
 
-[node name="CountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer2" index="1"]
+[node name="CountLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer2" index="1" unique_id=1229579169]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
 horizontal_alignment = 1
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer" index="2"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer" index="2" unique_id=415192283]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer6" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer6" index="0" unique_id=1071523296]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 8
 text = "Filesize:"
 
-[node name="FilesizeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer6" index="1"]
+[node name="FilesizeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer2/VBoxContainer/HBoxContainer6" index="1" unique_id=714698383]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="1" unique_id=2101262065]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="2" unique_id=1162350239]
 layout_mode = 2
 
-[node name="NewButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="0"]
+[node name="NewButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="0" unique_id=1214841999]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -138,7 +138,7 @@ size_flags_horizontal = 6
 disabled = true
 text = "Create New"
 
-[node name="DuplicateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="1"]
+[node name="DuplicateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="1" unique_id=196891149]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -146,43 +146,43 @@ size_flags_horizontal = 6
 disabled = true
 text = "Duplicate"
 
-[node name="ActivateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="2"]
+[node name="ActivateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="2" unique_id=898486624]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Make Active"
 
-[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="3"]
+[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="3" unique_id=1615752206]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Edit"
 
-[node name="EditContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="1"]
+[node name="EditContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="1" unique_id=222393134]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SoundEffects" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="0" instance=ExtResource("5_rq1sk")]
+[node name="SoundEffects" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="0" unique_id=551750256 instance=ExtResource("5_rq1sk")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="1" unique_id=401187429]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="2" unique_id=429113889]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer" index="0"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer" index="0" unique_id=687189139]
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "Back"
 
-[node name="SuccessLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer" index="1"]
+[node name="SuccessLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer" index="1" unique_id=1959016286]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -190,18 +190,18 @@ theme_override_colors/font_color = Color(0, 100, 0, 1)
 text = "Success!"
 horizontal_alignment = 2
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer" index="2"]
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer" index="2" unique_id=1383896444]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "Save"
 
-[node name="SubWindows" type="Control" parent="." index="2"]
+[node name="SubWindows" type="Control" parent="." index="2" unique_id=878829912]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="AudioClipEditor" parent="SubWindows" index="0" instance=ExtResource("6_bp70a")]
+[node name="AudioClipEditor" parent="SubWindows" index="0" unique_id=1664303492 instance=ExtResource("6_bp70a")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -217,7 +217,7 @@ offset_bottom = 382.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SFXSelector" parent="SubWindows" index="1" instance=ExtResource("7_xyr4a")]
+[node name="SFXSelector" parent="SubWindows" index="1" unique_id=2130089447 instance=ExtResource("7_xyr4a")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

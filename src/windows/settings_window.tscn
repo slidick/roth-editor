@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cs2y7pjd3ec63"]
+[gd_scene format=3 uid="uid://cs2y7pjd3ec63"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_s8lde"]
 [ext_resource type="Script" uid="uid://c0d5udm4mtt7j" path="res://src/windows/settings_window.gd" id="2_721jg"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_iwex4"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_2y2o5"]
 
-[node name="SettingsWindow" instance=ExtResource("1_s8lde")]
+[node name="SettingsWindow" unique_id=698840783 instance=ExtResource("1_s8lde")]
 offset_right = 810.0
 offset_bottom = 464.0
 theme = ExtResource("2_iwex4")
@@ -14,42 +14,42 @@ exclusive = true
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_2y2o5")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1996629581]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1226696907]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1707089943]
 layout_mode = 2
 text = "Locations"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=462651073]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=906963540]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=665231039]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "ROTH.RES"
 horizontal_alignment = 2
 
-[node name="RothResEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="RothResEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=648941687]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RothResButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2"]
+[node name="RothResButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=963395048]
 layout_mode = 2
 text = "Browse"
 
-[node name="RothResFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/RothResButton" index="0"]
+[node name="RothResFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/RothResButton" index="0" unique_id=1335743480]
 unique_name_in_owner = true
 auto_translate_mode = 1
 title = "Select ROTH.RES File"
@@ -62,25 +62,25 @@ access = 2
 filters = PackedStringArray("roth.res")
 use_native_dialog = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3" unique_id=1853928200]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1225653251]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "Dosbox"
 horizontal_alignment = 2
 
-[node name="DosboxEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="DosboxEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1445996797]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="DosboxButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2"]
+[node name="DosboxButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1607840837]
 layout_mode = 2
 text = "Browse"
 
-[node name="DosboxFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/DosboxButton" index="0"]
+[node name="DosboxFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/DosboxButton" index="0" unique_id=1352795095]
 unique_name_in_owner = true
 auto_translate_mode = 1
 title = "Select Dosbox Executable"
@@ -92,25 +92,25 @@ file_mode = 0
 access = 2
 use_native_dialog = true
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4" unique_id=2062607538]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=648377380]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "Dosbox Config"
 horizontal_alignment = 2
 
-[node name="DosboxConfigEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="1"]
+[node name="DosboxConfigEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=2044631946]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="DosboxConfigButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="2"]
+[node name="DosboxConfigButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="2" unique_id=1769938319]
 layout_mode = 2
 text = "Browse"
 
-[node name="DosboxConfigFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/DosboxConfigButton" index="0"]
+[node name="DosboxConfigFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/DosboxConfigButton" index="0" unique_id=1928152878]
 unique_name_in_owner = true
 auto_translate_mode = 1
 title = "Select Dosbox Config File"
@@ -123,24 +123,24 @@ access = 2
 filters = PackedStringArray("*.conf")
 use_native_dialog = true
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5" unique_id=1236401086]
 layout_mode = 2
 text = "
 Options"
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6"]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6" unique_id=1269249506]
 layout_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7" unique_id=669663615]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=418059153]
 custom_minimum_size = Vector2(224.08, 0)
 layout_mode = 2
 text = "Undo History Per Map"
 horizontal_alignment = 2
 
-[node name="UndoHistorySpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="1"]
+[node name="UndoHistorySpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="1" unique_id=339403724]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -150,16 +150,16 @@ rounded = true
 update_on_text_changed = true
 custom_arrow_step = 10.0
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8" unique_id=766357736]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="0" unique_id=2111258045]
 custom_minimum_size = Vector2(224.08, 0)
 layout_mode = 2
 text = "Backup Saves"
 horizontal_alignment = 2
 
-[node name="BackupSavesSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="1"]
+[node name="BackupSavesSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="1" unique_id=188832523]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -168,16 +168,16 @@ rounded = true
 allow_greater = true
 update_on_text_changed = true
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9" unique_id=883414721]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="0"]
+[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=1745198050]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reset"
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="1"]
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=1248765738]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10

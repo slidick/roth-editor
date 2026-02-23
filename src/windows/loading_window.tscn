@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dxr5najj0quo3"]
+[gd_scene format=3 uid="uid://dxr5najj0quo3"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_icbif"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_bnd15"]
@@ -7,7 +7,7 @@
 [ext_resource type="StyleBox" uid="uid://bxb0wg00e7qct" path="res://src/themes/loading_bar_background.tres" id="5_fn7ga"]
 [ext_resource type="StyleBox" uid="uid://bh13lqgmbc0m1" path="res://src/themes/loading_bar_fill.tres" id="6_sngxe"]
 
-[node name="LoadingWindow" instance=ExtResource("1_icbif")]
+[node name="LoadingWindow" unique_id=1370823102 instance=ExtResource("1_icbif")]
 offset_right = 400.0
 offset_bottom = 200.0
 theme = ExtResource("2_bnd15")
@@ -22,29 +22,29 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_s5myq")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1571748728]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=632997093]
 layout_mode = 2
 
-[node name="MapName" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="MapName" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=2049254522]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
 text = "STUDY1"
 
-[node name="Status" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="Status" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=210350073]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
 text = "Loading Textures:"
 
-[node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+[node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=1111281618]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 2

@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxmxrvias15hw"]
+[gd_scene format=3 uid="uid://cxmxrvias15hw"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_r7v6o"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_ilgvm"]
 [ext_resource type="Script" uid="uid://ecgg6atfpbj" path="res://src/windows/editor/metadata_window.gd" id="3_r7v6o"]
 
-[node name="MetadataWindow" instance=ExtResource("1_r7v6o")]
+[node name="MetadataWindow" unique_id=996981142 instance=ExtResource("1_r7v6o")]
 offset_right = 518.0
 offset_bottom = 537.0
 theme = ExtResource("2_ilgvm")
@@ -14,207 +14,207 @@ show_maximize_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=428620293]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=910377848]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=453805706]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=139181982]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Starting Position"
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=452996436]
 layout_mode = 2
 text = "X:"
 
-[node name="StartingPositionXEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2"]
+[node name="StartingPositionXEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=821631731]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="3"]
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="3" unique_id=639261049]
 layout_mode = 2
 text = "Y:"
 
-[node name="StartingPositionYEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="4"]
+[node name="StartingPositionYEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="4" unique_id=1220005455]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="5"]
+[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="5" unique_id=447386953]
 layout_mode = 2
 text = "Z:"
 
-[node name="StartingPositionZEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="6"]
+[node name="StartingPositionZEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="6" unique_id=241962313]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=986053473]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=252711792]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Starting Rotation"
 
-[node name="StartingRotationEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1"]
+[node name="StartingRotationEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=762613600]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SetCurrentLocationButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2"]
+[node name="SetCurrentLocationButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1709187156]
 layout_mode = 2
 text = "Set to Current"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=705921123]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=869079917]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Move Speed"
 
-[node name="MoveSpeedEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="1"]
+[node name="MoveSpeedEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=1168386143]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3" unique_id=979024015]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=263773211]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Player Height"
 
-[node name="PlayerHeightEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="1"]
+[node name="PlayerHeightEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=139183098]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4" unique_id=1008348119]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=1417446705]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Max Climb"
 
-[node name="MaxClimbEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="1"]
+[node name="MaxClimbEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="1" unique_id=1969489009]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5" unique_id=1601058446]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="0" unique_id=758887098]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Minimum Fit"
 
-[node name="MinimumFitEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="1"]
+[node name="MinimumFitEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="1" unique_id=767872660]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6"]
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6" unique_id=1967125717]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="0" unique_id=460445779]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Light Ambience"
 
-[node name="LightAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="1"]
+[node name="LightAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="1" unique_id=721465961]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7" unique_id=85288572]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer8" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer8" index="0" unique_id=1824269070]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Candle Glow"
 
-[node name="CandleGlowEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer8" index="1"]
+[node name="CandleGlowEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer8" index="1" unique_id=1045586856]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8"]
+[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8" unique_id=1199477411]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="0" unique_id=1738910356]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Candle Ambience"
 
-[node name="CandleAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="1"]
+[node name="CandleAmbienceEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer9" index="1" unique_id=311275592]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9"]
+[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9" unique_id=1484558046]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="0" unique_id=860178633]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Use Candle Shade"
 
-[node name="UseCandleShadeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="1"]
+[node name="UseCandleShadeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer10" index="1" unique_id=2009283404]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="10"]
+[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="10" unique_id=451771724]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer11" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer11" index="0" unique_id=282825551]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Sky Texture"
 
-[node name="SkyTextureEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer11" index="1"]
+[node name="SkyTextureEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer11" index="1" unique_id=721342867]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer12" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="11"]
+[node name="HBoxContainer12" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="11" unique_id=453485100]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer12" index="0"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer12" index="0" unique_id=917406695]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "unk0x1A"
 
-[node name="unk0x1AEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer12" index="1"]
+[node name="unk0x1AEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer12" index="1" unique_id=1185933712]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer13" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="12"]
+[node name="HBoxContainer13" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="12" unique_id=239214047]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer13" index="0"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer13" index="0" unique_id=1054827265]
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer13" index="1"]
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer13" index="1" unique_id=1586832060]
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Save"

@@ -14,7 +14,7 @@ config/name="roth_editor"
 config/version="0.19.0"
 run/main_scene="uid://dba8cygkkmhat"
 config/use_custom_user_dir=true
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 run/max_fps=60
 boot_splash/bg_color=Color(0.6, 0.815686, 0.960784, 1)
 boot_splash/use_filter=false
@@ -23,12 +23,13 @@ config/icon="uid://dova0a1l7g8pf"
 
 [audio]
 
+buses/default_bus_layout="uid://bel37xbh6iv46"
 driver/enable_input=true
 driver/mix_rate=22050
 
 [autoload]
 
-Settings="*res://addons/settings_system/settings.gd"
+Settings="*uid://cuo7ntpqjgbk"
 Roth="*res://src/globals/roth.gd"
 Dialog="*res://src/windows/dialog_window.tscn"
 Console="*res://src/windows/console_window.tscn"

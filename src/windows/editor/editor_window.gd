@@ -103,7 +103,7 @@ func _input(event: InputEvent) -> void:
 			var camera := viewport.get_camera_3d()
 			var origin_position: Vector2 = mouse_position
 			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-				origin_position = viewport_size / 2
+				origin_position = viewport_size / 2.0
 			var origin := camera.project_ray_origin(origin_position)
 			var direction := camera.project_ray_normal(origin_position)
 			var ray_length := camera.far

@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://de6v51e5rld6l"]
+[gd_scene format=3 uid="uid://de6v51e5rld6l"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_oumax"]
 [ext_resource type="Script" uid="uid://cnntlpby5d8uq" path="res://src/windows/sfx_editor/sfx_selector_window.gd" id="2_vcynu"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_embwl"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="4_drd3d"]
 
-[node name="SFXSelectorWindow" instance=ExtResource("1_oumax")]
+[node name="SFXSelectorWindow" unique_id=1568434759 instance=ExtResource("1_oumax")]
 offset_right = 1065.0
 offset_bottom = 643.0
 script = ExtResource("2_vcynu")
@@ -18,22 +18,22 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_embwl")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1638552400]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=341408930]
 layout_mode = 2
 
-[node name="SearchEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="SearchEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=40817716]
 layout_mode = 2
 placeholder_text = "Search..."
 clear_button_enabled = true
 
-[node name="Tree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1"]
+[node name="Tree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1266135616]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -45,14 +45,14 @@ hide_folding = true
 hide_root = true
 select_mode = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=680572950]
 layout_mode = 2
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=306667540]
 layout_mode = 2
 text = "Cancel"
 
-[node name="SelectButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="SelectButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=937935957]
 layout_mode = 2
 size_flags_horizontal = 10
 theme = ExtResource("4_drd3d")

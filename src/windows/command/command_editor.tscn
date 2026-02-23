@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://buvv5wgtyctbw"]
+[gd_scene format=3 uid="uid://buvv5wgtyctbw"]
 
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_8pnp2"]
 [ext_resource type="Script" uid="uid://d00va22y52dco" path="res://src/windows/command/command_editor.gd" id="2_u488m"]
 
-[node name="CommandEditor" type="MarginContainer"]
+[node name="CommandEditor" type="MarginContainer" unique_id=1187301856]
 offset_right = 1554.0
 offset_bottom = 858.0
 theme = ExtResource("1_8pnp2")
@@ -13,18 +13,18 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 script = ExtResource("2_u488m")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=19260792]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1371466552]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer" unique_id=2050787599]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 
-[node name="MapLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="MapLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=990550459]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -32,24 +32,24 @@ theme_override_font_sizes/font_size = 36
 text = "No Commands Loaded"
 horizontal_alignment = 1
 
-[node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=359716778]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Close"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1331139825]
 layout_mode = 2
 
-[node name="SearchEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=83287306]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Search..."
 keep_editing_on_text_submit = true
 
-[node name="SearchOptions" type="OptionButton" parent="VBoxContainer/HBoxContainer2"]
+[node name="SearchOptions" type="OptionButton" parent="VBoxContainer/HBoxContainer2" unique_id=40975157]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -83,12 +83,12 @@ popup/item_12/id = 11
 popup/item_13/text = "Command Index"
 popup/item_13/id = 13
 
-[node name="Graph" type="MarginContainer" parent="VBoxContainer"]
+[node name="Graph" type="MarginContainer" parent="VBoxContainer" unique_id=1477679819]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GraphPopupMenu" type="PopupMenu" parent="VBoxContainer/Graph"]
+[node name="GraphPopupMenu" type="PopupMenu" parent="VBoxContainer/Graph" unique_id=617452393]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -97,7 +97,7 @@ item_0/id = 0
 item_1/text = "Paste Command(s)"
 item_1/id = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/Graph"]
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/Graph" unique_id=1637950723]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(400, 0)

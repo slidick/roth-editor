@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bccjtuuhk3gl4"]
+[gd_scene format=3 uid="uid://bccjtuuhk3gl4"]
 
 [ext_resource type="Script" uid="uid://datm5vblg3i6x" path="res://src/windows/dbase_editor/actions.gd" id="1_r38q4"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_gj8af"]
 
-[node name="Actions" type="HBoxContainer"]
+[node name="Actions" type="HBoxContainer" unique_id=1308281101]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,17 +15,17 @@ size_flags_horizontal = 3
 script = ExtResource("1_r38q4")
 metadata/_tab_index = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=481191017]
 layout_mode = 2
 
-[node name="ActionList" type="ItemList" parent="VBoxContainer"]
+[node name="ActionList" type="ItemList" parent="VBoxContainer" unique_id=767808756]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
 
-[node name="ActionListPopupMenu" type="PopupMenu" parent="VBoxContainer/ActionList"]
+[node name="ActionListPopupMenu" type="PopupMenu" parent="VBoxContainer/ActionList" unique_id=1797286362]
 unique_name_in_owner = true
 item_count = 3
 item_0/text = "Duplicate"
@@ -35,16 +35,16 @@ item_1/id = 1
 item_2/text = "Delete"
 item_2/id = 2
 
-[node name="AddActionButton" type="Button" parent="VBoxContainer"]
+[node name="AddActionButton" type="Button" parent="VBoxContainer" unique_id=1320140265]
 layout_mode = 2
 text = "Add Action"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=245529068]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 
-[node name="Tree" type="Tree" parent="VBoxContainer2"]
+[node name="Tree" type="Tree" parent="VBoxContainer2" unique_id=71283802]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -57,7 +57,7 @@ hide_root = true
 select_mode = 1
 script = ExtResource("2_gj8af")
 
-[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree"]
+[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree" unique_id=1700333638]
 unique_name_in_owner = true
 item_count = 2
 item_0/text = "Copy"
@@ -65,7 +65,7 @@ item_0/id = 0
 item_1/text = "Delete"
 item_1/id = 1
 
-[node name="EmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree"]
+[node name="EmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree" unique_id=291126574]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -74,7 +74,7 @@ item_0/id = 0
 item_1/text = "Paste"
 item_1/id = 1
 
-[node name="AddOpcodeButton" type="Button" parent="VBoxContainer2"]
+[node name="AddOpcodeButton" type="Button" parent="VBoxContainer2" unique_id=69956499]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add Opcode"

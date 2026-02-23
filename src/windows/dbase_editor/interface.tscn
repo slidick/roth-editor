@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dxx86or0adcjx"]
+[gd_scene format=3 uid="uid://dxx86or0adcjx"]
 
 [ext_resource type="Script" uid="uid://cg33rhc5t34c5" path="res://src/windows/dbase_editor/interface.gd" id="1_ed28l"]
 
-[node name="Interface" type="HBoxContainer"]
+[node name="Interface" type="HBoxContainer" unique_id=1349960206]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +15,7 @@ size_flags_vertical = 3
 script = ExtResource("1_ed28l")
 metadata/_tab_index = 2
 
-[node name="Tree" type="Tree" parent="."]
+[node name="Tree" type="Tree" parent="." unique_id=1429963794]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c4n3x17743rei"]
+[gd_scene format=3 uid="uid://c4n3x17743rei"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_dbmt3"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_f20dw"]
@@ -20,7 +20,7 @@ corner_detail = 5
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_3yom7"]
 
-[node name="AudioClipEditorWindow" instance=ExtResource("1_dbmt3")]
+[node name="AudioClipEditorWindow" unique_id=2013615627 instance=ExtResource("1_dbmt3")]
 offset_right = 1161.0
 offset_bottom = 764.0
 theme = ExtResource("2_f20dw")
@@ -33,7 +33,7 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_denbt")
 
-[node name="Main" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="Main" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=164103662]
 clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -41,15 +41,15 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main" index="0" unique_id=2038939844]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer" index="0" unique_id=1195670687]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="NameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="0"]
+[node name="NameLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="0" unique_id=1752874042]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
@@ -57,11 +57,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="1"]
+[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="1" unique_id=709081276]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="StartMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control" index="0"]
+[node name="StartMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control" index="0" unique_id=1909790057]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 32.0
@@ -72,7 +72,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_prwse")
 
-[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/StartMarker" index="0"]
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/StartMarker" index="0" unique_id=179778706]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -83,7 +83,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.21611851, 0.4915222, 0.34274763, 1)
 
-[node name="EndMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control" index="1"]
+[node name="EndMarker" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control" index="1" unique_id=642546275]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 32.0
@@ -94,7 +94,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_prwse")
 
-[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/EndMarker" index="0"]
+[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/EndMarker" index="0" unique_id=2136370261]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -105,7 +105,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.1201851, 0.30128837, 0.20325923, 1)
 
-[node name="Waveform" type="Panel" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="2"]
+[node name="Waveform" type="Panel" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="2" unique_id=1815019451]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 350)
 layout_mode = 2
@@ -114,54 +114,54 @@ size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_oa4cw")
 script = ExtResource("5_oa4cw")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="3"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="3" unique_id=138923235]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2" index="0" unique_id=1814110418]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="AmpDownButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="0"]
+[node name="AmpDownButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="0" unique_id=1232203141]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Amplitude Down"
 
-[node name="AmpUpButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="1"]
+[node name="AmpUpButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="1" unique_id=1727970315]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Amplitude Up"
 
-[node name="ReverseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="2"]
+[node name="ReverseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="2" unique_id=1632480833]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Reverse"
 
-[node name="StopButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="3"]
+[node name="StopButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="3" unique_id=1189959595]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("6_prwse")
 
-[node name="PlayButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="4"]
+[node name="PlayButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="4" unique_id=654349092]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 icon = ExtResource("7_3yom7")
 
-[node name="RecordButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="5"]
+[node name="RecordButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="5" unique_id=1501356]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 icon = ExtResource("9_3yom7")
 
-[node name="LengthLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="6"]
+[node name="LengthLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="6" unique_id=258215437]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
@@ -170,17 +170,17 @@ size_flags_vertical = 0
 size_flags_stretch_ratio = 1.52
 vertical_alignment = 2
 
-[node name="BrowseFilesystemButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="7"]
+[node name="BrowseFilesystemButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="7" unique_id=1155550662]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Browse FileSystem"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="4"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="4" unique_id=800641798]
 layout_mode = 2
 
-[node name="DeviceOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3" index="0"]
+[node name="DeviceOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=1769459716]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -188,36 +188,36 @@ text_overrun_behavior = 1
 fit_to_longest_item = false
 allow_reselect = true
 
-[node name="BrowseExistingButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3" index="1"]
+[node name="BrowseExistingButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=996587761]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Browse Exisiting"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer" index="1"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer" index="1" unique_id=2010648036]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="0"]
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="0" unique_id=973751942]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
 
-[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="1"]
+[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="1" unique_id=435427117]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Reset"
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="2"]
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2" index="2" unique_id=48569237]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Save"
 
-[node name="FileDialog" type="FileDialog" parent="." index="2"]
+[node name="FileDialog" type="FileDialog" parent="." index="2" unique_id=62808254]
 unique_name_in_owner = true
 title = "Select a Sound Effect File"
 initial_position = 2
@@ -230,15 +230,15 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.wav")
 
-[node name="Timer" type="Timer" parent="." index="3"]
+[node name="Timer" type="Timer" parent="." index="3" unique_id=1035708640]
 unique_name_in_owner = true
 wait_time = 0.1
 
-[node name="RecordTimer" type="Timer" parent="." index="4"]
+[node name="RecordTimer" type="Timer" parent="." index="4" unique_id=76599037]
 unique_name_in_owner = true
 wait_time = 0.5
 
-[node name="AudioStreamRecorder" type="AudioStreamPlayer" parent="." index="5"]
+[node name="AudioStreamRecorder" type="AudioStreamPlayer" parent="." index="5" unique_id=911681652]
 unique_name_in_owner = true
 stream = SubResource("AudioStreamMicrophone_3yom7")
 bus = &"Record"

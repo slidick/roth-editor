@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dgdoob8bqrdx7"]
+[gd_scene format=3 uid="uid://dgdoob8bqrdx7"]
 
 [ext_resource type="Script" uid="uid://338dua3an46j" path="res://src/windows/dbase_editor/dbase_100_header.gd" id="1_ujeed"]
 
-[node name="DBase100Header" type="HBoxContainer"]
+[node name="DBase100Header" type="HBoxContainer" unique_id=132851262]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,178 +15,178 @@ size_flags_vertical = 3
 script = ExtResource("1_ujeed")
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=199094676]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1940993958]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1007582028]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Signature:"
 
-[node name="SignatureEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+[node name="SignatureEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1839777852]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1041300583]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=780179680]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Filesize:"
 
-[node name="FilesizeEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+[node name="FilesizeEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=1855322730]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=1625705550]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1611208958]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Unk 0x0C: "
 
-[node name="Unk0x0CEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3"]
+[node name="Unk0x0CEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3" unique_id=1274450708]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=623187155]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=270487197]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Inventory Count: "
 
-[node name="InventoryCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer4"]
+[node name="InventoryCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer4" unique_id=1432048915]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1310016914]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=375009933]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Inventory Offset: "
 
-[node name="InventoryOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5"]
+[node name="InventoryOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5" unique_id=149311385]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=330753003]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=361817947]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Actions Count: "
 
-[node name="ActionsCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer6"]
+[node name="ActionsCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer6" unique_id=1391319455]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer" unique_id=1477570834]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7" unique_id=947949519]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Actions Offset: "
 
-[node name="ActionsOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer7"]
+[node name="ActionsOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer7" unique_id=1797079120]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer" unique_id=470377776]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer8"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer8" unique_id=1703262879]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Cutscenes Count: "
 
-[node name="CutscenesCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer8"]
+[node name="CutscenesCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer8" unique_id=1424630073]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer" unique_id=1793494501]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9" unique_id=1081913192]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Cutscenes Offset: "
 
-[node name="CutscenesOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer9"]
+[node name="CutscenesOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer9" unique_id=1759338990]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer" unique_id=564984810]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer10"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer10" unique_id=925721487]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Interfaces Count: "
 
-[node name="InterfacesCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer10"]
+[node name="InterfacesCountEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer10" unique_id=123768629]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer" unique_id=831588509]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer11"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer11" unique_id=1027300822]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Interfaces Offset: "
 
-[node name="InterfacesOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer11"]
+[node name="InterfacesOffsetEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer11" unique_id=578049420]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="HBoxContainer12" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer12" type="HBoxContainer" parent="VBoxContainer" unique_id=880859597]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer12"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer12" unique_id=8997103]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Unk 0x30: "
 
-[node name="Unk0x30Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer12"]
+[node name="Unk0x30Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer12" unique_id=390416661]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InfoPanel" type="Control" parent="."]
+[node name="InfoPanel" type="Control" parent="." unique_id=15436957]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

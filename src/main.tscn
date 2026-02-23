@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dba8cygkkmhat"]
+[gd_scene format=3 uid="uid://dba8cygkkmhat"]
 
 [ext_resource type="Script" uid="uid://c7m0sdb6bu4b3" path="res://src/main.gd" id="1_eewff"]
 [ext_resource type="StyleBox" uid="uid://cn25wp84p5qer" path="res://src/themes/menu_panel.tres" id="2_gh0ne"]
@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
 [ext_resource type="PackedScene" uid="uid://bfe5dwpkm1ius" path="res://src/windows/image_editor_window.tscn" id="13_tb146"]
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" unique_id=2029515927]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +26,7 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_eewff")
 
-[node name="Menu" type="Control" parent="."]
+[node name="Menu" type="Control" parent="." unique_id=2114292172]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -36,7 +36,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="ColorRect" type="ColorRect" parent="Menu"]
+[node name="ColorRect" type="ColorRect" parent="Menu" unique_id=550761564]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,7 +46,7 @@ grow_vertical = 2
 focus_mode = 1
 color = Color(0.601793, 0.81459, 0.959943, 1)
 
-[node name="Title" type="Label" parent="Menu"]
+[node name="Title" type="Label" parent="Menu" unique_id=916091918]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -64,7 +64,7 @@ text = "Realms of the Haunting
 Editor"
 horizontal_alignment = 1
 
-[node name="Version" type="Label" parent="Menu"]
+[node name="Version" type="Label" parent="Menu" unique_id=656958425]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -82,7 +82,7 @@ theme_override_font_sizes/font_size = 96
 text = "v0.0.0"
 horizontal_alignment = 1
 
-[node name="MenuPanel" type="PanelContainer" parent="Menu"]
+[node name="MenuPanel" type="PanelContainer" parent="Menu" unique_id=607647534]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 1
 anchors_preset = 10
@@ -90,7 +90,7 @@ anchor_right = 1.0
 grow_horizontal = 2
 theme_override_styles/panel = ExtResource("2_gh0ne")
 
-[node name="MenuBar" type="MenuBar" parent="Menu/MenuPanel"]
+[node name="MenuBar" type="MenuBar" parent="Menu/MenuPanel" unique_id=1739407161]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
@@ -100,7 +100,7 @@ theme_override_fonts/font = ExtResource("3_rlaii")
 theme_override_font_sizes/font_size = 32
 flat = true
 
-[node name="Main" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+[node name="Main" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=579036751]
 unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -128,7 +128,7 @@ item_8/separator = true
 item_9/text = "Quit"
 item_9/id = 2
 
-[node name="Tools" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+[node name="Tools" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1812286878]
 unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -138,7 +138,7 @@ item_0/text = "Highlight Concave Sectors"
 item_0/checkable = 1
 item_0/id = 0
 
-[node name="Windows" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+[node name="Windows" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1040920327]
 unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -154,7 +154,7 @@ item_2/text = "Extras"
 item_2/checkable = 1
 item_2/id = 4
 
-[node name="Help" type="PopupMenu" parent="Menu/MenuPanel/MenuBar"]
+[node name="Help" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=973930017]
 unique_name_in_owner = true
 auto_translate_mode = 1
 theme = ExtResource("4_rlaii")
@@ -165,7 +165,7 @@ item_0/text = "Controls"
 item_0/checkable = 1
 item_0/id = 2
 
-[node name="AlwaysBehindWindows" type="Control" parent="."]
+[node name="AlwaysBehindWindows" type="Control" parent="." unique_id=62832486]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -174,7 +174,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Editor" parent="AlwaysBehindWindows" instance=ExtResource("5_fyndt")]
+[node name="Editor" parent="AlwaysBehindWindows" unique_id=1085086629 instance=ExtResource("5_fyndt")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -188,7 +188,7 @@ grow_horizontal = 1
 grow_vertical = 1
 start_maximized = true
 
-[node name="Windows" type="Control" parent="."]
+[node name="Windows" type="Control" parent="." unique_id=968857975]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -197,7 +197,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Controls" parent="Windows" instance=ExtResource("8_mgm53")]
+[node name="Controls" parent="Windows" unique_id=961647218 instance=ExtResource("8_mgm53")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -214,7 +214,7 @@ grow_horizontal = 2
 grow_vertical = 2
 show_maximize_button = false
 
-[node name="Search" parent="Windows" instance=ExtResource("9_uewes")]
+[node name="Search" parent="Windows" unique_id=834885959 instance=ExtResource("9_uewes")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -230,7 +230,7 @@ offset_bottom = 303.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Extras" parent="Windows" instance=ExtResource("11_tb146")]
+[node name="Extras" parent="Windows" unique_id=2067171609 instance=ExtResource("11_tb146")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -246,7 +246,7 @@ offset_bottom = 350.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ManageDbase" parent="Windows" instance=ExtResource("10_srxbw")]
+[node name="ManageDbase" parent="Windows" unique_id=2114035494 instance=ExtResource("10_srxbw")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -262,7 +262,7 @@ offset_bottom = 450.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ManageMaps" parent="Windows" instance=ExtResource("8_5mrjc")]
+[node name="ManageMaps" parent="Windows" unique_id=1707608338 instance=ExtResource("8_5mrjc")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -277,7 +277,7 @@ grow_horizontal = 2
 grow_vertical = 2
 exclusive = false
 
-[node name="ManageSFX" parent="Windows" instance=ExtResource("12_d3u4l")]
+[node name="ManageSFX" parent="Windows" unique_id=1506724836 instance=ExtResource("12_d3u4l")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -293,7 +293,7 @@ offset_bottom = 338.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackdropExporter" parent="Windows" instance=ExtResource("13_tb146")]
+[node name="BackdropExporter" parent="Windows" unique_id=282163287 instance=ExtResource("13_tb146")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -309,7 +309,7 @@ offset_bottom = 400.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AlwaysInFrontWindows" type="Control" parent="."]
+[node name="AlwaysInFrontWindows" type="Control" parent="." unique_id=1400528388]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -318,7 +318,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Settings" parent="AlwaysInFrontWindows" instance=ExtResource("12_srxbw")]
+[node name="Settings" parent="AlwaysInFrontWindows" unique_id=397550644 instance=ExtResource("12_srxbw")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -334,7 +334,7 @@ offset_bottom = 220.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Loading" parent="AlwaysInFrontWindows" instance=ExtResource("9_kf8lf")]
+[node name="Loading" parent="AlwaysInFrontWindows" unique_id=318526067 instance=ExtResource("9_kf8lf")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -350,7 +350,7 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FPSLabel" type="Label" parent="."]
+[node name="FPSLabel" type="Label" parent="." unique_id=1786135786]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0

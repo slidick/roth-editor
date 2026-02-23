@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bwfryqyo2a04c"]
+[gd_scene format=3 uid="uid://bwfryqyo2a04c"]
 
 [ext_resource type="Script" uid="uid://b1yc47ntibfsq" path="res://src/windows/sfx_editor/sound_effects.gd" id="1_qx2kp"]
 
-[node name="SoundEffects" type="Control"]
+[node name="SoundEffects" type="Control" unique_id=1800259869]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_vertical = 2
 script = ExtResource("1_qx2kp")
 metadata/_tab_index = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=353966012]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,13 +20,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SearchEdit" type="LineEdit" parent="VBoxContainer"]
+[node name="SearchEdit" type="LineEdit" parent="VBoxContainer" unique_id=1615177314]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Search..."
 clear_button_enabled = true
 
-[node name="Tree" type="Tree" parent="VBoxContainer"]
+[node name="Tree" type="Tree" parent="VBoxContainer" unique_id=442234338]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -38,7 +38,7 @@ hide_folding = true
 hide_root = true
 select_mode = 1
 
-[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer/Tree"]
+[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer/Tree" unique_id=1988991797]
 unique_name_in_owner = true
 item_count = 3
 item_0/text = "Edit"
@@ -48,15 +48,15 @@ item_1/id = 1
 item_2/text = "Delete"
 item_2/id = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=630688336]
 layout_mode = 2
 
-[node name="ShuffleButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="ShuffleButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1125524770]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Shuffle"
 
-[node name="NewButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="NewButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=267139741]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10

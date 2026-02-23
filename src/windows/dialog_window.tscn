@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://n727swy1chuv"]
+[gd_scene format=3 uid="uid://n727swy1chuv"]
 
 [ext_resource type="PackedScene" uid="uid://bwby27ghs5osy" path="res://addons/window_system/windows/dialog_window.tscn" id="1_3uu8u"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_qxbld"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_hgcx2"]
 
-[node name="DialogWindow" instance=ExtResource("1_3uu8u")]
+[node name="DialogWindow" unique_id=1981781339 instance=ExtResource("1_3uu8u")]
 theme = ExtResource("2_qxbld")
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_hgcx2")

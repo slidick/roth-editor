@@ -1,39 +1,39 @@
-[gd_scene load_steps=4 format=3 uid="uid://ctidddlqpgfo3"]
+[gd_scene format=3 uid="uid://ctidddlqpgfo3"]
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_nlodr"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_iwfyu"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_gpbl2"]
 
-[node name="ControlsWindow" instance=ExtResource("1_nlodr")]
+[node name="ControlsWindow" unique_id=444398816 instance=ExtResource("1_nlodr")]
 offset_right = 1079.0
 offset_bottom = 998.0
 theme = ExtResource("2_iwfyu")
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_gpbl2")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1716011195]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1288997731]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="0" unique_id=354494463]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="0" unique_id=99274308]
 layout_mode = 2
 text = "3D Controls"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="1" unique_id=1908954627]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="2" unique_id=1004443159]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 36
@@ -57,25 +57,25 @@ F2:  Toggle Collision Shapes
 F3:  Toggle Mouse Select
 "
 
-[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1"]
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1" unique_id=1393434481]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="2" unique_id=1621879679]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=1420069185]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="0" unique_id=1913666053]
 layout_mode = 2
 text = "2D Controls"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="1" unique_id=108225220]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer" index="2" unique_id=719953276]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Left Mouse: Select
@@ -83,19 +83,19 @@ Middle Mouse: Pan
 Mouse Wheel: Zoom
 "
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="1"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="1" unique_id=2016981104]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="0" unique_id=2007895655]
 layout_mode = 2
 text = "Sector / Face"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="1" unique_id=1025621985]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer3" index="2" unique_id=1893468653]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Left Click: Select
@@ -109,19 +109,19 @@ Del: Delete Sector or Double-sided face
 M: Merge Sectors
 "
 
-[node name="VBoxContainer5" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="2"]
+[node name="VBoxContainer5" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=455336048]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="0" unique_id=892590813]
 layout_mode = 2
 text = "Vertex"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="1" unique_id=891799057]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer5" index="2" unique_id=1989695395]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Left Click: Select / Move
@@ -131,37 +131,37 @@ Shift+Left-Click on vertex: Start Sector Split
 U: Unmerge selected vertex
 "
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="3"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="3" unique_id=2068331773]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="0" unique_id=1823335980]
 layout_mode = 2
 text = "Box"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="1" unique_id=330193022]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer4" index="2" unique_id=1938445948]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Left Click: Draw new sector
 "
 
-[node name="VBoxContainer6" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="4"]
+[node name="VBoxContainer6" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="4" unique_id=422082492]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="0"]
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="0" unique_id=1372731589]
 layout_mode = 2
 text = "Editor"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="1"]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="1" unique_id=1233543295]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="2"]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/VBoxContainer6" index="2" unique_id=2042273457]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "F11:  Toggle Fullscreen
