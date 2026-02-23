@@ -139,10 +139,10 @@ func _on_command_search_edit_text_submitted(new_text: String) -> void:
 	#print(search_type)
 	for i in range(len(dbase100.actions)):
 		var action: Dictionary = dbase100.actions[i]
-		if action.offset == 0 or action.length == 0:
-			continue
-		for opcode: Dictionary in action.opcodes:
-			if opcode.opcode == search_type and opcode.args == new_text.to_int():
+		#if action.offset == 0 or action.length == 0:
+			#continue
+		for command: Dictionary in action.commands:
+			if command.opcode == search_type and command.args == new_text.to_int():
 				
 				if search_amount == 0:
 				
@@ -154,7 +154,7 @@ func _on_command_search_edit_text_submitted(new_text: String) -> void:
 							var tree_item: TreeItem = %CommandTree.get_root().get_first_child()
 							
 							while tree_item:
-								if tree_item.get_text(0) == str(opcode.opcode) and tree_item.get_text(1) == str(opcode.args):
+								if tree_item.get_text(0) == str(command.opcode) and tree_item.get_text(1) == str(command.args):
 									%CommandTree.set_selected(tree_item, 0)
 									break
 								tree_item = tree_item.get_next()
