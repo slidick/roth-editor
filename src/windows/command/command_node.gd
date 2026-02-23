@@ -240,9 +240,9 @@ func _ready() -> void:
 			else:
 				arg_nodes[i].set_text(str(value))
 		
-		if i >= 2:
-			%MapNameLabel.text += String.chr((value) & 0xFF)
-			%MapNameLabel.text += String.chr((value >> 8) & 0xFF)
+		#if i >= 2:
+			#%MapNameLabel.text += String.chr((value) & 0xFF)
+			#%MapNameLabel.text += String.chr((value >> 8) & 0xFF)
 		
 		if i == 0:
 			%FlagButton1.set_pressed_no_signal((value & (1 << 0)) > 0)
@@ -414,8 +414,12 @@ func update_args_array() -> void:
 	#print(arg_array)
 	%MapNameLabel.text = ""
 	for value: int in arg_array.slice(2):
-		%MapNameLabel.text += String.chr((value) & 0xFF)
-		%MapNameLabel.text += String.chr((value >> 8) & 0xFF)
+		var c: int = (value) & 0xFF
+		if c != 0:
+			%MapNameLabel.text += String.chr(c)
+		c = (value >> 8) & 0xFF
+		if c != 0:
+			%MapNameLabel.text += String.chr(c)
 
 
 func _on_command_popup_menu_index_pressed(_index: int) -> void:
