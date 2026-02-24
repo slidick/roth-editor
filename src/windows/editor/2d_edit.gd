@@ -108,9 +108,7 @@ func _input(event: InputEvent) -> void:
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
 		zooming = true
 		update_camera_zoom()
-		var changed: bool = update_line_width(additional_zoom)
-		if changed:
-			queue_redraw()
+		update_line_width(additional_zoom)
 	
 	if event.is_action_pressed("map_2d_zoom_out"):
 		additional_zoom *= ZOOM_SPEED
@@ -725,9 +723,7 @@ func update_camera_center() -> void:
 		(maximum_y + minimum_y) / 2,
 	)
 	%Camera2D.position = center
-
-
-func update_camera_zoom() -> void:
+	
 	var size := Vector2(
 		maximum_x - minimum_x,
 		maximum_y - minimum_y
@@ -735,12 +731,22 @@ func update_camera_zoom() -> void:
 	if size.x == 0 or size.y == 0:
 		return
 	
+	
+	while %Camera2D.get_viewport().size.y < 10:
+		await get_tree().process_frame
+		await get_tree().process_frame
+	
 	var zoom_y: float = %Camera2D.get_viewport().size.y / size.y
 	var zoom_x: float = %Camera2D.get_viewport().size.x / size.x
-	var zoom: float = min(zoom_x, zoom_y) * 0.95
+	additional_zoom = clamp(min(zoom_x, zoom_y) * 0.95, MIN_ZOOM, MAX_ZOOM)
+	%Camera2D.zoom = Vector2.ONE * additional_zoom
+	update_line_width(additional_zoom)
+
+
+func update_camera_zoom() -> void:
+	%Camera2D.zoom = Vector2.ONE * additional_zoom
 	
 	var mouse_pos := get_global_mouse_position()
-	%Camera2D.zoom = Vector2(zoom, zoom) * additional_zoom
 	
 	# Ensures zoom to mouse works at high speed
 	if zooming:
@@ -791,6 +797,7 @@ func update_line_width(x: float) -> bool:
 	
 	if prev_line_width != line_width:
 		update_vertex_size()
+		queue_redraw()
 	
 	return prev_line_width != line_width
 
