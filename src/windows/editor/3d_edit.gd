@@ -9,7 +9,8 @@ var has_focus: bool = false :
 		has_focus = value
 		if has_focus == false:
 			if moused_over_resource and moused_over_resource not in owner.selected_faces and moused_over_resource not in owner.selected_sectors:
-				moused_over_resource.node.unhighlight()
+				if moused_over_resource.node:
+					moused_over_resource.node.unhighlight()
 				moused_over_resource = null
 var picking_enabled: bool = true
 var copied_face_texture_data: Dictionary = {}
@@ -240,7 +241,8 @@ func _process(_delta: float) -> void:
 			
 	else:
 		if moused_over_resource and moused_over_resource not in owner.selected_faces and moused_over_resource not in owner.selected_sectors and moused_over_resource not in owner.selected_objects and moused_over_resource not in owner.selected_sfx:
-			moused_over_resource.node.unhighlight()
+			if moused_over_resource.node:
+				moused_over_resource.node.unhighlight()
 			moused_over_resource = null
 	
 	if shift_switched != Input.is_physical_key_pressed(KEY_SHIFT):
