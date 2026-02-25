@@ -998,6 +998,8 @@ func delete_selected_sectors() -> void:
 		for map_info: Dictionary in map_groups:
 			Roth.editor_action.emit(map_info, "Delete Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
 		select_resource(null)
+		if %VertexCheckBox.button_pressed or %DrawModeCheckBox.button_pressed:
+			%Map2D.show_vertices(%Map2D.last_allow_move)
 
 
 func _delete_selected_sectors() -> Dictionary:
