@@ -1300,6 +1300,8 @@ func _on_face_split() -> void:
 
 
 func _on_sector_split(starting_vertex_node: VertexNode) -> void:
+	if not %VertexCheckBox.button_pressed:
+		return
 	var selected_vertices_count: int = 0
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node.is_selected:
