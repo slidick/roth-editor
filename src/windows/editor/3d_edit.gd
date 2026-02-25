@@ -8,7 +8,7 @@ var has_focus: bool = false :
 	set(value):
 		has_focus = value
 		if has_focus == false:
-			if moused_over_resource and moused_over_resource not in owner.selected_faces and moused_over_resource not in owner.selected_sectors:
+			if moused_over_resource and moused_over_resource not in owner.selected_faces and (moused_over_resource not in owner.selected_sectors or len(owner.selected_faces) == 1):
 				if moused_over_resource.node:
 					moused_over_resource.node.unhighlight()
 				moused_over_resource = null
