@@ -158,6 +158,7 @@ static func _load_das_thread(das_file: String) -> void:
 	#var das: Dictionary = _parse_das(das_file)
 	var palette: Array = test_for_palette(Roth.install_directory.path_join(das_file))
 	var das: Dictionary = RothExt.load_das(das_file, Roth.install_directory.path_join(das_file), func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_file.get_file()), palette)
+	das.das_file = das_file
 	Roth.das_loading_finished.emit.call_deferred(das)
 
 

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://83l60nlqs38r"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_41vcf"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_ojtoo"]
+[ext_resource type="Script" uid="uid://dy78sghyj7g8i" path="res://src/windows/editor/texture_presets_window.gd" id="2_u4apu"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_haxn6"]
+[ext_resource type="PackedScene" uid="uid://d0qwk04pu2mgq" path="res://src/utils/rotatable_item_list.tscn" id="5_haxn6"]
+
+[node name="TexturePresetsWindow" unique_id=452268762 instance=ExtResource("1_41vcf")]
+offset_right = 892.0
+offset_bottom = 636.0
+theme = ExtResource("2_ojtoo")
+script = ExtResource("2_u4apu")
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_haxn6")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=329525839]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1941752909]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="0" unique_id=1701213254]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="0" unique_id=506865270]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+
+[node name="PopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/ItemList" index="2" unique_id=1859664760]
+unique_name_in_owner = true
+item_count = 2
+item_0/text = "Rename"
+item_0/id = 0
+item_1/text = "Delete"
+item_1/id = 1
+
+[node name="AddButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer" index="1" unique_id=1825602440]
+layout_mode = 2
+text = "Add"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1" unique_id=191516101]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=935232374 instance=ExtResource("5_haxn6")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2" index="1" unique_id=354849450]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Save"
+
+[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/RotatableItemList" to="." method="_on_rotatable_item_list_context_option_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/RotatableItemList" to="." method="_on_rotatable_item_list_item_activated"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/VBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]

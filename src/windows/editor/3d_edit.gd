@@ -1,5 +1,7 @@
 extends Node3D
 
+signal properties_copied
+
 var mouse_inside: bool = true
 var moused_over_resource: RefCounted
 var shift_switched:bool = false
@@ -41,9 +43,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			if moused_over_resource is Face:
 				copied_face_texture_data = moused_over_resource.texture_data.duplicate()
 				copied_face_data = moused_over_resource.data.duplicate()
+				properties_copied.emit()
 			elif moused_over_resource is Sector:
 				copied_sector_data = moused_over_resource.data.duplicate()
 				copied_platform_data = moused_over_resource.platform.duplicate()
+				properties_copied.emit()
 	
 	if event.is_action_pressed("paste_texture", false, true):
 		if moused_over_resource:

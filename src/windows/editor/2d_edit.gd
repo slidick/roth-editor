@@ -416,7 +416,7 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 
 
 func handle_draw_mode_event(event: InputEvent) -> void:
-	if not %BoxCheckBox.button_pressed:
+	if not %DrawModeCheckBox.button_pressed:
 		return
 	
 	if event is InputEventMouseButton:
@@ -437,7 +437,7 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 						queue_redraw()
 						return
 					
-					var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD)
+					var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD, %DrawModeContainer.get_sector_options())
 					start_box_draw = false
 					start_box_position = Vector2.ZERO
 					queue_redraw()
@@ -1008,7 +1008,7 @@ func setup(p_map: Map, p_reset_camera: bool = true) -> void:
 	_on_object_check_box_toggled(%ObjectCheckBox.button_pressed)
 	_on_sfx_check_box_toggled(%SFXCheckBox.button_pressed)
 	_on_vertex_check_box_toggled(%VertexCheckBox.button_pressed)
-	_on_box_check_box_toggled(%BoxCheckBox.button_pressed)
+	_on_draw_mode_check_box_toggled(%DrawModeCheckBox.button_pressed)
 	queue_redraw()
 	%CountAndSizeContainer.recalculate()
 	update_concave_sectors()
@@ -1588,10 +1588,15 @@ func _on_vertex_check_box_toggled(toggled_on: bool) -> void:
 		hide_vertices()
 
 
-func _on_box_check_box_toggled(_toggled_on: bool) -> void:
+func _on_draw_mode_check_box_toggled(_toggled_on: bool) -> void:
 	if _toggled_on:
+		if not map:
+			return
 		show_vertices(false)
+		owner.select_resource(null)
+		%DrawModeContainer.enter_draw_mode()
 	else:
+		%DrawModeContainer.exit_draw_mode()
 		if not %VertexCheckBox.button_pressed:
 			hide_vertices()
 
@@ -1695,7 +1700,7 @@ func check_for_split(nearest_vertex: VertexNode) -> void:
 
 
 func update_vertex_size() -> void:
-	if %VertexCheckBox.button_pressed or %BoxCheckBox.button_pressed:
+	if %VertexCheckBox.button_pressed or %DrawModeCheckBox.button_pressed:
 		for vertex_node: VertexNode in %Vertices.get_children():
 			vertex_node.redraw(line_width)
 

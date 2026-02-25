@@ -287,7 +287,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
-		%Texture.show_texture(das)
+		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.midTextureIndex)
 		%MidTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:

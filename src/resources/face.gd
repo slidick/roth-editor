@@ -91,7 +91,7 @@ func duplicate() -> Face:
 		new_face.has_copied_sister = true
 	return new_face
 
-static func create_new_face(p_map_info: Dictionary, p_sector: Sector) -> Face:
+static func create_new_face(p_map_info: Dictionary, p_sector: Sector, sector_data: Dictionary = {}) -> Face:
 	var initial_data := {
 		"addCollision": 0,
 	}
@@ -102,7 +102,7 @@ static func create_new_face(p_map_info: Dictionary, p_sector: Sector) -> Face:
 	var initial_texture_data := {
 		"unk0x00": 16,
 		"type": 0,
-		"midTextureIndex": 3,
+		"midTextureIndex": sector_data.get("wall", 65535),
 		"upperTextureIndex": 65535,
 		"lowerTextureIndex": 65535,
 		"unk0x08": 0,

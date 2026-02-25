@@ -7,6 +7,7 @@ signal context_option_selected(index: int, context_index: int)
 
 var index: int
 var text: String
+var label: Label
 var texture: Texture2D
 var rotated: bool = false
 var rotation_container: RotationContainer
@@ -44,6 +45,16 @@ func get_metadata() -> Variant:
 	return metadata
 
 
+func set_text(p_text: String) -> void:
+	text = p_text
+	label.text = text
+
+
+func set_icon(p_icon: Texture2D) -> void:
+	texture = p_icon
+	texture_rect.texture = texture
+
+
 func _ready() -> void:
 	texture_rect = TextureRect.new()
 	texture_rect.texture = texture
@@ -56,7 +67,7 @@ func _ready() -> void:
 	rotation_container.enabled = rotated
 	rotation_container.add_child(texture_rect)
 	
-	var label := Label.new()
+	label = Label.new()
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS

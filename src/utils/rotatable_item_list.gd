@@ -74,6 +74,18 @@ func set_rotated(p_index: int, p_rotated: bool) -> void:
 	%HFlowContainer.get_child(p_index).set_rotated(p_rotated)
 
 
+func set_item_text(p_index: int, p_text: String) -> void:
+	var child: RotatedIconNode = %HFlowContainer.get_child(p_index)
+	if child:
+		child.set_text(p_text)
+
+
+func set_item_icon(p_index: int, p_icon: Texture2D) -> void:
+	var child: RotatedIconNode = %HFlowContainer.get_child(p_index)
+	if child:
+		child.set_icon(p_icon)
+
+
 func set_item_metadata(p_index: int, p_metadata: Variant) -> void:
 	var child: RotatedIconNode = %HFlowContainer.get_child(p_index)
 	if child:
@@ -85,3 +97,29 @@ func get_item_metadata(p_index: int) -> Variant:
 	if child:
 		return child.get_metadata()
 	return null
+
+
+func select(p_index: int) -> void:
+	if p_index == -1:
+		for child: RotatedIconNode in %HFlowContainer.get_children():
+			child.deselect()
+		item_selected.emit(-1)
+		return
+	var child: RotatedIconNode = %HFlowContainer.get_child(p_index)
+	if child:
+		child.select()
+	item_selected.emit(p_index)
+
+
+func get_item_position(p_index: int) -> Variant:
+	var child: RotatedIconNode = %HFlowContainer.get_child(p_index)
+	if child:
+		return child.position
+	return null
+
+
+func scroll_to_index(p_index: int) -> void:
+	var child: RotatedIconNode = %HFlowContainer.get_child(p_index)
+	if child:
+		await get_tree().process_frame
+		%ScrollContainer.scroll_vertical = child.position.y - (%ScrollContainer.size.y / 2.0) + (child.size.y / 2.0)

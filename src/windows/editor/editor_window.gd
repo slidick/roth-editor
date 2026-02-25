@@ -854,6 +854,7 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 	%EditObjectContainer.clear()
 	%EditSFXContainer.clear()
 	%EditVertexContainer.clear()
+	%DrawModeContainer.hide()
 	if not resource:
 		selected_faces.clear()
 		selected_sectors.clear()

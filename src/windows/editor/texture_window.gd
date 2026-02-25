@@ -42,7 +42,7 @@ func init_das(p_das: Dictionary) -> void:
 		%RotatableItemList.set_item_metadata(idx, texture)
 
 
-func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
+func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_index: int = -1) -> void:
 	current_das = p_das
 	only_ceilings = p_only_ceilings
 	
@@ -85,6 +85,15 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false) -> void:
 				%RotatableItemList.set_rotated(i, true)
 		else:
 			%RotatableItemList.set_hidden(i, true)
+	
+	for i in range(%RotatableItemList.item_count):
+		var texture_data: Dictionary = %RotatableItemList.get_item_metadata(i)
+		if texture_data.index == p_selected_index:
+			%RotatableItemList.select(i)
+			%RotatableItemList.scroll_to_index(i)
+	
+	if p_selected_index == -1:
+		%RotatableItemList.select(-1)
 	
 	toggle(true)
 
@@ -213,11 +222,16 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 func _on_rotatable_item_list_item_selected(index: int) -> void:
 	%FavoriteItemList.deselect_all()
 	%RecentItemList.deselect_all()
-	display_texture_data(%RotatableItemList.get_item_metadata(index))
+	var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
+	if index == -1:
+		texture_data = {}
+	display_texture_data(texture_data)
 	
 func display_texture_data(texture_data: Dictionary) -> void:
 	for child: Node in %InfoContainer.get_children():
 		child.queue_free()
+	if texture_data.is_empty():
+		return
 	for key: String in texture_data:
 		var label := Label.new()
 		label.text = "%s: %s" % [key, texture_data[key]]

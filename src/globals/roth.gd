@@ -34,6 +34,34 @@ const SELECTED_MATERIAL: StandardMaterial3D = preload("uid://bcwfrjbr5vhmi")
 const HIGHLIGHT_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://dhsattf813kya")
 const SELECTED_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://b5iarhl24whsd")
 
+const default_texture_presets: Dictionary = {
+	"M/DEMO.DAS": {
+		"STUDY": { "ceiling": 201, "floor": 59, "wall": 35 },
+		"HALLWAY": { "ceiling": 201, "floor": 58, "wall": 8 },
+		"MAUSOLEUM": { "ceiling": 766, "floor": 761, "wall": 763 },
+	},
+	"M/DEMO1.DAS": {
+		"CHURCH": { "ceiling": 153, "floor": 168, "wall": 154},
+		"GARDEN": { "ceiling": 1, "floor": 9, "wall": 26},
+		"TOWER": { "ceiling": 541, "floor": 535, "wall": 861},
+	},
+	"M/DEMO2.DAS": {
+		"TEMPLE": { "ceiling": 5, "floor": 7, "wall": 4},
+		"LAVA": { "ceiling": 33, "floor": 30, "wall": 32},
+		"HALLWAY": { "ceiling": 115, "floor": 116, "wall": 118},
+	},
+	"M/DEMO3.DAS": {
+		"ALIEN": { "ceiling": 179, "floor": 179, "wall": 180 },
+		"CAVERN": { "ceiling": 50, "floor": 118, "wall": 89 },
+		"RITUAL": { "ceiling": 625, "floor": 610, "wall": 605 },
+	},
+	"M/DEMO4.DAS": {
+		"MAUSOLEUM": { "ceiling": 2778, "floor": 2751, "wall": 2787 },
+		"EXTERIOR": { "ceiling": 0, "floor": 331, "wall": 2201 },
+		"TOMB": { "ceiling": 2025, "floor": 2031, "wall": 2235 },
+	}
+}
+
 var res: Dictionary = {}
 var maps: Array = []
 var das_files: Array = []
@@ -44,7 +72,7 @@ var loaded_maps: Dictionary = {}
 var loaded_das: Dictionary = {}
 var loading_das: Dictionary = {}
 var audio_player: RothAudioPlayer
-
+var texture_presets: Dictionary = {}
 
 ## Initialization
 func _ready() -> void:
@@ -213,6 +241,11 @@ func load_roth_settings() -> void:
 	
 	#print(JSON.stringify(maps, "\t"))
 	#print(JSON.stringify(dbase_packs, "\t"))
+	
+	texture_presets = Settings.settings.get("texture_presets", {})
+	if texture_presets.is_empty():
+		texture_presets = default_texture_presets.duplicate(true)
+		Settings.update_settings("texture_presets", texture_presets)
 	
 	settings_loaded.emit()
 

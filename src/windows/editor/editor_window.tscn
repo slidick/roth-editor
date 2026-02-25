@@ -12,21 +12,23 @@
 [ext_resource type="Script" uid="uid://b0dqary0n80ei" path="res://src/windows/editor/count_and_size_container.gd" id="9_ddibi"]
 [ext_resource type="Script" uid="uid://bg8a1j6sb2ctl" path="res://src/windows/editor/2d_edit.gd" id="9_kytel"]
 [ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/editor/palette_window.tscn" id="9_y8pqo"]
-[ext_resource type="Script" uid="uid://mi4etip4nmsx" path="res://src/windows/editor/edit_object_container.gd" id="10_2yf5m"]
+[ext_resource type="Script" uid="uid://mi4etip4nmsx" path="res://src/windows/editor/edit_panels/edit_object_container.gd" id="10_2yf5m"]
 [ext_resource type="PackedScene" uid="uid://buvv5wgtyctbw" path="res://src/windows/command/command_editor.tscn" id="10_12tai"]
-[ext_resource type="Script" uid="uid://dxxw2ncijwwje" path="res://src/windows/editor/edit_face_container.gd" id="10_jmx1t"]
-[ext_resource type="Script" uid="uid://b3cdufqwmtjtf" path="res://src/windows/editor/edit_sector_container.gd" id="11_12tai"]
+[ext_resource type="Script" uid="uid://dxxw2ncijwwje" path="res://src/windows/editor/edit_panels/edit_face_container.gd" id="10_jmx1t"]
+[ext_resource type="Script" uid="uid://b3cdufqwmtjtf" path="res://src/windows/editor/edit_panels/edit_sector_container.gd" id="11_12tai"]
 [ext_resource type="PackedScene" uid="uid://h7epeqaiukln" path="res://src/windows/editor/texture_window.tscn" id="11_q0i2p"]
 [ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="11_w2pak"]
-[ext_resource type="Script" uid="uid://pdmovt0easru" path="res://src/windows/editor/edit_sfx_container.gd" id="11_yrxyp"]
+[ext_resource type="Script" uid="uid://pdmovt0easru" path="res://src/windows/editor/edit_panels/edit_sfx_container.gd" id="11_yrxyp"]
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
 [ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/utils/tri_state_check_box.gd" id="13_tep3q"]
 [ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/editor/array_02_window.tscn" id="15_d740k"]
-[ext_resource type="Script" uid="uid://bibnsjvit8256" path="res://src/windows/editor/edit_vertex_container.gd" id="19_afexc"]
+[ext_resource type="Script" uid="uid://bibnsjvit8256" path="res://src/windows/editor/edit_panels/edit_vertex_container.gd" id="19_afexc"]
 [ext_resource type="PackedScene" uid="uid://db0dxik1y7uol" path="res://src/windows/editor/status_bar.tscn" id="19_sf4qd"]
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="20_12tai"]
+[ext_resource type="Script" uid="uid://c7rh7bpqr6cl2" path="res://src/windows/editor/edit_panels/draw_mode_container.gd" id="20_tv4rk"]
 [ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/editor/paste_options_dialog.tscn" id="21_dyevs"]
 [ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="27_6txe1"]
+[ext_resource type="PackedScene" uid="uid://83l60nlqs38r" path="res://src/windows/editor/texture_presets_window.tscn" id="29_wknxc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf4qd"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
@@ -147,6 +149,8 @@ corner_detail = 1
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8go8f"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_w2pak"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_tv4rk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vjvk8"]
 content_margin_left = 10.0
@@ -354,11 +358,11 @@ layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
 text = "Vertex"
 
-[node name="BoxCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="7" unique_id=422202938]
+[node name="DrawModeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="7" unique_id=422202938]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_kytel")
-text = "Box"
+text = "Draw"
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer" index="8" unique_id=527408891]
 custom_minimum_size = Vector2(0, 60)
@@ -2328,6 +2332,166 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="DrawModeContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit" index="5" unique_id=1425744190]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_x08gi")
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("20_tv4rk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" index="0" unique_id=1783677821]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="0" unique_id=602893178]
+layout_mode = 2
+text = "Shape"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="1" unique_id=1103482097]
+layout_mode = 2
+
+[node name="BoxCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1970604038]
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("ButtonGroup_tv4rk")
+text = "Box"
+
+[node name="StairCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="1" unique_id=551287210]
+layout_mode = 2
+disabled = true
+button_group = SubResource("ButtonGroup_tv4rk")
+text = "Stair"
+
+[node name="CircleCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="2" unique_id=226403585]
+layout_mode = 2
+disabled = true
+button_group = SubResource("ButtonGroup_tv4rk")
+text = "Circle"
+
+[node name="FreeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="3" unique_id=1010937595]
+layout_mode = 2
+disabled = true
+button_group = SubResource("ButtonGroup_tv4rk")
+text = "Free"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="2" unique_id=1165675953]
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="3" unique_id=1160992190]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=1564967357]
+layout_mode = 2
+text = "Preset:"
+
+[node name="DrawModeTextureOptionButton" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5" index="1" unique_id=2084675343]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+fit_to_longest_item = false
+allow_reselect = true
+
+[node name="DrawModeEditTexturePresetsButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5" index="2" unique_id=421173836]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Edit"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="4" unique_id=268654284]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1408197368]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "ROF"
+
+[node name="DrawModeRoofHeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=610058529]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -32768.0
+max_value = 32767.0
+value = 386.0
+
+[node name="DrawModeRoofOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1737624089]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+
+[node name="DrawModeRoofScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2" index="3" unique_id=854243893]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="5" unique_id=1261760314]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=896767738]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "FLR"
+
+[node name="DrawModeFloorHeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=32245073]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -32768.0
+max_value = 32767.0
+
+[node name="DrawModeFloorOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3" index="2" unique_id=124803751]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+
+[node name="DrawModeFloorScaleOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3" index="3" unique_id=1927544380]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1:2"
+popup/item_0/id = 0
+popup/item_1/text = "1:1"
+popup/item_1/id = 1
+popup/item_2/text = "2:1"
+popup/item_2/id = 2
+popup/item_3/text = "4:1"
+popup/item_3/id = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="6" unique_id=1223247824]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=396703667]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "WALL"
+
+[node name="DrawModeWallOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=767301576]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+fit_to_longest_item = false
+
+[node name="DrawModeAdjustCeilingHeightButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4" index="2" unique_id=558745687]
+layout_mode = 2
+text = "Adjust Ceiling"
+
 [node name="History" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="2" unique_id=1636518949]
 visible = false
 layout_mode = 2
@@ -2499,6 +2663,23 @@ offset_bottom = 343.5
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="TexturePresets" parent="Dialogs" index="7" unique_id=452268762 instance=ExtResource("29_wknxc")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -446.0
+offset_top = -318.0
+offset_right = 446.0
+offset_bottom = 318.0
+grow_horizontal = 2
+grow_vertical = 2
+exclusive = true
+
 [node name="3DObjectContextMenu" type="PopupMenu" parent="." index="3" unique_id=556158273]
 unique_name_in_owner = true
 item_count = 2
@@ -2560,7 +2741,7 @@ item_1/id = 1
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/ObjectCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_object_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/SFXCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_sfx_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/VertexCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_vertex_check_box_toggled"]
-[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/BoxCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_box_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/DrawModeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_draw_mode_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer/GridCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_grid_check_box_toggled"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer/GridEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_grid_edit_value_changed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/ToolsContainer/HBoxContainer2/SnapCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_check_box_toggled"]
@@ -2675,6 +2856,12 @@ item_1/id = 1
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer7/SFXUnk0x0EEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0e_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer8/SFXUnk0x10Edit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_10_edit_value_changed"]
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/EditSFXTimer" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_edit_sfx_timer_timeout"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5/DrawModeTextureOptionButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_texture_option_button_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5/DrawModeEditTexturePresetsButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_edit_texture_presets_button_pressed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2/DrawModeRoofOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_roof_option_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3/DrawModeFloorOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_floor_option_item_selected"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4/DrawModeWallOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_wall_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4/DrawModeAdjustCeilingHeightButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_adjust_ceiling_height_button_pressed"]
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/EditorHeader/TabBar" to="." method="_on_tab_bar_tab_changed"]
 [connection signal="index_pressed" from="3DObjectContextMenu" to="." method="_on_3d_object_context_menu_index_pressed"]
 [connection signal="index_pressed" from="3DContextMenu" to="." method="_on_3d_context_menu_index_pressed"]

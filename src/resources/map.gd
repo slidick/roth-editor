@@ -156,14 +156,14 @@ func delete_sector(sector_to_delete: Sector) -> void:
 	sectors.erase(sector_to_delete)
 
 
-func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
+func add_sector(starting_position: Vector2, ending_position: Vector2, sector_data: Dictionary) -> Sector:
 	var initial_data := {
-		"ceilingHeight": 256,
-		"floorHeight": 0,
+		"ceilingHeight": sector_data.ceiling_height,
+		"floorHeight": sector_data.floor_height,
 		"unk0x04": 0,
-		"ceilingTextureIndex": 3,
-		"floorTextureIndex": 3,
-		"textureFit": 0b00010100,
+		"ceilingTextureIndex": sector_data.ceiling,
+		"floorTextureIndex": sector_data.floor,
+		"textureFit": sector_data.texture_fit,
 		"lighting": 128,
 		"textureMapOverride": 0,
 		"facesCount": 4,
@@ -190,25 +190,25 @@ func add_sector(starting_position: Vector2, ending_position: Vector2) -> Sector:
 	else:
 		v3 = Vector2(ending_position.x, starting_position.y)
 		v2 = Vector2(starting_position.x, ending_position.y)
-	var face_1: Face = Face.create_new_face(map_info, new_sector)
+	var face_1: Face = Face.create_new_face(map_info, new_sector, sector_data)
 	face_1.v1 = Vector2(starting_position)
 	face_1.v2 = v2
 	face_1.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_1))
 	Roth.get_map(map_info).faces.append(face_1)
-	var face_2: Face = Face.create_new_face(map_info, new_sector)
+	var face_2: Face = Face.create_new_face(map_info, new_sector, sector_data)
 	face_2.v1 = v2
 	face_2.v2 = Vector2(ending_position)
 	face_2.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_2))
 	Roth.get_map(map_info).faces.append(face_2)
-	var face_3: Face = Face.create_new_face(map_info, new_sector)
+	var face_3: Face = Face.create_new_face(map_info, new_sector, sector_data)
 	face_3.v1 = Vector2(ending_position)
 	face_3.v2 = v3
 	face_3.update_horizontal_fit()
 	new_sector.faces.append(weakref(face_3))
 	Roth.get_map(map_info).faces.append(face_3)
-	var face_4: Face = Face.create_new_face(map_info, new_sector)
+	var face_4: Face = Face.create_new_face(map_info, new_sector, sector_data)
 	face_4.v1 = v3
 	face_4.v2 = Vector2(starting_position)
 	face_4.update_horizontal_fit()
