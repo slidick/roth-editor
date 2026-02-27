@@ -67,6 +67,8 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 6.0
+split_offsets = PackedInt32Array(1000)
+split_offset = 1000
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer" index="0" unique_id=1343840730]
 layout_mode = 2
@@ -102,6 +104,11 @@ text = "Both"
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="SearchEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2" index="2" unique_id=2117404608]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Search Textures..."
+
 [node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer" index="1" unique_id=1397547472]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -124,3 +131,4 @@ size_flags_vertical = 3
 [connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/RotatableItemList" to="." method="_on_rotatable_item_list_context_option_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/RotatableItemList" to="." method="_on_rotatable_item_list_item_activated"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/RotatableItemList" to="." method="_on_rotatable_item_list_item_selected"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer2/HSplitContainer/VBoxContainer2/SearchEdit" to="." method="_on_search_edit_text_changed"]

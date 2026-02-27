@@ -26,6 +26,7 @@ func _ready() -> void:
 func _fade_out() -> void:
 	super._fade_out()
 	texture_selected.emit(-1)
+	%SearchEdit.clear()
 
 
 func init_das(p_das: Dictionary) -> void:
@@ -159,6 +160,7 @@ func _on_both_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_favorite_item_list_item_activated(index: int) -> void:
 	texture_selected.emit(%FavoriteItemList.get_item_metadata(index).index)
+	%SearchEdit.clear()
 	add_to_recents(%FavoriteItemList.get_item_metadata(index).index)
 	toggle(false)
 
@@ -177,6 +179,7 @@ func _on_favorite_item_list_context_option_selected(index: int, context_index: i
 
 func _on_recent_item_list_item_activated(index: int) -> void:
 	texture_selected.emit(%RecentItemList.get_item_metadata(index).index)
+	%SearchEdit.clear()
 	add_to_recents(%RecentItemList.get_item_metadata(index).index)
 	toggle(false)
 
@@ -203,6 +206,7 @@ func add_to_recents(texture_index: int) -> void:
 
 func _on_rotatable_item_list_item_activated(index: int) -> void:
 	texture_selected.emit(%RotatableItemList.get_item_metadata(index).index)
+	%SearchEdit.clear()
 	add_to_recents(%RotatableItemList.get_item_metadata(index).index)
 	toggle(false)
 
@@ -248,3 +252,12 @@ func _on_recent_item_list_item_selected(index: int) -> void:
 	%FavoriteItemList.deselect_all()
 	%RotatableItemList.deselect_all()
 	display_texture_data(%RecentItemList.get_item_metadata(index))
+
+
+func _on_search_edit_text_changed(search_text: String) -> void:
+	for i in range(%RotatableItemList.item_count):
+		var texture: Dictionary = %RotatableItemList.get_item_metadata(i)
+		if is_viable(texture) and (search_text.to_upper() in texture.name.to_upper() or search_text.to_upper() in texture.desc.to_upper() or search_text.is_empty()):
+			%RotatableItemList.set_hidden(i, false)
+		else:
+			%RotatableItemList.set_hidden(i, true)
