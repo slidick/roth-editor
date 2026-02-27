@@ -109,6 +109,7 @@ func _input(event: InputEvent) -> void:
 		zooming = true
 		update_camera_zoom()
 		update_line_width(additional_zoom)
+		queue_redraw()
 	
 	if event.is_action_pressed("map_2d_zoom_out"):
 		additional_zoom *= ZOOM_SPEED
@@ -143,6 +144,7 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 			start_box_draw = false
 			start_box_position = Vector2.ZERO
+			%BoxSizeLabel.hide()
 			queue_redraw()
 	
 	if start_box_select:
@@ -434,12 +436,14 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 					):
 						start_box_draw = false
 						start_box_position = Vector2.ZERO
+						%BoxSizeLabel.hide()
 						queue_redraw()
 						return
 					
 					var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD, %DrawModeContainer.get_sector_options())
 					start_box_draw = false
 					start_box_position = Vector2.ZERO
+					%BoxSizeLabel.hide()
 					queue_redraw()
 					show_vertices(false)
 					
@@ -966,8 +970,11 @@ func draw_box() -> void:
 	if not start_box_draw:
 		return
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
-	var size: Vector2 = current_mouse - start_box_position
+	var size: Vector2 = (current_mouse - start_box_position).snappedf(snap)
 	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, line_width, true)
+	%BoxSizeLabel.text = "%.0f x %.0f" % [size.x * Roth.SCALE_2D_WORLD, size.y * Roth.SCALE_2D_WORLD]
+	%BoxSizeLabel.show()
+	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (start_box_position + current_mouse) / 2) * %Camera2D.zoom.x
 
 
 func draw_vertex_select() -> void:

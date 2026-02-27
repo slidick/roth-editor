@@ -804,6 +804,14 @@ grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 2
 
+[node name="BoxSizeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/CanvasLayer" index="2" unique_id=75894004]
+unique_name_in_owner = true
+visible = false
+offset_right = 118.0
+offset_bottom = 23.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D" index="1" unique_id=1295668365]
 unique_name_in_owner = true
 
