@@ -93,8 +93,8 @@ func _process(_delta: float) -> void:
 		timer.wait_time = 0.01
 	else:
 		timer.wait_time = 0.1
-	var mouse_x: float = get_global_mouse_position().x + global_position.x
-	var mouse_y: float = get_global_mouse_position().y + global_position.y
+	var mouse_x: float = snappedf(get_global_mouse_position().x + global_position.x, snap)
+	var mouse_y: float = snappedf(get_global_mouse_position().y + global_position.y, snap)
 	%CoordinatesLabel.text = "(%d, %d)" % [mouse_x * Roth.SCALE_2D_WORLD, mouse_y * Roth.SCALE_2D_WORLD]
 
 #region Input
