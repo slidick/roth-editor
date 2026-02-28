@@ -744,9 +744,9 @@ func update_camera_center() -> void:
 
 
 func update_camera_zoom() -> void:
-	%Camera2D.zoom = Vector2.ONE * additional_zoom
-	
 	var mouse_pos := get_global_mouse_position()
+	
+	%Camera2D.zoom = Vector2.ONE * additional_zoom
 	
 	# Ensures zoom to mouse works at high speed
 	if zooming:
