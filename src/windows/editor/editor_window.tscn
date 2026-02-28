@@ -20,7 +20,9 @@
 [ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="11_w2pak"]
 [ext_resource type="Script" uid="uid://pdmovt0easru" path="res://src/windows/editor/edit_panels/edit_sfx_container.gd" id="11_yrxyp"]
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
+[ext_resource type="Script" uid="uid://da08m6ghedkbl" path="res://src/windows/editor/draw_tools/box_tool.gd" id="12_uyfwr"]
 [ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/utils/tri_state_check_box.gd" id="13_tep3q"]
+[ext_resource type="Script" uid="uid://djuyvhq6u2tq2" path="res://src/windows/editor/draw_tools/stair_tool.gd" id="13_vjvk8"]
 [ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/editor/array_02_window.tscn" id="15_d740k"]
 [ext_resource type="Script" uid="uid://bibnsjvit8256" path="res://src/windows/editor/edit_panels/edit_vertex_container.gd" id="19_afexc"]
 [ext_resource type="PackedScene" uid="uid://db0dxik1y7uol" path="res://src/windows/editor/status_bar.tscn" id="19_sf4qd"]
@@ -151,6 +153,12 @@ corner_detail = 1
 [sub_resource type="ButtonGroup" id="ButtonGroup_w2pak"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_tv4rk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l6b3v"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_vjvk8"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_l6b3v"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vjvk8"]
 content_margin_left = 10.0
@@ -839,6 +847,17 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="Polygon2D" type="Polygon2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/Vertices" index="0" unique_id=389019593]
+
+[node name="DrawTools" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="3" unique_id=1075856890]
+unique_name_in_owner = true
+
+[node name="BoxTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="0" unique_id=97560281]
+unique_name_in_owner = true
+script = ExtResource("12_uyfwr")
+
+[node name="StairTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="1" unique_id=873530528]
+unique_name_in_owner = true
+script = ExtResource("13_vjvk8")
 
 [node name="Command Editor" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab" index="2" unique_id=512214698 instance=ExtResource("10_12tai")]
 unique_name_in_owner = true
@@ -2360,34 +2379,125 @@ text = "Shape"
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="1" unique_id=1103482097]
 layout_mode = 2
 
-[node name="BoxCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1970604038]
+[node name="BoxShapeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1970604038]
+unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 button_group = SubResource("ButtonGroup_tv4rk")
 text = "Box"
 
-[node name="StairCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="1" unique_id=551287210]
+[node name="StairShapeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="1" unique_id=551287210]
+unique_name_in_owner = true
 layout_mode = 2
-disabled = true
 button_group = SubResource("ButtonGroup_tv4rk")
 text = "Stair"
 
-[node name="CircleCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="2" unique_id=226403585]
+[node name="CircleShapeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="2" unique_id=226403585]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 button_group = SubResource("ButtonGroup_tv4rk")
 text = "Circle"
 
-[node name="FreeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="3" unique_id=1010937595]
+[node name="FreeShapeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="3" unique_id=1010937595]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 button_group = SubResource("ButtonGroup_tv4rk")
 text = "Free"
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="2" unique_id=1165675953]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="2" unique_id=260459218]
 layout_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="3" unique_id=1160992190]
+[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="3" unique_id=319575408]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_l6b3v")
+current_tab = 0
+tabs_visible = false
+
+[node name="BoxOptionsContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="1" unique_id=1029265201]
+unique_name_in_owner = true
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="StairOptionsContainer" type="BoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="2" unique_id=1823041469]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer" index="0" unique_id=1118154425]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer" index="0" unique_id=1349402438]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer" index="0" unique_id=2047520233]
+layout_mode = 2
+text = "Steps:"
+
+[node name="StepsSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer" index="1" unique_id=428150170]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 2.0
+value = 10.0
+rounded = true
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer" index="2" unique_id=1020961032]
+layout_mode = 2
+text = "Step Height:"
+
+[node name="StepHeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer" index="3" unique_id=2129295942]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+value = 40.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer" index="1" unique_id=1253729302]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1068832957]
+layout_mode = 2
+
+[node name="StairHorizontalCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2/VBoxContainer" index="0" unique_id=1771132078]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("ButtonGroup_vjvk8")
+text = "Horizontal"
+
+[node name="StairVerticalCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2/VBoxContainer" index="1" unique_id=477923876]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_vjvk8")
+text = "Vertical"
+
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=712711912]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1079833700]
+layout_mode = 2
+
+[node name="FlatCeilingCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="0" unique_id=784430788]
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("ButtonGroup_l6b3v")
+text = "Flat Ceiling"
+
+[node name="SteppedCeilingCheckBox2" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/StairOptionsContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="1" unique_id=783977530]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_l6b3v")
+text = "Stepped Ceiling"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="4" unique_id=1165675953]
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="5" unique_id=1160992190]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=1564967357]
@@ -2407,7 +2517,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Edit"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="4" unique_id=268654284]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="6" unique_id=268654284]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1408197368]
@@ -2444,7 +2554,7 @@ popup/item_2/id = 2
 popup/item_3/text = "4:1"
 popup/item_3/id = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="5" unique_id=1261760314]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="7" unique_id=1261760314]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=896767738]
@@ -2480,7 +2590,7 @@ popup/item_2/id = 2
 popup/item_3/text = "4:1"
 popup/item_3/id = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="6" unique_id=1223247824]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="8" unique_id=1223247824]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=396703667]
@@ -2864,6 +2974,8 @@ item_1/id = 1
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer7/SFXUnk0x0EEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0e_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer8/SFXUnk0x10Edit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_10_edit_value_changed"]
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/EditSFXTimer" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_edit_sfx_timer_timeout"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer/BoxShapeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools/BoxTool" method="_on_box_shape_check_box_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer/StairShapeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools/StairTool" method="_on_stair_shape_check_box_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5/DrawModeTextureOptionButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_texture_option_button_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5/DrawModeEditTexturePresetsButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_edit_texture_presets_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2/DrawModeRoofOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_roof_option_item_selected"]

@@ -29,8 +29,6 @@ var holding_ctrl: bool = false
 var holding_alt: bool = false
 var snap: float = 0.2
 var timer: Timer
-var start_box_draw: bool = false 
-var start_box_position := Vector2.ZERO
 var start_sector_split: bool = false
 var start_sector_split_vertex: VertexNode
 var last_allow_move: bool = false
@@ -136,15 +134,6 @@ func _input(event: InputEvent) -> void:
 			mouse_drag_enabled = true
 		else:
 			mouse_drag_enabled = false
-			queue_redraw()
-	
-	if start_box_draw:
-		if event is InputEventMouseMotion:
-			queue_redraw()
-		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-			start_box_draw = false
-			start_box_position = Vector2.ZERO
-			%BoxSizeLabel.hide()
 			queue_redraw()
 	
 	if start_box_select:
@@ -421,49 +410,11 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 	if not %DrawModeCheckBox.button_pressed:
 		return
 	
-	if event is InputEventMouseButton:
-		match event.button_index:
-			MOUSE_BUTTON_LEFT:
-				if event.pressed:
-					start_box_draw = true
-					start_box_position = (get_global_mouse_position() + global_position).snappedf(snap)
-				else:
-					if start_box_draw == false:
-						return
-					
-					if (start_box_position.x == (get_global_mouse_position() + global_position).snappedf(snap).x or 
-							start_box_position.y == (get_global_mouse_position() + global_position).snappedf(snap).y
-					):
-						start_box_draw = false
-						start_box_position = Vector2.ZERO
-						%BoxSizeLabel.hide()
-						queue_redraw()
-						return
-					
-					var new_sector: Sector = map.add_sector(start_box_position * Roth.SCALE_2D_WORLD, (get_global_mouse_position() + global_position).snappedf(snap) * Roth.SCALE_2D_WORLD, %DrawModeContainer.get_sector_options())
-					start_box_draw = false
-					start_box_position = Vector2.ZERO
-					%BoxSizeLabel.hide()
-					queue_redraw()
-					show_vertices(false)
-					
-					# Check for merges
-					for sector: Sector in map.sectors:
-						for face_ref: WeakRef in sector.faces:
-							var face: Face = face_ref.get_ref()
-							for new_face_ref: WeakRef in new_sector.faces:
-								var new_face: Face = new_face_ref.get_ref()
-								if face.sister and face.sister.get_ref() == new_face:
-									pass
-								elif new_face.v2 == face.v1 and new_face.v1 == face.v2:
-									face.sister = weakref(new_face)
-									new_face.sister = weakref(face)
-									face.initialize_mesh()
-									new_face.initialize_mesh()
-									show_vertices(false)
-									queue_redraw()
-					
-					Roth.editor_action.emit(map.map_info, "Draw Box Sector")
+	if %BoxShapeCheckBox.button_pressed:
+		%BoxTool.handle_input(event)
+	
+	if %StairShapeCheckBox.button_pressed:
+		%StairTool.handle_input(event)
 
 
 func handle_object_mode_event(event: InputEvent) -> void:
@@ -773,9 +724,10 @@ func _draw() -> void:
 	draw_grid()
 	draw_sectors()
 	update_camera_zoom()
-	draw_box()
 	draw_vertex_select()
 	draw_sector_split()
+	for child: Node2D in %DrawTools.get_children():
+		child.queue_redraw()
 
 
 func update_line_width(x: float) -> bool:
@@ -964,17 +916,6 @@ func draw_sectors() -> void:
 			for face_ref: WeakRef in sector.faces:
 				var face: Face = face_ref.get_ref()
 				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.RED, line_width*2, true)
-
-
-func draw_box() -> void:
-	if not start_box_draw:
-		return
-	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(snap)
-	var size: Vector2 = (current_mouse - start_box_position).snappedf(snap)
-	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, line_width, true)
-	%BoxSizeLabel.text = "%.0f x %.0f" % [size.x * Roth.SCALE_2D_WORLD, size.y * Roth.SCALE_2D_WORLD]
-	%BoxSizeLabel.show()
-	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (start_box_position + current_mouse) / 2) * %Camera2D.zoom.x
 
 
 func draw_vertex_select() -> void:

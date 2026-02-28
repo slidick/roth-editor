@@ -224,6 +224,35 @@ func add_sector(starting_position: Vector2, ending_position: Vector2, sector_dat
 	return new_sector
 
 
+func add_stairs(starting_position: Vector2, ending_position: Vector2, sector_data: Dictionary, stair_data: Dictionary) -> Array:
+	var new_sectors: Array = []
+	var size: Vector2i = (ending_position - starting_position).round()
+	
+	sector_data["lower_wall"] = sector_data.wall
+	if stair_data.stepped_ceiling:
+		sector_data["upper_wall"] = sector_data.wall
+	
+	for i in range(stair_data.steps):
+		var start := Vector2.ZERO
+		var end := Vector2.ZERO
+		
+		if stair_data.orientation == "horizontal":
+			start = Vector2(starting_position.x + (size.x * (i) / stair_data.steps), starting_position.y)
+			end = Vector2(starting_position.x + (size.x * (i+1) / stair_data.steps), starting_position.y+size.y)
+		else:
+			start = Vector2(starting_position.x, starting_position.y + (size.y * (i) / stair_data.steps))
+			end = Vector2(starting_position.x + size.x, starting_position.y + (size.y * (i+1) / stair_data.steps))
+		
+		var sector: Sector = await add_sector(start, end, sector_data)
+		new_sectors.append(sector)
+		
+		sector_data.floor_height += stair_data.height
+		if stair_data.stepped_ceiling:
+			sector_data.ceiling_height += stair_data.height
+	
+	return new_sectors
+
+
 func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 	for i in range(len(sector_data)):
 		var sector: Sector = sector_data[i]
