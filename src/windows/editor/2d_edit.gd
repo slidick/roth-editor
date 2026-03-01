@@ -1182,14 +1182,16 @@ func add_sfx_to_2d_map(new_sfx: SFX) -> void:
 
 #region Vertices
 
-func show_vertices(allow_move: bool) -> void:
+func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 	if not map:
 		return
-	hide_vertices()
 	last_allow_move = allow_move
 	var vertices := {}
 	var split_vertices := {}
-	for sector: Sector in map.sectors:
+	if sectors.is_empty():
+		hide_vertices()
+		sectors = map.sectors
+	for sector: Sector in sectors:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			face.v1 = face.v1.snappedf(2.0)

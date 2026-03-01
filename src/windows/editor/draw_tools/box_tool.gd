@@ -45,8 +45,7 @@ func handle_input(event: InputEvent) -> void:
 					start_box_draw = false
 					start_box_position = Vector2.ZERO
 					%BoxSizeLabel.hide()
-					queue_redraw()
-					%Map2D.show_vertices(false)
+					%Map2D.queue_redraw()
 					
 					# Check for merges
 					for sector: Sector in %Map2D.map.sectors:
@@ -61,9 +60,8 @@ func handle_input(event: InputEvent) -> void:
 									new_face.sister = weakref(face)
 									face.initialize_mesh()
 									new_face.initialize_mesh()
-									%Map2D.show_vertices(false)
-									queue_redraw()
 					
+					%Map2D.show_vertices(false, [new_sector])
 					Roth.editor_action.emit(%Map2D.map.map_info, "Draw Box Sector")
 
 
