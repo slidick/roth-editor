@@ -156,7 +156,47 @@ func delete_sector(sector_to_delete: Sector) -> void:
 	sectors.erase(sector_to_delete)
 
 
-func add_sector(starting_position: Vector2, ending_position: Vector2, sector_data: Dictionary) -> Sector:
+func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
+	var initial_data := {
+		"ceilingHeight": sector_data.ceiling_height,
+		"floorHeight": sector_data.floor_height,
+		"unk0x04": 0,
+		"ceilingTextureIndex": sector_data.ceiling,
+		"floorTextureIndex": sector_data.floor,
+		"textureFit": sector_data.texture_fit,
+		"lighting": 128,
+		"textureMapOverride": 0,
+		"facesCount": len(vertices),
+		"ceilingTextureShiftX": 0,
+		"ceilingTextureShiftY": 0,
+		"floorTextureShiftX": 0,
+		"floorTextureShiftY": 0,
+		"floorTriggerID": 0,
+		"unk0x16": 0b00010100,
+		"objectInformation": [],
+	}
+	
+	var new_sector: Sector = Sector.new(initial_data, map_info)
+	sectors.append(new_sector)
+	
+	for i in range(len(vertices)):
+		var v1: Vector2 = vertices[i]
+		var v2: Vector2 = vertices[(i+1)%len(vertices)]
+		var face: Face = Face.create_new_face(map_info, new_sector, sector_data)
+		face.v1 = v1
+		face.v2 = v2
+		face.update_horizontal_fit()
+		new_sector.faces.append(weakref(face))
+		Roth.get_map(map_info).faces.append(face)
+		node.get_node("Faces").add_child(await face.initialize_mesh())
+	
+	new_sector._update_vertices()
+	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+	
+	return new_sector
+
+
+func add_box_sector(starting_position: Vector2, ending_position: Vector2, sector_data: Dictionary) -> Sector:
 	var initial_data := {
 		"ceilingHeight": sector_data.ceiling_height,
 		"floorHeight": sector_data.floor_height,
@@ -243,7 +283,7 @@ func add_stairs(starting_position: Vector2, ending_position: Vector2, sector_dat
 			start = Vector2(starting_position.x, starting_position.y + (size.y * (i) / stair_data.steps))
 			end = Vector2(starting_position.x + size.x, starting_position.y + (size.y * (i+1) / stair_data.steps))
 		
-		var sector: Sector = await add_sector(start, end, sector_data)
+		var sector: Sector = await add_box_sector(start, end, sector_data)
 		new_sectors.append(sector)
 		
 		sector_data.floor_height += stair_data.height

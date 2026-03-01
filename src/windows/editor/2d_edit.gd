@@ -415,6 +415,9 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 	
 	if %StairShapeCheckBox.button_pressed:
 		%StairTool.handle_input(event)
+	
+	if %CircleShapeCheckBox.button_pressed:
+		%CircleTool.handle_input(event)
 
 
 func handle_object_mode_event(event: InputEvent) -> void:
