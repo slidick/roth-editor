@@ -682,6 +682,7 @@ func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 	
 	while len(undo_stacks[p_map_info.name]) > Settings.settings.get("options", {}).get("undo_history", 50):
 		undo_stacks[p_map_info.name].pop_front()
+		undo_positions[p_map_info.name] -= 1
 	
 	undo_lists[p_map_info.name].clear()
 	for i in range(len(undo_stacks[p_map_info.name])-1, -1, -1):
