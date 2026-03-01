@@ -24,6 +24,7 @@
 [ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/utils/tri_state_check_box.gd" id="13_tep3q"]
 [ext_resource type="Script" uid="uid://djuyvhq6u2tq2" path="res://src/windows/editor/draw_tools/stair_tool.gd" id="13_vjvk8"]
 [ext_resource type="Script" uid="uid://cp1cjottq6oww" path="res://src/windows/editor/draw_tools/circle_tool.gd" id="14_l6b3v"]
+[ext_resource type="Script" uid="uid://kh0asdqye1q3" path="res://src/windows/editor/draw_tools/free_tool.gd" id="15_cg06i"]
 [ext_resource type="PackedScene" uid="uid://bbbs14qgufor4" path="res://src/windows/editor/array_02_window.tscn" id="15_d740k"]
 [ext_resource type="Script" uid="uid://bibnsjvit8256" path="res://src/windows/editor/edit_panels/edit_vertex_container.gd" id="19_afexc"]
 [ext_resource type="PackedScene" uid="uid://db0dxik1y7uol" path="res://src/windows/editor/status_bar.tscn" id="19_sf4qd"]
@@ -863,6 +864,10 @@ script = ExtResource("13_vjvk8")
 [node name="CircleTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="2" unique_id=1853153096]
 unique_name_in_owner = true
 script = ExtResource("14_l6b3v")
+
+[node name="FreeTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="3" unique_id=517876629]
+unique_name_in_owner = true
+script = ExtResource("15_cg06i")
 
 [node name="Command Editor" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab" index="2" unique_id=512214698 instance=ExtResource("10_12tai")]
 unique_name_in_owner = true
@@ -2406,7 +2411,6 @@ text = "Circle"
 [node name="FreeShapeCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer" index="3" unique_id=1010937595]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = true
 button_group = SubResource("ButtonGroup_tv4rk")
 text = "Free"
 
@@ -2420,7 +2424,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_l6b3v")
 current_tab = 0
 tabs_visible = false
 
-[node name="BoxOptionsContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="1" unique_id=1029265201]
+[node name="BoxOptionsContainer" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="1" unique_id=609500712]
 unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
@@ -2521,6 +2525,12 @@ layout_mode = 2
 min_value = 3.0
 value = 12.0
 rounded = true
+
+[node name="FreeOptionsContainer" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="4" unique_id=1021503665]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="4" unique_id=1165675953]
 layout_mode = 2
@@ -3005,6 +3015,7 @@ item_1/id = 1
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer/BoxShapeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools/BoxTool" method="_on_box_shape_check_box_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer/StairShapeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools/StairTool" method="_on_stair_shape_check_box_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer/CircleShapeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools/CircleTool" method="_on_circle_shape_check_box_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer/FreeShapeCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools/FreeTool" method="_on_free_shape_check_box_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5/DrawModeTextureOptionButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_texture_option_button_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer5/DrawModeEditTexturePresetsButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_edit_texture_presets_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer2/DrawModeRoofOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_roof_option_item_selected"]

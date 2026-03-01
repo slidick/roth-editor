@@ -418,6 +418,9 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 	
 	if %CircleShapeCheckBox.button_pressed:
 		%CircleTool.handle_input(event)
+	
+	if %FreeShapeCheckBox.button_pressed:
+		%FreeTool.handle_input(event)
 
 
 func handle_object_mode_event(event: InputEvent) -> void:

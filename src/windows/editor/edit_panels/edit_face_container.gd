@@ -593,6 +593,7 @@ func _on_flip_face_button_pressed() -> void:
 		var v1:Vector2 = Vector2(face.v1)
 		face.v1 = Vector2(face.v2)
 		face.v2 = v1
+		face.sector.reorder_faces()
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
