@@ -2,7 +2,7 @@ extends Node2D
 class_name VertexNode
 
 signal vertex_deleted
-signal face_split
+signal face_split(vertex: VertexNode, new_faces: Array)
 signal start_sector_split(vertex: VertexNode)
 signal vertex_dragged(vertex: VertexNode, relative: Vector2)
 signal vertex_drag_canceled
@@ -253,7 +253,7 @@ func split_face() -> void:
 		new_faces[0].initialize_mesh()
 		new_faces[1].initialize_mesh()
 	
-	face_split.emit()
+	face_split.emit(self, new_faces)
 
 
 class BorderPolygon2D extends Polygon2D:

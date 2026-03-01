@@ -1249,9 +1249,20 @@ func _on_vertex_deleted() -> void:
 	queue_redraw()
 
 
-func _on_face_split() -> void:
+func _on_face_split(vertex: VertexNode, new_faces: Array) -> void:
 	Roth.editor_action.emit(map.map_info, "Split Face")
-	show_vertices(last_allow_move)
+	vertex.queue_free()
+	var new_vertex_data := {
+		"faces": new_faces,
+		"sectors": vertex.sectors,
+	}
+	var vertex_node := VertexNode.new(map.map_info, vertex.coordinate, new_vertex_data, last_allow_move, line_width)
+	vertex_node.vertex_deleted.connect(_on_vertex_deleted)
+	vertex_node.start_sector_split.connect(_on_sector_split)
+	vertex_node.vertex_dragged.connect(_on_vertex_dragged)
+	vertex_node.vertex_drag_canceled.connect(_on_vertex_drag_canceled)
+	vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
+	%Vertices.add_child(vertex_node)
 	queue_redraw()
 
 
