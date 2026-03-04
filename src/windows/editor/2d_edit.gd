@@ -410,6 +410,9 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 	if not %DrawModeCheckBox.button_pressed:
 		return
 	
+	if event.shift_pressed:
+		return
+	
 	if %BoxShapeCheckBox.button_pressed:
 		%BoxTool.handle_input(event)
 	
@@ -1285,8 +1288,8 @@ func _on_face_split(old_vertex: VertexNode, new_faces: Array) -> void:
 
 
 func _on_sector_split(starting_vertex_node: VertexNode) -> void:
-	if not %VertexCheckBox.button_pressed:
-		return
+	#if not %VertexCheckBox.button_pressed:
+		#return
 	var selected_vertices_count: int = 0
 	for vertex_node: VertexNode in %Vertices.get_children():
 		if vertex_node.is_selected:
