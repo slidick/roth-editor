@@ -30,7 +30,7 @@ func search(filter: String = "") -> void:
 		if is_audio_selection_window and ("dbase500" not in text_entry or "raw_data" not in text_entry.dbase500):
 			continue
 		if not filter.is_empty():
-			if text_entry.string.to_lower().find(filter.to_lower()) == -1:
+			if "string" not in text_entry or text_entry.string.to_lower().find(filter.to_lower()) == -1:
 				continue
 		var tree_item: TreeItem = %Tree.get_root().create_child()
 		if "string" in text_entry:
