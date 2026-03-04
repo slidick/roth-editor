@@ -1191,6 +1191,7 @@ func add_sfx_to_2d_map(new_sfx: SFX) -> void:
 func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 	if not map:
 		return
+	owner.selected_vertex_nodes.clear()
 	last_allow_move = allow_move
 	var vertices := {}
 	var split_vertices := {}
