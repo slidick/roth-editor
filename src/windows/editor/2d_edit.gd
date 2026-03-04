@@ -1404,6 +1404,22 @@ func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 			Roth.editor_action.emit(map.map_info, "Move Vertices")
 
 
+func is_line_within_polygon(start: Vector2, end: Vector2, vertices: Array) -> bool:
+	for i in range(len(vertices)):
+		var p1: Vector2 = vertices[i]
+		var p2: Vector2 = vertices[(i + 1) % len(vertices)]
+		var point: Variant = Geometry2D.segment_intersects_segment(start, end, p1, p2)
+		if point:
+			if point.is_equal_approx(start) or point.is_equal_approx(end):
+				pass
+			else:
+				return false
+	if Geometry2D.is_point_in_polygon((start + end) / 2, vertices):
+		return true
+	else:
+		return false
+
+
 func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 	var minimum: float = 1000000.0
 	var closest: VertexNode
@@ -1422,6 +1438,11 @@ func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 				
 				if skip:
 					continue
+				
+				var verts: Array = sector.get_vertices()
+				if not is_line_within_polygon(start_sector_split_vertex.coordinate, vertex_node.coordinate, verts):
+					continue
+				
 				var distance_squared := (vertex_node.global_position - p_mouse_position).length_squared()
 				if distance_squared < minimum:
 					minimum = distance_squared
@@ -1683,6 +1704,9 @@ func check_for_split(nearest_vertex: VertexNode) -> void:
 			return
 	for sector: Sector in start_sector_split_vertex.sectors:
 		if sector in nearest_vertex.sectors:
+			var verts: Array = sector.get_vertices()
+			if not is_line_within_polygon(start_sector_split_vertex.coordinate, nearest_vertex.coordinate, verts):
+				continue
 			map.split_sector(sector, start_sector_split_vertex, nearest_vertex)
 			Roth.editor_action.emit(map.map_info, "Split Sector")
 			owner.select_resource(sector)
