@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cdyj16x3u3s1x" path="res://src/windows/dbase_editor/text.tscn" id="10_snwk0"]
 [ext_resource type="PackedScene" uid="uid://gxfiwph6tqkc" path="res://src/windows/dbase_editor/text_entry_dialog.tscn" id="11_kn3rg"]
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="12_6d4ud"]
+[ext_resource type="PackedScene" uid="uid://debuc4xxgfvt6" path="res://src/windows/dbase_editor/action_selector_window.tscn" id="13_pryu3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fspgq"]
 
@@ -350,6 +351,22 @@ offset_bottom = 440.0
 grow_horizontal = 2
 grow_vertical = 2
 exclusive = true
+
+[node name="ActionSelector" parent="SubWindows" index="2" unique_id=452268762 instance=ExtResource("13_pryu3")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -482.145
+offset_top = -263.0
+offset_right = 482.145
+offset_bottom = 263.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_activated"]
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_clicked"]

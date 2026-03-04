@@ -3,16 +3,21 @@ extends Control
 var dbase_data: Dictionary = {}
 var copy_action: Dictionary = {}
 var copy_command: Dictionary = {}
-
+var last_selected_trigger: int = -1
 
 func _ready() -> void:
 	%Tree.set_column_title(0, "opcode")
 	%Tree.set_column_expand(0, false)
 	%Tree.set_column_custom_minimum_width(0, 100)
-	%Tree.set_column_title(1, "value")
+	%Tree.set_column_title(1, "name")
+	%Tree.set_column_title(2, "value")
+	%Tree.set_column_expand_ratio(2, 2)
 	%Tree.create_item()
 	
 	%TriggerTree.set_column_title(0, "Trigger")
+	%TriggerTree.set_column_custom_minimum_width(0, 100)
+	%TriggerTree.set_column_expand(0, false)
+	%TriggerTree.set_column_title(1, "Name")
 	%TriggerTree.create_item()
 
 
@@ -120,9 +125,15 @@ func _add_inventory_item(p_inventory_item: Dictionary = {}) -> void:
 
 
 func _add_action(p_action: Dictionary = {}) -> void:
-	var action: Dictionary = {"trigger": 0, "commands": []}
+	var action: Dictionary = {"trigger": 1, "commands": []}
 	if not p_action.is_empty():
 		action = p_action
+	else:
+		var trigger: int = await owner.trigger_selection(last_selected_trigger, owner.get_hex_preference())
+		if trigger == -1:
+			return
+		last_selected_trigger = trigger
+		action.trigger = trigger
 	
 	var tree_item: TreeItem = %TriggerTree.get_root().create_child()
 	tree_item.set_text(0, str(action.trigger))
@@ -136,7 +147,21 @@ func _update_actions() -> void:
 	var actions := []
 	for tree_item: TreeItem in %TriggerTree.get_root().get_children():
 		var action: Dictionary = tree_item.get_metadata(0)
-		action.trigger = int(tree_item.get_text(0))
+		
+		if tree_item.get_text(0).is_valid_hex_number(true):
+			action.trigger = tree_item.get_text(0).hex_to_int()
+		elif tree_item.get_text(0).is_valid_int():
+			action.trigger = tree_item.get_text(0).to_int()
+		else:
+			action.trigger = 0
+		
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % action.trigger)
+		else:
+			tree_item.set_text(0, "%d" % action.trigger)
+		
+		tree_item.set_text(1, Opcodes.triggers[action.trigger].name)
+		
 		actions.append(action)
 	inventory_item.actions_section = actions
 
@@ -147,8 +172,9 @@ func _add_command(p_command: Dictionary = {}) -> void:
 		command = p_command
 	var item: TreeItem = %Tree.get_root().create_child()
 	item.set_text(0, str(command.opcode))
-	item.set_text(1, str(command.args))
-	item.set_autowrap_mode(1, TextServer.AUTOWRAP_WORD_SMART)
+	item.set_text(1, Opcodes.dbase100[command.opcode].name)
+	item.set_text(2, str(command.args))
+	item.set_autowrap_mode(2, TextServer.AUTOWRAP_WORD_SMART)
 	item.set_metadata(0, command)
 	await get_tree().process_frame
 	%Tree.queue_redraw()
@@ -156,6 +182,12 @@ func _add_command(p_command: Dictionary = {}) -> void:
 
 
 func update_integer_preference() -> void:
+	for tree_item: TreeItem in %TriggerTree.get_root().get_children():
+		var trigger: Dictionary = tree_item.get_metadata(0)
+		if owner.get_hex_preference():
+			tree_item.set_text(0, "0x%02X" % trigger.trigger)
+		else:
+			tree_item.set_text(0, "%d" % trigger.trigger)
 	if not %TriggerTree.get_selected():
 		return
 	for tree_item: TreeItem in %Tree.get_root().get_children():
@@ -183,6 +215,8 @@ func _update_commands() -> void:
 		else:
 			tree_item.set_text(0, "%d" % command.opcode)
 		
+		tree_item.set_text(1, Opcodes.dbase100[command.opcode].name)
+		
 		if (	command.opcode == 5
 				or command.opcode == 8
 				or command.opcode == 15
@@ -190,18 +224,18 @@ func _update_commands() -> void:
 		):
 			command.args = 0
 			if "text_entry" in command and "string" in command.text_entry:
-				tree_item.set_text(1, command.text_entry.string)
+				tree_item.set_text(2, command.text_entry.string)
 			else:
-				tree_item.set_text(1, "(Empty)")
+				tree_item.set_text(2, "(Empty)")
 				command.text_entry = {}
 		else:
-			if tree_item.get_text(1).is_valid_hex_number(true):
-				command.args = tree_item.get_text(1).hex_to_int()
-			elif tree_item.get_text(1).is_valid_int():
-				command.args = tree_item.get_text(1).to_int()
+			if tree_item.get_text(2).is_valid_hex_number(true):
+				command.args = tree_item.get_text(2).hex_to_int()
+			elif tree_item.get_text(2).is_valid_int():
+				command.args = tree_item.get_text(2).to_int()
 			else:
 				command.args = 0
-			tree_item.set_text(1, "%d" % command.args)
+			tree_item.set_text(2, "%d" % command.args)
 			command.erase("text_entry")
 		commands.append(command)
 	action.commands = commands
@@ -302,6 +336,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		var tree_item: TreeItem = %TriggerTree.get_root().create_child()
 		tree_item.set_text(0, str(trigger.trigger))
 		tree_item.set_metadata(0, trigger)
+		tree_item.set_text(1, Opcodes.triggers[trigger.trigger].name)
 
 
 func _on_inventory_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
@@ -383,14 +418,16 @@ func _on_trigger_tree_item_selected() -> void:
 		else:
 			tree_item.set_text(0, "%d" % command.opcode)
 		
-		tree_item.set_autowrap_mode(1, TextServer.AUTOWRAP_WORD_SMART)
+		tree_item.set_text(1, Opcodes.dbase100[command.opcode].name)
+		
+		tree_item.set_autowrap_mode(2, TextServer.AUTOWRAP_WORD_SMART)
 		if "text_entry" in command:
 			if "string" in command.text_entry:
-				tree_item.set_text(1, command.text_entry.string)
+				tree_item.set_text(2, command.text_entry.string)
 			else:
-				tree_item.set_text(1, "(Empty)")
+				tree_item.set_text(2, "(Empty)")
 		else:
-			tree_item.set_text(1, "%d" % command.args)
+			tree_item.set_text(2, "%d" % command.args)
 		
 		tree_item.set_metadata(0, command)
 	
@@ -435,6 +472,17 @@ func _on_trigger_tree_item_moved() -> void:
 	_update_actions()
 
 
+func _on_trigger_tree_item_activated() -> void:
+	var tree_item: TreeItem = %TriggerTree.get_selected()
+	
+	if tree_item.is_selected(1):
+		var action: Dictionary = tree_item.get_metadata(0)
+		var trigger: int = await owner.trigger_selection(action.trigger, owner.get_hex_preference())
+		if trigger != -1:
+			tree_item.set_text(0, "%d" % trigger)
+			_update_actions()
+
+
 func _on_trigger_empty_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
@@ -464,6 +512,7 @@ func _on_trigger_popup_menu_index_pressed(index: int) -> void:
 			_update_actions()
 			for tree_item: TreeItem in %Tree.get_root().get_children():
 				tree_item.free()
+			%AddOpcodeButton.disabled = true
 
 
 func _on_tree_item_edited() -> void:
@@ -529,11 +578,11 @@ func _on_tree_item_selected() -> void:
 			and tree_item.get_text(0) != "15"
 			and tree_item.get_text(0) != "16"
 	):
-		tree_item.set_editable(1, true)
+		tree_item.set_editable(2, true)
 	await get_tree().create_timer(0.5).timeout
 	if tree_item:
 		tree_item.set_editable(0, false)
-		tree_item.set_editable(1, false)
+		tree_item.set_editable(2, false)
 
 
 func _on_add_opcode_button_pressed() -> void:
@@ -543,6 +592,14 @@ func _on_add_opcode_button_pressed() -> void:
 func _on_tree_item_activated() -> void:
 	var tree_item: TreeItem = %Tree.get_selected()
 	
+	if tree_item.is_selected(1):
+		var command: Dictionary = tree_item.get_metadata(0)
+		var opcode: int = await owner.action_selection(command.opcode, owner.get_hex_preference())
+		if opcode != -1:
+			tree_item.set_text(0, "%d" % opcode)
+			_update_commands()
+		return
+	
 	if (tree_item.get_text(0) != "5"
 		and tree_item.get_text(0) != "8"
 		and tree_item.get_text(0) != "15"
@@ -550,12 +607,13 @@ func _on_tree_item_activated() -> void:
 	):
 		return
 	
-	var command: Dictionary = tree_item.get_metadata(0)
-	await owner.edit_item_with_text_entry(command)
-	if "string" in command.text_entry:
-		tree_item.set_text(1, command.text_entry.string)
-	else:
-		tree_item.set_text(1, "(Empty)")
+	if tree_item.is_selected(2):
+		var command: Dictionary = tree_item.get_metadata(0)
+		await owner.edit_item_with_text_entry(command)
+		if "string" in command.text_entry:
+			tree_item.set_text(2, command.text_entry.string)
+		else:
+			tree_item.set_text(2, "(Empty)")
 
 
 func refresh_text(text_entry: Dictionary) -> void:
@@ -563,9 +621,9 @@ func refresh_text(text_entry: Dictionary) -> void:
 		var command: Dictionary = tree_item.get_metadata(0)
 		if "text_entry" in command and is_same(command.text_entry, text_entry):
 			if "string" in text_entry:
-				tree_item.set_text(1, text_entry.string)
+				tree_item.set_text(2, text_entry.string)
 			else:
-				tree_item.set_text(1, "(Empty)")
+				tree_item.set_text(2, "(Empty)")
 	if %InventoryList.get_selected_items().is_empty():
 		return
 	if is_same(%InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0]).text_entry, text_entry):

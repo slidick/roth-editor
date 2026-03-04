@@ -2,13 +2,15 @@ extends Control
 
 var dbase_data: Dictionary
 var copy_command: Dictionary = {}
-
+var last_selected_opcode: int = -1
 
 func _ready() -> void:
 	%Tree.create_item()
 	%Tree.set_column_title(0, "opcode")
-	%Tree.set_column_title(1, "args")
+	%Tree.set_column_title(1, "name")
+	%Tree.set_column_title(2, "args")
 	%Tree.set_column_expand(0, false)
+	%Tree.set_column_expand_ratio(2, 2)
 	%Tree.set_column_custom_minimum_width(0, 150)
 
 
@@ -47,10 +49,13 @@ func _add_command(p_command: Dictionary = {}) -> void:
 	var command := {"opcode": 0, "args": 0}
 	if not p_command.is_empty():
 		command = p_command
-	var item: TreeItem = %Tree.get_root().create_child()
-	item.set_text(0, str(command.opcode))
-	item.set_text(1, str(command.args))
-	item.set_metadata(0, command)
+	else:
+		var opcode: int = await owner.action_selection(last_selected_opcode, owner.get_hex_preference())
+		if opcode == -1:
+			return
+		last_selected_opcode = opcode
+		command.opcode = opcode
+	_add_tree_item(command)
 	_update_current_action()
 
 
@@ -82,6 +87,8 @@ func _update_current_action() -> void:
 		else:
 			tree_item.set_text(0, "%d" % command.opcode)
 		
+		tree_item.set_text(1, str(Opcodes.dbase100[command.opcode].name))
+		
 		if (command.opcode == 5
 				or command.opcode == 8
 				or command.opcode == 15
@@ -89,18 +96,18 @@ func _update_current_action() -> void:
 		):
 			command.args = 0
 			if "text_entry" in command and "string" in command.text_entry:
-				tree_item.set_text(1, command.text_entry.string)
+				tree_item.set_text(2, command.text_entry.string)
 			else:
-				tree_item.set_text(1, "(Empty)")
+				tree_item.set_text(2, "(Empty)")
 				command.text_entry = {}
 		else:
-			if tree_item.get_text(1).is_valid_hex_number(true):
-				command.args = tree_item.get_text(1).hex_to_int()
-			elif tree_item.get_text(1).is_valid_int():
-				command.args = tree_item.get_text(1).to_int()
+			if tree_item.get_text(2).is_valid_hex_number(true):
+				command.args = tree_item.get_text(2).hex_to_int()
+			elif tree_item.get_text(2).is_valid_int():
+				command.args = tree_item.get_text(2).to_int()
 			else:
 				command.args = 0
-			tree_item.set_text(1, "%d" % command.args)
+			tree_item.set_text(2, "%d" % command.args)
 			command.erase("text_entry")
 		new_commands.append(command)
 		
@@ -122,15 +129,16 @@ func _add_tree_item(p_command: Dictionary) -> void:
 		tree_item.set_text(0, "0x%02X" % p_command.opcode)
 	else:
 		tree_item.set_text(0, "%d" % p_command.opcode)
-	tree_item.set_autowrap_mode(1, TextServer.AUTOWRAP_WORD_SMART)
+	tree_item.set_text(1, str(Opcodes.dbase100[p_command.opcode].name))
+	tree_item.set_autowrap_mode(2, TextServer.AUTOWRAP_WORD_SMART)
 	tree_item.set_metadata(0, p_command)
 	if "text_entry" in p_command:
 		if "string" in p_command.text_entry:
-			tree_item.set_text(1, p_command.text_entry.string)
+			tree_item.set_text(2, p_command.text_entry.string)
 		else:
-			tree_item.set_text(1, "(Empty)")
+			tree_item.set_text(2, "(Empty)")
 	else:
-		tree_item.set_text(1, "%d" % p_command.args)
+		tree_item.set_text(2, "%d" % p_command.args)
 	# Needed to update cell spacing after auto-wrap
 	await get_tree().process_frame
 	%Tree.queue_redraw()
@@ -236,11 +244,12 @@ func _on_tree_item_selected() -> void:
 			and tree_item.get_text(0) != "15"
 			and tree_item.get_text(0) != "16"
 	):
-		tree_item.set_editable(1, true)
+		tree_item.set_editable(2, true)
 	await get_tree().create_timer(0.5).timeout
 	if tree_item:
 		tree_item.set_editable(0, false)
 		tree_item.set_editable(1, false)
+		tree_item.set_editable(2, false)
 
 
 func _on_add_opcode_button_pressed() -> void:
@@ -260,6 +269,14 @@ func jump_to_reference(reference: Dictionary) -> void:
 func _on_tree_item_activated() -> void:
 	var tree_item: TreeItem = %Tree.get_selected()
 	
+	if tree_item.is_selected(1):
+		var command: Dictionary = tree_item.get_metadata(0)
+		var opcode: int = await owner.action_selection(command.opcode, owner.get_hex_preference())
+		if opcode != -1:
+			tree_item.set_text(0, "%d" % opcode)
+			_update_current_action()
+		return
+	
 	if (tree_item.get_text(0) != "5"
 			and tree_item.get_text(0) != "8"
 			and tree_item.get_text(0) != "15"
@@ -267,11 +284,12 @@ func _on_tree_item_activated() -> void:
 	):
 		return
 	
-	var command: Dictionary = tree_item.get_metadata(0)
-	if "text_entry" not in command:
-		command.text_entry = {}
-	await owner.edit_item_with_text_entry(command)
-	if "string" in command.text_entry:
-		tree_item.set_text(1, command.text_entry.string)
-	else:
-		tree_item.set_text(1, "(Empty)")
+	if tree_item.is_selected(2):
+		var command: Dictionary = tree_item.get_metadata(0)
+		if "text_entry" not in command:
+			command.text_entry = {}
+		await owner.edit_item_with_text_entry(command)
+		if "string" in command.text_entry:
+			tree_item.set_text(2, command.text_entry.string)
+		else:
+			tree_item.set_text(2, "(Empty)")
