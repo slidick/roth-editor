@@ -1249,20 +1249,38 @@ func _on_vertex_deleted() -> void:
 	queue_redraw()
 
 
-func _on_face_split(vertex: VertexNode, new_faces: Array) -> void:
+func _on_face_split(old_vertex: VertexNode, new_faces: Array) -> void:
 	Roth.editor_action.emit(map.map_info, "Split Face")
-	vertex.queue_free()
+	old_vertex.queue_free()
 	var new_vertex_data := {
 		"faces": new_faces,
-		"sectors": vertex.sectors,
+		"sectors": old_vertex.sectors,
 	}
-	var vertex_node := VertexNode.new(map.map_info, vertex.coordinate, new_vertex_data, last_allow_move, line_width)
+	
+	var vertex_node := VertexNode.new(map.map_info, old_vertex.position * Roth.SCALE_2D_WORLD, new_vertex_data, last_allow_move, line_width)
 	vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 	vertex_node.start_sector_split.connect(_on_sector_split)
 	vertex_node.vertex_dragged.connect(_on_vertex_dragged)
 	vertex_node.vertex_drag_canceled.connect(_on_vertex_drag_canceled)
 	vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 	%Vertices.add_child(vertex_node)
+	
+	var split_vertices := {}
+	for face: Face in new_faces:
+		var split_vertex := (face.v1 + face.v2) / 2
+		if split_vertex not in split_vertices:
+			split_vertices[split_vertex] = {"faces": [face], "sectors": []}
+		else:
+			if face not in split_vertices[split_vertex].faces:
+				split_vertices[split_vertex].faces.append(face)
+		if face.sector not in split_vertices[split_vertex].sectors:
+			split_vertices[split_vertex].sectors.append(face.sector)
+	
+	for vertex: Vector2 in split_vertices:
+		var split_vertex_node := VertexNode.new(map.map_info, vertex, split_vertices[vertex], last_allow_move, line_width, true)
+		split_vertex_node.face_split.connect(_on_face_split)
+		%Vertices.add_child(split_vertex_node)
+	
 	queue_redraw()
 
 
@@ -1397,6 +1415,7 @@ func find_nearest_vertex(p_mouse_position: Vector2) -> VertexNode:
 					if face in vertex_node.faces:
 						skip = true
 						break
+				
 				if skip:
 					continue
 				var distance_squared := (vertex_node.global_position - p_mouse_position).length_squared()

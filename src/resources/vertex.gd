@@ -243,6 +243,8 @@ func split_face() -> void:
 			var new_face: Face = await sector.split_face(face)
 			if new_face:
 				new_faces.append(new_face)
+	
+	# What is this?
 	if len(faces) > 1:
 		faces[0].sister = weakref(new_faces[1])
 		new_faces[1].sister = weakref(faces[0])
@@ -253,6 +255,7 @@ func split_face() -> void:
 		new_faces[0].initialize_mesh()
 		new_faces[1].initialize_mesh()
 	
+	new_faces.append_array(faces)
 	face_split.emit(self, new_faces)
 
 
