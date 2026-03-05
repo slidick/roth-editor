@@ -101,7 +101,7 @@ func _input(event: InputEvent) -> void:
 	if not map:
 		return
 	
-	if event.is_action_pressed("map_2d_zoom_in"):
+	if event.is_action_pressed("map_2d_zoom_in", false, true):
 		additional_zoom /= ZOOM_SPEED
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
 		zooming = true
@@ -109,7 +109,7 @@ func _input(event: InputEvent) -> void:
 		update_line_width(additional_zoom)
 		queue_redraw()
 	
-	if event.is_action_pressed("map_2d_zoom_out"):
+	if event.is_action_pressed("map_2d_zoom_out", false, true):
 		additional_zoom *= ZOOM_SPEED
 		additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
 		zooming = true

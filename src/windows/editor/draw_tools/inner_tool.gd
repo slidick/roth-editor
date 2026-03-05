@@ -29,6 +29,14 @@ func _draw() -> void:
 
 
 func handle_input(event: InputEvent) -> void:
+	
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_UP and event.ctrl_pressed:
+		%InnerToolRatioSpinBox.set_value_no_signal(%InnerToolRatioSpinBox.value + 0.01)
+		queue_redraw()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.ctrl_pressed:
+		%InnerToolRatioSpinBox.set_value_no_signal(%InnerToolRatioSpinBox.value - 0.01)
+		queue_redraw()
+	
 	if start_draw:
 		if event is InputEventMouseMotion:
 			queue_redraw()

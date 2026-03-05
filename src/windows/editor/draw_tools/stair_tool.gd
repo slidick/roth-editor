@@ -13,6 +13,19 @@ func _on_stair_shape_check_box_pressed() -> void:
 
 
 func handle_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_UP and event.ctrl_pressed:
+		%StepsSpinBox.set_value_no_signal(%StepsSpinBox.value + 1)
+		queue_redraw()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.ctrl_pressed:
+		%StepsSpinBox.set_value_no_signal(%StepsSpinBox.value - 1)
+		queue_redraw()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_UP and event.alt_pressed:
+		%StepHeightSpinBox.set_value_no_signal(%StepHeightSpinBox.value + 1)
+		queue_redraw()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.alt_pressed:
+		%StepHeightSpinBox.set_value_no_signal(%StepHeightSpinBox.value - 1)
+		queue_redraw()
+	
 	if start_draw:
 		if event is InputEventMouseMotion:
 			queue_redraw()
