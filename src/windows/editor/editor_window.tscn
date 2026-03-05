@@ -2705,6 +2705,24 @@ fit_to_longest_item = false
 layout_mode = 2
 text = "Adjust Ceiling"
 
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="10" unique_id=26135789]
+layout_mode = 2
+
+[node name="AutoSplitWallCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer7" index="0" unique_id=884063433]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Auto Split Walls"
+
+[node name="AutoSplitWallSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer7" index="1" unique_id=108699548]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 32.0
+max_value = 1024.0
+step = 32.0
+value = 256.0
+editable = false
+
 [node name="History" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="2" unique_id=1636518949]
 visible = false
 layout_mode = 2
@@ -3080,6 +3098,7 @@ item_1/id = 1
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer3/DrawModeFloorOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_floor_option_item_selected"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4/DrawModeWallOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_wall_option_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer4/DrawModeAdjustCeilingHeightButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_draw_mode_adjust_ceiling_height_button_pressed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer7/AutoSplitWallCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer" method="_on_auto_split_wall_check_box_toggled"]
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/EditorHeader/TabBar" to="." method="_on_tab_bar_tab_changed"]
 [connection signal="index_pressed" from="3DObjectContextMenu" to="." method="_on_3d_object_context_menu_index_pressed"]
 [connection signal="index_pressed" from="3DContextMenu" to="." method="_on_3d_context_menu_index_pressed"]

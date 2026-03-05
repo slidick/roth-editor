@@ -82,6 +82,8 @@ func get_sector_options() -> Dictionary:
 		"texture_fit": texture_fit,
 		"ceiling_height": %DrawModeRoofHeightSpinBox.value,
 		"floor_height": %DrawModeFloorHeightSpinBox.value,
+		"auto_split_walls": %AutoSplitWallCheckBox.button_pressed,
+		"auto_split_walls_value": %AutoSplitWallSpinBox.value,
 	}
 
 
@@ -251,3 +253,7 @@ func _on_draw_mode_wall_option_item_selected(index: int) -> void:
 	elif index == %DrawModeWallOption.item_count - 3:
 		%DrawModeWallOption.select(0)
 		update_texture_options({"wall": %Map2D.map.metadata.skyTexture, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
+
+
+func _on_auto_split_wall_check_box_toggled(toggled_on: bool) -> void:
+	%AutoSplitWallSpinBox.editable = toggled_on

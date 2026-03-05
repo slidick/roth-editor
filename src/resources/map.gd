@@ -182,12 +182,25 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 	for i in range(len(vertices)):
 		var v1: Vector2 = vertices[i]
 		var v2: Vector2 = vertices[(i+1)%len(vertices)]
+		
+		if sector_data.auto_split_walls:
+			while (v2-v1).length() > sector_data.auto_split_walls_value:
+				var v2a: Vector2 = v1 + (v2-v1).normalized() * sector_data.auto_split_walls_value
+				var sub_face: Face = Face.create_new_face(map_info, new_sector, sector_data)
+				sub_face.v1 = v1
+				sub_face.v2 = v2a
+				sub_face.update_horizontal_fit()
+				new_sector.faces.append(weakref(sub_face))
+				faces.append(sub_face)
+				node.get_node("Faces").add_child(await sub_face.initialize_mesh())
+				v1 = v2a
+		
 		var face: Face = Face.create_new_face(map_info, new_sector, sector_data)
 		face.v1 = v1
 		face.v2 = v2
 		face.update_horizontal_fit()
 		new_sector.faces.append(weakref(face))
-		Roth.get_map(map_info).faces.append(face)
+		faces.append(face)
 		node.get_node("Faces").add_child(await face.initialize_mesh())
 	
 	new_sector._update_vertices()
@@ -197,70 +210,25 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 
 
 func add_box_sector(starting_position: Vector2, ending_position: Vector2, sector_data: Dictionary) -> Sector:
-	var initial_data := {
-		"ceilingHeight": sector_data.ceiling_height,
-		"floorHeight": sector_data.floor_height,
-		"unk0x04": 0,
-		"ceilingTextureIndex": sector_data.ceiling,
-		"floorTextureIndex": sector_data.floor,
-		"textureFit": sector_data.texture_fit,
-		"lighting": 128,
-		"textureMapOverride": 0,
-		"facesCount": 4,
-		"ceilingTextureShiftX": 0,
-		"ceilingTextureShiftY": 0,
-		"floorTextureShiftX": 0,
-		"floorTextureShiftY": 0,
-		"floorTriggerID": 0,
-		"unk0x16": 0b00010100,
-		"objectInformation": [],
-	}
-	
-	var new_sector: Sector = Sector.new(initial_data, map_info)
-	sectors.append(new_sector)
-	
 	var v2 := Vector2.ZERO
-	var v3 := Vector2.ZERO
+	var v4 := Vector2.ZERO
 	
 	if ((starting_position.x > ending_position.x and starting_position.y > ending_position.y)
 		or (starting_position.x < ending_position.x and starting_position.y < ending_position.y)
 	):
 		v2 = Vector2(ending_position.x, starting_position.y)
-		v3 = Vector2(starting_position.x, ending_position.y)
+		v4 = Vector2(starting_position.x, ending_position.y)
 	else:
-		v3 = Vector2(ending_position.x, starting_position.y)
+		v4 = Vector2(ending_position.x, starting_position.y)
 		v2 = Vector2(starting_position.x, ending_position.y)
-	var face_1: Face = Face.create_new_face(map_info, new_sector, sector_data)
-	face_1.v1 = Vector2(starting_position)
-	face_1.v2 = v2
-	face_1.update_horizontal_fit()
-	new_sector.faces.append(weakref(face_1))
-	Roth.get_map(map_info).faces.append(face_1)
-	var face_2: Face = Face.create_new_face(map_info, new_sector, sector_data)
-	face_2.v1 = v2
-	face_2.v2 = Vector2(ending_position)
-	face_2.update_horizontal_fit()
-	new_sector.faces.append(weakref(face_2))
-	Roth.get_map(map_info).faces.append(face_2)
-	var face_3: Face = Face.create_new_face(map_info, new_sector, sector_data)
-	face_3.v1 = Vector2(ending_position)
-	face_3.v2 = v3
-	face_3.update_horizontal_fit()
-	new_sector.faces.append(weakref(face_3))
-	Roth.get_map(map_info).faces.append(face_3)
-	var face_4: Face = Face.create_new_face(map_info, new_sector, sector_data)
-	face_4.v1 = v3
-	face_4.v2 = Vector2(starting_position)
-	face_4.update_horizontal_fit()
-	new_sector.faces.append(weakref(face_4))
-	Roth.get_map(map_info).faces.append(face_4)
-	new_sector._update_vertices()
-	node.get_node("Faces").add_child(await face_1.initialize_mesh())
-	node.get_node("Faces").add_child(await face_2.initialize_mesh())
-	node.get_node("Faces").add_child(await face_3.initialize_mesh())
-	node.get_node("Faces").add_child(await face_4.initialize_mesh())
-	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
 	
+	var vertices: Array = [
+		starting_position,
+		v2,
+		ending_position,
+		v4,
+	]
+	var new_sector: Sector = await add_sector(vertices, sector_data)
 	return new_sector
 
 
@@ -371,8 +339,8 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	face_2.sister = weakref(face_1)
 	face_1.update_horizontal_fit()
 	face_2.update_horizontal_fit()
-	Roth.get_map(map_info).faces.append(face_1)
-	Roth.get_map(map_info).faces.append(face_2)
+	faces.append(face_1)
+	faces.append(face_2)
 	
 	# Is faces in order?
 	var existing_faces := existing_sector.faces.duplicate()
