@@ -27,16 +27,26 @@ static func are_points_collinear(points_list: Array) -> bool:
 	return true
 
 
-static func are_points_collinear_2d(points_list: Array) -> bool:
+static func are_points_collinear_2d(points_list: Array, epsilon: float = 0.0001) -> bool:
 	if len(points_list) < 3:
 		return true
-	var vector1: Vector2 = points_list[1] - points_list[0]
+	
+	var base: Vector2 = points_list[0]
+	var dir := Vector2.ZERO
+	
 	for i in range(1, len(points_list)):
-		var vector2: Vector2 = (points_list[(i+1)%len(points_list)] - points_list[i])
-		var cross_product: float = vector1.cross(vector2)
-		if cross_product < 0.0001:
-			continue
-		return false
+		dir = points_list[i] - base
+		if dir.length() > epsilon:
+			break
+	
+	if dir == Vector2.ZERO:
+		return true
+	
+	for i in range(1, len(points_list)):
+		var v: Vector2 = (points_list[i] - base)
+		if abs(dir.cross(v)) > epsilon:
+			return false
+	
 	return true
 
 
