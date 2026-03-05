@@ -289,17 +289,33 @@ func get_center() -> Vector2:
 	return total / (len(vertices) - 1)
 
 
+func are_points_collinear(a: Vector2, b: Vector2, c: Vector2, epsilon: float = 0.1) -> bool:
+	var slope_a: float = (b.y-a.y) / (b.x-a.x)
+	var slope_b: float = (c.y-b.y) / (c.x-b.x)
+	var slope_c: float = (c.y-a.y) / (c.x-a.x)
+	var avg_slope: float = (slope_a + slope_b + slope_c) / 3
+	if (
+		abs(avg_slope-slope_a) < epsilon
+		and abs(avg_slope-slope_b) < epsilon
+		and abs(avg_slope-slope_c) < epsilon
+	):
+		return true
+	return false
+
+
 func is_convex() -> bool:
 	var ordered_vertices := get_vertices()
-	 # Get the number of vertices
+	
+	# Get the number of vertices
 	var n: int = len(ordered_vertices)
 	
 	# If there are less than 3 vertices, we cannot form a polygon
 	if n < 3:
 		return false
 	
-	
 	var orientation: float = cross_sign(ordered_vertices[0], ordered_vertices[1], ordered_vertices[2])
+	if are_points_collinear(ordered_vertices[0], ordered_vertices[1], ordered_vertices[2]):
+		orientation = 0.0
 	
 	for i in range(1, n):
 		# For each triplet of consecutive points
@@ -307,7 +323,11 @@ func is_convex() -> bool:
 		var p2: Vector2 = ordered_vertices[(i + 1) % n]
 		var p3: Vector2 = ordered_vertices[(i + 2) % n]
 		
+		if are_points_collinear(p1, p2, p3):
+			continue
+		
 		var new_orientation: float = cross_sign(p1, p2, p3)
+		
 		# If orientation changes, the polygon is concave
 		if sign(orientation) * sign(new_orientation) < 0:
 			return false
