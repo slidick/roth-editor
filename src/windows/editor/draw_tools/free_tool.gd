@@ -1,6 +1,7 @@
 extends Node2D
 
 var vertices: Array = []
+var ctrl_pressed: bool = false
 
 
 func _draw() -> void:
@@ -12,6 +13,12 @@ func _on_free_shape_check_box_pressed() -> void:
 
 
 func handle_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_CTRL:
+		if event.pressed:
+			ctrl_pressed = true
+		else:
+			ctrl_pressed = false
+	
 	if len(vertices) > 0:
 		if event is InputEventMouseMotion:
 			queue_redraw()
@@ -27,6 +34,11 @@ func handle_input(event: InputEvent) -> void:
 					if len(vertices) > 2 and vertex == vertices[0]:
 						finalize()
 					else:
+						if ctrl_pressed and len(vertices) > 0:
+							if abs(vertex.x - vertices[-1].x) < abs(vertex.y - vertices[-1].y):
+								vertex.x = vertices[-1].x
+							else:
+								vertex.y = vertices[-1].y
 						vertices.append(vertex)
 	
 	if event is InputEventKey:
@@ -75,4 +87,11 @@ func draw_box() -> void:
 	if len(vertices) > 1:
 		for i in range(len(vertices)-1):
 			draw_line(vertices[i], vertices[i+1], Color.GHOST_WHITE, %Map2D.line_width, true)
+	
+	if ctrl_pressed:
+		if abs(current_mouse.x - vertices[-1].x) < abs(current_mouse.y - vertices[-1].y):
+			current_mouse.x = vertices[-1].x
+		else:
+			current_mouse.y = vertices[-1].y
+	
 	draw_line(vertices[-1], current_mouse, Color.GHOST_WHITE, %Map2D.line_width, true)
