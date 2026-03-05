@@ -1288,6 +1288,22 @@ func _on_face_split(old_vertex: VertexNode, new_faces: Array) -> void:
 		split_vertex_node.face_split.connect(_on_face_split)
 		%Vertices.add_child(split_vertex_node)
 	
+	var face_to_add: Face
+	var face_to_remove: Face
+	for face: Face in new_faces:
+		if face not in old_vertex.faces:
+			face_to_add = face
+		else:
+			face_to_remove = face
+	
+	for v_node: VertexNode in %Vertices.get_children():
+		if v_node.split_vertex:
+			continue
+		if face_to_remove in v_node.faces and face_to_add not in v_node.faces:
+			if v_node.coordinate == face_to_add.v1 or v_node.coordinate == face_to_add.v2:
+				v_node.faces.append(face_to_add)
+				v_node.faces.erase(face_to_remove)
+	
 	queue_redraw()
 
 
