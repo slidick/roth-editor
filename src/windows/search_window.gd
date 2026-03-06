@@ -55,10 +55,12 @@ const FIELDS: Array = [
 	"unk0x04_snd",
 	"unk0x06_snd",
 	"unk0x08_snd",
-	"unk0x10_snd",
+	"zoneIndex_snd",
 	"unk0x0A_snd",
 	"unk0x0C_snd",
 	"unk0x0E_snd",
+	"volume_snd",
+	"unk0x11_snd",
 	"CommandData",
 	"commandBase",
 	"commandModifier",
@@ -203,10 +205,12 @@ func search() -> void:
 			or search_field == "unk0x04_snd"
 			or search_field == "unk0x06_snd"
 			or search_field == "unk0x08_snd"
-			or search_field == "unk0x10_snd"
+			or search_field == "zoneIndex_snd"
 			or search_field == "unk0x0A_snd"
 			or search_field == "unk0x0C_snd"
 			or search_field == "unk0x0E_snd"
+			or search_field == "volume_snd"
+			or search_field == "unk0x11_snd"
 	):
 		search_field = search_field.trim_suffix("_snd")
 		for sound: SFX in sfx:

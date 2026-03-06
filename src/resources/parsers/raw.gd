@@ -143,11 +143,13 @@ const SOUND_EFFECT := {
 	"unk0x02": Parser.Type.SignedWord,
 	"unk0x04": Parser.Type.Word,
 	"unk0x06": Parser.Type.Word,
-	"unk0x08": Parser.Type.Word,
+	"unk0x08": Parser.Type.Byte,
+	"zoneIndex": Parser.Type.Byte,
 	"unk0x0A": Parser.Type.Word,
 	"unk0x0C": Parser.Type.Word,
 	"unk0x0E": Parser.Type.Word,
-	"unk0x10": Parser.Type.Word,
+	"volume": Parser.Type.Byte,
+	"unk0x11": Parser.Type.Byte,
 }
 
 const UNKOWN_ARRAY_2 := {

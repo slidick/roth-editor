@@ -99,7 +99,7 @@ func delete() -> void:
 
 
 class CircleDraw2D extends Node2D:
-	var roth_rotation: int = 0
+	var ref: SFX
 	var radius: int = 1
 	var highlighted: bool = false :
 		set(value):
@@ -109,8 +109,8 @@ class CircleDraw2D extends Node2D:
 		set(value):
 			selected = value
 			queue_redraw()
-	func _init(p_rotation: int) -> void:
-		roth_rotation = p_rotation
+	func _init(p_ref: SFX) -> void:
+		ref = p_ref
 	func _draw() -> void:
 		var color := Color.ORANGE_RED
 		if selected:
@@ -118,9 +118,8 @@ class CircleDraw2D extends Node2D:
 		elif highlighted:
 			color = Color.CORAL
 		draw_circle(Vector2.ZERO, radius, color)
-		if roth_rotation >= 0:
-			var angle_degrees: float = ((float(roth_rotation) / 256) * 360) - 90
-			draw_line(Vector2.ZERO, Vector2(cos(deg_to_rad(angle_degrees)), sin(deg_to_rad(angle_degrees))) * 1.5, color, 0.1)
+		if (selected or highlighted) and ref.data.zoneIndex == 0 and ref.data.unk0x0A > 0:
+			draw_circle(Vector2.ZERO, ref.data.unk0x0A / Roth.SCALE_2D_WORLD, color, false)
 
 
 
@@ -138,11 +137,8 @@ class SFXNode2D extends Node2D:
 	
 	func _init(p_ref: SFX) -> void:
 		ref = p_ref
-		position = Vector2(
-			-ref.data.unk0x00 / Roth.SCALE_2D_WORLD,
-			ref.data.unk0x02 / Roth.SCALE_2D_WORLD
-		)
-		circle = CircleDraw2D.new(-1)
+		set_position_from_data()
+		circle = CircleDraw2D.new(ref)
 		add_child(circle)
 		var shape := CircleShape2D.new()
 		shape.radius = 1
@@ -153,6 +149,12 @@ class SFXNode2D extends Node2D:
 		area.mouse_entered.connect(_on_mouse_entered)
 		area.mouse_exited.connect(_on_mouse_exited)
 		add_child(area)
+	
+	func set_position_from_data() -> void:
+		position = Vector2(
+			-ref.data.unk0x00 / Roth.SCALE_2D_WORLD,
+			ref.data.unk0x02 / Roth.SCALE_2D_WORLD
+		)
 	
 	func _on_mouse_entered() -> void:
 		mouse_over = true

@@ -978,6 +978,12 @@ func redraw(redraw_list: Array) -> void:
 					if object_node.ref == resource:
 						object_node.circle.roth_rotation = resource.data.rotation
 						object_node.circle.queue_redraw()
+		if resource is SFX:
+			if %SFXCheckBox.button_pressed:
+				for sfx_node: SFX.SFXNode2D in %SFX.get_children():
+					if sfx_node.ref == resource:
+						sfx_node.set_position_from_data()
+						sfx_node.circle.queue_redraw()
 	%Map2D.queue_redraw()
 	%Map3D.update_selections()
 

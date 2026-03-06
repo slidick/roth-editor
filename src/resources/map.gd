@@ -957,11 +957,13 @@ func write_section7(buffer: PackedByteArray, json: Dictionary, section_sizes: Di
 		buffer.encode_s16(position + 0x02, array1_obj.unk0x02)
 		buffer.encode_u16(position + 0x04, array1_obj.unk0x04)
 		buffer.encode_u16(position + 0x06, array1_obj.unk0x06)
-		buffer.encode_u16(position + 0x08, array1_obj.unk0x08)
+		buffer.encode_u8(position + 0x08, array1_obj.unk0x08)
+		buffer.encode_u8(position + 0x09, array1_obj.zoneIndex)
 		buffer.encode_u16(position + 0x0A, array1_obj.unk0x0A)
 		buffer.encode_u16(position + 0x0C, array1_obj.unk0x0C)
 		buffer.encode_u16(position + 0x0E, array1_obj.unk0x0E)
-		buffer.encode_u16(position + 0x10, array1_obj.unk0x10)
+		buffer.encode_u8(position + 0x10, array1_obj.volume)
+		buffer.encode_u8(position + 0x11, array1_obj.unk0x11)
 		position += 0x12
 	if "unkArray02" not in json.section7:
 		return
