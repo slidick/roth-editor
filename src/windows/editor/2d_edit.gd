@@ -1027,7 +1027,10 @@ func show_objects() -> void:
 		return
 	for child: Node in %Objects.get_children():
 		child.queue_free()
+	var current_map: Map = map
 	await get_tree().process_frame
+	if current_map != map:
+		return
 	for object: ObjectRoth in map.objects:
 		if object.sector.get_ref().hidden:
 			continue
@@ -1113,7 +1116,10 @@ func show_sfx() -> void:
 		return
 	for child: Node in %SFX.get_children():
 		child.queue_free()
+	var current_map: Map = map
 	await get_tree().process_frame
+	if current_map != map:
+		return
 	for sfx: SFX in map.sound_effects:
 		var sfx_node: SFX.SFXNode2D = sfx.get_node_2d()
 		sfx_node.object_dragged.connect(_on_sfx_dragged)
