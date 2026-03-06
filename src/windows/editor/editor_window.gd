@@ -300,6 +300,8 @@ func load_map(map_info: Dictionary) -> void:
 	%MapContainer.show()
 	%EditorHeader.show()
 	
+	%SFXZoneIndexEdit.max_value = len(map.sfx_zones)
+	
 	
 	if tree_root.get_child_count() == 1:
 		first_load = true
@@ -474,10 +476,11 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			var results: Array = await %Array02.edit_data(selected[0].get_metadata(0).ref.section7_2)
+			var results: Array = await %SFXZones.edit_data(selected[0].get_metadata(0).ref.sfx_zones)
 			if results[0] == false:
 				return
-			selected[0].get_metadata(0).ref.section7_2 = results[1]
+			selected[0].get_metadata(0).ref.sfx_zones = results[1]
+			%SFXZoneIndexEdit.max_value = len(results[1])
 		MapMenu.EditCommands:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
@@ -489,6 +492,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
 			%Map2D.setup(Roth.get_map(selected[0].get_metadata(0).ref.map_info))
+			%SFXZoneIndexEdit.max_value = len(Roth.get_map(selected[0].get_metadata(0).ref.map_info).sfx_zones)
 		MapMenu.Close:
 			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).map_info.name))], "Confirm Close", false):
 				for item: TreeItem in selected:

@@ -25,10 +25,12 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> SFX:
 		"unk0x04": 0,
 		"unk0x06": 0,
 		"unk0x08": 0,
-		"unk0x0A": 0,
+		"zoneIndex": 0,
+		"unk0x0A": 64,
 		"unk0x0C": 0,
 		"unk0x0E": 0,
-		"unk0x10": 0,
+		"volume": 64,
+		"unk0x11": 0,
 	}
 	
 	var object := SFX.new(default_data, p_map_info)
@@ -118,8 +120,27 @@ class CircleDraw2D extends Node2D:
 		elif highlighted:
 			color = Color.CORAL
 		draw_circle(Vector2.ZERO, radius, color)
-		if (selected or highlighted) and ref.data.zoneIndex == 0 and ref.data.unk0x0A > 0:
+		if (selected or highlighted or Settings.settings.get("options", {}).get("always_show_sfx_zones", false)):
 			draw_circle(Vector2.ZERO, ref.data.unk0x0A / Roth.SCALE_2D_WORLD, color, false)
+			if ref.data.zoneIndex > 0:
+				if len(Roth.get_map(ref.map_info).sfx_zones) < ref.data.zoneIndex:
+					return
+				var zone_data: Dictionary = Roth.get_map(ref.map_info).sfx_zones[ref.data.zoneIndex-1]
+				
+				for i in range(1, zone_data.zoneCount+1):
+					var x: float = -zone_data["zone%dXBoundUpper" % i] / Roth.SCALE_2D_WORLD
+					var y: float = zone_data["zone%dYBoundLower" % i] / Roth.SCALE_2D_WORLD
+					var length_x: float = (zone_data["zone%dXBoundUpper" % i] - zone_data["zone%dXBoundLower" % i]) / Roth.SCALE_2D_WORLD
+					var length_y: float = (zone_data["zone%dYBoundUpper" % i] - zone_data["zone%dYBoundLower" % i]) / Roth.SCALE_2D_WORLD
+					var zone_flags: int = zone_data["zone%dFlags" % i]
+					var invert_zone: bool = (zone_flags & (1<<0)) > 0
+					if invert_zone:
+						color = Color.CRIMSON
+					else:
+						color = Color.SEA_GREEN
+					draw_rect(Rect2(x, y, length_x, length_y), color, false)
+				
+
 
 
 

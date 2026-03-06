@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_1g63i"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_5yxm6"]
-[ext_resource type="Script" uid="uid://bo7760gc34t3u" path="res://src/windows/editor/array_02_window.gd" id="3_wsry2"]
+[ext_resource type="Script" uid="uid://bo7760gc34t3u" path="res://src/windows/editor/sfx_zones_window.gd" id="3_wsry2"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ksim1"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_wsry2"]
 
@@ -36,7 +36,7 @@ text = "Add Row"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-columns = 16
+columns = 20
 column_titles_visible = true
 allow_rmb_select = true
 allow_search = false
@@ -65,6 +65,7 @@ text = "Save"
 
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/AddRowButton" to="." method="_on_add_row_button_pressed"]
 [connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="item_moved" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree" to="." method="_on_tree_item_moved"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

@@ -7,22 +7,26 @@ var selected_item: TreeItem
 func _ready() -> void:
 	super._ready()
 	tree_root = %Tree.create_item()
-	%Tree.set_column_title(0, "unk0x00")
-	%Tree.set_column_title(1, "unk0x02")
-	%Tree.set_column_title(2, "unk0x04")
-	%Tree.set_column_title(3, "unk0x06")
-	%Tree.set_column_title(4, "unk0x08")
-	%Tree.set_column_title(5, "unk0x0A")
-	%Tree.set_column_title(6, "unk0x0C")
-	%Tree.set_column_title(7, "unk0x0E")
-	%Tree.set_column_title(8, "unk0x10")
-	%Tree.set_column_title(9, "unk0x12")
-	%Tree.set_column_title(10, "unk0x14")
-	%Tree.set_column_title(11, "unk0x16")
-	%Tree.set_column_title(12, "unk0x18")
-	%Tree.set_column_title(13, "unk0x1A")
-	%Tree.set_column_title(14, "unk0x1C")
-	%Tree.set_column_title(15, "unk0x1E")
+	%Tree.set_column_title(0, "index")
+	%Tree.set_column_title(1, "zoneCount")
+	%Tree.set_column_title(2, "zone1Dampen")
+	%Tree.set_column_title(3, "zone1Flags")
+	%Tree.set_column_title(4, "zone1XBoundLower")
+	%Tree.set_column_title(5, "zone1YBoundLower")
+	%Tree.set_column_title(6, "zone1XBoundUpper")
+	%Tree.set_column_title(7, "zone1YBoundUpper")
+	%Tree.set_column_title(8, "zone2Dampen")
+	%Tree.set_column_title(9, "zone2Flags")
+	%Tree.set_column_title(10, "zone2XBoundLower")
+	%Tree.set_column_title(11, "zone2YBoundLower")
+	%Tree.set_column_title(12, "zone2XBoundUpper")
+	%Tree.set_column_title(13, "zone2YBoundUpper")
+	%Tree.set_column_title(14, "zone3Dampen")
+	%Tree.set_column_title(15, "zone3Flags")
+	%Tree.set_column_title(16, "zone3XBoundLower")
+	%Tree.set_column_title(17, "zone3YBoundLower")
+	%Tree.set_column_title(18, "zone3XBoundUpper")
+	%Tree.set_column_title(19, "zone3YBoundUpper")
 
 
 func _fade_out() -> void:
@@ -39,13 +43,21 @@ func edit_data(array_02: Array) -> Array:
 		var tree_item: TreeItem = tree_root.create_child()
 		var i: int = 0
 		for key: String in row:
-			tree_item.set_text(i, "%d" % row[key])
-			tree_item.set_editable(i, true)
+			tree_item.set_text(i+1, "%d" % row[key])
+			tree_item.set_editable(i+1, true)
 			i += 1
+	update_row_indices()
 	toggle(true)
 	var results: Array = await finished
 	toggle(false)
 	return results
+
+
+func update_row_indices() -> void:
+	var i: int = 1
+	for tree_item: TreeItem in tree_root.get_children():
+		tree_item.set_text(0, "%d" % i)
+		i += 1
 
 
 func _on_cancel_button_pressed() -> void:
@@ -56,7 +68,7 @@ func _on_save_button_pressed() -> void:
 	var array_02 := []
 	for tree_item: TreeItem in tree_root.get_children():
 		var row := {}
-		for i in range(%Tree.columns):
+		for i in range(1, %Tree.columns):
 			row[%Tree.get_column_title(i)] = int(tree_item.get_text(i))
 		array_02.append(row)
 		
@@ -83,3 +95,7 @@ func _on_add_row_button_pressed() -> void:
 		tree_item.set_text(i, "0")
 		tree_item.set_editable(i, true)
 	%Tree.scroll_to_item(tree_item)
+
+
+func _on_tree_item_moved() -> void:
+	update_row_indices()

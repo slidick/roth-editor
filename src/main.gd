@@ -16,6 +16,7 @@ enum Main {
 
 enum Tools {
 	ConcaveSectors,
+	SFXZones,
 }
 
 enum WindowID {
@@ -38,6 +39,7 @@ func _ready() -> void:
 	shortcut.events.append(input)
 	%Main.set_item_shortcut(Main.TestMap, shortcut, true)
 	%Tools.set_item_checked(Tools.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
+	%Tools.set_item_checked(Tools.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
 
 
 func _process(_delta: float) -> void:
@@ -161,6 +163,13 @@ func _on_tools_index_pressed(index: int) -> void:
 			var map_2d: Node = find_child("Map2D", true, false)
 			if map_2d:
 				map_2d.queue_redraw()
+		Tools.SFXZones:
+			var checked: bool = not %Tools.is_item_checked(Tools.SFXZones)
+			Settings.update_settings("options", {"always_show_sfx_zones": checked })
+			%Tools.set_item_checked(Tools.SFXZones, checked)
+			var map_2d: Node = find_child("Map2D", true, false)
+			if map_2d:
+				map_2d.redraw_sfx()
 
 
 func _on_windows_index_pressed(index: int) -> void:

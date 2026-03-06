@@ -25,7 +25,7 @@ var sectors := []
 var faces := []
 var objects := []
 var sound_effects := []
-var section7_2 := []
+var sfx_zones := []
 var vertices_count: int = 0
 var map_info := {}
 var commands_section := {
@@ -100,7 +100,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 		loaded_map.sound_effects.append(SFX.new(map_json.section7.unkArray01[i], loaded_map.map_info))
 	
 	if "unkArray02" in map_json.section7:
-		loaded_map.section7_2 = map_json.section7.unkArray02
+		loaded_map.sfx_zones = map_json.section7.unkArray02
 	
 	loaded_map.metadata = map_json.mapMetadataSection
 	loaded_map.vertices_count = len(map_json.verticesSection.vertices)
@@ -609,8 +609,8 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	json["verticesSection"] = { "vertices": vertices }
 	json["commandsSection"] = commands_section
 	json["section7"] = { "unkArray01": sound_effects.map(func (sfx: SFX) -> Dictionary: return sfx.data) }
-	if section7_2:
-		json["section7"]["unkArray02"] = section7_2
+	if sfx_zones:
+		json["section7"]["unkArray02"] = sfx_zones
 	
 	
 	
@@ -968,22 +968,25 @@ func write_section7(buffer: PackedByteArray, json: Dictionary, section_sizes: Di
 	if "unkArray02" not in json.section7:
 		return
 	for array2_obj: Dictionary in json.section7.unkArray02:
-		buffer.encode_u16(position + 0x00, array2_obj.unk0x00)
-		buffer.encode_u16(position + 0x02, array2_obj.unk0x02)
-		buffer.encode_u16(position + 0x04, array2_obj.unk0x04)
-		buffer.encode_u16(position + 0x06, array2_obj.unk0x06)
-		buffer.encode_u16(position + 0x08, array2_obj.unk0x08)
-		buffer.encode_u16(position + 0x0A, array2_obj.unk0x0A)
-		buffer.encode_u16(position + 0x0C, array2_obj.unk0x0C)
-		buffer.encode_u16(position + 0x0E, array2_obj.unk0x0E)
-		buffer.encode_u16(position + 0x10, array2_obj.unk0x10)
-		buffer.encode_u16(position + 0x12, array2_obj.unk0x12)
-		buffer.encode_u16(position + 0x14, array2_obj.unk0x14)
-		buffer.encode_u16(position + 0x16, array2_obj.unk0x16)
-		buffer.encode_u16(position + 0x18, array2_obj.unk0x18)
-		buffer.encode_u16(position + 0x1A, array2_obj.unk0x1A)
-		buffer.encode_u16(position + 0x1C, array2_obj.unk0x1C)
-		buffer.encode_u16(position + 0x1E, array2_obj.unk0x1E)
+		buffer.encode_u16(position + 0x00, array2_obj.zoneCount)
+		buffer.encode_u8(position + 0x02, array2_obj.zone1Dampen)
+		buffer.encode_u8(position + 0x03, array2_obj.zone1Flags)
+		buffer.encode_s16(position + 0x04, array2_obj.zone1XBoundLower)
+		buffer.encode_s16(position + 0x06, array2_obj.zone1YBoundLower)
+		buffer.encode_s16(position + 0x08, array2_obj.zone1XBoundUpper)
+		buffer.encode_s16(position + 0x0A, array2_obj.zone1YBoundUpper)
+		buffer.encode_u8(position + 0x0C, array2_obj.zone2Dampen)
+		buffer.encode_u8(position + 0x0D, array2_obj.zone2Flags)
+		buffer.encode_s16(position + 0x0E, array2_obj.zone2XBoundLower)
+		buffer.encode_s16(position + 0x10, array2_obj.zone2YBoundLower)
+		buffer.encode_s16(position + 0x12, array2_obj.zone2XBoundUpper)
+		buffer.encode_s16(position + 0x14, array2_obj.zone2YBoundUpper)
+		buffer.encode_u8(position + 0x16, array2_obj.zone3Dampen)
+		buffer.encode_u8(position + 0x17, array2_obj.zone3Flags)
+		buffer.encode_s16(position + 0x18, array2_obj.zone3XBoundLower)
+		buffer.encode_s16(position + 0x1A, array2_obj.zone3YBoundLower)
+		buffer.encode_s16(position + 0x1C, array2_obj.zone3XBoundUpper)
+		buffer.encode_s16(position + 0x1E, array2_obj.zone3YBoundUpper)
 		position += 0x20
 
 

@@ -1111,6 +1111,11 @@ func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
 
 #region SFX
 
+func redraw_sfx() -> void:
+	if %SFXCheckBox.button_pressed:
+		show_sfx()
+
+
 func show_sfx() -> void:
 	if not map:
 		return
