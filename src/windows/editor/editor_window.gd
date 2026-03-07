@@ -145,6 +145,11 @@ func _input(event: InputEvent) -> void:
 				delete_selected_face()
 			elif selected_faces.is_empty() and not selected_sectors.is_empty():
 				delete_selected_sectors()
+			elif not selected_objects.is_empty():
+				delete_selected_objects()
+			elif not selected_sfx.is_empty():
+				delete_selected_sfx()
+			
 		if event.is_action_pressed("merge_sectors"):
 			if len(selected_sectors) > 1 and len(selected_faces) == 0:
 				merge_selected_sectors()
@@ -1005,7 +1010,7 @@ func delete_selected_face() -> void:
 
 func delete_selected_sectors() -> void:
 	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
-	if await Dialog.confirm("Delete selected sector%s?" % ("s" if len(selected_sectors) > 1 else ""), "Confirm Deletion", false):
+	if await Dialog.confirm("Delete %d selected sector%s?" % [len(selected_sectors), ("s" if len(selected_sectors) > 1 else "")], "Confirm Deletion", false):
 		var map_groups: Dictionary = _delete_selected_sectors()
 		for map_info: Dictionary in map_groups:
 			Roth.editor_action.emit(map_info, "Delete Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
@@ -1187,5 +1192,33 @@ func complete_paste_sectors_mode() -> void:
 		select_resource(sector, false)
 	paste_sectors_mode = false
 	get_viewport().set_input_as_handled()
+
+
+func delete_selected_objects() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected object%s?" % [len(selected_objects), ("s" if len(selected_objects) > 1 else "")], "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for object: ObjectRoth in selected_objects:
+			if object.map_info not in map_groups:
+				map_groups[object.map_info] = []
+			map_groups[object.map_info].append(object)
+			object.delete()
+		for map_info: Dictionary in map_groups:
+			Roth.editor_action.emit(map_info, "Delete Object%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+		select_resource(null)
+
+
+func delete_selected_sfx() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected sfx%s?" % [len(selected_sfx), ("s" if len(selected_sfx) > 1 else "")], "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for sfx: SFX in selected_sfx:
+			if sfx.map_info not in map_groups:
+				map_groups[sfx.map_info] = []
+			map_groups[sfx.map_info].append(sfx)
+			sfx.delete()
+		for map_info: Dictionary in map_groups:
+			Roth.editor_action.emit(map_info, "Delete SFX%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+		select_resource(null)
 
 #endregion

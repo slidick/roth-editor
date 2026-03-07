@@ -1082,10 +1082,7 @@ func _on_on_object_context_popup_menu_index_pressed(index: int) -> void:
 			owner.selected_objects.insert(0, context_menu_object)
 			owner.copy_objects(owner.selected_objects)
 		1:
-			for object: ObjectRoth in owner.selected_objects:
-				object.delete()
-			Roth.editor_action.emit(map.map_info, "Delete Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
-			owner.select_resource(null)
+			owner.delete_selected_objects()
 
 
 func add_object_to_2d_map(new_object: ObjectRoth) -> void:
@@ -1175,10 +1172,7 @@ func _on_on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			owner.selected_sfx.insert(0, context_menu_sfx)
 			owner.copy_sfx(owner.selected_sfx)
 		1:
-			for sfx: SFX in owner.selected_sfx:
-				sfx.delete()
-			Roth.editor_action.emit(map.map_info, "Delete SFX%s" % ("s" if len(owner.selected_sfx) > 1 else ""))
-			owner.select_resource(null)
+			owner.delete_selected_sfx()
 
 
 func _on_sfx_dragged(node_dragged: SFX.SFXNode2D, relative: Vector2) -> void:
