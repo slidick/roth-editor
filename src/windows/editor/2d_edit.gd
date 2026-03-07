@@ -1212,35 +1212,86 @@ func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 	if sectors.is_empty():
 		hide_vertices()
 		sectors = map.sectors
-	for sector: Sector in sectors:
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			face.v1 = face.v1.snappedf(2.0)
-			if face.v1 not in vertices:
-				vertices[face.v1] = {"faces": [face], "sectors": []}
-			else:
-				if face not in vertices[face.v1].faces:
-					vertices[face.v1].faces.append(face)
-			if sector not in vertices[face.v1].sectors:
-				vertices[face.v1].sectors.append(sector)
+		for sector: Sector in map.sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				face.v1 = face.v1.snappedf(2.0)
+				if face.v1 not in vertices:
+					vertices[face.v1] = {"faces": [face], "sectors": []}
+				else:
+					if face not in vertices[face.v1].faces:
+						vertices[face.v1].faces.append(face)
+				if sector not in vertices[face.v1].sectors:
+					vertices[face.v1].sectors.append(sector)
 				
-			face.v2 = face.v2.snappedf(2.0)
-			if face.v2 not in vertices:
-				vertices[face.v2] = { "faces": [face], "sectors": []}
-			else:
-				if face not in vertices[face.v2].faces:
-					vertices[face.v2].faces.append(face)
-			if sector not in vertices[face.v2].sectors:
-				vertices[face.v2].sectors.append(sector)
-			
-			var split_vertex := (face.v1 + face.v2) / 2
-			if split_vertex not in split_vertices:
-				split_vertices[split_vertex] = {"faces": [face], "sectors": []}
-			else:
-				if face not in split_vertices[split_vertex].faces:
-					split_vertices[split_vertex].faces.append(face)
-			if sector not in split_vertices[split_vertex].sectors:
-				split_vertices[split_vertex].sectors.append(sector)
+				face.v2 = face.v2.snappedf(2.0)
+				if face.v2 not in vertices:
+					vertices[face.v2] = { "faces": [face], "sectors": []}
+				else:
+					if face not in vertices[face.v2].faces:
+						vertices[face.v2].faces.append(face)
+				if sector not in vertices[face.v2].sectors:
+					vertices[face.v2].sectors.append(sector)
+				
+				var split_vertex := (face.v1 + face.v2) / 2
+				if split_vertex not in split_vertices:
+					split_vertices[split_vertex] = {"faces": [face], "sectors": []}
+				else:
+					if face not in split_vertices[split_vertex].faces:
+						split_vertices[split_vertex].faces.append(face)
+				if sector not in split_vertices[split_vertex].sectors:
+					split_vertices[split_vertex].sectors.append(sector)
+	else:
+		var vertex_map := {}
+		for vertex_node: VertexNode in %Vertices.get_children():
+			if vertex_node.coordinate not in vertex_map:
+				vertex_map[vertex_node.coordinate] = vertex_node
+		
+		for sector: Sector in sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				if face.v1 in vertex_map:
+					vertex_map[face.v1].faces.append(face)
+					if face.sector not in vertex_map[face.v1].sectors:
+						vertex_map[face.v1].sectors.append(face.sector)
+				else:
+					face.v1 = face.v1.snappedf(2.0)
+					if face.v1 not in vertices:
+						vertices[face.v1] = {"faces": [face], "sectors": []}
+					else:
+						if face not in vertices[face.v1].faces:
+							vertices[face.v1].faces.append(face)
+					if sector not in vertices[face.v1].sectors:
+						vertices[face.v1].sectors.append(sector)
+				if face.v2 in vertex_map:
+					vertex_map[face.v2].faces.append(face)
+					if face.sector not in vertex_map[face.v2].sectors:
+						vertex_map[face.v2].sectors.append(face.sector)
+				else:
+					face.v2 = face.v2.snappedf(2.0)
+					if face.v2 not in vertices:
+						vertices[face.v2] = { "faces": [face], "sectors": []}
+					else:
+						if face not in vertices[face.v2].faces:
+							vertices[face.v2].faces.append(face)
+					if sector not in vertices[face.v2].sectors:
+						vertices[face.v2].sectors.append(sector)
+				
+				
+				var split_vertex := (face.v1 + face.v2) / 2
+				
+				if split_vertex in vertex_map:
+					vertex_map[split_vertex].faces.append(face)
+					if face.sector not in vertex_map[split_vertex].sectors:
+						vertex_map[split_vertex].sectors.append(face.sector)
+				else:
+					if split_vertex not in split_vertices:
+						split_vertices[split_vertex] = {"faces": [face], "sectors": []}
+					else:
+						if face not in split_vertices[split_vertex].faces:
+							split_vertices[split_vertex].faces.append(face)
+					if sector not in split_vertices[split_vertex].sectors:
+						split_vertices[split_vertex].sectors.append(sector)
 	
 	for vertex: Vector2 in split_vertices:
 		var vertex_node := VertexNode.new(map.map_info, vertex, split_vertices[vertex], allow_move, line_width, true)
