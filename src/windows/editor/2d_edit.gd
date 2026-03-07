@@ -164,8 +164,10 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.keycode == KEY_SHIFT:
 		if event.pressed:
 			holding_shift = true
+			check_for_hover()
 		else:
 			holding_shift = false
+			check_for_hover()
 	
 	if event is InputEventKey and event.keycode == KEY_CTRL:
 		if event.pressed:
@@ -348,6 +350,8 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 						elif owner.hovered_sector and len(owner.selected_faces) <= 1:
 							owner.select_resource(owner.hovered_sector)
 						elif not owner.hovered_sector:
+							owner.select_resource(null)
+						else:
 							owner.select_resource(null)
 					else:
 						holding_left_mouse = false
@@ -1543,7 +1547,10 @@ func check_for_hover() -> void:
 	elif not holding_ctrl:
 		if skip_sector_hover == skip_sector_hover_prev:
 			if owner.hovered_sector and is_mouse_inside_sector(owner.hovered_sector):
-				if len(owner.selected_sectors) <= 1:
+				if len(owner.selected_faces) == 1 and holding_shift:
+						owner.hovered_sector = null
+						queue_redraw()
+				elif len(owner.selected_sectors) <= 1:
 					check_for_face_hover(owner.hovered_sector)
 				return
 		skip_sector_hover_prev = skip_sector_hover
@@ -1556,12 +1563,14 @@ func check_for_hover() -> void:
 					sectors_to_skip -= 1
 					continue
 				if len(owner.selected_faces) <= 1:
-					if owner.hovered_sector != sector:
+					if len(owner.selected_faces) == 1 and holding_shift:
+						owner.hovered_sector = null
+						queue_redraw()
+					elif owner.hovered_sector != sector:
 						owner.hovered_sector = sector
 						if holding_left_mouse:
 							owner.select_resource(owner.hovered_sector, not holding_shift)
 						elif holding_right_mouse:
-							print("Q")
 							owner.deselect_resource(owner.hovered_sector)
 						queue_redraw()
 				check_for_face_hover(sector)
@@ -1578,6 +1587,10 @@ func check_for_hover() -> void:
 func check_for_face_hover(sector: Sector) -> void:
 	if len(owner.selected_sectors) > 1:
 		return
+	if (len(owner.selected_sectors) == 1 and holding_shift) and len(owner.selected_faces) == 0:
+		owner.hovered_face = null
+		queue_redraw()
+		return
 	var found: bool = false
 	var smallest_distance: float = 100.0
 	for face_ref: WeakRef in sector.faces:
@@ -1588,7 +1601,9 @@ func check_for_face_hover(sector: Sector) -> void:
 			found = true
 			if owner.hovered_face != face:
 				owner.hovered_face = face
-				if holding_left_mouse and len(owner.selected_sectors) == 0:
+				if holding_left_mouse and not holding_shift:
+					owner.select_resource(owner.hovered_face, not holding_shift)
+				if holding_left_mouse and len(owner.selected_sectors) <= 1:
 					owner.select_resource(owner.hovered_face, not holding_shift)
 				elif holding_right_mouse:
 					owner.deselect_resource(owner.hovered_face)
