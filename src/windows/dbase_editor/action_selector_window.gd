@@ -72,7 +72,7 @@ func trigger_selection(current_trigger: int = -1, as_hex: bool = false) -> int:
 	return trigger
 
 
-func _on_item_list_item_activated(index: int) -> void:
+func _on_item_list_item_activated(_index: int) -> void:
 	_on_save_button_pressed()
 
 
