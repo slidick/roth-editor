@@ -1052,7 +1052,7 @@ func hide_objects() -> void:
 func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var new_object := ObjectRoth.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			var new_object := ObjectRoth.new_object(map.map_info, mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD)
 			if not new_object:
 				return
 			map.add_object(new_object)
@@ -1063,7 +1063,7 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 			var origin := Vector2(-owner.copied_object_data[0].data.posX, owner.copied_object_data[0].data.posY)
 			for each_object: ObjectRoth in owner.copied_object_data:
 				var offset := origin - Vector2(-each_object.data.posX, each_object.data.posY)
-				var new_object := ObjectRoth.new_from_copied_object(each_object, (mouse_paste_position * Roth.SCALE_2D_WORLD) - offset)
+				var new_object := ObjectRoth.new_from_copied_object(each_object, (mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD) - offset)
 				if not new_object:
 					continue
 				map.add_object(new_object)
@@ -1144,7 +1144,7 @@ func hide_sfx() -> void:
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var new_sfx := SFX.new_object(map.map_info, mouse_paste_position * Roth.SCALE_2D_WORLD)
+			var new_sfx := SFX.new_object(map.map_info, mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD)
 			if not new_sfx:
 				return
 			map.add_sfx(new_sfx)
@@ -1155,7 +1155,7 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			var origin := Vector2(-owner.copied_sfx_data[0].data.unk0x00, owner.copied_sfx_data[0].data.unk0x02)
 			for each_sfx: SFX in owner.copied_sfx_data:
 				var offset := origin - Vector2(-each_sfx.data.unk0x00, each_sfx.data.unk0x02)
-				var new_sfx := SFX.new_from_copied_object(each_sfx, (mouse_paste_position * Roth.SCALE_2D_WORLD) - offset)
+				var new_sfx := SFX.new_from_copied_object(each_sfx, (mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD) - offset)
 				if not each_sfx:
 					continue
 				map.add_sfx(new_sfx)
