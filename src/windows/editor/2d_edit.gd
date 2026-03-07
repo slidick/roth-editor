@@ -583,8 +583,7 @@ func handle_vertex_mode_event(event: InputEvent) -> void:
 					else:
 						if not event.shift_pressed:
 							owner.select_resource(null)
-						for vertex_node: VertexNode in vertices_in_selection:
-							owner.select_resource(vertex_node, false)
+						owner.select_resources(vertices_in_selection, false)
 					start_box_select = false
 					start_box_select_position = Vector2.ZERO
 					queue_redraw()

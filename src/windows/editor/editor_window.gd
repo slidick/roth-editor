@@ -850,7 +850,13 @@ func select_face(index: int, type: String, p_map_name: String = "", count: int =
 		select_face(index, type, p_map_name, search_count)
 
 
-func select_resource(resource: Variant, deselect_others: bool = true) -> void:
+func select_resources(resource_list: Array, deselect_others: bool = true) -> void:
+	for i in range(len(resource_list)-1):
+		select_resource(resource_list[i], deselect_others, false)
+	select_resource(resource_list[-1], deselect_others, true)
+
+
+func select_resource(resource: Variant, deselect_others: bool = true, update_selections: bool = true) -> void:
 	%EditFaceContainer.clear()
 	%EditSectorContainer.clear()
 	%EditObjectContainer.clear()
@@ -881,7 +887,8 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 			selected_objects.clear()
 		if resource not in selected_objects:
 			selected_objects.append(resource)
-		%EditObjectContainer.update_selections()
+		if update_selections:
+			%EditObjectContainer.update_selections()
 	elif resource is SFX:
 		selected_faces.clear()
 		selected_sectors.clear()
@@ -891,7 +898,8 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 			selected_sfx.clear()
 		if resource not in selected_sfx:
 			selected_sfx.append(resource)
-		%EditSFXContainer.update_selections()
+		if update_selections:
+			%EditSFXContainer.update_selections()
 	elif resource is Face:
 		selected_objects.clear()
 		selected_sfx.clear()
@@ -909,7 +917,8 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 			elif len(selected_faces) == 1:
 				selected_sectors.clear()
 				selected_sectors.append(selected_faces[0].sector)
-		%EditFaceContainer.update_selections()
+		if update_selections:
+			%EditFaceContainer.update_selections()
 	elif resource is Sector:
 		selected_faces.clear()
 		selected_objects.clear()
@@ -920,7 +929,8 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 			selected_sectors.clear()
 		if resource not in selected_sectors:
 			selected_sectors.append(resource)
-		%EditSectorContainer.update_selections()
+		if update_selections:
+			%EditSectorContainer.update_selections()
 	elif resource is VertexNode:
 		selected_sectors.clear()
 		selected_faces.clear()
@@ -930,11 +940,13 @@ func select_resource(resource: Variant, deselect_others: bool = true) -> void:
 			selected_vertex_nodes.clear()
 		if resource not in selected_vertex_nodes and not resource.split_vertex:
 			selected_vertex_nodes.append(resource)
+		if update_selections:
 			%EditVertexContainer.update_selections()
 	
-	%Arrow3D.set_target(resource)
-	%Map2D.update_selections()
-	%Map3D.update_selections()
+	if update_selections:
+		%Arrow3D.set_target(resource)
+		%Map2D.update_selections()
+		%Map3D.update_selections()
 
 
 func deselect_resource(resource: Variant) -> void:
