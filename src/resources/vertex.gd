@@ -99,7 +99,7 @@ func _on_mouse_exited() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if allow_move and event is InputEventKey:
+	if event is InputEventKey:
 		if drag_started and event.keycode == KEY_ESCAPE and event.pressed:
 			dragging = false
 			drag_started = false
@@ -132,10 +132,23 @@ func _input(event: InputEvent) -> void:
 				#if event.pressed and dragging:
 					#if not split_vertex:
 						#delete()
+			if event.pressed:
+				if mouse_over and not split_vertex:
+					dragging = true
+					dragging_amount = Vector2.ZERO
+					drag_started = false
+			else:
+				if dragging:
+					dragging = false
+					if not split_vertex:
+						update_meshes()
+						if drag_started:
+							vertex_drag_ended.emit(self)
+					drag_started = false
 			if mouse_over and event.pressed and split_vertex:
 				split_face()
 	
-	if allow_move and (event is InputEventMouseMotion or (event is InputEventKey and event.keycode == KEY_CTRL)) and dragging and not split_vertex:
+	if (event is InputEventMouseMotion or (event is InputEventKey and event.keycode == KEY_CTRL)) and dragging and not split_vertex:
 		if event is InputEventMouseMotion:
 			dragging_amount += event.relative
 		if dragging_amount.length() > DRAGGING_THRESHOLD * get_viewport().get_camera_2d().zoom.x or drag_started:
