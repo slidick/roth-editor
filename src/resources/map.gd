@@ -59,7 +59,6 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 	var loaded_map := Map.new()
 	loaded_map.map_info = p_map_info
 	
-	#var temp_object_list := []
 	for i in range(len(map_json.sectorsSection.sectors)):
 		loaded_map.sectors.append( Sector.new( 
 				map_json.sectorsSection.sectors[i],
@@ -68,10 +67,6 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 			)
 		)
 		for object_data: Dictionary in loaded_map.sectors[i].data.objectInformation:
-			#object["sector_index"] = i
-			#temp_object_list.append(object)
-	#
-		#for i in range(len(temp_object_list)):
 			loaded_map.objects.append( ObjectRoth.new(
 					object_data,
 					loaded_map.map_info,
@@ -124,30 +119,20 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 	return loaded_map
 
 
-#func get_next_face_index() -> int:
-	#var count: int = -1
-	#for sector: Sector in sectors:
-		#for face_ref: WeakRef in sector.faces:
-			#count = max(count, face_ref.get_ref().index)
-	#return count + 1
-
-#func get_next_sector_index() -> int:
-	#var count: int = -1
-	#for sector: Sector in sectors:
-		#count = max(count, sector.index)
-	#return count + 1
-
-#func get_next_object_index() -> int:
-	#var count: int = -1
-	#for object: ObjectRoth in objects:
-		#count = max(count, object.index)
-	#return count + 1
-
-#func get_next_sfx_index() -> int:
-	#var count: int = -1
-	#for sfx: SFX in sound_effects:
-		#count = max(count, sfx.index)
-	#return count + 1
+static func get_triggering_ids(command_section: Dictionary, command_index: int) -> Array:
+	var triggering_ids: Array = []
+	for entry_command: int in command_section.entryCommandIndexes:
+		var command: Dictionary = command_section.allCommands[entry_command-1]
+		var next_command_index: int = command.nextCommandIndex
+		
+		while next_command_index != 0:
+			var next_command: Dictionary = command_section.allCommands[next_command_index-1]
+			if next_command.index == command_index:
+				if len(command.args) > 1:
+					triggering_ids.append(command.args[1])
+			next_command_index = next_command.nextCommandIndex
+	
+	return triggering_ids
 
 
 func delete_sector(sector_to_delete: Sector) -> void:
@@ -342,7 +327,6 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	faces.append(face_1)
 	faces.append(face_2)
 	
-	# Is faces in order?
 	var existing_faces := existing_sector.faces.duplicate()
 	var new_faces := []
 	var split_index_1: int = -1
@@ -396,10 +380,12 @@ func add_object(new_object: ObjectRoth) -> void:
 	var object_node_3d: Node3D = new_object.initialize_mesh()
 	node.get_node("Objects").add_child(object_node_3d)
 
+
 func add_sfx(new_object: SFX) -> void:
 	sound_effects.append(new_object)
 	var object_node_3d: Node3D = new_object.initialize_mesh()
 	node.get_node("SFX").add_child(object_node_3d)
+
 
 func get_sector_floor_height_from_vertex(vertex: Vector2) -> int:
 	for sector: Sector in sectors:
@@ -416,7 +402,7 @@ func reorder_faces() -> void:
 			ordered_faces.append(face)
 	faces.clear()
 	faces = ordered_faces
-	
+
 
 func get_sector_ceiling_height_from_vertex(vertex: Vector2) -> int:
 	for sector: Sector in sectors:
@@ -512,6 +498,7 @@ func get_texture_mappings_counts() -> Array:
 	return [len(texture_mappings), texture_additional_count]
 
 
+#region Compile
 func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
 	
@@ -527,7 +514,6 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			compiled_faces.append(face)
-			#face.index = len(compiled_faces) - 1
 			
 		sector.data["facesCount"] = len(sector.faces)
 		
@@ -1027,21 +1013,7 @@ func write_footer(buffer: PackedByteArray, _json: Dictionary, section_sizes: Dic
 		buffer.encode_u8(position, byte)
 		position += 0x01
 
-
-static func get_triggering_ids(command_section: Dictionary, command_index: int) -> Array:
-	var triggering_ids: Array = []
-	for entry_command: int in command_section.entryCommandIndexes:
-		var command: Dictionary = command_section.allCommands[entry_command-1]
-		var next_command_index: int = command.nextCommandIndex
-		
-		while next_command_index != 0:
-			var next_command: Dictionary = command_section.allCommands[next_command_index-1]
-			if next_command.index == command_index:
-				if len(command.args) > 1:
-					triggering_ids.append(command.args[1])
-			next_command_index = next_command.nextCommandIndex
-	
-	return triggering_ids
+#endregion
 
 
 class MapNode3D extends Node3D:

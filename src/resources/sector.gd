@@ -45,12 +45,9 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 
 func _init(p_data: Dictionary, p_map_info: Dictionary, p_platforms: Array = []) -> void:
 	data = p_data
-	#index = p_index
 	map_info = p_map_info
 	if "intermediateFloorIndex" in data and not p_platforms.is_empty():
 		platform = p_platforms[data.intermediateFloorIndex]
-	#if "objectInformation" in data:
-		#objects = data.objectInformation
 
 
 func duplicate(p_faces: bool = false) -> Sector:

@@ -420,7 +420,6 @@ static func parse(file: FileAccess) -> Dictionary:
 	
 	
 	var parsed_file := {}
-	#parsed_file["rawrMetadata"] = { "mapName": filepath.get_file().get_basename() }
 	parsed_file["sectorsSection"] = { "sectors": sectors }
 	parsed_file["facesSection"] = { "faces": faces }
 	parsed_file["faceTextureMappingSection"] = { "mappings": texture_mappings }
@@ -436,10 +435,6 @@ static func parse(file: FileAccess) -> Dictionary:
 	parsed_file["section7"] = { "unkArray01": unk_array_01 }
 	if unk_array_02:
 		parsed_file["section7"]["unkArray02"] = unk_array_02
-	
-	
-	#parsed_file["commandsSection"]["entryCommandIndexes"].sort()
-	#parsed_file["commandsSection"]["entryCommandIndexes"].sort_custom(func (i1: int, i2: int) -> bool: return parsed_file["commandsSection"]["allCommands"][i1-1].commandBase < parsed_file["commandsSection"]["allCommands"][i2-1].commandBase)
 	
 	
 	return parsed_file

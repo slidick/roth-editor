@@ -5,6 +5,7 @@ signal item_selected(object: Dictionary)
 var recents: Array = []
 var favorites: Array = []
 
+
 func _fade_out() -> void:
 	super._fade_out()
 	item_selected.emit({})
@@ -199,7 +200,6 @@ func add_to_recent(texture_data: Dictionary) -> void:
 		%RecentItemList.remove_item(30)
 
 
-
 func _on_rotatable_item_list_item_selected(index: int) -> void:
 	display_texture_data(%RotatableItemList.get_item_metadata(index))
 	%RecentItemList.deselect_all()
@@ -250,7 +250,6 @@ func _on_favorite_item_list_item_activated(index: int) -> void:
 func _on_favorite_item_list_context_option_selected(index: int, context_index: int) -> void:
 	match context_index:
 		0:
-			print("Remove from favorite: ", %FavoriteItemList.get_item_metadata(index).index)
 			%FavoriteItemList.remove_item(index)
 			favorites.pop_at(index)
 			Settings.update_settings("objects", {"favorites": favorites})

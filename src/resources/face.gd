@@ -62,9 +62,26 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
+static func create_new_face(p_map_info: Dictionary, p_sector: Sector, sector_data: Dictionary = {}) -> Face:
+	var initial_data := {
+		"addCollision": 0,
+	}
+	var new_face := Face.new(initial_data, p_map_info)
+	new_face.sector = p_sector
+	var initial_texture_data := {
+		"unk0x00": 16,
+		"type": 0,
+		"midTextureIndex": sector_data.get("wall", 65535),
+		"upperTextureIndex": sector_data.get("upper_wall", 65535),
+		"lowerTextureIndex": sector_data.get("lower_wall", 65535),
+		"unk0x08": 0,
+	}
+	new_face.texture_data = initial_texture_data
+	return new_face
+
+
 func _init(p_data: Dictionary, p_map_info: Dictionary, p_vertices: Array = [], p_sectors: Array = [], p_texture_mappings: Array = []) -> void:
 	data = p_data
-	#index = p_index
 	map_info = p_map_info
 	
 	if not p_sectors.is_empty():
@@ -91,28 +108,11 @@ func duplicate() -> Face:
 		new_face.has_copied_sister = true
 	return new_face
 
-static func create_new_face(p_map_info: Dictionary, p_sector: Sector, sector_data: Dictionary = {}) -> Face:
-	var initial_data := {
-		"addCollision": 0,
-	}
-	var new_face := Face.new(initial_data, p_map_info)
-	#new_face.v1 = Vector2(v1)
-	#new_face.v2 = Vector2(v2)
-	new_face.sector = p_sector
-	var initial_texture_data := {
-		"unk0x00": 16,
-		"type": 0,
-		"midTextureIndex": sector_data.get("wall", 65535),
-		"upperTextureIndex": sector_data.get("upper_wall", 65535),
-		"lowerTextureIndex": sector_data.get("lower_wall", 65535),
-		"unk0x08": 0,
-	}
-	new_face.texture_data = initial_texture_data
-	return new_face
 
 func update_sister_face(faces_array: Array) -> void:
 	if "sisterFaceIndex" in data:
 		sister = weakref(faces_array[data.sisterFaceIndex])
+
 
 func update_horizontal_fit() -> void:
 	var value := int(ceil(face_length))
@@ -225,7 +225,6 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		
 	
 	if not check_flag(texture_data.unk0x08, IMAGE_FIT) or (check_flag(texture_data.unk0x08, TRANSPARENT) and not mid):
-		#material.uv1_scale.x = face_length / (2 * texture_width)
 		material.uv1_scale.y = (texture_data.unk0x00 + ((texture_data.type & ~(1<<7))<<8)) / (2 * texture_width)
 		material.uv1_scale.x = mesh_height / (2 * texture_height)
 		
@@ -447,11 +446,8 @@ func _initialize_meshes() -> void:
 		if true:
 			var direction: Vector2 = (v2-v1).normalized()
 			var right_perendicular := Vector2(-direction.y, direction.x)
-			#var left_perendicular: Vector2 = -right_perendicular
 			
 			var a1: Vector2 = v1 + right_perendicular * 5
-			#var a2: Vector2 = v1 + left_perendicular * 5
-			#var a3: Vector2 = v2 + left_perendicular * 5
 			var a2: Vector2 = v1
 			var a3: Vector2 = v2
 			var a4: Vector2 = v2 + right_perendicular * 5
@@ -512,7 +508,6 @@ func _initialize_meshes() -> void:
 				node.add_child(mesh_instance)
 
 
-
 class Face3D extends Node3D:
 	var ref: Face
 	func highlight() -> void:
@@ -527,6 +522,7 @@ class Face3D extends Node3D:
 	func deselect() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
+
 
 class FaceMesh3D extends MeshInstance3D:
 	var ref: Face

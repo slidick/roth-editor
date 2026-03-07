@@ -236,9 +236,6 @@ func load_roth_settings() -> void:
 					file_json["filepath_json"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file)
 					maps.append(file_json)
 	
-	
-
-	
 	#print(JSON.stringify(maps, "\t"))
 	#print(JSON.stringify(dbase_packs, "\t"))
 	
@@ -281,7 +278,6 @@ func delete_maps(maps_array: Array) -> void:
 		if FileAccess.file_exists(map_info.filepath_json):
 			DirAccess.remove_absolute(map_info.filepath_json)
 		maps.erase(map_info)
-#	update_custom_maps_list()
 	settings_loaded.emit()
 
 
@@ -310,7 +306,6 @@ func create_new_map(map_info: Dictionary) -> void:
 	save_map(map)
 	Roth.settings_loaded.emit()
 	loaded_maps[map_info.name] = map
-	#load_maps([map_info])
 
 
 ## Takes a map and saves it to raw format, optionally overriding directory and player starting data

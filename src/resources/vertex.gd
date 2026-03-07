@@ -244,7 +244,7 @@ func split_face() -> void:
 			if new_face:
 				new_faces.append(new_face)
 	
-	# What is this?
+	# For splitting a double-sided face
 	if len(faces) > 1:
 		faces[0].sister = weakref(new_faces[1])
 		new_faces[1].sister = weakref(faces[0])

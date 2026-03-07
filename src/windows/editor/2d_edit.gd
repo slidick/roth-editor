@@ -898,8 +898,6 @@ func draw_sectors() -> void:
 			var v_center_2: Vector2 = v_center + perendicular * 100 * line_width
 			draw_line(v_center/Roth.SCALE_2D_WORLD, v_center_2/Roth.SCALE_2D_WORLD, Color.WEB_PURPLE, line_width*2, true)
 		
-		#if selected_face:
-			#draw_line(Vector2(selected_face.v1.x/Roth.SCALE_2D_WORLD, selected_face.v1.y/Roth.SCALE_2D_WORLD), Vector2(selected_face.v2.x/Roth.SCALE_2D_WORLD, selected_face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
 		
 		for face: Face in owner.selected_faces:
 			if face.map_info != map.map_info:

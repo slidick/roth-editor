@@ -42,7 +42,6 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> SFX:
 
 func _init(p_data: Dictionary, p_map_info: Dictionary) -> void:
 	data = p_data
-	#index = p_index
 	map_info = p_map_info
 
 func duplicate() -> SFX:

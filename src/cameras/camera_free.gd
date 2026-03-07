@@ -21,6 +21,7 @@ extends Camera3D
 
 @onready var _velocity: float = default_velocity
 
+
 func _process(delta: float) -> void:
 	if not current or not has_focus:
 		return

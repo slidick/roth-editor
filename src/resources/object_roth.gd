@@ -30,7 +30,6 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 	object.data.posZ = floor_height
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
 	object.sector = weakref(object.sectors[new_sector_index])
-	#object.data.sector_index = new_sector_index
 	
 	return object
 
@@ -41,8 +40,6 @@ static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRo
 		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.z), f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 	
-	#if "sector_index" in extra_info:
-		#new_sector_index = extra_info.sector_index
 	if new_sector_index == -1:
 		Console.print("Can't paste object outside a sector")
 		return
@@ -53,7 +50,6 @@ static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRo
 	object.data.posZ = p_position.y
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
 	object.sector = weakref(object.sectors[new_sector_index])
-	#object.data.sector_index = new_sector_index
 	
 	if extra_info["render_type"] == "fixed":
 		object.data.renderType |= 128
@@ -95,7 +91,6 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRot
 	object.data.posY = p_position.y
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
 	object.sector = weakref(object.sectors[new_sector_index])
-	#object.data.sector_index = new_sector_index
 	
 	return object
 
@@ -134,7 +129,6 @@ static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_inf
 	object.data.posZ = p_position.y
 	object.sectors[new_sector_index].data.objectInformation.append(object.data)
 	object.sector = weakref(object.sectors[new_sector_index])
-	#object.data.sector_index = new_sector_index
 	
 	if extra_info["render_type"] == "fixed":
 		object.data.renderType = 128
@@ -280,10 +274,7 @@ func _initialize_mesh_actual() -> void:
 	
 	
 	mesh_array.clear_surfaces()
-	#mesh_array.material = material
 	mdt.commit_to_surface(mesh_array)
-
-
 	
 	var mesh_instance := ObjectMesh3D.new()
 	mesh_instance.mesh = mesh_array
@@ -477,15 +468,6 @@ class ObjectNode2D extends Node2D:
 		
 		if new_sector_index == -1:
 			new_sector_index = closest_sector_index
-		
-		#for object: Dictionary in ref.sectors[new_sector_index].data.objectInformation:
-			#if object.posX == -int(pos.x) and object.posY == int(pos.y):
-				#position = Vector2(
-					#-ref.data.posX / Roth.SCALE_2D_WORLD,
-					#ref.data.posY / Roth.SCALE_2D_WORLD
-				#)
-				#return
-				
 		
 		if new_sector_index == -1:
 			position = Vector2(

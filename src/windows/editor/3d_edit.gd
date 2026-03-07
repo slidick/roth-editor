@@ -21,6 +21,7 @@ var copied_sector_data: Dictionary = {}
 var copied_platform_data: Dictionary = {}
 var show_selection_highlight: bool = true
 
+
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_WM_MOUSE_EXIT:
@@ -77,7 +78,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				var value: int = int(ceil(moused_over_resource.face_length))
 				moused_over_resource.texture_data.unk0x00 = int(value) & 255
 				moused_over_resource.texture_data.type = (int(value) >> 8) | (moused_over_resource.texture_data.type & (1<<7))
-				#moused_over_resource.initialize_mesh()
 				owner.redraw([moused_over_resource])
 				Roth.editor_action.emit(moused_over_resource.map_info, "Paste Face Properties")
 				%EditFaceContainer.update_selections()
@@ -252,6 +252,7 @@ func _process(_delta: float) -> void:
 	if shift_switched != Input.is_physical_key_pressed(KEY_SHIFT):
 		shift_switched = Input.is_physical_key_pressed(KEY_SHIFT)
 		moused_over_resource = null
+
 
 func update_selections() -> void:
 	for node: Variant in selected_nodes:

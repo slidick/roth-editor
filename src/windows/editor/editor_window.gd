@@ -502,14 +502,6 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).map_info.name))], "Confirm Close", false):
 				for item: TreeItem in selected:
 					close_map(item.get_metadata(0).map_info)
-					#item.get_metadata(0).queue_free()
-					#Roth.loaded_maps.erase(item.get_metadata(0).map_info.name)
-					#for child_item: TreeItem in item.get_children():
-						#child_item.free()
-					#%Map2D.close_map(item.get_metadata(0).map_info)
-					#%"Command Editor".close(item.get_metadata(0).map_info.name)
-					#Roth.reload_map_info(item.get_metadata(0).map_info)
-					#item.free()
 
 #endregion
 
