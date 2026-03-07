@@ -40,6 +40,7 @@ func handle_input(event: InputEvent) -> void:
 							else:
 								vertex.y = vertices[-1].y
 						vertices.append(vertex)
+						queue_redraw()
 	
 	if event is InputEventKey:
 		if event.keycode == KEY_ENTER:
@@ -58,7 +59,7 @@ func finalize() -> void:
 	
 	var new_sector: Sector = %Map2D.map.add_sector(scaled_vertices, %DrawModeContainer.get_sector_options())
 	vertices.clear()
-	
+	%BoxSizeLabel.hide()
 	%Map2D.queue_redraw()
 	%Map2D.check_for_merges([new_sector])
 	%Map2D.show_vertices(false, [new_sector])
@@ -67,6 +68,7 @@ func finalize() -> void:
 
 func draw_box() -> void:
 	if len(vertices) == 0:
+		%BoxSizeLabel.hide()
 		return
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(%Map2D.snap)
 	
@@ -81,3 +83,7 @@ func draw_box() -> void:
 			current_mouse.y = vertices[-1].y
 	
 	draw_line(vertices[-1], current_mouse, Color.GHOST_WHITE, %Map2D.line_width, true)
+	var length: Vector2 = current_mouse - vertices[-1]
+	%BoxSizeLabel.text = "%.0f x %.0f \n %.0f" % [length.x * Roth.SCALE_2D_WORLD, length.y * Roth.SCALE_2D_WORLD, length.length() * Roth.SCALE_2D_WORLD]
+	%BoxSizeLabel.show()
+	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (vertices[-1] + current_mouse) / 2) * %Camera2D.zoom.x
