@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://pdmovt0easru" path="res://src/windows/editor/edit_panels/edit_sfx_container.gd" id="11_yrxyp"]
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
 [ext_resource type="Script" uid="uid://da08m6ghedkbl" path="res://src/windows/editor/draw_tools/box_tool.gd" id="12_uyfwr"]
+[ext_resource type="Script" uid="uid://n65j26i32ams" path="res://src/windows/editor/mouse_pointer.gd" id="12_y0aww"]
 [ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/utils/tri_state_check_box.gd" id="13_tep3q"]
 [ext_resource type="Script" uid="uid://djuyvhq6u2tq2" path="res://src/windows/editor/draw_tools/stair_tool.gd" id="13_vjvk8"]
 [ext_resource type="Script" uid="uid://cp1cjottq6oww" path="res://src/windows/editor/draw_tools/circle_tool.gd" id="14_l6b3v"]
@@ -851,7 +852,11 @@ unique_name_in_owner = true
 [node name="Vertices" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="2" unique_id=620152428]
 unique_name_in_owner = true
 
-[node name="DrawTools" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="3" unique_id=1075856890]
+[node name="MousePointer" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="3" unique_id=728878148]
+unique_name_in_owner = true
+script = ExtResource("12_y0aww")
+
+[node name="DrawTools" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="4" unique_id=1075856890]
 unique_name_in_owner = true
 
 [node name="BoxTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="0" unique_id=97560281]

@@ -133,13 +133,16 @@ unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_styles/panel = ExtResource("5_5mrjc")
-item_count = 2
+item_count = 3
 item_0/text = "Highlight Concave Sectors"
 item_0/checkable = 1
 item_0/id = 0
 item_1/text = "Always Show SFX Zones"
 item_1/checkable = 1
 item_1/id = 1
+item_2/text = "Show Mouse Point"
+item_2/checkable = 1
+item_2/id = 2
 
 [node name="Windows" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1040920327]
 unique_name_in_owner = true

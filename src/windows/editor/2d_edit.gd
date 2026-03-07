@@ -124,6 +124,9 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("unmerge_vertices"):
 		unmerge_vertices()
 	
+	if event is InputEventMouseMotion:
+		%MousePointer.queue_redraw()
+	
 	if mouse_drag_enabled:
 		if event is InputEventMouseMotion:
 			%Camera2D.position.x -= event.relative.x / %Camera2D.zoom.x
