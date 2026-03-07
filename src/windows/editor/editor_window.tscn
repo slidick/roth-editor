@@ -118,6 +118,10 @@ content_margin_right = 4.0
 content_margin_bottom = 4.0
 bg_color = Color(0.12572601, 0.094868325, 0.20250013, 0.4627451)
 
+[sub_resource type="LabelSettings" id="LabelSettings_y0aww"]
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uyfwr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dyevs"]
@@ -823,6 +827,7 @@ unique_name_in_owner = true
 visible = false
 offset_right = 118.0
 offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_y0aww")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -859,21 +864,21 @@ script = ExtResource("12_y0aww")
 [node name="DrawTools" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" index="4" unique_id=1075856890]
 unique_name_in_owner = true
 
-[node name="BoxTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="0" unique_id=97560281]
+[node name="FreeTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="0" unique_id=517876629]
+unique_name_in_owner = true
+script = ExtResource("15_cg06i")
+
+[node name="BoxTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="1" unique_id=97560281]
 unique_name_in_owner = true
 script = ExtResource("12_uyfwr")
 
-[node name="StairTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="1" unique_id=873530528]
+[node name="StairTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="2" unique_id=873530528]
 unique_name_in_owner = true
 script = ExtResource("13_vjvk8")
 
-[node name="CircleTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="2" unique_id=1853153096]
+[node name="CircleTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="3" unique_id=1853153096]
 unique_name_in_owner = true
 script = ExtResource("14_l6b3v")
-
-[node name="FreeTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="3" unique_id=517876629]
-unique_name_in_owner = true
-script = ExtResource("15_cg06i")
 
 [node name="InnerTool" type="Node2D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D/DrawTools" index="4" unique_id=1451850968]
 unique_name_in_owner = true
