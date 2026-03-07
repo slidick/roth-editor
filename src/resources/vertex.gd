@@ -128,10 +128,10 @@ func _input(event: InputEvent) -> void:
 					start_sector_split.emit(self)
 				
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			if allow_move:
-				if event.pressed and dragging:
-					if not split_vertex:
-						delete()
+			#if allow_move:
+				#if event.pressed and dragging:
+					#if not split_vertex:
+						#delete()
 			if mouse_over and event.pressed and split_vertex:
 				split_face()
 	
