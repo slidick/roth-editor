@@ -1057,6 +1057,7 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 				return
 			map.add_object(new_object)
 			add_object_to_2d_map(new_object)
+			owner.select_resource(new_object)
 			Roth.editor_action.emit(map.map_info, "Add Object")
 		1:
 			owner.select_resource(null)
@@ -1149,6 +1150,7 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 				return
 			map.add_sfx(new_sfx)
 			add_sfx_to_2d_map(new_sfx)
+			owner.select_resource(new_sfx)
 			Roth.editor_action.emit(map.map_info, "Add SFX")
 		1:
 			owner.select_resource(null)
