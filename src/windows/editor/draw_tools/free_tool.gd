@@ -60,21 +60,7 @@ func finalize() -> void:
 	vertices.clear()
 	
 	%Map2D.queue_redraw()
-	
-	# Check for merges
-	for sector: Sector in %Map2D.map.sectors:
-		for face_ref: WeakRef in sector.faces:
-			var face: Face = face_ref.get_ref()
-			for new_face_ref: WeakRef in new_sector.faces:
-				var new_face: Face = new_face_ref.get_ref()
-				if face.sister and face.sister.get_ref() == new_face:
-					pass
-				elif new_face.v2 == face.v1 and new_face.v1 == face.v2:
-					face.sister = weakref(new_face)
-					new_face.sister = weakref(face)
-					face.initialize_mesh()
-					new_face.initialize_mesh()
-	
+	%Map2D.check_for_merges([new_sector])
 	%Map2D.show_vertices(false, [new_sector])
 	Roth.editor_action.emit(%Map2D.map.map_info, "Draw Free Sector")
 

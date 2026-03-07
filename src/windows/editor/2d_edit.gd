@@ -1610,6 +1610,21 @@ func check_for_face_hover(sector: Sector) -> void:
 		owner.hovered_face = null
 		queue_redraw()
 
+func check_for_merges(new_sectors: Array) -> void:
+	# Check for merges
+	for sector: Sector in %Map2D.map.sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			for new_sector: Sector in new_sectors:
+				for new_face_ref: WeakRef in new_sector.faces:
+					var new_face: Face = new_face_ref.get_ref()
+					if face.sister and face.sister.get_ref() == new_face:
+						pass
+					elif new_face.v2.is_equal_approx(face.v1) and new_face.v1.is_equal_approx(face.v2):
+						face.sister = weakref(new_face)
+						new_face.sister = weakref(face)
+						face.initialize_mesh()
+						new_face.initialize_mesh()
 #endregion
 
 #region Options
