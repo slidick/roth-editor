@@ -38,7 +38,7 @@ var data: Dictionary
 var index: int :
 	get():
 		return Roth.get_map(map_info).faces.find(self)
-
+var compiled_index: int = -1
 var map_info: Dictionary
 
 var sector: Sector

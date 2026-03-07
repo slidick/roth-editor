@@ -501,13 +501,11 @@ func get_texture_mappings_counts() -> Array:
 #region Compile
 func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
-	
 	var json := {}
 	json["mapMetadataSection"] = metadata.duplicate()
 	json["sectorsSection"] = { "sectors": sectors.map(func (sector: Sector) -> Dictionary: return sector.data) }
 	
 	var compiled_faces := []
-	
 	for i in range(len(sectors)):
 		var sector: Sector = sectors[i]
 		sector.data["firstFaceIndex"] = len(compiled_faces)
@@ -516,6 +514,11 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 			compiled_faces.append(face)
 			
 		sector.data["facesCount"] = len(sector.faces)
+	
+	var face_index: int = 0
+	for face: Face in faces:
+		face.compiled_index = face_index
+		face_index += 1
 		
 	
 	for i in range(len(sectors)):
@@ -524,13 +527,12 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 			var face: Face = face_ref.get_ref()
 			face.data["sectorIndex"] = i
 			if face.sister:
-				face.data["sisterFaceIndex"] = face.sister.get_ref().index
+				face.data["sisterFaceIndex"] = face.sister.get_ref().compiled_index
 				assert(face.data["sisterFaceIndex"] != -1)
 			else:
 				face.data.erase("sisterFaceIndex")
 	
 	json["facesSection"] = { "faces": compiled_faces.map(func (face: Face) -> Dictionary: return face.data) }
-	
 	
 	# Get a list of face ids used by map command 52
 	var command_52_face_ids := []
@@ -545,20 +547,31 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 					if face_id not in command_52_face_ids:
 						command_52_face_ids.append(face_id)
 	
-	var texture_mappings := []
+	var texture_mappings_map := {}
+	var additional_texture_faces := []
+	var texture_map_index: int = 0
 	for face: Face in compiled_faces:
-		if face.texture_data not in texture_mappings:
-			texture_mappings.append(face.texture_data)
-			face.data["textureMappingIndex"] = len(texture_mappings) - 1
+		if face.texture_data not in texture_mappings_map:
+			texture_mappings_map[face.texture_data] = texture_map_index
+			face.data["textureMappingIndex"] = texture_map_index
+			texture_map_index += 1
 		else:
 			# Map command 52 can't modify face flags if the texture mapping is assigned to more than one face
-			var texture_mapping: Dictionary = texture_mappings[texture_mappings.find(face.texture_data)]
-			if "additionalMetadata" in texture_mapping and texture_mapping.additionalMetadata.unk0x0C in command_52_face_ids:
-				texture_mappings.append(face.texture_data)
-				face.data["textureMappingIndex"] = len(texture_mappings) - 1
+			if "additionalMetadata" in face.texture_data and face.texture_data.additionalMetadata.unk0x0C in command_52_face_ids:
+				additional_texture_faces.append(face)
 			else:
-				face.data["textureMappingIndex"] = texture_mappings.find(face.texture_data)
+				face.data["textureMappingIndex"] = texture_mappings_map[face.texture_data]
+	
+	var texture_mappings: Array = []
+	for texture_map_data: Dictionary in texture_mappings_map:
+		texture_mappings.append(texture_map_data)
+	
+	for face: Face in additional_texture_faces:
+		texture_mappings.append(face.texture_data)
+		face.data["textureMappingIndex"] = len(texture_mappings) - 1
+	
 	json["faceTextureMappingSection"] = { "mappings": texture_mappings }
+	
 	
 	var platforms := []
 	for sector: Sector in sectors:
@@ -567,37 +580,43 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 		else:
 			platforms.append(sector.platform)
 			sector.data["intermediateFloorIndex"] = len(platforms) - 1
-
+	
 	if not platforms.is_empty():
 		json["midPlatformsSection"] = { "platforms": platforms }
 	
-	var vertices := []
+	var vertices := {}
+	var vertex_index: int = 0
 	for face: Face in compiled_faces:
 		var v1: Dictionary = {
 			"x": -int(face.v1.x),
 			"y": int(face.v1.y)
 		}
 		if v1 not in vertices:
-			vertices.append(v1)
-			face.data["vertexIndex01"] = len(vertices)-1
+			vertices[v1] = vertex_index
+			face.data["vertexIndex01"] = vertex_index
+			vertex_index += 1
 		else:
-			face.data["vertexIndex01"] = vertices.find(v1)
+			face.data["vertexIndex01"] = vertices[v1]
 		var v2: Dictionary = {
 			"x": -int(face.v2.x),
 			"y": int(face.v2.y)
 		}
 		if v2 not in vertices:
-			vertices.append(v2)
-			face.data["vertexIndex02"] = len(vertices)-1
+			vertices[v2] = vertex_index
+			face.data["vertexIndex02"] = vertex_index
+			vertex_index += 1
 		else:
-			face.data["vertexIndex02"] = vertices.find(v2)
+			face.data["vertexIndex02"] = vertices[v2]
 	
-	json["verticesSection"] = { "vertices": vertices }
+	var vertices_array: Array = []
+	for vertex: Dictionary in vertices:
+		vertices_array.append(vertex)
+	json["verticesSection"] = { "vertices": vertices_array }
+	
 	json["commandsSection"] = commands_section
 	json["section7"] = { "unkArray01": sound_effects.map(func (sfx: SFX) -> Dictionary: return sfx.data) }
 	if sfx_zones:
 		json["section7"]["unkArray02"] = sfx_zones
-	
 	
 	
 	if "position" in player_data:
@@ -607,15 +626,11 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	if "rotation" in player_data:
 		json["mapMetadataSection"]["rotation"] = player_data.rotation
 	
-	
 	var section_sizes: Dictionary = calculate_section_sizes_and_offsets(json)
-	
 	if section_sizes.verticesSection.startsAt > 65535:
 		return []
-	
 	var buffer := PackedByteArray()
 	buffer.resize(section_sizes.footer.startsAt + section_sizes.footer.size)
-	
 	write_header(buffer, json, section_sizes)
 	write_sectors(buffer, json, section_sizes)
 	var texture_mapping_offsets: Array = write_texture_mapping_section(buffer, json, section_sizes)
