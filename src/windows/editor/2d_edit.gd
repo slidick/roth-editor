@@ -713,7 +713,7 @@ func update_camera_center() -> void:
 	var zoom_x: float = %Camera2D.get_viewport().size.x / size.x
 	additional_zoom = clamp(min(zoom_x, zoom_y) * 0.95, MIN_ZOOM, MAX_ZOOM)
 	%Camera2D.zoom = Vector2.ONE * additional_zoom
-	update_line_width(additional_zoom)
+	update_line_width(additional_zoom, true)
 
 
 func update_camera_zoom() -> void:
@@ -748,7 +748,7 @@ func _draw() -> void:
 		child.queue_redraw()
 
 
-func update_line_width(x: float) -> bool:
+func update_line_width(x: float, skip_redraw: bool = false) -> bool:
 	var prev_line_width: float = line_width
 	if %Camera2D.zoom.x > 60:
 		line_width =  0.025
@@ -769,7 +769,7 @@ func update_line_width(x: float) -> bool:
 	else:
 		line_width =  2
 	
-	if prev_line_width != line_width:
+	if prev_line_width != line_width and not skip_redraw:
 		update_vertex_size()
 		queue_redraw()
 	
@@ -1771,7 +1771,14 @@ func check_for_split(nearest_vertex: VertexNode) -> void:
 
 func update_vertex_size() -> void:
 	if %VertexCheckBox.button_pressed or %DrawModeCheckBox.button_pressed:
+		var i: int = 0
 		for vertex_node: VertexNode in %Vertices.get_children():
 			vertex_node.redraw(line_width)
+			i += 1
+			if (i % 250) == 0:
+				var current_map: Map = map
+				await get_tree().process_frame
+				if current_map != map:
+					return
 
 #endregion
