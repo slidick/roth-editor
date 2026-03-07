@@ -1299,21 +1299,21 @@ func _on_face_split(old_vertex: VertexNode, new_faces: Array) -> void:
 		split_vertex_node.face_split.connect(_on_face_split)
 		%Vertices.add_child(split_vertex_node)
 	
-	var face_to_add: Face
-	var face_to_remove: Face
+	var faces_to_add: Array = []
+	var faces_to_remove: Array = []
 	for face: Face in new_faces:
 		if face not in old_vertex.faces:
-			face_to_add = face
+			faces_to_add.append(face)
 		else:
-			face_to_remove = face
-	
+			faces_to_remove.append(face)
 	for v_node: VertexNode in %Vertices.get_children():
 		if v_node.split_vertex:
 			continue
-		if face_to_remove in v_node.faces and face_to_add not in v_node.faces:
-			if v_node.coordinate == face_to_add.v1 or v_node.coordinate == face_to_add.v2:
-				v_node.faces.append(face_to_add)
-				v_node.faces.erase(face_to_remove)
+		for i in range(len(faces_to_remove)):
+			if faces_to_remove[i] in v_node.faces and faces_to_add[i] not in v_node.faces:
+				if v_node.coordinate == faces_to_add[i].v1 or v_node.coordinate == faces_to_add[i].v2:
+					v_node.faces.append(faces_to_add[i])
+					v_node.faces.erase(faces_to_remove[i])
 	
 	queue_redraw()
 
