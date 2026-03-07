@@ -1389,7 +1389,7 @@ func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 			for face_ref: WeakRef in sector.faces:
 				var face: Face = face_ref.get_ref()
 				for vertex_face: Face in vertex.faces:
-					if face.sister and face.sister.get_ref() == vertex_face:
+					if (face.sister and face.sister.get_ref() == vertex_face) or (vertex_face.sister and vertex_face.sister.get_ref() == face):
 						pass
 					elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
 						face.sister = weakref(vertex_face)
