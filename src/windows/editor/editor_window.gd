@@ -149,6 +149,8 @@ func _input(event: InputEvent) -> void:
 				delete_selected_objects()
 			elif not selected_sfx.is_empty():
 				delete_selected_sfx()
+			elif not selected_vertex_nodes.is_empty():
+				delete_selected_vertices()
 			
 		if event.is_action_pressed("merge_sectors"):
 			if len(selected_sectors) > 1 and len(selected_faces) == 0:
@@ -1225,4 +1227,20 @@ func delete_selected_sfx() -> void:
 			Roth.editor_action.emit(map_info, "Delete SFX%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
 		select_resource(null)
 
+
+func delete_selected_vertices() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected %s?" % [len(selected_vertex_nodes), ("vertices" if len(selected_vertex_nodes) > 1 else "vertex")], "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for vertex_node: VertexNode in selected_vertex_nodes:
+			if vertex_node.map_info not in map_groups:
+				map_groups[vertex_node.map_info] = []
+			map_groups[vertex_node.map_info].append(vertex_node)
+			for sector: Sector in vertex_node.sectors:
+				sector.delete_vertex(vertex_node)
+		for map_info: Dictionary in map_groups:
+			Roth.editor_action.emit(map_info, "Delete %s" % ("Vertices" if len(map_groups[map_info]) > 1 else "Vertex"))
+		select_resource(null)
+		%Map2D.show_vertices(true)
+		%Map2D.queue_redraw()
 #endregion
