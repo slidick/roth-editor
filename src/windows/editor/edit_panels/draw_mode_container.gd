@@ -74,12 +74,26 @@ func get_sector_options() -> Dictionary:
 			texture_fit |= Sector.FLOOR_A
 			texture_fit |= Sector.FLOOR_B
 	
+	var texture_flags: int = 0
+	if %DrawTextureFlagImageFitCheckBox.button_pressed:
+		texture_flags |= Face.IMAGE_FIT
+	if %DrawTextureFlagNoReflectCheckBox.button_pressed:
+		texture_flags |= Face.NO_REFLECT
+	if %DrawTextureFlagHalfPixelCheckBox.button_pressed:
+		texture_flags |= Face.HALF_PIXEL
+	if %DrawTextureFlagDrawBottomCheckBox.button_pressed:
+		texture_flags |= Face.PIN_BOTTOM
+	if %DrawTextureFlagEdgeMapCheckBox.button_pressed:
+		texture_flags |= Face.EDGE_MAP
+	if %DrawTextureFlagXFlipCheckBox.button_pressed:
+		texture_flags |= Face.FLIP_X
 	
 	return {
 		"ceiling": %DrawModeRoofOption.get_selected_metadata(),
 		"floor": %DrawModeFloorOption.get_selected_metadata(),
 		"wall": %DrawModeWallOption.get_selected_metadata(),
 		"texture_fit": texture_fit,
+		"texture_flags": texture_flags,
 		"ceiling_height": %DrawModeRoofHeightSpinBox.value,
 		"floor_height": %DrawModeFloorHeightSpinBox.value,
 		"auto_split_walls": %AutoSplitWallCheckBox.button_pressed,

@@ -74,7 +74,7 @@ static func create_new_face(p_map_info: Dictionary, p_sector: Sector, sector_dat
 		"midTextureIndex": sector_data.get("wall", 65535),
 		"upperTextureIndex": sector_data.get("upper_wall", 65535),
 		"lowerTextureIndex": sector_data.get("lower_wall", 65535),
-		"unk0x08": 0,
+		"unk0x08": sector_data.get("texture_flags", 0),
 	}
 	new_face.texture_data = initial_texture_data
 	return new_face

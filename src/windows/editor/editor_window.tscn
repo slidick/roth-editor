@@ -3227,6 +3227,48 @@ step = 32.0
 value = 256.0
 editable = false
 
+[node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="11" unique_id=2130218259]
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="12" unique_id=862921821]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8" index="0" unique_id=2082455534]
+layout_mode = 2
+
+[node name="DrawTextureFlagImageFitCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8/VBoxContainer" index="0" unique_id=2050261608]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Image Fit"
+
+[node name="DrawTextureFlagNoReflectCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8/VBoxContainer" index="1" unique_id=706117630]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No Reflect"
+
+[node name="DrawTextureFlagHalfPixelCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8/VBoxContainer" index="2" unique_id=332253680]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Half Pixel"
+
+[node name="DrawTextureFlagDrawBottomCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8/VBoxContainer" index="3" unique_id=691971968]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Draw From Bottom"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8" index="1" unique_id=1261798037]
+layout_mode = 2
+
+[node name="DrawTextureFlagXFlipCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8/VBoxContainer2" index="0" unique_id=812299105]
+unique_name_in_owner = true
+layout_mode = 2
+text = "X-Flip"
+
+[node name="DrawTextureFlagEdgeMapCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/HBoxContainer8/VBoxContainer2" index="1" unique_id=470766654]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Edge Map"
+
 [node name="History" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel" index="2" unique_id=1636518949]
 visible = false
 layout_mode = 2
