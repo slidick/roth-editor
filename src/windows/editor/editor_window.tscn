@@ -171,6 +171,8 @@ corner_detail = 1
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_8v1cx"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_yi0n0"]
+
 [sub_resource type="ButtonGroup" id="ButtonGroup_8go8f"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vjvk8"]
@@ -3034,13 +3036,13 @@ size_flags_vertical = 4
 [node name="CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer2" index="0" unique_id=1223414095]
 layout_mode = 2
 button_pressed = true
-button_group = SubResource("ButtonGroup_8v1cx")
+button_group = SubResource("ButtonGroup_yi0n0")
 text = "Solid"
 
 [node name="DonutHollowCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer2" index="1" unique_id=650897460]
 unique_name_in_owner = true
 layout_mode = 2
-button_group = SubResource("ButtonGroup_8v1cx")
+button_group = SubResource("ButtonGroup_yi0n0")
 text = "Hollow"
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl" index="1" unique_id=1076956369]
