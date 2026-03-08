@@ -1819,7 +1819,7 @@ func check_for_split(nearest_vertex: VertexNode) -> void:
 				continue
 			map.split_sector(sector, start_sector_split_vertex, nearest_vertex)
 			Roth.editor_action.emit(map.map_info, "Split Sector")
-			owner.select_resource(sector)
+			#owner.select_resource(sector)
 			show_vertices(last_allow_move)
 
 
