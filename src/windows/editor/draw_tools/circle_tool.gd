@@ -19,6 +19,12 @@ func handle_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.ctrl_pressed:
 		%CircleToolVerticesSpinBox.set_value_no_signal(%CircleToolVerticesSpinBox.value - 1)
 		queue_redraw()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_UP and event.alt_pressed:
+		%CircleToolRotationSpinBox.set_value_no_signal(%CircleToolRotationSpinBox.value + 1)
+		queue_redraw()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.alt_pressed:
+		%CircleToolRotationSpinBox.set_value_no_signal(%CircleToolRotationSpinBox.value - 1)
+		queue_redraw()
 	
 	if start_draw:
 		if event is InputEventMouseMotion:
@@ -52,7 +58,7 @@ func handle_input(event: InputEvent) -> void:
 					
 					var vertex_count := int(%CircleToolVerticesSpinBox.value)
 					var angle_increment: float = 2 * PI / vertex_count
-					var starting_angle: float = -PI/2
+					var starting_angle: float = -PI/2 + deg_to_rad(%CircleToolRotationSpinBox.value)
 					var vertices: Array = []
 					for i in range(vertex_count):
 						var angle: float = (i * angle_increment) + starting_angle
@@ -77,7 +83,7 @@ func draw_box() -> void:
 	var radius: float = size.length()
 	var vertex_count := int(%CircleToolVerticesSpinBox.value)
 	var angle_increment: float = 2 * PI / vertex_count
-	var starting_angle: float = -PI/2
+	var starting_angle: float = -PI/2 + deg_to_rad(%CircleToolRotationSpinBox.value)
 	var vertices: Array = []
 	for i in range(vertex_count):
 		var angle: float = (i * angle_increment) + starting_angle

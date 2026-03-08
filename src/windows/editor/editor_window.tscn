@@ -2886,6 +2886,17 @@ min_value = 3.0
 value = 12.0
 rounded = true
 
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/CircleOptionsContainer/VBoxContainer/HBoxContainer" index="2" unique_id=554512254]
+layout_mode = 2
+text = "Rotation:"
+
+[node name="CircleToolRotationSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/CircleOptionsContainer/VBoxContainer/HBoxContainer" index="3" unique_id=101277661]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -360.0
+max_value = 360.0
+rounded = true
+
 [node name="FreeOptionsContainer" type="Control" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="4" unique_id=1021503665]
 unique_name_in_owner = true
 visible = false
