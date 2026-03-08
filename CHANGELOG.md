@@ -1,3 +1,85 @@
+**0.20.0**
+### New Features
+  - New Draw Mode
+      - Stair Drawing Tool
+        - Configurable direction, step count, and step height
+        - Flat or stepped ceiling options
+      - Circle Drawing Tool
+        - Configurable vertex count
+      - Donut Drawing Tool
+        - Configurable vertex count, size ratio, rotation, hollow or solid center
+        - Create spiral staircases with configurable step height
+      - Free Drawing Tool
+        - Click to place a vertex
+        - Hold `Ctrl` to lock next point to the previous point's axis
+        - Esc to undo last vertex
+        - Enter to close last face
+        - Must manually split concave sections
+      - Inner Sector Drawing Tool
+        - Configurable ratio size for inner sector
+      - Use 'Ctrl/Alt + MouseWheel' to easily change some options while drawing
+      - Pre-select sector textures from customizable presets before drawing
+        - All texture sets come with 3 defaults
+        - Create new presets from scratch
+        - Create presets from copied texture data
+      - Adjust floor and ceiling height before drawing
+        - Button to automatically set the ceiling height based on the current wall texture height
+      - Display size of sector while drawing
+      - Ability to autosplit faces at set intervals while drawing
+        - Note: Doesn't quite work with stairs or inner/donut tools
+      - Note: Sectors can only support ~40 faces before glitching then crashing
+      - Right-click and drag in draw mode to quickly move a single vertex
+  - Add trigger and opcode names to DBase editor
+  - Add trigger and opcode selection dialogs with descriptions to DBase editor
+    - Double click name to bring up selection dialog
+  - New SFX node data
+    - Add loop and autoplay flags
+    - Add audible radius, volume, loop delay, and zone index values
+    - View the audible radius in 2d editor
+  - Add SFX zone data
+    - View zones in the 2d editor when selecting sfx
+    - Create and edit zone information in the edit panel
+    - Default 'allow zone' plays in the intersection of audible radius and the created zone
+    - 'Block zone' plays anywhere in the audible radius that is not in the block zone
+    - Lower the dampen value to play the sound in the block zone but at a lower volume
+    - 3 sub-zones can be created per zone, but only one can be an allow zone
+  - Search textures in texture selection dialog
+  - Add ability to create a BACKDROP.RAW file
+  - New 'Tools -> Show Mouse Point' shows a dot at the current mouse snap position
+  - Place newly created sfx/objects at current snap
+  - Select new sfx/objects after creation
+  - Delete key can be used to delete selected sfx/objects/vertices
+  - Right-click while dragging a vertex no longer deletes it
+
+### Bug Fixes
+  - Greatly speed up sector creating/merging in large maps
+  - Improve speed of map saving
+  - No longer allow incorrect splitting of a sector across or outside itself
+  - Fix regression in parsing of map names in command editor
+  - Fix regression in global command search
+  - Fix an error when an undo removes a selected object
+  - Fix the 2d camera zoom limits being dependent on the initial map size
+  - Change 2d mouse coordinates to snap value
+  - Fix the sector texture scale options being broken
+  - Fix broken ademo object selection
+  - Fix ghost vertices left over when in 2d vertex mode and deleting a sector from the 3d view
+  - Fix a 3d view highlight bug
+  - Fix face splitting while sector splitting
+  - Fix sector splitting while in draw mode
+  - Fix undo bug when reaching or lowering max undos
+  - Fix DBase editor text search failing after clearing a text entry
+  - Relaxed the 'Tools -> Highlight Concave Sectors' check; now tolerates minuscule concavity
+  - Fix bug when merging vertices that could trigger a sector merge prematurely
+  - Fix sfx node not updating position in the 2d editor when changing position from the edit panel
+  - Fix sfx node x value to be properly flipped
+  - Fix spam errors when opening more than one map while in sfx or object mode
+  - Improve 2d editor face/sector selection
+  - Speed up selection of many vertices
+  - Slightly improve redraw of vertices while zooming
+  - Fix some incorrect merging when moving vertices onto other vertices
+
+---
+
 **0.19.0**
 ### New Features
   - Dialog Editing
