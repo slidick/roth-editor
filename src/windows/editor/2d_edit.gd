@@ -1436,26 +1436,19 @@ func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 	var vertices_merged: bool = false
 	
 	if bad_merge_sectors.is_empty() and not bad_face_merge:
-		for sector: Sector in map.sectors:
-			for face_ref: WeakRef in sector.faces:
-				var face: Face = face_ref.get_ref()
-				for vertex_face: Face in vertex.faces:
-					if (face.sister and face.sister.get_ref() == vertex_face) or (vertex_face.sister and vertex_face.sister.get_ref() == face):
-						pass
-					elif vertex_face.v2.is_equal_approx(face.v1) and vertex_face.v1.is_equal_approx(face.v2):
-						face.sister = weakref(vertex_face)
-						vertex_face.sister = weakref(face)
-						face.initialize_mesh()
-						vertex_face.initialize_mesh()
-						faces_merged = true
+		faces_merged = check_for_merges(vertex.sectors)
 	elif not bad_merge_sectors.is_empty():
+		var check_sectors: Array = []
 		for sector: Sector in bad_merge_sectors:
 			for face: WeakRef in sector.faces:
+				if face.get_ref().sister:
+					check_sectors.append(face.get_ref().sister.get_ref().sector)
 				if face.get_ref() in vertex.faces:
-					if face.get_ref().sister:
-						#print("Sector Merge Happened")
-						map.merge_sectors(face.get_ref().sister.get_ref())
-						break
+					#print("Sector Merge Happened")
+					sector.delete_sector()
+					break
+		check_sectors.append_array(vertex.sectors)
+		check_for_merges(check_sectors)
 		sectors_merged = true
 	
 	if faces_merged:
@@ -1660,21 +1653,26 @@ func check_for_face_hover(sector: Sector) -> void:
 		owner.hovered_face = null
 		queue_redraw()
 
-func check_for_merges(new_sectors: Array) -> void:
+func check_for_merges(new_sectors: Array) -> bool:
 	# Check for merges
+	var merged: bool = false
 	for sector: Sector in %Map2D.map.sectors:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			for new_sector: Sector in new_sectors:
 				for new_face_ref: WeakRef in new_sector.faces:
 					var new_face: Face = new_face_ref.get_ref()
-					if face.sister and face.sister.get_ref() == new_face:
+					if (face.sister and face.sister.get_ref() == new_face) or (new_face.sister and new_face.sister.get_ref() == face):
 						pass
-					elif new_face.v2.is_equal_approx(face.v1) and new_face.v1.is_equal_approx(face.v2):
+					elif new_face.v2.is_equal_approx(face.v1) and new_face.v1.is_equal_approx(face.v2) and not new_face.v2.is_equal_approx(face.v2):
 						face.sister = weakref(new_face)
 						new_face.sister = weakref(face)
 						face.initialize_mesh()
 						new_face.initialize_mesh()
+						face.sector.initialize_mesh()
+						new_face.sector.initialize_mesh()
+						merged = true
+	return merged
 #endregion
 
 #region Options
