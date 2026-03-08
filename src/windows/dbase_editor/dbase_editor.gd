@@ -355,8 +355,8 @@ func dbase300_object_selection() -> int:
 	return await %ObjectSelection.dbase300_object_selection()
 
 
-func action_selection(current_opcode: int = -1, as_hex: bool = false) -> int:
-	return await %ActionSelector.action_selection(current_opcode, as_hex)
+func action_selection(current_opcode: int = -1, as_hex: bool = false, hide_item_actions: bool = false) -> int:
+	return await %ActionSelector.action_selection(current_opcode, as_hex, hide_item_actions)
 
 
 func trigger_selection(current_trigger: int = -1, as_hex: bool = false) -> int:

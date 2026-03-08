@@ -594,7 +594,7 @@ func _on_tree_item_activated() -> void:
 	
 	if tree_item.is_selected(1):
 		var command: Dictionary = tree_item.get_metadata(0)
-		var opcode: int = await owner.action_selection(command.opcode, owner.get_hex_preference())
+		var opcode: int = await owner.action_selection(command.opcode, owner.get_hex_preference(), false)
 		if opcode != -1:
 			tree_item.set_text(0, "%d" % opcode)
 			_update_commands()

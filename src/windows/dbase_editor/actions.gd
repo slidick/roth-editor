@@ -50,7 +50,7 @@ func _add_command(p_command: Dictionary = {}) -> void:
 	if not p_command.is_empty():
 		command = p_command
 	else:
-		var opcode: int = await owner.action_selection(last_selected_opcode, owner.get_hex_preference())
+		var opcode: int = await owner.action_selection(last_selected_opcode, owner.get_hex_preference(), true)
 		if opcode == -1:
 			return
 		last_selected_opcode = opcode
@@ -271,7 +271,7 @@ func _on_tree_item_activated() -> void:
 	
 	if tree_item.is_selected(1):
 		var command: Dictionary = tree_item.get_metadata(0)
-		var opcode: int = await owner.action_selection(command.opcode, owner.get_hex_preference())
+		var opcode: int = await owner.action_selection(command.opcode, owner.get_hex_preference(), true)
 		if opcode != -1:
 			tree_item.set_text(0, "%d" % opcode)
 			_update_current_action()
