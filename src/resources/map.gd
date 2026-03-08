@@ -165,8 +165,8 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 	sectors.append(new_sector)
 	
 	for i in range(len(vertices)):
-		var v1: Vector2 = vertices[i]
-		var v2: Vector2 = vertices[(i+1)%len(vertices)]
+		var v1: Vector2 = vertices[i].snappedf(2.0)
+		var v2: Vector2 = vertices[(i+1)%len(vertices)].snappedf(2.0)
 		
 		if sector_data.auto_split_walls:
 			while (v2-v1).length() > sector_data.auto_split_walls_value:
