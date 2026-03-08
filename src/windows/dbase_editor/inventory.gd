@@ -4,6 +4,7 @@ var dbase_data: Dictionary = {}
 var copy_action: Dictionary = {}
 var copy_command: Dictionary = {}
 var last_selected_trigger: int = -1
+var last_selected_opcode: int = -1
 
 func _ready() -> void:
 	%Tree.set_column_title(0, "opcode")
@@ -170,12 +171,13 @@ func _add_command(p_command: Dictionary = {}) -> void:
 	var command: Dictionary = {"opcode": 0, "args": 0}
 	if not p_command.is_empty():
 		command = p_command
-	var item: TreeItem = %Tree.get_root().create_child()
-	item.set_text(0, str(command.opcode))
-	item.set_text(1, Opcodes.dbase100[command.opcode].name)
-	item.set_text(2, str(command.args))
-	item.set_autowrap_mode(2, TextServer.AUTOWRAP_WORD_SMART)
-	item.set_metadata(0, command)
+	else:
+		var opcode: int = await owner.action_selection(last_selected_opcode, owner.get_hex_preference(), false)
+		if opcode == -1:
+			return
+		last_selected_opcode = opcode
+		command.opcode = opcode
+	_add_tree_item(command)
 	await get_tree().process_frame
 	%Tree.queue_redraw()
 	_update_commands()
@@ -412,24 +414,7 @@ func _on_trigger_tree_item_selected() -> void:
 	%Tree.scroll_to_item(%Tree.get_root())
 	var selected_item: TreeItem = %TriggerTree.get_selected()
 	for command: Dictionary in selected_item.get_metadata(0).commands:
-		var tree_item: TreeItem = %Tree.get_root().create_child()
-		if owner.get_hex_preference():
-			tree_item.set_text(0, "0x%02X" % command.opcode)
-		else:
-			tree_item.set_text(0, "%d" % command.opcode)
-		
-		tree_item.set_text(1, Opcodes.dbase100[command.opcode].name)
-		
-		tree_item.set_autowrap_mode(2, TextServer.AUTOWRAP_WORD_SMART)
-		if "text_entry" in command:
-			if "string" in command.text_entry:
-				tree_item.set_text(2, command.text_entry.string)
-			else:
-				tree_item.set_text(2, "(Empty)")
-		else:
-			tree_item.set_text(2, "%d" % command.args)
-		
-		tree_item.set_metadata(0, command)
+		_add_tree_item(command)
 	
 	# Needed to update cell spacing after auto-wrap
 	await get_tree().process_frame
@@ -440,6 +425,27 @@ func _on_trigger_tree_item_selected() -> void:
 	await get_tree().create_timer(0.5).timeout
 	if selected_item:
 		selected_item.set_editable(0, false)
+
+
+func _add_tree_item(command: Dictionary) -> void:
+	var tree_item: TreeItem = %Tree.get_root().create_child()
+	if owner.get_hex_preference():
+		tree_item.set_text(0, "0x%02X" % command.opcode)
+	else:
+		tree_item.set_text(0, "%d" % command.opcode)
+	
+	tree_item.set_text(1, Opcodes.dbase100[command.opcode].name)
+	
+	tree_item.set_autowrap_mode(2, TextServer.AUTOWRAP_WORD_SMART)
+	if "text_entry" in command:
+		if "string" in command.text_entry:
+			tree_item.set_text(2, command.text_entry.string)
+		else:
+			tree_item.set_text(2, "(Empty)")
+	else:
+		tree_item.set_text(2, "%d" % command.args)
+	
+	tree_item.set_metadata(0, command)
 
 
 func _on_add_trigger_button_pressed() -> void:
