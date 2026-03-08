@@ -363,7 +363,7 @@ func _on_browse_objects_button_pressed() -> void:
 		var index := 0
 		if new_object.das.get_file().get_basename() == "ADEMO":
 			source = 2
-			index = object.index
+			index = new_object.index
 			if new_object.index >= 256:
 				source = 3
 				index -= 256
