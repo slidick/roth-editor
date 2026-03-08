@@ -171,6 +171,8 @@ corner_detail = 1
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_8v1cx"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_8go8f"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vjvk8"]
 content_margin_left = 10.0
 content_margin_top = 10.0
@@ -2795,7 +2797,7 @@ text = "Donut"
 layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="4" unique_id=319575408]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 273.625)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_l6b3v")
 current_tab = 0
@@ -2961,26 +2963,31 @@ layout_mode = 2
 button_group = SubResource("ButtonGroup_8v1cx")
 text = "Hollow"
 
-[node name="DonutOptionsControl" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="6" unique_id=1560468022]
+[node name="DonutOptionsControl" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer" index="6" unique_id=1015104778]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl" index="0" unique_id=392899894]
+[node name="VBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl" index="0" unique_id=674320384]
 layout_mode = 2
+size_flags_vertical = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3" index="0" unique_id=392899894]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer" index="0" unique_id=855625731]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer" index="0" unique_id=855625731]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer/HBoxContainer" index="0" unique_id=857627120]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer/HBoxContainer" index="0" unique_id=857627120]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Ratio:"
 horizontal_alignment = 2
 
-[node name="DonutToolRatioSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer/HBoxContainer" index="1" unique_id=900773923]
+[node name="DonutToolRatioSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer/HBoxContainer" index="1" unique_id=900773923]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 0.01
@@ -2988,52 +2995,103 @@ max_value = 0.99
 step = 0.01
 value = 0.5
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer" index="1" unique_id=737874746]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer" index="1" unique_id=737874746]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer/HBoxContainer2" index="0" unique_id=1152709775]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer/HBoxContainer2" index="0" unique_id=1152709775]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Vertices:"
 horizontal_alignment = 2
 
-[node name="DonutToolVerticesSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer/HBoxContainer2" index="1" unique_id=1664361455]
+[node name="DonutToolVerticesSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer/HBoxContainer2" index="1" unique_id=1664361455]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 3.0
 value = 8.0
 rounded = true
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer" index="2" unique_id=1389878640]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer" index="2" unique_id=1389878640]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer/HBoxContainer3" index="0" unique_id=1042489042]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer/HBoxContainer3" index="0" unique_id=1042489042]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Rotation:"
 horizontal_alignment = 2
 
-[node name="DonutToolRotationSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer/HBoxContainer3" index="1" unique_id=138415740]
+[node name="DonutToolRotationSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer/HBoxContainer3" index="1" unique_id=138415740]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = -360.0
 max_value = 360.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl" index="1" unique_id=596954423]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3" index="1" unique_id=596954423]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer2" index="0" unique_id=1223414095]
+[node name="CheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer2" index="0" unique_id=1223414095]
 layout_mode = 2
 button_pressed = true
 button_group = SubResource("ButtonGroup_8v1cx")
 text = "Solid"
 
-[node name="DonutHollowCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer2" index="1" unique_id=650897460]
+[node name="DonutHollowCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/VBoxContainer3/VBoxContainer2" index="1" unique_id=650897460]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_8v1cx")
 text = "Hollow"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl" index="1" unique_id=1076956369]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl" index="2" unique_id=974484771]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer" index="0" unique_id=297548646]
+layout_mode = 2
+
+[node name="DonutSteppedFloorCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer" index="0" unique_id=1780903673]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Stepped Floor"
+
+[node name="DonutSteppedCeilingCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer" index="1" unique_id=2102924878]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Stepped Ceiling"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer" index="2" unique_id=107668255]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=1553748373]
+layout_mode = 2
+text = "Step Height:"
+
+[node name="DonutStepHeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=26013452]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -100.0
+value = 40.0
+rounded = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer" index="1" unique_id=1697103574]
+layout_mode = 2
+
+[node name="DonutClockwiseCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer2" index="0" unique_id=1124022538]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("ButtonGroup_8go8f")
+text = "Clockwise"
+
+[node name="CheckBox2" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer/TabContainer/DonutOptionsControl/HBoxContainer/VBoxContainer2" index="1" unique_id=1824167863]
+layout_mode = 2
+button_group = SubResource("ButtonGroup_8go8f")
+text = "Counter"
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/DrawModeContainer/VBoxContainer" index="5" unique_id=1165675953]
 layout_mode = 2
