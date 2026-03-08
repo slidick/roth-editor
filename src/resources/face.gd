@@ -325,7 +325,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	
 	
 	if Utility.are_points_collinear(vertices):
-		Console.print("Face forms a straight line (has no height): %s" % index)
+		#Console.print("Face forms a straight line (has no height): %s" % index)
 		static_body.queue_free()
 		collision_shape.queue_free()
 	else:
