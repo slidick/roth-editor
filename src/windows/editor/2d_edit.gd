@@ -839,6 +839,8 @@ func draw_sectors() -> void:
 		if owner.hovered_sector and len(owner.selected_faces) <= 1:
 			for face_ref: WeakRef in owner.hovered_sector.faces:
 				var face: Face = face_ref.get_ref()
+				if not face:
+					continue
 				draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.CORAL, line_width*2, true)
 				var direction: Vector2 = (face.v2 - face.v1).normalized()
 				var perendicular := Vector2(direction.y, -direction.x)
