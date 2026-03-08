@@ -625,7 +625,7 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	
 	
 	if Utility.are_points_collinear(collision_points):
-		Console.print("Sector forms a straight line: %s" % index)
+		#Console.print("Sector forms a straight line: %s" % index)
 		static_body.queue_free()
 		collision_shape.queue_free()
 	else:
