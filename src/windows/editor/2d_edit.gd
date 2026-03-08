@@ -434,6 +434,9 @@ func handle_draw_mode_event(event: InputEvent) -> void:
 	
 	if %InnerShapeCheckBox.button_pressed:
 		%InnerTool.handle_input(event)
+	
+	if %DonutShapeCheckBox.button_pressed:
+		%DonutTool.handle_input(event)
 
 
 func handle_object_mode_event(event: InputEvent) -> void:
