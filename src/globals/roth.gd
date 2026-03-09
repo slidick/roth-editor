@@ -1076,6 +1076,7 @@ func create_sfx_pack(p_sfx_name: String) -> void:
 		"active": false,
 		"count": 0,
 		"filesize": len(data),
+		"filepath": fxscript_filepath,
 	}
 	sfx_packs.append(sfx_info)
 	Roth.settings_loaded.emit()
