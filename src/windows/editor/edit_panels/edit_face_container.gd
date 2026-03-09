@@ -252,7 +252,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
-		%Texture.show_texture(das)
+		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.lowerTextureIndex)
 		%BottomTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:
@@ -324,7 +324,7 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
-		%Texture.show_texture(das)
+		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.upperTextureIndex)
 		%TopTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:

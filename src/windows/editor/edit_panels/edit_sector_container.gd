@@ -449,7 +449,7 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
-		%Texture.show_texture(das, true)
+		%Texture.show_texture(das, true, owner.selected_sectors[0].data.ceilingTextureIndex)
 		%RoofTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:
@@ -485,7 +485,7 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
-		%Texture.show_texture(das, true)
+		%Texture.show_texture(das, true, owner.selected_sectors[0].data.floorTextureIndex)
 		%FloorTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:
@@ -612,7 +612,7 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
-		%Texture.show_texture(das, true)
+		%Texture.show_texture(das, true, owner.selected_sectors[0].platform.floorTextureIndex)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:
 			return
@@ -660,7 +660,7 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 2:
 		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
-		%Texture.show_texture(das, true)
+		%Texture.show_texture(das, true, owner.selected_sectors[0].platform.ceilingTextureIndex)
 		var texture_index: int = await %Texture.texture_selected
 		if texture_index < 0:
 			return

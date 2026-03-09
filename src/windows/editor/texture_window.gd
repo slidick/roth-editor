@@ -89,10 +89,9 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 	
 	for i in range(%RotatableItemList.item_count):
 		var texture_data: Dictionary = %RotatableItemList.get_item_metadata(i)
-		if texture_data.index == p_selected_index:
+		if texture_data.index == p_selected_index and texture_data.das.get_file().get_basename() == current_das.name:
 			%RotatableItemList.select(i)
 			%RotatableItemList.scroll_to_index(i)
-	
 	if p_selected_index == -1:
 		%RotatableItemList.select(-1)
 	
