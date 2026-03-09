@@ -263,8 +263,9 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
 		for face: Face in owner.selected_faces:
-			face.texture_data.lowerTextureIndex = Roth.get_map(face.map_info).metadata.skyTexture
+			face.texture_data.lowerTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
@@ -298,8 +299,9 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
 		for face: Face in owner.selected_faces:
-			face.texture_data.midTextureIndex = Roth.get_map(face.map_info).metadata.skyTexture
+			face.texture_data.midTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
@@ -333,8 +335,9 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
 		for face: Face in owner.selected_faces:
-			face.texture_data.upperTextureIndex = Roth.get_map(face.map_info).metadata.skyTexture
+			face.texture_data.upperTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()

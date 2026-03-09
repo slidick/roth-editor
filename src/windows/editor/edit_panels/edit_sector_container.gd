@@ -460,8 +460,9 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %RoofTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
 		for sector: Sector in owner.selected_sectors:
-			sector.data.ceilingTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
+			sector.data.ceilingTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
@@ -495,8 +496,9 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %FloorTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
 		for sector: Sector in owner.selected_sectors:
-			sector.data.floorTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
+			sector.data.floorTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
@@ -620,8 +622,9 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformFloorTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
 		for sector: Sector in owner.selected_sectors:
-			sector.platform.floorTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
+			sector.platform.floorTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
@@ -667,8 +670,9 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
 	elif index == %PlatformRoofTextureOption.item_count - 3:
+		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
 		for sector: Sector in owner.selected_sectors:
-			sector.platform.ceilingTextureIndex = Roth.get_map(sector.map_info).metadata.skyTexture
+			sector.platform.ceilingTextureIndex = das.textures[0].index
 		update_selections(false)
 		owner.redraw(owner.selected_sectors)
 		%EditSectorTimer.start()
@@ -691,6 +695,7 @@ func _on_platform_roof_offset_y_edit_value_changed(value: float) -> void:
 
 
 func _on_platform_check_button_toggled(toggled_on: bool) -> void:
+	var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
 			sector.platform = {
@@ -709,7 +714,7 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 				var face: Face = face_ref.get_ref()
 				if face.sister:
 					var sister: Face = face.sister.get_ref()
-					if sister.texture_data.midTextureIndex == Roth.get_map(sister.map_info).metadata.skyTexture:
+					if sister.texture_data.midTextureIndex == das.textures[0].index:
 						sister.texture_data.midTextureIndex = 2
 					var value := int(ceil(sister.face_length))
 					sister.texture_data.unk0x00 = int(value) & 255
