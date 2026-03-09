@@ -61,7 +61,7 @@ func _on_item_list_item_selected(index: int) -> void:
 			if not "image" in texture:
 				continue
 			var tex: Texture2D = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
-			var idx: int = %RotatableItemList.add_item("%s\n%d: %s" % [key, texture.index, texture.name], tex, Vector2(150,150), Array(["Select from palette"], TYPE_STRING, "", null))
+			var idx: int = %RotatableItemList.add_item("%s\n%d: %s" % [key, texture.index, texture.name], tex, Vector2(150,150), Array(["Set to Sky", "Select from palette"], TYPE_STRING, "", null))
 			%RotatableItemList.set_item_metadata(idx, texture)
 			if key != "wall":
 				%RotatableItemList.set_rotated(idx, false)
@@ -73,7 +73,7 @@ func _on_item_list_item_selected(index: int) -> void:
 			var image := Image.create_empty(1, 1 , false, Image.FORMAT_RGB8)
 			image.set_pixel(0, 0, Color(das.palette[palette_index][0] / float(255), das.palette[palette_index][1] / float(255), das.palette[palette_index][2] / float(255)))
 			var tex: Texture2D = ImageTexture.create_from_image(image)
-			var idx: int = %RotatableItemList.add_item("%s\n%d" % [key, texture_preset_data[key]], tex, Vector2(150,150), Array(["Select from palette"], TYPE_STRING, "", null))
+			var idx: int = %RotatableItemList.add_item("%s\n%d" % [key, texture_preset_data[key]], tex, Vector2(150,150), Array(["Set to Sky", "Select from palette"], TYPE_STRING, "", null))
 			%RotatableItemList.set_item_metadata(idx, texture_preset_data[key])
 			if key != "wall":
 				%RotatableItemList.set_rotated(idx, false)
@@ -169,16 +169,22 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 
 
 func _on_rotatable_item_list_context_option_selected(index: int, context_index: int) -> void:
+	var key: String = ""
+	match index:
+		0:
+			key = "ceiling"
+		1:
+			key = "floor"
+		_:
+			key = "wall"
 	match context_index:
 		0:
-			var key: String = ""
-			match index:
-				0:
-					key = "ceiling"
-				1:
-					key = "floor"
-				_:
-					key = "wall"
+			var tex: Texture2D = das.textures[0].image[0] if typeof(das.textures[0].image) == TYPE_ARRAY else das.textures[0].image
+			%RotatableItemList.set_item_text(index, "%s\n%d: %s" % [key, das.textures[0].index, das.textures[0].name])
+			%RotatableItemList.set_item_icon(index, tex)
+			%RotatableItemList.set_item_metadata(index, das.textures[0].index)
+			texture_data[%ItemList.get_item_text(%ItemList.get_selected_items()[0])][key] = das.textures[0].index
+		1:
 			%Palette.show_palette(das.palette)
 			var palette_index: int = await %Palette.color_selected
 			if palette_index < 0:
