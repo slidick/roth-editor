@@ -286,7 +286,7 @@ func get_center() -> Vector2:
 	return total / (len(vertices) - 1)
 
 
-func are_points_collinear(a: Vector2, b: Vector2, c: Vector2, epsilon: float = 0.1) -> bool:
+func are_points_collinear(a: Vector2, b: Vector2, c: Vector2, epsilon: float = 0.02) -> bool:
 	var slope_a: float = (b.y-a.y) / (b.x-a.x)
 	var slope_b: float = (c.y-b.y) / (c.x-b.x)
 	var slope_c: float = (c.y-a.y) / (c.x-a.x)
