@@ -59,7 +59,7 @@ func clear(p_force_timeout: bool = true) -> void:
 
 func update_selections(p_force_timeout: bool = true) -> void:
 	clear(p_force_timeout)
-	if len(owner.selected_sectors) == 0:
+	if len(owner.selected_sectors) == 0 or (len(owner.selected_sectors) == 1 and len(owner.selected_faces) > 0):
 		return
 	
 	%EditSectorContainer.show()
