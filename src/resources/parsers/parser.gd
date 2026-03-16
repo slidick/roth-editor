@@ -10,7 +10,9 @@ const Type := {
 	SignedByte="get_8_signed",
 	SignedWord="get_16_signed",
 	SignedDWord="get_32_signed",
+	BigEndianWord="get_16_bigendian",
 	String="get_line",
+	Array=5,
 }
 
 
@@ -36,6 +38,10 @@ static func signed16_to_unsigned(signed: int) -> int:
 
 static func signed32_to_unsigned(signed: int) -> int:
 	return signed & 0xFFFFFFFF
+
+
+static func be16_to_le(value: int) -> int:
+	return ((value & 255) << 8) + (value >> 8)
 
 
 static func parse_section(file: FileAccess, section_definition: Dictionary) -> Dictionary:
@@ -65,7 +71,7 @@ static func parse_section_value(file: FileAccess, type: Variant) -> Variant:
 					value += String.chr(c)
 			return value
 		TYPE_STRING:
-			var call_string: String = type.trim_suffix("_signed")
+			var call_string: String = type.trim_suffix("_signed").trim_suffix("_bigendian")
 			if call_string == "get_line":
 				
 				var bytes := PackedByteArray()
@@ -84,6 +90,8 @@ static func parse_section_value(file: FileAccess, type: Variant) -> Variant:
 				value = unsigned16_to_signed(value)
 			if type.ends_with("32_signed"):
 				value = unsigned32_to_signed(value)
+			if type.ends_with("16_bigendian"):
+				value = be16_to_le(value)
 			return value
 		_:
 			return null

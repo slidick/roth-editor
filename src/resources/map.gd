@@ -38,6 +38,7 @@ var commands_section := {
 }
 var node: MapNode3D
 var editor_metadata := {}
+var das: Dictionary
 
 
 static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) -> Map:
@@ -62,15 +63,14 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 	for i in range(len(map_json.sectorsSection.sectors)):
 		loaded_map.sectors.append( Sector.new( 
 				map_json.sectorsSection.sectors[i],
-				loaded_map.map_info,
+				loaded_map,
 				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
 			)
 		)
 		for object_data: Dictionary in loaded_map.sectors[i].data.objectInformation:
 			loaded_map.objects.append( ObjectRoth.new(
 					object_data,
-					loaded_map.map_info,
-					loaded_map.sectors,
+					loaded_map,
 					loaded_map.sectors[i]
 				)
 			)
@@ -78,7 +78,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 	for i in range(len(map_json.facesSection.faces)):
 		loaded_map.faces.append( Face.new(
 				map_json.facesSection.faces[i],
-				loaded_map.map_info,
+				loaded_map,
 				map_json.verticesSection.vertices,
 				loaded_map.sectors,
 				map_json.faceTextureMappingSection.mappings,
@@ -92,7 +92,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 		sector.update_faces(loaded_map.faces)
 	
 	for i in range(len(map_json.section7.unkArray01)):
-		loaded_map.sound_effects.append(SFX.new(map_json.section7.unkArray01[i], loaded_map.map_info))
+		loaded_map.sound_effects.append(SFX.new(map_json.section7.unkArray01[i], loaded_map))
 	
 	if "unkArray02" in map_json.section7:
 		loaded_map.sfx_zones = map_json.section7.unkArray02
@@ -135,6 +135,10 @@ static func get_triggering_ids(command_section: Dictionary, command_index: int) 
 	return triggering_ids
 
 
+func load_das() -> void:
+	das = await Roth.get_das(map_info.das_info)
+
+
 func delete_sector(sector_to_delete: Sector) -> void:
 	if sector_to_delete.node:
 		sector_to_delete.node.queue_free()
@@ -161,7 +165,7 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 		"objectInformation": [],
 	}
 	
-	var new_sector: Sector = Sector.new(initial_data, map_info)
+	var new_sector: Sector = Sector.new(initial_data, self)
 	sectors.append(new_sector)
 	
 	for i in range(len(vertices)):
@@ -171,25 +175,25 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 		if sector_data.auto_split_walls:
 			while (v2-v1).length() > sector_data.auto_split_walls_value:
 				var v2a: Vector2 = v1 + (v2-v1).normalized() * sector_data.auto_split_walls_value
-				var sub_face: Face = Face.create_new_face(map_info, new_sector, sector_data)
+				var sub_face: Face = Face.create_new_face(self, new_sector, sector_data)
 				sub_face.v1 = v1
 				sub_face.v2 = v2a
 				sub_face.update_horizontal_fit()
 				new_sector.faces.append(weakref(sub_face))
 				faces.append(sub_face)
-				node.get_node("Faces").add_child(await sub_face.initialize_mesh())
+				node.get_node("Faces").add_child(sub_face.initialize_mesh())
 				v1 = v2a
 		
-		var face: Face = Face.create_new_face(map_info, new_sector, sector_data)
+		var face: Face = Face.create_new_face(self, new_sector, sector_data)
 		face.v1 = v1
 		face.v2 = v2
 		face.update_horizontal_fit()
 		new_sector.faces.append(weakref(face))
 		faces.append(face)
-		node.get_node("Faces").add_child(await face.initialize_mesh())
+		node.get_node("Faces").add_child(face.initialize_mesh())
 	
 	new_sector._update_vertices()
-	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+	node.get_node("Sectors").add_child(new_sector.initialize_mesh())
 	
 	return new_sector
 
@@ -213,7 +217,7 @@ func add_box_sector(starting_position: Vector2, ending_position: Vector2, sector
 		ending_position,
 		v4,
 	]
-	var new_sector: Sector = await add_sector(vertices, sector_data)
+	var new_sector: Sector = add_sector(vertices, sector_data)
 	return new_sector
 
 
@@ -236,7 +240,7 @@ func add_stairs(starting_position: Vector2, ending_position: Vector2, sector_dat
 			start = Vector2(starting_position.x, starting_position.y + (size.y * (i) / stair_data.steps))
 			end = Vector2(starting_position.x + size.x, starting_position.y + (size.y * (i+1) / stair_data.steps))
 		
-		var sector: Sector = await add_box_sector(start, end, sector_data)
+		var sector: Sector = add_box_sector(start, end, sector_data)
 		new_sectors.append(sector)
 		
 		sector_data.floor_height += stair_data.height
@@ -260,7 +264,7 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 			face.map_info = map_info
 			faces.append(face)
 			new_faces.append(weakref(face))
-			node.get_node("Faces").add_child(await face.initialize_mesh())
+			node.get_node("Faces").add_child(face.initialize_mesh())
 			sector_center += face.v1
 			sector_center += face.v2
 			original_center += original_data[i].faces[j].v1
@@ -281,11 +285,11 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 			sector.platform.floorTextureShiftY = int((-shift.y * sector.get_floor_platform_scale() + sector.platform.floorTextureShiftY)) & 0xFF
 			sector.platform.ceilingTextureShiftX = int((shift.x * sector.get_ceiling_platform_scale() + sector.platform.ceilingTextureShiftX)) & 0xFF
 			sector.platform.ceilingTextureShiftY = int((-shift.y * sector.get_ceiling_platform_scale()  + sector.platform.ceilingTextureShiftY)) & 0xFF
-		node.get_node("Sectors").add_child(await sector.initialize_mesh())
+		node.get_node("Sectors").add_child(sector.initialize_mesh())
 		
 		for object_data: Dictionary in sector.data.objectInformation:
 			object_data.rotation = object_data.rotation & 0xFF
-			var object_roth: ObjectRoth = ObjectRoth.new(object_data, map_info, sectors, sector)
+			var object_roth: ObjectRoth = ObjectRoth.new(object_data, self, sector)
 			add_object(object_roth)
 		
 		sectors.append(sector)
@@ -313,10 +317,10 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	new_sector.data.objectInformation = []
 	sectors.append(new_sector)
 	
-	var face_1: Face = Face.create_new_face(map_info, existing_sector)
+	var face_1: Face = Face.create_new_face(self, existing_sector)
 	face_1.v1 = vertex_node_1.coordinate
 	face_1.v2 = vertex_node_2.coordinate
-	var face_2: Face = Face.create_new_face(map_info, new_sector)
+	var face_2: Face = Face.create_new_face(self, new_sector)
 	face_2.index += 1
 	face_2.v1 = vertex_node_2.coordinate
 	face_2.v2 = vertex_node_1.coordinate
@@ -363,9 +367,9 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	new_sector.reorder_faces()
 	existing_sector.reorder_faces()
 	existing_sector.initialize_mesh()
-	node.get_node("Faces").add_child(await face_1.initialize_mesh())
-	node.get_node("Faces").add_child(await face_2.initialize_mesh())
-	node.get_node("Sectors").add_child(await new_sector.initialize_mesh())
+	node.get_node("Faces").add_child(face_1.initialize_mesh())
+	node.get_node("Faces").add_child(face_2.initialize_mesh())
+	node.get_node("Sectors").add_child(new_sector.initialize_mesh())
 	
 	for object: ObjectRoth in objects:
 		if object.sector.get_ref() == existing_sector:
@@ -1032,5 +1036,4 @@ func write_footer(buffer: PackedByteArray, _json: Dictionary, section_sizes: Dic
 
 
 class MapNode3D extends Node3D:
-	var map_info: Dictionary
 	var ref: Map

@@ -22,7 +22,7 @@ func edit_item_with_text_entry(p_item: Dictionary, p_references: Array = []) -> 
 func edit_text_entry(p_text_entry: Dictionary, p_references: Array = []) -> void:
 	text_entry = p_text_entry
 	palette_index = p_text_entry.font_color if "font_color" in p_text_entry else 0
-	var palette: Array = Das.get_default_palette()
+	var palette: Array = Das.DEFAULT_PALETTE
 	%ColorRect.color = Color(palette[palette_index][0] / float(255), palette[palette_index][1] / float(255), palette[palette_index][2] / float(255))
 	%TextEdit.text = p_text_entry.string if "string" in p_text_entry else ""
 	
@@ -52,7 +52,7 @@ func edit_text_entry(p_text_entry: Dictionary, p_references: Array = []) -> void
 
 func _on_color_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var palette: Array = Das.get_default_palette()
+		var palette: Array = Das.DEFAULT_PALETTE
 		%PaletteWindow.show_palette(palette)
 		var color: int = await %PaletteWindow.color_selected
 		if color == -1:

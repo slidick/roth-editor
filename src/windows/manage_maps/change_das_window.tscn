@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bynk5w4co0y3x"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_qighi"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_83bq1"]
+[ext_resource type="Script" uid="uid://c2q2xdx5ckbt0" path="res://src/windows/manage_maps/change_das_window.gd" id="3_83bq1"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_edli0"]
+
+[node name="ChangeDASWindow" unique_id=452268762 instance=ExtResource("1_qighi")]
+theme = ExtResource("2_83bq1")
+script = ExtResource("3_83bq1")
+movable = false
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
+panel_corner_radius = 0
+panel_style_override = ExtResource("3_edli0")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=611000823]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=2066305998]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=2111939822]
+layout_mode = 2
+size_flags_vertical = 10
+text = "New DAS:"
+
+[node name="DASOptions" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1344227067]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=1270518177]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=944851971]
+layout_mode = 2
+text = "Cancel"
+
+[node name="ChangeButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=544078723]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Change"
+
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ChangeButton" to="." method="_on_change_button_pressed"]

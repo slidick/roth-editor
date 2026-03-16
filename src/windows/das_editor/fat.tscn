@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://lfcqi7ovq54y"]
+
+[ext_resource type="Script" uid="uid://dlog6sdeq5u3h" path="res://src/windows/das_editor/fat.gd" id="1_nuh7r"]
+[ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_fvdbs"]
+
+[node name="Fat" type="MarginContainer" unique_id=1097178025]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_nuh7r")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1280954712]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer" unique_id=774366710]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="FATContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1051257041]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("2_fvdbs")
+
+[connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]

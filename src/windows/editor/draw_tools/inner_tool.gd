@@ -122,4 +122,4 @@ func handle_input(event: InputEvent) -> void:
 					%Map2D.queue_redraw()
 					%Map2D.check_for_merges(new_sectors)
 					%Map2D.show_vertices(false, new_sectors)
-					Roth.editor_action.emit(%Map2D.map.map_info, "Draw Inner Sector")
+					Roth.editor_action.emit(%Map2D.map, "Draw Inner Sector")

@@ -28,11 +28,11 @@ var is_selected: bool = false
 var face_vertex_move := []
 var shape: RectangleShape2D
 var initial_zoom: float = 1.0
-var map_info: Dictionary = {}
+var map: Map
 
 
-func _init(p_map_info: Dictionary, p_coordinate: Vector2, p_data: Dictionary, p_allow_move: bool, p_initial_zoom: float, p_split_vertex: bool = false) -> void:
-	map_info = p_map_info
+func _init(p_map: Map, p_coordinate: Vector2, p_data: Dictionary, p_allow_move: bool, p_initial_zoom: float, p_split_vertex: bool = false) -> void:
+	map = p_map
 	coordinate = Vector2(p_coordinate)
 	sectors = p_data.sectors
 	faces = p_data.faces
@@ -253,7 +253,7 @@ func split_face() -> void:
 	var new_faces := []
 	for sector: Sector in sectors:
 		for face: Face in faces:
-			var new_face: Face = await sector.split_face(face)
+			var new_face: Face = sector.split_face(face)
 			if new_face:
 				new_faces.append(new_face)
 	

@@ -63,7 +63,7 @@ func finalize() -> void:
 	%Map2D.queue_redraw()
 	%Map2D.check_for_merges([new_sector])
 	%Map2D.show_vertices(false, [new_sector])
-	Roth.editor_action.emit(%Map2D.map.map_info, "Draw Free Sector")
+	Roth.editor_action.emit(%Map2D.map, "Draw Free Sector")
 
 
 func draw_box() -> void:

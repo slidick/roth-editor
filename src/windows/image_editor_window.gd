@@ -51,13 +51,13 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	paletted_image = {
 		"width": image.get_width(),
 		"height": image.get_height(),
-		"data": await convert_to_paletted_image(dup.data.data, Das.get_default_palette())
+		"data": await convert_to_paletted_image(dup.data.data, Das.DEFAULT_PALETTE)
 	}
 	if cancel_load:
 		reset()
 		return
 	var reconstructed_image: Array = []
-	var palette := Das.get_default_palette()
+	var palette := Das.DEFAULT_PALETTE
 	for pixel: int in paletted_image.data:
 		var pixel_array := [palette[pixel][0],palette[pixel][1],palette[pixel][2]]
 		reconstructed_image.append_array(pixel_array)

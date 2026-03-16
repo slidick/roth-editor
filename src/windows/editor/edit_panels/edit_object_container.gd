@@ -148,19 +148,19 @@ func update_selections() -> void:
 
 
 func update_texture(object: ObjectRoth) -> void:
-	var object_das: String = ""
+	var object_das: Dictionary = {}
 	var object_index: int = -1
 	if object.data.textureSource == 0:
-		object_das = object.map_info.das
+		object_das = object.map.map_info.das_info
 		object_index = object.data.textureIndex + 4096
 	elif object.data.textureSource == 1:
-		object_das = object.map_info.das
+		object_das = object.map.map_info.das_info
 		object_index = object.data.textureIndex + 4096 + 256
 	elif object.data.textureSource == 2:
-		object_das = "M/ADEMO.DAS"
+		object_das = {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")}
 		object_index = object.data.textureIndex
 	elif object.data.textureSource == 3:
-		object_das = "M/ADEMO.DAS"
+		object_das = {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")}
 		object_index = object.data.textureIndex + 256
 	else:
 		%TextureNameLabel.text = "Invalid Source"
@@ -354,14 +354,14 @@ func _on_render_billboard_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_browse_objects_button_pressed() -> void:
-	var new_object: Dictionary = await %ObjectSelection.wait_for_object_selection(owner.selected_objects[0].map_info.das)
+	var new_object: Dictionary = await %ObjectSelection.wait_for_object_selection(owner.selected_objects[0].map.das)
 	if new_object.is_empty():
 		return
 	var i: int = 0
 	for object: ObjectRoth in owner.selected_objects:
 		var source := 0
 		var index := 0
-		if new_object.das.get_file().get_basename() == "ADEMO":
+		if new_object.das_info.name == "ADEMO":
 			source = 2
 			index = new_object.index
 			if new_object.index >= 256:
@@ -384,6 +384,6 @@ func _on_browse_objects_button_pressed() -> void:
 
 func _on_edit_object_timer_timeout() -> void:
 	if last_selection_length == 1:
-		Roth.editor_action.emit(owner.selected_objects[0].map_info, "Edit Object")
+		Roth.editor_action.emit(owner.selected_objects[0].map, "Edit Object")
 	elif last_selection_length > 1:
-		Roth.editor_action.emit(owner.selected_objects[0].map_info, "Edit Objects")
+		Roth.editor_action.emit(owner.selected_objects[0].map, "Edit Objects")

@@ -4,9 +4,9 @@ class_name ObjectRoth
 var data: Dictionary = {}
 var index: int :
 	get():
-		return Roth.get_map(map_info).objects.find(self)
-var map_info: Dictionary = {}
-var sectors: Array = []
+		return map.objects.find(self)
+var map: Map
+#var sectors: Array = []
 var node: ObjectNode3D
 var node_2d: ObjectNode2D
 var sector: WeakRef
@@ -15,7 +15,7 @@ var sector: WeakRef
 static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
 	var floor_height: int = 0
-	for f_sector: Sector in p_object.sectors:
+	for f_sector: Sector in p_object.map.sectors:
 		if Geometry2D.is_point_in_polygon(p_position, f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 			floor_height = f_sector.data.floorHeight
@@ -24,19 +24,19 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 		Console.print("Can't paste object outside a sector")
 		return
 	
-	var object := ObjectRoth.new(p_object.data.duplicate(true), p_object.map_info, p_object.sectors)
+	var object := ObjectRoth.new(p_object.data.duplicate(true), p_object.map)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.y
 	object.data.posZ = floor_height
-	object.sectors[new_sector_index].data.objectInformation.append(object.data)
+	object.map.sectors[new_sector_index].data.objectInformation.append(object.data)
 	object.sector = weakref(object.sectors[new_sector_index])
 	
 	return object
 
 
-static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRoth, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
+static func new_from_copied_object_3d(p_map: Map, p_object: ObjectRoth, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
 	var new_sector_index: int = -1
-	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
+	for f_sector: Sector in p_map.sectors:
 		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.z), f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 	
@@ -44,12 +44,12 @@ static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRo
 		Console.print("Can't paste object outside a sector")
 		return
 	
-	var object := ObjectRoth.new(p_object.data.duplicate(true), p_map_info, Roth.get_map(p_map_info).sectors)
+	var object := ObjectRoth.new(p_object.data.duplicate(true), p_map)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.z
 	object.data.posZ = p_position.y
-	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.sector = weakref(object.sectors[new_sector_index])
+	object.map.sectors[new_sector_index].data.objectInformation.append(object.data)
+	object.sector = weakref(object.map.sectors[new_sector_index])
 	
 	if extra_info["render_type"] == "fixed":
 		object.data.renderType |= 128
@@ -60,10 +60,10 @@ static func new_from_copied_object_3d(p_map_info: Dictionary, p_object: ObjectRo
 	return object
 
 
-static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRoth:
+static func new_object(p_map: Map, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
 	var floor_height: int = 0
-	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
+	for f_sector: Sector in p_map.sectors:
 		if Geometry2D.is_point_in_polygon(p_position, f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 			floor_height = f_sector.data.floorHeight
@@ -86,19 +86,19 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> ObjectRot
 		"unk0x0E": 0,
 	}
 	
-	var object := ObjectRoth.new(default_data, p_map_info, Roth.get_map(p_map_info).sectors)
+	var object := ObjectRoth.new(default_data, p_map)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.y
-	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.sector = weakref(object.sectors[new_sector_index])
+	object.map.sectors[new_sector_index].data.objectInformation.append(object.data)
+	object.sector = weakref(object.map.sectors[new_sector_index])
 	
 	return object
 
 
-static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
+static func new_object_3d(p_map: Map, p_position: Vector3, extra_info: Dictionary) -> ObjectRoth:
 	var new_sector_index: int = -1
 	var floor_height: int = 0
-	for f_sector: Sector in Roth.get_map(p_map_info).sectors:
+	for f_sector: Sector in p_map.sectors:
 		if Geometry2D.is_point_in_polygon(Vector2(p_position.x, p_position.y), f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 			floor_height = f_sector.data.floorHeight
@@ -123,12 +123,12 @@ static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_inf
 		"unk0x0E": 0,
 	}
 	
-	var object := ObjectRoth.new(default_data, p_map_info, Roth.get_map(p_map_info).sectors)
+	var object := ObjectRoth.new(default_data, p_map)
 	object.data.posX = -p_position.x
 	object.data.posY = p_position.z
 	object.data.posZ = p_position.y
-	object.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.sector = weakref(object.sectors[new_sector_index])
+	object.map.sectors[new_sector_index].data.objectInformation.append(object.data)
+	object.sector = weakref(object.map.sectors[new_sector_index])
 	
 	if extra_info["render_type"] == "fixed":
 		object.data.renderType = 128
@@ -137,16 +137,16 @@ static func new_object_3d(p_map_info: Dictionary, p_position: Vector3, extra_inf
 	return object
 
 
-func _init(p_data: Dictionary, p_map_info: Dictionary, p_sectors: Array, p_sector: Sector = null) -> void:
+func _init(p_data: Dictionary, p_map: Map, p_sector: Sector = null) -> void:
 	data = p_data
-	map_info = p_map_info
-	sectors = p_sectors
+	map = p_map
+	#sectors = p_sectors
 	if p_sector:
 		sector = weakref(p_sector)
 
 
 func duplicate() -> ObjectRoth:
-	return ObjectRoth.new(data.duplicate(true), map_info, sectors)
+	return ObjectRoth.new(data.duplicate(true), map)
 
 
 func initialize_mesh() -> Node3D:
@@ -192,19 +192,19 @@ func _initialize_mesh() -> void:
 
 
 func _initialize_mesh_actual() -> void:
-	var object_das: String
+	var object_das: Dictionary = {}
 	var object_index: int
 	if data.textureSource == 0:
-		object_das = map_info.das
+		object_das = map.map_info.das_info
 		object_index = data.textureIndex + 4096
 	elif data.textureSource == 1:
-		object_das = map_info.das
+		object_das = map.map_info.das_info
 		object_index = data.textureIndex + 4096 + 256
 	elif data.textureSource == 2:
-		object_das = "M/ADEMO.DAS"
+		object_das = {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")}
 		object_index = data.textureIndex
 	elif data.textureSource == 3:
-		object_das = "M/ADEMO.DAS"
+		object_das = {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")}
 		object_index = data.textureIndex + 256
 	else:
 		_initialize_mesh()
@@ -214,23 +214,12 @@ func _initialize_mesh_actual() -> void:
 	if texture.name == "Invalid":
 		_initialize_mesh()
 		return
+	elif "object_data" in texture:
+		_initialize_3d_object(texture)
+		return
+	
 	var width: float = texture.height / Roth.SCALE_3D_WORLD
 	var height: float = texture.width / Roth.SCALE_3D_WORLD
-	if (texture.unk & (1<<7)) > 0:
-		width /= 2
-		height /= 2
-	
-	var low_y: float = 0
-	var high_y: float = height * 2
-	if (texture.unk_byte_00 & (1<<3) > 0):
-		pass
-		#low_y -= height
-		#high_y -= height
-	
-	if (texture.unk_byte_00 & (1<<4) > 0):
-		low_y -= (height * 2)
-		high_y -= (height * 2)
-	
 	
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
@@ -245,9 +234,40 @@ func _initialize_mesh_actual() -> void:
 		material.albedo_texture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
 	elif "animation" in texture:
 		material.albedo_texture = texture.animation[0]
+	elif "monster_index" in texture:
+		var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, object_das)
+		material.albedo_texture = monster_texture.image
+		#print(monster_texture)
+		width = monster_texture.height / Roth.SCALE_3D_WORLD
+		height = monster_texture.width / Roth.SCALE_3D_WORLD
+	elif "directional_index" in texture:
+		var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, object_das)
+		material.albedo_texture = directional_texture.image
+		#print(monster_texture)
+		width = directional_texture.height / Roth.SCALE_3D_WORLD
+		height = directional_texture.width / Roth.SCALE_3D_WORLD
 	else:
 		_initialize_mesh()
 		return
+	
+	
+	#print(texture)
+	if (texture.modifier & (1<<7)) > 0:
+		width /= 2
+		height /= 2
+	
+	var low_y: float = 0
+	var high_y: float = height * 2
+	if (texture.flags_1 & (1<<3) > 0):
+		pass
+		#low_y -= height
+		#high_y -= height
+	
+	if (texture.flags_1 & (1<<4) > 0):
+		low_y -= (height * 2)
+		high_y -= (height * 2)
+	
+	
 	
 	var mesh := QuadMesh.new()
 	mesh.material = material
@@ -296,9 +316,9 @@ func _initialize_mesh_actual() -> void:
 	collision.shape = shape
 	collision.position.y = height
 	
-	if (texture.unk_byte_00 & (1<<3) > 0):
+	if (texture.flags_1 & (1<<3) > 0):
 		collision.position.y = 0
-	if (texture.unk_byte_00 & (1<<4) > 0):
+	if (texture.flags_1 & (1<<4) > 0):
 		collision.position.y = -height
 	
 	var static_body := StaticBodyObject3D.new(not data.renderType & (1<<7) > 0)
@@ -308,6 +328,85 @@ func _initialize_mesh_actual() -> void:
 	if data.renderType & (1<<7) > 0:
 		var angle_degrees: float = ((float(data.rotation) / 256) * 360) - 180
 		mesh_instance.rotation_degrees.y -= angle_degrees
+
+
+func _initialize_3d_object(texture: Dictionary) -> void:
+	for object_face: Dictionary in texture.object_data.faces:
+		var vertices := []
+		for edge: int in object_face.edge_array:
+			var vertex: Vector3 = texture.object_data.vertices[edge>>4]
+			vertex.x *= -1
+			vertices.append(vertex)
+		
+		var verts := []
+		if len(vertices) == 5:
+			verts = [0,1,2,0,2,3]
+		elif len(vertices) == 4:
+			verts = [0,1,2]
+		
+		
+		var collision_points := []
+		var mesh_tool := SurfaceTool.new()
+		mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		var uvs: Array = []
+		if len(vertices) == 5:
+			uvs = [Vector2(1,0), Vector2(0,0), Vector2(0,1), Vector2(1,0), Vector2(0,1), Vector2(1,1)]
+		elif len(vertices) == 4:
+			uvs = [Vector2(1,0), Vector2(0,0), Vector2(0,1)]
+		for i: int in range(len(verts)):
+			var v: Vector3 = vertices[verts[i]]
+			mesh_tool.set_uv(uvs[i])
+			mesh_tool.add_vertex(v / Roth.SCALE_3D_WORLD)
+			collision_points.append(v / Roth.SCALE_3D_WORLD)
+		
+		
+		var material := StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		
+		var fat_index: int = object_face.texture_fat_index_base
+		if len(vertices) == 0:
+			fat_index += 0x1000
+		
+		if fat_index in map.das.mapping:
+			var texture_data: Dictionary = map.das.mapping[fat_index]
+			var texture_image: ImageTexture
+			if texture_data.image is Array:
+				texture_image = texture_data.image[object_face.sub_texture_index]
+			else:
+				texture_image = texture_data.image
+			material.albedo_texture = texture_image
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+		else:
+			if fat_index >= 65280:
+				var color: Array = map.das.palette[fat_index - 65280]
+				material.albedo_color = Color(color[0] / 256.0, color[1] / 256.0, color[2] / 256.0)
+			else:
+				material.albedo_color = Color.REBECCA_PURPLE
+		
+		
+		mesh_tool.generate_normals()
+		mesh_tool.index()
+		var mesh_instance := ObjectMesh3D.new()
+		mesh_instance.ref = self
+		mesh_instance.mesh = mesh_tool.commit()
+		mesh_instance.material_override = material
+		mesh_instance.position = Vector3(
+			-data.posX / Roth.SCALE_3D_WORLD,
+			data.posZ / Roth.SCALE_3D_WORLD,
+			data.posY / Roth.SCALE_3D_WORLD,
+		)
+		var angle_degrees: float = ((float(data.rotation) / 256) * 360)
+		mesh_instance.rotation_degrees.y -= angle_degrees
+		node.add_child(mesh_instance)
+		
+		if not Utility.are_points_collinear(collision_points):
+			var static_body := StaticBody3D.new()
+			var collision_shape := CollisionShape3D.new()
+			var convex_polygon_shape := ConvexPolygonShape3D.new()
+			convex_polygon_shape.points = collision_points
+			collision_shape.shape = convex_polygon_shape
+			static_body.add_child(collision_shape)
+			mesh_instance.add_child(static_body)
 
 
 func get_node_2d() -> Node2D:
@@ -322,7 +421,7 @@ func delete() -> void:
 	if node_2d:
 		node_2d.queue_free()
 	sector.get_ref().data.objectInformation.erase(data)
-	Roth.get_map(map_info).objects.erase(self)
+	map.objects.erase(self)
 
 
 class CircleDraw2D extends Node2D:
@@ -455,7 +554,7 @@ class ObjectNode2D extends Node2D:
 		var closest_sector_index: int = -1
 		var new_sector_index: int = -1
 		var closest_distance: float = INF
-		for sector: Sector in ref.sectors:
+		for sector: Sector in ref.map.sectors:
 			for face_ref: WeakRef in sector.faces:
 				var face: Face = face_ref.get_ref()
 				var distance: float = Utility.distance_to_face(pos, face)
@@ -482,9 +581,9 @@ class ObjectNode2D extends Node2D:
 		
 		
 		if current_sector_index != new_sector_index:
-			ref.sectors[current_sector_index].data.objectInformation.erase(ref.data)
-			ref.sectors[new_sector_index].data.objectInformation.append(ref.data)
-			ref.sector = weakref(ref.sectors[new_sector_index])
+			ref.map.sectors[current_sector_index].data.objectInformation.erase(ref.data)
+			ref.map.sectors[new_sector_index].data.objectInformation.append(ref.data)
+			ref.sector = weakref(ref.map.sectors[new_sector_index])
 		
 		ref.initialize_mesh()
 
@@ -497,7 +596,7 @@ class ObjectNode3D extends Node3D:
 		if not _selected:
 			_highlighted = true
 			for child: MeshInstance3D in get_children():
-				if not ((ref.data.renderType & (1<<7)) > 0):
+				if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.unk0x07 & (1 << 0)) > 0:
 					child.material_overlay = Roth.HIGHLIGHT_FIXED_Y_MATERIAL
 				else:
 					child.material_overlay = Roth.HIGHLIGHT_MATERIAL
@@ -509,7 +608,7 @@ class ObjectNode3D extends Node3D:
 	func select() -> void:
 		_selected = true
 		for child: MeshInstance3D in get_children():
-			if not ((ref.data.renderType & (1<<7)) > 0):
+			if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.unk0x07 & (1 << 0)) > 0:
 				child.material_overlay = Roth.SELECTED_FIXED_Y_MATERIAL
 			else:
 				child.material_overlay = Roth.SELECTED_MATERIAL

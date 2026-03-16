@@ -79,7 +79,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				moused_over_resource.texture_data.unk0x00 = int(value) & 255
 				moused_over_resource.texture_data.type = (int(value) >> 8) | (moused_over_resource.texture_data.type & (1<<7))
 				owner.redraw([moused_over_resource])
-				Roth.editor_action.emit(moused_over_resource.map_info, "Paste Face Properties")
+				Roth.editor_action.emit(moused_over_resource.map, "Paste Face Properties")
 				%EditFaceContainer.update_selections()
 			elif moused_over_resource is Sector and copied_sector_data:
 				if paste_options.get("ceiling_texture"):
@@ -112,7 +112,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					moused_over_resource.platform = copied_platform_data.duplicate()
 				owner.redraw([moused_over_resource])
 				%EditSectorContainer.update_selections()
-				Roth.editor_action.emit(moused_over_resource.map_info, "Paste Sector Properties")
+				Roth.editor_action.emit(moused_over_resource.map, "Paste Sector Properties")
 	if event.is_action_pressed("toggle_selection_highlight", false, true):
 		show_selection_highlight = not show_selection_highlight
 		if moused_over_resource:

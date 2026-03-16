@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/manage_maps/new_map_window.tscn" id="6_yjel5"]
 [ext_resource type="PackedScene" uid="uid://bl4vofcsfauae" path="res://src/windows/manage_maps/export_window.tscn" id="7_x7qhk"]
 [ext_resource type="PackedScene" uid="uid://be7yk2ubuv2c8" path="res://src/windows/manage_maps/import_window.tscn" id="8_lah0d"]
+[ext_resource type="PackedScene" uid="uid://bynk5w4co0y3x" path="res://src/windows/manage_maps/change_das_window.tscn" id="9_hyou8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6cut"]
 draw_center = false
@@ -178,12 +179,16 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="0" unique_id=622598558]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "DAS File:"
+vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="1" unique_id=733849355]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Commands:"
+vertical_alignment = 1
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="4" unique_id=652903820]
 layout_mode = 2
@@ -192,15 +197,30 @@ size_flags_stretch_ratio = 2.0
 
 [node name="DASFile" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="0" unique_id=1544398248]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Commands" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="1" unique_id=707923710]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Control2" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="5" unique_id=1334044694]
+[node name="VBoxContainer5" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="5" unique_id=1481544396]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="ChangeDASButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer5" index="0" unique_id=1143489648]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Change"
+
+[node name="Control2" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="6" unique_id=1334044694]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
@@ -309,10 +329,28 @@ offset_bottom = 333.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ChangeDAS" parent="Dialogs" index="3" unique_id=452268762 instance=ExtResource("9_hyou8")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.5
+offset_top = -110.5
+offset_right = 240.5
+offset_bottom = 110.5
+grow_horizontal = 2
+grow_vertical = 2
+minimize_style = "fade_out"
+
 [connection signal="cell_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_cell_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_item_activated"]
 [connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_item_mouse_selected"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree/MapPopupMenu" to="." method="_on_map_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer5/ChangeDASButton" to="." method="_on_change_das_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/NewMapButton" to="." method="_on_new_map_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/ImportButton" to="." method="_on_import_button_pressed"]

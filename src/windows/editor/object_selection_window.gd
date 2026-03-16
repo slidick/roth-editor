@@ -27,13 +27,13 @@ func _ready() -> void:
 		favorites = objects.favorites
 
 
-func wait_for_object_selection(p_das: String) -> Dictionary:
+func wait_for_object_selection(p_das: Dictionary) -> Dictionary:
 	%RotatableItemList.clear()
 	%RecentItemList.clear()
 	%FavoriteItemList.clear()
 	load_das(p_das)
-	load_favorites(p_das)
-	load_recents(p_das)
+	load_favorites(p_das.das_info)
+	load_recents(p_das.das_info)
 	load_ademo()
 	toggle(true)
 	var selected_object: Dictionary = await item_selected
@@ -85,8 +85,8 @@ func dbase300_object_selection() -> int:
 	return item.offset
 
 
-func load_das(p_das: String) -> void:
-	var das := await Roth.get_das(p_das)
+func load_das(p_das: Dictionary) -> void:
+	var das: Dictionary = p_das
 	for texture: Dictionary in das.textures:
 		if texture.index >= 4096 and texture.index < 4352:
 			if texture.name == "Invalid":
@@ -101,11 +101,11 @@ func load_das(p_das: String) -> void:
 			%RotatableItemList.set_item_metadata(idx, texture)
 
 
-func load_favorites(p_das: String) -> void:
+func load_favorites(p_das_info: Dictionary) -> void:
 	for data: Dictionary in favorites:
 		var texture_index: int = data.index
-		var das_name: String = data.das
-		var texture_data: Dictionary = Roth.get_index_from_das(texture_index, das_name)
+		var fav_das_info: Dictionary = {"name": data.das.get_file().get_basename(), "filepath": data.das}
+		var texture_data: Dictionary = Roth.get_index_from_das(texture_index, fav_das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
 			tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
@@ -113,15 +113,15 @@ func load_favorites(p_das: String) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 		%FavoriteItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das != p_das and texture_data.das != "M/ADEMO.DAS":
+		if texture_data.das_info.name != p_das_info.name and texture_data.das_info.name != "ADEMO":
 			%FavoriteItemList.set_hidden(idx, true)
 
 
-func load_recents(p_das: String) -> void:
+func load_recents(p_das_info: Dictionary) -> void:
 	for data: Dictionary in recents:
 		var texture_index: int = data.index
-		var das_name: String = data.das
-		var texture_data: Dictionary = Roth.get_index_from_das(texture_index, das_name)
+		var fav_das_info: Dictionary = {"name": data.das.get_file().get_basename(), "filepath": data.das}
+		var texture_data: Dictionary = Roth.get_index_from_das(texture_index, fav_das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
 			tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
@@ -129,14 +129,13 @@ func load_recents(p_das: String) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 		%RecentItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das != p_das and texture_data.das != "M/ADEMO.DAS":
+		if texture_data.das_info.name != p_das_info.name and texture_data.das_info.name != "ADEMO":
 			%RecentItemList.set_hidden(idx, true)
 
 
 func load_ademo() -> void:
-	#var das := await Roth.get_das("M/ADEMO.DAS")
-	for i in range(256):
-		var texture: Dictionary = Roth.get_index_from_das(i, "M/ADEMO.DAS")
+	for i in range(293):
+		var texture: Dictionary = Roth.get_index_from_das(i, {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")})
 		if texture.name == "Invalid":
 			continue
 		var tex: Texture2D
@@ -181,7 +180,7 @@ func add_to_recent(texture_data: Dictionary) -> void:
 		if texture_data.index == %RecentItemList.get_item_metadata(i).index:
 			%RecentItemList.move_item(i, 0)
 			recents.pop_at(i)
-			recents.push_front({"das": texture_data.das, "index": texture_data.index})
+			recents.push_front({"das": texture_data.das_info.filepath, "index": texture_data.index})
 			return
 	
 	
@@ -193,7 +192,7 @@ func add_to_recent(texture_data: Dictionary) -> void:
 	var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 	%RecentItemList.set_item_metadata(idx, texture_data)
 	%RecentItemList.move_item(idx, 0)
-	recents.push_front({"das": texture_data.das, "index": texture_data.index})
+	recents.push_front({"das": texture_data.das_info.filepath, "index": texture_data.index})
 	
 	if len(recents) > 30:
 		recents.pop_back()
@@ -227,7 +226,7 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 			var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
 			
 			for favorite: Dictionary in favorites:
-				if favorite.index == texture_data.index and favorite.das == texture_data.das:
+				if favorite.index == texture_data.index and favorite.das == texture_data.das_info.name:
 					return
 			
 			var tex: Texture2D
@@ -237,7 +236,7 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 				tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 			var idx: int = %FavoriteItemList.add_item("%s\n" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 			%FavoriteItemList.set_item_metadata(idx, texture_data)
-			favorites.append({"das": texture_data.das, "index": texture_data.index})
+			favorites.append({"das": texture_data.das_info.filepath, "index": texture_data.index})
 			Settings.update_settings("objects", {"favorites": favorites})
 
 

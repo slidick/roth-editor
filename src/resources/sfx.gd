@@ -4,21 +4,21 @@ class_name SFX
 var data: Dictionary = {}
 var index: int :
 	get():
-		return Roth.get_map(map_info).sound_effects.find(self)
-var map_info: Dictionary = {}
+		return map.sound_effects.find(self)
+var map: Map
 var node: SFXNode3D
 var node_2d: SFXNode2D
 
 
-static func new_from_copied_object(p_object: SFX, p_position: Vector2) -> SFX:	
-	var object := SFX.new(p_object.data.duplicate(true), p_object.map_info)
-	object.data.unk0x00 = -p_position.x
-	object.data.unk0x02 = p_position.y
+static func new_from_copied_sfx(p_sfx: SFX, p_position: Vector2) -> SFX:	
+	var sfx := SFX.new(p_sfx.data.duplicate(true), p_sfx.map)
+	sfx.data.unk0x00 = -p_position.x
+	sfx.data.unk0x02 = p_position.y
 	
-	return object
+	return sfx
 
 
-static func new_object(p_map_info: Dictionary, p_position: Vector2) -> SFX:
+static func new_sfx(p_map: Map, p_position: Vector2) -> SFX:
 	var default_data := {
 		"unk0x00": 0,
 		"unk0x02": 0,
@@ -33,19 +33,19 @@ static func new_object(p_map_info: Dictionary, p_position: Vector2) -> SFX:
 		"unk0x11": 0,
 	}
 	
-	var object := SFX.new(default_data, p_map_info)
-	object.data.unk0x00 = -p_position.x
-	object.data.unk0x02 = p_position.y
+	var sfx := SFX.new(default_data, p_map)
+	sfx.data.unk0x00 = -p_position.x
+	sfx.data.unk0x02 = p_position.y
 	
-	return object
+	return sfx
 
 
-func _init(p_data: Dictionary, p_map_info: Dictionary) -> void:
+func _init(p_data: Dictionary, p_map: Map) -> void:
 	data = p_data
-	map_info = p_map_info
+	map = p_map
 
 func duplicate() -> SFX:
-	return SFX.new(data.duplicate(true), map_info)
+	return SFX.new(data.duplicate(true), map)
 
 func initialize_mesh() -> Node3D:
 	if node:
@@ -75,7 +75,7 @@ func _initialize_mesh() -> void:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color.ORANGE_RED
 	mesh_instance.material_override = material
-	var sector_floor_height:int = Roth.get_map(map_info).get_sector_floor_height_from_vertex(Vector2(-data.unk0x00, data.unk0x02))
+	var sector_floor_height:int = map.get_sector_floor_height_from_vertex(Vector2(-data.unk0x00, data.unk0x02))
 	mesh_instance.position = Vector3(
 			-data.unk0x00 / Roth.SCALE_3D_WORLD,
 			sector_floor_height / Roth.SCALE_3D_WORLD,
@@ -96,7 +96,7 @@ func delete() -> void:
 		node.queue_free()
 	if node_2d:
 		node_2d.queue_free()
-	Roth.get_map(map_info).sound_effects.erase(self)
+	map.sound_effects.erase(self)
 
 
 class CircleDraw2D extends Node2D:
@@ -122,9 +122,9 @@ class CircleDraw2D extends Node2D:
 		if (selected or highlighted or Settings.settings.get("options", {}).get("always_show_sfx_zones", false)):
 			draw_circle(Vector2.ZERO, ref.data.unk0x0A / Roth.SCALE_2D_WORLD, color, false)
 			if ref.data.zoneIndex > 0:
-				if len(Roth.get_map(ref.map_info).sfx_zones) < ref.data.zoneIndex:
+				if len(ref.map.sfx_zones) < ref.data.zoneIndex:
 					return
-				var zone_data: Dictionary = Roth.get_map(ref.map_info).sfx_zones[ref.data.zoneIndex-1]
+				var zone_data: Dictionary = ref.map.sfx_zones[ref.data.zoneIndex-1]
 				
 				for i in range(1, zone_data.zoneCount+1):
 					var x: float = -zone_data["zone%dXBoundUpper" % i] / Roth.SCALE_2D_WORLD

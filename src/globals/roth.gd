@@ -2,17 +2,17 @@ extends Node
 
 signal settings_loaded
 signal map_loading_started(map_info: String)
-signal map_loading_updated(status: String, progress: float)
-signal map_loading_finished(map_info: Dictionary)
+signal map_loading_updated(das_info: Dictionary, progress: float)
+signal map_loading_finished(map: Map)
 signal map_loading_completely_finished
 @warning_ignore("unused_signal")
 signal das_loading_started
-signal das_loading_updated(progress: float, das_file: String)
+signal das_loading_updated(progress: float, das_info: Dictionary)
 signal das_loading_finished(das: Dictionary)
 @warning_ignore("unused_signal")
 signal gdv_loading_updated(progress: float)
 @warning_ignore("unused_signal")
-signal close_map(map_info: Dictionary)
+signal close_map(map: Map)
 @warning_ignore("unused_signal")
 signal editor_action(p_map_info: Dictionary, p_name: String)
 
@@ -21,6 +21,7 @@ const SCALE_2D_WORLD: float = 10.0
 var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
 var ROTH_CUSTOM_DBASE_DIRECTORY: String = OS.get_user_data_dir().path_join("dbase")
 var ROTH_CUSTOM_SFX_DIRECTORY: String = OS.get_user_data_dir().path_join("sfx")
+var ROTH_CUSTOM_DAS_DIRECTORY: String = OS.get_user_data_dir().path_join("das")
 var ROTH_CUSTOM_INSTALL_DIRECTORY: String = OS.get_user_data_dir().path_join("install")
 var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
@@ -35,27 +36,27 @@ const HIGHLIGHT_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://dhsattf813
 const SELECTED_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://b5iarhl24whsd")
 
 const default_texture_presets: Dictionary = {
-	"M/DEMO.DAS": {
+	"DEMO.DAS": {
 		"STUDY": { "ceiling": 201, "floor": 59, "wall": 35 },
 		"HALLWAY": { "ceiling": 201, "floor": 58, "wall": 8 },
 		"MAUSOLEUM": { "ceiling": 766, "floor": 761, "wall": 763 },
 	},
-	"M/DEMO1.DAS": {
+	"DEMO1.DAS": {
 		"CHURCH": { "ceiling": 153, "floor": 168, "wall": 154},
 		"GARDEN": { "ceiling": 1, "floor": 9, "wall": 26},
 		"TOWER": { "ceiling": 541, "floor": 535, "wall": 861},
 	},
-	"M/DEMO2.DAS": {
+	"DEMO2.DAS": {
 		"TEMPLE": { "ceiling": 5, "floor": 7, "wall": 4},
 		"LAVA": { "ceiling": 33, "floor": 30, "wall": 32},
 		"HALLWAY": { "ceiling": 115, "floor": 116, "wall": 118},
 	},
-	"M/DEMO3.DAS": {
+	"DEMO3.DAS": {
 		"ALIEN": { "ceiling": 179, "floor": 179, "wall": 180 },
 		"CAVERN": { "ceiling": 50, "floor": 118, "wall": 89 },
 		"RITUAL": { "ceiling": 625, "floor": 610, "wall": 605 },
 	},
-	"M/DEMO4.DAS": {
+	"DEMO4.DAS": {
 		"MAUSOLEUM": { "ceiling": 2778, "floor": 2751, "wall": 2787 },
 		"EXTERIOR": { "ceiling": 0, "floor": 331, "wall": 2201 },
 		"TOMB": { "ceiling": 2025, "floor": 2031, "wall": 2235 },
@@ -64,7 +65,7 @@ const default_texture_presets: Dictionary = {
 
 var res: Dictionary = {}
 var maps: Array = []
-var das_files: Array = []
+var das_packs: Array = []
 var dbase_packs: Array = []
 var sfx_packs: Array = []
 var install_directory: String = ""
@@ -85,9 +86,13 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DBASE_DIRECTORY)
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_SFX_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_SFX_DIRECTORY)
+	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_DAS_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DAS_DIRECTORY)
 	
 	das_loading_updated.connect(_on_das_loading_updated)
 	Settings.settings_updated.connect(_on_settings_updated)
+	
+	migrate_das_names()
 	
 	# Wait for the scene to be ready so other nodes have time to connect to this nodes settings_loaded signal
 	await get_tree().get_root().ready
@@ -100,12 +105,22 @@ func _on_settings_updated(key: String) -> void:
 		load_roth_settings()
 
 
+func migrate_das_names() -> void:
+	var new_texture_presets: Dictionary = {}
+	var current_texture_presets: Dictionary = Settings.settings.get("texture_presets", {})
+	for texture_template_das: String in current_texture_presets:
+		new_texture_presets[texture_template_das.get_basename().get_file()] = current_texture_presets[texture_template_das]
+	if new_texture_presets != current_texture_presets:
+		Settings.settings["texture_presets"] = new_texture_presets
+		Settings._save_settings()
+
+
 ## Loads roth.res location using Settings autoload. [br]
 ## Reads roth.res to get list of maps and associated das files.
 func load_roth_settings() -> void:
 	var locations: Variant = Settings.settings.get("locations")
 	maps.clear()
-	das_files.clear()
+	var das_files := []
 	if locations and locations.get("roth.res"):
 		install_directory = locations.get("roth.res").get_base_dir()
 		var file := FileAccess.open(locations.get("roth.res"), FileAccess.READ)
@@ -140,6 +155,17 @@ func load_roth_settings() -> void:
 				das_files.append(das)
 		
 		das_files.sort()
+		
+		das_packs = []
+		for filename: String in das_files:
+			var das_info := { "name": filename.get_basename().get_file(), "filepath": install_directory.path_join("../DATA/").path_join(filename), "vanilla": true}
+			das_packs.append(das_info)
+		for filename: String in DirAccess.get_files_at(ROTH_CUSTOM_DAS_DIRECTORY):
+			if filename.get_extension().to_lower() == "das":
+				var das_info := { "name": filename.get_basename().get_file(), "filepath": ROTH_CUSTOM_DAS_DIRECTORY.path_join(filename)}
+				das_packs.append(das_info)
+		
+		
 		
 		match res.version:
 			"ROTH VERSION F1.4":
@@ -234,7 +260,17 @@ func load_roth_settings() -> void:
 				if file_json:
 					file_json["filepath"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file).get_basename() + ".RAW"
 					file_json["filepath_json"] = ROTH_CUSTOM_MAP_DIRECTORY.path_join(file)
+					if "das" not in file_json:
+						continue
 					maps.append(file_json)
+	
+	
+	for map_info: Dictionary in maps:
+		for das_info: Dictionary in das_packs:
+			if map_info.das.get_file().get_basename() == das_info.name:
+				map_info.das_info = das_info
+	for map_info: Dictionary in maps:
+		map_info.erase("das")
 	
 	#print(JSON.stringify(maps, "\t"))
 	#print(JSON.stringify(dbase_packs, "\t"))
@@ -252,6 +288,7 @@ func load_roth_settings() -> void:
 
 ## Does an initial partial load of a map.
 func get_map(map_info: Dictionary) -> Map:
+	#print(map_info.das_info)
 	# Check if map is already loaded
 	if map_info.name in loaded_maps:
 		return loaded_maps[map_info.name]
@@ -265,8 +302,9 @@ func get_map(map_info: Dictionary) -> Map:
 func load_maps(maps_array: Array) -> void:
 	for map_info: Dictionary in maps_array:
 		map_loading_started.emit(map_info.name)
-		await get_das(map_info.das)
-		map_loading_finished.emit(map_info)
+		var map: Map = get_map(map_info)
+		await map.load_das()
+		map_loading_finished.emit(map)
 	map_loading_completely_finished.emit()
 
 
@@ -302,6 +340,11 @@ func rename_map(map_info: Dictionary, new_map_name: String) -> void:
 ## Creates a new map
 func create_new_map(map_info: Dictionary) -> void:
 	var map := Map.new()
+	for das_info: Dictionary in das_packs:
+		if das_info.name == map_info.das:
+			map_info.das_info = das_info
+			map_info.erase("das")
+			break
 	map.map_info = map_info
 	save_map(map)
 	Roth.settings_loaded.emit()
@@ -362,6 +405,8 @@ func save_metadata(map_info: Dictionary) -> void:
 	var save_info: Dictionary = map_info.duplicate()
 	save_info.erase("filepath")
 	save_info.erase("filepath_json")
+	save_info["das"] = save_info.das_info.name
+	save_info.erase("das_info")
 	
 	var json_file := FileAccess.open(json_filepath, FileAccess.WRITE)
 	json_file.store_string(JSON.stringify(save_info, "\t"))
@@ -395,8 +440,11 @@ das2=m\\ademo
 
 maps {
 """
+	var vanilla_das: bool = true
 	for map: Map in maps_to_run:
-		roth_res_test += "D:\\%s %s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das.replace("/", "\\").get_basename()]
+		roth_res_test += "D:\\%s M\\%s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das_info.name.replace("/", "\\").get_basename()]
+		if "vanilla" not in map.map_info.das_info:
+			vanilla_das = false
 	roth_res_test += "}\n"
 	
 	var roth_res_test_file := FileAccess.open(roth_res_test_filepath, FileAccess.WRITE)
@@ -414,7 +462,7 @@ maps {
 	for sfx_info: Dictionary in sfx_packs:
 		if sfx_info.active:
 			current_sfx = sfx_info
-	if "vanilla" not in current_dbase or "vanilla" not in current_sfx:
+	if "vanilla" not in current_dbase or "vanilla" not in current_sfx or not vanilla_das:
 		create_install(Roth.install_directory.path_join(".."), ROTH_CUSTOM_INSTALL_DIRECTORY)
 		roth_directory = ROTH_CUSTOM_INSTALL_DIRECTORY
 		if "vanilla" not in current_dbase:
@@ -427,6 +475,11 @@ maps {
 				var filepath := ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name).path_join(file)
 				var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join("DATA").path_join(file)
 				DirAccess.copy_absolute(filepath, dest_filepath)
+		if not vanilla_das:
+			for map: Map in maps_to_run:
+				if "vanilla" not in map.map_info.das_info:
+					var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join("M").path_join(map.map_info.das_info.name+".DAS")
+					DirAccess.copy_absolute(map.map_info.das_info.filepath, dest_filepath)
 	else:
 		roth_directory = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
 	
@@ -513,35 +566,38 @@ func reload_map_info(map_info: Dictionary) -> void:
 						map_info[key] = file_json[key]
 					else:
 						map_info.erase(key)
+				for das_info: Dictionary in das_packs:
+					if das_info.name == file_json.das.get_basename().get_file():
+						map_info.das_info = das_info
 
 #endregion
 
 #region DAS Functions
 
-func _on_das_loading_updated(progress: float, das_file: String) -> void:
-	map_loading_updated.emit("Loading textures: %s" % das_file, progress)
+func _on_das_loading_updated(progress: float, das_info: Dictionary) -> void:
+	map_loading_updated.emit(das_info, progress)
 
 
 ## Return or load the requested das_file. [br]
 ## Das files stay loaded after initial load.
-func get_das(das_file: String) -> Dictionary:
-	if das_file in loaded_das:
-		return loaded_das[das_file]
-	elif das_file in loading_das:
+func get_das(das_info: Dictionary) -> Dictionary:
+	if das_info in loaded_das:
+		return loaded_das[das_info]
+	elif das_info in loading_das:
 		return await das_loading_finished
 	else:
-		loading_das[das_file] = true
-		loaded_das[das_file] = await Das.load_das(das_file)
-		loading_das.erase(das_file)
-		return loaded_das[das_file]
+		loading_das[das_info] = true
+		loaded_das[das_info] = await Das.load_das(das_info)
+		loading_das.erase(das_info)
+		return loaded_das[das_info]
 
 
 ## Directly get a single image from a das file by index
-func get_index_from_das(index:int, das_file: String) -> Dictionary:
-	if das_file in loaded_das:
-		if index in loaded_das[das_file]:
-			return loaded_das[das_file][index]
-	return Das._get_index_from_das(index, das_file)
+func get_index_from_das(index:int, das_info: Dictionary) -> Dictionary:
+	if das_info in loaded_das:
+		if index in loaded_das[das_info]:
+			return loaded_das[das_info][index]
+	return Das._get_index_from_das(index, das_info.filepath)
 
 #endregion
 
@@ -1087,5 +1143,34 @@ func get_active_sfx_info() -> Dictionary:
 		if sfx_info.active:
 			return sfx_info
 	return {}
+
+#endregion
+
+#region DAS Packs
+
+func check_das_pack_name(p_name: String) -> String:
+	var error := ""
+	if p_name.to_lower() in das_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		error = "Name already in use."
+	if not p_name.is_valid_filename():
+		error = "Can't contain the following: : / \\ ? * \" | % < >"
+	return error
+
+
+func duplicate_das_pack(p_das_info: Dictionary, new_name: String) -> void:
+	var das_info := p_das_info.duplicate()
+	das_info.name = new_name.to_upper()
+	das_info.erase("vanilla")
+	das_info.filepath = ROTH_CUSTOM_DAS_DIRECTORY.path_join(new_name.to_upper()+".DAS")
+	DirAccess.copy_absolute(p_das_info.filepath, das_info.filepath)
+	das_packs.append(das_info)
+	Roth.settings_loaded.emit()
+
+
+func delete_das_pack(p_das_info: Dictionary) -> void:
+	if FileAccess.file_exists(p_das_info.filepath):
+		DirAccess.remove_absolute(p_das_info.filepath)
+	das_packs.erase(p_das_info)
+	Roth.settings_loaded.emit()
 
 #endregion

@@ -453,7 +453,7 @@ func handle_object_mode_event(event: InputEvent) -> void:
 			for object: ObjectRoth in owner.selected_objects:
 				object.node_2d.update_position()
 			%EditObjectContainer.update_selections()
-			Roth.editor_action.emit(map.map_info, "Rotate Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
+			Roth.editor_action.emit(map, "Rotate Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
 	if holding_alt and event is InputEventMouseMotion and not owner.selected_objects.is_empty():
 		var offset: Vector2 = (DisplayServer.mouse_get_position() - mouse_rotation_position)
 		var rotation_deg: float = offset.x + offset.y
@@ -855,7 +855,7 @@ func draw_sectors() -> void:
 		for sector: Sector in highlight_sectors:
 			if sector.hidden:
 				continue
-			if sector.map_info != map.map_info:
+			if sector.map != map:
 				continue
 			for face_ref: WeakRef in sector.faces:
 				var face: Face = face_ref.get_ref()
@@ -873,7 +873,7 @@ func draw_sectors() -> void:
 		for sector: Sector in owner.selected_sectors:
 			if sector.hidden:
 				continue
-			if sector.map_info != map.map_info:
+			if sector.map != map:
 				continue
 			if start_box_deselect and sector in highlight_sectors:
 				continue
@@ -904,7 +904,7 @@ func draw_sectors() -> void:
 		
 		
 		for face: Face in owner.selected_faces:
-			if face.map_info != map.map_info:
+			if face.map != map:
 				continue
 			draw_line(Vector2(face.v1.x/Roth.SCALE_2D_WORLD, face.v1.y/Roth.SCALE_2D_WORLD), Vector2(face.v2.x/Roth.SCALE_2D_WORLD, face.v2.y/Roth.SCALE_2D_WORLD), Color.PURPLE, line_width*2, true)
 			var direction: Vector2 = (face.v2 - face.v1).normalized()
@@ -963,7 +963,7 @@ func draw_sector_split() -> void:
 
 func setup(p_map: Map, p_reset_camera: bool = true) -> void:
 	if map:
-		close_map(map.map_info)
+		close_map(map)
 	map = p_map
 	%MapNameLabel.text = map.map_info.name.to_upper()
 	if not map.name_changed.is_connected(_on_map_name_changed):
@@ -983,8 +983,8 @@ func setup(p_map: Map, p_reset_camera: bool = true) -> void:
 	update_concave_sectors()
 
 
-func close_map(map_info: Dictionary, p_reset_camera: bool = true) -> bool:
-	if map and map.map_info == map_info:
+func close_map(p_map: Map, p_reset_camera: bool = true) -> bool:
+	if map and map == p_map:
 		if map.name_changed.is_connected(_on_map_name_changed):
 			map.name_changed.disconnect(_on_map_name_changed)
 		map = null
@@ -1058,13 +1058,13 @@ func hide_objects() -> void:
 func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var new_object := ObjectRoth.new_object(map.map_info, mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD)
+			var new_object := ObjectRoth.new_object(map, mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD)
 			if not new_object:
 				return
 			map.add_object(new_object)
 			add_object_to_2d_map(new_object)
 			owner.select_resource(new_object)
-			Roth.editor_action.emit(map.map_info, "Add Object")
+			Roth.editor_action.emit(map, "Add Object")
 		1:
 			owner.select_resource(null)
 			var origin := Vector2(-owner.copied_object_data[0].data.posX, owner.copied_object_data[0].data.posY)
@@ -1076,7 +1076,7 @@ func _on_object_context_popup_menu_index_pressed(index: int) -> void:
 				map.add_object(new_object)
 				add_object_to_2d_map(new_object)
 				owner.select_resource(new_object, false)
-			Roth.editor_action.emit(map.map_info, "Paste Object%s" % ("s" if len(owner.copied_object_data) > 1 else ""))
+			Roth.editor_action.emit(map, "Paste Object%s" % ("s" if len(owner.copied_object_data) > 1 else ""))
 
 
 func _on_on_object_context_popup_menu_index_pressed(index: int) -> void:
@@ -1110,7 +1110,7 @@ func _on_object_drag_ended(object: ObjectRoth.ObjectNode2D) -> void:
 	for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 		if object_node != object:
 			object_node.end_drag()
-	Roth.editor_action.emit(map.map_info, "Move Objects")
+	Roth.editor_action.emit(map, "Move Objects")
 	%EditObjectContainer.update_selections()
 	%Map3D.update_selections()
 
@@ -1148,25 +1148,25 @@ func hide_sfx() -> void:
 func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var new_sfx := SFX.new_object(map.map_info, mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD)
+			var new_sfx := SFX.new_sfx(map, mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD)
 			if not new_sfx:
 				return
 			map.add_sfx(new_sfx)
 			add_sfx_to_2d_map(new_sfx)
 			owner.select_resource(new_sfx)
-			Roth.editor_action.emit(map.map_info, "Add SFX")
+			Roth.editor_action.emit(map, "Add SFX")
 		1:
 			owner.select_resource(null)
 			var origin := Vector2(-owner.copied_sfx_data[0].data.unk0x00, owner.copied_sfx_data[0].data.unk0x02)
 			for each_sfx: SFX in owner.copied_sfx_data:
 				var offset := origin - Vector2(-each_sfx.data.unk0x00, each_sfx.data.unk0x02)
-				var new_sfx := SFX.new_from_copied_object(each_sfx, (mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD) - offset)
+				var new_sfx := SFX.new_from_copied_sfx(each_sfx, (mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD) - offset)
 				if not each_sfx:
 					continue
 				map.add_sfx(new_sfx)
 				add_sfx_to_2d_map(new_sfx)
 				owner.select_resource(new_sfx, false)
-			Roth.editor_action.emit(map.map_info, "Paste SFX%s" % ("s" if len(owner.copied_sfx_data) > 1 else ""))
+			Roth.editor_action.emit(map, "Paste SFX%s" % ("s" if len(owner.copied_sfx_data) > 1 else ""))
 
 
 func _on_on_sfx_context_popup_menu_index_pressed(index: int) -> void:
@@ -1191,7 +1191,7 @@ func _on_sfx_drag_ended(object: SFX.SFXNode2D) -> void:
 	for sfx_node: SFX.SFXNode2D in %SFX.get_children():
 		if sfx_node != object:
 			sfx_node.end_drag()
-	Roth.editor_action.emit(map.map_info, "Move SFX")
+	Roth.editor_action.emit(map, "Move SFX")
 	%Map3D.update_selections()
 
 
@@ -1299,11 +1299,11 @@ func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 						split_vertices[split_vertex].sectors.append(sector)
 	
 	for vertex: Vector2 in split_vertices:
-		var vertex_node := VertexNode.new(map.map_info, vertex, split_vertices[vertex], allow_move, line_width, true)
+		var vertex_node := VertexNode.new(map, vertex, split_vertices[vertex], allow_move, line_width, true)
 		vertex_node.face_split.connect(_on_face_split)
 		%Vertices.add_child(vertex_node)
 	for vertex: Vector2 in vertices:
-		var vertex_node := VertexNode.new(map.map_info, vertex, vertices[vertex], allow_move, line_width)
+		var vertex_node := VertexNode.new(map, vertex, vertices[vertex], allow_move, line_width)
 		vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 		vertex_node.start_sector_split.connect(_on_sector_split)
 		vertex_node.vertex_dragged.connect(_on_vertex_dragged)
@@ -1318,20 +1318,20 @@ func hide_vertices() -> void:
 
 
 func _on_vertex_deleted() -> void:
-	Roth.editor_action.emit(map.map_info, "Delete Vertex")
+	Roth.editor_action.emit(map, "Delete Vertex")
 	show_vertices(last_allow_move)
 	queue_redraw()
 
 
 func _on_face_split(old_vertex: VertexNode, new_faces: Array) -> void:
-	Roth.editor_action.emit(map.map_info, "Split Face")
+	Roth.editor_action.emit(map, "Split Face")
 	old_vertex.queue_free()
 	var new_vertex_data := {
 		"faces": new_faces,
 		"sectors": old_vertex.sectors,
 	}
 	
-	var vertex_node := VertexNode.new(map.map_info, old_vertex.position * Roth.SCALE_2D_WORLD, new_vertex_data, last_allow_move, line_width)
+	var vertex_node := VertexNode.new(map, old_vertex.position * Roth.SCALE_2D_WORLD, new_vertex_data, last_allow_move, line_width)
 	vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 	vertex_node.start_sector_split.connect(_on_sector_split)
 	vertex_node.vertex_dragged.connect(_on_vertex_dragged)
@@ -1351,7 +1351,7 @@ func _on_face_split(old_vertex: VertexNode, new_faces: Array) -> void:
 			split_vertices[split_vertex].sectors.append(face.sector)
 	
 	for vertex: Vector2 in split_vertices:
-		var split_vertex_node := VertexNode.new(map.map_info, vertex, split_vertices[vertex], last_allow_move, line_width, true)
+		var split_vertex_node := VertexNode.new(map, vertex, split_vertices[vertex], last_allow_move, line_width, true)
 		split_vertex_node.face_split.connect(_on_face_split)
 		%Vertices.add_child(split_vertex_node)
 	
@@ -1459,7 +1459,7 @@ func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 	if faces_merged:
 		show_vertices(last_allow_move)
 		queue_redraw()
-		Roth.editor_action.emit(map.map_info, "Merge Faces")
+		Roth.editor_action.emit(map, "Merge Faces")
 	else:
 		for face: Face in vertex.faces:
 			if face.face_length == 0 and face.sector:
@@ -1470,17 +1470,17 @@ func _on_vertex_drag_ended(vertex: VertexNode) -> void:
 		if sectors_merged:
 			show_vertices(last_allow_move)
 			queue_redraw()
-			Roth.editor_action.emit(map.map_info, "Merge Sectors")
+			Roth.editor_action.emit(map, "Merge Sectors")
 		elif vertices_merged:
 			show_vertices(last_allow_move)
 			queue_redraw()
-			Roth.editor_action.emit(map.map_info, "Merge Vertices")
+			Roth.editor_action.emit(map, "Merge Vertices")
 		elif bad_face_merge:
 			vertex.revert_last_position()
 			queue_redraw()
 			redraw_split_vertices()
 		else:
-			Roth.editor_action.emit(map.map_info, "Move Vertices")
+			Roth.editor_action.emit(map, "Move Vertices")
 
 
 func is_line_within_polygon(start: Vector2, end: Vector2, vertices: Array) -> bool:
@@ -1795,14 +1795,14 @@ func unmerge_vertices() -> void:
 							queue_redraw()
 		
 		for vertex: Vector2 in vertices:
-			var vertex_node := VertexNode.new(map.map_info, vertex, vertices[vertex], last_allow_move, line_width)
+			var vertex_node := VertexNode.new(map, vertex, vertices[vertex], last_allow_move, line_width)
 			vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 			vertex_node.start_sector_split.connect(_on_sector_split)
 			vertex_node.vertex_dragged.connect(_on_vertex_dragged)
 			vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 			%Vertices.add_child(vertex_node)
 	
-	Roth.editor_action.emit(map.map_info, "Unmerge Vertices")
+	Roth.editor_action.emit(map, "Unmerge Vertices")
 
 
 func check_for_split(nearest_vertex: VertexNode) -> void:
@@ -1818,7 +1818,7 @@ func check_for_split(nearest_vertex: VertexNode) -> void:
 			if not is_line_within_polygon(start_sector_split_vertex.coordinate, nearest_vertex.coordinate, verts):
 				continue
 			map.split_sector(sector, start_sector_split_vertex, nearest_vertex)
-			Roth.editor_action.emit(map.map_info, "Split Sector")
+			Roth.editor_action.emit(map, "Split Sector")
 			#owner.select_resource(sector)
 			show_vertices(last_allow_move)
 

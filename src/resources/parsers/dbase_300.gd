@@ -230,7 +230,7 @@ static func parse_rle_image(file: FileAccess) -> Image:
 	var img_type := file.get_32()
 	file.seek(file.get_position() - 4)
 	var header: Dictionary
-	var palette: Array = Das.get_default_palette()
+	var palette: Array = Das.DEFAULT_PALETTE
 	if not palette:
 		return null
 	match img_type:

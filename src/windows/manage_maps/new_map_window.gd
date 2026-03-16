@@ -16,10 +16,10 @@ func toggle(_bool: Variant = null) -> void:
 
 func _on_settings_loaded() -> void:
 	%DasOption.clear()
-	for das: String in Roth.das_files:
-		if das.ends_with("ADEMO.DAS"):
+	for das_info: Dictionary in Roth.das_packs:
+		if das_info.name.ends_with("ADEMO.DAS"):
 			continue
-		%DasOption.add_item(das)
+		%DasOption.add_item(das_info.name)
 
 
 func _on_cancel_button_pressed() -> void:

@@ -13,7 +13,7 @@ using namespace godot;
 
 void RothExt::_bind_methods() {
   ClassDB::bind_static_method("RothExt", D_METHOD("get_video_by_path", "gdv_video_path", "status_callback"), &RothExt::get_video_by_path);
-  ClassDB::bind_static_method("RothExt", D_METHOD("load_das", "das_filepath", "status_callback", "palette_override"), &RothExt::load_das);
+  ClassDB::bind_static_method("RothExt", D_METHOD("load_das", "das_info", "status_callback", "palette_override"), &RothExt::load_das);
   ClassDB::bind_static_method("RothExt", D_METHOD("stop_video_loading"), &RothExt::stop_video_loading);
   ClassDB::bind_static_method("RothExt", D_METHOD("get_video_by_file", "gdv_video_fileaccess", "status_callback"), &RothExt::get_video_by_file, Callable());
 }
@@ -192,13 +192,14 @@ void RothExt::stop_video_loading() {
 }
 
 
-Dictionary RothExt::load_das(String p_das_name, String p_das_path, Callable p_callback, Array p_palette) {
+Dictionary RothExt::load_das(Dictionary p_das_info, Callable p_callback, Array p_palette) {
   	// File
-	Ref<FileAccess> file = FileAccess::open(p_das_path, FileAccess::READ);
+	Ref<FileAccess> file = FileAccess::open(p_das_info["filepath"], FileAccess::READ);
   
   	// Name
 	Dictionary das = Dictionary();
-	das["name"] = p_das_path.get_file().get_basename();
+	//das["name"] = p_das_path.get_file().get_basename();
+	das["das_info"] = p_das_info;
   
   	// Header
 	das["header"] = Dictionary();
@@ -262,7 +263,7 @@ Dictionary RothExt::load_das(String p_das_name, String p_das_path, Callable p_ca
 	// Textures
  	for ( int i=0; i<static_cast<int>(das["textures"].call("size")); i++) {
 
-		das["textures"].get(i).set("das", p_das_name);
+		das["textures"].get(i).set("das_info", p_das_info);
 
 		file->seek(static_cast<int>(das["header"].get("imgFATOffset")) + (static_cast<int>(das["textures"].get(i).get("index")) * 0x08));
 		
@@ -675,12 +676,84 @@ Dictionary RothExt::load_das(String p_das_name, String p_das_path, Callable p_ca
 			}
 		
     } else if (static_cast<int>(das["textures"].get(i).get("imageType")) == 0x80) {
-		Array args = Array();
-		args.append(das["textures"].get(i).get("name"));
-		args.append(das["textures"].get(i).get("desc"));
-		args.append(das["textures"].get(i).get("index"));
-		das["loading_errors"].call("append", String("Object not loaded: {0}, Desc: {1}, Index: {2}").format(args));
+		file->seek(static_cast<int>(das["textures"].get(i).get("offset_data")));
+		
+		Dictionary object_data = Dictionary();
+		object_data.set("block_type_modifier", file->get_8());
+		object_data.set("block_type", file->get_8());
+		object_data.set("max_bound_x", file->get_16());
+		object_data.set("max_bound_y", file->get_16());
+		object_data.set("unk_0x06", file->get_16());
+		object_data.set("unk_0x08", file->get_16());
+		object_data.set("unk_0x0A", file->get_32());
+		object_data.set("max_bound_z", file->get_16());
+		object_data.set("unk_0x10", file->get_32());
+		object_data.set("num_vertices", file->get_16());
+		
+		Array vertex_array = Array();
+		for (int i = 0; i < static_cast<int>(object_data["num_vertices"]); i++) {
+			Dictionary vertex_data = Dictionary();
+			vertex_data.set("pos_x", (file->get_16() + (1 << 15)) % (1 << 16) - (1 << 15));
+			vertex_data.set("pos_y", (file->get_16() + (1 << 15)) % (1 << 16) - (1 << 15));
+			vertex_data.set("pos_z", (file->get_16() + (1 << 15)) % (1 << 16) - (1 << 15));
+			vertex_data.set("padding1", file->get_32());
+			vertex_data.set("padding2", file->get_32());
+			vertex_data.set("padding3", file->get_16());
+			Vector3 vertex = Vector3(static_cast<int>(vertex_data["pos_x"]), static_cast<int>(vertex_data["pos_y"]), static_cast<int>(vertex_data["pos_z"]));
+			vertex_array.append(vertex);
+		}
+
+		Dictionary faces_mapping_header = Dictionary();
+		// var faces_mapping_header := Parser.parse_section(file, FACE_MAPPING_HEADER);
+		faces_mapping_header.set("sig", file->get_32());
+		faces_mapping_header.set("unk_0x04", file->get_16());
+		int faces_array_size = file->get_16();
+		faces_mapping_header.set("faces_array_size", ((faces_array_size & 255) << 8) + (faces_array_size >> 8));
+
+		int current_size = 4;
+		Array face_array = Array();
+		while (current_size < static_cast<int>(faces_mapping_header["faces_array_size"])) {
+			Dictionary face = Dictionary();
+			face.set("size", file->get_16());
+			face.set("unk_0x02", file->get_32());
+			face.set("unk_0x06", file->get_16());
+			face.set("unk_0x08", file->get_16());
+			face.set("unk_0x0A", file->get_16());
+			int texture_fat_index_base = file->get_16();
+			face.set("texture_fat_index_base", ((texture_fat_index_base & 255) << 8) + (texture_fat_index_base >> 8));
+			face.set("unk_0x0E", file->get_16());
+			face.set("unk_0x10", file->get_16());
+			face.set("unk_0x10_2", file->get_32());
+			face.set("render_flag_1", file->get_8());
+			face.set("render_flag_2", file->get_8());
+			face.set("unk_0x18", file->get_32());
+			face.set("sub_texture_index", file->get_8());
+			face.set("unk_0x1D", file->get_8());
+			face.set("unk_0x1E", file->get_8());
+			face.set("unk_0x1F", file->get_8());
+			face.set("unk_0x20", file->get_32());
+			face.set("unk_0x24", file->get_16());
+			face.set("unk_0x26", file->get_16());
+			face.set("unk_0x28", file->get_32());
+			face.set("unk_0x2C", file->get_32());
+			face.set("unk_0x30", file->get_16());
+			face.set("unk_0x32", file->get_16());
+			face.set("edge_count", file->get_16());
 			
+			current_size += 54;
+			Array edge_array = Array();
+			for (int i = 0; i < static_cast<int>(face["edge_count"])+1; i++) {
+				edge_array.append(file->get_16());
+				current_size += 2;
+			}
+			face.set("edge_array", edge_array);
+			face_array.append(face);
+		}
+
+		object_data.set("vertices", vertex_array);
+		object_data.set("faces_header", faces_mapping_header);
+		object_data.set("faces", face_array);
+		das["textures"].get(i).set("object", object_data);
     } else {
 		Array args = Array();
 		args.append(das["textures"].get(i).get("imageType"));

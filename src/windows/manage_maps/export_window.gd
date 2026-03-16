@@ -30,11 +30,11 @@ func export_maps(p_maps: Array) -> void:
 		if sfx_info.active:
 			%SFXOption.select(%SFXOption.item_count-1)
 	
-	for map: Dictionary in p_maps:
+	for map_info: Dictionary in p_maps:
 		var tree_item: TreeItem = %MapsTree.get_root().create_child()
-		tree_item.set_text(0, map.name)
-		tree_item.set_text(1, map.das)
-		tree_item.set_metadata(0, map)
+		tree_item.set_text(0, map_info.name)
+		tree_item.set_text(1, map_info.das_info.name)
+		tree_item.set_metadata(0, map_info)
 	
 	toggle(true)
 

@@ -27,31 +27,30 @@ const CEILING_FLIP_Y = 1 << 11
 var data: Dictionary
 var index: int :
 	get():
-		return Roth.get_map(map_info).sectors.find(self)
+		return map.sectors.find(self)
 	set(new_value):
 		pass
-var map_info: Dictionary
-
+var map: Map
 var faces: Array = []
 var vertices: Array
 var platform: Dictionary
-#var objects: Array = []
 var node: Node3D
 var hidden: bool = false
+
 
 static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
-func _init(p_data: Dictionary, p_map_info: Dictionary, p_platforms: Array = []) -> void:
+func _init(p_data: Dictionary, p_map: Map, p_platforms: Array = []) -> void:
 	data = p_data
-	map_info = p_map_info
+	map = p_map
 	if "intermediateFloorIndex" in data and not p_platforms.is_empty():
 		platform = p_platforms[data.intermediateFloorIndex]
 
 
 func duplicate(p_faces: bool = false) -> Sector:
-	var new_sector := Sector.new(data.duplicate(true), map_info)
+	var new_sector := Sector.new(data.duplicate(true), map)
 	if platform:
 		new_sector.platform = platform.duplicate(true)
 	if p_faces:
@@ -150,13 +149,13 @@ func delete_sector() -> void:
 		node.queue_free()
 	
 	var objects_in_sector: Array = []
-	for object: ObjectRoth in Roth.get_map(map_info).objects:
+	for object: ObjectRoth in map.objects:
 		if object.sector.get_ref() == self:
 			objects_in_sector.append(object)
 	for object: ObjectRoth in objects_in_sector:
 		object.delete()
 	
-	Roth.get_map(map_info).delete_sector(self)
+	map.delete_sector(self)
 
 
 func delete_face(face_to_delete: Face) -> void:
@@ -192,7 +191,7 @@ func split_face(face_to_split: Face) -> Face:
 			var mid_point: Vector2 = (face.v1 + face.v2) / 2
 			face.v2 = mid_point
 			new_face.v1 = mid_point
-			var mesh: Node3D = await new_face.initialize_mesh()
+			var mesh: Node3D = new_face.initialize_mesh()
 			node.get_parent().get_parent().get_node("Faces").add_child(mesh)
 	if not new_face:
 		return
@@ -233,7 +232,7 @@ func reorder_faces() -> void:
 	
 	faces = ordered_faces
 	_update_vertices()
-	Roth.get_map(map_info).reorder_faces()
+	map.reorder_faces()
 
 
 func get_vertices() -> Array:
@@ -645,16 +644,16 @@ func initialize_mesh() -> Node3D:
 			child.queue_free()
 		if hidden:
 			return
-		await _initialize_meshes()
+		_initialize_meshes()
 		return
 	
 	node = Sector3D.new()
 	node.ref = self
-	await _initialize_meshes()
+	_initialize_meshes()
 	return node
 
 func _initialize_meshes() -> void:
-	var das: Dictionary = await Roth.get_das(map_info.das)
+	var das: Dictionary = map.das
 	assert(not das.is_empty())
 	
 	# Flooring

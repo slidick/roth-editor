@@ -6,10 +6,10 @@ var das: Dictionary = {}
 var texture_data: Dictionary = {}
 
 
-func edit_presets(das_name: String, preset_name: String, copied_data: Dictionary = {}) -> Variant:
-	das = await Roth.get_das(das_name)
+func edit_presets(p_das: Dictionary, preset_name: String, copied_data: Dictionary = {}) -> Variant:
+	das = p_das
 	toggle(true)
-	texture_data = Settings.settings.get("texture_presets", {}).get(das_name, {}).duplicate(true)
+	texture_data = Settings.settings.get("texture_presets", {}).get(das.das_info.name, {}).duplicate(true)
 	%ItemList.clear()
 	%RotatableItemList.clear()
 	var i: int = 0

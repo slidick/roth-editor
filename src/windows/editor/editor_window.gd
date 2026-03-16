@@ -68,25 +68,25 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		
 		if event.is_action_pressed("move_object_to_ceiling"):
-			var map_infos: Array = []
+			var maps: Array = []
 			for object: ObjectRoth in selected_objects:
 				object.data.posZ = object.sector.get_ref().data.ceilingHeight
 				redraw(selected_objects)
 				%EditObjectContainer.update_selections()
-				if object.map_info not in map_infos:
-					map_infos.append(object.map_info)
-			for map_info: Dictionary in map_infos:
-				Roth.editor_action.emit(map_info, "Snap to Ceiling")
+				if object.map not in maps:
+					maps.append(object.map)
+			for map: Map in maps:
+				Roth.editor_action.emit(map, "Snap to Ceiling")
 		if event.is_action_pressed("move_object_to_floor"):
-			var map_infos: Array = []
+			var maps: Array = []
 			for object: ObjectRoth in selected_objects:
 				object.data.posZ = object.sector.get_ref().data.floorHeight
 				redraw(selected_objects)
 				%EditObjectContainer.update_selections()
-				if object.map_info not in map_infos:
-					map_infos.append(object.map_info)
-			for map_info: Dictionary in map_infos:
-				Roth.editor_action.emit(map_info, "Snap to Floor")
+				if object.map not in maps:
+					maps.append(object.map)
+			for map: Map in maps:
+				Roth.editor_action.emit(map, "Snap to Floor")
 		if event.is_action_pressed("open_3d_context_menu"):
 			var viewport := %Map3D.get_viewport()
 			var mouse_position := viewport.get_mouse_position()
@@ -220,44 +220,40 @@ func test_map() -> void:
 	Roth.test_run_maps(maps, player_data)
 
 
-func close_map(map_info: Dictionary) -> void:
+func close_map(map: Map) -> void:
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
-		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map_info:
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref == map:
 			tree_item.get_metadata(0).queue_free()
-			Roth.loaded_maps.erase(tree_item.get_metadata(0).map_info.name)
+			Roth.loaded_maps.erase(tree_item.get_metadata(0).ref.map_info.name)
 			for child_item: TreeItem in tree_item.get_children():
 				child_item.free()
-			%Map2D.close_map(tree_item.get_metadata(0).map_info)
+			%Map2D.close_map(tree_item.get_metadata(0).ref)
 			selected_faces.clear()
 			selected_sectors.clear()
 			hovered_face = null
 			hovered_sector = null
-			%"Command Editor".close(tree_item.get_metadata(0).map_info.name)
-			Roth.reload_map_info(tree_item.get_metadata(0).map_info)
-			close_undo_redo(tree_item.get_metadata(0).map_info)
+			%"Command Editor".close(tree_item.get_metadata(0).ref.map_info.name)
+			Roth.reload_map_info(tree_item.get_metadata(0).ref.map_info)
+			close_undo_redo(tree_item.get_metadata(0).ref.map_info)
 			tree_item.free()
 
 
-func load_map(map_info: Dictionary) -> void:
+func load_map(map: Map) -> void:
 	for i in range(tree_root.get_child_count()):
-		if map_info.name == tree_root.get_child(i).get_text(0):
+		if map == tree_root.get_child(i).get_metadata(0).ref:
 			Console.print("Map loaded already")
 			return
-	
-	var map: Map = Roth.get_map(map_info)
-	if not map:
-		return
 	
 	var sectors_node := Node3D.new()
 	sectors_node.name = "Sectors"
 	for sector: Sector in map.sectors:
-		var mesh := await sector.initialize_mesh()
+		var mesh := sector.initialize_mesh()
 		sectors_node.add_child(mesh)
 	
 	var faces_node := Node3D.new()
 	faces_node.name = "Faces"
 	for face: Face in map.faces:
-		var mesh := await face.initialize_mesh()
+		var mesh := face.initialize_mesh()
 		faces_node.add_child(mesh)
 	
 	var objects_node := Node3D.new()
@@ -277,19 +273,18 @@ func load_map(map_info: Dictionary) -> void:
 	
 	var map_node := Map.MapNode3D.new()
 	map_node.ref = map
-	map_node.map_info = map.map_info
 	map_node.add_child(sectors_node)
 	map_node.add_child(faces_node)
 	map_node.add_child(objects_node)
 	map_node.add_child(sfx_node)
-	map_node.name = map_info.name
+	map_node.name = map.map_info.name
 	map_node.visible = false
 	map_node.process_mode = PROCESS_MODE_DISABLED
 	%Maps.add_child(map_node)
 	map.node = map_node
 	
 	var tree_child: TreeItem = tree_root.create_child()
-	tree_child.set_text(0, map_info.name)
+	tree_child.set_text(0, map.map_info.name)
 	tree_child.set_metadata(0, map_node)
 	tree_child.add_button(0, EYE_CLOSED_ICON)
 	
@@ -313,11 +308,11 @@ func load_map(map_info: Dictionary) -> void:
 	if tree_root.get_child_count() == 1:
 		first_load = true
 	
-	add_to_undo_redo(map_info, "Map Opened")
+	add_to_undo_redo(map, "Map Opened")
 
 
-func _on_map_loaded(map_info: Dictionary) -> void:
-	load_map(map_info)
+func _on_map_loaded(map: Map) -> void:
+	load_map(map)
 
 
 func _on_map_completely_loaded() -> void:
@@ -399,7 +394,7 @@ func _on_tab_bar_tab_changed(tab: int) -> void:
 			%MapPanelContainer.show()
 			%InspectorSidePanel.show()
 			if %"Command Editor".map:
-				Roth.editor_action.emit(%"Command Editor".map.map_info, "Edit Commands")
+				Roth.editor_action.emit(%"Command Editor".map, "Edit Commands")
 		1:
 			%MapPanelContainer.hide()
 			%InspectorSidePanel.hide()
@@ -421,7 +416,7 @@ func _on_maps_tree_button_clicked(item: TreeItem, _column: int, id: int, _mouse_
 func _on_maps_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
 	var tree_item: TreeItem = %MapsTree.get_item_at_position(mouse_position)
 	if mouse_button_index == MOUSE_BUTTON_RIGHT and tree_item.get_parent() == tree_root:
-		if not "vanilla" in tree_item.get_metadata(0).map_info:
+		if not "vanilla" in tree_item.get_metadata(0).ref.map_info:
 			%MapsTreeMenu.set_item_disabled(MapMenu.Save, false)
 		else:
 			%MapsTreeMenu.set_item_disabled(MapMenu.Save, true)
@@ -440,9 +435,9 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save.", "Info", false, Vector2(400,150))
 				return
-			if "vanilla" not in selected[0].get_metadata(0).map_info:
-				Console.print("Saving file: %s" % selected[0].get_metadata(0).map_info.name)
-				var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
+			if "vanilla" not in selected[0].get_metadata(0).ref.map_info:
+				Console.print("Saving file: %s" % selected[0].get_metadata(0).ref.map_info.name)
+				var map: Map = selected[0].get_metadata(0).ref
 				Roth.save_map(map)
 		MapMenu.SaveAs:
 			if len(selected) != 1:
@@ -454,8 +449,8 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				return
 			
 			Console.print("Saving file as: %s" % new_map_name)
-			var old_map_name: String = selected[0].get_metadata(0).map_info.name
-			var map: Map = Roth.get_map(selected[0].get_metadata(0).map_info)
+			var old_map_name: String = selected[0].get_metadata(0).ref.map_info.name
+			var map: Map = selected[0].get_metadata(0).ref
 			Roth.loaded_maps.erase(map.map_info.name)
 			Roth.maps.erase(map.map_info)
 			Roth.maps.append(map.map_info.duplicate())
@@ -498,12 +493,12 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			%Map2D.setup(Roth.get_map(selected[0].get_metadata(0).ref.map_info))
-			%SFXZoneIndexEdit.max_value = len(Roth.get_map(selected[0].get_metadata(0).ref.map_info).sfx_zones)
+			%Map2D.setup(selected[0].get_metadata(0).ref)
+			%SFXZoneIndexEdit.max_value = len(selected[0].get_metadata(0).ref.sfx_zones)
 		MapMenu.Close:
-			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).map_info.name))], "Confirm Close", false):
+			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).ref.map_info.name))], "Confirm Close", false):
 				for item: TreeItem in selected:
-					close_map(item.get_metadata(0).map_info)
+					close_map(item.get_metadata(0).ref)
 
 #endregion
 
@@ -544,7 +539,7 @@ func _on_search_option_item_selected(_index: int) -> void:
 func _on_3d_context_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			var map_info: Dictionary = context_collision.collider.get_parent().ref.map_info
+			var map: Map = context_collision.collider.get_parent().ref.map
 			var extra_info: Dictionary = {
 				"render_type": "billboard",
 				"rotation": 0,
@@ -563,15 +558,15 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 			elif context_collision.collider.get_parent().ref is Sector:
 				extra_info["sector_index"] = context_collision.collider.get_parent().ref.index
 			
-			var new_object := ObjectRoth.new_object_3d(map_info, pos, extra_info)
+			var new_object := ObjectRoth.new_object_3d(map, pos, extra_info)
 			if not new_object:
 				return
-			Roth.get_map(map_info).add_object(new_object)
+			map.add_object(new_object)
 			%Map2D.add_object_to_2d_map(new_object)
 			select_resource(new_object, true)
-			Roth.editor_action.emit(new_object.map_info, "Add Object")
+			Roth.editor_action.emit(new_object.map, "Add Object")
 		1:
-			var map_info: Dictionary = context_collision.collider.get_parent().ref.map_info
+			var map: Map = context_collision.collider.get_parent().ref.map
 			var extra_info: Dictionary = {
 				"render_type": "billboard",
 				"rotation": 0,
@@ -595,13 +590,13 @@ func _on_3d_context_menu_index_pressed(index: int) -> void:
 			for each_object: ObjectRoth in copied_object_data:
 				var offset := origin - Vector3(-each_object.data.posX, each_object.data.posZ, each_object.data.posY)
 				extra_info.rotation = each_object.data.rotation
-				var new_object := ObjectRoth.new_from_copied_object_3d(map_info, copied_object_data[0], pos - offset, extra_info)
+				var new_object := ObjectRoth.new_from_copied_object_3d(map, copied_object_data[0], pos - offset, extra_info)
 				if not new_object:
 					continue
-				Roth.get_map(map_info).add_object(new_object)
+				map.add_object(new_object)
 				%Map2D.add_object_to_2d_map(new_object)
 				select_resource(new_object, false)
-			Roth.editor_action.emit(map_info, "Paste Object%s" % ("s" if len(copied_object_data) > 1 else ""))
+			Roth.editor_action.emit(map, "Paste Object%s" % ("s" if len(copied_object_data) > 1 else ""))
 
 
 func _on_3d_object_context_menu_index_pressed(index: int) -> void:
@@ -617,7 +612,7 @@ func _on_3d_object_context_menu_index_pressed(index: int) -> void:
 			var object: ObjectRoth = context_collision.collider.get_parent().ref
 			object.delete()
 			select_resource(null)
-			Roth.editor_action.emit(object.map_info, "Delete Object")
+			Roth.editor_action.emit(object.map, "Delete Object")
 
 
 func copy_objects(object_list: Array) -> void:
@@ -637,23 +632,24 @@ func copy_sfx(sfx_list: Array) -> void:
 
 #region Undo/Redo
 
-func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
+func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 	%CountAndSizeContainer.recalculate()
 	%Map2D.update_concave_sectors()
 	
-	if p_map_info.name not in undo_stacks:
-		undo_stacks[p_map_info.name] = []
-		undo_positions[p_map_info.name] = 0
-		undo_lists[p_map_info.name] = ItemList.new()
-		undo_lists[p_map_info.name].name = p_map_info.name
-		compilation_failure_warning_given[p_map_info.name] = false
-		%HistoryTabContainer.add_child(undo_lists[p_map_info.name])
-		undo_lists[p_map_info.name].item_selected.connect(func (index: int) -> void:
-			undo_positions[p_map_info.name] = len(undo_stacks[p_map_info.name]) - index
-			var undo_state: Dictionary = undo_stacks[p_map_info.name][ undo_positions[p_map_info.name] - 1]
+	if p_map.map_info.name not in undo_stacks:
+		undo_stacks[p_map.map_info.name] = []
+		undo_positions[p_map.map_info.name] = 0
+		undo_lists[p_map.map_info.name] = ItemList.new()
+		undo_lists[p_map.map_info.name].name = p_map.map_info.name
+		compilation_failure_warning_given[p_map.map_info.name] = false
+		%HistoryTabContainer.add_child(undo_lists[p_map.map_info.name])
+		undo_lists[p_map.map_info.name].item_selected.connect(func (index: int) -> void:
+			undo_positions[p_map.map_info.name] = len(undo_stacks[p_map.map_info.name]) - index
+			var undo_state: Dictionary = undo_stacks[p_map.map_info.name][ undo_positions[p_map.map_info.name] - 1]
 			var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
 			if not map:
 				return
+			map.das = await Roth.get_das(map.map_info.das_info)
 			replace_map(map)
 		)
 	
@@ -661,37 +657,37 @@ func add_to_undo_redo(p_map_info: Dictionary, p_name: String = "") -> void:
 	
 		var action: Dictionary = {
 			"name": p_name,
-			"map_info": p_map_info,
-			"bytes": Roth.get_map(p_map_info).compile(),
+			"map_info": p_map.map_info,
+			"bytes": p_map.compile(),
 		}
 		
 		# Check if map actually compiles, if not give a warning
 		if action.bytes.is_empty():
-			if not compilation_failure_warning_given[p_map_info.name]:
-				compilation_failure_warning_given[p_map_info.name] = true
-				Dialog.information("Map %s is too large!\nMap cannot be saved!\nUndo history will not be recorded until corrected!" % p_map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
+			if not compilation_failure_warning_given[p_map.map_info.name]:
+				compilation_failure_warning_given[p_map.map_info.name] = true
+				Dialog.information("Map %s is too large!\nMap cannot be saved!\nUndo history will not be recorded until corrected!" % p_map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
 			return
-		compilation_failure_warning_given[p_map_info.name] = false
+		compilation_failure_warning_given[p_map.map_info.name] = false
 		
 		# Check if state is same as previous state
-		if not undo_stacks[p_map_info.name].is_empty() and action.bytes == undo_stacks[p_map_info.name][undo_positions[p_map_info.name]-1].bytes:
+		if not undo_stacks[p_map.map_info.name].is_empty() and action.bytes == undo_stacks[p_map.map_info.name][undo_positions[p_map.map_info.name]-1].bytes:
 			return
 		
-		while undo_positions[p_map_info.name] < len(undo_stacks[p_map_info.name]):
-			undo_stacks[p_map_info.name].pop_back()
+		while undo_positions[p_map.map_info.name] < len(undo_stacks[p_map.map_info.name]):
+			undo_stacks[p_map.map_info.name].pop_back()
 		
-		undo_stacks[p_map_info.name].append(action)
-		undo_positions[p_map_info.name] += 1
+		undo_stacks[p_map.map_info.name].append(action)
+		undo_positions[p_map.map_info.name] += 1
 	
-	while len(undo_stacks[p_map_info.name]) > Settings.settings.get("options", {}).get("undo_history", 50):
-		undo_stacks[p_map_info.name].pop_front()
-		undo_positions[p_map_info.name] -= 1
+	while len(undo_stacks[p_map.map_info.name]) > Settings.settings.get("options", {}).get("undo_history", 50):
+		undo_stacks[p_map.map_info.name].pop_front()
+		undo_positions[p_map.map_info.name] -= 1
 	
-	undo_lists[p_map_info.name].clear()
-	for i in range(len(undo_stacks[p_map_info.name])-1, -1, -1):
-		undo_lists[p_map_info.name].add_item(undo_stacks[p_map_info.name][i].name)
-	if undo_lists[p_map_info.name].item_count > 0:
-		undo_lists[p_map_info.name].select(0)
+	undo_lists[p_map.map_info.name].clear()
+	for i in range(len(undo_stacks[p_map.map_info.name])-1, -1, -1):
+		undo_lists[p_map.map_info.name].add_item(undo_stacks[p_map.map_info.name][i].name)
+	if undo_lists[p_map.map_info.name].item_count > 0:
+		undo_lists[p_map.map_info.name].select(0)
 
 
 func close_undo_redo(p_map_info: Dictionary) -> void:
@@ -724,13 +720,13 @@ func replace_map(map: Map) -> void:
 			var sectors_node := Node3D.new()
 			sectors_node.name = "Sectors"
 			for sector: Sector in map.sectors:
-				var mesh := await sector.initialize_mesh()
+				var mesh := sector.initialize_mesh()
 				sectors_node.add_child(mesh)
 			
 			var faces_node := Node3D.new()
 			faces_node.name = "Faces"
 			for face: Face in map.faces:
-				var mesh := await face.initialize_mesh()
+				var mesh := face.initialize_mesh()
 				faces_node.add_child(mesh)
 			
 			var objects_node := Node3D.new()
@@ -749,7 +745,6 @@ func replace_map(map: Map) -> void:
 			
 			var map_node := Map.MapNode3D.new()
 			map_node.ref = map
-			map_node.map_info = map.map_info
 			map_node.add_child(sectors_node)
 			map_node.add_child(faces_node)
 			map_node.add_child(objects_node)
@@ -769,7 +764,7 @@ func replace_map(map: Map) -> void:
 			old_map_node.queue_free()
 			
 			var folded: bool = %CountAndSizeContainer.folded
-			if %Map2D.close_map(map.map_info, false):
+			if %Map2D.close_map(map, false):
 				%Map2D.setup(map, false)
 				%CountAndSizeContainer.folded = folded
 			
@@ -1008,8 +1003,8 @@ func delete_selected_face() -> void:
 	assert(len(selected_sectors) == 1)
 	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
 	if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
-		Roth.get_map(selected_faces[0].map_info).merge_sectors(selected_faces[0])
-		Roth.editor_action.emit(selected_faces[0].map_info, "Delete Double-Sided Face")
+		selected_faces[0].map.merge_sectors(selected_faces[0])
+		Roth.editor_action.emit(selected_faces[0].map, "Delete Double-Sided Face")
 		hovered_face = null
 		select_resource(selected_sectors[0])
 
@@ -1018,8 +1013,8 @@ func delete_selected_sectors() -> void:
 	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
 	if await Dialog.confirm("Delete %d selected sector%s?" % [len(selected_sectors), ("s" if len(selected_sectors) > 1 else "")], "Confirm Deletion", false):
 		var map_groups: Dictionary = _delete_selected_sectors()
-		for map_info: Dictionary in map_groups:
-			Roth.editor_action.emit(map_info, "Delete Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete Sector%s" % ("s" if len(map_groups[map]) > 1 else ""))
 		select_resource(null)
 		if %VertexCheckBox.button_pressed or %DrawModeCheckBox.button_pressed:
 			%Map2D.show_vertices(%Map2D.last_allow_move)
@@ -1029,9 +1024,9 @@ func _delete_selected_sectors() -> Dictionary:
 	var map_groups: Dictionary = {}
 	for sector: Sector in selected_sectors:
 		sector.delete_sector()
-		if sector.map_info not in map_groups:
-			map_groups[sector.map_info] = []
-		map_groups[sector.map_info].append(sector)
+		if sector.map not in map_groups:
+			map_groups[sector.map] = []
+		map_groups[sector.map].append(sector)
 	return map_groups
 
 
@@ -1041,7 +1036,7 @@ func merge_selected_sectors() -> void:
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			all_sector_faces.append(face)
-	var map_info: Dictionary = selected_sectors[0].map_info
+	var map: Map = selected_sectors[0].map
 	var found: bool = true
 	while found:
 		found = false
@@ -1052,7 +1047,7 @@ func merge_selected_sectors() -> void:
 					var face_sister: Face = face.sister.get_ref()
 					if face_sister in all_sector_faces:
 						selected_sectors.erase(face_sister.sector)
-						Roth.get_map(face_sister.map_info).merge_sectors(face)
+						face_sister.map.merge_sectors(face)
 						found = true
 						hovered_face = null
 						hovered_sector = null
@@ -1062,20 +1057,20 @@ func merge_selected_sectors() -> void:
 			if found:
 				break
 	
-	Roth.editor_action.emit(map_info, "Merge Multiple Sectors")
+	Roth.editor_action.emit(map, "Merge Multiple Sectors")
 
 
 func hide_selected_sectors() -> void:
 	var maps: Array = []
 	for sector: Sector in selected_sectors:
-		if sector.map_info not in maps:
-			maps.append(sector.map_info)
+		if sector.map not in maps:
+			maps.append(sector.map)
 		sector.hidden = true
 		for face_ref: WeakRef in sector.faces:
 			var face: Face = face_ref.get_ref()
 			face.hidden = true
-	for map_info: Dictionary in maps:
-		for object: ObjectRoth in Roth.get_map(map_info).objects:
+	for map: Map in maps:
+		for object: ObjectRoth in map.objects:
 			if object.sector.get_ref().hidden:
 				object.initialize_mesh()
 	redraw(selected_sectors)
@@ -1158,8 +1153,8 @@ func cut_selected_sectors() -> void:
 		return
 	copy_selected_sectors()
 	var map_groups: Dictionary = _delete_selected_sectors()
-	for map_info: Dictionary in map_groups:
-		Roth.editor_action.emit(map_info, "Cut Sector%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+	for map: Map in map_groups:
+		Roth.editor_action.emit(map, "Cut Sector%s" % ("s" if len(map_groups[map]) > 1 else ""))
 	enter_paste_sectors_mode()
 
 
@@ -1192,7 +1187,7 @@ func complete_paste_sectors_mode() -> void:
 	for sector: Sector in current_pasted_sector_data:
 		new_data.append(sector.duplicate(true))
 	%Map2D.map.add_copied_sectors(new_data, copied_sector_data)
-	Roth.editor_action.emit(%Map2D.map.map_info, "Paste Sectors")
+	Roth.editor_action.emit(%Map2D.map, "Paste Sectors")
 	select_resource(null)
 	for sector: Sector in new_data:
 		select_resource(sector, false)
@@ -1205,12 +1200,12 @@ func delete_selected_objects() -> void:
 	if await Dialog.confirm("Delete %d selected object%s?" % [len(selected_objects), ("s" if len(selected_objects) > 1 else "")], "Confirm Deletion", false):
 		var map_groups: Dictionary = {}
 		for object: ObjectRoth in selected_objects:
-			if object.map_info not in map_groups:
-				map_groups[object.map_info] = []
-			map_groups[object.map_info].append(object)
+			if object.map not in map_groups:
+				map_groups[object.map] = []
+			map_groups[object.map].append(object)
 			object.delete()
-		for map_info: Dictionary in map_groups:
-			Roth.editor_action.emit(map_info, "Delete Object%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete Object%s" % ("s" if len(map_groups[map]) > 1 else ""))
 		select_resource(null)
 
 
@@ -1219,12 +1214,12 @@ func delete_selected_sfx() -> void:
 	if await Dialog.confirm("Delete %d selected sfx%s?" % [len(selected_sfx), ("s" if len(selected_sfx) > 1 else "")], "Confirm Deletion", false):
 		var map_groups: Dictionary = {}
 		for sfx: SFX in selected_sfx:
-			if sfx.map_info not in map_groups:
-				map_groups[sfx.map_info] = []
-			map_groups[sfx.map_info].append(sfx)
+			if sfx.map not in map_groups:
+				map_groups[sfx.map] = []
+			map_groups[sfx.map].append(sfx)
 			sfx.delete()
-		for map_info: Dictionary in map_groups:
-			Roth.editor_action.emit(map_info, "Delete SFX%s" % ("s" if len(map_groups[map_info]) > 1 else ""))
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete SFX%s" % ("s" if len(map_groups[map]) > 1 else ""))
 		select_resource(null)
 
 
@@ -1233,13 +1228,13 @@ func delete_selected_vertices() -> void:
 	if await Dialog.confirm("Delete %d selected %s?" % [len(selected_vertex_nodes), ("vertices" if len(selected_vertex_nodes) > 1 else "vertex")], "Confirm Deletion", false):
 		var map_groups: Dictionary = {}
 		for vertex_node: VertexNode in selected_vertex_nodes:
-			if vertex_node.map_info not in map_groups:
-				map_groups[vertex_node.map_info] = []
-			map_groups[vertex_node.map_info].append(vertex_node)
+			if vertex_node.map not in map_groups:
+				map_groups[vertex_node.map] = []
+			map_groups[vertex_node.map].append(vertex_node)
 			for sector: Sector in vertex_node.sectors:
 				sector.delete_vertex(vertex_node)
-		for map_info: Dictionary in map_groups:
-			Roth.editor_action.emit(map_info, "Delete %s" % ("Vertices" if len(map_groups[map_info]) > 1 else "Vertex"))
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete %s" % ("Vertices" if len(map_groups[map]) > 1 else "Vertex"))
 		select_resource(null)
 		%Map2D.show_vertices(true)
 		%Map2D.queue_redraw()

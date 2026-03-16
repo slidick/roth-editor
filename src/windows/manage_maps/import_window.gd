@@ -163,7 +163,7 @@ func _on_import_button_pressed() -> void:
 				map_info.erase("import")
 				map_info["filepath"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".RAW")
 				map_info["filepath_json"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".json")
-				Roth.close_map.emit(map_info)
+				#Roth.close_map.emit(map_info)
 				Roth.save_raw(map_info, map_raw)
 	if %DBaseCheckBox.button_pressed and "dbase_pack" in map_data:
 		var dbase_name: String = map_data.dbase_pack.name

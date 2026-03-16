@@ -8,21 +8,22 @@ func _ready() -> void:
 	Roth.settings_loaded.connect(_on_roth_settings_loaded)
 
 
-func load_das(das_file: Variant) -> void:
+func load_das(das_variant: Dictionary) -> void:
 	clear_das()
 	var das: Dictionary
-	if typeof(das_file) == TYPE_STRING:
+	if "das_info" not in das_variant:
 		for i in range(%DASFiles.item_count):
-			if %DASFiles.get_item_metadata(i) == das_file:
+			if %DASFiles.get_item_metadata(i) == das_variant:
 				%DASFiles.select(i)
-		das = await Roth.get_das(das_file)
+		das = await Roth.get_das(das_variant)
 		if das.is_empty():
 			return
 	else:
 		for i in range(%DASFiles.item_count):
-			if %DASFiles.get_item_metadata(i).get_file().get_basename() == das_file.name:
+			if %DASFiles.get_item_metadata(i) == das_variant.das_info:
 				%DASFiles.select(i)
-		das = das_file
+		das = das_variant
+	
 	for key: String in das.header:
 		var label := Label.new()
 		label.text = "%s: %s" % [key, das.header[key]]
@@ -51,9 +52,9 @@ func load_das(das_file: Variant) -> void:
 func set_das_list(das_list: Array) -> void:
 	%DASFiles.clear()
 	var index := 0
-	for das: String in das_list:
-		%DASFiles.add_item(das)
-		%DASFiles.set_item_metadata(index, das)
+	for das_info: Dictionary in das_list:
+		%DASFiles.add_item(das_info.name)
+		%DASFiles.set_item_metadata(index, das_info)
 		index += 1
 	%DASFiles.select(-1)
 
@@ -76,7 +77,7 @@ func clear_texture() -> void:
 
 func _on_roth_settings_loaded() -> void:
 	Console.print("Settings Loaded")
-	set_das_list(Roth.das_files)
+	set_das_list(Roth.das_packs)
 
 
 func _on_das_files_item_selected(_index: int) -> void:
@@ -194,13 +195,13 @@ func _on_das_loading_start() -> void:
 	%ProgressBar.value = 0
 
 
-func _on_das_loading_update(progress: float, _das_file: String) -> void:
+func _on_das_loading_update(progress: float, _das_info: Dictionary) -> void:
 	%ProgressBar.value = progress * 100
 
 
-func _on_das_loading_finished(_das: Dictionary) -> void:
+func _on_das_loading_finished(p_das: Dictionary) -> void:
 	if %DASFiles.selected == -1:
-		load_das(_das)
+		load_das(p_das)
 	%ProgressBar.hide()
 
 

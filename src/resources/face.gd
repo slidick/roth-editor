@@ -37,9 +37,9 @@ const FLAG8 = 1 << 7 # When combined with STOP_WALK, only stops movement under a
 var data: Dictionary
 var index: int :
 	get():
-		return Roth.get_map(map_info).faces.find(self)
+		return map.faces.find(self)
 var compiled_index: int = -1
-var map_info: Dictionary
+var map: Map
 
 var sector: Sector
 var sister: WeakRef
@@ -62,11 +62,11 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 	return (byte_value & flag) > 0
 
 
-static func create_new_face(p_map_info: Dictionary, p_sector: Sector, sector_data: Dictionary = {}) -> Face:
+static func create_new_face(p_map: Map, p_sector: Sector, sector_data: Dictionary = {}) -> Face:
 	var initial_data := {
 		"addCollision": 0,
 	}
-	var new_face := Face.new(initial_data, p_map_info)
+	var new_face := Face.new(initial_data, p_map)
 	new_face.sector = p_sector
 	var initial_texture_data := {
 		"unk0x00": 16,
@@ -80,9 +80,9 @@ static func create_new_face(p_map_info: Dictionary, p_sector: Sector, sector_dat
 	return new_face
 
 
-func _init(p_data: Dictionary, p_map_info: Dictionary, p_vertices: Array = [], p_sectors: Array = [], p_texture_mappings: Array = []) -> void:
+func _init(p_data: Dictionary, p_map: Map, p_vertices: Array = [], p_sectors: Array = [], p_texture_mappings: Array = []) -> void:
 	data = p_data
-	map_info = p_map_info
+	map = p_map
 	
 	if not p_sectors.is_empty():
 		sector = p_sectors[data.sectorIndex]
@@ -99,7 +99,7 @@ func _init(p_data: Dictionary, p_map_info: Dictionary, p_vertices: Array = [], p
 
 
 func duplicate() -> Face:
-	var new_face := Face.new(data.duplicate(true), map_info)
+	var new_face := Face.new(data.duplicate(true), map)
 	new_face.v1 = Vector2(v1)
 	new_face.v2 = Vector2(v2)
 	new_face.sector = sector
@@ -121,8 +121,8 @@ func update_horizontal_fit() -> void:
 
 
 func delete() -> void:
-	assert(Roth.get_map(map_info).faces.find(self) != -1)
-	Roth.get_map(map_info).faces.pop_at(Roth.get_map(map_info).faces.find(self))
+	assert(map.faces.find(self) != -1)
+	map.faces.pop_at(map.faces.find(self))
 	node.queue_free()
 	sector = null
 
@@ -358,17 +358,17 @@ func initialize_mesh() -> Node3D:
 			child.queue_free()
 		if hidden:
 			return
-		await _initialize_meshes()
+		_initialize_meshes()
 		return
 	
 	node = Face3D.new()
 	node.ref = self
-	await _initialize_meshes()
+	_initialize_meshes()
 	return node
 
 
 func _initialize_meshes() -> void:
-	var das: Dictionary = await Roth.get_das(map_info.das)
+	var das: Dictionary = map.das
 	assert(not das.is_empty())
 	
 	if not sister:

@@ -145,7 +145,7 @@ func _on_cutscene_list_item_selected(index: int) -> void:
 		rich_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		vbox.add_child(rich_text)
 		
-		var palette: Array = Das.get_default_palette()
+		var palette: Array = Das.DEFAULT_PALETTE
 		for subtitle_line: Dictionary in cutscene.subtitles.entries:
 			if subtitle_line.string.is_empty():
 				continue
@@ -447,7 +447,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 					label.text = "%s" % subtitle.string
 					label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 					label.autowrap_mode = TextServer.AUTOWRAP_WORD
-					var color: Array = Das.get_default_palette()[subtitle.font_color]
+					var color: Array = Das.DEFAULT_PALETTE[subtitle.font_color]
 					label.add_theme_color_override("font_color", Color(color[0], color[1], color[2]))
 					
 					var scroll2 := ScrollContainer.new()

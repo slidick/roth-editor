@@ -19,8 +19,8 @@ func _on_map_loading_started(map_name: String) -> void:
 	#%Status.text = status
 
 
-func _on_map_loading_updated(status: String, progress: float) -> void:
-	%Status.text = status
+func _on_map_loading_updated(das_info: Dictionary, progress: float) -> void:
+	%Status.text = "Loading textures: %s" % das_info.name
 	%ProgressBar.value = progress * 100
 
 

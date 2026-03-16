@@ -95,16 +95,19 @@ func _on_map_tree_cell_selected() -> void:
 	%Vertices.text = "%s" % map.vertices_count
 	%Objects.text = "%s" % len(map.objects)
 	%MapName.text = "%s" % map_info.name
-	%DASFile.text = "%s" % map_info.das
+	%DASFile.text = "%s" % map_info.das_info.name
 	%Commands.text = "%s" % len(map.commands_section.allCommands)
 	%ExportButton.disabled = false
 	%RunButton.disabled = false
 	%OpenButton.disabled = false
+	if "vanilla" in map_info:
+		%ChangeDASButton.hide()
+	else:
+		%ChangeDASButton.show()
 
 
 func _on_map_tree_item_activated() -> void:
-	Roth.load_maps([%MapTree.get_selected().get_metadata(0)])
-	cancel()
+	open()
 
 
 func _on_map_popup_menu_index_pressed(index: int) -> void:
@@ -197,3 +200,13 @@ func _on_export_button_pressed() -> void:
 
 func _on_import_button_pressed() -> void:
 	%Import.import_map()
+
+
+func _on_change_das_button_pressed() -> void:
+	var map_info: Dictionary = %MapTree.get_selected().get_metadata(0)
+	var new_das: Dictionary = await %ChangeDAS.change_das(map_info.das_info)
+	if new_das.is_empty():
+		return
+	map_info.das_info = new_das
+	Roth.save_metadata(map_info)
+	%DASFile.text = new_das.name

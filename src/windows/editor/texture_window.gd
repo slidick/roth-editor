@@ -30,11 +30,11 @@ func _fade_out() -> void:
 
 
 func init_das(p_das: Dictionary) -> void:
-	loaded_das[p_das.name] = {}
-	if p_das.name not in favorites:
-		favorites[p_das.name] = []
-	if p_das.name not in recents:
-		recents[p_das.name] = []
+	loaded_das[p_das.das_info.name] = {}
+	if p_das.das_info.name not in favorites:
+		favorites[p_das.das_info.name] = []
+	if p_das.das_info.name not in recents:
+		recents[p_das.das_info.name] = []
 	for texture: Dictionary in p_das.textures:
 		if not "image" in texture:
 			continue
@@ -52,12 +52,12 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 	else:
 		%WallOptions.show()
 	
-	if p_das.name not in loaded_das:
+	if p_das.das_info.name not in loaded_das:
 		init_das(p_das)
 	
 	
 	%FavoriteItemList.clear()
-	for texture_index: int in favorites[p_das.name]:
+	for texture_index: int in favorites[p_das.das_info.name]:
 		var texture_data: Dictionary = p_das.mapping[texture_index]
 		if is_viable(texture_data):
 			var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
@@ -67,7 +67,7 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 	
 	
 	%RecentItemList.clear()
-	for texture_index: int in recents[p_das.name]:
+	for texture_index: int in recents[p_das.das_info.name]:
 		var texture_data: Dictionary = p_das.mapping[texture_index]
 		if is_viable(texture_data):
 			var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image, Vector2(75,75))
@@ -89,7 +89,7 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 	
 	for i in range(%RotatableItemList.item_count):
 		var texture_data: Dictionary = %RotatableItemList.get_item_metadata(i)
-		if texture_data.index == p_selected_index and texture_data.das.get_file().get_basename() == current_das.name:
+		if texture_data.index == p_selected_index and texture_data.das_info == current_das.das_info:
 			%RotatableItemList.select(i)
 			%RotatableItemList.scroll_to_index(i)
 	if p_selected_index == -1:
@@ -99,7 +99,7 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 
 
 func is_viable(texture_data: Dictionary) -> bool:
-	if texture_data.das.get_file().get_basename() != current_das.name:
+	if texture_data.das_info != current_das.das_info:
 		return false
 	if ( ((only_ceilings or (vert_tileable and horz_tileable))
 		and (texture_data.width > 0
@@ -169,10 +169,10 @@ func _on_favorite_item_list_context_option_selected(index: int, context_index: i
 		0:
 			var texture_index: int = %FavoriteItemList.get_item_metadata(index).index
 			%FavoriteItemList.remove_item(index)
-			var idx: int = favorites[current_das.name].find(texture_index)
+			var idx: int = favorites[current_das.das_info.name].find(texture_index)
 			if idx == -1:
-				idx = favorites[current_das.name].find(float(texture_index))
-			favorites[current_das.name].pop_at(idx)
+				idx = favorites[current_das.das_info.name].find(float(texture_index))
+			favorites[current_das.das_info.name].pop_at(idx)
 			Settings.update_settings("favorite_textures", favorites)
 
 
@@ -187,20 +187,20 @@ func add_to_recents(texture_index: int) -> void:
 	if texture_index == -1:
 		return
 	
-	if (texture_index in recents[current_das.name]
-		or float(texture_index) in recents[current_das.name]
+	if (texture_index in recents[current_das.das_info.name]
+		or float(texture_index) in recents[current_das.das_info.name]
 	):
-		var idx: int = recents[current_das.name].find(texture_index)
+		var idx: int = recents[current_das.das_info.name].find(texture_index)
 		if idx == -1:
-			idx = recents[current_das.name].find(float(texture_index))
-		recents[current_das.name].pop_at(idx)
-		recents[current_das.name].push_front(texture_index)
+			idx = recents[current_das.das_info.name].find(float(texture_index))
+		recents[current_das.das_info.name].pop_at(idx)
+		recents[current_das.das_info.name].push_front(texture_index)
 		return
 	
-	recents[current_das.name].push_front(texture_index)
+	recents[current_das.das_info.name].push_front(texture_index)
 	
-	if len(recents[current_das.name]) > 20:
-		recents[current_das.name].pop_back()
+	if len(recents[current_das.das_info.name]) > 20:
+		recents[current_das.das_info.name].pop_back()
 
 
 func _on_rotatable_item_list_item_activated(index: int) -> void:
@@ -214,11 +214,11 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 	match context_index:
 		0:
 			var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
-			if texture_data.index in favorites[current_das.name]:
+			if texture_data.index in favorites[current_das.das_info.name]:
 				return
 			var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 			%FavoriteItemList.set_item_metadata(idx, texture_data)
-			favorites[current_das.name].append(texture_data.index)
+			favorites[current_das.das_info.name].append(texture_data.index)
 			Settings.update_settings("favorite_textures", favorites)
 
 

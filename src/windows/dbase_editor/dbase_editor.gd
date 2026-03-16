@@ -281,7 +281,7 @@ func refresh_text_2(text_entry: Dictionary) -> void:
 
 
 func get_texture_color_with_color(font_color: int) -> GradientTexture2D:
-		var palette := Das.get_default_palette()
+		var palette := Das.DEFAULT_PALETTE
 		var gradient := Gradient.new()
 		var color := Color(palette[font_color][0] / float(255), palette[font_color][1] / float(255), palette[font_color][2] / float(255))
 		gradient.set_color(0, color)

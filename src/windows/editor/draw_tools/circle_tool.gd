@@ -72,7 +72,7 @@ func handle_input(event: InputEvent) -> void:
 					%Map2D.queue_redraw()
 					%Map2D.check_for_merges([new_sector])
 					%Map2D.show_vertices(false, [new_sector])
-					Roth.editor_action.emit(%Map2D.map.map_info, "Draw Circle Sector")
+					Roth.editor_action.emit(%Map2D.map, "Draw Circle Sector")
 
 
 func draw_box() -> void:

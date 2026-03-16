@@ -134,7 +134,7 @@ func load_sfx_zone_data() -> void:
 		return
 	var zone_index: int = %SFXZoneIndexEdit.value
 	if zone_index > 0:
-		var sfx_zones: Array = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones
+		var sfx_zones: Array = owner.selected_sfx[0].map.sfx_zones
 		
 		if len(sfx_zones) >= zone_index:
 			var zone_data: Dictionary = sfx_zones[zone_index-1]
@@ -232,9 +232,9 @@ func _on_sfx_unk_0x_11_edit_value_changed(value: float) -> void:
 
 func _on_edit_sfx_timer_timeout() -> void:
 	if last_selection_length == 1:
-		Roth.editor_action.emit(owner.selected_sfx[0].map_info, "Edit SFX")
+		Roth.editor_action.emit(owner.selected_sfx[0].map, "Edit SFX")
 	elif last_selection_length > 1:
-		Roth.editor_action.emit(owner.selected_sfx[0].map_info, "Edit SFXs")
+		Roth.editor_action.emit(owner.selected_sfx[0].map, "Edit SFXs")
 
 
 func _on_sfx_play_button_pressed() -> void:
@@ -244,6 +244,8 @@ func _on_sfx_play_button_pressed() -> void:
 
 func _on_select_sfx_button_pressed() -> void:
 	var sfx_entry: Dictionary = await %SFXSelector.select_sfx()
+	if sfx_entry.is_empty():
+		return
 	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx_entry.index)
 	%SFXSoundIndexEdit.set_value_no_signal(sfx_entry.index)
 	_on_sfx_sound_index_edit_value_changed(sfx_entry.index)
@@ -343,7 +345,7 @@ func _on_sfx_add_zone_button_pressed() -> void:
 		"zone3XBoundUpper": 0,
 		"zone3YBoundUpper": 0,
 	}
-	var sfx_zones: Array = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones
+	var sfx_zones: Array = owner.selected_sfx[0].map.sfx_zones
 	sfx_zones.append(zone_data)
 	%SFXZoneIndexEdit.max_value = len(sfx_zones)
 	%SFXZoneIndexEdit.set_value_no_signal(len(sfx_zones))
@@ -351,7 +353,7 @@ func _on_sfx_add_zone_button_pressed() -> void:
 
 
 func _on_sfx_add_sub_zone_button_pressed() -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data.zoneCount += 1
 	if zone_data.zoneCount == 2:
 		zone_data["zone2Dampen"] = 255
@@ -373,97 +375,97 @@ func _on_sfx_add_sub_zone_button_pressed() -> void:
 
 
 func _on_sfx_zone_1x_lower_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone1XBoundLower"] = -int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_1x_upper_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone1XBoundUpper"] = -int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_1y_lower_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone1YBoundLower"] = int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_1y_upper_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone1YBoundUpper"] = int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_2x_lower_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone2XBoundLower"] = -int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_2x_upper_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone2XBoundUpper"] = -int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_2y_lower_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone2YBoundLower"] = int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_2y_upper_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone2YBoundUpper"] = int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_3x_lower_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone3XBoundLower"] = -int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_3x_upper_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone3XBoundUpper"] = -int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_3y_lower_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone3YBoundLower"] = int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_3y_upper_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone3YBoundUpper"] = int(value)
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_1_dampen_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone1Dampen"] = int(value)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_1_flag_1_check_box_toggled(toggled_on: bool) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if toggled_on:
 		zone_data["zone1Flags"] |= (1 << 0)
 	else:
@@ -473,7 +475,7 @@ func _on_sfx_zone_1_flag_1_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_sfx_zone_1_flag_2_check_box_toggled(toggled_on: bool) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if toggled_on:
 		zone_data["zone1Flags"] |= (1 << 1)
 	else:
@@ -482,13 +484,13 @@ func _on_sfx_zone_1_flag_2_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_sfx_zone_2_dampen_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone2Dampen"] = int(value)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_2_flag_1_check_box_toggled(toggled_on: bool) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if toggled_on:
 		zone_data["zone2Flags"] |= (1 << 0)
 	else:
@@ -498,7 +500,7 @@ func _on_sfx_zone_2_flag_1_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_sfx_zone_2_flag_2_check_box_toggled(toggled_on: bool) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if toggled_on:
 		zone_data["zone2Flags"] |= (1 << 1)
 	else:
@@ -507,13 +509,13 @@ func _on_sfx_zone_2_flag_2_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_sfx_zone_3_dampen_spin_box_value_changed(value: float) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone3Dampen"] = int(value)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_zone_3_flag_1_check_box_toggled(toggled_on: bool) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if toggled_on:
 		zone_data["zone3Flags"] |= (1 << 0)
 	else:
@@ -523,7 +525,7 @@ func _on_sfx_zone_3_flag_1_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_sfx_zone_3_flag_2_check_box_toggled(toggled_on: bool) -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if toggled_on:
 		zone_data["zone3Flags"] |= (1 << 1)
 	else:
@@ -532,7 +534,7 @@ func _on_sfx_zone_3_flag_2_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_sfx_zone_2_remove_button_pressed() -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	if zone_data["zoneCount"] == 3:
 		zone_data["zone2Dampen"] = zone_data["zone3Dampen"]
 		zone_data["zone2Flags"] = zone_data["zone3Flags"]
@@ -560,7 +562,7 @@ func _on_sfx_zone_2_remove_button_pressed() -> void:
 
 
 func _on_sfx_zone_3_remove_button_pressed() -> void:
-	var zone_data: Dictionary = Roth.get_map(owner.selected_sfx[0].map_info).sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
+	var zone_data: Dictionary = owner.selected_sfx[0].map.sfx_zones[int(%SFXZoneIndexEdit.value) - 1]
 	zone_data["zone3Dampen"] = 0
 	zone_data["zone3Flags"] = 0
 	zone_data["zone3XBoundLower"] = 0

@@ -14,14 +14,14 @@ func _on_settings_loaded() -> void:
 func enter_draw_mode(force_reload: bool = false) -> void:
 	var texture_presets: Dictionary = Settings.settings.get("texture_presets", {})
 	
-	if current_das != %Map2D.map.map_info.das or force_reload:
+	if current_das != %Map2D.map.map_info.das_info.name or force_reload:
 		var current_preset: String = ""
 		if force_reload:
 			current_preset = %DrawModeTextureOptionButton.get_item_text(%DrawModeTextureOptionButton.get_item_index(%DrawModeTextureOptionButton.get_selected_id()))
-		current_das = %Map2D.map.map_info.das
+		current_das = %Map2D.map.map_info.das_info.name
 		%DrawModeTextureOptionButton.clear()
 		for das: String in texture_presets:
-			if %Map2D.map.map_info.das == das:
+			if %Map2D.map.map_info.das_info.name == das:
 				for preset_name: String in texture_presets[das]:
 					%DrawModeTextureOptionButton.add_item(preset_name)
 					%DrawModeTextureOptionButton.set_item_metadata(%DrawModeTextureOptionButton.item_count-1, texture_presets[das][preset_name])
@@ -134,7 +134,7 @@ func _on_draw_mode_texture_option_button_item_selected(index: int) -> void:
 
 
 func update_texture_options(texture_data: Dictionary) -> void:
-	var das := await Roth.get_das(%Map2D.map.map_info.das)
+	var das: Dictionary = %Map2D.map.das
 	%DrawModeRoofOption.clear()
 	if texture_data.ceiling in das.mapping:
 		%DrawModeRoofOption.add_item( "%s:%s" % [das.mapping[texture_data.ceiling].index, das.mapping[texture_data.ceiling].name] )
@@ -168,7 +168,7 @@ func update_texture_options(texture_data: Dictionary) -> void:
 
 
 func _on_draw_mode_adjust_ceiling_height_button_pressed() -> void:
-	var das := await Roth.get_das(%Map2D.map.map_info.das)
+	var das: Dictionary = %Map2D.map.das
 	var index: int = %DrawModeWallOption.get_selected_metadata()
 	%DrawModeRoofHeightSpinBox.set_value_no_signal(%DrawModeFloorHeightSpinBox.value + (das.mapping[index].width * 2))
 
@@ -189,7 +189,7 @@ func _on_draw_mode_edit_texture_presets_button_pressed() -> void:
 			"floor": %DrawModeFloorOption.get_selected_metadata(),
 			"wall": %DrawModeWallOption.get_selected_metadata(),
 		}
-	var selected_key: Variant = await %TexturePresets.edit_presets(%Map2D.map.map_info.das, selected_preset, texture_data)
+	var selected_key: Variant = await %TexturePresets.edit_presets(%Map2D.map.das, selected_preset, texture_data)
 	enter_draw_mode(true)
 	if selected_key is int:
 		return
@@ -205,7 +205,7 @@ func _on_draw_mode_edit_texture_presets_button_pressed() -> void:
 
 func _on_draw_mode_roof_option_item_selected(index: int) -> void:
 	if index == %DrawModeRoofOption.item_count - 1:
-		var das: Dictionary = await Roth.get_das(%Map2D.map.map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		%Palette.show_palette(das.palette)
 		var palette_index: int = await %Palette.color_selected
 		%DrawModeRoofOption.select(0)
@@ -213,7 +213,7 @@ func _on_draw_mode_roof_option_item_selected(index: int) -> void:
 			return
 		update_texture_options({"ceiling": palette_index + 65280, "floor": %DrawModeFloorOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 	elif index == %DrawModeRoofOption.item_count - 2:
-		var das: Dictionary = await Roth.get_das(%Map2D.map.map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		%Texture.show_texture(das, true)
 		var texture_index: int = await %Texture.texture_selected
 		%DrawModeRoofOption.select(0)
@@ -222,13 +222,13 @@ func _on_draw_mode_roof_option_item_selected(index: int) -> void:
 		update_texture_options({"ceiling": texture_index, "floor": %DrawModeFloorOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 	elif index == %DrawModeRoofOption.item_count - 3:
 		%DrawModeRoofOption.select(0)
-		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		update_texture_options({"ceiling": das.textures[0].index, "floor": %DrawModeFloorOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 
 
 func _on_draw_mode_floor_option_item_selected(index: int) -> void:
 	if index == %DrawModeFloorOption.item_count - 1:
-		var das: Dictionary = await Roth.get_das(%Map2D.map.map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		%Palette.show_palette(das.palette)
 		var palette_index: int = await %Palette.color_selected
 		%DrawModeFloorOption.select(0)
@@ -236,7 +236,7 @@ func _on_draw_mode_floor_option_item_selected(index: int) -> void:
 			return
 		update_texture_options({"floor": palette_index + 65280, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 	elif index == %DrawModeFloorOption.item_count - 2:
-		var das: Dictionary = await Roth.get_das(%Map2D.map.map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		%Texture.show_texture(das, true)
 		var texture_index: int = await %Texture.texture_selected
 		%DrawModeFloorOption.select(0)
@@ -245,13 +245,13 @@ func _on_draw_mode_floor_option_item_selected(index: int) -> void:
 		update_texture_options({"floor": texture_index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 	elif index == %DrawModeFloorOption.item_count - 3:
 		%DrawModeFloorOption.select(0)
-		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		update_texture_options({"floor": das.textures[0].index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 
 
 func _on_draw_mode_wall_option_item_selected(index: int) -> void:
 	if index == %DrawModeWallOption.item_count - 1:
-		var das: Dictionary = await Roth.get_das(%Map2D.map.map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		%Palette.show_palette(das.palette)
 		var palette_index: int = await %Palette.color_selected
 		%DrawModeWallOption.select(0)
@@ -259,7 +259,7 @@ func _on_draw_mode_wall_option_item_selected(index: int) -> void:
 			return
 		update_texture_options({"wall": palette_index + 65280, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
 	elif index == %DrawModeWallOption.item_count - 2:
-		var das: Dictionary = await Roth.get_das(%Map2D.map.map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		%Texture.show_texture(das, false)
 		var texture_index: int = await %Texture.texture_selected
 		%DrawModeWallOption.select(0)
@@ -268,7 +268,7 @@ func _on_draw_mode_wall_option_item_selected(index: int) -> void:
 		update_texture_options({"wall": texture_index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
 	elif index == %DrawModeWallOption.item_count - 3:
 		%DrawModeWallOption.select(0)
-		var das: Dictionary = await Roth.get_das(owner.selected_sectors[0].map_info.das)
+		var das: Dictionary = %Map2D.map.das
 		update_texture_options({"wall": das.textures[0].index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
 
 

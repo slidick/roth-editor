@@ -65,7 +65,7 @@ static func parse_file(file: FileAccess) -> Dictionary:
 		for i in range(0, len(raw_palette), 3):
 			palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
 	else:
-		palette = Das.get_default_palette()
+		palette = Das.DEFAULT_PALETTE
 	
 	# Audio Init
 	var delta_table := Utility.init_delta_table()

@@ -141,7 +141,7 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	%TopTextureOption.clear()
 	%MidTextureOption.clear()
 	%BottomTextureOption.clear()
-	var das := await Roth.get_das(face.map_info.das)
+	var das: Dictionary = face.map.das
 	if face.texture_data.upperTextureIndex in das.mapping:
 		%TopTextureOption.add_item( "%s:%s" % [das.mapping[face.texture_data.upperTextureIndex].index, das.mapping[face.texture_data.upperTextureIndex].name] )
 	elif face.texture_data.upperTextureIndex == 65535:
@@ -239,7 +239,7 @@ func update_selections(p_force_timeout: bool = true) -> void:
 
 func _on_bottom_texture_option_item_selected(index: int) -> void:
 	if index == %BottomTextureOption.item_count - 1:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		%Palette.show_palette(das.palette)
 		%BottomTextureOption.select(0)
 		var palette_index: int = await %Palette.color_selected
@@ -251,7 +251,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 2:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.lowerTextureIndex)
 		%BottomTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
@@ -263,7 +263,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %BottomTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		for face: Face in owner.selected_faces:
 			face.texture_data.lowerTextureIndex = das.textures[0].index
 		update_selections(false)
@@ -275,7 +275,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 
 func _on_mid_texture_option_item_selected(index: int) -> void:
 	if index == %MidTextureOption.item_count - 1:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		%Palette.show_palette(das.palette)
 		%MidTextureOption.select(0)
 		var palette_index: int = await %Palette.color_selected
@@ -287,7 +287,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 2:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.midTextureIndex)
 		%MidTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
@@ -299,7 +299,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %MidTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		for face: Face in owner.selected_faces:
 			face.texture_data.midTextureIndex = das.textures[0].index
 		update_selections(false)
@@ -311,7 +311,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 
 func _on_top_texture_option_item_selected(index: int) -> void:
 	if index == %TopTextureOption.item_count - 1:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		%Palette.show_palette(das.palette)
 		%TopTextureOption.select(0)
 		var palette_index: int = await %Palette.color_selected
@@ -323,7 +323,7 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 2:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.upperTextureIndex)
 		%TopTextureOption.select(0)
 		var texture_index: int = await %Texture.texture_selected
@@ -335,7 +335,7 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		owner.redraw(owner.selected_faces)
 		%EditFaceTimer.start()
 	elif index == %TopTextureOption.item_count - 3:
-		var das: Dictionary = await Roth.get_das(owner.selected_faces[0].map_info.das)
+		var das: Dictionary = owner.selected_faces[0].map.das
 		for face: Face in owner.selected_faces:
 			face.texture_data.upperTextureIndex = das.textures[0].index
 		update_selections(false)
@@ -582,10 +582,10 @@ func _on_sister_edit_text_changed(new_text: String) -> void:
 			face.sister = null
 			return
 		var new_sister_index: int = int(new_text)
-		if new_sister_index < 0 or new_sister_index >= len(Roth.get_map(face.map_info).faces):
+		if new_sister_index < 0 or new_sister_index >= len(face.map.faces):
 			face.sister = null
 			return
-		var new_sister: Face = Roth.get_map(face.map_info).faces[new_sister_index]
+		var new_sister: Face = face.map.faces[new_sister_index]
 		face.sister = weakref(new_sister)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
@@ -603,6 +603,6 @@ func _on_flip_face_button_pressed() -> void:
 
 func _on_edit_face_timer_timeout() -> void:
 	if last_selection_length == 1:
-		Roth.editor_action.emit(owner.selected_faces[0].map_info, "Edit Face")
+		Roth.editor_action.emit(owner.selected_faces[0].map, "Edit Face")
 	elif last_selection_length > 1:
-		Roth.editor_action.emit(owner.selected_faces[0].map_info, "Edit Faces")
+		Roth.editor_action.emit(owner.selected_faces[0].map, "Edit Faces")
