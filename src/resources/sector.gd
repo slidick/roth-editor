@@ -505,8 +505,8 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 		var u: float = float(v.x - min_x) / (max_x - min_x)
 		var vv: float = float(v.y - min_y) / (max_y - min_y)
 		mesh_tool.set_uv(Vector2(u,vv))
-		mesh_tool.add_vertex(Vector3(v.x/100.0, y_pos/100.0, v.y/100.0))
-		collision_points.append(Vector3(v.x/100.0, y_pos/100.0, v.y/100.0))
+		mesh_tool.add_vertex(Vector3(v.x/Roth.SCALE_3D_WORLD, y_pos/Roth.SCALE_3D_WORLD, v.y/Roth.SCALE_3D_WORLD))
+		collision_points.append(Vector3(v.x/Roth.SCALE_3D_WORLD, y_pos/Roth.SCALE_3D_WORLD, v.y/Roth.SCALE_3D_WORLD))
 
 	var mesh: ArrayMesh = mesh_tool.commit()
 	
