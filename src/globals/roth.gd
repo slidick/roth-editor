@@ -1078,6 +1078,7 @@ func duplicate_sfx_pack(p_sfx_info: Dictionary, new_name: String) -> void:
 	sfx_info.name = new_name
 	sfx_info.active = false
 	sfx_info.erase("vanilla")
+	sfx_info.filepath = ROTH_CUSTOM_SFX_DIRECTORY.path_join(new_name)+"/FXSCRIPT.SFX"
 	var copy_dir: String = ""
 	var new_dir: String = ROTH_CUSTOM_SFX_DIRECTORY.path_join(new_name)
 	DirAccess.make_dir_recursive_absolute(new_dir)
@@ -1104,6 +1105,7 @@ func rename_sfx_pack(p_sfx_info: Dictionary, new_name: String) -> void:
 		ROTH_CUSTOM_SFX_DIRECTORY.path_join(new_name)
 	)
 	p_sfx_info.name = new_name
+	p_sfx_info.filepath = ROTH_CUSTOM_SFX_DIRECTORY.path_join(new_name)+"/FXSCRIPT.SFX"
 	Roth.settings_loaded.emit()
 
 
@@ -1115,7 +1117,7 @@ func delete_sfx_pack(p_sfx_info: Dictionary) -> void:
 		for sfx_info: Dictionary in sfx_packs:
 			if sfx_info.name == "Original":
 				sfx_info.active = true
-				Settings.update_settings("options", {"active_dbase": "Original"})
+				Settings.update_settings("options", {"active_sfx": "Original"})
 	Roth.settings_loaded.emit()
 
 
