@@ -568,7 +568,6 @@ environment = SubResource("Environment_kc8ui")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="2" unique_id=1803112455]
 transform = Transform3D(-0.866025, -0.469846, 0.17101, 0, 0.34202, 0.939692, -0.5, 0.813798, -0.296198, 0, 0, 0)
-shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="3" unique_id=208104690]
 unique_name_in_owner = true
