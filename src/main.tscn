@@ -14,8 +14,9 @@
 [ext_resource type="PackedScene" uid="uid://dq8sxf6oabjnm" path="res://src/windows/extras/extras_window.tscn" id="11_tb146"]
 [ext_resource type="PackedScene" uid="uid://cg7cw5eoa4pcd" path="res://src/windows/sfx_editor/sfx_editor_window.tscn" id="12_d3u4l"]
 [ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
-[ext_resource type="PackedScene" uid="uid://bfe5dwpkm1ius" path="res://src/windows/image_editor_window.tscn" id="13_tb146"]
-[ext_resource type="PackedScene" uid="uid://3uxl7yogw1g2" path="res://src/windows/das_editor/das_editor_window.tscn" id="14_tb146"]
+[ext_resource type="PackedScene" uid="uid://bfe5dwpkm1ius" path="res://src/windows/graphics/backdrop_editor_window.tscn" id="13_tb146"]
+[ext_resource type="PackedScene" uid="uid://3uxl7yogw1g2" path="res://src/windows/das_editor/das_editor_window.tscn" id="14_e7lu8"]
+[ext_resource type="PackedScene" uid="uid://berunrqt716n1" path="res://src/windows/graphics/icons_editor_window.tscn" id="14_tb146"]
 
 [node name="Main" type="Control" unique_id=2029515927]
 layout_mode = 3
@@ -107,7 +108,7 @@ theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_accelerator_color = Color(0.244148, 0.280182, 0.530773, 1)
 theme_override_styles/panel = ExtResource("5_5mrjc")
-item_count = 11
+item_count = 12
 item_0/text = "Manage Maps"
 item_0/id = 3
 item_1/text = "Manage DBase Packs"
@@ -115,21 +116,23 @@ item_1/id = 7
 item_2/text = "Manage SFX Packs"
 item_2/id = 8
 item_3/text = "Manage DAS Files"
-item_3/id = 10
-item_4/text = "Export Backdrop"
+item_3/id = 11
+item_4/text = "Create BACKDROP.RAW"
 item_4/id = 9
-item_5/id = 4
-item_5/separator = true
-item_6/text = "Run Maps"
-item_6/id = 7
-item_7/id = 5
-item_7/separator = true
-item_8/text = "Settings"
-item_8/id = 0
-item_9/id = 1
-item_9/separator = true
-item_10/text = "Quit"
-item_10/id = 2
+item_5/text = "Create ICONS.ALL"
+item_5/id = 10
+item_6/id = 4
+item_6/separator = true
+item_7/text = "Run Maps"
+item_7/id = 7
+item_8/id = 5
+item_8/separator = true
+item_9/text = "Settings"
+item_9/id = 0
+item_10/id = 1
+item_10/separator = true
+item_11/text = "Quit"
+item_11/id = 2
 
 [node name="Tools" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1812286878]
 unique_name_in_owner = true
@@ -302,7 +305,7 @@ offset_bottom = 338.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackdropExporter" parent="Windows" unique_id=282163287 instance=ExtResource("13_tb146")]
+[node name="BackdropEditor" parent="Windows" unique_id=312449859 instance=ExtResource("13_tb146")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -318,7 +321,7 @@ offset_bottom = 400.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ManageDAS" parent="Windows" unique_id=452268762 instance=ExtResource("14_tb146")]
+[node name="ManageDAS" parent="Windows" unique_id=452268762 instance=ExtResource("14_e7lu8")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -327,14 +330,30 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -677.5
-offset_top = -402.0
-offset_right = 677.5
-offset_bottom = 402.0
+offset_left = -636.0
+offset_top = -385.0
+offset_right = 636.0
+offset_bottom = 385.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AlwaysInFrontWindows" type="Control" parent="." unique_id=1400528388]
+[node name="IconsEditor" parent="Windows" unique_id=1543962257 instance=ExtResource("14_tb146")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -593.0
+offset_top = -357.0
+offset_right = 593.0
+offset_bottom = 357.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AlwaysInFrontWindows" type="Control" parent="." unique_id=1615074608]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

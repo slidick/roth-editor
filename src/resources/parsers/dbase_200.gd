@@ -57,7 +57,7 @@ static func parse_full() -> Array:
 			IMGTYPE_RLE:
 				var image: Dictionary = {}
 				image.offset = file.get_position() - 12
-				image.image = Parser.decode_rle_img(rle_image_hdr, file, palette)
+				image.image = RLE.decode_rle_img(rle_image_hdr, file, palette)
 				dbase200.append(image)
 			#IMGTYPE_ROWBGN_LEN:
 				#images.append(_decode_row_bgn_img(rle_image_hdr, file, palette))
@@ -103,7 +103,7 @@ static func get_at_offset(offset: int) -> Variant:
 	var rle_image_hdr := Parser.parse_section(file, RLE_IMG_HDR)
 	match rle_image_hdr["imgType"]:
 		IMGTYPE_RLE:
-			return Parser.decode_rle_img(rle_image_hdr, file, palette)
+			return RLE.decode_rle_img(rle_image_hdr, file, palette)
 		IMGTYPE_ROWBGN_LEN:
 			return _decode_row_bgn_img(rle_image_hdr, file, palette)
 	return

@@ -6,7 +6,8 @@ enum Main {
 	ManageDBase,
 	ManageSFX,
 	ManageDAS,
-	ExportBackdrop,
+	CreateBackdrop,
+	CreateIcons,
 	Sep0,
 	TestMap,
 	Sep1,
@@ -150,8 +151,10 @@ func _on_main_index_pressed(index: int) -> void:
 			%ManageSFX.toggle(true)
 		Main.ManageDAS:
 			%ManageDAS.toggle(true)
-		Main.ExportBackdrop:
-			%BackdropExporter.toggle(true)
+		Main.CreateBackdrop:
+			%BackdropEditor.toggle(true)
+		Main.CreateIcons:
+			%IconsEditor.toggle(true)
 		Main.Settings:
 			%Settings.toggle(true)
 		Main.Quit:

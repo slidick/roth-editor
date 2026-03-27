@@ -1,0 +1,133 @@
+[gd_scene format=3 uid="uid://453133w4dgmj"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_5g3s7"]
+[ext_resource type="Script" uid="uid://mp2c1pmgywa8" path="res://src/windows/graphics/image_editor_window.gd" id="2_2gdtu"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_v7f7k"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_vgo61"]
+[ext_resource type="Texture2D" uid="uid://cgxhrl6daxi3u" path="res://assets/icons/color-picker.svg" id="5_db6r7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5his"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.20784314)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="ImageEditorWindow" unique_id=1671538512 instance=ExtResource("1_5g3s7")]
+offset_right = 1280.0
+offset_bottom = 800.0
+theme = ExtResource("2_v7f7k")
+script = ExtResource("2_2gdtu")
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("3_vgo61")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=163977548]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=616865155]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1478674404]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1213611274]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" index="0" unique_id=515917833]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" index="0" unique_id=738118519]
+handle_input_locally = false
+physics_object_picking = true
+physics_object_picking_sort = true
+physics_object_picking_first_only = true
+size = Vector2i(1206, 655)
+render_target_update_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1218851620]
+unique_name_in_owner = true
+texture_filter = 1
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 3
+stretch_mode = 2
+
+[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="1" unique_id=1889443076]
+unique_name_in_owner = true
+zoom = Vector2(5, 5)
+
+[node name="PositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" index="1" unique_id=139147548]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1350186580]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="0" unique_id=1467783165]
+layout_mode = 2
+
+[node name="ColorPickerButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer" index="0" unique_id=606875954]
+layout_mode = 2
+icon = ExtResource("5_db6r7")
+
+[node name="PaletteContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="1" unique_id=1977510581]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_q5his")
+
+[node name="PreviewTextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="2" unique_id=2097779496]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+stretch_mode = 5
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1374710611]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=1061933318]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=405171608]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Cancel"
+
+[node name="ResetButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1693275732]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Reset"
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=1756576023]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Save"
+
+[connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
+[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
+[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/TextureRect" to="." method="_on_texture_rect_gui_input"]
+[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/TextureRect" to="." method="_on_texture_rect_mouse_exited"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/ColorPickerButton" to="." method="_on_color_picker_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

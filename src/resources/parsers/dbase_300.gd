@@ -240,10 +240,10 @@ static func parse_rle_image(file: FileAccess) -> Image:
 			palette = []
 			for i in range(0, len(raw_palette), 3):
 				palette.append([raw_palette[i+0], raw_palette[i+1], raw_palette[i+2]])
-			return Parser.decode_rle_img(header, file, palette, false)
+			return RLE.decode_rle_img(header, file, palette, false)
 		FILETYPE_IMG3:
 			header = Parser.parse_section(file, IMG3_HDR)
 		FILETYPE_IMG7:
 			header = Parser.parse_section(file, IMG7_HDR)
 	
-	return Parser.decode_rle_img(header, file, palette)
+	return RLE.decode_rle_img(header, file, palette)
