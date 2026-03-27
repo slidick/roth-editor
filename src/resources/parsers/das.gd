@@ -1,6 +1,7 @@
 extends Object
 class_name Das
 
+
 const DEFAULT_PALETTE := [
 	[0, 0, 0], [0, 0, 0], [4, 69, 32], [73, 109, 81], [0, 81, 40], [53, 101, 65], [8, 61, 28], [0, 0, 0], [69, 49, 49], [0, 0, 0], [61, 40, 36], [0, 0, 0], [190, 130, 73], [0, 0, 0], [32, 16, 20], [0, 0, 0],
 	[45, 130, 93], [0, 0, 0], [61, 45, 101], [0, 0, 0], [85, 45, 12], [0, 0, 0], [101, 121, 158], [0, 0, 0], [53, 138, 93], [0, 0, 0], [69, 36, 16], [0, 0, 0], [65, 61, 57], [0, 0, 0], [223, 174, 134], [0, 0, 0],
@@ -19,32 +20,8 @@ const DEFAULT_PALETTE := [
 	[121, 146, 174], [101, 121, 158], [0, 85, 40], [162, 235, 85], [49, 97, 53], [16, 113, 93], [89, 105, 142], [85, 85, 146], [81, 85, 138], [85, 89, 150], [69, 69, 130], [97, 113, 142], [235, 158, 81], [251, 219, 0], [24, 202, 93], [255, 231, 0],
 	[81, 223, 69], [20, 4, 0], [251, 198, 36], [0, 0, 0], [231, 134, 40], [0, 0, 0], [247, 125, 28], [0, 0, 0], [255, 202, 81], [0, 0, 0], [255, 170, 61], [0, 0, 0], [194, 138, 49], [0, 0, 0], [73, 85, 105], [113, 0, 202]
 ]
+
 const DEFAULT_RAW_PALETTE: Array = [0, 0, 0, 0, 0, 0, 1, 17, 8, 18, 27, 20, 0, 20, 10, 13, 25, 16, 2, 15, 7, 0, 0, 0, 17, 12, 12, 0, 0, 0, 15, 10, 9, 0, 0, 0, 47, 32, 18, 0, 0, 0, 8, 4, 5, 0, 0, 0, 11, 32, 23, 0, 0, 0, 15, 11, 25, 0, 0, 0, 21, 11, 3, 0, 0, 0, 25, 30, 39, 0, 0, 0, 13, 34, 23, 0, 0, 0, 17, 9, 4, 0, 0, 0, 16, 15, 14, 0, 0, 0, 55, 43, 33, 0, 0, 0, 63, 44, 25, 50, 35, 19, 37, 26, 14, 24, 17, 9, 12, 8, 4, 0, 0, 0, 52, 28, 12, 46, 24, 10, 40, 21, 9, 34, 18, 7, 28, 15, 6, 22, 12, 4, 16, 8, 3, 11, 5, 2, 5, 2, 1, 0, 0, 0, 43, 49, 58, 16, 11, 23, 45, 51, 60, 11, 9, 20, 15, 15, 20, 7, 7, 10, 0, 0, 0, 28, 20, 47, 24, 17, 41, 20, 14, 35, 17, 12, 29, 13, 9, 23, 10, 7, 17, 6, 4, 11, 2, 1, 5, 0, 0, 0, 63, 63, 63, 58, 58, 58, 54, 54, 54, 50, 50, 50, 46, 46, 46, 41, 41, 41, 37, 37, 37, 33, 33, 33, 29, 29, 29, 24, 24, 24, 20, 20, 20, 16, 16, 16, 12, 12, 12, 7, 7, 7, 3, 3, 3, 0, 0, 0, 47, 53, 62, 0, 0, 0, 39, 46, 59, 0, 0, 0, 63, 63, 0, 57, 57, 0, 51, 51, 0, 45, 45, 0, 39, 39, 0, 34, 34, 0, 28, 28, 0, 22, 22, 0, 16, 16, 0, 10, 10, 0, 5, 5, 0, 0, 0, 0, 63, 56, 47, 33, 29, 25, 63, 60, 51, 28, 26, 24, 61, 51, 40, 0, 0, 0, 0, 0, 0, 63, 0, 0, 55, 0, 0, 47, 0, 0, 39, 0, 0, 31, 0, 0, 23, 0, 0, 15, 0, 0, 7, 0, 0, 0, 0, 0, 58, 46, 36, 51, 40, 32, 45, 35, 28, 38, 30, 23, 32, 25, 19, 25, 20, 15, 18, 14, 11, 12, 9, 7, 5, 4, 3, 0, 0, 0, 53, 32, 27, 26, 15, 13, 0, 0, 0, 61, 21, 0, 53, 18, 0, 45, 15, 0, 37, 12, 0, 30, 10, 0, 22, 7, 0, 14, 4, 0, 7, 1, 0, 0, 0, 0, 0, 43, 23, 0, 38, 20, 0, 33, 17, 0, 28, 15, 0, 23, 12, 0, 18, 9, 0, 13, 7, 0, 9, 4, 0, 4, 1, 0, 0, 0, 14, 7, 3, 14, 29, 22, 19, 10, 3, 11, 32, 23, 0, 8, 13, 14, 33, 23, 32, 14, 5, 13, 34, 23, 48, 38, 31, 55, 43, 33, 25, 14, 4, 20, 11, 25, 19, 5, 0, 24, 15, 35, 15, 12, 9, 22, 6, 33, 21, 17, 12, 27, 17, 37, 28, 23, 17, 29, 19, 39, 2, 11, 6, 33, 22, 41, 27, 8, 0, 35, 24, 44, 4, 2, 9, 12, 10, 20, 9, 6, 12, 14, 10, 19, 8, 5, 15, 12, 11, 18, 15, 14, 15, 9, 9, 9, 24, 19, 11, 11, 11, 11, 26, 21, 15, 6, 6, 6, 10, 4, 2, 30, 24, 18, 12, 6, 3, 22, 18, 16, 35, 28, 21, 14, 11, 16, 41, 33, 24, 11, 10, 15, 21, 15, 10, 9, 10, 15, 18, 18, 17, 15, 12, 18, 22, 22, 22, 15, 11, 17, 13, 13, 13, 20, 43, 36, 14, 10, 9, 13, 37, 34, 24, 9, 1, 19, 39, 33, 20, 6, 0, 17, 13, 32, 17, 4, 0, 23, 14, 38, 13, 6, 3, 36, 20, 9, 0, 16, 8, 44, 22, 8, 11, 10, 17, 0, 0, 31, 32, 24, 13, 32, 27, 57, 30, 21, 10, 35, 32, 58, 42, 29, 16, 35, 39, 62, 47, 46, 55, 0, 0, 0, 35, 43, 55, 0, 0, 0, 32, 40, 53, 0, 0, 0, 28, 35, 52, 0, 0, 0, 30, 36, 43, 25, 30, 39, 0, 21, 10, 40, 58, 21, 12, 24, 13, 4, 28, 23, 22, 26, 35, 21, 21, 36, 20, 21, 34, 21, 22, 37, 17, 17, 32, 24, 28, 35, 58, 39, 20, 62, 54, 0, 6, 50, 23, 63, 57, 0, 20, 55, 17, 5, 1, 0, 62, 49, 9, 0, 0, 0, 57, 33, 10, 0, 0, 0, 61, 31, 7, 0, 0, 0, 63, 50, 20, 0, 0, 0, 63, 42, 15, 0, 0, 0, 48, 34, 12, 0, 0, 0, 18, 21, 26, 28, 0, 50]
-const SECOND__RAW_PALETTE: Array = [0, 0, 0, 0, 0, 0, 1, 17, 8, 18, 27, 20, 0, 20, 10, 13, 25, 16, 2, 15, 7, 0, 0, 0, 17, 12, 12, 0, 0, 0, 15, 10, 9, 0, 0, 0, 47, 32, 18, 0, 0, 0, 8, 4, 5, 0, 0, 0, 11, 32, 23, 0, 0, 0, 15, 11, 25, 0, 0, 0, 21, 11, 3, 0, 0, 0, 25, 30, 39, 0, 0, 0, 13, 34, 23, 0, 0, 0, 17, 9, 4, 0, 0, 0, 16, 15, 14, 0, 0, 0, 55, 43, 33, 0, 0, 0, 63, 44, 25, 50, 35, 19, 37, 26, 14, 24, 17, 9, 12, 8, 4, 0, 0, 0, 52, 28, 12, 46, 24, 10, 40, 21, 9, 34, 18, 7, 28, 15, 6, 22, 12, 4, 16, 8, 3, 11, 5, 2, 5, 2, 1, 0, 0, 0, 43, 49, 58, 16, 11, 23, 45, 51, 60, 11, 9, 20, 15, 15, 20, 7, 7, 10, 0, 0, 0, 28, 20, 47, 24, 17, 41, 20, 14, 35, 17, 12, 29, 13, 9, 23, 10, 7, 17, 6, 4, 11, 2, 1, 5, 0, 0, 0, 63, 63, 63, 58, 58, 58, 54, 54, 54, 50, 50, 50, 46, 46, 46, 41, 41, 41, 37, 37, 37, 33, 33, 33, 29, 29, 29, 24, 24, 24, 20, 20, 20, 16, 16, 16, 12, 12, 12, 7, 7, 7, 3, 3, 3, 0, 0, 0, 47, 53, 62, 0, 0, 0, 39, 46, 59, 0, 0, 0, 63, 63, 0, 57, 57, 0, 51, 51, 0, 45, 45, 0, 39, 39, 0, 34, 34, 0, 28, 28, 0, 22, 22, 0, 16, 16, 0, 10, 10, 0, 5, 5, 0, 0, 0, 0, 63, 56, 47, 33, 29, 25, 63, 60, 51, 28, 26, 24, 61, 51, 40, 0, 0, 0, 0, 0, 0, 63, 0, 0, 55, 0, 0, 47, 0, 0, 39, 0, 0, 31, 0, 0, 23, 0, 0, 15, 0, 0, 7, 0, 0, 0, 0, 0, 58, 46, 36, 51, 40, 32, 45, 35, 28, 38, 30, 23, 32, 25, 19, 25, 20, 15, 18, 14, 11, 12, 9, 7, 5, 4, 3, 0, 0, 0, 53, 32, 27, 26, 15, 13, 0, 0, 0, 61, 21, 0, 53, 18, 0, 45, 15, 0, 37, 12, 0, 30, 10, 0, 22, 7, 0, 14, 4, 0, 7, 1, 0, 0, 0, 0, 0, 43, 23, 0, 38, 20, 0, 33, 17, 0, 28, 15, 0, 23, 12, 0, 18, 9, 0, 13, 7, 0, 9, 4, 0, 4, 1, 0, 0, 0, 14, 7, 3, 14, 29, 22, 19, 10, 3, 11, 32, 23, 0, 8, 13, 14, 33, 23, 32, 14, 5, 13, 34, 23, 48, 38, 31, 55, 43, 33, 25, 14, 4, 20, 11, 25, 19, 5, 0, 24, 15, 35, 15, 12, 9, 22, 6, 33, 21, 17, 12, 27, 17, 37, 28, 23, 17, 29, 19, 39, 2, 11, 6, 33, 22, 41, 27, 8, 0, 35, 24, 44, 4, 2, 9, 12, 10, 20, 9, 6, 12, 14, 10, 19, 8, 5, 15, 12, 11, 18, 15, 14, 15, 9, 9, 9, 24, 19, 11, 11, 11, 11, 26, 21, 15, 6, 6, 6, 10, 4, 2, 30, 24, 18, 12, 6, 3, 22, 18, 16, 35, 28, 21, 14, 11, 16, 41, 33, 24, 11, 10, 15, 21, 15, 10, 9, 10, 15, 18, 18, 17, 15, 12, 18, 22, 22, 22, 15, 11, 17, 13, 13, 13, 20, 43, 36, 14, 10, 9, 13, 37, 34, 24, 9, 1, 19, 39, 33, 20, 6, 0, 17, 13, 32, 17, 4, 0, 23, 14, 38, 13, 6, 3, 36, 20, 9, 0, 16, 8, 44, 22, 8, 11, 10, 17, 0, 0, 31, 32, 24, 13, 32, 27, 57, 30, 21, 10, 35, 32, 58, 42, 29, 16, 35, 39, 62, 47, 46, 55, 0, 0, 0, 35, 43, 55, 0, 0, 0, 32, 40, 53, 0, 0, 0, 28, 35, 52, 0, 0, 0, 30, 36, 43, 25, 30, 39, 0, 21, 10, 40, 58, 21, 12, 24, 13, 4, 28, 23, 22, 26, 35, 21, 21, 36, 20, 21, 34, 21, 22, 37, 17, 17, 32, 24, 28, 35, 58, 39, 20, 62, 54, 0, 6, 50, 23, 63, 57, 0, 20, 55, 17, 0, 0, 0, 62, 49, 9, 0, 0, 0, 57, 33, 10, 0, 0, 0, 61, 31, 7, 0, 0, 0, 63, 50, 20, 0, 0, 0, 63, 42, 15, 0, 0, 0, 48, 34, 12, 0, 0, 0, 18, 21, 26, 28, 0, 50]
-
-
-enum IMG_BASIC_TYPES {
-	PLAIN_DATA =            0x02,
-	PLAIN_DATA_2 =          0x1A,
-	PLAIN_DATA_3 =          0x18,
-	PLAIN_DATA_4 =          0x04,
-	PLAIN_DATA_5 =          0x1C,
-	PLAIN_DATA_6 =          0x06,
-	PLAIN_DATA_7 =          0x0A,
-	PLAIN_DATA_8 =          0x0C,
-	PLAIN_DATA_9 =          0x00,
-	PLAIN_DATA_FLIPPED =    0x10,
-	PLAIN_DATA_FLIPPED_2 =  0x12,
-	PLAIN_DATA_FLIPPED_3 =  0x14,
-	PLAIN_DATA_FLIPPED_4 =  0x30,
-	COMPRESSED =            0x11,
-	COMPRESSED_2 =          0x13,
-	COMPRESSED_3 =          0x31,
-	COMPRESSED_4 =          0x17,
-	COMPRESSED_5 =          0x33,
-	COMPRESSED_6 =          0x03
-}
-
 
 const DAS_HEADER := {
 	das_id_str = [Parser.Type.Char,Parser.Type.Char,Parser.Type.Char,Parser.Type.Char], # "DASP"
@@ -74,8 +51,6 @@ const DAS_HEADER := {
 const FILE_NAMES_HEADER := {
 	section1_element_count = Parser.Type.Word,
 	section2_element_count = Parser.Type.Word,
-	#section1_array = Parser.Type.Array,
-	#section2_array = Parser.Type.Array,
 }
 
 const FILE_NAMES_ENTRY := {
@@ -90,11 +65,6 @@ const FAT_ENTRY := {
 	size = Parser.Type.Word,
 	flags_1 = Parser.Type.Byte,
 	flags_2 = Parser.Type.Byte,
-}
-
-const IMAGE_COMMsON_HEADER := {
-	modifier = Parser.Type.Byte,
-	image_type = Parser.Type.Byte,
 }
 
 const IMAGE_STANDARD_HEADER := {
@@ -278,10 +248,9 @@ const THREE_DIMENSIONAL_OBJECT_FACE_HEADER := {
 	edge_count = Parser.Type.Word,
 }
 
-static var loaded_das := {}
-
 
 static func load_das(das_info: Dictionary) -> Dictionary:
+	Utility.deinit_shader()
 	Roth.das_loading_started.emit()
 	var thread := Thread.new()
 	Console.print("Loading das: %s" % das_info.filepath)
@@ -291,52 +260,393 @@ static func load_das(das_info: Dictionary) -> Dictionary:
 	return das
 
 
-static func _load_das_thread(das_info: Dictionary) -> void:
-	#var das: Dictionary = _parse_das(das_file)
-	var palette: Array = test_for_palette(das_info)
-	var das: Dictionary = RothExt.load_das(das_info, func (percent: float) -> void: Roth.das_loading_updated.emit(percent, das_info), palette)
-	Roth.das_loading_finished.emit.call_deferred(das)
-
-
-static func test_for_palette(das_info: Dictionary) -> Array:
+static func _load_das_thread(das_info: Dictionary) -> Dictionary:
 	var file := FileAccess.open(das_info.filepath, FileAccess.READ)
-	var das_header: Dictionary = Parser.parse_section(file, DAS_HEADER)
-	var palette: Array = Array()
-	if das_header["palette_offset"] == 0:
-		palette = DEFAULT_PALETTE
-	return palette
-
-
-static func _parse_palette(file: FileAccess, offset: int) -> Dictionary:
-	if offset == 0:
-		return {
-			palette = DEFAULT_PALETTE,
-			raw_palette = DEFAULT_RAW_PALETTE,
-		}
-	var file_position := file.get_position()
-	file.seek(offset)
-	var palette: Array = []
-	var raw_palette: PackedByteArray = file.get_buffer(256*3)
-	for i in range(0, len(raw_palette), 3):
-		palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
-	file.seek(file_position)
-	return {
-		palette = palette,
-		raw_palette = raw_palette,
+	var das: Dictionary = {
+		"das_info": das_info,
+		"textures": [],
+		"mapping": {},
 	}
+	
+	# Header
+	var header: Dictionary = Parser.parse_section(file, DAS_HEADER)
+	das.header = header
+	
+	# Palette
+	das.merge(_parse_palette(file, header.palette_offset))
+	
+	# Monster Mapping Section
+	file.seek(header.monster_mapping_section_offset)
+	var monster_mappings: Array = []
+	for i in range(header.monster_mapping_section_size / 104):
+		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
+		monster_mappings.append(monster_mapping)
+	das.monster_mappings = monster_mappings
+	
+	# Directional Objects
+	var directional_mappings: Array = []
+	for i in range(header.directional_object_table_size/20):
+		file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
+		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+		directional_mappings.append(directional_mapping)
+	das.directional_object_mappings = directional_mappings
+	
+	# Filenames
+	file.seek(header.filenames_offset)
+	var filenames_header: Dictionary = Parser.parse_section(file, FILE_NAMES_HEADER)
+	for i in range(filenames_header.section1_element_count):
+		var entry: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
+		das.textures.append(entry)
+	for i in range(filenames_header.section2_element_count):
+		var entry: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
+		das.textures.append(entry)
+	
+	# Load textures
+	var i: int = 0
+	for texture: Dictionary in das.textures:
+		texture["das_info"] = das.das_info
+		das.mapping[texture.index] = _load_texture_from_file(file, texture, das)
+		i += 1
+		Roth.das_loading_updated.emit.call_deferred(float(i) / len(das.textures), das_info)
+	Roth.das_loading_finished.emit.call_deferred(das)
+	Utility.deinit_shader()
+	return das
 
 
-static func _parse_palette_shading(file: FileAccess, offset: int) -> Array:
-	var palette_shading_tables := []
-	file.seek(offset+2+(256*3))
-	for i in range(322):
-		var table := []
-		for j in range(256):
-			table.append(file.get_8())
-		palette_shading_tables.append(table)
-	return palette_shading_tables
+static func get_index_from_das(das_info: Dictionary, index: int, p_range: int = 1) -> Array:
+	#print("Getting index: %d from das: %s" %[index, das_info.name])
+	
+	# Init
+	var das: Dictionary = {
+		das_info = das_info
+	}
+	var file := FileAccess.open(das_info.filepath, FileAccess.READ)
+	
+	# Header
+	var header: Dictionary = Parser.parse_section(file, DAS_HEADER)
+	das.header = header
+	
+	# Palette
+	das.merge(_parse_palette(file, header.palette_offset))
+	
+	# Monster Mapping Section
+	file.seek(header.monster_mapping_section_offset)
+	var monster_mappings: Array = []
+	for i in range(header.monster_mapping_section_size / 104):
+		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
+		monster_mappings.append(monster_mapping)
+	das.monster_mappings = monster_mappings
+	
+	# Directional Objects
+	var directional_mappings: Array = []
+	for i in range(header.directional_object_table_size/20):
+		file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
+		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+		directional_mappings.append(directional_mapping)
+	das.directional_object_mappings = directional_mappings
+	
+	# Textures
+	var mappings := {}
+	var texture_array: Array = []
+	file.seek(header.filenames_offset)
+	var filenames_header: Dictionary = Parser.parse_section(file, FILE_NAMES_HEADER)
+	for i in range(filenames_header.section1_element_count):
+		var entry: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
+		mappings[entry.index] = entry
+	for i in range(filenames_header.section2_element_count):
+		var entry: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
+		mappings[entry.index] = entry
+	
+	# Load requested textures
+	for i in range(index, index+p_range):
+		if i in mappings:
+			var texture: Dictionary = _load_texture_from_file(file, mappings[i], das)
+			texture["das_info"] = das_info
+			texture_array.append(texture)
+		else:
+			texture_array.append({"index": i, "name": "Invalid", "desc": ""})
+	
+	return texture_array
 
 
+static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: Dictionary) -> Dictionary:
+	
+	# Seek to FAT offset
+	file.seek(das.header.img_fat_offset + (texture.index * 0x08))
+	
+	# Read FAT
+	texture.merge(Parser.parse_section(file, FAT_ENTRY))
+	
+	# Seek to Data
+	file.seek(texture.offset)
+	
+	# Read standard header
+	texture.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
+	
+	# Parse as Monster
+	if (texture.flags_1 == 36):
+		if das.das_info.is_ademo:
+			var first_byte: int = das.monster_mappings[texture.flags_2].walking_front & 0xFF
+			var second_byte: int = das.monster_mappings[texture.flags_2].walking_front >> 8
+			var monster_index: int = first_byte | (((second_byte & 0x7F) - 0x12) << 8)
+			texture.monster_index = monster_index
+		else:
+			texture.monster_index = das.monster_mappings[texture.flags_2].walking_front & 0x7FFF
+		
+	
+	# Parse as Directional object
+	elif (texture.flags_1 & 32) > 0:
+		if das.das_info.is_ademo:
+			var first_byte: int = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx & 0xFF
+			var second_byte: int = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx >> 8
+			var directional_index: int = first_byte | (((second_byte & 0x7F) - 0x12) << 8)
+			texture.directional_index = directional_index
+		else:
+			texture.directional_index = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx & 0x7FFF
+	
+	# Parse as directional images
+	elif texture.offset == 0:
+		return texture
+	elif texture.modifier > 0xC0:
+		file.seek(texture["offset"] + 32)
+		var alignment := file.get_position() & 0xF
+		var img_reference := file.get_8()
+		var _type := file.get_8()
+		var width := file.get_16()
+		var height := file.get_16()
+		
+		texture["image"] = []
+		while true:
+			var raw_img := file.get_buffer(width * height)
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
+			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"].append(image_texture)
+			
+			var lower_ptr_4_bits := file.get_position() & 0xF
+			var pos := file.get_position()
+			if lower_ptr_4_bits > alignment:
+				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+			else:
+				pos = pos + (alignment - lower_ptr_4_bits)
+			file.seek(pos)
+			
+			var img_reference_new := file.get_8()
+			_type = file.get_8()
+			width = file.get_16()
+			height = file.get_16()
+			if img_reference != img_reference_new:
+				break
+	
+	# Parse as 3d object images pack
+	elif texture.modifier == 0x40 and (texture.image_type % 2) == 0:
+		var numImgs := 0
+		while file.get_16() != 0:
+			numImgs += 1
+		numImgs -= 1
+		
+		while file.get_8() == 0:
+			pass
+		file.seek(file.get_position() - 2)
+		
+		var alignment := file.get_position() & 0xF
+		var _img_reference := file.get_8()
+		var _type := file.get_8()
+		var width := file.get_16()
+		var height := file.get_16()
+		texture["image"] = []
+		for j in range(numImgs):
+			#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
+			if width == 0:
+				continue
+			
+			var raw_img := file.get_buffer(width * height)
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
+			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"].append(image_texture)
+			
+			var lower_ptr_4_bits := file.get_position() & 0xF
+			var pos := file.get_position()
+			if lower_ptr_4_bits > alignment:
+				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+			else:
+				pos = pos + (alignment - lower_ptr_4_bits)
+			file.seek(pos)
+			
+			_img_reference = file.get_8()
+			_type = file.get_8()
+			width = file.get_16()
+			height = file.get_16()
+	
+	# Parse as plain image
+	elif texture.image_type < 64 and (texture.image_type % 2) == 0:
+		if texture.width == 0:
+			das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
+			return texture
+		if texture.height == 0:
+			das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
+			return texture
+		
+		var raw_img := file.get_buffer(texture.width * texture.height)
+		if len(raw_img) != texture.width * texture.height:
+			das.loading_errors.append("Unexpected image mismatch! (Read past end of file) Expected: %s (%sx%s), Found: %s, Index: %s, Name: %s, Unk: %s" % [texture.width * texture.height, texture.width, texture.height, len(raw_img), texture.index, texture.name, texture.unk])
+			return texture
+		
+		var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
+		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
+		var image_texture := ImageTexture.create_from_image(img)
+		texture["image"] = image_texture
+	
+	# Parse as animated image
+	elif texture.image_type < 64 and (texture.image_type % 2) != 0:
+		var _block_size := file.get_16()
+		var _unk := file.get_16()
+		var firstImgOffset := file.get_16()
+		var img_type_2 := file.get_16()
+		# Type 1
+		if img_type_2 != 0xFFFE:
+			file.seek(texture["offset"] + firstImgOffset + 0x06)
+			
+			if texture.width == 0:
+				das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
+				return texture
+			
+			if texture.height == 0:
+				das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
+				return texture
+			
+			var raw_img := file.get_buffer(texture.width * texture.height)
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
+			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"] = image_texture
+			texture["animation"] = [image_texture]
+			for j in range(img_type_2):
+				var finished := false
+				var pos := 0
+				while true:
+					var code := file.get_8()
+					if code == 0:
+						code = file.get_8()
+						if code == 0:
+							finished = true
+							break
+						var value := file.get_8()
+						for k in range(code):
+							raw_img[pos+k] = value
+						pos += code
+					elif code > 0x80:
+						code &= 0x7F
+						pos += code
+					elif code < 0x80:
+						for k in range(code):
+							raw_img[pos+k] = file.get_8()
+						pos += code
+					else:
+						var code_word := file.get_16()
+						if code_word == 0:
+							break
+						if code_word & 0x8000:
+							code_word &= 0x3FFF
+							var value := file.get_8()
+							if value == 0:
+								for k in range(code_word):
+									raw_img[pos+k] = 0
+							else:
+								break
+						
+						pos += code_word
+				
+				if finished:
+					break
+				
+				var data2: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
+				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data2)
+				var image_texture2 := ImageTexture.create_from_image(img2)
+				texture["animation"].append(image_texture2)
+		
+		# Type 2
+		else:
+			file.seek(texture["offset"] + 16)
+			
+			texture["animation"] = []
+			
+			var starting_position: int = file.get_position()
+			
+			var sub_img_header := {}
+			for key: String in SUB_IMAGE_COMPRESSED_2_HEADER:
+				sub_img_header[key] = file.call(SUB_IMAGE_COMPRESSED_2_HEADER[key])
+			
+			var num_imgs: int = sub_img_header.num_images
+			while num_imgs == sub_img_header.num_images:
+				var img_size: int = sub_img_header.width * sub_img_header.height
+				var img_buffer: Array = []
+				img_buffer.resize(img_size)
+				var pos := 0
+				
+				while pos < img_size:
+					var byte := file.get_8()
+					if byte > 0xF0:
+						var count := byte & 0x0F
+						var next_byte := file.get_8()
+						for j in range(count):
+							img_buffer[pos+j] = next_byte
+						pos += count
+					else:
+						img_buffer[pos] = byte
+						pos += 1
+				
+				var data: Array = Utility.convert_palette_image(das.raw_palette, img_buffer)
+				var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
+				var image_texture := ImageTexture.create_from_image(img)
+				texture["animation"].append(image_texture)
+				
+				file.seek(starting_position + sub_img_header.current_image_size)
+				starting_position = file.get_position()
+				
+				for key: String in SUB_IMAGE_COMPRESSED_2_HEADER:
+					sub_img_header[key] = file.call(SUB_IMAGE_COMPRESSED_2_HEADER[key])
+			if len(texture["animation"]) > 0:
+				texture["image"] = texture["animation"][0]
+	
+	# Parse as 3D object data
+	elif texture.image_type == 0x80:
+		file.seek(texture.offset)
+		
+		var object_data := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_HEADER)
+		
+		var vertex_array := []
+		for i in range(object_data.num_vertices):
+			var vertex_data := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_VERTEX_DATA)
+			var vertex := Vector3(vertex_data.pos_x, vertex_data.pos_y, vertex_data.pos_z)
+			vertex_array.append(vertex)
+		
+		var faces_mapping_header := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_FACE_MAPPING_HEADER)
+		var current_size := 4
+		var face_array := []
+		while current_size < faces_mapping_header.faces_array_size:
+			var face := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_FACE_HEADER)
+			current_size += 54
+			face.edge_array = []
+			for i in range(face.edge_count+1):
+				face.edge_array.append(file.get_16())
+				current_size += 2
+			face_array.append(face)
+		
+		object_data["vertices"] = vertex_array
+		object_data["faces_header"] = faces_mapping_header
+		object_data["faces"] = face_array
+		texture["object_data"] = object_data
+	
+	# Unknown type
+	else:
+		Console.print("Unknown Type: %s, Name: %s" % [texture.image_type, texture.name])
+	
+	return texture
+
+
+#region Parse for editing
 static func parse_das(das_info: Dictionary) -> Dictionary:
 	var file := FileAccess.open(das_info.filepath, FileAccess.READ)
 	if not file:
@@ -345,10 +655,6 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	var das: Dictionary = {
 		"das_info": das_info
 	}
-	
-	var is_ademo: bool = false
-	if das_info.name.contains("A"):
-		is_ademo = true
 	
 	# Header
 	das["header"] = Parser.parse_section(file, DAS_HEADER)
@@ -378,7 +684,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	var index: int = 0
 	for i in range(das.header.fat_block_1_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = parse_fat(file, is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
 		data.index = index
 		das["fat_1"].append(data)
 		index += 1
@@ -386,7 +692,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	das["fat_2"] = []
 	for i in range(das.header.fat_block_2_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = parse_fat(file, is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
 		data.index = index
 		das["fat_2"].append(data)
 		index += 1
@@ -394,7 +700,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	das["fat_3"] = []
 	for i in range(das.header.fat_block_3_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = parse_fat(file, is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
 		data.index = index
 		das["fat_3"].append(data)
 		index += 1
@@ -402,7 +708,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	das["fat_4"] = []
 	for i in range(das.header.fat_block_4_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = parse_fat(file, is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
 		data.index = index
 		das["fat_4"].append(data)
 		index += 1
@@ -474,7 +780,35 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	return das
 
 
-static func parse_fat(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_palette(file: FileAccess, offset: int) -> Dictionary:
+	if offset == 0:
+		return {
+			palette = DEFAULT_PALETTE,
+			raw_palette = DEFAULT_RAW_PALETTE,
+		}
+	file.seek(offset)
+	var palette: Array = []
+	var raw_palette: PackedByteArray = file.get_buffer(256*3)
+	for i in range(0, len(raw_palette), 3):
+		palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
+	return {
+		palette = palette,
+		raw_palette = raw_palette,
+	}
+
+
+static func _parse_palette_shading(file: FileAccess, offset: int) -> Array:
+	var palette_shading_tables := []
+	file.seek(offset+2+(256*3))
+	for i in range(322):
+		var table := []
+		for j in range(256):
+			table.append(file.get_8())
+		palette_shading_tables.append(table)
+	return palette_shading_tables
+
+
+static func _parse_fat(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var entry: Dictionary = Parser.parse_section(file, FAT_ENTRY)
 	if entry.offset != 0:
 		file.seek(entry.offset)
@@ -487,33 +821,33 @@ static func parse_fat(file: FileAccess, is_ademo: bool) -> Dictionary:
 			entry["raw_data"] = file.get_buffer(entry.size*2)
 			
 		else:
-			entry["data"] = parse_image(file, is_ademo)
+			entry["data"] = _parse_image(file, is_ademo)
 	return entry
 
 
-static func parse_image(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_image(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var modifier: int = file.get_8()
 	var image_type: int = file.get_8()
 	file.seek(file.get_position() - 2)
 	var data: Dictionary = {}
 	if modifier > 0xC0:
-		data = parse_directional_images(file, is_ademo)
+		data = _parse_directional_images(file, is_ademo)
 	elif modifier == 0x40 and (image_type % 2) == 0:
-		data = parse_object_image_pack(file, is_ademo)
+		data = _parse_object_image_pack(file, is_ademo)
 	elif image_type < 64 and (image_type % 2) == 0:
-		data = parse_standard_image(file, is_ademo)
+		data = _parse_standard_image(file, is_ademo)
 	elif image_type < 64 and (image_type % 2) != 0:
-		data = parse_animated_image(file, is_ademo)
+		data = _parse_animated_image(file, is_ademo)
 	elif image_type == 128:
-		data = parse_object_data(file, is_ademo)
+		data = _parse_object_data(file, is_ademo)
 	else:
-		print("Invalid Type")
-		#assert(false, "Invalid type")
+		push_error("Invalid Type")
+		data = {"name": "Invalid Type"}
 	
 	return data
 
 
-static func parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var texture_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -533,7 +867,7 @@ static func parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionary
 	return texture_data
 
 
-static func parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var texture_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -628,8 +962,8 @@ static func parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionary
 			texture_data["raw_animation_2"].append(file.get_buffer(sub_image_header.current_image_size))
 			file.seek(starting_position + 24)
 			var image_size: int = sub_image_header.width * sub_image_header.height
-			var image_buffer: Array = []
-			image_buffer.resize(image_size)
+			var image_rid: Array = []
+			image_rid.resize(image_size)
 			var pos := 0
 			while pos < image_size:
 				var byte := file.get_8()
@@ -637,13 +971,13 @@ static func parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionary
 					var count := byte & 0x0F
 					var next_byte := file.get_8()
 					for j in range(count):
-						image_buffer[pos+j] = next_byte
+						image_rid[pos+j] = next_byte
 					pos += count
 				else:
-					image_buffer[pos] = byte
+					image_rid[pos] = byte
 					pos += 1
 			
-			texture_data["animation_2"].append({"header": sub_image_header, "raw_image": image_buffer})
+			texture_data["animation_2"].append({"header": sub_image_header, "raw_image": image_rid})
 			file.seek(starting_position + sub_image_header.current_image_size)
 			starting_position = file.get_position()
 			
@@ -656,7 +990,7 @@ static func parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionary
 	return texture_data
 
 
-static func parse_directional_images(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_directional_images(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var texture_data: Dictionary
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -694,7 +1028,7 @@ static func parse_directional_images(file: FileAccess, is_ademo: bool) -> Dictio
 	return texture_data
 
 
-static func parse_object_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_object_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var texture_data: Dictionary
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -746,7 +1080,7 @@ static func parse_object_image_pack(file: FileAccess, is_ademo: bool) -> Diction
 	return texture_data
 
 
-static func parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var object_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -779,668 +1113,18 @@ static func parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
 	
 	
 	return object_data
+#endregion
 
-
-static func _get_index_from_das(index:int, das_file: String) -> Dictionary:
-	if das_file in loaded_das:
-		if index in loaded_das[das_file]:
-			return loaded_das[das_file][index]
-	else:
-		loaded_das[das_file] = {}
-	
-	
-	var file := FileAccess.open(das_file, FileAccess.READ)
-	var das: Dictionary = {}
-	
-	#das["name"] = das_file
-	das["das_info"] = {
-		"name": das_file.get_basename().get_file(),
-		"filepath": das_file
-	}
-	das["header"] = Parser.parse_section(file, DAS_HEADER)
-	var p := _parse_palette(file, das.header.palette_offset)
-	das["palette"] = p.palette
-	das["raw_palette"] = p.raw_palette
-	das["textures"] = []
-	das["mapping"] = {}
-	
-	das["loading_errors"] = []
-	das["sky"] = 0
-	
-	# Monster Mapping Section
-	file.seek(das.header.monster_mapping_section_offset)
-	var monster_mappings: Array = []
-	for i in range(das.header.monster_mapping_section_size / 104):
-		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
-		monster_mappings.append(monster_mapping)
-	das["monster_mappings"] = monster_mappings
-	
-	
-	
-	file.seek(das.header.filenames_offset)
-	das["filenames_header"] = Parser.parse_section(file, FILE_NAMES_HEADER)
-	
-	var texture := {}
-	#texture["das"] = das_file
-	
-	for i in range(das.filenames_header.section1_element_count):
-		var entry: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
-		das["textures"].append(entry)
-		if entry.index == index:
-			texture = entry
-	for i in range(das.filenames_header.section2_element_count):
-		var entry: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
-		das["textures"].append(entry)
-		if entry.index == index:
-			texture = entry
-	
-	texture["das_info"] = {
-		"name": das_file.get_basename().get_file(),
-		"filepath": das_file
-	}
-	
-	#print(texture)
-	if not "name" in texture:
-		texture["name"] = "Invalid"
-	if not "desc" in texture:
-		texture["desc"] = ""
-	if "index" not in texture:
-		texture["index"] = index
-		return texture
-	
-	file.seek(das.header.img_fat_offset + (index * 0x08))
-	
-	for key: String in FAT_ENTRY:
-		texture[key] = file.call(FAT_ENTRY[key])
-	
-	if texture.flags_1 & 2 > 0:
-		texture["is_sky"] = true
-	else:
-		texture["is_sky"] = false
-	
-	file.seek(texture["offset"])
-	
-	for key: String in IMAGE_STANDARD_HEADER:
-		texture[key] = file.call(IMAGE_STANDARD_HEADER[key])
-	if (texture.flags_1 & 36) > 0:
-		
-		var first_byte: int = das["monster_mappings"][texture.flags_2].walking_front & 0xFF
-		var second_byte: int = das["monster_mappings"][texture.flags_2].walking_front >> 8
-		var monster_index: int = first_byte | (((second_byte & 0x7F) - 0x12) << 8)
-		texture.monster_index = monster_index
-		#print(JSON.stringify(texture, '\t', false))
-		#das.loading_errors.append("Folder Type: %s, Name: %s" % [texture.image_type, texture.name])
-		#Console.print("Folder Type: %s, Name: %s" % [texture.image_type, texture.name])
-	elif (texture.flags_1 & 32) > 0:
-		var first_byte: int = das["directional_object_mappings"][texture.flags_2].dir_5_fat_idx & 0xFF
-		var second_byte: int = das["directional_object_mappings"][texture.flags_2].dir_5_fat_idx >> 8
-		var directional_index: int = first_byte | (((second_byte & 0x7F) - 0x12) << 8)
-		texture.directional_index = directional_index
-	elif (texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_2 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_3 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_4 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_5 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_6 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_7 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_8 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_9
-	):
-		#Console.print("Plain: %s" % texture.name)
-		#file.seek(texture["offset"] + 0x06)
-		if texture.width == 0:
-			das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
-			loaded_das[das_file][index] = texture
-			return texture
-		
-		if texture.height == 0:
-			das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
-			loaded_das[das_file][index] = texture
-			return texture
-		
-		var raw_img := file.get_buffer(texture.width * texture.height)
-		if len(raw_img) != texture.width * texture.height:
-			das.loading_errors.append("Expected image mismatch! (Read past end of file) Expected: %s (%sx%s), Found: %s, Index: %s, Name: %s, Unk: %s" % [texture.width * texture.height, texture.width, texture.height, len(raw_img), texture.index, texture.name, texture.unk])
-			loaded_das[das_file][index] = texture
-			return texture
-		var data: Array
-		for pixel in raw_img:
-			data.append_array(das.palette[pixel])
-			if das.palette[pixel] == [0,0,0] and pixel == 0:
-				data.append(0)
-			else:
-				data.append(255)
-		
-		
-		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-		var image_texture := ImageTexture.create_from_image(img)
-		texture["image"] = image_texture
-	
-	elif (texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_FLIPPED or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_FLIPPED_2 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_FLIPPED_3 or
-			texture.image_type == IMG_BASIC_TYPES.PLAIN_DATA_FLIPPED_4 
-	):
-		
-		if texture.modifier > 0xC0:
-			
-			
-			file.seek(texture["offset"] + 32)
-			
-			var alignment := file.get_position() & 0xF
-			
-			var img_reference := file.get_8()
-			var _type := file.get_8()
-			var width := file.get_16()
-			var height := file.get_16()
-			
-			
-			texture["image"] = []
-			while true:
-				#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [texture.name, img_reference, width, height])
-				var raw_img := file.get_buffer(width * height)
-				var data: Array
-				for pixel in raw_img:
-					data.append_array(das.palette[pixel])
-					if das.palette[pixel] == [0,0,0] and pixel == 0:
-						data.append(0)
-					else:
-						data.append(255)
-				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-				var image_texture := ImageTexture.create_from_image(img)
-				texture["image"].append(image_texture)
-				
-				
-				var lower_ptr_4_bits := file.get_position() & 0xF
-				var pos := file.get_position()
-				if lower_ptr_4_bits > alignment:
-					pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-				else:
-					pos = pos + (alignment - lower_ptr_4_bits)
-				file.seek(pos)
-				
-				var img_reference_new := file.get_8()
-				_type = file.get_8()
-				width = file.get_16()
-				height = file.get_16()
-				#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [texture.name, img_reference_new, width, height])
-				if img_reference != img_reference_new:
-					#print(img_reference_new)
-					break
-			
-		elif texture.modifier == 0x40:
-			#Console.print("3D Objs Textures: %s" % texture.name)
-			var numImgs := 0
-			while file.get_16() != 0:
-				numImgs += 1
-			numImgs -= 1
-			#Console.print("numImgs: %s" % numImgs)
-			
-			while file.get_8() == 0:
-				pass
-			file.seek(file.get_position() - 2)
-			
-			var alignment := file.get_position() & 0xF
-			var _img_reference := file.get_8()
-			var _type := file.get_8()
-			var width := file.get_16()
-			var height := file.get_16()
-			texture["image"] = []
-			for j in range(numImgs):
-				#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
-				var raw_img := file.get_buffer(width * height)
-				var data: Array
-				for pixel in raw_img:
-					data.append_array(das.palette[pixel])
-					if das.palette[pixel] == [0,0,0] and pixel == 0:
-						data.append(0)
-					else:
-						data.append(255)
-				
-				if width == 0:
-					das.loading_errors.append("Image width is zero! Index: %s, Name: %s, Subimage: %s, Of: %s" % [texture.index, texture.name, j, numImgs])
-				else:
-					var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-					var image_texture := ImageTexture.create_from_image(img)
-					texture["image"].append(image_texture)
-				
-				var lower_ptr_4_bits := file.get_position() & 0xF
-				var pos := file.get_position()
-				if lower_ptr_4_bits > alignment:
-					pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-				else:
-					pos = pos + (alignment - lower_ptr_4_bits)
-				file.seek(pos)
-				
-				_img_reference = file.get_8()
-				_type = file.get_8()
-				width = file.get_16()
-				height = file.get_16()
-				#Console.print("MULTI PLAIN NEXT: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference_new, type_new, width, height])
-				#if img_reference != img_reference_new:
-					#Console.print("NOT SAME REF")
-				#if type != type_new:
-					#Console.print("NOT SAME TYPE REF")
-				
-		else:
-			var raw_img := file.get_buffer(texture.width * texture.height)
-			var data: Array
-			for pixel in raw_img:
-				data.append_array(das.palette[pixel])
-				if das.palette[pixel] == [0,0,0] and pixel == 0:
-					data.append(0)
-				else:
-					data.append(255)
-			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-			var image_texture := ImageTexture.create_from_image(img)
-			texture["image"] = image_texture
-	
-	elif (texture.image_type == IMG_BASIC_TYPES.COMPRESSED or 
-			texture.image_type == IMG_BASIC_TYPES.COMPRESSED_2 or 
-			texture.image_type == IMG_BASIC_TYPES.COMPRESSED_3 or 
-			texture.image_type == IMG_BASIC_TYPES.COMPRESSED_4 or 
-			texture.image_type == IMG_BASIC_TYPES.COMPRESSED_5 or 
-			texture.image_type == IMG_BASIC_TYPES.COMPRESSED_6
-	):
-		#Console.print("COMPRESSED: %s" % texture.name)
-		var _block_size := file.get_16()
-		var _unk := file.get_16()
-		var firstImgOffset := file.get_16()
-		var img_type_2 := file.get_16()
-		if img_type_2 != 0xFFFE:
-			#Console.print("COMPRESS TYPE 1: %s, Count: %s" % [texture.name, img_type_2])
-			file.seek(texture["offset"] + firstImgOffset + 0x06)
-			
-			if texture.width == 0:
-				das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
-				loaded_das[das_file][index] = texture
-				return texture
-			
-			if texture.height == 0:
-				das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
-				loaded_das[das_file][index] = texture
-				return texture
-			
-			var raw_img := file.get_buffer(texture.width * texture.height)
-			var data: Array
-			for pixel in raw_img:
-				data.append_array(das.palette[pixel])
-				if das.palette[pixel] == [0,0,0] and pixel == 0:
-					data.append(0)
-				else:
-					data.append(255)
-			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-			var image_texture := ImageTexture.create_from_image(img)
-			texture["image"] = image_texture
-			texture["animation"] = [image_texture]
-			#Console.print("Index: %s, Name: %s, Subimages: %s" % [texture.index, texture.name, img_type_2])
-			for j in range(img_type_2):
-				#Console.print("SubImage: %s" % j)
-				
-				var finished := false
-				var pos := 0
-				while true:
-					var code := file.get_8()
-					
-					if code == 0:
-						code = file.get_8()
-						if code == 0:
-							finished = true
-							break
-						var value := file.get_8()
-						#Console.print("Repeating Bytes")
-						for k in range(code):
-							raw_img[pos+k] = value
-						pos += code
-					elif code > 0x80:
-						#Console.print("Moving forward")
-						code &= 0x7F
-						pos += code
-					elif code < 0x80:
-						#Console.print("Copying whole")
-						for k in range(code):
-							raw_img[pos+k] = file.get_8()
-						pos += code
-					else:
-						var code_word := file.get_16()
-						
-						if code_word == 0:
-							#Console.print("Codeword 0")
-							break
-						
-						if code_word & 0x8000:
-							#Console.print("Codeword & 0x8000")
-							code_word &= 0x3FFF
-							var value := file.get_8()
-							if value == 0:
-								#Console.print("Repeating 0s")
-								for k in range(code_word):
-									raw_img[pos+k] = 0
-							else:
-								# This path is only triggered by DEMO1/588:ANICE3.
-								# Happens at the end of the last frame so nothing is lost.
-								# Not sure if something is wrong with my code translation from the c code
-								# but breaking out here seems to work ok.
-								break
-						else:
-							pass
-							#Console.print("Codeword other")
-						
-						pos += code_word
-				
-				if finished:
-					#Console.print("Finished?")
-					break
-				
-				var data2: Array
-				for pixel in raw_img:
-					data2.append_array(das.palette[pixel])
-					if das.palette[pixel] == [0,0,0] and pixel == 0:
-						data2.append(0)
-					else:
-						data2.append(255)
-				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data2)
-				var image_texture2 := ImageTexture.create_from_image(img2)
-				texture["animation"].append(image_texture2)
-		
-		else:
-			#Console.print("COMPRESS TYPE 2, Index: %s, Name: %s" % [texture.index, texture.name])
-			
-			file.seek(texture["offset"] + 16)
-			
-			texture["animation"] = []
-			
-			var starting_position: int = file.get_position()
-			
-			var sub_img_header := {}
-			for key: String in SUB_IMAGE_COMPRESSED_2_HEADER:
-				sub_img_header[key] = file.call(SUB_IMAGE_COMPRESSED_2_HEADER[key])
-			
-			
-			var num_imgs: int = sub_img_header.num_images
-			while num_imgs == sub_img_header.num_images:
-				var img_size: int = sub_img_header.width * sub_img_header.height
-				var img_buffer: Array = []
-				img_buffer.resize(img_size)
-				var pos := 0
-				
-				while pos < img_size:
-					var byte := file.get_8()
-					if byte > 0xF0:
-						var count := byte & 0x0F
-						var next_byte := file.get_8()
-						for j in range(count):
-							img_buffer[pos+j] = next_byte
-						pos += count
-					else:
-						img_buffer[pos] = byte
-						pos += 1
-				
-				var data: Array
-				for pixel: int in img_buffer:
-					data.append_array(das.palette[pixel])
-					if das.palette[pixel] == [0,0,0] and pixel == 0:
-						data.append(0)
-					else:
-						data.append(255)
-				
-				var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
-				var image_texture := ImageTexture.create_from_image(img)
-				texture["animation"].append(image_texture)
-				
-				file.seek(starting_position + sub_img_header.current_image_size)
-				starting_position = file.get_position()
-				
-				for key: String in SUB_IMAGE_COMPRESSED_2_HEADER:
-					sub_img_header[key] = file.call(SUB_IMAGE_COMPRESSED_2_HEADER[key])
-			if len(texture["animation"]) > 0:
-				texture["image"] = texture["animation"][0]
-	
-	elif texture.image_type == 0x80:
-		#print("==========\nLoading 3D Object: %s" % texture.name)
-		file.seek(texture.offset)
-		
-		var object_data := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_HEADER)
-		
-		var vertex_array := []
-		for i in range(object_data.num_vertices):
-			var vertex_data := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_VERTEX_DATA)
-			var vertex := Vector3(vertex_data.pos_x, vertex_data.pos_y, vertex_data.pos_z)
-			vertex_array.append(vertex)
-		
-		var faces_mapping_header := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_FACE_MAPPING_HEADER)
-		var current_size := 4
-		var face_array := []
-		while current_size < faces_mapping_header.faces_array_size:
-			var face := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_FACE_HEADER)
-			current_size += 54
-			face.edge_array = []
-			for i in range(face.edge_count+1):
-				face.edge_array.append(file.get_16())
-				current_size += 2
-			face_array.append(face)
-		
-		object_data["vertices"] = vertex_array
-		object_data["faces_header"] = faces_mapping_header
-		object_data["faces"] = face_array
-		texture["object_data"] = object_data
-		
-		#print(JSON.stringify(texture, '\t', false))
-		#das.loading_errors.append("Object not loaded: %s, Desc: %s, Index: %s" % [texture.name, texture.desc, texture.index])
-		#Console.print("Object not loaded: %s, Desc: %s, Index: %s" % [texture.name, texture.desc, texture.index])
-	else:
-		das.loading_errors.append("Unknown Type: %s, Name: %s" % [texture.imageType, texture.name])
-		Console.print("Unknown Type: %s, Name: %s" % [texture.imageType, texture.name])
-	
-	loaded_das[das_file][index] = texture
-	return texture
-
-
-static func calculate_section_sizes_and_offsets(das: Dictionary, is_ademo: bool) -> Dictionary:
-	var header := {
-		"starts_at": 0,
-		"size": 68
-	}
-	var fat := {
-		"starts_at": header.size,
-		"size": (len(das.fat_1) + len(das.fat_2) + len(das.fat_3) + len(das.fat_4)) * 8
-	}
-	var palette := {
-		"starts_at": (header.size + fat.size) if not das.palette.is_empty() else 0,
-		"size": ((256*3) + 2 + (256*322)) if not das.palette.is_empty() else 0
-	}
-	var unk_0x10 := {
-		"starts_at": (header.size + fat.size + palette.size) if not das.unk_0x10_section.raw_data.is_empty() else 0,
-		"size": len(das.unk_0x10_section.raw_data)
-	}
-	
-	var start_data_offset: int = header.size + fat.size + palette.size + unk_0x10.size
-	if is_ademo:
-		start_data_offset += 4
-	
-	var final_data_offset: int = calculate_data_size(das.fat_1, start_data_offset, is_ademo)
-	final_data_offset = calculate_data_size(das.fat_2, final_data_offset, is_ademo)
-	final_data_offset = calculate_data_size(das.fat_3, final_data_offset, is_ademo)
-	final_data_offset = calculate_data_size(das.fat_4, final_data_offset, is_ademo)
-	
-	var data := {
-		"starts_at": start_data_offset,
-		"size": final_data_offset - start_data_offset
-	}
-	if is_ademo:
-		data.size += 4
-	
-	
-	var directional_objects := {
-		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size) if not das.directional_object_mappings.is_empty() else 0,
-		"size": len(das.directional_object_mappings) * 20,
-	}
-	
-	var object_collisions := {
-		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size) if not das.object_collisions.is_empty() else 0,
-		"size": len(das.object_collisions) * 4,
-	}
-	
-	var monster_mappings := {
-		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size) if not das.monster_mappings.is_empty() else 0,
-		"size": len(das.monster_mappings) * 104
-	}
-	
-	var unk_0x38 := {
-		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size + monster_mappings.size) if not das.unk_0x38_section.raw_data.is_empty() else 0,
-		"size": len(das.unk_0x38_section.raw_data),
-	}
-	var unk_0x40 := {
-		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size + monster_mappings.size + unk_0x38.size) if not das.unk_0x40_section.raw_data.is_empty() else 0,
-		"size": len(das.unk_0x40_section.raw_data),
-	}
-	
-	
-	
-	var filenames_size: int = 4 # Header
-	for filename: Dictionary in das.filenames_1:
-		filenames_size += filename.size
-	for filename: Dictionary in das.filenames_2:
-		filenames_size += filename.size
-	if filenames_size % 2 != 0:
-		filenames_size += 1
-	var filenames := {
-		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size + monster_mappings.size + unk_0x38.size + unk_0x40.size),
-		"size": filenames_size
-	}
-	
-	return {
-		header = header,
-		fat = fat,
-		palette = palette,
-		unk_0x10 = unk_0x10,
-		data = data,
-		directional_objects = directional_objects,
-		object_collisions = object_collisions,
-		monster_mappings = monster_mappings,
-		unk_0x38 = unk_0x38,
-		unk_0x40 = unk_0x40,
-		filenames = filenames,
-		total_size = filenames.starts_at+filenames.size,
-	}
-
-
-static func calculate_data_size(fat: Array, total_size: int, is_ademo: bool) -> int:
-	for entry: Dictionary in fat:
-		var size: int = 0
-		if entry.offset != 0:
-			if entry.flags_1 & 32 > 0:
-				print(entry.index)
-				#entry.offset = 0
-				#continue
-			entry.offset = total_size
-			if "raw_data" in entry:
-				size += len(entry.raw_data)
-			if "data" in entry:
-				if "raw" in entry.data:
-					size += 6  # Header
-					size += len(entry.data.raw)
-					if size % 2 != 0:
-						size += 1
-				if "animation" in entry.data:
-					size += len(entry.data.raw_animation) # Includes header
-					while size % 16 != 0:
-						size += 1
-				if "animation_2" in entry.data:
-					size += 16 # Header
-					for sub_image: Array in entry.data.raw_animation_2:
-						size += len(sub_image)
-					while size % 16 != 0:
-						size += 1
-				if "directional" in entry.data:
-					size += 32 # Header
-					var alignment: int = (total_size + size) & 0xF
-					for sub_image: Dictionary in entry.data.directional:
-						size += 6 # Sub-image header
-						size += len(sub_image.raw_image)
-						var new_alignment: int = (total_size + size) & 0xF
-						if new_alignment > alignment:
-							size += (alignment + 0x10 - new_alignment)
-						else:
-							size += (alignment - new_alignment)
-					if size % 2 != 0:
-						size += 1
-				if "num_vertices" in entry.data:
-					size += 22 # Header
-					size += (16 * len(entry.data.vertices))
-					size += 8 # Faces section header
-					for face: Dictionary in entry.data.faces:
-						size += 54 # Face header
-						size += len(face.edge_array) * 2
-					size += 4 # TODO ?
-					if size % 2 != 0:
-						size += 1
-				if "object_images" in entry.data:
-					size += 8 # Header
-					size += (2*len(entry.data.header)) # Additional header
-					size += len(entry.data.padding)  # TODO
-					var alignment: int = (total_size + size) & 0xF
-					for sub_image: Dictionary in entry.data.object_images:
-						size += 6 # Sub-image header
-						size += len(sub_image.raw_image)
-						var new_alignment: int = (total_size + size) & 0xF
-						if new_alignment > alignment:
-							size += (alignment + 0x10 - new_alignment)
-						else:
-							size += (alignment - new_alignment)
-					if size % 2 != 0:
-						size += 1
-		
-		total_size += size
-		
-		if is_ademo and size != 0:
-			total_size += 4
-			entry.offset += 4
-		
-		if entry.offset != 0:
-			if "raw_data" in entry:
-				#if entry.size != size >> 1:
-					#print("ERROR SIZE: ", entry.index)
-				#else:
-					entry.size = size >> 1
-			elif "data" in entry:
-				if "animation" in entry.data or "animation_2" in entry.data:
-					#if entry.size != size >>4:
-						#print("ERROR SIZE: ", entry.index)
-						#print("Orig: ", entry.size, " New: ", size)
-						#print("=====")
-					#else:
-						entry.size = size >> 4
-				else:
-					#if entry.size != size >> 1:
-						#print("ERROR SIZE: ", entry.index)
-					#else:
-						entry.size = size >> 1
-	
-	return total_size
-
-
+#region Compile
 static func compile(das: Dictionary) -> PackedByteArray:
 	# Calculate sizes and offsets
-	var is_ademo: bool = false
-	if das.das_info.name.contains("A"):
-		is_ademo = true
-	var section_sizes: Dictionary = calculate_section_sizes_and_offsets(das, is_ademo)
+	var section_sizes: Dictionary = _calculate_section_sizes_and_offsets(das)
 	if section_sizes.is_empty():
 		return []
 	
 	
-	print(JSON.stringify(section_sizes, '\t', false))
-	print("Total size: ", section_sizes.total_size)
-	
-	
-	# ADEMO TESTING
-	#section_sizes.directional_objects.starts_at = 19455066
-	#section_sizes.object_collisions.starts_at = 19455286
-	#section_sizes.monster_mappings.starts_at = 19456458
-	#section_sizes.unk_0x38.starts_at = 19459370
-	#section_sizes.unk_0x40.starts_at = 19459380
-	#section_sizes.filenames.starts_at = 19459386
+	#print(JSON.stringify(section_sizes, '\t', false))
+	#print("Total size: ", section_sizes.total_size)
 	
 	
 	# Initialize
@@ -1478,7 +1162,7 @@ static func compile(das: Dictionary) -> PackedByteArray:
 	pos += 68
 	
 	
-	#FAT Table
+	# FAT Table
 	assert(pos == section_sizes.fat.starts_at)
 	for fat_table: String in ["fat_1", "fat_2", "fat_3", "fat_4"]:
 		for fat_entry: Dictionary in das[fat_table]:
@@ -1513,13 +1197,13 @@ static func compile(das: Dictionary) -> PackedByteArray:
 	
 	# Data
 	if section_sizes.data.size > 0:
-		if is_ademo:
+		if das.das_info.is_ademo:
 			pos += 4
 		#pos = section_sizes.data.starts_at
 		assert(pos == section_sizes.data.starts_at)
 		for fat_table: String in ["fat_1", "fat_2", "fat_3", "fat_4"]:
 			for data_entry: Dictionary in das[fat_table]:
-				pos = write_data_entry(data_entry, data, pos, is_ademo)
+				pos = _write_data_entry(data_entry, data, pos, das.das_info.is_ademo)
 	
 	
 	# Directional Objects
@@ -1639,47 +1323,214 @@ static func compile(das: Dictionary) -> PackedByteArray:
 		data.encode_u16(pos, len(das.filenames_1))
 		data.encode_u16(pos+2, len(das.filenames_2))
 		pos += 4
-		for filename: Dictionary in das.filenames_1:
-			data.encode_u16(pos, filename.size)
-			data.encode_u16(pos+2, filename.index)
-			pos += 4
-			for c: String in filename.name:
-				data.encode_u8(pos, ord(c))
+		for filename_table: String in ["filenames_1", "filenames_2"]:
+			for filename: Dictionary in das[filename_table]:
+				data.encode_u16(pos, filename.size)
+				data.encode_u16(pos+2, filename.index)
+				pos += 4
+				for c: String in filename.name:
+					data.encode_u8(pos, ord(c))
+					pos += 1
+				data.encode_u8(pos, 0)
 				pos += 1
-			data.encode_u8(pos, 0)
-			pos += 1
-			for c: String in filename.desc:
-				data.encode_u8(pos, ord(c))
+				for c: String in filename.desc:
+					data.encode_u8(pos, ord(c))
+					pos += 1
+				data.encode_u8(pos, 0)
 				pos += 1
-			data.encode_u8(pos, 0)
-			pos += 1
-		for filename: Dictionary in das.filenames_2:
-			data.encode_u16(pos, filename.size)
-			data.encode_u16(pos+2, filename.index)
-			pos += 4
-			for c: String in filename.name:
-				data.encode_u8(pos, ord(c))
-				pos += 1
-			data.encode_u8(pos, 0)
-			pos += 1
-			for c: String in filename.desc:
-				data.encode_u8(pos, ord(c))
-				pos += 1
-			data.encode_u8(pos, 0)
-			pos += 1
 	
 	return data
 
 
-static func write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int, is_ademo: bool) -> int:
+static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
+	var header := {
+		"starts_at": 0,
+		"size": 68
+	}
+	var fat := {
+		"starts_at": header.size,
+		"size": (len(das.fat_1) + len(das.fat_2) + len(das.fat_3) + len(das.fat_4)) * 8
+	}
+	var palette := {
+		"starts_at": (header.size + fat.size) if not das.palette.is_empty() else 0,
+		"size": ((256*3) + 2 + (256*322)) if not das.palette.is_empty() else 0
+	}
+	var unk_0x10 := {
+		"starts_at": (header.size + fat.size + palette.size) if not das.unk_0x10_section.raw_data.is_empty() else 0,
+		"size": len(das.unk_0x10_section.raw_data)
+	}
+	
+	var start_data_offset: int = header.size + fat.size + palette.size + unk_0x10.size
+	if das.das_info.is_ademo:
+		start_data_offset += 4
+	
+	var final_data_offset: int = _calculate_data_size(das.fat_1, start_data_offset, das.das_info.is_ademo)
+	final_data_offset = _calculate_data_size(das.fat_2, final_data_offset, das.das_info.is_ademo)
+	final_data_offset = _calculate_data_size(das.fat_3, final_data_offset, das.das_info.is_ademo)
+	final_data_offset = _calculate_data_size(das.fat_4, final_data_offset, das.das_info.is_ademo)
+	
+	var data := {
+		"starts_at": start_data_offset,
+		"size": final_data_offset - start_data_offset
+	}
+	if das.das_info.is_ademo:
+		data.size += 4
+	
+	
+	var directional_objects := {
+		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size) if not das.directional_object_mappings.is_empty() else 0,
+		"size": len(das.directional_object_mappings) * 20,
+	}
+	
+	var object_collisions := {
+		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size) if not das.object_collisions.is_empty() else 0,
+		"size": len(das.object_collisions) * 4,
+	}
+	
+	var monster_mappings := {
+		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size) if not das.monster_mappings.is_empty() else 0,
+		"size": len(das.monster_mappings) * 104
+	}
+	
+	var unk_0x38 := {
+		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size + monster_mappings.size) if not das.unk_0x38_section.raw_data.is_empty() else 0,
+		"size": len(das.unk_0x38_section.raw_data),
+	}
+	var unk_0x40 := {
+		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size + monster_mappings.size + unk_0x38.size) if not das.unk_0x40_section.raw_data.is_empty() else 0,
+		"size": len(das.unk_0x40_section.raw_data),
+	}
+	
+	
+	
+	var filenames_size: int = 4 # Header
+	for filename: Dictionary in das.filenames_1:
+		filenames_size += filename.size
+	for filename: Dictionary in das.filenames_2:
+		filenames_size += filename.size
+	if filenames_size % 2 != 0:
+		filenames_size += 1
+	var filenames := {
+		"starts_at": (header.size + fat.size + palette.size + unk_0x10.size + data.size + directional_objects.size + object_collisions.size + monster_mappings.size + unk_0x38.size + unk_0x40.size),
+		"size": filenames_size
+	}
+	
+	return {
+		header = header,
+		fat = fat,
+		palette = palette,
+		unk_0x10 = unk_0x10,
+		data = data,
+		directional_objects = directional_objects,
+		object_collisions = object_collisions,
+		monster_mappings = monster_mappings,
+		unk_0x38 = unk_0x38,
+		unk_0x40 = unk_0x40,
+		filenames = filenames,
+		total_size = filenames.starts_at+filenames.size,
+	}
+
+
+static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) -> int:
+	for entry: Dictionary in fat:
+		var size: int = 0
+		if entry.offset != 0:
+			#if entry.flags_1 & 32 > 0:
+				#print(entry.index)
+				#entry.offset = 0
+				#continue
+			entry.offset = total_size
+			if "raw_data" in entry:
+				size += len(entry.raw_data)
+				if size % 2 != 0:
+					size += 1
+			if "data" in entry:
+				if "raw" in entry.data:
+					size += 6  # Header
+					size += len(entry.data.raw)
+					if size % 2 != 0:
+						size += 1
+				if "animation" in entry.data:
+					size += len(entry.data.raw_animation) # Includes header
+					while size % 16 != 0:
+						size += 1
+				if "animation_2" in entry.data:
+					size += 16 # Header
+					for sub_image: Array in entry.data.raw_animation_2:
+						size += len(sub_image)
+					while size % 16 != 0:
+						size += 1
+				if "directional" in entry.data:
+					size += 32 # Header
+					var alignment: int = (total_size + size) & 0xF
+					for sub_image: Dictionary in entry.data.directional:
+						size += 6 # Sub-image header
+						size += len(sub_image.raw_image)
+						var new_alignment: int = (total_size + size) & 0xF
+						if new_alignment > alignment:
+							size += (alignment + 0x10 - new_alignment)
+						else:
+							size += (alignment - new_alignment)
+					if size % 2 != 0:
+						size += 1
+				if "num_vertices" in entry.data:
+					size += 22 # Header
+					size += (16 * len(entry.data.vertices))
+					size += 8 # Faces section header
+					for face: Dictionary in entry.data.faces:
+						size += 54 # Face header
+						size += len(face.edge_array) * 2
+					size += 4 # TODO ?
+					if size % 2 != 0:
+						size += 1
+				if "object_images" in entry.data:
+					size += 8 # Header
+					size += (2*len(entry.data.header)) # Additional header
+					size += len(entry.data.padding)  # TODO
+					var alignment: int = (total_size + size) & 0xF
+					for sub_image: Dictionary in entry.data.object_images:
+						size += 6 # Sub-image header
+						size += len(sub_image.raw_image)
+						var new_alignment: int = (total_size + size) & 0xF
+						if new_alignment > alignment:
+							size += (alignment + 0x10 - new_alignment)
+						else:
+							size += (alignment - new_alignment)
+					if size % 2 != 0:
+						size += 1
+		
+		total_size += size
+		
+		if is_ademo and size != 0:
+			total_size += 4
+			entry.offset += 4
+		
+		if entry.offset != 0:
+			if "raw_data" in entry:
+				#if entry.size != size >> 1:
+					#print("ERROR SIZE: ", entry.index)
+				#else:
+					entry.size = size >> 1
+			elif "data" in entry:
+				if "animation" in entry.data or "animation_2" in entry.data:
+					#if entry.size != size >>4:
+						#print("ERROR SIZE: ", entry.index)
+						#print("Orig: ", entry.size, " New: ", size)
+						#print("=====")
+					#else:
+						entry.size = size >> 4
+				else:
+					#if entry.size != size >> 1:
+						#print("ERROR SIZE: ", entry.index)
+					#else:
+						entry.size = size >> 1
+	
+	return total_size
+
+
+static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int, is_ademo: bool) -> int:
 	var size: int = 0
 	if entry.offset != 0:
-		#var test: int = 4269486
-		#if entry.offset > (test - 2000) and entry.offset < (test + 2000):
-			#print("CLOSE INDEX: ", entry.index)
-			#print(entry.offset)
-		
-		
 		#pos = entry.offset
 		if is_ademo:
 			assert(pos == entry.offset-4)
@@ -1694,6 +1545,9 @@ static func write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int,
 					pos += 2
 			for byte: int in entry.raw_data:
 				data.encode_u8(pos, byte)
+				pos += 1
+				size += 1
+			if size % 2 != 0:
 				pos += 1
 				size += 1
 		
@@ -1866,7 +1720,7 @@ static func write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int,
 				pos += 4
 				size += 4
 				
-				while size % 2 != 0:
+				if size % 2 != 0:
 					pos += 1
 					size += 1
 				
@@ -1897,7 +1751,7 @@ static func write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int,
 					data.encode_u16(pos+2, sub_image.header.width)
 					data.encode_u16(pos+4, sub_image.header.height)
 					pos += 6
-					size += 6 # Sub-entry header
+					size += 6
 					
 					for byte: int in sub_image.raw_image:
 						data.encode_u8(pos, byte)
@@ -1912,10 +1766,9 @@ static func write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int,
 						pos += (alignment - new_alignment)
 						size += (alignment - new_alignment)
 					
-				while size % 2 != 0:
+				if size % 2 != 0:
 					pos += 1
 					size += 1
-			
-			
-			
+	
 	return pos
+#endregion

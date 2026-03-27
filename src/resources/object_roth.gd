@@ -220,6 +220,7 @@ func _initialize_mesh_actual() -> void:
 	
 	var width: float = texture.height / Roth.SCALE_3D_WORLD
 	var height: float = texture.width / Roth.SCALE_3D_WORLD
+	var modifier: int = texture.modifier
 	
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
@@ -237,22 +238,21 @@ func _initialize_mesh_actual() -> void:
 	elif "monster_index" in texture:
 		var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, object_das)
 		material.albedo_texture = monster_texture.image
-		#print(monster_texture)
 		width = monster_texture.height / Roth.SCALE_3D_WORLD
 		height = monster_texture.width / Roth.SCALE_3D_WORLD
 	elif "directional_index" in texture:
 		var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, object_das)
 		material.albedo_texture = directional_texture.image
-		#print(monster_texture)
 		width = directional_texture.height / Roth.SCALE_3D_WORLD
 		height = directional_texture.width / Roth.SCALE_3D_WORLD
+		modifier = directional_texture.modifier
 	else:
 		_initialize_mesh()
 		return
 	
 	
 	#print(texture)
-	if (texture.modifier & (1<<7)) > 0:
+	if (modifier & (1<<7)) > 0:
 		width /= 2
 		height /= 2
 	

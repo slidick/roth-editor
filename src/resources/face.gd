@@ -148,7 +148,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		material.albedo_color = Color.TRANSPARENT
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	elif texture in mapping and "image" in mapping[texture]:
-		if mapping[texture].is_sky:
+		if mapping[texture].flags_1 & (1<<1) > 0:
 			material.albedo_color = Color.TRANSPARENT
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		else:

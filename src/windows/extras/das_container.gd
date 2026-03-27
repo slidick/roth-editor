@@ -24,19 +24,6 @@ func load_das(das_variant: Dictionary) -> void:
 				%DASFiles.select(i)
 		das = das_variant
 	
-	for key: String in das.header:
-		var label := Label.new()
-		label.text = "%s: %s" % [key, das.header[key]]
-		%DasInfoContainer.add_child(label)
-	for key: String in das.das_strings_header:
-		var label := Label.new()
-		label.text = "%s: %s" % [key, das.das_strings_header[key]]
-		%DasInfoContainer.add_child(label)
-	for error: String in das.loading_errors:
-		%Errors.append_text("%s\n" % error)
-
-	
-	%TabContainer.set_tab_title(0, "Textures (%s)" % len(das.textures))
 	for texture: Dictionary in das.textures:
 		var index: int = %TextureList.add_item("%s: %s (%s) %sx%s" % [texture["index"], texture["name"], texture["desc"], texture["width"], texture["height"]])
 		#if %TextureLayoutOption.text == "Grid View":
@@ -61,10 +48,7 @@ func set_das_list(das_list: Array) -> void:
 
 func clear_das() -> void:
 	clear_texture()
-	for child in %DasInfoContainer.get_children():
-		child.queue_free()
 	%TextureList.clear()
-	%Errors.clear()
 
 
 func clear_texture() -> void:

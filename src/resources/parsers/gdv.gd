@@ -33,39 +33,36 @@ const FRAME_HEADER := {
 }
 
 static var _stop_loading: bool = false
-static var is_loading: bool = false
+#static var is_loading: bool = false
 
 
 static func stop_loading() -> void:
 	_stop_loading = true
 
 
-static func get_video(filename: String) -> Dictionary:
-	if is_loading:
-		return {}
-	is_loading = true
-	var gdv_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % filename)
-	if not FileAccess.file_exists(gdv_filepath):
-		return {}
-	#print("Parsing: %s" % gdv_filepath)
+static func get_video_by_path(gdv_filepath: String) -> Dictionary:
 	var file := FileAccess.open(gdv_filepath, FileAccess.READ)
-	return parse_file(file).merged({"name": filename})
+	var gdv := get_video_by_file(file)
+	gdv["name"] = gdv_filepath.get_basename().get_file()
+	return gdv
 
 
-static func parse_file(file: FileAccess) -> Dictionary:
+static func get_video_by_file(file: FileAccess) -> Dictionary:
 	# Header
 	var header := Parser.parse_section(file, HEADER)
 	assert(header.signature == 688986516)
 	#print(JSON.stringify(header, '\t', false))
 	
 	# Palette
-	var palette: Array = []
+	#var palette: Array = []
+	var raw_palette: PackedByteArray = []
 	if header.image_type & PIXEL_8_BITS > 0:
-		var raw_palette: PackedByteArray = file.get_buffer(256*3)
-		for i in range(0, len(raw_palette), 3):
-			palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
+		raw_palette = file.get_buffer(256*3)
+		#for i in range(0, len(raw_palette), 3):
+			#palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
 	else:
-		palette = Das.DEFAULT_PALETTE
+		raw_palette = Das.DEFAULT_RAW_PALETTE
+		#palette = Das.DEFAULT_PALETTE
 	
 	# Audio Init
 	var delta_table := Utility.init_delta_table()
@@ -81,7 +78,7 @@ static func parse_file(file: FileAccess) -> Dictionary:
 	for i in range(header.nb_frames):
 		# Audio
 		if header.sound_flags & AUDIO_PRESENT > 0:
-			var audio_length: int = get_length_audio_data(header)
+			var audio_length: int = _get_length_audio_data(header)
 			var raw_audio: PackedByteArray = file.get_buffer(audio_length)
 			var audio_frame: Array = []
 			if header.sound_flags & AUDIO_CODING_DPCM > 0:
@@ -115,18 +112,17 @@ static func parse_file(file: FileAccess) -> Dictionary:
 			var frame_header := Parser.parse_section(file, FRAME_HEADER)
 			assert(frame_header.signature == 4869)
 			var data: PackedByteArray = file.get_buffer(frame_header.length)
-			var frame := FrameDecoder.new(header.frame_width, header.frame_height, frame_header, data, palette, previous_frame)
+			var frame := FrameDecoder.new(header.frame_width, header.frame_height, frame_header, data, raw_palette, previous_frame)
 			frame.decode()
 			previous_frame = frame.get_pixels()
-			video.append(create_frame_image(previous_frame, frame.palette, header))
+			video.append(_create_frame_image(previous_frame, frame.raw_palette, header))
 		
 		if _stop_loading:
 			_stop_loading = false
-			is_loading = false
+			Utility.deinit_shader()
 			return {}
 		Roth.gdv_loading_updated.emit.call_deferred(float(i) / header.nb_frames)
-	
-	is_loading = false
+	Utility.deinit_shader()
 	return {
 		"header": header,
 		"audio": audio,
@@ -134,14 +130,12 @@ static func parse_file(file: FileAccess) -> Dictionary:
 	}
 
 
-static func create_frame_image(raw_img: PackedByteArray, palette: Array, header: Dictionary) -> Image:
-	var data: Array
-	for pixel in raw_img:
-		data.append_array(palette[pixel])
+static func _create_frame_image(raw_img: PackedByteArray, raw_palette: Array, header: Dictionary) -> Image:
+	var data: Array = Utility.convert_palette_image(raw_palette, raw_img, false)
 	return Image.create_from_data(header.frame_width, header.frame_height, false, Image.FORMAT_RGB8, data)
 
 
-static func get_length_audio_data(header: Dictionary) -> int:
+static func _get_length_audio_data(header: Dictionary) -> int:
 	var amount: int = 0
 	if header.sound_flags & AUDIO_PRESENT == 0:
 		return 0
@@ -194,7 +188,7 @@ class FrameDecoder extends RefCounted:
 	var frame_header: Dictionary
 	var pixels: PackedByteArray
 	var reader: BitReader
-	var palette: Array
+	var raw_palette: Array
 	
 	var encoding_type: int
 	var horizontal_scaling: bool
@@ -224,12 +218,12 @@ class FrameDecoder extends RefCounted:
 		3: method_08_tag_03,
 	}
 	
-	func _init(p_frame_width: int, p_frame_height: int, p_frame_header: Dictionary, data: PackedByteArray, p_palette: Array, prev_frame: PackedByteArray = []) -> void:
+	func _init(p_frame_width: int, p_frame_height: int, p_frame_header: Dictionary, data: PackedByteArray, p_raw_palette: Array, prev_frame: PackedByteArray = []) -> void:
 		frame_width = p_frame_width
 		frame_height = p_frame_height
 		frame_header = p_frame_header.duplicate()
 		pixels = []
-		palette = p_palette
+		raw_palette = p_raw_palette
 		
 		encoding_type = frame_header.type_flags & 0x0F
 		horizontal_scaling = frame_header.type_flags & 0b00010000
@@ -244,14 +238,14 @@ class FrameDecoder extends RefCounted:
 		for i in range(256):
 			for j in range(8):
 				pixels.append(i)
-		pixels.append_array(pixels.duplicate())
+		pixels.append_array(pixels)
 		
 		if prev_frame.is_empty():
 			for i in range(frame_width):
 				for j in range(frame_height):
 					pixels.append(0)
 		else:
-			pixels.append_array(prev_frame.duplicate())
+			pixels.append_array(prev_frame)
 		
 		if vertical_scaling:
 			for y in range(float(frame_height)/2):
@@ -302,10 +296,10 @@ class FrameDecoder extends RefCounted:
 	
 	func decode_method_01() -> void:
 		assert(len(reader.bytes) == 256 * 3)
-		var raw_palette: PackedByteArray = reader.bytes
-		palette.clear()
-		for i in range(0, len(raw_palette), 3):
-			palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
+		raw_palette = reader.bytes
+		#palette.clear()
+		#for i in range(0, len(raw_palette), 3):
+			#palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
 		
 		if pixel_skip == 0:
 			pixels.fill(0)

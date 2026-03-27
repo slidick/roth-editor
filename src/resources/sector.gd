@@ -450,7 +450,7 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	#material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	if texture in mapping and "image" in mapping[texture]:
-		if mapping[texture].is_sky:
+		if mapping[texture].flags_1 & (1<<1) > 0:
 			material.albedo_color = Color.TRANSPARENT
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		

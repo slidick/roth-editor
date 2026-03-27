@@ -43,21 +43,15 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_styles/background = ExtResource("1_dd7hf")
 theme_override_styles/fill = ExtResource("2_vbttp")
 
-[node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=1198116526]
-unique_name_in_owner = true
+[node name="Textures" type="HSplitContainer" parent="VBoxContainer" unique_id=167617092]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
 
-[node name="Textures" type="HSplitContainer" parent="VBoxContainer/TabContainer" unique_id=167617092]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures" unique_id=61762173]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Textures" unique_id=61762173]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TextureLayoutOption" type="OptionButton" parent="VBoxContainer/TabContainer/Textures/VBoxContainer" unique_id=939037403]
+[node name="TextureLayoutOption" type="OptionButton" parent="VBoxContainer/Textures/VBoxContainer" unique_id=939037403]
 unique_name_in_owner = true
 layout_mode = 2
 flat = true
@@ -68,7 +62,7 @@ popup/item_0/id = 0
 popup/item_1/text = "Grid View"
 popup/item_1/id = 1
 
-[node name="TextureList" type="ItemList" parent="VBoxContainer/TabContainer/Textures/VBoxContainer" unique_id=1738569550]
+[node name="TextureList" type="ItemList" parent="VBoxContainer/Textures/VBoxContainer" unique_id=1738569550]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -81,62 +75,27 @@ theme_override_colors/guide_color = Color(0, 0, 0, 0)
 theme_override_constants/v_separation = 10
 fixed_icon_size = Vector2i(25, 25)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Textures" unique_id=791663901]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Textures" unique_id=791663901]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="TextureContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer" unique_id=687610699]
+[node name="TextureContainer" type="VBoxContainer" parent="VBoxContainer/Textures/HBoxContainer" unique_id=687610699]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Control" type="ScrollContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer" unique_id=384029800]
+[node name="Control" type="ScrollContainer" parent="VBoxContainer/Textures/HBoxContainer" unique_id=384029800]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="DataContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Textures/HBoxContainer/Control" unique_id=488428416]
+[node name="DataContainer" type="VBoxContainer" parent="VBoxContainer/Textures/HBoxContainer/Control" unique_id=488428416]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="Header" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=897667434]
-visible = false
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-metadata/_tab_index = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Header" unique_id=1141233569]
-layout_mode = 2
-
-[node name="DasInfoContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Header/ScrollContainer" unique_id=1521786403]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Load Errors" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=163155920]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Load Errors" unique_id=1827973720]
-layout_mode = 2
-horizontal_scroll_mode = 2
-
-[node name="Errors" type="RichTextLabel" parent="VBoxContainer/TabContainer/Load Errors/ScrollContainer" unique_id=84319588]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-fit_content = true
-autowrap_mode = 0
 
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer/DASFiles" to="." method="_on_das_files_item_selected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="item_selected" from="VBoxContainer/TabContainer/Textures/VBoxContainer/TextureLayoutOption" to="." method="_on_texture_layout_option_item_selected"]
-[connection signal="item_selected" from="VBoxContainer/TabContainer/Textures/VBoxContainer/TextureList" to="." method="_on_texture_list_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/Textures/VBoxContainer/TextureLayoutOption" to="." method="_on_texture_layout_option_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/Textures/VBoxContainer/TextureList" to="." method="_on_texture_list_item_selected"]

@@ -174,7 +174,7 @@ func play_video() -> void:
 	if not %VideoTimer.is_stopped():
 		pause_video()
 		return
-	stop_video()
+	await stop_video()
 	var cutscene: Dictionary = %CutsceneList.get_item_metadata(%CutsceneList.get_selected_items()[0])
 	var gdv: Dictionary
 	if current_video.is_empty() or (current_video and current_video.name != cutscene.name):
@@ -183,10 +183,12 @@ func play_video() -> void:
 		var thread := Thread.new()
 		%VideoLoadingBar.show()
 		%VideoLoadingBar.value = 0
+		#var start_time: int = Time.get_ticks_msec()
 		thread.start(parse_thread.bind(cutscene.name))
 		gdv = await gdv_parsing_done
 		%VideoLoadingBar.hide()
 		thread.wait_to_finish()
+		#print("Load time: %.2f" % ((Time.get_ticks_msec()-start_time)/1000.0))
 	else:
 		gdv = current_video
 	if not gdv.is_empty() and "header" in gdv:
@@ -202,9 +204,9 @@ func play_video() -> void:
 
 
 func parse_thread(gdv_name: String) -> void:
-	#var gdv: Dictionary = GDV.get_video(gdv_name)
 	var gdv_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % gdv_name)
 	var gdv: Dictionary = RothExt.get_video_by_path(gdv_filepath, func (percent: float) -> void: Roth.gdv_loading_updated.emit(percent))
+	#var gdv: Dictionary = GDV.get_video_by_path(gdv_filepath)
 	gdv_parsing_done.emit.call_deferred(gdv)
 
 
@@ -279,6 +281,8 @@ func stop_video() -> void:
 	#%VideoSlider.max_value = 0
 	%VideoTimer.paused = true
 	current_frame = 0
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 
 func _seconds_to_time(total: int) -> String:

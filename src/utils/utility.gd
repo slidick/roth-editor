@@ -1,6 +1,10 @@
 extends Object
 class_name Utility
 
+const CONVERT_SHADER_FILE: RDShaderFile = preload("uid://ctypdd4htadqj")
+const CONVERT_SHADER_FILE_WITH_ALPHA: RDShaderFile = preload("uid://cbrjcrstq4vkq")
+static var rd: RenderingDevice
+
 static func are_points_collinear(points_list: Array) -> bool:
 	# Check if there are fewer than 3 points, which can only form a line
 	if len(points_list) < 3:
@@ -100,3 +104,102 @@ static func init_delta_table() -> Array:
 		delta_table[i+1] = -delta
 	delta_table[255] = delta + (code >> 5)
 	return delta_table
+
+
+static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool = true) -> Array:
+	# Renderer
+	if not rd:
+		rd = RenderingServer.create_local_rendering_device()
+	
+	if not rd:
+		var data: Array = []
+		for pixel in p_raw_img:
+			data.append((p_raw_palette[3*pixel] * 259 + 33) >> 6)
+			data.append((p_raw_palette[3*pixel+1] * 259 + 33) >> 6)
+			data.append((p_raw_palette[3*pixel+2] * 259 + 33) >> 6)
+			if p_with_alpha:
+				if pixel == 0:
+					data.append(0)
+				else:
+					data.append(255)
+		return data
+	
+	# Shader
+	var shader_spirv: RDShaderSPIRV
+	if p_with_alpha:
+		shader_spirv = CONVERT_SHADER_FILE_WITH_ALPHA.get_spirv()
+	else:
+		shader_spirv = CONVERT_SHADER_FILE.get_spirv()
+	var shader: RID = rd.shader_create_from_spirv(shader_spirv)
+	
+	# Input Image
+	var image_bytes: PackedByteArray = PackedInt32Array(Array(p_raw_img)).to_byte_array()
+	var image_rid: RID = rd.storage_buffer_create(image_bytes.size(), image_bytes)
+	
+	var image_uniform := RDUniform.new()
+	image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+	image_uniform.binding = 0
+	image_uniform.add_id(image_rid)
+	
+	
+	# Palette
+	var palette_bytes: PackedByteArray = PackedInt32Array(Array(p_raw_palette)).to_byte_array()
+	var palette_rid: RID = rd.storage_buffer_create(palette_bytes.size(), palette_bytes)
+	
+	var palette_uniform := RDUniform.new()
+	palette_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+	palette_uniform.binding = 1
+	palette_uniform.add_id(palette_rid)
+	
+	
+	# Output Image
+	var size_multiplier: int = 3
+	if p_with_alpha:
+		size_multiplier = 4
+	var output_image_rid: RID = rd.storage_buffer_create(image_bytes.size()*size_multiplier)
+	
+	var output_image_uniform := RDUniform.new()
+	output_image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+	output_image_uniform.binding = 2
+	output_image_uniform.add_id(output_image_rid)
+	
+	
+	var uniform_set: RID = rd.uniform_set_create([image_uniform, palette_uniform, output_image_uniform], shader, 0)
+	var pipeline: RID = rd.compute_pipeline_create(shader)
+	
+	
+	# Execute shader
+	var compute_list := rd.compute_list_begin()
+	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
+	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
+	rd.compute_list_dispatch(compute_list, ceili(image_bytes.size()/32.0), 1, 1)
+	rd.compute_list_end()
+	rd.submit()
+	rd.sync()
+	
+	
+	# Output
+	var output := rd.buffer_get_data(output_image_rid)
+	
+	
+	# Cleanup
+	rd.free_rid(pipeline)
+	rd.free_rid(uniform_set)
+	rd.free_rid(image_rid)
+	rd.free_rid(palette_rid)
+	rd.free_rid(output_image_rid)
+	rd.free_rid(shader)
+	pipeline = RID()
+	uniform_set = RID()
+	image_rid = RID()
+	palette_rid = RID()
+	output_image_rid = RID()
+	shader = RID()
+	
+	
+	return output.to_int32_array()
+
+
+static func deinit_shader() -> void:
+	if rd != null:
+		rd.free()

@@ -62,6 +62,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		if await Dialog.confirm("Are you sure?\nMake sure to save!", "Confirm Quit", false):
+			Utility.deinit_shader()
 			Console.print("Quitting...")
 			get_tree().quit()
 
