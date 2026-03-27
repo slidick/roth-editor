@@ -375,7 +375,8 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FPSLabel" type="Label" parent="." unique_id=1786135786]
+[node name="FPSLabel" type="Label" parent="." unique_id=1502798165]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -386,6 +387,7 @@ grow_horizontal = 0
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 horizontal_alignment = 2
+vertical_alignment = 1
 
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Main" to="." method="_on_main_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Tools" to="." method="_on_tools_index_pressed"]
