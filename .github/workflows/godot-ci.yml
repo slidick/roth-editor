@@ -2,7 +2,7 @@ name: "godot-ci export"
 on: push
 
 env:
-  GODOT_VERSION: 4.5.1
+  GODOT_VERSION: 4.6.1
   EXPORT_NAME: RotH_Editor
   PROJECT_PATH: "."
 
@@ -11,7 +11,7 @@ jobs:
     name: Linux Export
     runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:4.5.1
+      image: barichello/godot-ci:4.6.1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
     name: Windows Export
     runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:4.5.1
+      image: barichello/godot-ci:4.6.1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
