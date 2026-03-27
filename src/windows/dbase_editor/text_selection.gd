@@ -8,7 +8,9 @@ func make_selection(dbase_data: Dictionary, p_audio_selection: bool = false) -> 
 	var text_entry: Dictionary = await selection_done
 	toggle(false)
 	if p_audio_selection:
-		return text_entry.dbase500
+		if text_entry:
+			return text_entry.dbase500
+		return {}
 	else:
 		return text_entry
 
