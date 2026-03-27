@@ -159,10 +159,18 @@ func load_roth_settings() -> void:
 		das_packs = []
 		for filename: String in das_files:
 			var das_info := { "name": filename.get_basename().get_file(), "filepath": install_directory.path_join("../DATA/").path_join(filename), "vanilla": true}
+			if das_info.name == "ADEMO":
+				das_info.is_ademo = true
+			else:
+				das_info.is_ademo = false
 			das_packs.append(das_info)
 		for filename: String in DirAccess.get_files_at(ROTH_CUSTOM_DAS_DIRECTORY):
 			if filename.get_extension().to_lower() == "das":
 				var das_info := { "name": filename.get_basename().get_file(), "filepath": ROTH_CUSTOM_DAS_DIRECTORY.path_join(filename)}
+				if das_info.name.begins_with("A"):
+					das_info.is_ademo = true
+				else:
+					das_info.is_ademo = false
 				das_packs.append(das_info)
 		
 		
@@ -1173,4 +1181,10 @@ func delete_das_pack(p_das_info: Dictionary) -> void:
 	das_packs.erase(p_das_info)
 	Roth.settings_loaded.emit()
 
+
+func get_das_info_by_name(p_das_name: String) -> Dictionary:
+	for das_info: Dictionary in das_packs:
+		if das_info.name == p_das_name:
+			return das_info
+	return {}
 #endregion

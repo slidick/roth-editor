@@ -201,10 +201,10 @@ func _initialize_mesh_actual() -> void:
 		object_das = map.map_info.das_info
 		object_index = data.textureIndex + 4096 + 256
 	elif data.textureSource == 2:
-		object_das = {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")}
+		object_das = Roth.get_das_info_by_name("ADEMO")
 		object_index = data.textureIndex
 	elif data.textureSource == 3:
-		object_das = {"name": "ADEMO", "filepath": Roth.install_directory.path_join("M/ADEMO.DAS")}
+		object_das = Roth.get_das_info_by_name("ADEMO")
 		object_index = data.textureIndex + 256
 	else:
 		_initialize_mesh()
