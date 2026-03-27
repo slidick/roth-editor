@@ -362,6 +362,7 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		
 		var material := StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 		
 		var fat_index: int = object_face.texture_fat_index_base
 		if len(vertices) == 0:
