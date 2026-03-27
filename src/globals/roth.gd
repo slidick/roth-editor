@@ -390,6 +390,19 @@ func create_new_map(map_info: Dictionary) -> void:
 	loaded_maps[map_info.name] = map
 
 
+## Duplicate a map
+func duplicate_map(map_info: Dictionary, new_map_name: String) -> void:
+	var new_map_info: Dictionary = map_info.duplicate(true)
+	new_map_info.name = new_map_name
+	new_map_info.filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(new_map_name + ".RAW")
+	new_map_info.erase("filepath_json")
+	new_map_info.erase("vanilla")
+	maps.append(new_map_info)
+	DirAccess.copy_absolute(map_info.filepath, new_map_info.filepath)
+	Roth.save_metadata(new_map_info)
+	Roth.settings_loaded.emit()
+
+
 ## Takes a map and saves it to raw format, optionally overriding directory and player starting data
 func save_map(map: Map, directory: String = ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
 	var raw_map := map.compile(player_data)

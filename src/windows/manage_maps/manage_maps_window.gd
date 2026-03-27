@@ -148,6 +148,16 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 			if await Dialog.confirm("Are you sure you wish to delete the following maps?\n%s" % maps_string, "Confirm Deletion", false):
 				Roth.delete_maps(maps)
 				clear()
+		2:
+			var maps: Array = get_selected_maps()
+			if len(maps) > 1:
+				await Dialog.information("Only duplicate one at a time", "Info", false, Vector2(200,150))
+				return
+			var map_info: Dictionary = maps[0]
+			var new_map_name := await Roth.query_for_map_name("Duplicate %s" % map_info.name)
+			if new_map_name.is_empty():
+				return
+			Roth.duplicate_map(map_info, new_map_name)
 
 
 func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
