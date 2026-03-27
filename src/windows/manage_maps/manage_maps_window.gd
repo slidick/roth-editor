@@ -97,9 +97,14 @@ func _on_map_tree_cell_selected() -> void:
 	%MapName.text = "%s" % map_info.name
 	%DASFile.text = "%s" % map_info.das_info.name
 	%Commands.text = "%s" % len(map.commands_section.allCommands)
-	%ExportButton.disabled = false
-	%RunButton.disabled = false
-	%OpenButton.disabled = false
+	if "invalid" in map_info.das_info:
+		%ExportButton.disabled = true
+		%RunButton.disabled = true
+		%OpenButton.disabled = true
+	else:
+		%ExportButton.disabled = false
+		%RunButton.disabled = false
+		%OpenButton.disabled = false
 	if "vanilla" in map_info:
 		%ChangeDASButton.hide()
 	else:

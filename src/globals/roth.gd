@@ -302,9 +302,14 @@ func load_roth_settings() -> void:
 	
 	
 	for map_info: Dictionary in maps:
+		var das_found: bool = false
 		for das_info: Dictionary in das_packs:
 			if map_info.das.get_file().get_basename() == das_info.name:
 				map_info.das_info = das_info
+				das_found = true
+				break
+		if not das_found:
+			map_info.das_info = {"name": map_info.das+" (Invalid)", "invalid": true}
 	for map_info: Dictionary in maps:
 		map_info.erase("das")
 	
