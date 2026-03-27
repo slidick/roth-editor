@@ -308,12 +308,15 @@ func get_map(map_info: Dictionary) -> Map:
 
 ## Loads an array of maps textures using the das file then signals viewer window
 func load_maps(maps_array: Array) -> void:
+	var start_time: int = Time.get_ticks_msec()
+	get_index_from_das(0, get_das_info_by_name("ADEMO"), 293)
 	for map_info: Dictionary in maps_array:
 		map_loading_started.emit(map_info.name)
 		var map: Map = get_map(map_info)
 		await map.load_das()
 		map_loading_finished.emit(map)
 	map_loading_completely_finished.emit()
+	print("Maps loaded in: %.2fs" % ((Time.get_ticks_msec()-start_time)/1000.0))
 
 
 ## Deletes maps from the filesystem and removes them from the list of available maps
@@ -589,7 +592,7 @@ func _on_das_loading_updated(progress: float, das_info: Dictionary) -> void:
 ## Return or load the requested das_file. [br]
 ## Das files stay loaded after initial load.
 func get_das(das_info: Dictionary) -> Dictionary:
-	if das_info in loaded_das:
+	if das_info in loaded_das and "textures" in loaded_das[das_info]:
 		return loaded_das[das_info]
 	elif das_info in loading_das:
 		return await das_loading_finished
@@ -601,11 +604,18 @@ func get_das(das_info: Dictionary) -> Dictionary:
 
 
 ## Directly get a single image from a das file by index
-func get_index_from_das(index:int, das_info: Dictionary) -> Dictionary:
+func get_index_from_das(index:int, das_info: Dictionary, p_range: int = 1) -> Dictionary:
 	if das_info in loaded_das:
-		if index in loaded_das[das_info]:
-			return loaded_das[das_info][index]
-	return Das._get_index_from_das(index, das_info.filepath)
+		if index not in loaded_das[das_info].mapping:
+			var results: Array = Das.get_index_from_das(das_info, index, p_range)
+			for i in range(p_range):
+				loaded_das[das_info].mapping[results[i].index] = results[i]
+	else:
+		loaded_das[das_info] = {"mapping": {}}
+		var results: Array = Das.get_index_from_das(das_info, index, p_range)
+		for i in range(p_range):
+			loaded_das[das_info].mapping[results[i].index] = results[i]
+	return loaded_das[das_info].mapping[index]
 
 #endregion
 
