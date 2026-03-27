@@ -345,7 +345,10 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				line_edit.text = str(das[p_key][key])
 				
-				if key in ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x08", "unk_0x0A", "unk_0x10", "name", "desc", "modifier_2", "image_type_2"]:
+				var editable_keys: Array = ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x08", "unk_0x0A", "unk_0x0E", "unk_0x10", "name", "desc", "modifier_2", "image_type_2"]
+				editable_keys.append_array(Das.DIRECTIONAL_OBJECT_MAPPING_ENTRY.keys())
+				editable_keys.append_array(Das.MONSTER_MAPPING_ENTRY.keys())
+				if key in editable_keys:
 					line_edit.text_changed.connect(func (new_text: String) -> void:
 						if new_text.is_valid_int():
 							das[p_key][key] = int(new_text)
