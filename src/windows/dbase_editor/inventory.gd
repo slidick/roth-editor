@@ -309,7 +309,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	
 	
 	if inventory_item["object_texture_index"] >= 512:
-		var image: Dictionary = Roth.get_index_from_das(inventory_item["object_texture_index"]-512, Roth.get_das_info_by_name("ADEMO"))
+		var image: Dictionary = Roth.get_index_from_das(inventory_item["object_texture_index"]-512, Roth.get_active_ademo())
 		if "image" in image:
 			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
 	if "inventory_image" in inventory_item and inventory_item["inventory_image"] != 0:
@@ -705,7 +705,7 @@ func _on_inventory_image_offset_edit_text_submitted(_new_text: String = "") -> v
 func _on_object_texture_index_edit_text_submitted(_new_text: String = "") -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	if inventory_item["object_texture_index"] >= 512:
-		var image: Dictionary = Roth.get_index_from_das(inventory_item["object_texture_index"]-512, Roth.get_das_info_by_name("ADEMO"))
+		var image: Dictionary = Roth.get_index_from_das(inventory_item["object_texture_index"]-512, Roth.get_active_ademo())
 		if "image" in image:
 			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
 		else:

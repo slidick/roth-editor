@@ -22,6 +22,7 @@ var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
 var ROTH_CUSTOM_DBASE_DIRECTORY: String = OS.get_user_data_dir().path_join("dbase")
 var ROTH_CUSTOM_SFX_DIRECTORY: String = OS.get_user_data_dir().path_join("sfx")
 var ROTH_CUSTOM_DAS_DIRECTORY: String = OS.get_user_data_dir().path_join("das")
+var ROTH_CUSTOM_DAS2_DIRECTORY: String = OS.get_user_data_dir().path_join("das2")
 var ROTH_CUSTOM_INSTALL_DIRECTORY: String = OS.get_user_data_dir().path_join("install")
 var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
@@ -66,6 +67,7 @@ const default_texture_presets: Dictionary = {
 var res: Dictionary = {}
 var maps: Array = []
 var das_packs: Array = []
+var das2_packs: Array = []
 var dbase_packs: Array = []
 var sfx_packs: Array = []
 var install_directory: String = ""
@@ -88,6 +90,8 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_SFX_DIRECTORY)
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_DAS_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DAS_DIRECTORY)
+	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_DAS2_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DAS2_DIRECTORY)
 	
 	das_loading_updated.connect(_on_das_loading_updated)
 	Settings.settings_updated.connect(_on_settings_updated)
@@ -121,6 +125,7 @@ func load_roth_settings() -> void:
 	var locations: Variant = Settings.settings.get("locations")
 	maps.clear()
 	var das_files := []
+	var das2_files := []
 	if locations and locations.get("roth.res"):
 		install_directory = locations.get("roth.res").get_base_dir()
 		var file := FileAccess.open(locations.get("roth.res"), FileAccess.READ)
@@ -131,7 +136,7 @@ func load_roth_settings() -> void:
 				var line_split: Array = line.split("=")
 				if line_split[0] == "das2":
 					line_split[1] += ".das"
-					das_files.append(line_split[1].to_upper())
+					das2_files.append(line_split[1].to_upper())
 				res[line_split[0]] = line_split[1].to_upper()
 				
 			elif line.contains("maps"):
@@ -150,31 +155,6 @@ func load_roth_settings() -> void:
 				res[line] = true
 		file.close()
 		
-		for das: String in maps.map(func (map: Dictionary) -> String: return map.das ):
-			if das not in das_files:
-				das_files.append(das)
-		
-		das_files.sort()
-		
-		das_packs = []
-		for filename: String in das_files:
-			var das_info := { "name": filename.get_basename().get_file(), "filepath": install_directory.path_join("../DATA/").path_join(filename), "vanilla": true}
-			if das_info.name == "ADEMO":
-				das_info.is_ademo = true
-			else:
-				das_info.is_ademo = false
-			das_packs.append(das_info)
-		for filename: String in DirAccess.get_files_at(ROTH_CUSTOM_DAS_DIRECTORY):
-			if filename.get_extension().to_lower() == "das":
-				var das_info := { "name": filename.get_basename().get_file(), "filepath": ROTH_CUSTOM_DAS_DIRECTORY.path_join(filename)}
-				if das_info.name.begins_with("A"):
-					das_info.is_ademo = true
-				else:
-					das_info.is_ademo = false
-				das_packs.append(das_info)
-		
-		
-		
 		match res.version:
 			"ROTH VERSION F1.4":
 				res["exe_version"] = OLD_EXE
@@ -192,15 +172,63 @@ func load_roth_settings() -> void:
 				res["exe_version"] = 0.0
 		
 		
-		
 		var options: Dictionary = Settings.settings.get("options", {})
-		
 		if "active_dbase" not in options:
 			options.active_dbase = "Original"
 			Settings.update_settings("options", options)
 		if "active_sfx" not in options:
 			options.active_sfx = "Original"
 			Settings.update_settings("options", options)
+		if "active_ademo" not in options:
+			options.active_ademo = "ADEMO"
+			Settings.update_settings("options", options)
+		
+		
+		for das: String in maps.map(func (map: Dictionary) -> String: return map.das ):
+			if das not in das_files:
+				das_files.append(das)
+		
+		das_files.sort()
+		das_packs = []
+		for filename: String in das_files:
+			var das_info := { "name": filename.get_basename().get_file(), "filepath": install_directory.path_join("../DATA/").path_join(filename), "vanilla": true, "is_ademo": false}
+			das_packs.append(das_info)
+		
+		for filename: String in DirAccess.get_files_at(ROTH_CUSTOM_DAS_DIRECTORY):
+			if filename.get_extension().to_lower() == "das":
+				var das_info := { "name": filename.get_basename().get_file(), "filepath": ROTH_CUSTOM_DAS_DIRECTORY.path_join(filename), "is_ademo": false}
+				das_packs.append(das_info)
+		
+		das2_files.sort()
+		das2_packs = []
+		for filename: String in das2_files:
+			var das_info := {
+				"name": filename.get_basename().get_file(),
+				"filepath": install_directory.path_join("../DATA/").path_join(filename),
+				"vanilla": true,
+				"is_ademo": true,
+				"active": false,
+			}
+			das2_packs.append(das_info)
+			if das_info.name == options.active_ademo:
+				das_info.active = true
+		for filename: String in DirAccess.get_files_at(ROTH_CUSTOM_DAS2_DIRECTORY):
+			if filename.get_extension().to_lower() == "das":
+				var das_info := {
+					"name": filename.get_basename().get_file(),
+					"filepath": ROTH_CUSTOM_DAS2_DIRECTORY.path_join(filename),
+					"is_ademo": true,
+					"active": false,
+				}
+				if das_info.name == options.active_ademo:
+					das_info.active = true
+				
+				das2_packs.append(das_info)
+		
+		if options.active_ademo not in das2_packs.map(func (a:Dictionary) -> String: return a.name):
+			options.active_ademo = "ADEMO"
+			Settings.update_settings("options", options)
+		
 		
 		dbase_packs = [
 			{
@@ -309,7 +337,7 @@ func get_map(map_info: Dictionary) -> Map:
 ## Loads an array of maps textures using the das file then signals viewer window
 func load_maps(maps_array: Array) -> void:
 	var start_time: int = Time.get_ticks_msec()
-	get_index_from_das(0, get_das_info_by_name("ADEMO"), 293)
+	get_index_from_das(0, get_active_ademo(), 293)
 	for map_info: Dictionary in maps_array:
 		map_loading_started.emit(map_info.name)
 		var map: Map = get_map(map_info)
@@ -443,56 +471,65 @@ func test_run_maps(maps_to_run: Array, player_data: Dictionary = {}) -> void:
 	for i in range(len(maps_to_run)):
 		save_map(maps_to_run[i], ROTH_TEMP_DIRECTORY, player_data if i == 0 else {})
 	
+	
+	# If using a non vanilla sfx pack, copy into temporary directory
+	var current_sfx: Dictionary = get_active_sfx_info()
+	if "vanilla" not in current_sfx:
+		for file: String in DirAccess.get_files_at(ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name)):
+			var filepath := ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name).path_join(file)
+			var dest_filepath: String = ROTH_TEMP_DIRECTORY.path_join(file)
+			DirAccess.copy_absolute(filepath, dest_filepath)
+	
+	
+	# If using a non vanilla ademo, copy into temporary directory
+	var current_ademo: Dictionary = get_active_ademo()
+	if "vanilla" not in current_ademo:
+		var dest_filepath: String = ROTH_TEMP_DIRECTORY.path_join(current_ademo.name+".DAS")
+		DirAccess.copy_absolute(current_ademo.filepath, dest_filepath)
+	
+	
 	# Create the .res file in the temporary directory with the specified maps
 	var roth_res_test_filepath := ROTH_TEMP_DIRECTORY.path_join("test.res")
 	var roth_res_test := """version="Roth Custom Maps"
-snd=data\\fxscript.sfx
-das2=m\\ademo
+snd=%s
+das2=%s
 
 maps {
-"""
+""" % ["data\\fxscript" if "vanilla" in current_sfx else "D:\\fxscript", "m\\ademo" if "vanilla" in current_ademo else "D:\\"+current_ademo.name]
 	var vanilla_das: bool = true
 	for map: Map in maps_to_run:
-		roth_res_test += "D:\\%s M\\%s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das_info.name.replace("/", "\\").get_basename()]
-		if "vanilla" not in map.map_info.das_info:
+		if "vanilla" in map.map_info.das_info:
+			roth_res_test += "D:\\%s M\\%s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das_info.name.replace("/", "\\").get_basename()]
+		else:
+			roth_res_test += "D:\\%s D:\\%s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das_info.name.replace("/", "\\").get_basename()]
 			vanilla_das = false
 	roth_res_test += "}\n"
 	
+	# Write the .res file
 	var roth_res_test_file := FileAccess.open(roth_res_test_filepath, FileAccess.WRITE)
 	roth_res_test_file.store_string(roth_res_test)
 	roth_res_test_file.close()
 	
 	
+	# If using non vanilla map das, copy into temporary directory
+	if not vanilla_das:
+		for map: Map in maps_to_run:
+			if "vanilla" not in map.map_info.das_info:
+				var dest_filepath: String = ROTH_TEMP_DIRECTORY.path_join(map.map_info.das_info.name+".DAS")
+				DirAccess.copy_absolute(map.map_info.das_info.filepath, dest_filepath)
+	
+	
 	# Create custom install directory if using non vanilla dbase
-	var roth_directory: String
-	var current_dbase: Dictionary
-	var current_sfx: Dictionary
-	for dbase_info: Dictionary in dbase_packs:
-		if dbase_info.active:
-			current_dbase = dbase_info
-	for sfx_info: Dictionary in sfx_packs:
-		if sfx_info.active:
-			current_sfx = sfx_info
-	if "vanilla" not in current_dbase or "vanilla" not in current_sfx or not vanilla_das:
+	var roth_directory: String = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
+	var current_dbase: Dictionary = get_active_dbase()
+	
+	if "vanilla" not in current_dbase:
 		create_install(Roth.install_directory.path_join(".."), ROTH_CUSTOM_INSTALL_DIRECTORY)
 		roth_directory = ROTH_CUSTOM_INSTALL_DIRECTORY
-		if "vanilla" not in current_dbase:
-			for file: String in DirAccess.get_files_at(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name)):
-				var filepath := ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name).path_join(file)
-				var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join(file)
-				DirAccess.copy_absolute(filepath, dest_filepath)
-		if "vanilla" not in current_sfx:
-			for file: String in DirAccess.get_files_at(ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name)):
-				var filepath := ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx.name).path_join(file)
-				var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join("DATA").path_join(file)
-				DirAccess.copy_absolute(filepath, dest_filepath)
-		if not vanilla_das:
-			for map: Map in maps_to_run:
-				if "vanilla" not in map.map_info.das_info:
-					var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join("M").path_join(map.map_info.das_info.name+".DAS")
-					DirAccess.copy_absolute(map.map_info.das_info.filepath, dest_filepath)
-	else:
-		roth_directory = Settings.settings.locations.get("roth.res").get_base_dir().path_join("..")
+		for file: String in DirAccess.get_files_at(ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name)):
+			var filepath := ROTH_CUSTOM_DBASE_DIRECTORY.path_join(current_dbase.name).path_join(file)
+			var dest_filepath: String = ROTH_CUSTOM_INSTALL_DIRECTORY.path_join(file)
+			DirAccess.copy_absolute(filepath, dest_filepath)
 	
 	
 	# Create the dosbox auto exec .conf file
@@ -680,11 +717,11 @@ func create_install(installation_directory: String, roth_directory: String) -> v
 	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE400.DAT"), roth_directory.path_join("DBASE400.DAT"))
 	DirAccess.copy_absolute(installation_directory.path_join("DATA/DBASE500.DAT"), roth_directory.path_join("DBASE500.DAT"))
 	
-	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FXSCRIPT.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
-	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FX22.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
-	
 	if quick_refresh:
 		return
+	
+	#DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FXSCRIPT.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
+	DirAccess.copy_absolute(installation_directory.path_join("DATA/DATA/FX22.SFX"), roth_directory.path_join("DATA/FXSCRIPT.SFX"))
 	
 	DirAccess.copy_absolute(installation_directory.path_join("DATA/DOS4GW.EXE"), roth_directory.path_join("DOS4GW.EXE"))
 	if FileAccess.file_exists(installation_directory.path_join("DATA/ROTH.RES")):
@@ -1060,6 +1097,11 @@ func create_dbase_pack(p_dbase_name: String) -> void:
 	dbase_packs.append(dbase_info)
 	Roth.settings_loaded.emit()
 
+func get_active_dbase() -> Dictionary:
+	for dbase_info: Dictionary in dbase_packs:
+		if dbase_info.active:
+			return dbase_info
+	return {}
 #endregion
 
 #region SFX Packs
@@ -1170,7 +1212,9 @@ func get_active_sfx_info() -> Dictionary:
 
 func check_das_pack_name(p_name: String) -> String:
 	var error := ""
-	if p_name.to_lower() in das_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+	if (p_name.to_lower() in das_packs.map(func (d: Dictionary) -> String: return d.name.to_lower())
+		or p_name.to_lower() in das2_packs.map(func (d: Dictionary) -> String: return d.name.to_lower())
+	):
 		error = "Name already in use."
 	if not p_name.is_valid_filename():
 		error = "Can't contain the following: : / \\ ? * \" | % < >"
@@ -1187,6 +1231,17 @@ func duplicate_das_pack(p_das_info: Dictionary, new_name: String) -> void:
 	Roth.settings_loaded.emit()
 
 
+func duplicate_das2_pack(p_das_info: Dictionary, new_name: String) -> void:
+	var das_info := p_das_info.duplicate()
+	das_info.name = new_name.to_upper()
+	das_info.active = false
+	das_info.erase("vanilla")
+	das_info.filepath = ROTH_CUSTOM_DAS2_DIRECTORY.path_join(new_name.to_upper()+".DAS")
+	DirAccess.copy_absolute(p_das_info.filepath, das_info.filepath)
+	das2_packs.append(das_info)
+	Roth.settings_loaded.emit()
+
+
 func delete_das_pack(p_das_info: Dictionary) -> void:
 	if FileAccess.file_exists(p_das_info.filepath):
 		DirAccess.remove_absolute(p_das_info.filepath)
@@ -1194,9 +1249,31 @@ func delete_das_pack(p_das_info: Dictionary) -> void:
 	Roth.settings_loaded.emit()
 
 
+func delete_das2_pack(p_das_info: Dictionary) -> void:
+	if FileAccess.file_exists(p_das_info.filepath):
+		DirAccess.remove_absolute(p_das_info.filepath)
+	das2_packs.erase(p_das_info)
+	if p_das_info.active:
+		for das_info: Dictionary in das2_packs:
+			if das_info.name == "ADEMO":
+				das_info.active = true
+				Settings.update_settings("options", {"das_info": "ADEMO"})
+	Roth.settings_loaded.emit()
+
+
 func get_das_info_by_name(p_das_name: String) -> Dictionary:
 	for das_info: Dictionary in das_packs:
 		if das_info.name == p_das_name:
+			return das_info
+	for das_info: Dictionary in das2_packs:
+		if das_info.name == p_das_name:
+			return das_info
+	return {}
+
+
+func get_active_ademo() -> Dictionary:
+	for das_info: Dictionary in Roth.das2_packs:
+		if das_info.active:
 			return das_info
 	return {}
 #endregion

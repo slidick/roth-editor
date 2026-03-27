@@ -139,17 +139,17 @@ func load_recents(p_das_info: Dictionary) -> void:
 
 func load_ademo() -> void:
 	for i in range(293):
-		var texture: Dictionary = Roth.get_index_from_das(i, Roth.get_das_info_by_name("ADEMO"))
+		var texture: Dictionary = Roth.get_index_from_das(i, Roth.get_active_ademo())
 		if texture.name == "Invalid":
 			continue
 		var tex: Texture2D
 		if "image" in texture:
 			tex = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
 		elif "monster_index" in texture:
-			var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, Roth.get_das_info_by_name("ADEMO"))
+			var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, Roth.get_active_ademo())
 			tex = monster_texture.image
 		elif "directional_index" in texture:
-			var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, Roth.get_das_info_by_name("ADEMO"))
+			var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, Roth.get_active_ademo())
 			tex = directional_texture.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))

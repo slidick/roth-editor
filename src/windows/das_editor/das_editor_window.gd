@@ -23,9 +23,15 @@ func _on_settings_loaded() -> void:
 	for das_info: Dictionary in Roth.das_packs:
 		var idx: int = %DASList.add_item(das_info.name)
 		%DASList.set_item_metadata(idx, das_info)
+	%DAS2List.clear()
+	for das_info: Dictionary in Roth.das2_packs:
+		var idx: int = %DAS2List.add_item(das_info.name+" (Active)" if das_info.active else das_info.name)
+		%DAS2List.set_item_metadata(idx, das_info)
 
 
+#region DASList
 func _on_das_list_item_selected(_index: int) -> void:
+	%DAS2List.deselect_all()
 	var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
 	if "vanilla" in das_info:
 		%EditDASButton.disabled = true
@@ -37,8 +43,10 @@ func _on_das_list_item_clicked(index: int, at_position: Vector2, mouse_button_in
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			if "vanilla" in %DASList.get_item_metadata(index):
+				%DASListPopupMenu.set_item_disabled(0, true)
 				%DASListPopupMenu.set_item_disabled(1, true)
 			else:
+				%DASListPopupMenu.set_item_disabled(0, false)
 				%DASListPopupMenu.set_item_disabled(1, false)
 			%DASListPopupMenu.popup(Rect2(%DASList.global_position.x+at_position.x, %DASList.global_position.y+at_position.y, 0, 0))
 
@@ -46,6 +54,13 @@ func _on_das_list_item_clicked(index: int, at_position: Vector2, mouse_button_in
 func _on_das_list_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
+			print("RENAME")
+		1:
+			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
+			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
+				return
+			Roth.delete_das_pack(das_info)
+		2:
 			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
 			var err: String = "init"
 			var results: Array = [false, ""]
@@ -57,19 +72,83 @@ func _on_das_list_popup_menu_index_pressed(index: int) -> void:
 			Roth.duplicate_das_pack(das_info, results[1])
 			%DASList.select(%DASList.item_count - 1)
 			_on_das_list_item_selected(%DASList.item_count - 1)
-		1:
-			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
-			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
-				return
-			Roth.delete_das_pack(das_info)
-
-
-func _on_edit_das_button_pressed() -> void:
-	_edit_das(%DASList.get_item_metadata(%DASList.get_selected_items()[0]))
 
 
 func _on_das_list_item_activated(_index: int) -> void:
 	_edit_das(%DASList.get_item_metadata(%DASList.get_selected_items()[0]))
+#endregion
+
+
+#region DASList2
+func _on_das_2_list_item_selected(_index: int) -> void:
+	%DASList.deselect_all()
+	var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
+	if "vanilla" in das_info:
+		%EditDASButton.disabled = true
+	else:
+		%EditDASButton.disabled = false
+
+
+func _on_das_2_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+	match mouse_button_index:
+		MOUSE_BUTTON_RIGHT:
+			if "vanilla" in %DAS2List.get_item_metadata(index):
+				%DAS2ListPopupMenu.set_item_disabled(0, true)
+				%DAS2ListPopupMenu.set_item_disabled(1, true)
+			else:
+				%DAS2ListPopupMenu.set_item_disabled(0, false)
+				%DAS2ListPopupMenu.set_item_disabled(1, false)
+			if %DAS2List.get_item_metadata(index).active:
+				%DAS2ListPopupMenu.set_item_disabled(3, true)
+			else:
+				%DAS2ListPopupMenu.set_item_disabled(3, false)
+			%DAS2ListPopupMenu.popup(Rect2(%DAS2List.global_position.x+at_position.x, %DAS2List.global_position.y+at_position.y, 0, 0))
+
+
+func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			print("RENAME")
+		1:
+			var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
+			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
+				return
+			Roth.delete_das2_pack(das_info)
+		2:
+			var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
+			var err: String = "init"
+			var results: Array = [false, ""]
+			while not err.is_empty():
+				results = await Dialog.input("New Name:", "Duplicating DAS File: %s" % das_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
+				if not results[0]:
+					return
+				err = Roth.check_das_pack_name(results[1])
+			Roth.duplicate_das2_pack(das_info, results[1])
+			%DAS2List.select(%DAS2List.item_count - 1)
+			_on_das_2_list_item_selected(%DAS2List.item_count - 1)
+		3:
+			var new_index: int = %DAS2List.get_selected_items()[0]
+			for i in range(%DAS2List.item_count):
+				var das_info: Dictionary = %DAS2List.get_item_metadata(i)
+				if i == new_index:
+					das_info.active = true
+					%DAS2List.set_item_text(i, das_info.name+" (Active)")
+					Settings.update_settings("options", {"active_ademo": das_info.name})
+				else:
+					das_info.active = false
+					%DAS2List.set_item_text(i, das_info.name)
+
+
+func _on_das_2_list_item_activated(_index: int) -> void:
+	_edit_das(%DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0]))
+#endregion
+
+
+func _on_edit_das_button_pressed() -> void:
+	if len(%DASList.get_selected_items()) != 0:
+		_edit_das(%DASList.get_item_metadata(%DASList.get_selected_items()[0]))
+	if len(%DAS2List.get_selected_items()) != 0:
+		_edit_das(%DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0]))
 
 
 func _edit_das(das_info: Dictionary) -> void:

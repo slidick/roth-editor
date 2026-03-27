@@ -157,10 +157,10 @@ func update_texture(object: ObjectRoth) -> void:
 		object_das = object.map.map_info.das_info
 		object_index = object.data.textureIndex + 4096 + 256
 	elif object.data.textureSource == 2:
-		object_das = Roth.get_das_info_by_name("ADEMO")
+		object_das = Roth.get_active_ademo()
 		object_index = object.data.textureIndex
 	elif object.data.textureSource == 3:
-		object_das = Roth.get_das_info_by_name("ADEMO")
+		object_das = Roth.get_active_ademo()
 		object_index = object.data.textureIndex + 256
 	else:
 		%TextureNameLabel.text = "Invalid Source"
