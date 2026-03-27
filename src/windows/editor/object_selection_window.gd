@@ -94,6 +94,12 @@ func load_das(p_das: Dictionary) -> void:
 			var tex: Texture2D
 			if "image" in texture:
 				tex = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+			elif "monster_index" in texture:
+				var monster_texture: Dictionary = das.mapping[texture.monster_index]
+				tex = monster_texture.image
+			elif "directional_index" in texture:
+				var directional_texture: Dictionary = das.mapping[texture.directional_index]
+				tex = directional_texture.image
 			else:
 				tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 			
@@ -139,6 +145,12 @@ func load_ademo() -> void:
 		var tex: Texture2D
 		if "image" in texture:
 			tex = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+		elif "monster_index" in texture:
+			var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, Roth.get_das_info_by_name("ADEMO"))
+			tex = monster_texture.image
+		elif "directional_index" in texture:
+			var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, Roth.get_das_info_by_name("ADEMO"))
+			tex = directional_texture.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 			
