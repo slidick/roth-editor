@@ -2195,6 +2195,11 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
+[node name="EditObjectDASButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer/VBoxContainer" index="19" unique_id=96959552]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Edit Object"
+
 [node name="EditObjectTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer" index="1" unique_id=320841169]
 unique_name_in_owner = true
 wait_time = 1.5
@@ -3621,6 +3626,7 @@ item_1/id = 1
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer/VBoxContainer/HBoxContainer3/ObjectTextureIndexEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer" method="_on_object_texture_index_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer/VBoxContainer/HBoxContainer3/ObjectTextureSourceEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer" method="_on_object_texture_source_edit_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer/VBoxContainer/BrowseObjectsButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer" method="_on_browse_objects_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer/VBoxContainer/EditObjectDASButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer" method="_on_edit_object_das_button_pressed"]
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer/EditObjectTimer" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditObjectContainer" method="_on_edit_object_timer_timeout"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer/SFXPosXEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_pos_x_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer/SFXPosYEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_pos_y_edit_value_changed"]

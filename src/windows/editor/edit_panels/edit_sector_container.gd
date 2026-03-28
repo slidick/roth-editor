@@ -1,5 +1,13 @@
 extends MarginContainer
 
+enum {
+	SELECT_DASH,
+	SELECT_SKY,
+	SELECT_TEXTURE,
+	SELECT_PALETTE,
+	EDIT_TEXTURE,
+}
+
 var last_selection_length: int = 0
 
 
@@ -298,23 +306,28 @@ func update_selections(p_force_timeout: bool = true) -> void:
 			if each_sector.platform.floorTextureShiftY != sector.platform.floorTextureShiftY:
 				%PlatformFloorOffsetYEdit.get_line_edit().clear.call_deferred()
 	
-	%RoofTextureOption.add_item("--------")
-	%RoofTextureOption.add_item("Sky")
-	%RoofTextureOption.add_item("Select Texture")
-	%RoofTextureOption.add_item("Select Palette")
-	%FloorTextureOption.add_item("--------")
-	%FloorTextureOption.add_item("Sky")
-	%FloorTextureOption.add_item("Select Texture")
-	%FloorTextureOption.add_item("Select Palette")
+	%RoofTextureOption.add_item("--------", SELECT_DASH)
+	%RoofTextureOption.add_item("Sky", SELECT_SKY)
+	%RoofTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%RoofTextureOption.add_item("Select Palette", SELECT_PALETTE)
+	%FloorTextureOption.add_item("--------", SELECT_DASH)
+	%FloorTextureOption.add_item("Sky", SELECT_SKY)
+	%FloorTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%FloorTextureOption.add_item("Select Palette", SELECT_PALETTE)
 	
-	%PlatformRoofTextureOption.add_item("--------")
-	%PlatformRoofTextureOption.add_item("Sky")
-	%PlatformRoofTextureOption.add_item("Select Texture")
-	%PlatformRoofTextureOption.add_item("Select Palette")
-	%PlatformFloorTextureOption.add_item("--------")
-	%PlatformFloorTextureOption.add_item("Sky")
-	%PlatformFloorTextureOption.add_item("Select Texture")
-	%PlatformFloorTextureOption.add_item("Select Palette")
+	%PlatformRoofTextureOption.add_item("--------", SELECT_DASH)
+	%PlatformRoofTextureOption.add_item("Sky", SELECT_SKY)
+	%PlatformRoofTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%PlatformRoofTextureOption.add_item("Select Palette", SELECT_PALETTE)
+	%PlatformFloorTextureOption.add_item("--------", SELECT_DASH)
+	%PlatformFloorTextureOption.add_item("Sky", SELECT_SKY)
+	%PlatformFloorTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%PlatformFloorTextureOption.add_item("Select Palette", SELECT_PALETTE)
+	if "vanilla" not in sector.map.map_info.das_info:
+		%RoofTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
+		%FloorTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
+		%PlatformRoofTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
+		%PlatformFloorTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
 
 
 func _on_roof_height_edit_value_changed(value: float) -> void:
@@ -435,75 +448,89 @@ func _on_floor_scale_option_item_selected(index: int) -> void:
 
 
 func _on_roof_texture_option_item_selected(index: int) -> void:
-	if index == %RoofTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Palette.show_palette(das.palette)
-		%RoofTextureOption.select(0)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.data.ceilingTextureIndex = palette_index + 65280
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %RoofTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Texture.show_texture(das, true, owner.selected_sectors[0].data.ceilingTextureIndex)
-		%RoofTextureOption.select(0)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.data.ceilingTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %RoofTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		for sector: Sector in owner.selected_sectors:
-			sector.data.ceilingTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %RoofTextureOption.item_count - 4:
-		%RoofTextureOption.select(0)
+	var id: int = %RoofTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Palette.show_palette(das.palette)
+			%RoofTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.data.ceilingTextureIndex = palette_index + 65280
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Texture.show_texture(das, true, owner.selected_sectors[0].data.ceilingTextureIndex)
+			%RoofTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.data.ceilingTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			for sector: Sector in owner.selected_sectors:
+				sector.data.ceilingTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_DASH:
+			%RoofTextureOption.select(0)
+		EDIT_TEXTURE:
+			var sector: Sector = owner.selected_sectors[0]
+			var das: Dictionary = sector.map.das
+			%RoofTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, sector.data.ceilingTextureIndex)
 
 
 func _on_floor_texture_option_item_selected(index: int) -> void:
-	if index == %FloorTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Palette.show_palette(das.palette)
-		%FloorTextureOption.select(0)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.data.floorTextureIndex = palette_index + 65280
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %FloorTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Texture.show_texture(das, true, owner.selected_sectors[0].data.floorTextureIndex)
-		%FloorTextureOption.select(0)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.data.floorTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %FloorTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		for sector: Sector in owner.selected_sectors:
-			sector.data.floorTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %FloorTextureOption.item_count - 4:
-		%FloorTextureOption.select(0)
+	var id: int = %FloorTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Palette.show_palette(das.palette)
+			%FloorTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.data.floorTextureIndex = palette_index + 65280
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Texture.show_texture(das, true, owner.selected_sectors[0].data.floorTextureIndex)
+			%FloorTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.data.floorTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			for sector: Sector in owner.selected_sectors:
+				sector.data.floorTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_DASH:
+			%FloorTextureOption.select(0)
+		EDIT_TEXTURE:
+			var sector: Sector = owner.selected_sectors[0]
+			var das: Dictionary = sector.map.das
+			%FloorTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, sector.data.floorTextureIndex)
 
 
 func _on_roof_flip_x_check_box_toggled(toggled_on: bool) -> void:
@@ -599,37 +626,46 @@ func _on_platform_roof_scale_option_item_selected(index: int) -> void:
 
 
 func _on_platform_floor_texture_option_item_selected(index: int) -> void:
-	if index == %PlatformFloorTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Palette.show_palette(das.palette)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.platform.floorTextureIndex = palette_index + 65280
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %PlatformFloorTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Texture.show_texture(das, true, owner.selected_sectors[0].platform.floorTextureIndex)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.platform.floorTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %PlatformFloorTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		for sector: Sector in owner.selected_sectors:
-			sector.platform.floorTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %PlatformFloorTextureOption.item_count - 4:
-		%PlatformFloorTextureOption.select(0)
+	var id: int = %PlatformFloorTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Palette.show_palette(das.palette)
+			%PlatformFloorTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.platform.floorTextureIndex = palette_index + 65280
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Texture.show_texture(das, true, owner.selected_sectors[0].platform.floorTextureIndex)
+			%PlatformFloorTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.platform.floorTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			for sector: Sector in owner.selected_sectors:
+				sector.platform.floorTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_DASH:
+			%PlatformFloorTextureOption.select(0)
+		EDIT_TEXTURE:
+			var sector: Sector = owner.selected_sectors[0]
+			var das: Dictionary = sector.map.das
+			%PlatformFloorTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, sector.platform.floorTextureIndex)
 
 
 func _on_platform_floor_offset_x_edit_value_changed(value: float) -> void:
@@ -647,37 +683,46 @@ func _on_platform_floor_offset_y_edit_value_changed(value: float) -> void:
 
 
 func _on_platform_roof_texture_option_item_selected(index: int) -> void:
-	if index == %PlatformRoofTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Palette.show_palette(das.palette)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.platform.ceilingTextureIndex = palette_index + 65280
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %PlatformRoofTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		%Texture.show_texture(das, true, owner.selected_sectors[0].platform.ceilingTextureIndex)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for sector: Sector in owner.selected_sectors:
-			sector.platform.ceilingTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %PlatformRoofTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_sectors[0].map.das
-		for sector: Sector in owner.selected_sectors:
-			sector.platform.ceilingTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_sectors)
-		%EditSectorTimer.start()
-	elif index == %PlatformRoofTextureOption.item_count - 4:
-		%PlatformRoofTextureOption.select(0)
+	var id: int = %PlatformRoofTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Palette.show_palette(das.palette)
+			%PlatformRoofTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.platform.ceilingTextureIndex = palette_index + 65280
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			%Texture.show_texture(das, true, owner.selected_sectors[0].platform.ceilingTextureIndex)
+			%PlatformRoofTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for sector: Sector in owner.selected_sectors:
+				sector.platform.ceilingTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_sectors[0].map.das
+			for sector: Sector in owner.selected_sectors:
+				sector.platform.ceilingTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_sectors)
+			%EditSectorTimer.start()
+		SELECT_DASH:
+			%PlatformRoofTextureOption.select(0)
+		EDIT_TEXTURE:
+			var sector: Sector = owner.selected_sectors[0]
+			var das: Dictionary = sector.map.das
+			%PlatformRoofTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, sector.platform.ceilingTextureIndex)
 
 
 func _on_platform_roof_offset_x_edit_value_changed(value: float) -> void:

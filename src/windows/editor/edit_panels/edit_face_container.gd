@@ -1,5 +1,13 @@
 extends MarginContainer
 
+enum {
+	SELECT_DASH,
+	SELECT_SKY,
+	SELECT_TEXTURE,
+	SELECT_PALETTE,
+	EDIT_TEXTURE,
+}
+
 var last_selection_length: int = 0
 
 
@@ -223,126 +231,151 @@ func update_selections(p_force_timeout: bool = true) -> void:
 			if each_face.texture_data.additionalMetadata.unk0x0C != face.texture_data.additionalMetadata.unk0x0C:
 				%"0x0CEdit".text = ""
 	
-	%TopTextureOption.add_item("--------")
-	%TopTextureOption.add_item("Sky")
-	%TopTextureOption.add_item("Select Texture")
-	%TopTextureOption.add_item("Select Palette")
-	%MidTextureOption.add_item("--------")
-	%MidTextureOption.add_item("Sky")
-	%MidTextureOption.add_item("Select Texture")
-	%MidTextureOption.add_item("Select Palette")
-	%BottomTextureOption.add_item("--------")
-	%BottomTextureOption.add_item("Sky")
-	%BottomTextureOption.add_item("Select Texture")
-	%BottomTextureOption.add_item("Select Palette")
+	%TopTextureOption.add_item("--------", SELECT_DASH)
+	%TopTextureOption.add_item("Sky", SELECT_SKY)
+	%TopTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%TopTextureOption.add_item("Select Palette", SELECT_PALETTE)
+	%MidTextureOption.add_item("--------", SELECT_DASH)
+	%MidTextureOption.add_item("Sky", SELECT_SKY)
+	%MidTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%MidTextureOption.add_item("Select Palette", SELECT_PALETTE)
+	%BottomTextureOption.add_item("--------", SELECT_DASH)
+	%BottomTextureOption.add_item("Sky", SELECT_SKY)
+	%BottomTextureOption.add_item("Select Texture", SELECT_TEXTURE)
+	%BottomTextureOption.add_item("Select Palette", SELECT_PALETTE)
+	if "vanilla" not in face.map.map_info.das_info:
+		%TopTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
+		%MidTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
+		%BottomTextureOption.add_item("Edit Texture", EDIT_TEXTURE)
 
 
 func _on_bottom_texture_option_item_selected(index: int) -> void:
-	if index == %BottomTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		%Palette.show_palette(das.palette)
-		%BottomTextureOption.select(0)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for face: Face in owner.selected_faces:
-			face.texture_data.lowerTextureIndex = palette_index + 32768
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %BottomTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.lowerTextureIndex)
-		%BottomTextureOption.select(0)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for face: Face in owner.selected_faces:
-			face.texture_data.lowerTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %BottomTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		for face: Face in owner.selected_faces:
-			face.texture_data.lowerTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %BottomTextureOption.item_count - 4:
-		%BottomTextureOption.select(0)
+	var id: int = %BottomTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			%Palette.show_palette(das.palette)
+			%BottomTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for face: Face in owner.selected_faces:
+				face.texture_data.lowerTextureIndex = palette_index + 32768
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.lowerTextureIndex)
+			%BottomTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for face: Face in owner.selected_faces:
+				face.texture_data.lowerTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			for face: Face in owner.selected_faces:
+				face.texture_data.lowerTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_DASH:
+			%BottomTextureOption.select(0)
+		EDIT_TEXTURE:
+			var face: Face = owner.selected_faces[0]
+			var das: Dictionary = face.map.das
+			%BottomTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, face.texture_data.lowerTextureIndex)
 
 
 func _on_mid_texture_option_item_selected(index: int) -> void:
-	if index == %MidTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		%Palette.show_palette(das.palette)
-		%MidTextureOption.select(0)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for face: Face in owner.selected_faces:
-			face.texture_data.midTextureIndex = palette_index + 32768
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %MidTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.midTextureIndex)
-		%MidTextureOption.select(0)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for face: Face in owner.selected_faces:
-			face.texture_data.midTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %MidTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		for face: Face in owner.selected_faces:
-			face.texture_data.midTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %MidTextureOption.item_count - 4:
-		%MidTextureOption.select(0)
+	var id: int = %MidTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			%Palette.show_palette(das.palette)
+			%MidTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for face: Face in owner.selected_faces:
+				face.texture_data.midTextureIndex = palette_index + 32768
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.midTextureIndex)
+			%MidTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for face: Face in owner.selected_faces:
+				face.texture_data.midTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			for face: Face in owner.selected_faces:
+				face.texture_data.midTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_DASH:
+			%MidTextureOption.select(0)
+		EDIT_TEXTURE:
+			var face: Face = owner.selected_faces[0]
+			var das: Dictionary = face.map.das
+			%MidTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, face.texture_data.midTextureIndex)
 
 
 func _on_top_texture_option_item_selected(index: int) -> void:
-	if index == %TopTextureOption.item_count - 1:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		%Palette.show_palette(das.palette)
-		%TopTextureOption.select(0)
-		var palette_index: int = await %Palette.color_selected
-		if palette_index < 0:
-			return
-		for face: Face in owner.selected_faces:
-			face.texture_data.upperTextureIndex = palette_index + 32768
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %TopTextureOption.item_count - 2:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.upperTextureIndex)
-		%TopTextureOption.select(0)
-		var texture_index: int = await %Texture.texture_selected
-		if texture_index < 0:
-			return
-		for face: Face in owner.selected_faces:
-			face.texture_data.upperTextureIndex = texture_index
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %TopTextureOption.item_count - 3:
-		var das: Dictionary = owner.selected_faces[0].map.das
-		for face: Face in owner.selected_faces:
-			face.texture_data.upperTextureIndex = das.textures[0].index
-		update_selections(false)
-		owner.redraw(owner.selected_faces)
-		%EditFaceTimer.start()
-	elif index == %TopTextureOption.item_count - 4:
-		%TopTextureOption.select(0)
+	var id: int = %TopTextureOption.get_item_id(index)
+	match id:
+		SELECT_PALETTE:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			%Palette.show_palette(das.palette)
+			%TopTextureOption.select(0)
+			var palette_index: int = await %Palette.color_selected
+			if palette_index < 0:
+				return
+			for face: Face in owner.selected_faces:
+				face.texture_data.upperTextureIndex = palette_index + 32768
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_TEXTURE:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			%Texture.show_texture(das, false, owner.selected_faces[0].texture_data.upperTextureIndex)
+			%TopTextureOption.select(0)
+			var texture_index: int = await %Texture.texture_selected
+			if texture_index < 0:
+				return
+			for face: Face in owner.selected_faces:
+				face.texture_data.upperTextureIndex = texture_index
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_SKY:
+			var das: Dictionary = owner.selected_faces[0].map.das
+			for face: Face in owner.selected_faces:
+				face.texture_data.upperTextureIndex = das.textures[0].index
+			update_selections(false)
+			owner.redraw(owner.selected_faces)
+			%EditFaceTimer.start()
+		SELECT_DASH:
+			%TopTextureOption.select(0)
+		EDIT_TEXTURE:
+			var face: Face = owner.selected_faces[0]
+			var das: Dictionary = face.map.das
+			%TopTextureOption.select(0)
+			Roth.edit_texture.emit(das.das_info, face.texture_data.upperTextureIndex)
 
 
 func _on_transparency_check_box_toggled(toggled_on: bool) -> void:

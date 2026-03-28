@@ -15,6 +15,8 @@ signal gdv_loading_updated(progress: float)
 signal close_map(map: Map)
 @warning_ignore("unused_signal")
 signal editor_action(p_map_info: Dictionary, p_name: String)
+@warning_ignore("unused_signal")
+signal edit_texture(p_das_info: Dictionary, p_index: int)
 
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0

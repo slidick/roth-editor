@@ -145,6 +145,17 @@ func update_selections() -> void:
 			%ObjectFlagButton7.indeterminate = true
 		if ((each_object.data.unk0x07 & (1<<7)) > 0) != ((object.data.unk0x07 & (1<<7)) > 0):
 			%ObjectFlagButton8.indeterminate = true
+	
+	if object.data.textureSource == 0 or object.data.textureSource ==  1:
+		if "vanilla" in object.map.map_info.das_info:
+			%EditObjectDASButton.hide()
+		else:
+			%EditObjectDASButton.show()
+	if object.data.textureSource == 2 or object.data.textureSource ==  3:
+		if "vanilla" in Roth.get_active_ademo():
+			%EditObjectDASButton.hide()
+		else:
+			%EditObjectDASButton.show()
 
 
 func update_texture(object: ObjectRoth) -> void:
@@ -387,3 +398,22 @@ func _on_edit_object_timer_timeout() -> void:
 		Roth.editor_action.emit(owner.selected_objects[0].map, "Edit Object")
 	elif last_selection_length > 1:
 		Roth.editor_action.emit(owner.selected_objects[0].map, "Edit Objects")
+
+
+func _on_edit_object_das_button_pressed() -> void:
+	var object: ObjectRoth = owner.selected_objects[0]
+	var object_das: Dictionary = {}
+	var object_index: int = -1
+	if object.data.textureSource == 0:
+		object_das = object.map.map_info.das_info
+		object_index = object.data.textureIndex + 4096
+	elif object.data.textureSource == 1:
+		object_das = object.map.map_info.das_info
+		object_index = object.data.textureIndex + 4096 + 256
+	elif object.data.textureSource == 2:
+		object_das = Roth.get_active_ademo()
+		object_index = object.data.textureIndex
+	elif object.data.textureSource == 3:
+		object_das = Roth.get_active_ademo()
+		object_index = object.data.textureIndex + 256
+	Roth.edit_texture.emit(object_das, object_index)

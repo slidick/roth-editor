@@ -8,6 +8,7 @@ var save_tween: Tween
 func _ready() -> void:
 	super._ready()
 	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.edit_texture.connect(_on_edit_texture)
 	window_title = "Manage DAS Files"
 	%ListContainer.show()
 	%EditContainer.hide()
@@ -151,6 +152,21 @@ func _on_edit_das_button_pressed() -> void:
 		_edit_das(%DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0]))
 
 
+func _on_edit_texture(p_das_info: Dictionary, p_index: int) -> void:
+	#print("Edit index: %d DAS: %s" % [p_index, p_das_info.name])
+	toggle(true)
+	if not das.is_empty():
+		if das.das_info == p_das_info:
+			_on_filenames_jump_to_pressed(p_index)
+		else:
+			if await _on_cancel_button_pressed():
+				_edit_das(p_das_info)
+				_on_filenames_jump_to_pressed(p_index)
+	else:
+		_edit_das(p_das_info)
+		_on_filenames_jump_to_pressed(p_index)
+
+
 func _edit_das(das_info: Dictionary) -> void:
 	if "vanilla" in das_info:
 		return
@@ -169,16 +185,17 @@ func _edit_das(das_info: Dictionary) -> void:
 	%EditContainer.show()
 
 
-func _on_cancel_button_pressed() -> void:
+func _on_cancel_button_pressed() -> bool:
 	if original_das != das:
 		if not await Dialog.confirm("There are unsaved changes!\nAre you sure?", "Changes will be lost!", false, Vector2(400,200)):
-			return
+			return false
 	das = {}
 	original_das = {}
 	%ListContainer.show()
 	%EditContainer.hide()
 	window_title = "Manage DAS Files"
 	reset_das()
+	return true
 
 
 func _on_save_button_pressed() -> void:
