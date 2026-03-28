@@ -365,14 +365,15 @@ func _on_render_billboard_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_browse_objects_button_pressed() -> void:
-	var new_object: Dictionary = await %ObjectSelection.wait_for_object_selection(owner.selected_objects[0].map.das)
+	var new_object: Dictionary = await %ObjectSelection.wait_for_object_selection(owner.selected_objects[0])
 	if new_object.is_empty():
 		return
 	var i: int = 0
+	var active_ademo: Dictionary = Roth.get_active_ademo()
 	for object: ObjectRoth in owner.selected_objects:
 		var source := 0
 		var index := 0
-		if new_object.das_info.name == "ADEMO":
+		if new_object.das_info == active_ademo:
 			source = 2
 			index = new_object.index
 			if new_object.index >= 256:

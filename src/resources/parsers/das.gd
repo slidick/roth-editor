@@ -1772,3 +1772,23 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 	
 	return pos
 #endregion
+
+#region Utility
+static func get_texture_from_object(p_object: ObjectRoth) -> Dictionary:
+	var object_das: Dictionary = {}
+	var object_index: int = -1
+	var object_texture: Dictionary = {}
+	if p_object.data.textureSource == 0:
+		object_das = p_object.map.das
+		object_index = p_object.data.textureIndex + 4096
+		object_texture = object_das.mapping[object_index]
+	elif p_object.data.textureSource == 1:
+		object_das = p_object.map.das
+		object_index = p_object.data.textureIndex + 4096 + 256
+		object_texture = object_das.mapping[object_index]
+	elif p_object.data.textureSource == 2:
+		object_texture = Roth.get_index_from_das(p_object.data.textureIndex, Roth.get_active_ademo())
+	elif p_object.data.textureSource == 3:
+		object_texture = Roth.get_index_from_das(p_object.data.textureIndex + 256, Roth.get_active_ademo())
+	return object_texture
+#endregion

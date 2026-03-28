@@ -17,8 +17,6 @@ func toggle(_bool: Variant = null) -> void:
 func _on_settings_loaded() -> void:
 	%DasOption.clear()
 	for das_info: Dictionary in Roth.das_packs:
-		if das_info.name.ends_with("ADEMO.DAS"):
-			continue
 		%DasOption.add_item(das_info.name)
 
 

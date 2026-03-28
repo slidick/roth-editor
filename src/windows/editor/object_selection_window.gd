@@ -27,14 +27,17 @@ func _ready() -> void:
 		favorites = objects.favorites
 
 
-func wait_for_object_selection(p_das: Dictionary) -> Dictionary:
+func wait_for_object_selection(p_current_object: ObjectRoth) -> Dictionary:
 	%RotatableItemList.clear()
 	%RecentItemList.clear()
 	%FavoriteItemList.clear()
-	load_das(p_das)
-	load_favorites(p_das.das_info)
-	load_recents(p_das.das_info)
-	load_ademo()
+	%SearchEdit.show()
+	load_das(p_current_object.map.das)
+	load_favorites(p_current_object.map.das.das_info)
+	load_recents(p_current_object.map.das.das_info)
+	load_ademo(true)
+	_on_search_edit_text_changed(%SearchEdit.text)
+	select_object(p_current_object)
 	toggle(true)
 	var selected_object: Dictionary = await item_selected
 	toggle(false)
@@ -47,7 +50,9 @@ func ademo_object_selection() -> Dictionary:
 	%RotatableItemList.clear()
 	%RecentItemList.clear()
 	%FavoriteItemList.clear()
-	load_ademo()
+	%SearchEdit.show()
+	%SearchEdit.clear()
+	load_ademo(false)
 	toggle(true)
 	var item: Dictionary = await item_selected
 	toggle(false)
@@ -61,6 +66,7 @@ func dbase200_object_selection() -> int:
 	%FavRecentContainer.hide()
 	%InfoContainer.hide()
 	%RotatableItemList.clear()
+	%SearchEdit.hide()
 	load_dbase200()
 	toggle(true)
 	var item: Dictionary = await item_selected
@@ -75,6 +81,7 @@ func dbase300_object_selection() -> int:
 	%FavRecentContainer.hide()
 	%InfoContainer.hide()
 	%RotatableItemList.clear()
+	%SearchEdit.hide()
 	load_dbase300()
 	toggle(true)
 	var item: Dictionary = await item_selected
@@ -108,6 +115,7 @@ func load_das(p_das: Dictionary) -> void:
 
 
 func load_favorites(p_das_info: Dictionary) -> void:
+	var active_ademo: Dictionary = Roth.get_active_ademo()
 	for favorite_data: Dictionary in favorites:
 		var das_info: Dictionary = Roth.get_das_info_by_name(favorite_data.das)
 		var texture_data: Dictionary = Roth.get_index_from_das(favorite_data.index, das_info)
@@ -118,11 +126,12 @@ func load_favorites(p_das_info: Dictionary) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 		%FavoriteItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das_info.name != p_das_info.name and texture_data.das_info.name != "ADEMO":
+		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != active_ademo:
 			%FavoriteItemList.set_hidden(idx, true)
 
 
 func load_recents(p_das_info: Dictionary) -> void:
+	var active_ademo: Dictionary = Roth.get_active_ademo()
 	for recent_data: Dictionary in recents:
 		var das_info: Dictionary = Roth.get_das_info_by_name(recent_data.das)
 		var texture_data: Dictionary = Roth.get_index_from_das(recent_data.index, das_info)
@@ -133,11 +142,11 @@ func load_recents(p_das_info: Dictionary) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 		%RecentItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das_info.name != p_das_info.name and texture_data.das_info.name != "ADEMO":
+		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != active_ademo:
 			%RecentItemList.set_hidden(idx, true)
 
 
-func load_ademo() -> void:
+func load_ademo(p_show_add_to_favorites: bool = false) -> void:
 	for i in range(293):
 		var texture: Dictionary = Roth.get_index_from_das(i, Roth.get_active_ademo())
 		if texture.name == "Invalid":
@@ -153,16 +162,19 @@ func load_ademo() -> void:
 			tex = directional_texture.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
-			
-		var idx: int = %RotatableItemList.add_item("%s: %s\n%s x %s" % [texture.index, texture.name, texture.height, texture.width], tex, Vector2(150,150), Array(["Add to Favorites"], TYPE_STRING, "", null))
+		
+		var right_click_array: Array[String] = []
+		if p_show_add_to_favorites:
+			right_click_array = Array(["Add to Favorites"], TYPE_STRING, "", null)
+		
+		var idx: int = %RotatableItemList.add_item("%s: %s\n%s x %s" % [texture.index, texture.name, texture.height, texture.width], tex, Vector2(150,150), right_click_array)
 		%RotatableItemList.set_item_metadata(idx, texture)
 
 
 func load_dbase200() -> void:
 	for item: Dictionary in DBase200.parse_full():
 		var tex := ImageTexture.create_from_image(item.image)
-		
-		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150), Array(["Add to Favorites"], TYPE_STRING, "", null))
+		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
 		%RotatableItemList.set_item_metadata(idx, item)
 		%RotatableItemList.set_rotated(idx, false)
 
@@ -173,9 +185,18 @@ func load_dbase300() -> void:
 		var gdv: Dictionary = DBase300.get_at_offset(offset)
 		gdv.offset = offset
 		var tex := ImageTexture.create_from_image(gdv.video[0])
-		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150), Array(["Add to Favorites"], TYPE_STRING, "", null))
+		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
 		%RotatableItemList.set_item_metadata(idx, gdv)
 		%RotatableItemList.set_rotated(idx, false)
+
+
+func select_object(p_object: ObjectRoth) -> void:
+	var texture: Dictionary = Das.get_texture_from_object(p_object)
+	for i in range(%RotatableItemList.item_count):
+		var object_texture: Dictionary = %RotatableItemList.get_item_metadata(i)
+		if object_texture == texture:
+			%RotatableItemList.select(i)
+			%RotatableItemList.scroll_to_index(i)
 
 
 func _on_rotatable_item_list_item_activated(index: int) -> void:
@@ -274,3 +295,15 @@ func _on_recent_item_list_item_selected(index: int) -> void:
 	%RotatableItemList.deselect_all()
 	%FavoriteItemList.deselect_all()
 	display_texture_data(%RecentItemList.get_item_metadata(index))
+
+
+func _on_search_edit_text_changed(new_text: String) -> void:
+	for i in range(%RotatableItemList.item_count):
+		if (%RotatableItemList.get_item_metadata(i).name.to_lower().contains(new_text.to_lower())
+			or %RotatableItemList.get_item_metadata(i).desc.to_lower().contains(new_text.to_lower())
+			or str(%RotatableItemList.get_item_metadata(i).index).to_lower().contains(new_text.to_lower())
+			or new_text.is_empty()
+		):
+			%RotatableItemList.set_hidden(i, false)
+		else:
+			%RotatableItemList.set_hidden(i, true)

@@ -11,8 +11,6 @@ func _ready() -> void:
 func _on_settings_loaded() -> void:
 	%DASOptions.clear()
 	for das_info: Dictionary in Roth.das_packs:
-		if das_info.name.to_upper().contains("ADEMO"):
-			continue
 		%DASOptions.add_item(das_info.name)
 		%DASOptions.set_item_metadata(%DASOptions.item_count-1, das_info)
 

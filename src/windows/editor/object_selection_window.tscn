@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://d0qwk04pu2mgq" path="res://src/utils/rotatable_item_list.tscn" id="5_a2r2s"]
 
 [node name="ObjectSelectionWindow" unique_id=1401260369 instance=ExtResource("1_vjf0r")]
-offset_right = 1560.0
-offset_bottom = 880.0
+offset_right = 1084.0
+offset_bottom = 691.0
 theme = ExtResource("2_0liay")
 script = ExtResource("3_a2r2s")
 minimize_style = "fade_out"
@@ -23,6 +23,8 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=621994560]
 layout_mode = 2
+split_offsets = PackedInt32Array(2000)
+split_offset = 2000
 
 [node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="0" unique_id=1119309400]
 layout_mode = 2
@@ -65,10 +67,22 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="1" unique_id=1164461198 instance=ExtResource("5_a2r2s")]
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer" index="1" unique_id=1429819684]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.5
+
+[node name="RotatableItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VBoxContainer" index="0" unique_id=1164461198 instance=ExtResource("5_a2r2s")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_stretch_ratio = 4.5
+size_flags_horizontal = 1
+
+[node name="SearchEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VBoxContainer" index="1" unique_id=1441953229]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Search..."
+keep_editing_on_text_submit = true
+clear_button_enabled = true
 
 [node name="InfoContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer" index="1" unique_id=1952668669]
 unique_name_in_owner = true
@@ -87,6 +101,7 @@ size_flags_vertical = 3
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer/FavoriteItemList" to="." method="_on_favorite_item_list_item_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2/RecentItemList" to="." method="_on_recent_item_list_item_activated"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/FavRecentContainer/VBoxContainer2/RecentItemList" to="." method="_on_recent_item_list_item_selected"]
-[connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/RotatableItemList" to="." method="_on_rotatable_item_list_context_option_selected"]
-[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/RotatableItemList" to="." method="_on_rotatable_item_list_item_activated"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/RotatableItemList" to="." method="_on_rotatable_item_list_item_selected"]
+[connection signal="context_option_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VBoxContainer/RotatableItemList" to="." method="_on_rotatable_item_list_context_option_selected"]
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VBoxContainer/RotatableItemList" to="." method="_on_rotatable_item_list_item_activated"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VBoxContainer/RotatableItemList" to="." method="_on_rotatable_item_list_item_selected"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HSplitContainer/HSplitContainer/VBoxContainer/SearchEdit" to="." method="_on_search_edit_text_changed"]
