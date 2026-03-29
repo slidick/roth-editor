@@ -227,6 +227,7 @@ func _on_section_item_list_item_selected(index: int) -> void:
 func load_das(p_das: Dictionary) -> void:
 	%Header.load_das(p_das)
 	%Palette.load_das(p_das)
+	%PaletteShading.load_das(p_das)
 	%Unk0x10.load_das(p_das, "unk_0x10_section")
 	%Fat1.load_das(p_das, "fat_1", 0)
 	%Fat2.load_das(p_das, "fat_2", len(p_das["fat_1"]))

@@ -8,11 +8,15 @@ func load_das(p_das: Dictionary) -> void:
 	var node: Node = _create_palette_node(p_das.palette)
 	if node:
 		%DefaultPalette.add_child(node)
+		%PaletteSlider.set_value_no_signal(0)
+		_on_palette_slider_value_changed(0)
 
 
 func reset() -> void:
 	das = {}
 	for child: Control in %DefaultPalette.get_children():
+		child.queue_free()
+	for child: Control in %ShadedPalette.get_children():
 		child.queue_free()
 
 
@@ -43,3 +47,26 @@ func _create_palette_node(palette: Array) -> Control:
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin.add_child(hbox)
 	return margin
+
+
+func _on_palette_slider_value_changed(value: float) -> void:
+	for child: Control in %ShadedPalette.get_children():
+		child.queue_free()
+	
+	var append_text := ""
+	if %PaletteSlider.value < 32:
+		append_text = "Distance Shading"
+	elif %PaletteSlider.value < 64:
+		append_text = "Tinted Shading"
+	elif %PaletteSlider.value < 320:
+		append_text = "Transparency Blend"
+	elif %PaletteSlider.value < 321:
+		append_text = "Blue-Tinted Darken"
+	elif %PaletteSlider.value < 322:
+		append_text = "Color Cooling"
+	%PaletteLabel.text = "%d / 322 -- %s" % [(%PaletteSlider.value + 1), append_text]
+	if das["palette_shading"].is_empty():
+		return
+	var palette_remap: Array = das["palette_shading"][%PaletteSlider.value]
+	var palette_control: Control = _create_palette_node(palette_remap.map(func (r:int) -> Array: return das.palette[r]))
+	%ShadedPalette.add_child(palette_control)

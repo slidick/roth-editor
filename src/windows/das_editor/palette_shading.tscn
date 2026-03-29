@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://c4jw70n45a6mx"]
+
+[ext_resource type="Script" uid="uid://dew75i8xvlhqo" path="res://src/windows/das_editor/palette_shading.gd" id="1_rm4ei"]
+
+[node name="DASPalette" type="MarginContainer" unique_id=1091046701]
+offset_right = 915.0
+offset_bottom = 588.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_rm4ei")
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=194096588]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=557273467]
+layout_mode = 2
+
+[node name="PaletteLabel" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=854797302]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PaletteSlider" type="HSlider" parent="VBoxContainer/VBoxContainer" unique_id=289226926]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 321.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1477678050]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DefaultPalette" type="Control" parent="VBoxContainer/HBoxContainer2" unique_id=1256521562]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer2" unique_id=519091141]
+layout_mode = 2
+
+[node name="ShadedPalette" type="Control" parent="VBoxContainer/HBoxContainer2" unique_id=1405096414]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="value_changed" from="VBoxContainer/VBoxContainer/PaletteSlider" to="." method="_on_palette_slider_value_changed"]
