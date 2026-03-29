@@ -25,15 +25,74 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2" unique_id=91097016]
 layout_mode = 2
 
-[node name="ColorPicker" type="ColorPicker" parent="VBoxContainer/HBoxContainer2" unique_id=1402062615]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1134429254]
+layout_mode = 2
+
+[node name="ColorPicker" type="ColorPicker" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1402062615]
 unique_name_in_owner = true
 layout_mode = 2
 edit_alpha = false
 edit_intensity = false
 picker_shape = 2
-color_modes_visible = false
 presets_visible = false
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1745955335]
+layout_mode = 2
+text = "Hue"
+
+[node name="HueSlider" type="HSlider" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=257321723]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=91254556]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=303075016]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Hue Shift"
+
+[node name="HueShiftSlider" type="HSlider" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=856816374]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 2
+max_value = 1.0
+step = 0.01
+
+[node name="RandomizeButton" type="Button" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1041380499]
+layout_mode = 2
+text = "Randomize Selected"
+
+[node name="ResetSelectedButton" type="Button" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1983753141]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Reset Selected"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1501436626]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ResetPaletteButton" type="Button" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=866905697]
+layout_mode = 2
+text = "Reset All"
+
+[node name="SlowdownTimer" type="Timer" parent="." unique_id=1067603264]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
+
+[connection signal="color_changed" from="VBoxContainer/HBoxContainer2/VBoxContainer/ColorPicker" to="." method="_on_color_picker_color_changed"]
+[connection signal="drag_ended" from="VBoxContainer/HBoxContainer2/VBoxContainer/HueSlider" to="." method="_on_hue_slider_drag_ended"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer2/VBoxContainer/HueSlider" to="." method="_on_hue_slider_value_changed"]
+[connection signal="drag_ended" from="VBoxContainer/HBoxContainer2/VBoxContainer/HueShiftSlider" to="." method="_on_hue_shift_slider_drag_ended"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer2/VBoxContainer/HueShiftSlider" to="." method="_on_hue_shift_slider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/RandomizeButton" to="." method="_on_randomize_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/ResetSelectedButton" to="." method="_on_reset_selected_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/ResetPaletteButton" to="." method="_on_reset_palette_button_pressed"]

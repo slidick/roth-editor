@@ -41,30 +41,3 @@ func show_palette(palette: Array) -> void:
 	%MainContainer.add_child(margin)
 	
 	toggle(true)
-
-
-class ColorRectButton extends ColorRect:
-	var border: ColorRect
-	func _ready() -> void:
-		border = ColorRect.new()
-		border.color = Color.WHITE_SMOKE
-		border.anchor_left = 0
-		border.anchor_top = 0
-		border.anchor_right = 1
-		border.anchor_bottom = 1
-		border.offset_left = -2
-		border.offset_top = -2
-		border.offset_right = 2
-		border.offset_bottom = 2
-		border.show_behind_parent = true
-		border.visible = false
-		border.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(border)
-		mouse_entered.connect(_on_mouse_entered)
-		mouse_exited.connect(_on_mouse_exited)
-	
-	func _on_mouse_entered() -> void:
-		border.visible = true
-		
-	func _on_mouse_exited() -> void:
-		border.visible = false

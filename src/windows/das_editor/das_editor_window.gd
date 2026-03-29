@@ -206,7 +206,7 @@ func _on_save_button_pressed() -> void:
 	file.store_buffer(bytes)
 	file.close()
 	original_das = das.duplicate(true)
-	
+	%Palette.update_original()
 	if save_tween:
 		save_tween.kill()
 	%SuccessLabel.modulate.a = 1.0
@@ -222,6 +222,8 @@ func reset_das() -> void:
 
 func _on_section_item_list_item_selected(index: int) -> void:
 	%DASTabContainer.current_tab = index
+	if %DASTabContainer.get_child(index).has_method("reload"):
+		%DASTabContainer.get_child(index).reload()
 
 
 func load_das(p_das: Dictionary) -> void:
