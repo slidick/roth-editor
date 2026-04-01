@@ -3,7 +3,7 @@ extends BaseWindow
 var das: Dictionary = {}
 var original_das: Dictionary = {}
 var save_tween: Tween
-
+var copied_data: Dictionary
 
 func _ready() -> void:
 	super._ready()
@@ -261,3 +261,7 @@ func _on_filenames_jump_to_pressed(index: int) -> void:
 
 func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray) -> Variant:
 	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette)
+
+
+func copy_data(p_data: Dictionary) -> void:
+	copied_data = p_data.duplicate(true)

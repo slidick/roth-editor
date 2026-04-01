@@ -34,3 +34,28 @@ func select_index(index: int) -> bool:
 			_on_item_list_item_selected(i)
 			return true
 	return false
+
+
+func _on_popup_menu_index_pressed(index: int) -> void:
+	var item_index: int = %ItemList.get_selected_items()[0]
+	match index:
+		0:
+			var data: Dictionary = das[key][item_index]
+			owner.copy_data(data)
+		1:
+			das[key][item_index] = owner.copied_data.duplicate(true)
+			_on_item_list_item_selected(item_index)
+		2:
+			if await Dialog.confirm("Clear selected data?", "Confirm", false, Vector2(400,200)):
+				das[key][item_index] = {
+					"offset": 0,
+					"size": 0,
+					"flags_1": 0,
+					"flags_2": 0,
+				}
+				_on_item_list_item_selected(item_index)
+
+
+func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
+	if mouse_button_index == MOUSE_BUTTON_RIGHT:
+		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
