@@ -5,8 +5,7 @@ const MAX_ZOOM : int = 10
 const MIN_ZOOM : float = .05
 const COLOR_PICKER_CURSOR: Texture2D = preload("uid://cgxhrl6daxi3u")
 
-signal done(image: Variant)
-
+signal done(raw_image: PackedByteArray)
 enum Mode {
 	DRAW,
 	COLOR_PICKER,
@@ -15,13 +14,15 @@ var current_mode := Mode.DRAW
 
 var color_rects: Array = []
 var image: Image
-var original_image: Image
 var selected_rect: ColorRectButton
 var canvas_has_focus: bool = false
 var draw_enabled: bool = false
 var additional_zoom: float = 1
 var zooming: bool = false
 var mouse_drag_enabled: bool = false
+var texture_data: Dictionary = {}
+var raw_data: PackedByteArray = []
+var palette: Array = []
 
 
 func _input(event: InputEvent) -> void:
@@ -71,41 +72,54 @@ func update_camera_center() -> void:
 
 
 
-func edit_image(p_image: Image) -> Variant:
-	image = p_image.duplicate(true)
-	original_image = p_image.duplicate(true)
-	var texture := ImageTexture.create_from_image(image)
-	%TextureRect.texture = texture
-	%PreviewTextureRect.texture = texture
-	load_palette(Das.DEFAULT_PALETTE)
+func edit_image(p_texture_data: Dictionary, p_raw_palette: Array) -> Variant:
+	texture_data = p_texture_data
+	palette = p_raw_palette
+	raw_data = p_texture_data.raw_image.duplicate()
+	
+	redraw_image()
+	
+	load_palette(palette)
 	update_camera_center()
 	additional_zoom = 1
 	adjust_zoom()
 	current_mode = Mode.DRAW
 	toggle(true)
-	var new_image: Variant = await done
+	var new_raw_data: Variant = await done
 	toggle(false)
 	Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
 	Input.set_custom_mouse_cursor(null, Input.CURSOR_CROSS)
-	return new_image
+	return new_raw_data
 
 
 func _on_cancel_button_pressed() -> void:
-	done.emit(null)
+	done.emit([])
 
 
 func _on_reset_button_pressed() -> void:
-	image = original_image.duplicate(true)
+	raw_data = texture_data.raw_image.duplicate()
+	redraw_image()
+
+
+func redraw_image() -> void:
+	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+	image = Image.create_from_data(
+		texture_data.width,
+		texture_data.height,
+		false,
+		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
+		Utility.convert_palette_image(palette, raw_data, is_transparent)
+	)
 	var texture := ImageTexture.create_from_image(image)
 	%TextureRect.texture = texture
 	%PreviewTextureRect.texture = texture
 
 
 func _on_save_button_pressed() -> void:
-	done.emit(image)
+	done.emit(raw_data)
 
 
-func load_palette(palette: Array) -> void:
+func load_palette(p_raw_palette: Array) -> void:
 	for child: Node in %PaletteContainer.get_children():
 		child.queue_free()
 	color_rects.clear()
@@ -123,9 +137,9 @@ func load_palette(palette: Array) -> void:
 				color_rect.queue_redraw()
 			color_rect.palette_index = i
 			if i == 0:
-				color_rect.color = Color(palette[i][0] / float(255), palette[i][1] / float(255), palette[i][2] / float(255), 0.0)
+				color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255), 0.0)
 			else:
-				color_rect.color = Color(palette[i][0] / float(255), palette[i][1] / float(255), palette[i][2] / float(255))
+				color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255))
 			
 			color_rect.custom_minimum_size = Vector2(20,20)
 			color_rect.gui_input.connect(
@@ -133,10 +147,8 @@ func load_palette(palette: Array) -> void:
 					if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 						if selected_rect:
 							selected_rect.selected = false
-							selected_rect.queue_redraw()
 						selected_rect = color_rect
 						color_rect.selected = true
-						color_rect.queue_redraw()
 			)
 			vbox.add_child(color_rect)
 			color_rects.append(color_rect)
@@ -155,27 +167,40 @@ func load_palette(palette: Array) -> void:
 func _on_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		%PositionLabel.text = "X: %d Y: %d" % [event.position.x+1, event.position.y+1]
-		if current_mode == Mode.DRAW and draw_enabled:
-			if event.position.x >= 0 and event.position.y >= 0 and event.position.x < image.get_width() and event.position.y < image.get_height():
-				image.set_pixelv(event.position, selected_rect.color)
-				var texture := ImageTexture.create_from_image(image)
-				%TextureRect.texture = texture
-				%PreviewTextureRect.texture = texture
+		if current_mode == Mode.DRAW:
+			%TextureRect.queue_redraw()
+			if draw_enabled:
+				var mouse_pos: Vector2 = event.position
+				var _draw_size: int = int(%DrawSizeSpinBox.value) - 1
+				var vertex_1 := Vector2i(floori(mouse_pos.x)-int(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
+				var vertex_2 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
+				var vertex_3 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), ceili(mouse_pos.y)+roundi(_draw_size/2.0))
+				for x in range(vertex_1.x, vertex_2.x):
+					for y in range(vertex_1.y, vertex_3.y):
+						if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+							raw_data[y * texture_data.width + x] = selected_rect.palette_index
+				redraw_image()
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		match current_mode:
 			Mode.DRAW:
 				if event.pressed:
 					draw_enabled = true
-					image.set_pixelv(event.position, selected_rect.color)
-					var texture := ImageTexture.create_from_image(image)
-					%TextureRect.texture = texture
-					%PreviewTextureRect.texture = texture
+					var mouse_pos: Vector2 = event.position
+					var _draw_size: int = int(%DrawSizeSpinBox.value) - 1
+					var vertex_1 := Vector2i(floori(mouse_pos.x)-int(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
+					var vertex_2 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
+					var vertex_3 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), ceili(mouse_pos.y)+roundi(_draw_size/2.0))
+					for x in range(vertex_1.x, vertex_2.x):
+						for y in range(vertex_1.y, vertex_3.y):
+							raw_data[y * texture_data.width + x] = selected_rect.palette_index
+					redraw_image()
 				else:
 					draw_enabled = false
 			Mode.COLOR_PICKER:
 				if event.pressed:
-					select_color(image.get_pixelv(event.position))
+					var new_palette_index: int = raw_data[int(event.position.y) * texture_data.width + int(event.position.x)]
+					select_color(new_palette_index)
 
 
 func _on_texture_rect_mouse_exited() -> void:
@@ -205,9 +230,9 @@ func enter_draw_mode() -> void:
 	Input.set_custom_mouse_cursor(null, Input.CURSOR_CROSS)
 
 
-func select_color(color: Color) -> void:
+func select_color(palette_index: int) -> void:
 	for color_rect: ColorRect in color_rects:
-		if color_rect.color == color:
+		if color_rect.palette_index == palette_index:
 			if selected_rect:
 				selected_rect.selected = false
 				selected_rect.queue_redraw()
@@ -216,3 +241,7 @@ func select_color(color: Color) -> void:
 			color_rect.queue_redraw()
 	
 	enter_draw_mode()
+
+
+func _on_draw_size_spin_box_value_changed(value: float) -> void:
+	%TextureRect.draw_size = int(value)

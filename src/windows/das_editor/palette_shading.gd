@@ -113,7 +113,7 @@ func _create_palette_node(p_palette: Array) -> Control:
 	return margin
 
 
-func _create_palette_remap_node(p_palette_remap: Array) -> Control:
+func _create_palette_remap_node(p_palette_remap: Array, p_select_index: int = 0) -> Control:
 	var p_palette: Array = p_palette_remap.map(func (r:int) -> Array: return das.palette[r]+[r])
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 10)
@@ -131,7 +131,7 @@ func _create_palette_remap_node(p_palette_remap: Array) -> Control:
 			color_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			color_rect.add_to_group("palette_color_remap_buttons")
 			color_rect.mouse_filter = Control.MOUSE_FILTER_PASS
-			if j == 0 and k == 0:
+			if i == p_select_index:
 				color_rect.selected = true
 				select_cooresponding_palette_color(color_rect.palette_index)
 			color_rect.mouse_entered.connect(
@@ -169,6 +169,10 @@ func _create_palette_remap_node(p_palette_remap: Array) -> Control:
 
 
 func _on_palette_slider_value_changed(value: float) -> void:
+	var selected_index: int = 0
+	if len(selected_rects) > 0:
+		selected_index = selected_rects[0].index
+	
 	for child: Control in %ShadedPalette.get_children():
 		child.queue_free()
 	
@@ -187,7 +191,7 @@ func _on_palette_slider_value_changed(value: float) -> void:
 	if das["palette_shading"].is_empty():
 		return
 	var palette_remap: Array = das["palette_shading"][%PaletteSlider.value]
-	var palette_control: Control = _create_palette_remap_node(palette_remap)
+	var palette_control: Control = _create_palette_remap_node(palette_remap, selected_index)
 	%ShadedPalette.add_child(palette_control)
 
 

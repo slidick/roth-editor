@@ -13,6 +13,8 @@ enum MapMenu {
 	Sep2,
 	EditMode,
 	Sep3,
+	ReloadDAS,
+	Sep4,
 	Close,
 }
 
@@ -495,6 +497,22 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				return
 			%Map2D.setup(selected[0].get_metadata(0).ref)
 			%SFXZoneIndexEdit.max_value = len(selected[0].get_metadata(0).ref.sfx_zones)
+		MapMenu.ReloadDAS:
+			var das_packs: Array = []
+			for item: TreeItem in selected:
+				var das_info: Dictionary = item.get_metadata(0).ref.map_info.das_info
+				if das_info not in das_packs:
+					das_packs.append(das_info)
+			for das_info: Dictionary in das_packs:
+				Roth.unload_das(das_info)
+				%Texture.unload_das(das_info)
+			for item: TreeItem in selected:
+				var map: Map = Map.load_from_bytes(item.get_metadata(0).ref.map_info, item.get_metadata(0).ref.compile())
+				if not map:
+					return
+				Roth.map_loading_started.emit("Reloading DAS")
+				map.das = await Roth.get_das(map.map_info.das_info)
+				replace_map(map)
 		MapMenu.Close:
 			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).ref.map_info.name))], "Confirm Close", false):
 				for item: TreeItem in selected:
@@ -713,6 +731,30 @@ func replace_map(map: Map) -> void:
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
 		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map.map_info:
 			
+			for i in range(len(selected_objects)-1, -1, -1):
+				var object: ObjectRoth = selected_objects[i]
+				if object.map == tree_item.get_metadata(0).ref:
+					selected_objects.pop_at(i)
+			for i in range(len(selected_sfx)-1, -1, -1):
+				var sfx: SFX = selected_sfx[i]
+				if sfx.map == tree_item.get_metadata(0).ref:
+					selected_sfx.pop_at(i)
+			for i in range(len(selected_faces)-1, -1, -1):
+				var face: Face = selected_faces[i]
+				if face.map == tree_item.get_metadata(0).ref:
+					selected_faces.pop_at(i)
+			for i in range(len(selected_sectors)-1, -1, -1):
+				var sector: Sector = selected_sectors[i]
+				if sector.map == tree_item.get_metadata(0).ref:
+					selected_sectors.pop_at(i)
+			
+			
+			var folded: bool = %CountAndSizeContainer.folded
+			if %Map2D.close_map(tree_item.get_metadata(0).ref, false):
+				%Map2D.setup(map, false)
+				%CountAndSizeContainer.folded = folded
+			
+			
 			Roth.loaded_maps[map.map_info.name] = map
 			
 			var old_map_node: Map.MapNode3D = tree_item.get_metadata(0)
@@ -741,8 +783,6 @@ func replace_map(map: Map) -> void:
 				var mesh := sfx.initialize_mesh()
 				sfx_node.add_child(mesh)
 			
-			
-			
 			var map_node := Map.MapNode3D.new()
 			map_node.ref = map
 			map_node.add_child(sectors_node)
@@ -760,13 +800,7 @@ func replace_map(map: Map) -> void:
 			tree_item.get_child(0).set_metadata(0, objects_node)
 			tree_item.get_child(1).set_metadata(0, sfx_node)
 			
-			
 			old_map_node.queue_free()
-			
-			var folded: bool = %CountAndSizeContainer.folded
-			if %Map2D.close_map(map, false):
-				%Map2D.setup(map, false)
-				%CountAndSizeContainer.folded = folded
 			
 			if not is_same(old_map_node.ref.commands_section, map.commands_section) and %"Command Editor".map and %"Command Editor".map.map_info == map.map_info:
 				%"Command Editor".load_command_editor(map, false)

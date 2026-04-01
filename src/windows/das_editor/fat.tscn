@@ -24,6 +24,8 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 
 [node name="FATContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1051257041]
 unique_name_in_owner = true

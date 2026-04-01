@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://drtcco1brsueg" path="res://src/windows/das_editor/directional_object_mappings.tscn" id="9_etu4s"]
 [ext_resource type="PackedScene" uid="uid://b13db4skwnxbm" path="res://src/windows/das_editor/monster_mappings.tscn" id="10_cd1io"]
 [ext_resource type="PackedScene" uid="uid://bl4ldhvm76xam" path="res://src/windows/das_editor/object_collisions.tscn" id="10_vwsjw"]
+[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="14_iy22k"]
 
 [node name="DasEditorWindow" unique_id=452268762 instance=ExtResource("1_o2sbq")]
 offset_right = 1272.0
@@ -120,6 +121,8 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 
 [node name="DASTabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3" index="1" unique_id=996401012]
 unique_name_in_owner = true
@@ -262,6 +265,22 @@ text = "Save"
 layout_mode = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
+
+[node name="ImageEditor" parent="SubWindows" index="0" unique_id=1671538512 instance=ExtResource("14_iy22k")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -640.0
+offset_top = -400.0
+offset_right = 640.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_activated"]
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_clicked"]

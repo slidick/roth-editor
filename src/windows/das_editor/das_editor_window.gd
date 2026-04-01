@@ -246,14 +246,18 @@ func load_das(p_das: Dictionary) -> void:
 
 func _on_filenames_jump_to_pressed(index: int) -> void:
 	if %Fat1.select_index(index):
-		%SectionItemList.select(3)
-		_on_section_item_list_item_selected(3)
-	if %Fat2.select_index(index):
 		%SectionItemList.select(4)
 		_on_section_item_list_item_selected(4)
-	if %Fat3.select_index(index):
+	if %Fat2.select_index(index):
 		%SectionItemList.select(5)
 		_on_section_item_list_item_selected(5)
-	if %Fat4.select_index(index):
+	if %Fat3.select_index(index):
 		%SectionItemList.select(6)
 		_on_section_item_list_item_selected(6)
+	if %Fat4.select_index(index):
+		%SectionItemList.select(7)
+		_on_section_item_list_item_selected(7)
+
+
+func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray) -> Variant:
+	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette)

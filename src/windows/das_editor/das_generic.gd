@@ -11,11 +11,10 @@ func reset() -> void:
 		child.queue_free()
 
 
-func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
+func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void:
 	das = p_das
 	if p_das is Dictionary and p_key not in p_das:
 		return
-	
 	
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -54,20 +53,14 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 					das[p_key][key][1] = int(new_text)
 				)
 				hbox.add_child(line_edit_2)
-			"raw":
+			"raw_image":
 				var palette: Array = []
-				if p_palette.is_empty():
-					palette = Das.DEFAULT_PALETTE
+				if p_raw_palette.is_empty():
+					palette = Das.DEFAULT_RAW_PALETTE
 				else:
-					palette = p_palette
-				var texture_data: Array = []
-				for pixel: int in das[p_key][key]:
-					texture_data.append_array(palette[pixel])
-					if palette[pixel] == [0,0,0] and pixel == 0:
-						texture_data.append(0)
-					else:
-						texture_data.append(255)
-				var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8, texture_data)
+					palette = p_raw_palette
+				var is_transparent: bool = das[p_key].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or das[p_key].image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+				var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, das[p_key][key], is_transparent))
 				var image_texture := ImageTexture.create_from_image(image)
 				var texture_rect := TextureRect.new()
 				texture_rect.texture = image_texture
@@ -81,6 +74,19 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				var edit_button := Button.new()
 				edit_button.text = "Edit"
 				edit_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				edit_button.pressed.connect(func () -> void:
+					var new_raw_image: PackedByteArray = await owner.owner.edit_image(das[p_key], palette)
+					if not new_raw_image.is_empty():
+						var new_image: Image = Image.create_from_data(
+							das[p_key].width,
+							das[p_key].height,
+							false,
+							Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
+							Utility.convert_palette_image(palette, new_raw_image, is_transparent)
+						)
+						texture_rect.texture = ImageTexture.create_from_image(new_image)
+						das[p_key].raw_image = new_raw_image
+				)
 				hbox.add_child(rotation_container)
 				hbox.add_child(edit_button)
 				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -88,10 +94,10 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				label.custom_minimum_size.y = 200
 				label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 				var palette: Array = []
-				if p_palette.is_empty():
-					palette = Das.DEFAULT_PALETTE
+				if p_raw_palette.is_empty():
+					palette = Das.DEFAULT_RAW_PALETTE
 				else:
-					palette = p_palette
+					palette = p_raw_palette
 				
 				var animation_rect := TextureRect.new()
 				#animation_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -103,15 +109,9 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				var sprite_frames := SpriteFrames.new()
 				animated_image.sprite_frames = sprite_frames
 				sprite_frames.set_animation_speed("default", 12)
+				var is_transparent: bool = das[p_key].image_type_2 & Das.IMAGE_TYPE.TRANSPARENT > 0 or das[p_key].image_type_2 & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
 				for raw_img: Array in das[p_key][key].slice(0,-1):
-					var texture_data: Array = []
-					for pixel: int in raw_img:
-						texture_data.append_array(palette[pixel])
-						if palette[pixel] == [0,0,0] and pixel == 0:
-							texture_data.append(0)
-						else:
-							texture_data.append(255)
-					var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8, texture_data)
+					var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, raw_img, is_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					sprite_frames.add_frame("default", image_texture)
 				animated_image.play("default")
@@ -127,10 +127,10 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				label.custom_minimum_size.y = 200
 				label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 				var palette: Array = []
-				if p_palette.is_empty():
-					palette = Das.DEFAULT_PALETTE
+				if p_raw_palette.is_empty():
+					palette = Das.DEFAULT_RAW_PALETTE
 				else:
-					palette = p_palette
+					palette = p_raw_palette
 				
 				var animation_rect := TextureRect.new()
 				#animation_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -161,15 +161,8 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 						hbox3.add_child(label2)
 						hbox3.add_child(line_edit2)
 						vbox2.add_child(hbox3)
-					
-					var texture_data: Array = []
-					for pixel: int in sub_image_data.raw_image:
-						texture_data.append_array(palette[pixel])
-						if palette[pixel] == [0,0,0] and pixel == 0:
-							texture_data.append(0)
-						else:
-							texture_data.append(255)
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8, texture_data)
+					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					sprite_frames.add_frame("default", image_texture)
 				animated_image.play("default")
@@ -180,10 +173,10 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			"directional":
 				var palette: Array = []
-				if p_palette.is_empty():
-					palette = Das.DEFAULT_PALETTE
+				if p_raw_palette.is_empty():
+					palette = Das.DEFAULT_RAW_PALETTE
 				else:
-					palette = p_palette
+					palette = p_raw_palette
 				
 				
 				var hbox2 := HBoxContainer.new()
@@ -207,15 +200,8 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 						hbox3.add_child(label2)
 						hbox3.add_child(line_edit2)
 						vbox2.add_child(hbox3)
-					
-					var texture_data: Array = []
-					for pixel: int in sub_image_data.raw_image:
-						texture_data.append_array(palette[pixel])
-						if palette[pixel] == [0,0,0] and pixel == 0:
-							texture_data.append(0)
-						else:
-							texture_data.append(255)
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8, texture_data)
+					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					
 					var texture_rect := TextureRect.new()
@@ -230,10 +216,10 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 					vbox2.add_child(texture_rect)
 			"object_images":
 				var palette: Array = []
-				if p_palette.is_empty():
-					palette = Das.DEFAULT_PALETTE
+				if p_raw_palette.is_empty():
+					palette = Das.DEFAULT_RAW_PALETTE
 				else:
-					palette = p_palette
+					palette = p_raw_palette
 				
 				
 				var hbox2 := HBoxContainer.new()
@@ -254,15 +240,8 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 						hbox3.add_child(label2)
 						hbox3.add_child(line_edit2)
 						vbox2.add_child(hbox3)
-					
-					var texture_data: Array = []
-					for pixel: int in sub_image_data.raw_image:
-						texture_data.append_array(palette[pixel])
-						if palette[pixel] == [0,0,0] and pixel == 0:
-							texture_data.append(0)
-						else:
-							texture_data.append(255)
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8, texture_data)
+					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					
 					var texture_rect := TextureRect.new()
@@ -320,10 +299,12 @@ func load_das(p_das: Variant, p_key: Variant, p_palette: Array = []) -> void:
 				margin_container.add_theme_constant_override("margin_right", 10)
 				margin_container.add_theme_constant_override("margin_bottom", 10)
 				margin_container.set_script(SCRIPT)
-				margin_container.call("load_das", das[p_key], key, p_palette)
+				margin_container.set_owner.call_deferred(owner)
+				margin_container.call_deferred("load_das", das[p_key], key, p_raw_palette)
 				margin_container.add_theme_constant_override("margin_right", 0)
 				margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				hbox.add_child(margin_container)
+				
 				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			"index":
 				var line_edit := LineEdit.new()

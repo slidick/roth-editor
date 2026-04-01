@@ -234,6 +234,7 @@ func _on_randomize_button_pressed() -> void:
 		color_rect_button.hue_start_color = color_rect_button.color
 		return true
 	)
+	update_palette()
 
 
 func _on_hue_slider_value_changed(value: float) -> void:
@@ -251,6 +252,7 @@ func _on_reset_selected_button_pressed() -> void:
 		color_rect_button.hue_start_color = color_rect_button.original_color
 		return true
 	)
+	update_palette()
 
 
 func _on_hue_slider_drag_ended(_value_changed: bool) -> void:

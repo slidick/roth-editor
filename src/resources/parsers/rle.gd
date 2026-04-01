@@ -51,66 +51,42 @@ static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette:
 	return image
 
 
-static func add_image_to_raw_rle_dict(input_image: Dictionary, palette: Array, with_alpha: bool = true) -> void:
-	var decoded_sprite_size: int = input_image.header.width * input_image.header.height
-	if with_alpha:
-		decoded_sprite_size *= 4
-	else:
-		decoded_sprite_size *= 3
-	var decoded_sprite_buffer: Array = []
+static func decode_rle_image_data(image_data: Dictionary) -> PackedByteArray:
+	if not "rle_data" in image_data:
+		return PackedByteArray()
+	
+	var decoded_sprite_size: int = image_data.width * image_data.height
+	var decoded_sprite_buffer := PackedByteArray()
 	decoded_sprite_buffer.resize(decoded_sprite_size)
+	
 	var dest_idx: int = 0
 	var position: int = 0
 	while dest_idx < decoded_sprite_size:
-		var byte: int = input_image.rle_data[position]
+		var byte: int = image_data.rle_data[position]
 		position += 1
+		var pixel_count: int = 1
 		if byte > 0xF0:
-			var pixel_count: int = byte & 0x0F
-			var value: int = input_image.rle_data[position]
+			pixel_count = byte & 0x0F
+			byte = image_data.rle_data[position]
 			position += 1
-			var pixel_value: Array = palette[value].duplicate()
-			if palette[value] == [0,0,0] and value == 0:
-				pixel_value.append(0)
-			else:
-				pixel_value.append(255)
-			for i in range(pixel_count):
-				decoded_sprite_buffer[dest_idx] = pixel_value[0]
-				decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
-				decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
-				if with_alpha:
-					decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
-					dest_idx += 4
-				else:
-					dest_idx += 3
-		else:
-			var pixel_value: Array = palette[byte].duplicate()
-			if palette[byte] == [0,0,0] and byte == 0:
-				pixel_value.append(0)
-			else:
-				pixel_value.append(255)
-			decoded_sprite_buffer[dest_idx] = pixel_value[0]
-			decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
-			decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
-			if with_alpha:
-				decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
-				dest_idx += 4
-			else:
-				dest_idx += 3
-	
-	var image := Image.create_from_data(input_image.header.width, input_image.header.height, false, Image.FORMAT_RGBA8, decoded_sprite_buffer)
-	input_image["image"] = image
+		
+		for i in range(pixel_count):
+			decoded_sprite_buffer[dest_idx] = byte
+			dest_idx += 1
+		
+	return decoded_sprite_buffer
 
 
 static func encode_rle_img(input_image: Dictionary) -> PackedByteArray:
-	if not "raw_data" in input_image:
-		return input_image.rle_data
+	if not "raw_image" in input_image:
+		return PackedByteArray()
 	
 	var output_data: PackedByteArray = []
 	var repeat: int = 1
-	var last_byte: int = input_image.raw_data[0]
+	var last_byte: int = input_image.raw_image[0]
 	
-	for i: int in range(1, len(input_image.raw_data), 1):
-		var byte: int = input_image.raw_data[i]
+	for i: int in range(1, len(input_image.raw_image), 1):
+		var byte: int = input_image.raw_image[i]
 		if byte == last_byte and repeat < 15:
 			repeat += 1
 		else:

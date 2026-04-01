@@ -229,7 +229,12 @@ func _initialize_mesh_actual() -> void:
 		pass
 	else:
 		material.billboard_mode = BaseMaterial3D.BILLBOARD_FIXED_Y
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	
+	if texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0:
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	else:
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	if "image" in texture:
 		material.albedo_texture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
@@ -263,7 +268,7 @@ func _initialize_mesh_actual() -> void:
 		#low_y -= height
 		#high_y -= height
 	
-	if (texture.flags_1 & (1<<4) > 0):
+	if (texture.modifier & (1<<4) > 0):
 		low_y -= (height * 2)
 		high_y -= (height * 2)
 	
@@ -363,6 +368,7 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		var material := StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		material.render_priority = 2
 		
 		var fat_index: int = object_face.texture_fat_index_base
 		if len(vertices) == 0:
@@ -377,6 +383,10 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 				texture_image = texture_data.image
 			material.albedo_texture = texture_image
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+			if texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0:
+				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			elif texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0:
+				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		else:
 			if fat_index >= 65280:
 				var color: Array = map.das.palette[fat_index - 65280]

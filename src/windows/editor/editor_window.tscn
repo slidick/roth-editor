@@ -317,7 +317,7 @@ select_mode = 2
 
 [node name="MapsTreeMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MapsTree" index="5" unique_id=1229638688]
 unique_name_in_owner = true
-item_count = 10
+item_count = 12
 item_0/text = "Save"
 item_0/id = 1
 item_1/text = "Save As"
@@ -334,10 +334,14 @@ item_6/id = 6
 item_6/separator = true
 item_7/text = "2D Edit Mode"
 item_7/id = 7
-item_8/id = 8
+item_8/id = 11
 item_8/separator = true
-item_9/text = "Close"
-item_9/id = 0
+item_9/text = "Reload DAS"
+item_9/id = 10
+item_10/id = 8
+item_10/separator = true
+item_11/text = "Close"
+item_11/id = 0
 
 [node name="ToolsContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer" index="1" unique_id=1929184419]
 layout_mode = 2

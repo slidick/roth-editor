@@ -7,9 +7,9 @@ const ICON_HEADER := {
 }
 
 const RLE_IMG_HDR := {
-	"imgType": Parser.Type.Word,
-	"xOffset": Parser.Type.Byte,
-	"yOffset": Parser.Type.Byte,
+	"image_type": Parser.Type.Word,
+	"x_offset": Parser.Type.Byte,
+	"y_offset": Parser.Type.Byte,
 	"width": Parser.Type.Word,
 	"height": Parser.Type.Word,
 }
@@ -59,10 +59,10 @@ static func parse_for_editing(icon_filepath: String) -> Array:
 	var data: Array = []
 	for offset: Dictionary in offsets:
 		file.seek(offset.offset)
-		data.append({
-			"header": Parser.parse_section(file, RLE_IMG_HDR),
-			"rle_data": file.get_buffer(offset.size-8)
-		})
+		var icon_data: Dictionary = Parser.parse_section(file, RLE_IMG_HDR)
+		icon_data["rle_data"] = file.get_buffer(offset.size-8)
+		icon_data["raw_image"] = RLE.decode_rle_image_data(icon_data)
+		data.append(icon_data)
 	
 	return data
 
@@ -82,11 +82,11 @@ static func compile(input: Array) -> PackedByteArray:
 		data.encode_u32(position + 4, len(entry.rle_data)+8)
 		position += 8
 		var offset_position: int = entry.offset
-		data.encode_u16(offset_position, entry.header.imgType)
-		data.encode_u8(offset_position+2, entry.header.xOffset)
-		data.encode_u8(offset_position+3, entry.header.yOffset)
-		data.encode_u16(offset_position+4, entry.header.width)
-		data.encode_u16(offset_position+6, entry.header.height)
+		data.encode_u16(offset_position, entry.image_type)
+		data.encode_u8(offset_position+2, entry.x_offset)
+		data.encode_u8(offset_position+3, entry.y_offset)
+		data.encode_u16(offset_position+4, entry.width)
+		data.encode_u16(offset_position+6, entry.height)
 		offset_position += 8
 		for byte: int in entry.rle_data:
 			data.encode_u8(offset_position, byte)

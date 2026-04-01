@@ -1,6 +1,8 @@
 extends BaseWindow
 
 
+var raw_palette: PackedByteArray = Das.DEFAULT_RAW_PALETTE
+
 func _ready() -> void:
 	super._ready()
 	reset()
@@ -31,10 +33,11 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	%BrowseLineEdit.text = path
 	%SaveFileDialog.current_dir = %FileDialog.current_dir
 	var icons_data: Array = IconsAll.parse_for_editing(path)
-	var palette: Array = Das.DEFAULT_PALETTE
 	for icon: Dictionary in icons_data:
-		RLE.add_image_to_raw_rle_dict(icon, palette)
-		var index: int = %IconsList.add_item("%d\n%d-%d\n%dx%d" % [icon.header.imgType, icon.header.xOffset, icon.header.yOffset, icon.header.width, icon.header.height], ImageTexture.create_from_image(icon.image))
+		var index: int = %IconsList.add_item(
+			"%d\n%d-%d\n%dx%d" % [icon.image_type, icon.x_offset, icon.y_offset, icon.width, icon.height],
+			ImageTexture.create_from_image(Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(raw_palette, icon.raw_image, true)))
+		)
 		%IconsList.set_item_metadata(index, icon)
 
 
@@ -47,9 +50,9 @@ func _on_save_file_dialog_file_selected(path: String) -> void:
 	var icons_data: Array = []
 	for i in range(%IconsList.item_count):
 		var icon: Dictionary = %IconsList.get_item_metadata(i)
-		var image: Image = icon.image.duplicate(true)
+		#var image: Image = icon.image.duplicate(true)
 		#image.convert(Image.FORMAT_RGB8)
-		icon.raw_data = await RLE.convert_to_paletted_image(image, Das.DEFAULT_PALETTE)
+		#icon.raw_data = await RLE.convert_to_paletted_image(image, Das.DEFAULT_PALETTE)
 		icon.rle_data = RLE.encode_rle_img(icon)
 		icons_data.append(icon)
 		
@@ -61,12 +64,12 @@ func _on_save_file_dialog_file_selected(path: String) -> void:
 
 func _on_icons_list_item_selected(index: int) -> void:
 	var icon: Dictionary = %IconsList.get_item_metadata(index)
-	%TypeEdit.set_value_no_signal(icon.header.imgType)
-	%TypeEdit.get_line_edit().text = str(icon.header.imgType)
-	%xOffsetEdit.set_value_no_signal(icon.header.xOffset)
-	%xOffsetEdit.get_line_edit().text = str(icon.header.xOffset)
-	%yOffsetEdit.set_value_no_signal(icon.header.yOffset)
-	%yOffsetEdit.get_line_edit().text = str(icon.header.yOffset)
+	%TypeEdit.set_value_no_signal(icon.image_type)
+	%TypeEdit.get_line_edit().text = str(icon.image_type)
+	%xOffsetEdit.set_value_no_signal(icon.x_offset)
+	%xOffsetEdit.get_line_edit().text = str(icon.x_offset)
+	%yOffsetEdit.set_value_no_signal(icon.y_offset)
+	%yOffsetEdit.get_line_edit().text = str(icon.y_offset)
 	%TypeEdit.editable = true
 	%xOffsetEdit.editable = true
 	%yOffsetEdit.editable = true
@@ -78,7 +81,7 @@ func _on_type_edit_value_changed(value: float) -> void:
 	var index: int = %IconsList.get_selected_items()[0]
 	var icon: Dictionary = %IconsList.get_item_metadata(index)
 	icon.header.imgType = int(value)
-	%IconsList.set_item_text(index, "%d\n%d-%d\n%dx%d" % [icon.header.imgType, icon.header.xOffset, icon.header.yOffset, icon.header.width, icon.header.height])
+	%IconsList.set_item_text(index, "%d\n%d-%d\n%dx%d" % [icon.image_type, icon.x_offset, icon.y_offset, icon.width, icon.height])
 
 
 func _on_x_offset_edit_value_changed(value: float) -> void:
@@ -87,7 +90,7 @@ func _on_x_offset_edit_value_changed(value: float) -> void:
 	var index: int = %IconsList.get_selected_items()[0]
 	var icon: Dictionary = %IconsList.get_item_metadata(index)
 	icon.header.xOffset = int(value)
-	%IconsList.set_item_text(index, "%d\n%d-%d\n%dx%d" % [icon.header.imgType, icon.header.xOffset, icon.header.yOffset, icon.header.width, icon.header.height])
+	%IconsList.set_item_text(index, "%d\n%d-%d\n%dx%d" % [icon.image_type, icon.x_offset, icon.y_offset, icon.width, icon.height])
 
 
 func _on_y_offset_edit_value_changed(value: float) -> void:
@@ -96,12 +99,12 @@ func _on_y_offset_edit_value_changed(value: float) -> void:
 	var index: int = %IconsList.get_selected_items()[0]
 	var icon: Dictionary = %IconsList.get_item_metadata(index)
 	icon.header.yOffset = int(value)
-	%IconsList.set_item_text(index, "%d\n%d-%d\n%dx%d" % [icon.header.imgType, icon.header.xOffset, icon.header.yOffset, icon.header.width, icon.header.height])
+	%IconsList.set_item_text(index, "%d\n%d-%d\n%dx%d" % [icon.image_type, icon.x_offset, icon.y_offset, icon.width, icon.height])
 
 
 func _on_icons_list_item_activated(index: int) -> void:
 	var icon: Dictionary = %IconsList.get_item_metadata(index)
-	var new_image: Image = await %ImageEditor.edit_image(icon.image)
-	if new_image:
-		icon.image = new_image
-		%IconsList.set_item_icon(index, ImageTexture.create_from_image(icon.image))
+	var new_raw_image: PackedByteArray = await %ImageEditor.edit_image(icon, raw_palette)
+	if not new_raw_image.is_empty():
+		icon.raw_image = new_raw_image
+		%IconsList.set_item_icon(index, ImageTexture.create_from_image(Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(raw_palette, new_raw_image, true))))

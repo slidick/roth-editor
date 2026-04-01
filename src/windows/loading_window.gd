@@ -22,6 +22,8 @@ func _on_map_loading_started(map_name: String) -> void:
 func _on_map_loading_updated(das_info: Dictionary, progress: float) -> void:
 	%Status.text = "Loading textures: %s" % das_info.name
 	%ProgressBar.value = progress * 100
+	if is_equal_approx(progress, 1.0):
+		_fade_out()
 
 
 func _on_map_loading_completely_finished() -> void:

@@ -1,6 +1,49 @@
 extends Object
 class_name Das
 
+enum FLAGS_1 {
+	FLAG_1 = (1<<0),
+	SKY = (1<<1),
+	MONSTER = (1<<2), # Needs directional flag
+	FLAG_4 = (1<<3),
+	FLAG_5 = (1<<4),
+	DIRECTIONAL = (1<<5),
+	FLAG_7 = (1<<6),
+	FLAG_8 = (1<<7),
+}
+
+enum FLAGS_2 {
+	FLAG_1 = (1<<0),
+	FLAG_2 = (1<<1),
+	FLAG_3 = (1<<2),
+	FLAG_4 = (1<<3),
+	FLAG_5 = (1<<4),
+	FLAG_6 = (1<<5),
+	FLAG_7 = (1<<6),
+	FLAG_8 = (1<<7),
+}
+
+enum IMAGE_TYPE {
+	ANIMATION = (1<<0),
+	PALETTE_ZERO_OPAQUE = (1<<1),
+	TRANSPARENT = (1<<2),
+	MIRROR = (1<<3),
+	FLAG_5 = (1<<4),
+	FLAG_6 = (1<<5),
+	FLAG_7 = (1<<6),
+	OBJECT_DATA = (1<<7),
+}
+
+enum MODIFIER {
+	FLAG_1 = (1<<0),
+	FLAG_2 = (1<<1),
+	FLAG_3 = (1<<2),
+	FLAG_4 = (1<<3),
+	DRAW_DOWNWARD = (1<<4),
+	FLAG_6 = (1<<5),
+	OBJECT_IMAGES = (1<<6),
+	HALF_SIZE = (1<<7),
+}
 
 const DEFAULT_PALETTE := [
 	[0, 0, 0], [0, 0, 0], [4, 69, 32], [73, 109, 81], [0, 81, 40], [53, 101, 65], [8, 61, 28], [0, 0, 0], [69, 49, 49], [0, 0, 0], [61, 40, 36], [0, 0, 0], [190, 130, 73], [0, 0, 0], [32, 16, 20], [0, 0, 0],
@@ -384,7 +427,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	texture.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
 	
 	# Parse as Monster
-	if (texture.flags_1 == 36):
+	if (texture.flags_1 & FLAGS_1.DIRECTIONAL > 0 and texture.flags_1 & FLAGS_1.MONSTER > 0):
 		if das.das_info.is_ademo:
 			var first_byte: int = das.monster_mappings[texture.flags_2].walking_front & 0xFF
 			var second_byte: int = das.monster_mappings[texture.flags_2].walking_front >> 8
@@ -395,7 +438,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 		
 	
 	# Parse as Directional object
-	elif (texture.flags_1 & 32) > 0:
+	elif texture.flags_1 & FLAGS_1.DIRECTIONAL > 0:
 		if das.das_info.is_ademo:
 			var first_byte: int = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx & 0xFF
 			var second_byte: int = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx >> 8
@@ -404,109 +447,19 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 		else:
 			texture.directional_index = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx & 0x7FFF
 	
-	# Parse as directional images
+	# Return if no offset
 	elif texture.offset == 0:
 		return texture
-	elif texture.modifier > 0xC0:
-		file.seek(texture["offset"] + 32)
-		var alignment := file.get_position() & 0xF
-		var img_reference := file.get_8()
-		var _type := file.get_8()
-		var width := file.get_16()
-		var height := file.get_16()
-		
-		texture["image"] = []
-		while true:
-			var raw_img := file.get_buffer(width * height)
-			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
-			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-			var image_texture := ImageTexture.create_from_image(img)
-			texture["image"].append(image_texture)
-			
-			var lower_ptr_4_bits := file.get_position() & 0xF
-			var pos := file.get_position()
-			if lower_ptr_4_bits > alignment:
-				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-			else:
-				pos = pos + (alignment - lower_ptr_4_bits)
-			file.seek(pos)
-			
-			var img_reference_new := file.get_8()
-			_type = file.get_8()
-			width = file.get_16()
-			height = file.get_16()
-			if img_reference != img_reference_new:
-				break
-	
-	# Parse as 3d object images pack
-	elif texture.modifier == 0x40 and (texture.image_type % 2) == 0:
-		var numImgs := 0
-		while file.get_16() != 0:
-			numImgs += 1
-		numImgs -= 1
-		
-		while file.get_8() == 0:
-			pass
-		file.seek(file.get_position() - 2)
-		
-		var alignment := file.get_position() & 0xF
-		var _img_reference := file.get_8()
-		var _type := file.get_8()
-		var width := file.get_16()
-		var height := file.get_16()
-		texture["image"] = []
-		for j in range(numImgs):
-			#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
-			if width == 0:
-				continue
-			
-			var raw_img := file.get_buffer(width * height)
-			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
-			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8, data)
-			var image_texture := ImageTexture.create_from_image(img)
-			texture["image"].append(image_texture)
-			
-			var lower_ptr_4_bits := file.get_position() & 0xF
-			var pos := file.get_position()
-			if lower_ptr_4_bits > alignment:
-				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-			else:
-				pos = pos + (alignment - lower_ptr_4_bits)
-			file.seek(pos)
-			
-			_img_reference = file.get_8()
-			_type = file.get_8()
-			width = file.get_16()
-			height = file.get_16()
-	
-	# Parse as plain image
-	elif texture.image_type < 64 and (texture.image_type % 2) == 0:
-		if texture.width == 0:
-			das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
-			return texture
-		if texture.height == 0:
-			das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
-			return texture
-		
-		var raw_img := file.get_buffer(texture.width * texture.height)
-		if len(raw_img) != texture.width * texture.height:
-			das.loading_errors.append("Unexpected image mismatch! (Read past end of file) Expected: %s (%sx%s), Found: %s, Index: %s, Name: %s, Unk: %s" % [texture.width * texture.height, texture.width, texture.height, len(raw_img), texture.index, texture.name, texture.unk])
-			return texture
-		
-		var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
-		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
-		var image_texture := ImageTexture.create_from_image(img)
-		texture["image"] = image_texture
 	
 	# Parse as animated image
-	elif texture.image_type < 64 and (texture.image_type % 2) != 0:
+	elif texture.image_type & IMAGE_TYPE.ANIMATION > 0:
 		var _block_size := file.get_16()
 		var _unk := file.get_16()
 		var firstImgOffset := file.get_16()
 		var img_type_2 := file.get_16()
 		# Type 1
 		if img_type_2 != 0xFFFE:
-			file.seek(texture["offset"] + firstImgOffset + 0x06)
+			file.seek(texture["offset"] + firstImgOffset)
 			
 			if texture.width == 0:
 				das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
@@ -516,9 +469,15 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
 				return texture
 			
+			var _mod: int = file.get_8()
+			var _type: int = file.get_8()
+			var _w: int = file.get_16()
+			var _h: int = file.get_16()
+			
 			var raw_img := file.get_buffer(texture.width * texture.height)
-			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
-			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data)
+			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 			var image_texture := ImageTexture.create_from_image(img)
 			texture["image"] = image_texture
 			texture["animation"] = [image_texture]
@@ -561,8 +520,8 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				if finished:
 					break
 				
-				var data2: Array = Utility.convert_palette_image(das.raw_palette, raw_img)
-				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8, data2)
+				var data2: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data2)
 				var image_texture2 := ImageTexture.create_from_image(img2)
 				texture["animation"].append(image_texture2)
 		
@@ -597,8 +556,9 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 						img_buffer[pos] = byte
 						pos += 1
 				
-				var data: Array = Utility.convert_palette_image(das.raw_palette, img_buffer)
-				var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8, data)
+				var is_transparent: bool = texture.image_type & IMAGE_TYPE.TRANSPARENT > 0 or texture.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+				var data: Array = Utility.convert_palette_image(das.raw_palette, img_buffer, is_transparent)
+				var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
 				texture["animation"].append(image_texture)
 				
@@ -611,7 +571,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				texture["image"] = texture["animation"][0]
 	
 	# Parse as 3D object data
-	elif texture.image_type == 0x80:
+	elif texture.image_type & IMAGE_TYPE.OBJECT_DATA > 0:
 		file.seek(texture.offset)
 		
 		var object_data := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_HEADER)
@@ -639,9 +599,102 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 		object_data["faces"] = face_array
 		texture["object_data"] = object_data
 	
-	# Unknown type
+	
+	# Parse as directional images
+	elif texture.modifier & MODIFIER.HALF_SIZE > 0 and texture.modifier & MODIFIER.OBJECT_IMAGES > 0:
+		file.seek(texture["offset"] + 32)
+		var alignment := file.get_position() & 0xF
+		var img_reference := file.get_8()
+		var _type := file.get_8()
+		var width := file.get_16()
+		var height := file.get_16()
+		
+		texture["image"] = []
+		while true:
+			var raw_img := file.get_buffer(width * height)
+			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"].append(image_texture)
+			
+			var lower_ptr_4_bits := file.get_position() & 0xF
+			var pos := file.get_position()
+			if lower_ptr_4_bits > alignment:
+				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+			else:
+				pos = pos + (alignment - lower_ptr_4_bits)
+			file.seek(pos)
+			
+			var img_reference_new := file.get_8()
+			_type = file.get_8()
+			width = file.get_16()
+			height = file.get_16()
+			if img_reference != img_reference_new:
+				break
+	
+	# Parse as 3d object images pack
+	elif texture.modifier & MODIFIER.OBJECT_IMAGES > 0:
+		var numImgs := 0
+		while file.get_16() != 0:
+			numImgs += 1
+		numImgs -= 1
+		
+		while file.get_8() == 0:
+			pass
+		file.seek(file.get_position() - 2)
+		
+		var alignment := file.get_position() & 0xF
+		var _img_reference := file.get_8()
+		var _type := file.get_8()
+		var width := file.get_16()
+		var height := file.get_16()
+		texture["image"] = []
+		for j in range(numImgs):
+			#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
+			if width == 0:
+				continue
+			
+			var raw_img := file.get_buffer(width * height)
+			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
+			var image_texture := ImageTexture.create_from_image(img)
+			texture["image"].append(image_texture)
+			
+			var lower_ptr_4_bits := file.get_position() & 0xF
+			var pos := file.get_position()
+			if lower_ptr_4_bits > alignment:
+				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+			else:
+				pos = pos + (alignment - lower_ptr_4_bits)
+			file.seek(pos)
+			
+			_img_reference = file.get_8()
+			_type = file.get_8()
+			width = file.get_16()
+			height = file.get_16()
+	
+	# Parse as plain image
 	else:
-		Console.print("Unknown Type: %s, Name: %s" % [texture.image_type, texture.name])
+		if texture.width == 0:
+			das.loading_errors.append("Image has zero width. Index: %s, Name: %s" % [texture.index, texture.name])
+			return texture
+		if texture.height == 0:
+			das.loading_errors.append("Image has zero height. Index: %s, Name: %s" % [texture.index, texture.name])
+			return texture
+		
+		var raw_img := file.get_buffer(texture.width * texture.height)
+		if len(raw_img) != texture.width * texture.height:
+			das.loading_errors.append("Unexpected image mismatch! (Read past end of file) Expected: %s (%sx%s), Found: %s, Index: %s, Name: %s, Unk: %s" % [texture.width * texture.height, texture.width, texture.height, len(raw_img), texture.index, texture.name, texture.unk])
+			return texture
+		
+		var is_transparent: bool = texture.image_type & IMAGE_TYPE.TRANSPARENT > 0 or texture.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+		var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
+		var image_texture := ImageTexture.create_from_image(img)
+		texture["image"] = image_texture
+	
 	
 	return texture
 
@@ -665,6 +718,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		das["palette_shading"] = _parse_palette_shading(file, das.header.palette_offset)
 	else:
 		das["palette"] = []
+		das["raw_palette"] = []
 		das["palette_shading"] = []
 	
 	
@@ -684,7 +738,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	var index: int = 0
 	for i in range(das.header.fat_block_1_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
 		das["fat_1"].append(data)
 		index += 1
@@ -692,7 +746,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	das["fat_2"] = []
 	for i in range(das.header.fat_block_2_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
 		das["fat_2"].append(data)
 		index += 1
@@ -700,7 +754,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	das["fat_3"] = []
 	for i in range(das.header.fat_block_3_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
 		das["fat_3"].append(data)
 		index += 1
@@ -708,11 +762,10 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 	das["fat_4"] = []
 	for i in range(das.header.fat_block_4_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
 		das["fat_4"].append(data)
 		index += 1
-
 	
 	
 	# Directional Objects
@@ -808,7 +861,7 @@ static func _parse_palette_shading(file: FileAccess, offset: int) -> Array:
 	return palette_shading_tables
 
 
-static func _parse_fat(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_fat(file: FileAccess, is_ademo: bool, index: int) -> Dictionary:
 	var entry: Dictionary = Parser.parse_section(file, FAT_ENTRY)
 	if entry.offset != 0:
 		file.seek(entry.offset)
@@ -821,28 +874,25 @@ static func _parse_fat(file: FileAccess, is_ademo: bool) -> Dictionary:
 			entry["raw_data"] = file.get_buffer(entry.size*2)
 			
 		else:
-			entry["data"] = _parse_image(file, is_ademo)
+			entry["data"] = _parse_image(file, is_ademo, index)
 	return entry
 
 
-static func _parse_image(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_image(file: FileAccess, is_ademo: bool, _index: int) -> Dictionary:
 	var modifier: int = file.get_8()
 	var image_type: int = file.get_8()
 	file.seek(file.get_position() - 2)
 	var data: Dictionary = {}
-	if modifier > 0xC0:
-		data = _parse_directional_images(file, is_ademo)
-	elif modifier == 0x40 and (image_type % 2) == 0:
-		data = _parse_object_image_pack(file, is_ademo)
-	elif image_type < 64 and (image_type % 2) == 0:
-		data = _parse_standard_image(file, is_ademo)
-	elif image_type < 64 and (image_type % 2) != 0:
+	if image_type & IMAGE_TYPE.ANIMATION > 0:
 		data = _parse_animated_image(file, is_ademo)
-	elif image_type == 128:
+	elif image_type & IMAGE_TYPE.OBJECT_DATA > 0:
 		data = _parse_object_data(file, is_ademo)
+	elif modifier & MODIFIER.HALF_SIZE > 0 and modifier & MODIFIER.OBJECT_IMAGES > 0:
+		data = _parse_directional_images(file, is_ademo)
+	elif modifier & MODIFIER.OBJECT_IMAGES > 0:
+		data = _parse_object_image_pack(file, is_ademo)
 	else:
-		push_error("Invalid Type")
-		data = {"name": "Invalid Type"}
+		data = _parse_standard_image(file, is_ademo)
 	
 	return data
 
@@ -862,7 +912,7 @@ static func _parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionar
 	if len(raw_img) != texture_data.width * texture_data.height:
 		print("INCORRECT LENGTH READ")
 		return {}
-	texture_data["raw"] = raw_img
+	texture_data["raw_image"] = raw_img
 
 	return texture_data
 
@@ -895,7 +945,6 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionar
 			return {}
 		
 		var raw_img := file.get_buffer(texture_data.width * texture_data.height)
-		#texture_data["raw"] = raw_img.duplicate()
 		texture_data["animation"] = [raw_img.duplicate()]
 		
 		for j in range(texture_data.num_sub_images):
@@ -1445,9 +1494,9 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 				if size % 2 != 0:
 					size += 1
 			if "data" in entry:
-				if "raw" in entry.data:
+				if "raw_image" in entry.data:
 					size += 6  # Header
-					size += len(entry.data.raw)
+					size += len(entry.data.raw_image)
 					if size % 2 != 0:
 						size += 1
 				if "animation" in entry.data:
@@ -1557,14 +1606,14 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 				for word: int in entry.data.bonus:
 					data.encode_u16(pos, word)
 					pos += 2
-			if "raw" in entry.data:
+			if "raw_image" in entry.data:
 				data.encode_u8(pos, entry.data.modifier)
 				data.encode_u8(pos+1, entry.data.image_type)
 				data.encode_u16(pos+2, entry.data.width)
 				data.encode_u16(pos+4, entry.data.height)
 				pos += 6
 				size += 6
-				for byte: int in entry.data.raw:
+				for byte: int in entry.data.raw_image:
 					data.encode_u8(pos, byte)
 					pos += 1
 					size += 1

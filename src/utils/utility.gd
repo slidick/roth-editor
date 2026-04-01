@@ -106,7 +106,7 @@ static func init_delta_table() -> Array:
 	return delta_table
 
 
-static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool = true) -> Array:
+static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool) -> Array:
 	# Renderer
 	if not rd:
 		rd = RenderingServer.create_local_rendering_device()
@@ -120,8 +120,10 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 			if p_with_alpha:
 				if pixel == 0:
 					data.append(0)
-				else:
+				elif pixel > 0 and pixel < 128:
 					data.append(255)
+				else:
+					data.append(128)
 		return data
 	
 	# Shader

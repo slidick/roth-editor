@@ -24,9 +24,8 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer/ItemList" unique_id=1890137447]
-layout_mode = 0
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 
 [node name="Container" type="MarginContainer" parent="HBoxContainer" unique_id=495002111]
 unique_name_in_owner = true

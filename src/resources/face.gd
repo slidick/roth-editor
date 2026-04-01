@@ -127,7 +127,7 @@ func delete() -> void:
 	sector = null
 
 
-func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: float, mid: bool = false) -> FaceMesh3D:
+func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: float, mid: bool = false, allow_transparency: bool = false) -> FaceMesh3D:
 	var mapping: Dictionary = das.mapping
 	
 	var static_body := StaticBody3D.new()
@@ -140,9 +140,12 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	#if not sister:
 		#material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	if (check_flag(texture_data.unk0x08, TRANSPARENT) and mid):
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	
+	if allow_transparency:
+		if (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0)) or (texture not in mapping and check_flag(texture_data.unk0x08, FLIP_X)):
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+		elif (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0)):
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	
 	if sector.data.floorTriggerID == 65534 and sister:
 		material.albedo_color = Color.TRANSPARENT
@@ -170,6 +173,9 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		else:
 			Console.print("Face has invalid texture; index: %s, texture: %s" % [index, texture])
 			material.albedo_color = Color.WHITE
+		
+		if check_flag(texture_data.unk0x08, FLIP_X):
+			material.albedo_color.a8 = 128
 	
 	
 	var mesh_tool := SurfaceTool.new()
@@ -404,6 +410,7 @@ func _initialize_meshes() -> void:
 				das,
 				mesh_height,
 				true,
+				true
 			)
 			mesh_instance.ref = self
 			node.add_child(mesh_instance)

@@ -640,42 +640,6 @@ func reload_map_info(map_info: Dictionary) -> void:
 
 #endregion
 
-#region DAS Functions
-
-func _on_das_loading_updated(progress: float, das_info: Dictionary) -> void:
-	map_loading_updated.emit(das_info, progress)
-
-
-## Return or load the requested das_file. [br]
-## Das files stay loaded after initial load.
-func get_das(das_info: Dictionary) -> Dictionary:
-	if das_info in loaded_das and "textures" in loaded_das[das_info]:
-		return loaded_das[das_info]
-	elif das_info in loading_das:
-		return await das_loading_finished
-	else:
-		loading_das[das_info] = true
-		loaded_das[das_info] = await Das.load_das(das_info)
-		loading_das.erase(das_info)
-		return loaded_das[das_info]
-
-
-## Directly get a single image from a das file by index
-func get_index_from_das(index:int, das_info: Dictionary, p_range: int = 1) -> Dictionary:
-	if das_info in loaded_das:
-		if index not in loaded_das[das_info].mapping:
-			var results: Array = Das.get_index_from_das(das_info, index, p_range)
-			for i in range(p_range):
-				loaded_das[das_info].mapping[results[i].index] = results[i]
-	else:
-		loaded_das[das_info] = {"mapping": {}}
-		var results: Array = Das.get_index_from_das(das_info, index, p_range)
-		for i in range(p_range):
-			loaded_das[das_info].mapping[results[i].index] = results[i]
-	return loaded_das[das_info].mapping[index]
-
-#endregion
-
 #region Rotation Functions
 
 ## Converts from player game rotation to degrees
@@ -1228,7 +1192,38 @@ func get_active_sfx_info() -> Dictionary:
 
 #endregion
 
-#region DAS Packs
+#region DAS Functions
+
+func _on_das_loading_updated(progress: float, das_info: Dictionary) -> void:
+	map_loading_updated.emit(das_info, progress)
+
+
+func get_das(das_info: Dictionary) -> Dictionary:
+	if das_info in loaded_das and "textures" in loaded_das[das_info]:
+		return loaded_das[das_info]
+	elif das_info in loading_das:
+		return await das_loading_finished
+	else:
+		loading_das[das_info] = true
+		loaded_das[das_info] = await Das.load_das(das_info)
+		loading_das.erase(das_info)
+		return loaded_das[das_info]
+
+
+## Directly get a single image from a das file by index
+func get_index_from_das(index:int, das_info: Dictionary, p_range: int = 1) -> Dictionary:
+	if das_info in loaded_das:
+		if index not in loaded_das[das_info].mapping:
+			var results: Array = Das.get_index_from_das(das_info, index, p_range)
+			for i in range(p_range):
+				loaded_das[das_info].mapping[results[i].index] = results[i]
+	else:
+		loaded_das[das_info] = {"mapping": {}}
+		var results: Array = Das.get_index_from_das(das_info, index, p_range)
+		for i in range(p_range):
+			loaded_das[das_info].mapping[results[i].index] = results[i]
+	return loaded_das[das_info].mapping[index]
+
 
 func check_das_pack_name(p_name: String) -> String:
 	var error := ""
@@ -1296,4 +1291,10 @@ func get_active_ademo() -> Dictionary:
 		if das_info.active:
 			return das_info
 	return {}
+
+
+func unload_das(das_info: Dictionary) -> void:
+	loaded_das.erase(das_info)
+	loaded_das.erase(get_active_ademo())
+	get_index_from_das(0, get_active_ademo(), 293)
 #endregion

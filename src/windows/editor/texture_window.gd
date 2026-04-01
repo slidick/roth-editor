@@ -43,6 +43,16 @@ func init_das(p_das: Dictionary) -> void:
 		%RotatableItemList.set_item_metadata(idx, texture)
 
 
+func unload_das(das_info: Dictionary) -> void:
+	loaded_das.erase(das_info.name)
+	favorites.erase(das_info.name)
+	recents.erase(das_info.name)
+	for i in range(%RotatableItemList.item_count-1, -1, -1):
+		var texture: Dictionary = %RotatableItemList.get_item_metadata(i)
+		if texture.das_info == das_info:
+			%RotatableItemList.remove_item(i)
+
+
 func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_index: int = -1) -> void:
 	current_das = p_das
 	only_ceilings = p_only_ceilings

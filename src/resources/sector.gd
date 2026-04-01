@@ -449,13 +449,19 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	#material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
+	if is_platform:
+		if (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0)):
+		#if (check_flag(texture_data.unk0x08, TRANSPARENT) and mid):
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		elif (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0)):
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	
+	
 	if texture in mapping and "image" in mapping[texture]:
 		if mapping[texture].flags_1 & (1<<1) > 0:
 			material.albedo_color = Color.TRANSPARENT
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		
-		if is_platform:
-			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		
 		material.albedo_texture = mapping[texture].image
 	else:

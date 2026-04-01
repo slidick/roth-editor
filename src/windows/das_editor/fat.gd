@@ -23,7 +23,7 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 
 func _on_item_list_item_selected(index: int) -> void:
 	%FATContainer.reset()
-	%FATContainer.load_das(das[key], index, das.palette)
+	%FATContainer.load_das(das[key], index, das.raw_palette)
 
 
 func select_index(index: int) -> bool:
