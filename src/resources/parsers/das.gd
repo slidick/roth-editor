@@ -858,10 +858,10 @@ static func _parse_fat(file: FileAccess, is_ademo: bool, index: int) -> Dictiona
 		file.seek(entry.offset)
 		if (entry.flags_1 & 32) > 0:
 			if is_ademo:
-				entry.bonus = []
+				entry.shift_data = []
 				file.seek(file.get_position() - 4)
 				for i in range(2):
-					entry.bonus.append(file.get_16())
+					entry.shift_data.append(file.get_16())
 			entry["raw_data"] = file.get_buffer(entry.size*2)
 			
 		else:
@@ -890,9 +890,9 @@ static func _parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionar
 	var texture_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
-		texture_data.bonus = []
+		texture_data.shift_data = []
 		for i in range(2):
-			texture_data.bonus.append(file.get_16())
+			texture_data.shift_data.append(file.get_16())
 	texture_data.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
 	if texture_data.width == 0 or texture_data.height == 0:
 		print("ZERO WIDTH OR HEIGHT")
@@ -910,9 +910,9 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionar
 	var texture_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
-		texture_data.bonus = []
+		texture_data.shift_data = []
 		for i in range(2):
-			texture_data.bonus.append(file.get_16())
+			texture_data.shift_data.append(file.get_16())
 	var start_offset: int = file.get_position()
 	texture_data.merge(Parser.parse_section(file, IMAGE_COMPRESSED_1_HEADER))
 	file.seek(start_offset)
@@ -1032,9 +1032,9 @@ static func _parse_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var texture_data: Dictionary
 	if is_ademo:
 		file.seek(file.get_position()-4)
-		texture_data.bonus = []
+		texture_data.shift_data = []
 		for i in range(2):
-			texture_data.bonus.append(file.get_16())
+			texture_data.shift_data.append(file.get_16())
 	
 	var starting_offset: int = file.get_position()
 	
@@ -1072,9 +1072,9 @@ static func _parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var object_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
-		object_data.bonus = []
+		object_data.shift_data = []
 		for i in range(2):
-			object_data.bonus.append(file.get_16())
+			object_data.shift_data.append(file.get_16())
 	
 	object_data.merge(Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_HEADER))
 	
@@ -1512,9 +1512,9 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 			assert(pos == entry.offset)
 		
 		if "raw_data" in entry:
-			if "bonus" in entry:
+			if "shift_data" in entry:
 				#pos -= 4
-				for word: int in entry.bonus:
+				for word: int in entry.shift_data:
 					data.encode_u16(pos, word)
 					pos += 2
 			for byte: int in entry.raw_data:
@@ -1526,9 +1526,9 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 				size += 1
 		
 		elif "data" in entry:
-			if "bonus" in entry.data:
+			if "shift_data" in entry.data:
 				#pos -= 4
-				for word: int in entry.data.bonus:
+				for word: int in entry.data.shift_data:
 					data.encode_u16(pos, word)
 					pos += 2
 			if "raw_image" in entry.data:

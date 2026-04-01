@@ -40,7 +40,7 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 		hbox.add_child(label)
 		
 		match key:
-			"bonus":
+			"shift_data":
 				var line_edit_1 := LineEdit.new()
 				line_edit_1.text = str(das[p_key][key][0])
 				line_edit_1.text_changed.connect(func (new_text: String) -> void:
