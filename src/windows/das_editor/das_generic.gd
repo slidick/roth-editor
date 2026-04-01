@@ -254,6 +254,58 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 					texture_rect.custom_minimum_size.y = 100
 					hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 					vbox2.add_child(texture_rect)
+			"vertices":
+				var scroll_2 := ScrollContainer.new()
+				scroll_2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				scroll_2.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+				hbox.add_child(scroll_2)
+				#hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+				var hbox_3 := HBoxContainer.new()
+				scroll_2.add_child(hbox_3)
+				for i in range(len(das[p_key][key])):
+					var vertex: Vector3 = das[p_key][key][i]
+					var vbox2 := VBoxContainer.new()
+					hbox_3.add_child(vbox2)
+					hbox_3.add_theme_constant_override("separation", 20)
+					var hbox2 := HBoxContainer.new()
+					vbox2.add_child(hbox2)
+					var label2 := Label.new()
+					label2.text = "X:"
+					label2.custom_minimum_size.x = 40
+					hbox2.add_child(label2)
+					var line_edit_x := LineEdit.new()
+					line_edit_x.custom_minimum_size.x = 60
+					line_edit_x.text = str(vertex.x)
+					hbox2.add_child(line_edit_x)
+					var hbox3 := HBoxContainer.new()
+					vbox2.add_child(hbox3)
+					var label3 := Label.new()
+					label3.text = "Y:"
+					label3.custom_minimum_size.x = 40
+					hbox3.add_child(label3)
+					var line_edit_y := LineEdit.new()
+					line_edit_y.custom_minimum_size.x = 60
+					line_edit_y.text = str(vertex.y)
+					hbox3.add_child(line_edit_y)
+					var hbox4 := HBoxContainer.new()
+					vbox2.add_child(hbox4)
+					var label4 := Label.new()
+					label4.text = "Z:"
+					label4.custom_minimum_size.x = 40
+					hbox4.add_child(label4)
+					var line_edit_z := LineEdit.new()
+					line_edit_z.custom_minimum_size.x = 60
+					line_edit_z.text = str(vertex.z)
+					hbox4.add_child(line_edit_z)
+					line_edit_x.text_changed.connect(func (_new_text: String) -> void:
+						das[p_key][key][i] = Vector3i(int(line_edit_x.text), int(line_edit_y.text), int(line_edit_z.text))
+					)
+					line_edit_y.text_changed.connect(func (_new_text: String) -> void:
+						das[p_key][key][i] = Vector3i(int(line_edit_x.text), int(line_edit_y.text), int(line_edit_z.text))
+					)
+					line_edit_z.text_changed.connect(func (_new_text: String) -> void:
+						das[p_key][key][i] = Vector3i(int(line_edit_x.text), int(line_edit_y.text), int(line_edit_z.text))
+					)
 			"faces":
 				var scroll_2 := ScrollContainer.new()
 				scroll_2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -326,7 +378,7 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				line_edit.text = str(das[p_key][key])
 				
-				var editable_keys: Array = ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x08", "unk_0x0A", "unk_0x0E", "unk_0x10", "name", "desc", "modifier_2", "image_type_2"]
+				var editable_keys: Array = ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x08", "unk_0x0A", "unk_0x0E", "unk_0x10", "name", "desc", "modifier_2", "image_type_2", "max_bound_x", "max_bound_y", "max_bound_z"]
 				editable_keys.append_array(Das.DIRECTIONAL_OBJECT_MAPPING_ENTRY.keys())
 				editable_keys.append_array(Das.MONSTER_MAPPING_ENTRY.keys())
 				if key in editable_keys:

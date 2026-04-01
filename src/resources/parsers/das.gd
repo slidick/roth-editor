@@ -1142,7 +1142,7 @@ static func _parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var vertex_array := []
 	for i in range(object_data.num_vertices):
 		var vertex_data := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_VERTEX_DATA)
-		var vertex := Vector3(vertex_data.pos_x, vertex_data.pos_y, vertex_data.pos_z)
+		var vertex := Vector3i(vertex_data.pos_x, vertex_data.pos_y, vertex_data.pos_z)
 		vertex_array.append(vertex)
 	
 	var faces_mapping_header := Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_FACE_MAPPING_HEADER)
