@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://dewa4njpsve7v"
+path="res://.godot/imported/convert_palette_image_with_full_alpha.glsl-efe9b54b5400ec0b68aa68373ff88be1.res"
+
+[deps]
+
+source_file="res://src/shaders/convert_palette_image_with_full_alpha.glsl"
+dest_files=["res://.godot/imported/convert_palette_image_with_full_alpha.glsl-efe9b54b5400ec0b68aa68373ff88be1.res"]
+
+[params]
+

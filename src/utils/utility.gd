@@ -3,6 +3,7 @@ class_name Utility
 
 const CONVERT_SHADER_FILE: RDShaderFile = preload("uid://ctypdd4htadqj")
 const CONVERT_SHADER_FILE_WITH_ALPHA: RDShaderFile = preload("uid://cbrjcrstq4vkq")
+const CONVERT_SHADER_FILE_WITH_FULL_ALPHA: RDShaderFile = preload("uid://dewa4njpsve7v")
 static var rd: RenderingDevice
 
 static func are_points_collinear(points_list: Array) -> bool:
@@ -106,7 +107,7 @@ static func init_delta_table() -> Array:
 	return delta_table
 
 
-static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool) -> Array:
+static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool = true) -> Array:
 	# Renderer
 	if not rd:
 		rd = RenderingServer.create_local_rendering_device()
@@ -120,16 +121,22 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 			if p_with_alpha:
 				if pixel == 0:
 					data.append(0)
-				elif pixel > 0 and pixel < 128:
-					data.append(255)
+				if p_with_full_alpha:
+					if pixel > 0 and pixel < 128:
+						data.append(255)
+					else:
+						data.append(128)
 				else:
-					data.append(128)
+					data.append(255)
 		return data
 	
 	# Shader
 	var shader_spirv: RDShaderSPIRV
 	if p_with_alpha:
-		shader_spirv = CONVERT_SHADER_FILE_WITH_ALPHA.get_spirv()
+		if p_with_full_alpha:
+			shader_spirv = CONVERT_SHADER_FILE_WITH_FULL_ALPHA.get_spirv()
+		else:
+			shader_spirv = CONVERT_SHADER_FILE_WITH_ALPHA.get_spirv()
 	else:
 		shader_spirv = CONVERT_SHADER_FILE.get_spirv()
 	var shader: RID = rd.shader_create_from_spirv(shader_spirv)

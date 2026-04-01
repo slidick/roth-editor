@@ -22,7 +22,9 @@ void main() {
   output_buffer.data[4*gl_GlobalInvocationID.x+2] = ((palette_buffer.data[3*pixel+2] * 259 + 33) >> 6);
   if (pixel == 0)
     output_buffer.data[4*gl_GlobalInvocationID.x+3] = 0;
-  else
+  else if (pixel > 0 && pixel < 128)
     output_buffer.data[4*gl_GlobalInvocationID.x+3] = 255;
+  else
+    output_buffer.data[4*gl_GlobalInvocationID.x+3] = 128;
 }
 

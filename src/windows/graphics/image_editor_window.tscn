@@ -5,7 +5,8 @@
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_v7f7k"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_vgo61"]
 [ext_resource type="Texture2D" uid="uid://cgxhrl6daxi3u" path="res://assets/icons/color-picker.svg" id="5_db6r7"]
-[ext_resource type="Script" uid="uid://d0bv1nu8jm520" path="res://src/windows/graphics/texture_canvas.gd" id="5_dwvjd"]
+[ext_resource type="Script" uid="uid://d0bv1nu8jm520" path="res://src/windows/graphics/texture_selection_canvas.gd" id="5_dwvjd"]
+[ext_resource type="Script" uid="uid://bfku4hdh4y3qg" path="res://src/windows/graphics/texture_background_canvas.gd" id="5_v6fcf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5his"]
 content_margin_left = 0.0
@@ -61,7 +62,16 @@ physics_object_picking_first_only = true
 size = Vector2i(946, 655)
 render_target_update_mode = 4
 
-[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1218851620]
+[node name="BackgroundCanvas" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=283560619 node_paths=PackedStringArray("canvas_texture")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+script = ExtResource("5_v6fcf")
+canvas_texture = NodePath("../TextureRect")
+
+[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="1" unique_id=1218851620]
 unique_name_in_owner = true
 texture_filter = 1
 size_flags_horizontal = 3
@@ -69,7 +79,7 @@ mouse_default_cursor_shape = 3
 stretch_mode = 2
 script = ExtResource("5_dwvjd")
 
-[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="1" unique_id=1889443076]
+[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="2" unique_id=1889443076]
 unique_name_in_owner = true
 zoom = Vector2(5, 5)
 

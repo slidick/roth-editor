@@ -102,13 +102,14 @@ func _on_reset_button_pressed() -> void:
 
 
 func redraw_image() -> void:
-	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
 	image = Image.create_from_data(
 		texture_data.width,
 		texture_data.height,
 		false,
 		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
-		Utility.convert_palette_image(palette, raw_data, is_transparent)
+		Utility.convert_palette_image(palette, raw_data, is_transparent, is_fully_transparent)
 	)
 	var texture := ImageTexture.create_from_image(image)
 	%TextureRect.texture = texture
@@ -169,6 +170,7 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 		%PositionLabel.text = "X: %d Y: %d" % [event.position.x+1, event.position.y+1]
 		if current_mode == Mode.DRAW:
 			%TextureRect.queue_redraw()
+			%BackgroundCanvas.queue_redraw()
 			if draw_enabled:
 				var mouse_pos: Vector2 = event.position
 				var _draw_size: int = int(%DrawSizeSpinBox.value) - 1
