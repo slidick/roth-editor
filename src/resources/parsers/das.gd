@@ -41,7 +41,7 @@ enum MODIFIER {
 	FLAG_4 = (1<<3),
 	DRAW_DOWNWARD = (1<<4),
 	FLAG_6 = (1<<5),
-	OBJECT_IMAGES = (1<<6),
+	IMAGE_PACK = (1<<6),
 	HALF_SIZE = (1<<7),
 }
 
@@ -154,22 +154,13 @@ const SUB_IMAGE_COMPRESSED_2_HEADER := {
 	height = Parser.Type.Word,
 }
 
-const DIRECTIONAL_IMAGES_HEADER := {
+const IMAGE_PACK_HEADER := {
 	modifier = Parser.Type.Byte,
 	image_type = Parser.Type.Byte,
 	width = Parser.Type.Word,
 	height = Parser.Type.Word,
-	unk_0x06 = Parser.Type.Word,
-	dir_1_img_ref = Parser.Type.Word,
-	dir_2_img_ref = Parser.Type.Word,
-	dir_3_img_ref = Parser.Type.Word,
-	dir_4_img_ref = Parser.Type.Word,
-	dir_5_img_ref = Parser.Type.Word,
-	dir_6_img_ref = Parser.Type.Word,
-	dir_7_img_ref = Parser.Type.Word,
-	dir_8_img_ref = Parser.Type.Word,
-	unk_0x18 = Parser.Type.DWord,
-	unk_0x1C = Parser.Type.DWord,
+	size_of_offsets = Parser.Type.Byte,
+	pack_type = Parser.Type.Byte,
 }
 
 const DIRECTIONAL_OBJECT_MAPPING_ENTRY := {
@@ -601,7 +592,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	
 	
 	# Parse as directional images
-	elif texture.modifier & MODIFIER.HALF_SIZE > 0 and texture.modifier & MODIFIER.OBJECT_IMAGES > 0:
+	elif texture.modifier & MODIFIER.HALF_SIZE > 0 and texture.modifier & MODIFIER.IMAGE_PACK > 0:
 		file.seek(texture["offset"] + 32)
 		var alignment := file.get_position() & 0xF
 		var img_reference := file.get_8()
@@ -634,7 +625,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				break
 	
 	# Parse as 3d object images pack
-	elif texture.modifier & MODIFIER.OBJECT_IMAGES > 0:
+	elif texture.modifier & MODIFIER.IMAGE_PACK > 0:
 		var numImgs := 0
 		while file.get_16() != 0:
 			numImgs += 1
@@ -887,10 +878,8 @@ static func _parse_image(file: FileAccess, is_ademo: bool, _index: int) -> Dicti
 		data = _parse_animated_image(file, is_ademo)
 	elif image_type & IMAGE_TYPE.OBJECT_DATA > 0:
 		data = _parse_object_data(file, is_ademo)
-	elif modifier & MODIFIER.HALF_SIZE > 0 and modifier & MODIFIER.OBJECT_IMAGES > 0:
-		data = _parse_directional_images(file, is_ademo)
-	elif modifier & MODIFIER.OBJECT_IMAGES > 0:
-		data = _parse_object_image_pack(file, is_ademo)
+	elif modifier & MODIFIER.IMAGE_PACK > 0:
+		data = _parse_image_pack(file, is_ademo)
 	else:
 		data = _parse_standard_image(file, is_ademo)
 	
@@ -1039,7 +1028,7 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionar
 	return texture_data
 
 
-static func _parse_directional_images(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
 	var texture_data: Dictionary
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -1047,84 +1036,34 @@ static func _parse_directional_images(file: FileAccess, is_ademo: bool) -> Dicti
 		for i in range(2):
 			texture_data.bonus.append(file.get_16())
 	
-	texture_data.merge(Parser.parse_section(file, DIRECTIONAL_IMAGES_HEADER))
-	var alignment := file.get_position() & 0xF
-	var header: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
-	var img_reference: int = header.modifier
+	var starting_offset: int = file.get_position()
 	
-	texture_data["directional"] = []
-	while true:
-		#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [das.textures[i].name, img_reference, width, height])
-		var raw_img := file.get_buffer(header.width * header.height)
-		texture_data["directional"].append({"header": header, "raw_image": raw_img})
-		
-		var lower_ptr_4_bits := file.get_position() & 0xF
-		var pos := file.get_position()
-		
-		if lower_ptr_4_bits > alignment:
-			pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-		else:
-			pos = pos + (alignment - lower_ptr_4_bits)
-		file.seek(pos)
-		
-		header = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
-		
-		#Console.print("MULTI PLAIN IMGS: %s, ref: %s, width: %s, height: %s" % [das.textures[i].name, img_reference_new, width, height])
-		if img_reference != header.modifier:
-			break
-	
-	
-	return texture_data
-
-
-static func _parse_object_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
-	var texture_data: Dictionary
-	if is_ademo:
-		file.seek(file.get_position()-4)
-		texture_data.bonus = []
-		for i in range(2):
-			texture_data.bonus.append(file.get_16())
-	texture_data.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
-	texture_data["unk_0x06"] = file.get_8()
-	texture_data["unk_0x07"] = file.get_8()
-	texture_data["header"] = []
-	var number_of_images := 0
+	texture_data.merge(Parser.parse_section(file, IMAGE_PACK_HEADER))
+	texture_data["offsets"] = []
+	texture_data["offsets_flipped"] = []
+	var unique_offsets: = []
 	while true:
 		var word: int = file.get_16()
 		if word == 0:
 			break
-		texture_data.header.append(word)
-		number_of_images += 1
-	#Console.print("numImgs: %s" % numImgs)
+		texture_data.offsets.append(word & 0x7FF)
+		if word & 0x7FF not in unique_offsets:
+			unique_offsets.append(word & 0x7FF)
+		texture_data.offsets_flipped.append((word & 0x8000) > 0)
 	
-	texture_data["padding"] = [0, 0]
-	while true:
-		var byte: int = file.get_8()
-		if byte != 0:
-			break
-		texture_data.padding.append(byte)
-	texture_data.padding.pop_back()
-	file.seek(file.get_position() - 2)
+	assert(file.get_16() == 0)
+	assert(file.get_32() == 0)
+	while (starting_offset - file.get_position()) % 16 != 0:
+		file.get_8()
 	
-	var alignment := file.get_position() & 0xF
-	var header: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
-	texture_data["object_images"] = []
-	for j in range(number_of_images):
-		#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [das.textures[i].name, img_reference, type, width, height])
+	texture_data["image_pack"] = []
+	for _unique_offset: int in unique_offsets:
+		var header: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
 		var raw_img := file.get_buffer(header.width * header.height)
-		texture_data["object_images"].append({"header": header, "raw_image": raw_img})
+		texture_data["image_pack"].append({"header": header, "raw_image": raw_img})
 		
-		var lower_ptr_4_bits := file.get_position() & 0xF
-		var pos := file.get_position()
-		if lower_ptr_4_bits > alignment:
-			pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-		else:
-			pos = pos + (alignment - lower_ptr_4_bits)
-		file.seek(pos)
-		
-		header = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
-		if header.width == 0 or header.height == 0:
-			break
+		while (starting_offset - file.get_position()) % 16 != 0:
+			file.get_8()
 	
 	return texture_data
 
@@ -1509,17 +1448,18 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 						size += len(sub_image)
 					while size % 16 != 0:
 						size += 1
-				if "directional" in entry.data:
-					size += 32 # Header
-					var alignment: int = (total_size + size) & 0xF
-					for sub_image: Dictionary in entry.data.directional:
+				if "image_pack" in entry.data:
+					var starting_offset: int = size
+					size += 8 # Header
+					size += (2*len(entry.data.offsets)) # Additional header
+					size += 8
+					while (size-starting_offset) % 16 != 0:
+						size += 1
+					for sub_image: Dictionary in entry.data.image_pack:
 						size += 6 # Sub-image header
 						size += len(sub_image.raw_image)
-						var new_alignment: int = (total_size + size) & 0xF
-						if new_alignment > alignment:
-							size += (alignment + 0x10 - new_alignment)
-						else:
-							size += (alignment - new_alignment)
+						while (size-starting_offset) % 16 != 0:
+							size += 1
 					if size % 2 != 0:
 						size += 1
 				if "num_vertices" in entry.data:
@@ -1530,21 +1470,6 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 						size += 54 # Face header
 						size += len(face.edge_array) * 2
 					size += 4 # TODO ?
-					if size % 2 != 0:
-						size += 1
-				if "object_images" in entry.data:
-					size += 8 # Header
-					size += (2*len(entry.data.header)) # Additional header
-					size += len(entry.data.padding)  # TODO
-					var alignment: int = (total_size + size) & 0xF
-					for sub_image: Dictionary in entry.data.object_images:
-						size += 6 # Sub-image header
-						size += len(sub_image.raw_image)
-						var new_alignment: int = (total_size + size) & 0xF
-						if new_alignment > alignment:
-							size += (alignment + 0x10 - new_alignment)
-						else:
-							size += (alignment - new_alignment)
 					if size % 2 != 0:
 						size += 1
 		
@@ -1647,26 +1572,29 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 				while size % 16 != 0:
 					pos += 1
 					size += 1
-			if "directional" in entry.data:
+			if "image_pack" in entry.data:
+				var starting_offset: int = pos
 				data.encode_u8(pos, entry.data.modifier)
 				data.encode_u8(pos+1, entry.data.image_type)
 				data.encode_u16(pos+2, entry.data.width)
 				data.encode_u16(pos+4, entry.data.height)
-				data.encode_u16(pos+6, entry.data.unk_0x06)
-				data.encode_u16(pos+8, entry.data.dir_1_img_ref)
-				data.encode_u16(pos+10, entry.data.dir_2_img_ref)
-				data.encode_u16(pos+12, entry.data.dir_3_img_ref)
-				data.encode_u16(pos+14, entry.data.dir_4_img_ref)
-				data.encode_u16(pos+16, entry.data.dir_5_img_ref)
-				data.encode_u16(pos+18, entry.data.dir_6_img_ref)
-				data.encode_u16(pos+20, entry.data.dir_7_img_ref)
-				data.encode_u16(pos+22, entry.data.dir_8_img_ref)
-				data.encode_u32(pos+24, entry.data.unk_0x18)
-				data.encode_u32(pos+28, entry.data.unk_0x1C)
-				pos += 32
-				size += 32 # Header
-				var alignment: int = pos & 0xF
-				for sub_image: Dictionary in entry.data.directional:
+				data.encode_u16(pos+6, len(entry.data.offsets) * 2)
+				data.encode_u16(pos+7, entry.data.pack_type)
+				pos += 8
+				size += 8
+				for i in range(len(entry.data.offsets)):
+					var offset: int = entry.data.offsets[i]
+					if entry.data.offsets_flipped[i]:
+						offset |= 0x8000
+					data.encode_u16(pos, offset)
+					pos += 2
+					size += 2
+				pos += 8
+				size += 8
+				while (pos - starting_offset) % 16 != 0:
+					pos += 1
+					size += 1
+				for sub_image: Dictionary in entry.data.image_pack:
 					data.encode_u8(pos, sub_image.header.modifier)
 					data.encode_u8(pos+1, sub_image.header.image_type)
 					data.encode_u16(pos+2, sub_image.header.width)
@@ -1677,14 +1605,9 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 						data.encode_u8(pos, byte)
 						pos += 1
 						size += 1
-					
-					var new_alignment: int = pos & 0xF
-					if new_alignment > alignment:
-						pos += (alignment + 0x10 - new_alignment)
-						size += (alignment + 0x10 - new_alignment)
-					else:
-						pos += (alignment - new_alignment)
-						size += (alignment - new_alignment)
+					while (pos - starting_offset) % 16 != 0:
+						pos += 1
+						size += 1
 				if size % 2 != 0:
 					pos += 1
 					size += 1
@@ -1769,52 +1692,6 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 				pos += 4
 				size += 4
 				
-				if size % 2 != 0:
-					pos += 1
-					size += 1
-				
-			if "object_images" in entry.data:
-				data.encode_u8(pos, entry.data.modifier)
-				data.encode_u8(pos+1, entry.data.image_type)
-				data.encode_u16(pos+2, entry.data.width)
-				data.encode_u16(pos+4, entry.data.height)
-				data.encode_u8(pos+6, entry.data.unk_0x06)
-				data.encode_u8(pos+7, entry.data.unk_0x07)
-				pos += 8
-				size += 8
-				
-				for word: int in entry.data.header:
-					data.encode_u16(pos, word)
-					pos += 2
-					size += 2
-				
-				for byte: int in entry.data.padding:
-					data.encode_u8(pos, byte)
-					pos += 1
-					size += 1
-				
-				var alignment: int = pos & 0xF
-				for sub_image: Dictionary in entry.data.object_images:
-					data.encode_u8(pos, sub_image.header.modifier)
-					data.encode_u8(pos+1, sub_image.header.image_type)
-					data.encode_u16(pos+2, sub_image.header.width)
-					data.encode_u16(pos+4, sub_image.header.height)
-					pos += 6
-					size += 6
-					
-					for byte: int in sub_image.raw_image:
-						data.encode_u8(pos, byte)
-						pos += 1
-						size += 1
-					
-					var new_alignment: int = pos & 0xF
-					if new_alignment > alignment:
-						pos += (alignment + 0x10 - new_alignment)
-						size += (alignment + 0x10 - new_alignment)
-					else:
-						pos += (alignment - new_alignment)
-						size += (alignment - new_alignment)
-					
 				if size % 2 != 0:
 					pos += 1
 					size += 1

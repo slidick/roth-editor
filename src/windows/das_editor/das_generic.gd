@@ -171,16 +171,23 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 				hbox.add_child(animated_image)
 				hbox.add_child(animation_rect)
 				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			"directional":
+			"image_pack":
 				var palette: Array = []
 				if p_raw_palette.is_empty():
 					palette = Das.DEFAULT_RAW_PALETTE
 				else:
 					palette = p_raw_palette
 				
-				
+				var scroll2 := ScrollContainer.new()
+				scroll2.size_flags_vertical = Control.SIZE_EXPAND_FILL
+				scroll2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				scroll2.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+				hbox.add_child(scroll2)
 				var hbox2 := HBoxContainer.new()
-				hbox.add_child(hbox2)
+				hbox2.size_flags_vertical = Control.SIZE_EXPAND_FILL
+				hbox2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				hbox2.add_theme_constant_override("separation", 20)
+				scroll2.add_child(hbox2)
 				for sub_image_data: Dictionary in das[p_key][key]:
 					var vbox2 := VBoxContainer.new()
 					hbox2.add_child(vbox2)
@@ -196,46 +203,6 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 							)
 						else:
 							line_edit2.editable = false
-						var hbox3 := HBoxContainer.new()
-						hbox3.add_child(label2)
-						hbox3.add_child(line_edit2)
-						vbox2.add_child(hbox3)
-					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent))
-					var image_texture := ImageTexture.create_from_image(image)
-					
-					var texture_rect := TextureRect.new()
-					texture_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-					texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-					texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-					texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-					texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-					texture_rect.texture = image_texture
-					texture_rect.custom_minimum_size.y = 100
-					hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-					vbox2.add_child(texture_rect)
-			"object_images":
-				var palette: Array = []
-				if p_raw_palette.is_empty():
-					palette = Das.DEFAULT_RAW_PALETTE
-				else:
-					palette = p_raw_palette
-				
-				
-				var hbox2 := HBoxContainer.new()
-				hbox.add_child(hbox2)
-				for sub_image_data: Dictionary in das[p_key][key]:
-					var vbox2 := VBoxContainer.new()
-					hbox2.add_child(vbox2)
-					for key2: String in sub_image_data.header:
-						var label2 := Label.new()
-						label2.text = key2
-						label2.custom_minimum_size.x = 150
-						var line_edit2 := LineEdit.new()
-						line_edit2.text = str(sub_image_data.header[key2])
-						line_edit2.text_changed.connect(func (new_text: String) -> void:
-							sub_image_data.header[key2] = int(new_text)
-						)
 						var hbox3 := HBoxContainer.new()
 						hbox3.add_child(label2)
 						hbox3.add_child(line_edit2)
@@ -378,12 +345,14 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				line_edit.text = str(das[p_key][key])
 				
-				var editable_keys: Array = ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x08", "unk_0x0A", "unk_0x0E", "unk_0x10", "name", "desc", "modifier_2", "image_type_2", "max_bound_x", "max_bound_y", "max_bound_z"]
+				var editable_keys: Array = ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x07", "unk_0x08", "unk_0x0A", "unk_0x0E", "unk_0x10", "name", "desc", "modifier_2", "image_type_2", "max_bound_x", "max_bound_y", "max_bound_z"]
 				editable_keys.append_array(Das.DIRECTIONAL_OBJECT_MAPPING_ENTRY.keys())
 				editable_keys.append_array(Das.MONSTER_MAPPING_ENTRY.keys())
 				if key in editable_keys:
 					line_edit.text_changed.connect(func (new_text: String) -> void:
-						if new_text.is_valid_int():
+						if new_text.contains("["):
+							das[p_key][key] = Array(new_text.trim_prefix("[").trim_suffix("]").split(", ")).map(func(string: String) -> int: return int(string))
+						elif new_text.is_valid_int():
 							das[p_key][key] = int(new_text)
 						else:
 							das[p_key][key] = new_text
