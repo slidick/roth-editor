@@ -36,6 +36,7 @@ func clear() -> void:
 	%ObjectFlagButton8.indeterminate = false
 	%RenderDirectionalCheckBox.set_pressed_no_signal(true)
 	%RenderBillboardCheckBox.set_pressed_no_signal(false)
+	%RenderBillboardCheckBox.disabled = false
 	%RenderStyleLabel.text = "Render Style"
 	%EditObjectContainer.hide()
 	last_selection_length = 0
@@ -94,9 +95,10 @@ func update_selections() -> void:
 		%RenderBillboardCheckBox.set_pressed_no_signal(true)
 		%RenderDirectionalCheckBox.set_pressed_no_signal(false)
 	if (object.data.unk0x07 & (1<<0)) > 0:
-		%RenderStyleLabel.text = "Collision Style"
+		%RenderBillboardCheckBox.button_pressed = true
+		%RenderBillboardCheckBox.disabled = true
 	else:
-		%RenderStyleLabel.text = "Render Style"
+		%RenderBillboardCheckBox.disabled = false
 	
 	update_texture(object)
 	
@@ -187,6 +189,12 @@ func update_texture(object: ObjectRoth) -> void:
 				%ObjectTexture.texture = texture.image[0]
 			else:
 				%ObjectTexture.texture = texture.image
+		elif "monster_index" in texture:
+			var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, object_das)
+			%ObjectTexture.texture = monster_texture.image
+		elif "directional_index" in texture:
+			var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, object_das)
+			%ObjectTexture.texture = directional_texture.image
 		else:
 			%ObjectTexture.texture = null
 	else:
@@ -273,10 +281,11 @@ func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
 			object.data.unk0x07 |= (1 << 0)
-			%RenderStyleLabel.text = "Collision Style"
+			%RenderBillboardCheckBox.button_pressed = true
+			%RenderBillboardCheckBox.disabled = true
 		else:
+			%RenderBillboardCheckBox.disabled = false
 			object.data.unk0x07 &= ~(1 << 0)
-			%RenderStyleLabel.text = "Render Style"
 	%EditObjectTimer.start()
 
 

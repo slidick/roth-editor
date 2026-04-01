@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bl4ldhvm76xam"]
 
 [ext_resource type="Script" uid="uid://c74ptamd068l7" path="res://src/windows/das_editor/object_collisions.gd" id="1_2f126"]
-[ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_kk23u"]
 
 [node name="ObjectCollisions" type="MarginContainer" unique_id=1306105614]
 anchors_preset = 15
@@ -27,12 +26,93 @@ focus_neighbor_bottom = NodePath(".")
 
 [node name="Container" type="MarginContainer" parent="HBoxContainer" unique_id=653733156]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-script = ExtResource("2_kk23u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Container" unique_id=1602478726]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=1032935659]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer" unique_id=1713249277]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+text = "Height:"
+
+[node name="HeightEdit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer" unique_id=1305937439]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RegularContainer" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=747850952]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/RegularContainer" unique_id=1354719994]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+text = "Width:"
+
+[node name="WidthEdit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/RegularContainer" unique_id=1285088359]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Width"
+
+[node name="3DObjectContainer" type="VBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=270817720]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer" unique_id=590213004]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer" unique_id=1549351367]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+text = "Unk_0X00:"
+
+[node name="Unk0x00Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer" unique_id=746246062]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer" unique_id=2108038922]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer3" unique_id=81259455]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+text = "Width Perpendicular:"
+
+[node name="WidthPerpendicularEdit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer3" unique_id=420926213]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer" unique_id=116622193]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer4" unique_id=25934093]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+text = "Width Parallel:"
+
+[node name="WidthParallelEdit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer4" unique_id=743156532]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer/HeightEdit" to="." method="_on_height_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/RegularContainer/WidthEdit" to="." method="_on_width_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer/Unk0x00Edit" to="." method="_on_unk_0x_00_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer3/WidthPerpendicularEdit" to="." method="_on_width_perpendicular_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/3DObjectContainer/HBoxContainer4/WidthParallelEdit" to="." method="_on_width_parallel_edit_text_changed"]
