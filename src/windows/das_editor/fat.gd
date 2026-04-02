@@ -67,6 +67,10 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 
 func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
+		if owner.copied_data.is_empty():
+			%PopupMenu.set_item_disabled(1, true)
+		else:
+			%PopupMenu.set_item_disabled(1, false)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
 
 
