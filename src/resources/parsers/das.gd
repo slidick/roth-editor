@@ -141,7 +141,7 @@ const IMAGE_COMPRESSED_2_HEADER := {
 }
 
 const SUB_IMAGE_COMPRESSED_2_HEADER := {
-	sub_image_id = Parser.Type.Word,       # seems to be always 0x17
+	image_type = Parser.Type.Word,       # seems to be always 0x17
 	unk_0x02 = Parser.Type.Word,            # seems to be always zero
 	buf_width = Parser.Type.Word,
 	buf_height = Parser.Type.Word,
