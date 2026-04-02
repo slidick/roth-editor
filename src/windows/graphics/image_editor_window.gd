@@ -176,10 +176,13 @@ func load_palette(p_raw_palette: Array) -> void:
 
 func _on_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		if %RotateCanvasCheckBox.button_pressed:
-			%PositionLabel.text = "X: %d Y: %d" % [event.position.y+1, event.position.x+1]
+		if event.position.x >= 0 and event.position.y >= 0 and event.position.x < image.get_width() and event.position.y < image.get_height():
+			if %RotateCanvasCheckBox.button_pressed:
+				%PositionLabel.text = "X: %d Y: %d" % [event.position.y+1, event.position.x+1]
+			else:
+				%PositionLabel.text = "X: %d Y: %d" % [event.position.x+1, event.position.y+1]
 		else:
-			%PositionLabel.text = "X: %d Y: %d" % [event.position.x+1, event.position.y+1]
+			%PositionLabel.text = ""
 		if current_mode == Mode.DRAW:
 			%TextureRect.queue_redraw()
 			if draw_enabled:
@@ -206,7 +209,8 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 					var vertex_3 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), ceili(mouse_pos.y)+roundi(_draw_size/2.0))
 					for x in range(vertex_1.x, vertex_2.x):
 						for y in range(vertex_1.y, vertex_3.y):
-							raw_data[y * texture_data.width + x] = selected_rect.palette_index
+							if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+								raw_data[y * texture_data.width + x] = selected_rect.palette_index
 					redraw_image()
 				else:
 					draw_enabled = false
