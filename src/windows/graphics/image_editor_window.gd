@@ -5,7 +5,7 @@ const MAX_ZOOM : int = 10
 const MIN_ZOOM : float = .05
 const COLOR_PICKER_CURSOR: Texture2D = preload("uid://cgxhrl6daxi3u")
 
-signal done(raw_image: PackedByteArray)
+signal done(texture: Dictionary)
 enum Mode {
 	DRAW,
 	COLOR_PICKER,
@@ -20,10 +20,10 @@ var draw_enabled: bool = false
 var additional_zoom: float = 1
 var zooming: bool = false
 var mouse_drag_enabled: bool = false
+var original_texture_data: Dictionary = {}
 var texture_data: Dictionary = {}
-var raw_data: PackedByteArray = []
 var palette: Array = []
-
+var force_partial_alpha: bool = false
 
 func _input(event: InputEvent) -> void:
 	if canvas_has_focus:
@@ -81,52 +81,56 @@ func update_camera_center() -> void:
 
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: Array) -> Variant:
-	texture_data = p_texture_data
+func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false) -> Dictionary:
+	original_texture_data = p_texture_data.duplicate(true)
+	texture_data = p_texture_data.duplicate(true)
 	palette = p_raw_palette
-	raw_data = p_texture_data.raw_image.duplicate()
-	
-	redraw_image()
-	
+	force_partial_alpha = p_force_partial_alpha
+	_on_reset_button_pressed()
 	load_palette(palette)
 	update_camera_center()
 	additional_zoom = 1
 	adjust_zoom()
 	current_mode = Mode.DRAW
 	toggle(true)
-	var new_raw_data: Variant = await done
+	var new_texture: Dictionary = await done
 	toggle(false)
 	Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
 	Input.set_custom_mouse_cursor(null, Input.CURSOR_CROSS)
-	return new_raw_data
+	return new_texture
 
 
 func _on_cancel_button_pressed() -> void:
-	done.emit([])
+	done.emit({})
 
 
 func _on_reset_button_pressed() -> void:
-	raw_data = texture_data.raw_image.duplicate()
+	texture_data = original_texture_data.duplicate(true)
+	%WidthSpinBox.set_value_no_signal(texture_data.width)
+	%WidthSpinBox.get_line_edit().text = str(texture_data.width)
+	%HeightSpinBox.set_value_no_signal(texture_data.height)
+	%HeightSpinBox.get_line_edit().text = str(texture_data.height)
 	redraw_image()
 
 
 func redraw_image() -> void:
-	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or force_partial_alpha
 	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
 	image = Image.create_from_data(
 		texture_data.width,
 		texture_data.height,
 		false,
 		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
-		Utility.convert_palette_image(palette, raw_data, is_transparent, is_fully_transparent)
+		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent)
 	)
 	var texture := ImageTexture.create_from_image(image)
 	%TextureRect.texture = texture
 	%PreviewTextureRect.texture = texture
+	%BackgroundCanvas.queue_redraw()
 
 
 func _on_save_button_pressed() -> void:
-	done.emit(raw_data)
+	done.emit(texture_data)
 
 
 func load_palette(p_raw_palette: Array) -> void:
@@ -194,7 +198,7 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 				for x in range(vertex_1.x, vertex_2.x):
 					for y in range(vertex_1.y, vertex_3.y):
 						if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
-							raw_data[y * texture_data.width + x] = selected_rect.palette_index
+							texture_data.raw_image[y * texture_data.width + x] = selected_rect.palette_index
 				redraw_image()
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -210,13 +214,13 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 					for x in range(vertex_1.x, vertex_2.x):
 						for y in range(vertex_1.y, vertex_3.y):
 							if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
-								raw_data[y * texture_data.width + x] = selected_rect.palette_index
+								texture_data.raw_image[y * texture_data.width + x] = selected_rect.palette_index
 					redraw_image()
 				else:
 					draw_enabled = false
 			Mode.COLOR_PICKER:
 				if event.pressed:
-					var new_palette_index: int = raw_data[int(event.position.y) * texture_data.width + int(event.position.x)]
+					var new_palette_index: int = texture_data.raw_image[int(event.position.y) * texture_data.width + int(event.position.x)]
 					select_color(new_palette_index)
 
 
@@ -267,3 +271,56 @@ func _on_draw_size_spin_box_value_changed(value: float) -> void:
 func _on_rotate_canvas_check_box_toggled(toggled_on: bool) -> void:
 	%RotationContainer.enabled = toggled_on
 	%RotationPreviewContainer.enabled = toggled_on
+
+
+func _on_width_spin_box_value_changed(value: float) -> void:
+	var old_width: int = texture_data.width
+	if int(value) == old_width:
+		return
+	texture_data.width = int(value)
+	var new_raw_image := []
+	if value > old_width:
+		var index: int = 0
+		for i in range(texture_data.height):
+			for j in range(old_width):
+				new_raw_image.append(texture_data.raw_image[index])
+				index += 1
+			for j in range(value-old_width):
+				new_raw_image.append(0)
+	if value < old_width:
+		var index: int = 0
+		for i in range(texture_data.height):
+			for j in range(value):
+				new_raw_image.append(texture_data.raw_image[index])
+				index += 1
+			for j in range(old_width-value):
+				index += 1
+	
+	texture_data.raw_image = new_raw_image
+	redraw_image()
+
+
+func _on_height_spin_box_value_changed(value: float) -> void:
+	var old_height: int = texture_data.height
+	if int(value) == old_height:
+		return
+	texture_data.height = int(value)
+	var new_raw_image := []
+	if value > old_height:
+		var index: int = 0
+		for i in range(old_height):
+			for j in range(texture_data.width):
+				new_raw_image.append(texture_data.raw_image[index])
+				index += 1
+		for i in range(value-old_height):
+			for j in range(texture_data.width):
+				new_raw_image.append(0)
+	if value < old_height:
+		var index: int = 0
+		for i in range(value):
+			for j in range(texture_data.width):
+				new_raw_image.append(texture_data.raw_image[index])
+				index += 1
+	
+	texture_data.raw_image = new_raw_image
+	redraw_image()

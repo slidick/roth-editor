@@ -60,7 +60,7 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(946, 647)
+size = Vector2i(732, 647)
 render_target_update_mode = 4
 
 [node name="RotationContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1696174823]
@@ -131,6 +131,30 @@ max_value = 64.0
 value = 1.0
 rounded = true
 
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="2" unique_id=1637433269]
+layout_mode = 2
+text = "Width:"
+
+[node name="WidthSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="3" unique_id=1172273463]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 256.0
+value = 32.0
+rounded = true
+
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="4" unique_id=50821418]
+layout_mode = 2
+text = "Height:"
+
+[node name="HeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="5" unique_id=443703408]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 256.0
+value = 32.0
+rounded = true
+
 [node name="PaletteContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="2" unique_id=1977510581]
 unique_name_in_owner = true
 layout_mode = 2
@@ -183,6 +207,8 @@ text = "Save"
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/RotateCanvasCheckBox" to="." method="_on_rotate_canvas_check_box_toggled"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/ColorPickerButton" to="." method="_on_color_picker_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/DrawSizeSpinBox" to="." method="_on_draw_size_spin_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/WidthSpinBox" to="." method="_on_width_spin_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/HeightSpinBox" to="." method="_on_height_spin_box_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

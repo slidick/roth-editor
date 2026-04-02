@@ -75,17 +75,18 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 				edit_button.text = "Edit"
 				edit_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 				edit_button.pressed.connect(func () -> void:
-					var new_raw_image: PackedByteArray = await owner.owner.edit_image(das[p_key], palette)
-					if not new_raw_image.is_empty():
+					var new_texture: Dictionary = await owner.owner.edit_image(das[p_key], palette)
+					if not new_texture.is_empty():
 						var new_image: Image = Image.create_from_data(
-							das[p_key].width,
-							das[p_key].height,
+							new_texture.width,
+							new_texture.height,
 							false,
 							Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
-							Utility.convert_palette_image(palette, new_raw_image, is_transparent)
+							Utility.convert_palette_image(palette, new_texture.raw_image, is_transparent)
 						)
 						texture_rect.texture = ImageTexture.create_from_image(new_image)
-						das[p_key].raw_image = new_raw_image
+						das[p_key] = new_texture
+						
 				)
 				hbox.add_child(rotation_container)
 				hbox.add_child(edit_button)

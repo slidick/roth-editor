@@ -77,6 +77,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 max_value = 65535.0
 rounded = true
+editable = false
 update_on_text_changed = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HSplitContainer/VBoxContainer" index="1" unique_id=284809888]
@@ -85,7 +86,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1520715318]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "X-Shift-Left"
+text = "X Hotspot"
 
 [node name="xOffsetEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1496798806]
 unique_name_in_owner = true
@@ -101,7 +102,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=34663475]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Y-Shift-Up"
+text = "Y Hotspot"
 
 [node name="yOffsetEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HSplitContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=736437856]
 unique_name_in_owner = true
@@ -127,6 +128,7 @@ text = "Save As"
 [node name="SubWindows" type="Control" parent="." index="2" unique_id=407647284]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="FileDialog" type="FileDialog" parent="SubWindows" index="0" unique_id=2106586111]
 unique_name_in_owner = true
