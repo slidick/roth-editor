@@ -1,7 +1,10 @@
 extends Container
 class_name RotationContainer
 
-var enabled: bool = true
+var enabled: bool = true :
+	set(p_enabled):
+		enabled = p_enabled
+		queue_sort()
 
 func _get_minimum_size() -> Vector2:
 	var children_size := Vector2.ZERO

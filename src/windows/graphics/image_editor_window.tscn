@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cgxhrl6daxi3u" path="res://assets/icons/color-picker.svg" id="5_db6r7"]
 [ext_resource type="Script" uid="uid://d0bv1nu8jm520" path="res://src/windows/graphics/texture_selection_canvas.gd" id="5_dwvjd"]
 [ext_resource type="Script" uid="uid://bfku4hdh4y3qg" path="res://src/windows/graphics/texture_background_canvas.gd" id="5_v6fcf"]
+[ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="6_5dcxl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5his"]
 content_margin_left = 0.0
@@ -59,33 +60,50 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(946, 655)
+size = Vector2i(946, 647)
 render_target_update_mode = 4
 
-[node name="BackgroundCanvas" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=283560619 node_paths=PackedStringArray("canvas_texture")]
+[node name="RotationContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1696174823]
+unique_name_in_owner = true
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+script = ExtResource("6_5dcxl")
+
+[node name="BackgroundCanvas" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer" index="0" unique_id=283560619 node_paths=PackedStringArray("canvas_texture")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(256, 256)
-layout_mode = 3
-anchors_preset = 0
+layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("5_v6fcf")
 canvas_texture = NodePath("../TextureRect")
 
-[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="1" unique_id=1218851620]
+[node name="TextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer" index="1" unique_id=1218851620]
 unique_name_in_owner = true
 texture_filter = 1
+layout_mode = 2
 size_flags_horizontal = 3
 mouse_default_cursor_shape = 3
 stretch_mode = 2
 script = ExtResource("5_dwvjd")
 
-[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="2" unique_id=1889443076]
+[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="1" unique_id=1889443076]
 unique_name_in_owner = true
 zoom = Vector2(5, 5)
 
-[node name="PositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" index="1" unique_id=139147548]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" index="1" unique_id=354372061]
+layout_mode = 2
+
+[node name="PositionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" index="0" unique_id=139147548]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="RotateCanvasCheckBox" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" index="1" unique_id=855928310]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+button_pressed = true
+text = "Rotate Canvas"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1350186580]
 custom_minimum_size = Vector2(300, 0)
@@ -120,11 +138,18 @@ size_flags_vertical = 0
 size_flags_stretch_ratio = 0.5
 theme_override_styles/panel = SubResource("StyleBoxFlat_q5his")
 
-[node name="PreviewTextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3" unique_id=2097779496]
+[node name="RotationPreviewContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3" unique_id=1643524020]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("6_5dcxl")
+
+[node name="PreviewTextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/RotationPreviewContainer" index="0" unique_id=2097779496]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
-size_flags_vertical = 3
+expand_mode = 1
 stretch_mode = 5
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1374710611]
@@ -153,8 +178,9 @@ text = "Save"
 
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
-[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/TextureRect" to="." method="_on_texture_rect_gui_input"]
-[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/TextureRect" to="." method="_on_texture_rect_mouse_exited"]
+[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
+[connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer/TextureRect" to="." method="_on_texture_rect_mouse_exited"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/RotateCanvasCheckBox" to="." method="_on_rotate_canvas_check_box_toggled"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/ColorPickerButton" to="." method="_on_color_picker_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/DrawSizeSpinBox" to="." method="_on_draw_size_spin_box_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]

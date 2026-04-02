@@ -55,6 +55,9 @@ func adjust_zoom() -> void:
 		await get_tree().process_frame
 	var zoom_y: float = %Camera2D.get_viewport().size.y / float(image.get_height())
 	var zoom_x: float = %Camera2D.get_viewport().size.x / float(image.get_width())
+	if %RotateCanvasCheckBox.button_pressed:
+		zoom_y = %Camera2D.get_viewport().size.y / float(image.get_width())
+		zoom_x = %Camera2D.get_viewport().size.x / float(image.get_height())
 	var zoom: float = min(zoom_x, zoom_y) * 0.90
 	var mouse_pos: Vector2 = %TextureRect.get_global_mouse_position()
 	%Camera2D.zoom = Vector2.ONE * zoom * additional_zoom
@@ -68,7 +71,13 @@ func adjust_zoom() -> void:
 
 
 func update_camera_center() -> void:
-	%Camera2D.position = image.get_size() / 2.0
+	if %RotateCanvasCheckBox.button_pressed:
+		var _size := Vector2.ZERO
+		_size.x = image.get_size().y
+		_size.y = image.get_size().x
+		%Camera2D.position = _size / 2.0
+	else:
+		%Camera2D.position = image.get_size() / 2.0
 
 
 
@@ -167,10 +176,12 @@ func load_palette(p_raw_palette: Array) -> void:
 
 func _on_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		%PositionLabel.text = "X: %d Y: %d" % [event.position.x+1, event.position.y+1]
+		if %RotateCanvasCheckBox.button_pressed:
+			%PositionLabel.text = "X: %d Y: %d" % [event.position.y+1, event.position.x+1]
+		else:
+			%PositionLabel.text = "X: %d Y: %d" % [event.position.x+1, event.position.y+1]
 		if current_mode == Mode.DRAW:
 			%TextureRect.queue_redraw()
-			%BackgroundCanvas.queue_redraw()
 			if draw_enabled:
 				var mouse_pos: Vector2 = event.position
 				var _draw_size: int = int(%DrawSizeSpinBox.value) - 1
@@ -247,3 +258,8 @@ func select_color(palette_index: int) -> void:
 
 func _on_draw_size_spin_box_value_changed(value: float) -> void:
 	%TextureRect.draw_size = int(value)
+
+
+func _on_rotate_canvas_check_box_toggled(toggled_on: bool) -> void:
+	%RotationContainer.enabled = toggled_on
+	%RotationPreviewContainer.enabled = toggled_on
