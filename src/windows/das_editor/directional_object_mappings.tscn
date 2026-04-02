@@ -20,15 +20,31 @@ script = ExtResource("1_0ci2o")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1356307626]
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="HBoxContainer" unique_id=1499765232]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=20086319]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer/VBoxContainer" unique_id=1499765232]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 3
 focus_neighbor_top = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
+allow_rmb_select = true
+
+[node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=1102468031]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Delete"
+item_0/id = 0
+
+[node name="AddButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=1371187863]
+layout_mode = 2
+text = "Add"
 
 [node name="Container" type="MarginContainer" parent="HBoxContainer" unique_id=495002111]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -37,4 +53,224 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("2_0yvfq")
 
-[connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Container" unique_id=952014434]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=413344665]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer" unique_id=2084026850]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Header"
+
+[node name="HeaderEdit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer" unique_id=1689647270]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=224364048]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer2" unique_id=1799631160]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 1 Fat Index"
+
+[node name="Dir1Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer2" unique_id=888093326]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir1MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer2" unique_id=311715052]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo1Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer2" unique_id=54886142]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=1430217093]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer3" unique_id=832286303]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 2 Fat Index"
+
+[node name="Dir2Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer3" unique_id=1349812141]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir2MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer3" unique_id=1933167858]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo2Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer3" unique_id=1909198678]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=1179170097]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer4" unique_id=45348434]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 3 Fat Index"
+
+[node name="Dir3Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer4" unique_id=2064840028]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir3MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer4" unique_id=650469582]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo3Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer4" unique_id=1354688726]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=1667917592]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer5" unique_id=503537186]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 4 Fat Index"
+
+[node name="Dir4Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer5" unique_id=461009488]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir4MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer5" unique_id=630715126]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo4Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer5" unique_id=1067210513]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=2028630893]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer6" unique_id=194607405]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 5 Fat Index"
+
+[node name="Dir5Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer6" unique_id=81225919]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir5MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer6" unique_id=1779895330]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo5Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer6" unique_id=507005707]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=904106293]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer7" unique_id=1812742273]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 6 Fat Index"
+
+[node name="Dir6Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer7" unique_id=1834977068]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir6MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer7" unique_id=1474254735]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo6Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer7" unique_id=80544878]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=81638903]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer8" unique_id=35382412]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 7 Fat Index"
+
+[node name="Dir7Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer8" unique_id=2137750761]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir7MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer8" unique_id=1842731336]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo7Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer8" unique_id=669983932]
+layout_mode = 2
+text = "Jump to Index"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="HBoxContainer/Container/VBoxContainer" unique_id=697649761]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer9" unique_id=1669475825]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Dir 8 Fat Index"
+
+[node name="Dir8Edit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer9" unique_id=1268752390]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dir8MirrorCheckBox" type="CheckBox" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer9" unique_id=271132526]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mirror"
+
+[node name="JumpTo8Button" type="Button" parent="HBoxContainer/Container/VBoxContainer/HBoxContainer9" unique_id=2139041799]
+layout_mode = 2
+text = "Jump to Index"
+
+[connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="index_pressed" from="HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer/HeaderEdit" to="." method="_on_header_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer2/Dir1Edit" to="." method="_on_dir_1_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer2/Dir1MirrorCheckBox" to="." method="_on_dir_1_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer2/JumpTo1Button" to="." method="_on_jump_to_1_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer3/Dir2Edit" to="." method="_on_dir_2_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer3/Dir2MirrorCheckBox" to="." method="_on_dir_2_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer3/JumpTo2Button" to="." method="_on_jump_to_2_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer4/Dir3Edit" to="." method="_on_dir_3_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer4/Dir3MirrorCheckBox" to="." method="_on_dir_3_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer4/JumpTo3Button" to="." method="_on_jump_to_3_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer5/Dir4Edit" to="." method="_on_dir_4_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer5/Dir4MirrorCheckBox" to="." method="_on_dir_4_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer5/JumpTo4Button" to="." method="_on_jump_to_4_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer6/Dir5Edit" to="." method="_on_dir_5_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer6/Dir5MirrorCheckBox" to="." method="_on_dir_5_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer6/JumpTo5Button" to="." method="_on_jump_to_5_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer7/Dir6Edit" to="." method="_on_dir_6_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer7/Dir6MirrorCheckBox" to="." method="_on_dir_6_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer7/JumpTo6Button" to="." method="_on_jump_to_6_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer8/Dir7Edit" to="." method="_on_dir_7_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer8/Dir7MirrorCheckBox" to="." method="_on_dir_7_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer8/JumpTo7Button" to="." method="_on_jump_to_7_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer9/Dir8Edit" to="." method="_on_dir_8_edit_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Container/VBoxContainer/HBoxContainer9/Dir8MirrorCheckBox" to="." method="_on_dir_8_mirror_check_box_toggled"]
+[connection signal="pressed" from="HBoxContainer/Container/VBoxContainer/HBoxContainer9/JumpTo8Button" to="." method="_on_jump_to_8_button_pressed"]

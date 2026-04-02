@@ -157,14 +157,14 @@ func _on_edit_texture(p_das_info: Dictionary, p_index: int) -> void:
 	toggle(true)
 	if not das.is_empty():
 		if das.das_info == p_das_info:
-			_on_filenames_jump_to_index_pressed(p_index)
+			_on_jump_to_index_pressed(p_index)
 		else:
 			if await _on_cancel_button_pressed():
 				_edit_das(p_das_info)
-				_on_filenames_jump_to_index_pressed(p_index)
+				_on_jump_to_index_pressed(p_index)
 	else:
 		_edit_das(p_das_info)
-		_on_filenames_jump_to_index_pressed(p_index)
+		_on_jump_to_index_pressed(p_index)
 
 
 func _edit_das(das_info: Dictionary) -> void:
@@ -244,7 +244,7 @@ func load_das(p_das: Dictionary) -> void:
 	%Filenames2.load_das(p_das, "filenames_2")
 
 
-func _on_filenames_jump_to_index_pressed(index: int) -> void:
+func _on_jump_to_index_pressed(index: int) -> void:
 	if %Fat1.select_index(index):
 		%SectionItemList.select(4)
 		_on_section_item_list_item_selected(4)

@@ -347,7 +347,6 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				line_edit.text = str(das[p_key][key])
 				
 				var editable_keys: Array = ["flags_1", "flags_2", "modifier", "image_type", "unk_0x06", "unk_0x07", "unk_0x08", "unk_0x0A", "unk_0x0E", "unk_0x10", "name", "desc", "modifier_2", "image_type_2", "max_bound_x", "max_bound_y", "max_bound_z"]
-				editable_keys.append_array(Das.DIRECTIONAL_OBJECT_MAPPING_ENTRY.keys())
 				editable_keys.append_array(Das.MONSTER_MAPPING_ENTRY.keys())
 				if key in editable_keys:
 					line_edit.text_changed.connect(func (new_text: String) -> void:
