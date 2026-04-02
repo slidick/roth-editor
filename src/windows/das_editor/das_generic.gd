@@ -62,7 +62,8 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				else:
 					palette = p_raw_palette
 				var is_transparent: bool = das[p_key].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or das[p_key].image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-				var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, das[p_key][key], is_transparent))
+				var is_fully_transparent: bool = das[p_key].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+				var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, das[p_key][key], is_transparent, is_fully_transparent))
 				var image_texture := ImageTexture.create_from_image(image)
 				var texture_rect := TextureRect.new()
 				texture_rect.texture = image_texture
@@ -84,7 +85,7 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 							new_texture.height,
 							false,
 							Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
-							Utility.convert_palette_image(palette, new_texture.raw_image, is_transparent)
+							Utility.convert_palette_image(palette, new_texture.raw_image, is_transparent, is_fully_transparent)
 						)
 						texture_rect.texture = ImageTexture.create_from_image(new_image)
 						das[p_key] = new_texture
@@ -113,8 +114,9 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				animated_image.sprite_frames = sprite_frames
 				sprite_frames.set_animation_speed("default", 12)
 				var is_transparent: bool = das[p_key].image_type_2 & Das.IMAGE_TYPE.TRANSPARENT > 0 or das[p_key].image_type_2 & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+				var is_fully_transparent: bool = das[p_key].image_type_2 & Das.IMAGE_TYPE.TRANSPARENT > 0
 				for raw_img: Array in das[p_key][key].slice(0,-1):
-					var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, raw_img, is_transparent))
+					var image: Image = Image.create_from_data(das[p_key].width, das[p_key].height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, raw_img, is_transparent, is_fully_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					sprite_frames.add_frame("default", image_texture)
 				animated_image.play("default")
@@ -165,7 +167,8 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 						hbox3.add_child(line_edit2)
 						vbox2.add_child(hbox3)
 					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent))
+					var is_fully_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent, is_fully_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					sprite_frames.add_frame("default", image_texture)
 				animated_image.play("default")
@@ -211,7 +214,8 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 						hbox3.add_child(line_edit2)
 						vbox2.add_child(hbox3)
 					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent))
+					var is_fully_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent, is_fully_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					
 					var texture_rect := TextureRect.new()
