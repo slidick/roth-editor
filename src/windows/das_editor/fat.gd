@@ -78,3 +78,13 @@ func select(index: int) -> void:
 	if %ItemList.item_count > index:
 		%ItemList.select(index)
 		_on_item_list_item_selected(index)
+
+
+func _on_find_empty_button_pressed() -> void:
+	for i in range(%ItemList.item_count):
+		var fat_data: Dictionary = %ItemList.get_item_metadata(i) 
+		if fat_data.offset == 0:
+			%ItemList.select(i)
+			%ItemList.ensure_current_is_visible()
+			_on_item_list_item_selected(i)
+			break

@@ -20,15 +20,19 @@ script = ExtResource("1_nuh7r")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1280954712]
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="HBoxContainer" unique_id=774366710]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=359628481]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer/VBoxContainer" unique_id=774366710]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 3
 focus_neighbor_top = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
 allow_rmb_select = true
 
-[node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/ItemList" unique_id=427259160]
+[node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=427259160]
 unique_name_in_owner = true
 item_count = 3
 item_0/text = "Copy"
@@ -37,6 +41,10 @@ item_1/text = "Paste"
 item_1/id = 1
 item_2/text = "Clear"
 item_2/id = 2
+
+[node name="FindEmptyButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=2069763857]
+layout_mode = 2
+text = "Find Next Empty"
 
 [node name="FATContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1051257041]
 unique_name_in_owner = true
@@ -48,6 +56,7 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("2_fvdbs")
 
-[connection signal="item_clicked" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
-[connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
-[connection signal="index_pressed" from="HBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="index_pressed" from="HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FindEmptyButton" to="." method="_on_find_empty_button_pressed"]
