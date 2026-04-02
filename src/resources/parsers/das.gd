@@ -713,17 +713,6 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		das["palette_shading"] = []
 	
 	
-	# Filenames
-	file.seek(das.header.filenames_offset)
-	das["filenames_header"] = Parser.parse_section(file, FILE_NAMES_HEADER)
-	das["filenames_1"] = []
-	das["filenames_2"] = []
-	for i in range(das.filenames_header.section1_element_count):
-		das["filenames_1"].append(Parser.parse_section(file, FILE_NAMES_ENTRY))
-	for i in range(das.filenames_header.section2_element_count):
-		das["filenames_2"].append(Parser.parse_section(file, FILE_NAMES_ENTRY))
-	
-	
 	# FAT
 	das["fat_1"] = []
 	var index: int = 0
@@ -757,6 +746,35 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		data.index = index
 		das["fat_4"].append(data)
 		index += 1
+	
+	
+	# Filenames
+	file.seek(das.header.filenames_offset)
+	das["filenames_header"] = Parser.parse_section(file, FILE_NAMES_HEADER)
+	das["filenames_1"] = []
+	das["filenames_2"] = []
+	for i in range(das.filenames_header.section1_element_count):
+		var filename: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
+		if filename.index < len(das.fat_1):
+			das.fat_1[filename.index]["filename"] = filename
+		elif filename.index < len(das.fat_1) + len(das.fat_2):
+			das.fat_2[filename.index-len(das.fat_1)]["filename"] = filename
+		elif filename.index < len(das.fat_1) + len(das.fat_2) + len(das.fat_3):
+			das.fat_3[filename.index-len(das.fat_1)-len(das.fat_2)]["filename"] = filename
+		elif filename.index < len(das.fat_1) + len(das.fat_2) + len(das.fat_3) + len(das.fat_4):
+			das.fat_4[filename.index-len(das.fat_1)-len(das.fat_2)-len(das.fat_3)]["filename"] = filename
+		das["filenames_1"].append(filename)
+	for i in range(das.filenames_header.section2_element_count):
+		var filename: Dictionary = Parser.parse_section(file, FILE_NAMES_ENTRY)
+		if filename.index < len(das.fat_1):
+			das.fat_1[filename.index]["filename"] = filename
+		elif filename.index < len(das.fat_1) + len(das.fat_2):
+			das.fat_2[filename.index-len(das.fat_1)]["filename"] = filename
+		elif filename.index < len(das.fat_1) + len(das.fat_2) + len(das.fat_3):
+			das.fat_3[filename.index-len(das.fat_1)-len(das.fat_2)]["filename"] = filename
+		elif filename.index < len(das.fat_1) + len(das.fat_2) + len(das.fat_3) + len(das.fat_4):
+			das.fat_4[filename.index-len(das.fat_1)-len(das.fat_2)-len(das.fat_3)]["filename"] = filename
+		das["filenames_2"].append(filename)
 	
 	
 	# Directional Objects

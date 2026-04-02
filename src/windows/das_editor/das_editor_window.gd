@@ -277,3 +277,12 @@ func _on_jump_to_object_pressed(index: int) -> void:
 	%SectionItemList.select(6)
 	_on_section_item_list_item_selected(6)
 	%Fat3.select(index)
+
+
+func _on_jump_to_filename_pressed(filename: Dictionary) -> void:
+	if %Filenames1.select(filename):
+		%SectionItemList.select(13)
+		_on_section_item_list_item_selected(13)
+	if %Filenames2.select(filename):
+		%SectionItemList.select(14)
+		_on_section_item_list_item_selected(14)

@@ -1,5 +1,6 @@
 extends MarginContainer
 signal jump_to_collision_pressed(index: int)
+signal jump_to_filename_pressed(filename: Dictionary)
 
 var das: Dictionary = {}
 var key: String = ""
@@ -8,6 +9,9 @@ var key: String = ""
 func _ready() -> void:
 	%FATContainer.jump_to_collision_pressed.connect(func () -> void:
 		jump_to_collision_pressed.emit(%ItemList.get_selected_items()[0])
+	)
+	%FATContainer.jump_to_filename_pressed.connect(func (filename: Dictionary) -> void:
+		jump_to_filename_pressed.emit(filename)
 	)
 
 func reset() -> void:

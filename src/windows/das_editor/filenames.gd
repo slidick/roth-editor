@@ -27,3 +27,13 @@ func load_das(p_das: Dictionary, p_key: String) -> void:
 func _on_item_list_item_selected(index: int) -> void:
 	%FilenamesContainer.reset()
 	%FilenamesContainer.load_das(das[key], index)
+
+
+func select(filename: Dictionary) -> bool:
+	for i in range(%ItemList.item_count):
+		var item_filename: Dictionary = %ItemList.get_item_metadata(i)
+		if filename == item_filename:
+			%ItemList.select(i)
+			_on_item_list_item_selected(i)
+			return true
+	return false

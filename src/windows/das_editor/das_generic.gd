@@ -2,6 +2,7 @@ extends Control
 
 signal jump_to_index_pressed(index: int)
 signal jump_to_collision_pressed
+signal jump_to_filename_pressed(filename: Dictionary)
 
 var das: Variant
 var SCRIPT: Script = preload("uid://daro30p1hipaw")
@@ -341,6 +342,18 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				button.text = "Jump to"
 				button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				button.pressed.connect(func() -> void: jump_to_index_pressed.emit(das[p_key][key]))
+				hbox.add_child(button)
+			"filename":
+				var line_edit := LineEdit.new()
+				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				line_edit.text = "%s: %s" % [das[p_key][key].name, das[p_key][key].desc]
+				line_edit.editable = false
+				hbox.add_child(line_edit)
+				var button := Button.new()
+				button.text = "Jump to Filename"
+				button.pressed.connect(func() -> void:
+					jump_to_filename_pressed.emit(das[p_key][key])
+				)
 				hbox.add_child(button)
 			_:
 				var line_edit := LineEdit.new()
