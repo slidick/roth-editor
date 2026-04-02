@@ -1,6 +1,5 @@
 extends Control
 
-signal jump_to_index_pressed(index: int)
 signal jump_to_collision_pressed
 signal jump_to_filename_pressed(filename: Dictionary)
 
@@ -29,11 +28,9 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 	add_child(scroll_container)
 	
 	for key: String in das[p_key]:
+		if key == "index" or key == "raw_animation" or key == "raw_animation_2":
+			continue
 		
-		if key == "index" and "name" not in das[p_key]:
-			continue
-		if key == "raw_animation" or key == "raw_animation_2":
-			continue
 		var hbox := HBoxContainer.new()
 		
 		var label := Label.new()
@@ -332,21 +329,6 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				hbox.add_child(margin_container)
 				
 				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			"index":
-				var line_edit := LineEdit.new()
-				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				line_edit.text = str(das[p_key][key])
-				if das[p_key][key] is Array or das[p_key][key] is PackedByteArray:
-					line_edit.editable = false
-				line_edit.text_changed.connect(func (new_text: String) -> void:
-					das[p_key][key] = int(new_text)
-				)
-				hbox.add_child(line_edit)
-				var button := Button.new()
-				button.text = "Jump to"
-				button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				button.pressed.connect(func() -> void: jump_to_index_pressed.emit(das[p_key][key]))
-				hbox.add_child(button)
 			"filename":
 				var line_edit := LineEdit.new()
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL

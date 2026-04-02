@@ -1411,8 +1411,14 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 	
 	var filenames_size: int = 4 # Header
 	for filename: Dictionary in das.filenames_1:
+		filename.size = 4 # Header
+		filename.size += len(filename.name) + 1
+		filename.size += len(filename.desc) + 1
 		filenames_size += filename.size
 	for filename: Dictionary in das.filenames_2:
+		filename.size = 4 # Header
+		filename.size += len(filename.name) + 1
+		filename.size += len(filename.desc) + 1
 		filenames_size += filename.size
 	if filenames_size % 2 != 0:
 		filenames_size += 1

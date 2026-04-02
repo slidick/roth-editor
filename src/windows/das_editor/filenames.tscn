@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bb554osdwyo68"]
 
 [ext_resource type="Script" uid="uid://bed030hprv3ja" path="res://src/windows/das_editor/filenames.gd" id="1_gpcwq"]
-[ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_umfya"]
 
 [node name="Filenames" type="MarginContainer" unique_id=1319212317]
 anchors_preset = 15
@@ -21,22 +20,91 @@ metadata/_tab_index = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=683921947]
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="HBoxContainer" unique_id=1537346242]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1560680560]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer/VBoxContainer" unique_id=1537346242]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 3
 focus_neighbor_top = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
+allow_rmb_select = true
 auto_width = true
+
+[node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=2119742599]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Delete"
+item_0/id = 0
+
+[node name="AddButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=778077993]
+layout_mode = 2
+text = "Add"
 
 [node name="FilenamesContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1719942849]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-script = ExtResource("2_umfya")
 
-[connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/FilenamesContainer" unique_id=950994830]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/FilenamesContainer/VBoxContainer" unique_id=83007204]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer" unique_id=478908679]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Index"
+
+[node name="IndexEdit" type="LineEdit" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer" unique_id=1577823160]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="JumpToIndexButton" type="Button" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer" unique_id=62679689]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Jump To Index"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/FilenamesContainer/VBoxContainer" unique_id=170858959]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer2" unique_id=816705886]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Name"
+
+[node name="NameEdit" type="LineEdit" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer2" unique_id=1785955617]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/FilenamesContainer/VBoxContainer" unique_id=1117823109]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer3" unique_id=1669669674]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Description"
+
+[node name="DescEdit" type="LineEdit" parent="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer3" unique_id=545372059]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="index_pressed" from="HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer/IndexEdit" to="." method="_on_index_edit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer/JumpToIndexButton" to="." method="_on_jump_to_index_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer2/NameEdit" to="." method="_on_name_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/FilenamesContainer/VBoxContainer/HBoxContainer3/DescEdit" to="." method="_on_desc_edit_text_changed"]
