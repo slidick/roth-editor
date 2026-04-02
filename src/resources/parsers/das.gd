@@ -1407,7 +1407,12 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 		"size": len(das.unk_0x40_section.raw_data),
 	}
 	
-	
+	das.filenames_1.sort_custom(func (a: Dictionary, b: Dictionary) -> bool:
+		return a.index < b.index
+	)
+	das.filenames_2.sort_custom(func (a: Dictionary, b: Dictionary) -> bool:
+		return a.index < b.index
+	)
 	
 	var filenames_size: int = 4 # Header
 	for filename: Dictionary in das.filenames_1:
