@@ -102,8 +102,16 @@ static func encode_rle_img(input_image: Dictionary) -> PackedByteArray:
 	return output_data
 
 
-static func convert_to_paletted_image(input_image: Image, palette: Array) -> PackedByteArray:
+static func convert_raw_palette(p_raw_palette: PackedByteArray) -> Array:
+	var palette: Array = []
+	for i in range(0, len(p_raw_palette), 3):
+		palette.append([(p_raw_palette[i] * 259 + 33) >> 6, (p_raw_palette[i+1] * 259 + 33) >> 6, (p_raw_palette[i+2] * 259 + 33) >> 6 ])
+	return palette
+
+
+static func convert_to_paletted_image(input_image: Image, raw_palette: Array) -> PackedByteArray:
 	var input_image_data: PackedByteArray = input_image.data.data
+	var palette: Array = convert_raw_palette(raw_palette)
 	
 	var channels:int = 3
 	if input_image.get_format() == Image.FORMAT_RGBA8:

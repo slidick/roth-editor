@@ -56,7 +56,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 			"width": image.get_width(),
 			"height": image.get_height(),
 		},
-		"raw_data": await RLE.convert_to_paletted_image(dup, Das.DEFAULT_PALETTE)
+		"raw_data": await RLE.convert_to_paletted_image(dup, Das.DEFAULT_RAW_PALETTE)
 	}
 	if cancel_load:
 		reset()

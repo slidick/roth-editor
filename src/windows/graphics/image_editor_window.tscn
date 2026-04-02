@@ -116,6 +116,24 @@ layout_mode = 2
 layout_mode = 2
 icon = ExtResource("5_db6r7")
 
+[node name="BrowseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer" index="1" unique_id=579567111]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Browse"
+
+[node name="FileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/BrowseButton" index="0" unique_id=800106397]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 2
+size = Vector2i(1280, 800)
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png,*.jpg;Image Files;image/png,image/jpeg")
+use_native_dialog = true
+option_count = 1
+option_0/name = "Rotate on Import"
+option_0/default = 1
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="1" unique_id=856958101]
 layout_mode = 2
 
@@ -206,6 +224,8 @@ text = "Save"
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer/TextureRect" to="." method="_on_texture_rect_mouse_exited"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/RotateCanvasCheckBox" to="." method="_on_rotate_canvas_check_box_toggled"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/ColorPickerButton" to="." method="_on_color_picker_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="file_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/BrowseButton/FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/DrawSizeSpinBox" to="." method="_on_draw_size_spin_box_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/WidthSpinBox" to="." method="_on_width_spin_box_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/HeightSpinBox" to="." method="_on_height_spin_box_value_changed"]

@@ -324,3 +324,44 @@ func _on_height_spin_box_value_changed(value: float) -> void:
 	
 	texture_data.raw_image = new_raw_image
 	redraw_image()
+
+
+func _on_browse_button_pressed() -> void:
+	%FileDialog.popup()
+
+
+func _on_file_dialog_file_selected(path: String) -> void:
+	var import_image: Image = Image.load_from_file(path)
+	
+	if %FileDialog.get_selected_options()["Rotate on Import"]:
+		import_image.flip_x()
+		import_image.rotate_90(COUNTERCLOCKWISE)
+		%RotateCanvasCheckBox.button_pressed = true
+	else:
+		%RotateCanvasCheckBox.button_pressed = false
+	
+	
+	if import_image.get_size().x > 256:
+		import_image.resize(256, roundi((256.0/import_image.get_size().x) * import_image.get_size().y), Image.INTERPOLATE_NEAREST)
+	if import_image.get_size().y > 256:
+		import_image.resize(roundi((256.0/import_image.get_size().y) * import_image.get_size().x), 256, Image.INTERPOLATE_NEAREST)
+	
+	var import_raw_image: PackedByteArray = await RLE.convert_to_paletted_image(import_image, palette)
+	
+	var new_texture_data: Dictionary = {}
+	if "modifier" in texture_data:
+		new_texture_data["modifier"] = texture_data.modifier
+	
+	new_texture_data["image_type"] = texture_data.image_type
+	new_texture_data["width"] = import_image.get_size().x
+	new_texture_data["height"] = import_image.get_size().y
+	new_texture_data["raw_image"] = import_raw_image
+	texture_data = new_texture_data
+	%WidthSpinBox.set_value_no_signal(texture_data.width)
+	%WidthSpinBox.get_line_edit().text = str(texture_data.width)
+	%HeightSpinBox.set_value_no_signal(texture_data.height)
+	%HeightSpinBox.get_line_edit().text = str(texture_data.height)
+	redraw_image()
+	update_camera_center()
+	additional_zoom = 1
+	adjust_zoom()
