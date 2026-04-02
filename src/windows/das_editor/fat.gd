@@ -1,9 +1,14 @@
 extends MarginContainer
-
+signal jump_to_collision_pressed(index: int)
 
 var das: Dictionary = {}
 var key: String = ""
 
+
+func _ready() -> void:
+	%FATContainer.jump_to_collision_pressed.connect(func () -> void:
+		jump_to_collision_pressed.emit(%ItemList.get_selected_items()[0])
+	)
 
 func reset() -> void:
 	das = {}
@@ -23,7 +28,7 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 
 func _on_item_list_item_selected(index: int) -> void:
 	%FATContainer.reset()
-	%FATContainer.load_das(das[key], index, das.raw_palette)
+	%FATContainer.load_das(das[key], index, das.raw_palette, true if key == "fat_3" else false)
 
 
 func select_index(index: int) -> bool:
@@ -59,3 +64,9 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
+
+
+func select(index: int) -> void:
+	if %ItemList.item_count > index:
+		%ItemList.select(index)
+		_on_item_list_item_selected(index)

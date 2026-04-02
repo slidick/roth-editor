@@ -1,13 +1,13 @@
 extends MarginContainer
 
-signal jump_to_pressed(index: int)
+signal jump_to_index_pressed(index: int)
 
 var das: Dictionary = {}
 var key: String = ""
 
 
 func _ready() -> void:
-	%FilenamesContainer.jump_to_pressed.connect(jump_to_pressed.emit)
+	%FilenamesContainer.jump_to_index_pressed.connect(jump_to_index_pressed.emit)
 
 
 func reset() -> void:

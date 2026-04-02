@@ -1,6 +1,7 @@
 extends Control
 
-signal jump_to_pressed(index: int)
+signal jump_to_index_pressed(index: int)
+signal jump_to_collision_pressed
 
 var das: Variant
 var SCRIPT: Script = preload("uid://daro30p1hipaw")
@@ -11,7 +12,7 @@ func reset() -> void:
 		child.queue_free()
 
 
-func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void:
+func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_3: bool = false) -> void:
 	das = p_das
 	if p_das is Dictionary and p_key not in p_das:
 		return
@@ -339,7 +340,7 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 				var button := Button.new()
 				button.text = "Jump to"
 				button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				button.pressed.connect(func() -> void: jump_to_pressed.emit(das[p_key][key]))
+				button.pressed.connect(func() -> void: jump_to_index_pressed.emit(das[p_key][key]))
 				hbox.add_child(button)
 			_:
 				var line_edit := LineEdit.new()
@@ -387,5 +388,12 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = []) -> void
 						hbox.add_child(checkbox)
 				
 				
+				if key == "offset" and is_fat_3:
+					var button := Button.new()
+					button.text = "Jump to Object Collision"
+					button.pressed.connect(func() -> void:
+						jump_to_collision_pressed.emit()
+					)
+					hbox.add_child(button)
 				
 		vbox.add_child(hbox)

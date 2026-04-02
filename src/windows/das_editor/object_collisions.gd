@@ -1,5 +1,6 @@
 extends MarginContainer
 
+signal jump_to_object_pressed(index: int)
 
 var das: Dictionary = {}
 var key: String = ""
@@ -74,3 +75,12 @@ func _on_width_parallel_edit_text_changed(_new_text: String) -> void:
 
 func _on_unk_0x_00_edit_text_changed(_new_text: String) -> void:
 	update_data()
+
+
+func select(index: int) -> void:
+	%ItemList.select(index)
+	_on_item_list_item_selected(index)
+
+
+func _on_jump_to_object_button_pressed() -> void:
+	jump_to_object_pressed.emit(%ItemList.get_selected_items()[0])
