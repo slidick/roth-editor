@@ -32,6 +32,7 @@ func clear() -> void:
 	%ExportButton.disabled = true
 	%RunButton.disabled = true
 	%OpenButton.disabled = true
+	%ChangeDASButton.hide()
 
 
 func cancel() -> void:
