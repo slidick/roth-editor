@@ -50,20 +50,20 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	cancel_load = false
 	paletted_image = {
 		"header": {
-			"imgType": 3,
-			"xOffset": 0,
-			"yOffset": 0,
+			"image_type": 3,
+			"x_offset": 0,
+			"y_offset": 0,
 			"width": image.get_width(),
 			"height": image.get_height(),
 		},
-		"raw_data": await RLE.convert_to_paletted_image(dup, Das.DEFAULT_RAW_PALETTE)
+		"raw_image": await RLE.convert_to_paletted_image(dup, Das.DEFAULT_RAW_PALETTE)
 	}
 	if cancel_load:
 		reset()
 		return
 	var reconstructed_image: Array = []
 	var palette := Das.DEFAULT_PALETTE
-	for pixel: int in paletted_image.raw_data:
+	for pixel: int in paletted_image.raw_image:
 		var pixel_array := [palette[pixel][0],palette[pixel][1],palette[pixel][2]]
 		reconstructed_image.append_array(pixel_array)
 	var texture_image := Image.create_from_data(paletted_image.header.width, paletted_image.header.height, false, Image.FORMAT_RGB8, reconstructed_image)
