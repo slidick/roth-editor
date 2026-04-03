@@ -298,6 +298,7 @@ func _on_width_spin_box_value_changed(value: float) -> void:
 	
 	texture_data.raw_image = new_raw_image
 	redraw_image()
+	adjust_zoom()
 
 
 func _on_height_spin_box_value_changed(value: float) -> void:
@@ -324,6 +325,7 @@ func _on_height_spin_box_value_changed(value: float) -> void:
 	
 	texture_data.raw_image = new_raw_image
 	redraw_image()
+	adjust_zoom()
 
 
 func _on_browse_button_pressed() -> void:
