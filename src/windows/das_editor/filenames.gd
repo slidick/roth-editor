@@ -34,11 +34,11 @@ func select(filename: Dictionary) -> bool:
 	return false
 
 
-func _on_add_button_pressed() -> void:
+func _on_add_button_pressed(fat_index: int = 0) -> Dictionary:
 	var filename_info := {
 		"name": "NAME",
 		"desc": "Description",
-		"index": 0,
+		"index": fat_index,
 		"size": 21,
 	}
 	das[key].append(filename_info)
@@ -47,6 +47,7 @@ func _on_add_button_pressed() -> void:
 	%ItemList.select(idx)
 	%ItemList.ensure_current_is_visible()
 	_on_item_list_item_selected(idx)
+	return filename_info
 
 
 func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:

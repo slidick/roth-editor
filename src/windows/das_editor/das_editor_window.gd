@@ -286,3 +286,14 @@ func _on_jump_to_filename_pressed(filename: Dictionary) -> void:
 	if %Filenames2.select(filename):
 		%SectionItemList.select(14)
 		_on_section_item_list_item_selected(14)
+
+
+func _on_add_filename_pressed(filename_index: int, fat_index: int) -> Dictionary:
+	if filename_index == 1:
+		%SectionItemList.select(13)
+		_on_section_item_list_item_selected(13)
+		return %Filenames1._on_add_button_pressed(fat_index)
+	else:
+		%SectionItemList.select(14)
+		_on_section_item_list_item_selected(14)
+		return %Filenames2._on_add_button_pressed(fat_index)

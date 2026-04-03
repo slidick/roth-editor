@@ -30,6 +30,7 @@ layout_mode = 2
 size_flags_vertical = 3
 focus_neighbor_top = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
+allow_reselect = true
 allow_rmb_select = true
 
 [node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=427259160]

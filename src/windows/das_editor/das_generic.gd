@@ -2,7 +2,6 @@ extends Control
 
 signal jump_to_collision_pressed
 signal jump_to_filename_pressed(filename: Dictionary)
-
 var das: Variant
 var SCRIPT: Script = preload("uid://daro30p1hipaw")
 
@@ -394,4 +393,23 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 					)
 					hbox.add_child(button)
 				
+		vbox.add_child(hbox)
+	
+	if "data" in das[p_key] and "filename" not in das[p_key]:
+		var hbox := HBoxContainer.new()
+		var label := Label.new()
+		label.text = "filename"
+		label.custom_minimum_size.x = 200
+		hbox.add_child(label)
+		var button := Button.new()
+		button.text = "Add Filename"
+		button.custom_minimum_size.x = 400
+		button.pressed.connect(func () -> void:
+			if owner.name == "Fat1" or owner.name == "Fat2":
+				das[p_key]["filename"] = owner.owner._on_add_filename_pressed(1, das[p_key].index)
+			else:
+				das[p_key]["filename"] = owner.owner._on_add_filename_pressed(2, das[p_key].index)
+			owner.select(p_key)
+		)
+		hbox.add_child(button)
 		vbox.add_child(hbox)

@@ -1,4 +1,5 @@
 extends MarginContainer
+
 signal jump_to_collision_pressed(index: int)
 signal jump_to_filename_pressed(filename: Dictionary)
 
@@ -45,6 +46,13 @@ func select_index(index: int) -> bool:
 	return false
 
 
+func select(index: int) -> void:
+	if index < %ItemList.item_count:
+		%ItemList.select(index)
+		%ItemList.ensure_current_is_visible()
+		_on_item_list_item_selected(index)
+
+
 func _on_popup_menu_index_pressed(index: int) -> void:
 	var item_index: int = %ItemList.get_selected_items()[0]
 	match index:
@@ -72,12 +80,6 @@ func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_
 		else:
 			%PopupMenu.set_item_disabled(1, false)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
-
-
-func select(index: int) -> void:
-	if %ItemList.item_count > index:
-		%ItemList.select(index)
-		_on_item_list_item_selected(index)
 
 
 func _on_find_empty_button_pressed() -> void:
