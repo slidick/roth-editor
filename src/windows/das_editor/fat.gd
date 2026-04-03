@@ -28,7 +28,7 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 	
 	for i in range(len(das[key])):
 		var idx: int = %ItemList.add_item(str(p_starting_index + i))
-		%ItemList.set_item_metadata(idx, das[key][i])
+		#%ItemList.set_item_metadata(idx, das[key][i])
 
 
 func _on_item_list_item_selected(index: int) -> void:
@@ -64,27 +64,40 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			_on_item_list_item_selected(item_index)
 		2:
 			if await Dialog.confirm("Clear selected data?", "Confirm", false, Vector2(400,200)):
-				das[key][item_index] = {
-					"offset": 0,
-					"size": 0,
-					"flags_1": 0,
-					"flags_2": 0,
-				}
+				das[key][item_index].offset = 0
+				das[key][item_index].size = 0
+				das[key][item_index].flags_1 = 0
+				das[key][item_index].flags_2 = 0
 				_on_item_list_item_selected(item_index)
+		3:
+			var data := {
+				"modifier": 0,
+				"image_type": 0,
+				"width": 1,
+				"height": 1,
+				"raw_image": PackedByteArray([0]),
+			}
+			das[key][item_index]["offset"] = 1
+			das[key][item_index]["data"] = data
+			_on_item_list_item_selected(item_index)
 
 
-func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
 		if owner.copied_data.is_empty():
 			%PopupMenu.set_item_disabled(1, true)
 		else:
 			%PopupMenu.set_item_disabled(1, false)
+		if das[key][index].offset == 0:
+			%PopupMenu.set_item_disabled(3, false)
+		else:
+			%PopupMenu.set_item_disabled(3, true)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
 
 
 func _on_find_empty_button_pressed() -> void:
 	for i in range(%ItemList.item_count):
-		var fat_data: Dictionary = %ItemList.get_item_metadata(i) 
+		var fat_data: Dictionary = das[key][i]
 		if fat_data.offset == 0:
 			%ItemList.select(i)
 			%ItemList.ensure_current_is_visible()
