@@ -119,6 +119,32 @@ func migrate_das_names() -> void:
 	if new_texture_presets != current_texture_presets:
 		Settings.settings["texture_presets"] = new_texture_presets
 		Settings._save_settings()
+	
+	var new_object_favorites: Array = []
+	var current_object_favorites: Array = Settings.settings.get("objects", {}).get("favorites", [])
+	for favorite_info: Dictionary in current_object_favorites:
+		new_object_favorites.append({
+			"das": favorite_info.das.get_basename().get_file(),
+			"index": favorite_info.index
+		})
+	if new_object_favorites != current_object_favorites:
+		if "objects" not in Settings.settings:
+			Settings.settings["objects"] = {}
+		Settings.settings["objects"]["favorites"] = new_object_favorites
+		Settings._save_settings()
+	
+	var new_object_recents: Array = []
+	var current_object_recents: Array = Settings.cache.get("objects", {}).get("recents", [])
+	for recent_info: Dictionary in current_object_recents:
+		new_object_recents.append({
+			"das": recent_info.das.get_basename().get_file(),
+			"index": recent_info.index
+		})
+	if new_object_recents != current_object_recents:
+		if "objects" not in Settings.cache:
+			Settings.cache["objects"] = {}
+		Settings.cache["objects"]["recents"] = new_object_recents
+		Settings._save_cache()
 
 
 ## Loads roth.res location using Settings autoload. [br]
