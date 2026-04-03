@@ -125,7 +125,7 @@ func _on_draw_mode_texture_option_button_item_selected(index: int) -> void:
 		texture_data = {
 			"ceiling": %Map3D.copied_sector_data.get("ceilingTextureIndex", 65535),
 			"floor": %Map3D.copied_sector_data.get("floorTextureIndex", 65535),
-			"wall": %Map3D.copied_face_texture_data.get("midTextureIndex", 65535),
+			"wall": %Map3D.copied_face_texture_data.get("midTextureIndex", 33023),
 		}
 	else:
 		texture_data = %DrawModeTextureOptionButton.get_selected_metadata()
@@ -181,7 +181,7 @@ func _on_draw_mode_edit_texture_presets_button_pressed() -> void:
 		texture_data = {
 			"ceiling": %Map3D.copied_sector_data.get("ceilingTextureIndex", 65535),
 			"floor": %Map3D.copied_sector_data.get("floorTextureIndex", 65535),
-			"wall": %Map3D.copied_face_texture_data.get("midTextureIndex", 65535),
+			"wall": %Map3D.copied_face_texture_data.get("midTextureIndex", 33023),
 		}
 	elif selected_preset == "Custom":
 		texture_data = {
@@ -257,7 +257,7 @@ func _on_draw_mode_wall_option_item_selected(index: int) -> void:
 		%DrawModeWallOption.select(0)
 		if palette_index < 0:
 			return
-		update_texture_options({"wall": palette_index + 65280, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
+		update_texture_options({"wall": palette_index + 32768, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
 	elif index == %DrawModeWallOption.item_count - 2:
 		var das: Dictionary = %Map2D.map.das
 		%Texture.show_texture(das, false)
