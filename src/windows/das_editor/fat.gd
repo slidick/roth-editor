@@ -27,8 +27,7 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 	key = p_key
 	
 	for i in range(len(das[key])):
-		var idx: int = %ItemList.add_item(str(p_starting_index + i))
-		#%ItemList.set_item_metadata(idx, das[key][i])
+		%ItemList.add_item(str(p_starting_index + i))
 
 
 func _on_item_list_item_selected(index: int) -> void:
@@ -60,6 +59,9 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			var data: Dictionary = das[key][item_index]
 			owner.copy_data(data)
 		1:
+			if das[key][item_index].offset != 0:
+				if not await Dialog.confirm("Paste over selected data?", "Confirm", false, Vector2(400,200)):
+					return
 			das[key][item_index] = owner.copied_data.duplicate(true)
 			_on_item_list_item_selected(item_index)
 		2:
@@ -68,6 +70,8 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].size = 0
 				das[key][item_index].flags_1 = 0
 				das[key][item_index].flags_2 = 0
+				das[key][item_index].erase("data")
+				das[key][item_index].erase("filename")
 				_on_item_list_item_selected(item_index)
 		3:
 			var data := {
