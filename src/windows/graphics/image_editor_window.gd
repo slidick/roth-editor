@@ -220,8 +220,9 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 					draw_enabled = false
 			Mode.COLOR_PICKER:
 				if event.pressed:
-					var new_palette_index: int = texture_data.raw_image[int(event.position.y) * texture_data.width + int(event.position.x)]
-					select_color(new_palette_index)
+					if event.position.x >= 0 and event.position.y >= 0 and event.position.x < image.get_width() and event.position.y < image.get_height():
+						var new_palette_index: int = texture_data.raw_image[int(event.position.y) * texture_data.width + int(event.position.x)]
+						select_color(new_palette_index)
 
 
 func _on_texture_rect_mouse_exited() -> void:
