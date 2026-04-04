@@ -355,9 +355,9 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 		var uvs: Array = []
 		if len(vertices) == 5:
-			uvs = [Vector2(1,0), Vector2(0,0), Vector2(0,1), Vector2(1,0), Vector2(0,1), Vector2(1,1)]
+			uvs = [Vector2(0,0), Vector2(0,1), Vector2(1,1), Vector2(0,0), Vector2(1,1), Vector2(1,0)]
 		elif len(vertices) == 4:
-			uvs = [Vector2(1,0), Vector2(0,0), Vector2(0,1)]
+			uvs = [Vector2(0,0), Vector2(0,1), Vector2(1,1)]
 		for i: int in range(len(verts)):
 			var v: Vector3 = vertices[verts[i]]
 			mesh_tool.set_uv(uvs[i])
@@ -368,7 +368,10 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		var material := StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-		material.render_priority = 2
+		
+		if object_face.render_flag_1 & (1<<1) > 0:
+			material.uv1_scale.y *= -1
+			material.uv1_offset.y *= -1
 		
 		var fat_index: int = object_face.texture_fat_index_base
 		if len(vertices) == 0:
