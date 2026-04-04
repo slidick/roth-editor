@@ -102,7 +102,7 @@ static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
 	loaded_map.commands_section = map_json.commandsSection
 	
 	for i in range(len(loaded_map.commands_section.allCommands)):
-		loaded_map.commands_section.allCommands[i]["map_info"] = p_map_info
+		loaded_map.commands_section.allCommands[i]["map"] = loaded_map
 		loaded_map.commands_section.allCommands[i]["index"] = i+1
 	
 	if "vanilla" in p_map_info and p_map_info.name == "RAQUIA2":
@@ -261,7 +261,7 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 			var face: Face = sector.faces[j]
 			face.v1 = face.v1.snappedf(2)
 			face.v2 = face.v2.snappedf(2)
-			face.map_info = map_info
+			face.map = self
 			faces.append(face)
 			new_faces.append(weakref(face))
 			node.get_node("Faces").add_child(face.initialize_mesh())
@@ -273,7 +273,7 @@ func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 		sector_center /= count
 		original_center /= count
 		sector.faces = new_faces
-		sector.map_info = map_info
+		sector.map = self
 		sector._update_vertices()
 		var shift: Vector2 = original_center - sector_center
 		sector.data.floorTextureShiftX = int((shift.x * sector.get_floor_scale() + sector.data.floorTextureShiftX)) & 0xFF

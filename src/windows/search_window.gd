@@ -228,8 +228,8 @@ func search() -> void:
 	if results:
 		%ResultsList.grab_focus()
 		for result: Dictionary in results:
-			var index: int  = %ResultsList.add_item("%s -- %s: %s" % [result.value.map_info.name, result.type, result.value.index])
-			%ResultsList.set_item_metadata(index, {"map_info": result.value.map_info, "type": result.type, "index": result.value.index})
+			var index: int  = %ResultsList.add_item("%s -- %s: %s" % [result.value.map.map_info.name, result.type, result.value.index])
+			%ResultsList.set_item_metadata(index, {"map_info": result.value.map.map_info, "type": result.type, "index": result.value.index})
 	else:
 		%ResultsList.add_item("No results.")
 		# Quirk Fix: Needed to allow reediting of search value when pressing enter and no results.
