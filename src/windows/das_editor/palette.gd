@@ -18,6 +18,8 @@ func load_das(p_das: Dictionary) -> void:
 	var node: Node = _create_palette_node(p_das.palette)
 	if node:
 		%DefaultPalette.add_child(node)
+	else:
+		%SidePanel.hide()
 
 
 func reset() -> void:
