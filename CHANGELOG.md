@@ -1,3 +1,41 @@
+**0.21.0**
+### New Features
+  - Initial Texture Editing Support
+    - New 'Manage DAS Files' window
+    - Duplicate then edit existing DAS files
+    - Support for both regular and 'ADEMO' files
+    - Edit palette and palette shading tables
+    - Edit flags, modifier, image type, and unknown values
+    - Edit standard textures using simple drawing tool or loading external images
+    - Turn empty data entries into standard textures
+    - Manually change 3d object vertices and faces
+    - Quickly jump to the texture editor from selected faces/objects in the map editor
+      - Must be on a map with a custom DAS assigned
+    - Edit and assign names to textures
+      - Textures must have a name to be seen in texture selection dialog
+    - Anything related to animations can not be edited yet
+  - Duplicate maps from 'Manage Maps' window
+  - Change DAS file for a map from 'Manage Maps' window
+  - DAS loading speed has been improved by switching to a compute shader
+  - Reload DAS files from a map name's 'right-click' menu
+  - Initial rendering of 3D objects
+  - Add rendering of monsters and directional objects to 3D view
+    - Only renders the front view for now
+  - Proper rendering of semi-transparent pixels
+  - Object selection dialog improvements
+  - ICONS.ALL support
+
+### Bug Fixes
+  - Fix bugs in the sfx editor that could cause changes to overwrite the wrong file
+  - Fix incorrect determination of 'sky' texture
+  - Add ability to set 'sky' texture to texture presests
+  - Fix bug in scrolling to current texture in texture selection dialog
+  - Retighten up concave sector checking
+    - While outer sector edges can tolerate some concavity, graphical glitches will quickly occur if any inner faces have even the smallest concavity
+  - Fix bug in dbase editor when canceling a selection of an existing audio clip
+
+---
+
 **0.20.0**
 ### New Features
   - New Draw Mode
@@ -24,6 +62,7 @@
         - Create presets from copied texture data
       - Adjust floor and ceiling height before drawing
         - Button to automatically set the ceiling height based on the current wall texture height
+      - Adjust face flags before drawing
       - Display size of sector while drawing
       - Ability to autosplit faces at set intervals while drawing
         - Note: Doesn't quite work with stairs or inner/donut tools
