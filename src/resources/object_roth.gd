@@ -321,9 +321,9 @@ func _initialize_mesh_actual() -> void:
 	collision.shape = shape
 	collision.position.y = height
 	
-	if (texture.flags_1 & (1<<3) > 0):
-		collision.position.y = 0
-	if (texture.flags_1 & (1<<4) > 0):
+	#if (texture.flags_1 & (1<<3) > 0):
+		#collision.position.y = 0
+	if (texture.modifier & (1<<4) > 0):
 		collision.position.y = -height
 	
 	var static_body := StaticBodyObject3D.new(not data.renderType & (1<<7) > 0)
