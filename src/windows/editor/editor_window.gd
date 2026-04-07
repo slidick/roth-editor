@@ -237,6 +237,7 @@ func close_map(map: Map) -> void:
 			%"Command Editor".close(tree_item.get_metadata(0).ref.map_info.name)
 			Roth.reload_map_info(tree_item.get_metadata(0).ref.map_info)
 			close_undo_redo(tree_item.get_metadata(0).ref.map_info)
+			tree_item.get_metadata(0).ref.unload()
 			tree_item.free()
 
 
@@ -653,7 +654,7 @@ func copy_sfx(sfx_list: Array) -> void:
 func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 	%CountAndSizeContainer.recalculate()
 	%Map2D.update_concave_sectors()
-	
+	var map_name: String = p_map.map_info.name
 	if p_map.map_info.name not in undo_stacks:
 		undo_stacks[p_map.map_info.name] = []
 		undo_positions[p_map.map_info.name] = 0
@@ -662,8 +663,8 @@ func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 		compilation_failure_warning_given[p_map.map_info.name] = false
 		%HistoryTabContainer.add_child(undo_lists[p_map.map_info.name])
 		undo_lists[p_map.map_info.name].item_selected.connect(func (index: int) -> void:
-			undo_positions[p_map.map_info.name] = len(undo_stacks[p_map.map_info.name]) - index
-			var undo_state: Dictionary = undo_stacks[p_map.map_info.name][ undo_positions[p_map.map_info.name] - 1]
+			undo_positions[map_name] = len(undo_stacks[map_name]) - index
+			var undo_state: Dictionary = undo_stacks[map_name][ undo_positions[map_name] - 1]
 			var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
 			if not map:
 				return
@@ -806,6 +807,8 @@ func replace_map(map: Map) -> void:
 				%"Command Editor".load_command_editor(map, false)
 			
 			compilation_failure_warning_given[map.map_info.name] = false
+			
+			old_map_node.ref.unload()
 
 #endregion
 

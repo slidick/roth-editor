@@ -1,4 +1,4 @@
-extends RefCounted
+extends Object
 class_name Map
 
 @warning_ignore("unused_signal")
@@ -137,6 +137,10 @@ static func get_triggering_ids(command_section: Dictionary, command_index: int) 
 
 func load_das() -> void:
 	das = await Roth.get_das(map_info.das_info)
+
+
+func unload() -> void:
+	free.call_deferred()
 
 
 func delete_sector(sector_to_delete: Sector) -> void:

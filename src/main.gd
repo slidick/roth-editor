@@ -65,6 +65,8 @@ func _notification(what: int) -> void:
 		if await Dialog.confirm("Are you sure?\nMake sure to save!", "Confirm Quit", false):
 			Utility.deinit_shader()
 			Console.print("Quitting...")
+			for map: Map in Roth.loaded_maps.values():
+				map.unload()
 			get_tree().quit()
 
 
