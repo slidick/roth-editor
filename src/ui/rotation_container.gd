@@ -31,3 +31,4 @@ func _notification(what: int) -> void:
 				else:
 					child.rotation = 0
 					child.scale.y = 1
+					child.set_deferred("size", Vector2(s.x, s.y))
