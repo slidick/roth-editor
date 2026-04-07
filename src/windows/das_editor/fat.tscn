@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dlog6sdeq5u3h" path="res://src/windows/das_editor/fat.gd" id="1_nuh7r"]
 [ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_fvdbs"]
+[ext_resource type="PackedScene" uid="uid://dh4pvj0xqsi7t" path="res://src/windows/das_editor/standard_image_container.tscn" id="3_6706r"]
 
 [node name="Fat" type="MarginContainer" unique_id=1097178025]
 anchors_preset = 15
@@ -49,8 +50,9 @@ item_3/id = 3
 layout_mode = 2
 text = "Find Next Empty"
 
-[node name="FATContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1051257041]
+[node name="GenericContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1051257041]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -58,6 +60,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("2_fvdbs")
+
+[node name="StandardImageContainer" parent="HBoxContainer" unique_id=1890185046 instance=ExtResource("3_6706r")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]

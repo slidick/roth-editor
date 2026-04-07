@@ -8,10 +8,16 @@ var key: String = ""
 
 
 func _ready() -> void:
-	%FATContainer.jump_to_collision_pressed.connect(func () -> void:
+	%GenericContainer.jump_to_collision_pressed.connect(func () -> void:
 		jump_to_collision_pressed.emit(%ItemList.get_selected_items()[0])
 	)
-	%FATContainer.jump_to_filename_pressed.connect(func (filename: Dictionary) -> void:
+	%GenericContainer.jump_to_filename_pressed.connect(func (filename: Dictionary) -> void:
+		jump_to_filename_pressed.emit(filename)
+	)
+	%StandardImageContainer.jump_to_collision_pressed.connect(func () -> void:
+		jump_to_collision_pressed.emit(%ItemList.get_selected_items()[0])
+	)
+	%StandardImageContainer.jump_to_filename_pressed.connect(func (filename: Dictionary) -> void:
 		jump_to_filename_pressed.emit(filename)
 	)
 
@@ -19,7 +25,7 @@ func reset() -> void:
 	das = {}
 	key = ""
 	%ItemList.clear()
-	%FATContainer.reset()
+	%GenericContainer.reset()
 
 
 func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
@@ -31,8 +37,15 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 
 
 func _on_item_list_item_selected(index: int) -> void:
-	%FATContainer.reset()
-	%FATContainer.load_das(das[key], index, das.raw_palette, true if key == "fat_3" else false)
+	%GenericContainer.hide()
+	%StandardImageContainer.hide()
+	if "data" in das[key][index] and "raw_image" in das[key][index].data:
+		%StandardImageContainer.show()
+		%StandardImageContainer.load_image_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
+	else:
+		%GenericContainer.show()
+		%GenericContainer.reset()
+		%GenericContainer.load_das(das[key], index, das.raw_palette, true if key == "fat_3" else false)
 
 
 func select_index(index: int) -> bool:
