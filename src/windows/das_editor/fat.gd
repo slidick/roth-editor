@@ -33,7 +33,22 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 	key = p_key
 	
 	for i in range(len(das[key])):
-		%ItemList.add_item(str(p_starting_index + i))
+		var fat_name: String = str(p_starting_index + i)
+		if "data" in das[key][i]:
+			if "raw_image" in das[key][i].data:
+				fat_name += "  -  Image"
+			if "faces" in das[key][i].data:
+				fat_name += "  -  3D"
+			if "animation" in das[key][i].data or "animation_2" in das[key][i].data:
+				fat_name += "  -  Animation"
+			if "image_pack" in das[key][i].data:
+				fat_name += "  -  Pack"
+		if das[key][i].flags_1 & 32 > 0 and das[key][i].flags_1 & 4 > 0 :
+			fat_name += "  -  Monster"
+		elif das[key][i].flags_1 & 32 > 0:
+			fat_name += "  -  Directional"
+		var idx: int = %ItemList.add_item(fat_name)
+		%ItemList.set_item_metadata(idx, das[key][i])
 
 
 func _on_item_list_item_selected(index: int) -> void:
@@ -42,6 +57,8 @@ func _on_item_list_item_selected(index: int) -> void:
 	if "data" in das[key][index] and "raw_image" in das[key][index].data:
 		%StandardImageContainer.show()
 		%StandardImageContainer.load_image_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
+	elif das[key][index].size == 0:
+		pass
 	else:
 		%GenericContainer.show()
 		%GenericContainer.reset()
@@ -50,7 +67,7 @@ func _on_item_list_item_selected(index: int) -> void:
 
 func select_index(index: int) -> bool:
 	for i in range(%ItemList.item_count):
-		if %ItemList.get_item_text(i) == str(index):
+		if %ItemList.get_item_metadata(i).index == index:
 			%ItemList.select(i)
 			%ItemList.ensure_current_is_visible()
 			_on_item_list_item_selected(i)
