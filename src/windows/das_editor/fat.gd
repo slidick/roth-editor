@@ -89,12 +89,14 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].erase("filename")
 				_on_item_list_item_selected(item_index)
 		3:
+			var raw_image := PackedByteArray()
+			raw_image.resize(16*16)
 			var data := {
 				"modifier": 0,
 				"image_type": 0,
-				"width": 1,
-				"height": 1,
-				"raw_image": PackedByteArray([0]),
+				"width": 16,
+				"height": 16,
+				"raw_image": raw_image,
 			}
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["data"] = data
