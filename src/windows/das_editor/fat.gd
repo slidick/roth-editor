@@ -75,7 +75,9 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			if das[key][item_index].offset != 0:
 				if not await Dialog.confirm("Paste over selected data?", "Confirm", false, Vector2(400,200)):
 					return
+			var fat_index: int = das[key][item_index].index
 			das[key][item_index] = owner.copied_data.duplicate(true)
+			das[key][item_index].index = fat_index
 			_on_item_list_item_selected(item_index)
 		2:
 			if await Dialog.confirm("Clear selected data?", "Confirm", false, Vector2(400,200)):

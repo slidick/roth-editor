@@ -265,6 +265,7 @@ func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray) -> V
 
 func copy_data(p_data: Dictionary) -> void:
 	copied_data = p_data.duplicate(true)
+	copied_data.erase("filename")
 
 
 func _on_jump_to_collision_pressed(index: int) -> void:
