@@ -85,6 +85,7 @@ func _on_index_edit_text_changed(new_text: String) -> void:
 func _on_name_edit_text_changed(new_text: String) -> void:
 	var filename_info: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	filename_info.name = new_text
+	%ItemList.set_item_text(%ItemList.get_selected_items()[0], new_text)
 
 
 func _on_desc_edit_text_changed(new_text: String) -> void:
