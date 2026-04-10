@@ -37,7 +37,7 @@ allow_rmb_select = true
 
 [node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=427259160]
 unique_name_in_owner = true
-item_count = 4
+item_count = 5
 item_0/text = "Copy"
 item_0/id = 0
 item_1/text = "Paste"
@@ -46,6 +46,8 @@ item_2/text = "Clear"
 item_2/id = 2
 item_3/text = "Init as Standard Image"
 item_3/id = 3
+item_4/text = "Init as Animation"
+item_4/id = 4
 
 [node name="FindEmptyButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=2069763857]
 layout_mode = 2

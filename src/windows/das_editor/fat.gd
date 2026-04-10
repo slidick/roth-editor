@@ -109,6 +109,28 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			}
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["data"] = data
+			das[key][item_index].flags_1 = 0
+			das[key][item_index].flags_2 = 0
+			%ItemList.set_item_text(item_index, "%d - Image" % item_index)
+			_on_item_list_item_selected(item_index)
+		4:
+			var raw_image := PackedByteArray()
+			raw_image.resize(16*16)
+			var data := {
+				"modifier": 0,
+				"image_type": 1,
+				"width": 16,
+				"height": 16,
+				"unk_0x0E": 0xFFFF,
+				"unk_0x10": 0xFF,
+				"animation_speed": 8,
+				"animation": [raw_image]
+			}
+			das[key][item_index]["offset"] = 1
+			das[key][item_index]["data"] = data
+			das[key][item_index].flags_1 = 0
+			das[key][item_index].flags_2 = 1
+			%ItemList.set_item_text(item_index, "%d - Animation" % item_index)
 			_on_item_list_item_selected(item_index)
 
 
@@ -120,8 +142,10 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 			%PopupMenu.set_item_disabled(1, false)
 		if das[key][index].offset == 0:
 			%PopupMenu.set_item_disabled(3, false)
+			%PopupMenu.set_item_disabled(4, false)
 		else:
 			%PopupMenu.set_item_disabled(3, true)
+			%PopupMenu.set_item_disabled(4, true)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
 
 
