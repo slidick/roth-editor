@@ -1,0 +1,718 @@
+[gd_scene format=3 uid="uid://tvrovuq6tp52"]
+
+[ext_resource type="Script" uid="uid://dnsbng8ub7fb5" path="res://src/windows/das_editor/animation_container.gd" id="1_mrtmn"]
+[ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="2_u5m3r"]
+[ext_resource type="Script" uid="uid://0to5xffpd2ll" path="res://src/ui/animated_texture_rect.gd" id="3_6cdqi"]
+
+[node name="AnimationContainer" type="MarginContainer" unique_id=1237815482]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_mrtmn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1197079188]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=940304441]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=697454943]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Name"
+
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=503227414]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="JumpToFilenameButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=18267641]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump to Filename"
+
+[node name="AddFilenameButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1956870772]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add Filename"
+
+[node name="JumpToObjectCollisionButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=773814929]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump to Object Collision"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=393162545]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1198343083]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1344124341]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Flags 1"
+
+[node name="Flags1Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=2103532449]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1768030105]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flags1CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1562742173]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 1"
+
+[node name="Flags1CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1276191778]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Sky"
+
+[node name="Flags1CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1911062418]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Monster"
+
+[node name="Flags1CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=412487109]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 4"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=201772293]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flags1CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=504316797]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 5"
+
+[node name="Flags1CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=834609483]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Directional"
+
+[node name="Flags1CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1917064705]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 7"
+
+[node name="Flags1CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=470573492]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 8"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1361688792]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1205846411]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=877329009]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Flags 2"
+
+[node name="Flags2Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=2115591118]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=1980011402]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flags2CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=413964003]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Animation"
+
+[node name="Flags2CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=911604616]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 2"
+
+[node name="Flags2CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=77551278]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 3"
+
+[node name="Flags2CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=853924220]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 4"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=284090068]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flags2CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=2055900525]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 5"
+
+[node name="Flags2CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=2031526481]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 6"
+
+[node name="Flags2CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=1025591514]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 7"
+
+[node name="Flags2CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=2013851580]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 8"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=591504805]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=2090050974]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3" unique_id=71533433]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=1419470834]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Modifier"
+
+[node name="ModifierEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=689163208]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=1242720434]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ModifierCheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=471412644]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 1"
+
+[node name="ModifierCheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=1270556606]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 2"
+
+[node name="ModifierCheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=864501546]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 3"
+
+[node name="ModifierCheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=2056407776]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 4"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=708162838]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ModifierCheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=240027800]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Draw Downward"
+
+[node name="ModifierCheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=632869429]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 6"
+
+[node name="ModifierCheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=622926774]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Image Pack"
+
+[node name="ModifierCheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=1941403966]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Half Size"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer3" unique_id=625209736]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3" unique_id=1352317944]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=1470990345]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Image Type"
+
+[node name="ImageTypeEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=614160657]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=99818349]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ImageTypeCheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=847050637]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Animation"
+
+[node name="ImageTypeCheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=742871961]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Disable Pixel 0"
+
+[node name="ImageTypeCheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=1977920167]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Transparency"
+
+[node name="ImageTypeCheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=909214855]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Create Mirror"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=630549615]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ImageTypeCheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=1687138748]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 5"
+
+[node name="ImageTypeCheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=342257121]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 6"
+
+[node name="ImageTypeCheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=523023821]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 7"
+
+[node name="ImageTypeCheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=1091105186]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "3D Object"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1690642865]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=2134646585]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=268844001]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Offsets"
+
+[node name="OffsetsEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer6" unique_id=782963710]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=760112984]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer4" unique_id=2043379895]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4/HBoxContainer" unique_id=2123171817]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Sub-Modifier"
+
+[node name="Modifier2Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer4/HBoxContainer" unique_id=592485606]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer4/HBoxContainer" unique_id=437880587]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Modifier2CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer" unique_id=1460420954]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 1"
+
+[node name="Modifier2CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer" unique_id=988228918]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 2"
+
+[node name="Modifier2CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer" unique_id=1428099791]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 3"
+
+[node name="Modifier2CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer" unique_id=1952054300]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 4"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer4/HBoxContainer" unique_id=559751596]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Modifier2CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2" unique_id=1110511787]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Draw Downward"
+
+[node name="Modifier2CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2" unique_id=1129384647]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 6"
+
+[node name="Modifier2CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2" unique_id=2026509907]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Image Pack"
+
+[node name="Modifier2CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2" unique_id=694783406]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Half Size"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer4" unique_id=995721175]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer4" unique_id=1123361516]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer4/HBoxContainer2" unique_id=1190306270]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Sub-Image Type"
+
+[node name="ImageType2Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer4/HBoxContainer2" unique_id=295586015]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer4/HBoxContainer2" unique_id=1193704105]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ImageType2CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3" unique_id=1922801713]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Animation"
+
+[node name="ImageType2CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3" unique_id=199911316]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Disable Pixel 0"
+
+[node name="ImageType2CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3" unique_id=203966768]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Transparency"
+
+[node name="ImageType2CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3" unique_id=341835405]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Create Mirror"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer4/HBoxContainer2" unique_id=188007277]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ImageType2CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4" unique_id=172739650]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 5"
+
+[node name="ImageType2CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4" unique_id=1143525950]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 6"
+
+[node name="ImageType2CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4" unique_id=100462670]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 7"
+
+[node name="ImageType2CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4" unique_id=503616474]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "3D Object"
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer" unique_id=2046286337]
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=2016264926]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1659052363]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=929874999]
+layout_mode = 2
+text = "Animation"
+horizontal_alignment = 1
+
+[node name="DimensionLabel" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=635061636]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1292248496]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4" unique_id=1543288260]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Frames"
+
+[node name="FramesSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4" unique_id=1779061810]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 65535.0
+value = 1.0
+rounded = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1176358351]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer" unique_id=766922182]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Unk_0x0E"
+
+[node name="Unk0x0EEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer" unique_id=1119528603]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1811079844]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2" unique_id=1504983245]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Unk_0x10"
+
+[node name="Unk0x10Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2" unique_id=1303849358]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=850679550]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=1468059727]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Speed"
+
+[node name="AnimationSpeedEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=1154590057]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1003809134]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Rotated"
+
+[node name="AsImagesCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=200641478]
+unique_name_in_owner = true
+layout_mode = 2
+text = "As Images"
+
+[node name="AnimationContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1504598344]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RotationContainer" type="Container" parent="VBoxContainer/HBoxContainer5/AnimationContainer" unique_id=931176528]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_u5m3r")
+metadata/_custom_type_script = "uid://2rrlixceot6j"
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer5/AnimationContainer/RotationContainer" unique_id=456550490]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+stretch_mode = 5
+script = ExtResource("3_6cdqi")
+
+[node name="AsImagesContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1354276981]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ImagesContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/AsImagesContainer" unique_id=1474000291]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PopupMenu" type="PopupMenu" parent="." unique_id=448491370]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Copy"
+item_0/id = 0
+item_1/text = "Paste"
+item_1/id = 1
+item_2/text = "Delete"
+item_2/id = 2
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/AddFilenameButton" to="." method="_on_add_filename_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToObjectCollisionButton" to="." method="_on_jump_to_object_collision_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/HBoxContainer/Flags1Edit" to="." method="_on_flags_1_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox1" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox2" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox3" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox4" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox5" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox6" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox7" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox8" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/HBoxContainer2/Flags2Edit" to="." method="_on_flags_2_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3/Flags2CheckBox1" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3/Flags2CheckBox2" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3/Flags2CheckBox3" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3/Flags2CheckBox4" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4/Flags2CheckBox5" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4/Flags2CheckBox6" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4/Flags2CheckBox7" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4/Flags2CheckBox8" to="." method="_on_flags_2_check_box_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/HBoxContainer/ModifierEdit" to="." method="_on_modifier_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer/ModifierCheckBox1" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer/ModifierCheckBox2" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer/ModifierCheckBox3" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer/ModifierCheckBox4" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2/ModifierCheckBox5" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2/ModifierCheckBox6" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2/ModifierCheckBox7" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2/ModifierCheckBox8" to="." method="_on_modifier_check_box_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/ImageTypeEdit" to="." method="_on_image_type_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3/ImageTypeCheckBox1" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3/ImageTypeCheckBox2" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3/ImageTypeCheckBox3" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3/ImageTypeCheckBox4" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox5" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox6" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox7" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox8" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer6/OffsetsEdit" to="." method="_on_offsets_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer4/HBoxContainer/Modifier2Edit" to="." method="_on_modifier_2_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer/Modifier2CheckBox1" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer/Modifier2CheckBox2" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer/Modifier2CheckBox3" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer/Modifier2CheckBox4" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2/Modifier2CheckBox5" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2/Modifier2CheckBox6" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2/Modifier2CheckBox7" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer/VBoxContainer2/Modifier2CheckBox8" to="." method="_on_modifier_2_check_box_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/ImageType2Edit" to="." method="_on_image_type_2_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3/ImageType2CheckBox1" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3/ImageType2CheckBox2" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3/ImageType2CheckBox3" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer3/ImageType2CheckBox4" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox5" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox6" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox7" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox8" to="." method="_on_image_type_2_check_box_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4/FramesSpinBox" to="." method="_on_frames_spin_box_value_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer/Unk0x0EEdit" to="." method="_on_unk_0x0e_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2/Unk0x10Edit" to="." method="_on_unk_0x_10_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3/AnimationSpeedEdit" to="." method="_on_animation_speed_edit_text_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/AsImagesCheckButton" to="." method="_on_as_images_check_button_toggled"]
+[connection signal="index_pressed" from="PopupMenu" to="." method="_on_popup_menu_index_pressed"]

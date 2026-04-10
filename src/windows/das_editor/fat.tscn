@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dlog6sdeq5u3h" path="res://src/windows/das_editor/fat.gd" id="1_nuh7r"]
 [ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_fvdbs"]
 [ext_resource type="PackedScene" uid="uid://dh4pvj0xqsi7t" path="res://src/windows/das_editor/standard_image_container.tscn" id="3_6706r"]
+[ext_resource type="PackedScene" uid="uid://tvrovuq6tp52" path="res://src/windows/das_editor/animation_container.tscn" id="4_sfrjw"]
 
 [node name="Fat" type="MarginContainer" unique_id=1097178025]
 anchors_preset = 15
@@ -66,7 +67,18 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[node name="AnimationContainer" parent="HBoxContainer" unique_id=1237815482 instance=ExtResource("4_sfrjw")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
 [connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="index_pressed" from="HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FindEmptyButton" to="." method="_on_find_empty_button_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/GenericContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/GenericContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/StandardImageContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/StandardImageContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/AnimationContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/AnimationContainer" to="." method="_on_jump_to_filename_pressed"]

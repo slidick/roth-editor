@@ -125,8 +125,9 @@ const IMAGE_COMPRESSED_1_HEADER := {
 	total_block_size = Parser.Type.DWord,
 	first_image_offset = Parser.Type.Word,     # relative to the start of this header
 	num_sub_images = Parser.Type.Word,         # the amount of compressed images following the first uncompressed frame. 0xFFFE is type 2
-	unk_0x0E = Parser.Type.Word,
-	unk_0x10 = Parser.Type.Word,
+	unk_0x0E = Parser.Type.Word,               # always 0xFFFF ?
+	unk_0x10 = Parser.Type.Byte,               # always 0xFF   ?
+	animation_speed = Parser.Type.Byte,
 }
 
 const IMAGE_COMPRESSED_2_HEADER := {
@@ -893,7 +894,7 @@ static func _parse_image(file: FileAccess, is_ademo: bool, _index: int) -> Dicti
 	file.seek(file.get_position() - 2)
 	var data: Dictionary = {}
 	if image_type & IMAGE_TYPE.ANIMATION > 0:
-		data = _parse_animated_image(file, is_ademo)
+		data = _parse_animated_image(file, is_ademo, _index)
 	elif image_type & IMAGE_TYPE.OBJECT_DATA > 0:
 		data = _parse_object_data(file, is_ademo)
 	elif modifier & MODIFIER.IMAGE_PACK > 0:
@@ -924,7 +925,7 @@ static func _parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionar
 	return texture_data
 
 
-static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionary:
+static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int) -> Dictionary:
 	var texture_data: Dictionary = {}
 	if is_ademo:
 		file.seek(file.get_position()-4)
@@ -933,16 +934,14 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionar
 			texture_data.shift_data.append(file.get_16())
 	var start_offset: int = file.get_position()
 	texture_data.merge(Parser.parse_section(file, IMAGE_COMPRESSED_1_HEADER))
-	file.seek(start_offset)
-	texture_data["raw_animation"] = file.get_buffer(texture_data.total_block_size)
-	file.seek(start_offset+18)
 	if texture_data.num_sub_images != 0xFFFE:
 		#Console.print("COMPRESS TYPE 1")
 		texture_data["offsets_array"] = []
 		for i in range(texture_data.num_sub_images):
 			texture_data["offsets_array"].append(file.get_32())
-		texture_data["padding"] = file.get_buffer(start_offset + texture_data.first_image_offset - file.get_position())
-		
+		while file.get_position() != (start_offset + texture_data.first_image_offset):
+			assert(file.get_8() == 0)
+		assert(file.get_position() == (start_offset + texture_data.first_image_offset))
 		texture_data.modifier_2 = file.get_8()
 		texture_data.image_type_2 = file.get_8()
 		texture_data.width_2 = file.get_16()
@@ -953,9 +952,13 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionar
 		
 		var raw_img := file.get_buffer(texture_data.width * texture_data.height)
 		texture_data["animation"] = [raw_img.duplicate()]
+		texture_data["offset_mapping"] = {}
 		
 		for j in range(texture_data.num_sub_images):
 			#Console.print("SubImage: %s" % j)
+			
+			var current_offset: int = (file.get_position() - start_offset) + 10
+			
 			var finished := false
 			var pos := 0
 			while true:
@@ -999,13 +1002,22 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool) -> Dictionar
 			if finished:
 				break
 			
-			texture_data["animation"].append(raw_img.duplicate())
+			texture_data["offset_mapping"][current_offset] = raw_img.duplicate()
 		
+		for k in range(len(texture_data.offsets_array)):
+			var offset: int = texture_data.offsets_array[k]
+			if offset == 0:
+				texture_data["animation"].append(texture_data["animation"][k])
+			else:
+				texture_data["animation"].append(texture_data.offset_mapping[offset])
+		
+		# Last frame is always same as first so remove it
+		texture_data["animation"].pop_back()
 		
 	else:
 		#Console.print("COMPRESS TYPE 2")
 		texture_data.erase("unk_0x10")
-		texture_data.erase("raw_animation")
+		texture_data.erase("animation_speed")
 		assert(file.get_position()-2 == start_offset+16)
 		file.seek(start_offset + 16)
 		texture_data["animation_2"] = []
@@ -1468,7 +1480,15 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 					if size % 2 != 0:
 						size += 1
 				if "animation" in entry.data:
-					size += len(entry.data.raw_animation) # Includes header
+					var animation_data_size: int = _compile_animation(entry.data)
+					size += 18 # Header
+					size += (len(entry.data.offsets_array) * 4)
+					size += 8 # Padding
+					entry.data.first_image_offset = size
+					size += 6 # Sub-header
+					size += len(entry.data.animation[0]) # Base image
+					size += animation_data_size
+					entry.data.total_block_size = size
 					while size % 16 != 0:
 						size += 1
 				if "animation_2" in entry.data:
@@ -1531,6 +1551,85 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 	return total_size
 
 
+static func _compile_animation(animation_data: Dictionary) -> int:
+	var animation_array: Array = animation_data.animation.duplicate(true)
+	var base_image: PackedByteArray = animation_array[0]
+	animation_array.append(base_image)
+	var starting_offset: int = 18 + ((len(animation_array)-1) * 4) + 8 + 6 + len(base_image)
+	var compiled_animation := PackedByteArray()
+	var offsets_array: Array = []
+	for i in range(1, len(animation_array)):
+		var frame: PackedByteArray = animation_array[i]
+		
+		if frame == base_image:
+			offsets_array.append(0)
+			continue
+		else:
+			offsets_array.append( starting_offset + len(compiled_animation) + 10 )
+		
+		var same_count: int = 0
+		var diff_count: int = 0
+		for j in range(len(base_image)):
+			if same_count > 0 and (frame[j] != base_image[j] or same_count == 32767):
+				# Same code
+				if same_count < 128:
+					compiled_animation.append(0x80 + same_count) # Code w/ count
+				elif same_count < 255:
+					compiled_animation.append(0x80 + 127) # Code w/ count
+					compiled_animation.append(0x80 + same_count-127) # Code w/ count
+				else:
+					compiled_animation.append(0x80) # Code
+					compiled_animation.append(same_count & 0xFF) # Count
+					compiled_animation.append((same_count & 0xFF00) >> 8) # Count
+					
+				same_count = 0
+			
+			elif diff_count > 0 and (frame[j] == base_image[j] or diff_count == 127):
+				# Diff code
+				compiled_animation.append(diff_count)
+				for k in range(diff_count, 0, -1):
+					compiled_animation.append(frame[j-k])
+				diff_count = 0
+			
+			if frame[j] == base_image[j] and diff_count == 0:
+				same_count += 1
+			elif same_count == 0:
+				diff_count += 1
+			else:
+				assert(false)
+		
+		
+		# FINAL
+		if same_count > 0:
+			if same_count < 128:
+				compiled_animation.append(0x80 + same_count) # Code w/ count
+			elif same_count < 255:
+				compiled_animation.append(0x80 + 127) # Code w/ count
+				compiled_animation.append(0x80 + same_count-127) # Code w/ count
+			else:
+				compiled_animation.append(0x80) # Code
+				compiled_animation.append(same_count & 0xFF) # Count
+				compiled_animation.append((same_count & 0xFF00) >> 8) # Count
+		elif diff_count > 0:
+			compiled_animation.append(diff_count)
+			for k in range(diff_count, 0, -1):
+				compiled_animation.append(frame[len(frame)-diff_count])
+		
+		# End frame code
+		compiled_animation.append(0x80)
+		compiled_animation.append(0)
+		compiled_animation.append(0)
+		base_image = frame
+	
+	# End animation code
+	compiled_animation.append(0)
+	compiled_animation.append(0)
+	
+	animation_data["compiled_animation"] = compiled_animation
+	animation_data["offsets_array"] = offsets_array
+	return len(compiled_animation)
+
+
 static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int, is_ademo: bool) -> int:
 	var size: int = 0
 	if entry.offset != 0:
@@ -1575,7 +1674,38 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 					pos += 1
 					size += 1
 			if "animation" in entry.data:
-				for byte: int in entry.data.raw_animation:
+				data.encode_u8(pos, entry.data.modifier)
+				data.encode_u8(pos+1, entry.data.image_type)
+				data.encode_u16(pos+2, entry.data.width)
+				data.encode_u16(pos+4, entry.data.height)
+				data.encode_u32(pos+6, entry.data.total_block_size)
+				data.encode_u16(pos+10, entry.data.first_image_offset)
+				data.encode_u16(pos+12, len(entry.data.offsets_array))
+				data.encode_u16(pos+14, entry.data.unk_0x0E)  # 0xFFFF
+				data.encode_u8(pos+16, entry.data.unk_0x10)   # 0xFF
+				data.encode_u8(pos+17, entry.data.animation_speed)
+				
+				pos += 18
+				size += 18
+				for dword: int in entry.data.offsets_array:
+					data.encode_u32(pos, dword)
+					pos += 4
+					size += 4
+				pos += 8 # Padding
+				size += 8
+				assert(size == entry.data.first_image_offset)
+				# These values don't actually seem to do anything
+				data.encode_u8(pos, 0)       # modifier_2
+				data.encode_u8(pos+1, 0)     # image_type_2
+				data.encode_u16(pos+2, 0)    # width_2
+				data.encode_u16(pos+4, 0)    # height_2
+				pos += 6
+				size += 6
+				for byte: int in entry.data.animation[0]:
+					data.encode_u8(pos, byte)
+					pos += 1
+					size += 1
+				for byte: int in entry.data.compiled_animation:
 					data.encode_u8(pos, byte)
 					pos += 1
 					size += 1
