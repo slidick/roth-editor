@@ -122,7 +122,8 @@ static func convert_to_paletted_image(input_image: Image, raw_palette: Array) ->
 	var color_map: Dictionary = {}
 	for i in range(len(palette)):
 		var rgb_string: String = "%d,%d,%d" % [palette[i][0], palette[i][1], palette[i][2]]
-		color_map[rgb_string] = i
+		if rgb_string not in color_map:
+			color_map[rgb_string] = i
 	
 	var mutex := Mutex.new()
 	var worker: Callable = func (worker_image_data: PackedByteArray) -> PackedByteArray:
