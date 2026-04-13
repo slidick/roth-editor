@@ -17,7 +17,8 @@ var image: Image
 var selected_rect: ColorRectButton
 var canvas_has_focus: bool = false
 var draw_enabled: bool = false
-var additional_zoom: float = 1
+var zoom: float = 1.0
+var additional_zoom: float = 1.0
 var zooming: bool = false
 var mouse_drag_enabled: bool = false
 var original_texture_data: Dictionary = {}
@@ -50,7 +51,7 @@ func _input(event: InputEvent) -> void:
 			mouse_drag_enabled = false
 
 
-func adjust_zoom() -> void:
+func init_zoom() -> void:
 	while %Camera2D.get_viewport().size.y < 5:
 		await get_tree().process_frame
 	var zoom_y: float = %Camera2D.get_viewport().size.y / float(image.get_height())
@@ -58,7 +59,11 @@ func adjust_zoom() -> void:
 	if %RotateCanvasCheckBox.button_pressed:
 		zoom_y = %Camera2D.get_viewport().size.y / float(image.get_width())
 		zoom_x = %Camera2D.get_viewport().size.x / float(image.get_height())
-	var zoom: float = min(zoom_x, zoom_y) * 0.90
+	zoom = min(zoom_x, zoom_y) * 0.90
+	adjust_zoom()
+
+
+func adjust_zoom() -> void:
 	var mouse_pos: Vector2 = %TextureRect.get_global_mouse_position()
 	%Camera2D.zoom = Vector2.ONE * zoom * additional_zoom
 	if zooming:
@@ -67,7 +72,6 @@ func adjust_zoom() -> void:
 		var new_mouse_pos: Vector2 = %TextureRect.get_global_mouse_position()
 		%Camera2D.position += mouse_pos - new_mouse_pos
 		zooming = false
-
 
 
 func update_camera_center() -> void:
@@ -80,17 +84,16 @@ func update_camera_center() -> void:
 		%Camera2D.position = image.get_size() / 2.0
 
 
-
 func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false) -> Dictionary:
 	original_texture_data = p_texture_data.duplicate(true)
 	texture_data = p_texture_data.duplicate(true)
-	palette = p_raw_palette
 	force_partial_alpha = p_force_partial_alpha
+	if palette != p_raw_palette:
+		palette = p_raw_palette
+		load_palette(palette)
 	_on_reset_button_pressed()
-	load_palette(palette)
 	update_camera_center()
 	additional_zoom = 1
-	adjust_zoom()
 	current_mode = Mode.DRAW
 	toggle(true)
 	var new_texture: Dictionary = await done
@@ -106,13 +109,11 @@ func _on_cancel_button_pressed() -> void:
 
 func _on_reset_button_pressed() -> void:
 	texture_data = original_texture_data.duplicate(true)
-	%WidthSpinBox.set_value_no_signal(texture_data.width)
-	%WidthSpinBox.get_line_edit().text = str(texture_data.width)
-	%HeightSpinBox.set_value_no_signal(texture_data.height)
-	%HeightSpinBox.get_line_edit().text = str(texture_data.height)
-	%HeightSpinBox.max_value = int(65536 / texture_data.width)
-	%WidthSpinBox.max_value = int(65536 / texture_data.height)
+	update_dimensions()
 	redraw_image()
+	update_camera_center()
+	additional_zoom = 1
+	init_zoom()
 
 
 func redraw_image() -> void:
@@ -129,6 +130,23 @@ func redraw_image() -> void:
 	%TextureRect.texture = texture
 	%PreviewTextureRect.texture = texture
 	%BackgroundCanvas.queue_redraw()
+
+
+func update_dimensions() -> void:
+	if %RotateCanvasCheckBox.button_pressed:
+		%WidthSpinBox.set_value_no_signal(texture_data.height)
+		%WidthSpinBox.get_line_edit().text = str(texture_data.height)
+		%HeightSpinBox.set_value_no_signal(texture_data.width)
+		%HeightSpinBox.get_line_edit().text = str(texture_data.width)
+		%HeightSpinBox.max_value = int(65536 / texture_data.height)
+		%WidthSpinBox.max_value = int(65536 / texture_data.width)
+	else:
+		%WidthSpinBox.set_value_no_signal(texture_data.width)
+		%WidthSpinBox.get_line_edit().text = str(texture_data.width)
+		%HeightSpinBox.set_value_no_signal(texture_data.height)
+		%HeightSpinBox.get_line_edit().text = str(texture_data.height)
+		%HeightSpinBox.max_value = int(65536 / texture_data.width)
+		%WidthSpinBox.max_value = int(65536 / texture_data.height)
 
 
 func _on_save_button_pressed() -> void:
@@ -274,9 +292,18 @@ func _on_draw_size_spin_box_value_changed(value: float) -> void:
 func _on_rotate_canvas_check_box_toggled(toggled_on: bool) -> void:
 	%RotationContainer.enabled = toggled_on
 	%RotationPreviewContainer.enabled = toggled_on
+	update_dimensions()
 
 
 func _on_width_spin_box_value_changed(value: float) -> void:
+	if %RotateCanvasCheckBox.button_pressed:
+		update_height(value)
+	else:
+		update_width(value)
+	%HeightSpinBox.max_value = int(65536 / value)
+
+
+func update_width(value: float) -> void:
 	var old_width: int = texture_data.width
 	if int(value) == old_width:
 		return
@@ -301,11 +328,17 @@ func _on_width_spin_box_value_changed(value: float) -> void:
 	
 	texture_data.raw_image = new_raw_image
 	redraw_image()
-	adjust_zoom()
-	%HeightSpinBox.max_value = int(65536 / value)
 
 
 func _on_height_spin_box_value_changed(value: float) -> void:
+	if %RotateCanvasCheckBox.button_pressed:
+		update_width(value)
+	else:
+		update_height(value)
+	%WidthSpinBox.max_value = int(65536 / value)
+
+
+func update_height(value: float) -> void:
 	var old_height: int = texture_data.height
 	if int(value) == old_height:
 		return
@@ -329,8 +362,6 @@ func _on_height_spin_box_value_changed(value: float) -> void:
 	
 	texture_data.raw_image = new_raw_image
 	redraw_image()
-	adjust_zoom()
-	%WidthSpinBox.max_value = int(65536 / value)
 
 
 func _on_browse_button_pressed() -> void:
@@ -371,4 +402,4 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	redraw_image()
 	update_camera_center()
 	additional_zoom = 1
-	adjust_zoom()
+	init_zoom()
