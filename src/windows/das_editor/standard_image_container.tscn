@@ -383,14 +383,19 @@ text = "Rotated"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RotationContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer" unique_id=1667507850]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer" unique_id=1599552553]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RotationContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer" unique_id=1667507850]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("3_xommh")
 metadata/_custom_type_script = "uid://2rrlixceot6j"
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer5/VBoxContainer/RotationContainer" unique_id=1359974312]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/RotationContainer" unique_id=1359974312]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
