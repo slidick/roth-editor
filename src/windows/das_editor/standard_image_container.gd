@@ -252,3 +252,42 @@ func _on_image_type_check_box_pressed() -> void:
 func _on_rotated_check_button_toggled(toggled_on: bool) -> void:
 	%RotationContainer.enabled = toggled_on
 	update_dimension()
+
+
+func _on_texture_rect_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		%PopupMenu.popup(Rect2(event.global_position.x, event.global_position.y, 0, 0))
+
+
+func _on_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			if %RotatedCheckButton.button_pressed:
+				standard_image.data.raw_image = Utility.rotate_raw_image_counter_clockwise(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			else:
+				standard_image.data.raw_image = Utility.rotate_raw_image_clockwise(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			var new_height: int = standard_image.data.width
+			standard_image.data.width = standard_image.data.height
+			standard_image.data.height = new_height
+			update_texture()
+		1:
+			if %RotatedCheckButton.button_pressed:
+				standard_image.data.raw_image = Utility.rotate_raw_image_clockwise(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			else:
+				standard_image.data.raw_image = Utility.rotate_raw_image_counter_clockwise(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			var new_height: int = standard_image.data.width
+			standard_image.data.width = standard_image.data.height
+			standard_image.data.height = new_height
+			update_texture()
+		2:
+			if %RotatedCheckButton.button_pressed:
+				standard_image.data.raw_image = Utility.flip_raw_image_vertical(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			else:
+				standard_image.data.raw_image = Utility.flip_raw_image_horizontal(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			update_texture()
+		3:
+			if %RotatedCheckButton.button_pressed:
+				standard_image.data.raw_image = Utility.flip_raw_image_horizontal(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			else:
+				standard_image.data.raw_image = Utility.flip_raw_image_vertical(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
+			update_texture()

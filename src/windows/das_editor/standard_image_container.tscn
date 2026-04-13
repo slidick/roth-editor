@@ -406,6 +406,18 @@ unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
+[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer/HBoxContainer5/VBoxContainer" unique_id=935565235]
+unique_name_in_owner = true
+item_count = 4
+item_0/text = "Rotate Clockwise"
+item_0/id = 0
+item_1/text = "Rotate Counter-Clockwise"
+item_1/id = 1
+item_2/text = "Flip Horizontal"
+item_2/id = 2
+item_3/text = "Flip Vertical"
+item_3/id = 3
+
 [node name="EditImageButton" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=874414400]
 layout_mode = 2
 size_flags_vertical = 4
@@ -451,4 +463,6 @@ text = "Edit Image"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox7" to="." method="_on_image_type_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox8" to="." method="_on_image_type_check_box_pressed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
+[connection signal="gui_input" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
+[connection signal="index_pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer5/EditImageButton" to="." method="_on_edit_image_button_pressed"]

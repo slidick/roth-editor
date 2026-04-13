@@ -212,3 +212,39 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 static func deinit_shader() -> void:
 	if rd != null:
 		rd.free()
+
+
+static func rotate_raw_image_clockwise(raw_image: PackedByteArray, width: int, height: int) -> PackedByteArray:
+	var new_width: int = height
+	var new_height: int = width
+	var new_data := PackedByteArray()
+	for y in range(new_height):
+		for x in range(new_width):
+			new_data.append(raw_image[(new_width - 1 - x) * new_height + y])
+	return new_data
+
+
+static func rotate_raw_image_counter_clockwise(raw_image: PackedByteArray, width: int, height: int) -> PackedByteArray:
+	var new_width: int = height
+	var new_height: int = width
+	var new_data := PackedByteArray()
+	for y in range(new_height):
+		for x in range(new_width):
+			new_data.append(raw_image[x * new_height + (new_height - 1 - y)])
+	return new_data
+
+
+static func flip_raw_image_horizontal(raw_image: PackedByteArray, width: int, height: int) -> PackedByteArray:
+	var new_data := PackedByteArray()
+	for y in range(height):
+		for x in range(width):
+			new_data.append(raw_image[y * width + (width - 1 - x)])
+	return new_data
+
+
+static func flip_raw_image_vertical(raw_image: PackedByteArray, width: int, height: int) -> PackedByteArray:
+	var new_data := PackedByteArray()
+	for y in range(height):
+		for x in range(width):
+			new_data.append(raw_image[x + width * (height - 1 - y)])
+	return new_data
