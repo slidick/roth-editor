@@ -1,0 +1,301 @@
+[gd_scene format=3 uid="uid://cv1auqpk7ch8w"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_ru00o"]
+[ext_resource type="Script" uid="uid://dubq7dtxgg0dc" path="res://src/windows/graphics/sprite_sheet_importer_window.gd" id="2_1g5jn"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_onjrr"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_paaiy"]
+[ext_resource type="Script" uid="uid://b4caire0vxxpx" path="res://src/windows/graphics/sprite_sheet_texture_rect.gd" id="5_paaiy"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_onjrr"]
+
+[node name="SpriteSheetImporterWindow" unique_id=452268762 instance=ExtResource("1_ru00o")]
+offset_right = 1251.0
+offset_bottom = 702.0
+theme = ExtResource("2_onjrr")
+script = ExtResource("2_1g5jn")
+exclusive = true
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_paaiy")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=727967972]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1187990858]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=270129168]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1428547192]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer" index="0" unique_id=1234545783]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="SpriteSheetTextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/MarginContainer" index="0" unique_id=587859923]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+stretch_mode = 5
+script = ExtResource("5_paaiy")
+
+[node name="LoadingContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/MarginContainer" index="1" unique_id=630551447]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/MarginContainer/LoadingContainer" index="0" unique_id=1156455402]
+layout_mode = 2
+text = "Converting Image To Palette"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer/MarginContainer/LoadingContainer" index="1" unique_id=1484037177]
+layout_mode = 2
+indeterminate = true
+editor_preview_indeterminate = false
+
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1542763377]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=407707189]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="BrowseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=67468696]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Browse"
+
+[node name="FileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/BrowseButton" index="0" unique_id=1562424495]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 2
+size = Vector2i(1280, 800)
+file_mode = 0
+access = 2
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1" unique_id=1278883772]
+layout_mode = 2
+
+[node name="PreviewCheckButton" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2" unique_id=2064407055]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Preview"
+
+[node name="SizeLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="3" unique_id=2063962832]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="4" unique_id=1407699344]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PreviewTextureRect" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2" index="0" unique_id=1572934037]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/PreviewTextureRect" index="0" unique_id=814526536]
+unique_name_in_owner = true
+visible = false
+sprite_frames = SubResource("SpriteFrames_onjrr")
+
+[node name="FPSContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2" index="1" unique_id=1427320968]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/FPSContainer" index="0" unique_id=1310483443]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "FPS"
+
+[node name="FPSSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/FPSContainer" index="1" unique_id=428695620]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 60.0
+value = 12.0
+rounded = true
+allow_greater = true
+update_on_text_changed = true
+
+[node name="BlackAsTransparentCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2" index="2" unique_id=1423399991]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+button_pressed = true
+text = "Black as Transparent"
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="5" unique_id=1253975138]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="6" unique_id=1552945855]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FitImageCheckButton" type="CheckButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" index="0" unique_id=344572261]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fit Image"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" index="1" unique_id=435428477]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1718596858]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Rows"
+
+[node name="RowsSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1130753826]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+value = 1.0
+rounded = true
+allow_greater = true
+update_on_text_changed = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" index="2" unique_id=1566237021]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1175276732]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Columns"
+
+[node name="ColumnsSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=77259774]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+value = 4.0
+rounded = true
+allow_greater = true
+update_on_text_changed = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" index="3" unique_id=516267104]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=392002960]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Use Row"
+
+[node name="UseRowSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=1862179239]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 1.0
+value = 1.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" index="4" unique_id=1276951689]
+layout_mode = 2
+
+[node name="ImportAsRotatedCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=137744501]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Import as Rotated"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=333318817]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=403452603]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1523055299]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Cancel"
+
+[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1048966536]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Import"
+
+[node name="Subwindow" type="Control" parent="." index="2" unique_id=1222629174]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ImportingPanel" parent="Subwindow" index="0" unique_id=431625911 instance=ExtResource("1_ru00o")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -174.75
+offset_top = -87.5
+offset_right = 174.75
+offset_bottom = 87.5
+grow_horizontal = 2
+grow_vertical = 2
+movable = false
+resizable = false
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_paaiy")
+
+[node name="Background" parent="Subwindow/ImportingPanel/Control" parent_id_path=PackedInt32Array(431625911, 1456915901) index="0" unique_id=1555277503]
+visible = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Subwindow/ImportingPanel/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(431625911, 2051013205) index="0" unique_id=273885921]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Subwindow/ImportingPanel/Contents/VBoxContainer/MainContainer/VBoxContainer" index="0" unique_id=50408914]
+layout_mode = 2
+text = "Importing..."
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="Subwindow/ImportingPanel/Contents/VBoxContainer/MainContainer/VBoxContainer" index="1" unique_id=1720028652]
+layout_mode = 2
+indeterminate = true
+editor_preview_indeterminate = false
+
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="file_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/BrowseButton/FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/PreviewCheckButton" to="." method="_on_preview_check_button_toggled"]
+[connection signal="frame_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/PreviewTextureRect/AnimatedSprite" to="." method="_on_animated_sprite_frame_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/FPSContainer/FPSSpinBox" to="." method="_on_fps_spin_box_value_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/BlackAsTransparentCheckBox" to="." method="_on_black_as_transparent_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/FitImageCheckButton" to="." method="_on_fit_image_check_button_toggled"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/RowsSpinBox" to="." method="_on_rows_spin_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ColumnsSpinBox" to="." method="_on_columns_spin_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/UseRowSpinBox" to="." method="_on_use_row_spin_box_value_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/ImportButton" to="." method="_on_import_button_pressed"]
+
+[editable path="Subwindow/ImportingPanel"]

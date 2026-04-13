@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://b13db4skwnxbm" path="res://src/windows/das_editor/monster_mappings.tscn" id="10_cd1io"]
 [ext_resource type="PackedScene" uid="uid://bl4ldhvm76xam" path="res://src/windows/das_editor/object_collisions.tscn" id="10_vwsjw"]
 [ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="14_iy22k"]
+[ext_resource type="PackedScene" uid="uid://cv1auqpk7ch8w" path="res://src/windows/graphics/sprite_sheet_importer_window.tscn" id="15_1uofs"]
 
 [node name="DasEditorWindow" unique_id=452268762 instance=ExtResource("1_o2sbq")]
 offset_right = 1272.0
@@ -279,6 +280,22 @@ offset_left = -640.0
 offset_top = -400.0
 offset_right = 640.0
 offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SpriteSheetImporter" parent="SubWindows" index="1" unique_id=999387797 instance=ExtResource("15_1uofs")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -632.5
+offset_top = -385.0
+offset_right = 632.5
+offset_bottom = 385.0
 grow_horizontal = 2
 grow_vertical = 2
 

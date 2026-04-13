@@ -24,8 +24,8 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	%ModifierEdit.text = str(animation_image.data.modifier)
 	%ImageTypeEdit.text = str(animation_image.data.image_type)
 	%OffsetsEdit.text = str(animation_image.data.offsets_array)
-	%Modifier2Edit.text = str(animation_image.data.modifier_2)
-	%ImageType2Edit.text = str(animation_image.data.image_type_2)
+	#%Modifier2Edit.text = str(animation_image.data.modifier_2)
+	#%ImageType2Edit.text = str(animation_image.data.image_type_2)
 	%Unk0x0EEdit.text = str(animation_image.data.unk_0x0E)
 	%Unk0x10Edit.text = str(animation_image.data.unk_0x10)
 	%AnimationSpeedEdit.text = str(animation_image.data.animation_speed)
@@ -44,8 +44,8 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	update_flags_2_checkboxes()
 	update_modifier_checkboxes()
 	update_image_type_checkboxes()
-	update_modifier_2_checkboxes()
-	update_image_type_2_checkboxes()
+	#update_modifier_2_checkboxes()
+	#update_image_type_2_checkboxes()
 	
 	update_texture()
 
@@ -255,7 +255,7 @@ func update_texture() -> void:
 	for child: Node in %ImagesContainer.get_children():
 		child.queue_free()
 	
-	var is_transparent: bool = animation_image.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_image.data.image_type_2 & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+	var is_transparent: bool = animation_image.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_image.data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
 	var is_fully_transparent: bool = animation_image.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
 	for i in range(len(animation_image.data.animation)):
 		var vbox := VBoxContainer.new()
@@ -461,3 +461,13 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				%ImagesContainer.get_child(right_clicked_frame).queue_free()
 				%FramesSpinBox.set_value_no_signal(len(animation_image.data.animation))
 				%FramesSpinBox.get_line_edit().text = str(len(animation_image.data.animation))
+
+
+func _on_import_sprite_sheet_button_pressed() -> void:
+	var spritesheet_data: Dictionary = await owner.owner.import_sprite_sheet(raw_palette)
+	if spritesheet_data.is_empty():
+		return
+	animation_image.data.animation = spritesheet_data.animation
+	animation_image.data.width = spritesheet_data.width
+	animation_image.data.height = spritesheet_data.height
+	update_texture()

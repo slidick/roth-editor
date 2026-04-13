@@ -124,7 +124,8 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				"unk_0x0E": 0xFFFF,
 				"unk_0x10": 0xFF,
 				"animation_speed": 8,
-				"animation": [raw_image]
+				"animation": [raw_image],
+				"offsets_array": [],
 			}
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["data"] = data

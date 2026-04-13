@@ -298,3 +298,7 @@ func _on_add_filename_pressed(filename_index: int, fat_index: int) -> Dictionary
 		%SectionItemList.select(14)
 		_on_section_item_list_item_selected(14)
 		return %Filenames2._on_add_button_pressed(fat_index)
+
+
+func import_sprite_sheet(p_raw_palette: PackedByteArray) -> Dictionary:
+	return await %SpriteSheetImporter.import_sprite_sheet(p_raw_palette)
