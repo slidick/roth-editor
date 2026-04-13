@@ -25,6 +25,7 @@ var original_texture_data: Dictionary = {}
 var texture_data: Dictionary = {}
 var palette: Array = []
 var force_partial_alpha: bool = false
+var previous_mouse_position := Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
 	if canvas_has_focus:
@@ -210,16 +211,20 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 		if current_mode == Mode.DRAW:
 			%TextureRect.queue_redraw()
 			if draw_enabled:
-				var mouse_pos: Vector2 = event.position
-				var _draw_size: int = int(%DrawSizeSpinBox.value) - 1
-				var vertex_1 := Vector2i(floori(mouse_pos.x)-int(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
-				var vertex_2 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
-				var vertex_3 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), ceili(mouse_pos.y)+roundi(_draw_size/2.0))
-				for x in range(vertex_1.x, vertex_2.x):
-					for y in range(vertex_1.y, vertex_3.y):
-						if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
-							texture_data.raw_image[y * texture_data.width + x] = selected_rect.palette_index
+				var current_mouse_position: Vector2 = event.position
+				while (previous_mouse_position-current_mouse_position).length() > 0.01:
+					var mouse_pos: Vector2 = previous_mouse_position.lerp(current_mouse_position, 0.01)
+					var _draw_size: int = int(%DrawSizeSpinBox.value) - 1
+					var vertex_1 := Vector2i(floori(mouse_pos.x)-int(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
+					var vertex_2 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), floori(mouse_pos.y)-int(_draw_size/2.0))
+					var vertex_3 := Vector2i(ceili(mouse_pos.x)+roundi(_draw_size/2.0), ceili(mouse_pos.y)+roundi(_draw_size/2.0))
+					for x in range(vertex_1.x, vertex_2.x):
+						for y in range(vertex_1.y, vertex_3.y):
+							if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+								texture_data.raw_image[y * texture_data.width + x] = selected_rect.palette_index
+					previous_mouse_position = mouse_pos
 				redraw_image()
+				
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		match current_mode:
@@ -236,6 +241,7 @@ func _on_texture_rect_gui_input(event: InputEvent) -> void:
 							if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
 								texture_data.raw_image[y * texture_data.width + x] = selected_rect.palette_index
 					redraw_image()
+					previous_mouse_position = mouse_pos
 				else:
 					draw_enabled = false
 			Mode.COLOR_PICKER:
