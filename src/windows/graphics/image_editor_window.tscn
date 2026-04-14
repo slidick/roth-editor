@@ -174,14 +174,35 @@ max_value = 1024.0
 value = 32.0
 rounded = true
 
-[node name="PaletteContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="2" unique_id=1977510581]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="2" unique_id=414901896]
+layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3" index="0" unique_id=1687955382]
+layout_mode = 2
+
+[node name="Transform" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/MenuBar" index="0" unique_id=1543449975]
+item_count = 6
+item_0/text = "Rotate Clockwise"
+item_0/id = 0
+item_1/text = "Rotate Counter-Clockwise"
+item_1/id = 1
+item_2/text = "Flip Horizontally"
+item_2/id = 2
+item_3/text = "Flip Vertically"
+item_3/id = 3
+item_4/id = 4
+item_4/separator = true
+item_5/text = "Scale"
+item_5/id = 5
+
+[node name="PaletteContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3" unique_id=1977510581]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
 size_flags_stretch_ratio = 0.5
 theme_override_styles/panel = SubResource("StyleBoxFlat_q5his")
 
-[node name="RotationPreviewContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3" unique_id=1643524020]
+[node name="RotationPreviewContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="4" unique_id=1643524020]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -229,6 +250,7 @@ text = "Save"
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/DrawSizeSpinBox" to="." method="_on_draw_size_spin_box_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/WidthSpinBox" to="." method="_on_width_spin_box_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/HeightSpinBox" to="." method="_on_height_spin_box_value_changed"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/MenuBar/Transform" to="." method="_on_transform_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

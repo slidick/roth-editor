@@ -409,3 +409,39 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	update_camera_center()
 	additional_zoom = 1
 	init_zoom()
+
+
+func _on_transform_index_pressed(index: int) -> void:
+	match index:
+		0:
+			if %RotateCanvasCheckBox.button_pressed:
+				texture_data.raw_image = Utility.rotate_raw_image_counter_clockwise(texture_data.raw_image, texture_data.width, texture_data.height)
+			else:
+				texture_data.raw_image = Utility.rotate_raw_image_clockwise(texture_data.raw_image, texture_data.width, texture_data.height)
+			var new_height: int = texture_data.width
+			texture_data.width = texture_data.height
+			texture_data.height = new_height
+			redraw_image()
+			update_dimensions()
+		1:
+			if %RotateCanvasCheckBox.button_pressed:
+				texture_data.raw_image = Utility.rotate_raw_image_clockwise(texture_data.raw_image, texture_data.width, texture_data.height)
+			else:
+				texture_data.raw_image = Utility.rotate_raw_image_counter_clockwise(texture_data.raw_image, texture_data.width, texture_data.height)
+			var new_height: int = texture_data.width
+			texture_data.width = texture_data.height
+			texture_data.height = new_height
+			redraw_image()
+			update_dimensions()
+		2:
+			if %RotateCanvasCheckBox.button_pressed:
+				texture_data.raw_image = Utility.flip_raw_image_vertical(texture_data.raw_image, texture_data.width, texture_data.height)
+			else:
+				texture_data.raw_image = Utility.flip_raw_image_horizontal(texture_data.raw_image, texture_data.width, texture_data.height)
+			redraw_image()
+		3:
+			if %RotateCanvasCheckBox.button_pressed:
+				texture_data.raw_image = Utility.flip_raw_image_horizontal(texture_data.raw_image, texture_data.width, texture_data.height)
+			else:
+				texture_data.raw_image = Utility.flip_raw_image_vertical(texture_data.raw_image, texture_data.width, texture_data.height)
+			redraw_image()
