@@ -628,12 +628,24 @@ size_flags_vertical = 3
 script = ExtResource("2_u5m3r")
 metadata/_custom_type_script = "uid://2rrlixceot6j"
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer5/AnimationContainer/RotationContainer" unique_id=456550490]
+[node name="AnimationTextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer5/AnimationContainer/RotationContainer" unique_id=456550490]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
 stretch_mode = 5
 script = ExtResource("3_6cdqi")
+
+[node name="AnimationPopupMenu" type="PopupMenu" parent="VBoxContainer/HBoxContainer5/AnimationContainer" unique_id=280763827]
+unique_name_in_owner = true
+item_count = 4
+item_0/text = "Rotate Clockwise"
+item_0/id = 0
+item_1/text = "Rotate Counter-Clockwise"
+item_1/id = 1
+item_2/text = "Flip Horizontal"
+item_2/id = 2
+item_3/text = "Flip Vertical"
+item_3/id = 3
 
 [node name="AsImagesContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1354276981]
 unique_name_in_owner = true
@@ -722,4 +734,6 @@ item_2/id = 2
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/AsImagesCheckButton" to="." method="_on_as_images_check_button_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ImportSpriteSheetButton" to="." method="_on_import_sprite_sheet_button_pressed"]
+[connection signal="gui_input" from="VBoxContainer/HBoxContainer5/AnimationContainer/RotationContainer/AnimationTextureRect" to="." method="_on_animation_texture_rect_gui_input"]
+[connection signal="index_pressed" from="VBoxContainer/HBoxContainer5/AnimationContainer/AnimationPopupMenu" to="." method="_on_animation_popup_menu_index_pressed"]
 [connection signal="index_pressed" from="PopupMenu" to="." method="_on_popup_menu_index_pressed"]

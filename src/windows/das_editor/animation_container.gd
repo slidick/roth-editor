@@ -249,7 +249,7 @@ func update_image_type_2_from_checkboxes() -> void:
 
 
 func update_texture() -> void:
-	%TextureRect.set_data(animation_image.data, raw_palette)
+	%AnimationTextureRect.set_data(animation_image.data, raw_palette)
 	update_dimension()
 	
 	for child: Node in %ImagesContainer.get_children():
@@ -471,3 +471,46 @@ func _on_import_sprite_sheet_button_pressed() -> void:
 	animation_image.data.width = spritesheet_data.width
 	animation_image.data.height = spritesheet_data.height
 	update_texture()
+
+
+func _on_animation_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			for i in range(len(animation_image.data.animation)):
+				if %RotatedCheckButton.button_pressed:
+					animation_image.data.animation[i] = Utility.rotate_raw_image_counter_clockwise(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+				else:
+					animation_image.data.animation[i] = Utility.rotate_raw_image_clockwise(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			var new_height: int = animation_image.data.width
+			animation_image.data.width = animation_image.data.height
+			animation_image.data.height = new_height
+			update_texture()
+		1:
+			for i in range(len(animation_image.data.animation)):
+				if %RotatedCheckButton.button_pressed:
+					animation_image.data.animation[i] = Utility.rotate_raw_image_clockwise(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+				else:
+					animation_image.data.animation[i] = Utility.rotate_raw_image_counter_clockwise(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			var new_height: int = animation_image.data.width
+			animation_image.data.width = animation_image.data.height
+			animation_image.data.height = new_height
+			update_texture()
+		2:
+			for i in range(len(animation_image.data.animation)):
+				if %RotatedCheckButton.button_pressed:
+					animation_image.data.animation[i] = Utility.flip_raw_image_vertical(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+				else:
+					animation_image.data.animation[i] = Utility.flip_raw_image_horizontal(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			update_texture()
+		3:
+			for i in range(len(animation_image.data.animation)):
+				if %RotatedCheckButton.button_pressed:
+					animation_image.data.animation[i] = Utility.flip_raw_image_horizontal(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+				else:
+					animation_image.data.animation[i] = Utility.flip_raw_image_vertical(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			update_texture()
+
+
+func _on_animation_texture_rect_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		%AnimationPopupMenu.popup(Rect2(event.global_position.x, event.global_position.y, 0, 0))
