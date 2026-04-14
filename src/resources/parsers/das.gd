@@ -1613,7 +1613,7 @@ static func _compile_animation(animation_data: Dictionary) -> int:
 		elif diff_count > 0:
 			compiled_animation.append(diff_count)
 			for k in range(diff_count, 0, -1):
-				compiled_animation.append(frame[len(frame)-diff_count])
+				compiled_animation.append(frame[len(frame)-k])
 		
 		# End frame code
 		compiled_animation.append(0x80)
