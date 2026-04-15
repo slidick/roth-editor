@@ -445,3 +445,39 @@ func _on_transform_index_pressed(index: int) -> void:
 			else:
 				texture_data.raw_image = Utility.flip_raw_image_vertical(texture_data.raw_image, texture_data.width, texture_data.height)
 			redraw_image()
+		5:
+			var data: Dictionary = await %Scale.scale_image(texture_data, %RotateCanvasCheckBox.button_pressed)
+			if not data.is_empty():
+				_on_scale_changed(data)
+				%Scaling.toggle(true)
+				var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette)
+				%Scaling.toggle(false)
+				texture_data.raw_image = raw_image
+				if %RotateCanvasCheckBox.button_pressed:
+					texture_data.width = data.height
+					texture_data.height = data.width
+				else:
+					texture_data.width = data.width
+					texture_data.height = data.height
+				update_dimensions()
+			redraw_image()
+
+
+func _on_scale_changed(data: Dictionary) -> void:
+	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or force_partial_alpha
+	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+	image = Image.create_from_data(
+		texture_data.width,
+		texture_data.height,
+		false,
+		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
+		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent)
+	)
+	if %RotateCanvasCheckBox.button_pressed:
+		image.resize(data.height, data.width, Image.INTERPOLATE_NEAREST)
+	else:
+		image.resize(data.width, data.height, Image.INTERPOLATE_NEAREST)
+	var texture := ImageTexture.create_from_image(image)
+	%TextureRect.texture = texture
+	%PreviewTextureRect.texture = texture
+	%BackgroundCanvas.queue_redraw()
