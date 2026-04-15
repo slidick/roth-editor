@@ -28,7 +28,8 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	#%ImageType2Edit.text = str(animation_image.data.image_type_2)
 	%Unk0x0EEdit.text = str(animation_image.data.unk_0x0E)
 	%Unk0x10Edit.text = str(animation_image.data.unk_0x10)
-	%AnimationSpeedEdit.text = str(animation_image.data.animation_speed)
+	%AnimationSpeedSpinBox.set_value_no_signal(animation_image.data.animation_speed)
+	%AnimationSpeedSpinBox.get_line_edit().text = str(animation_image.data.animation_speed)
 	%FramesSpinBox.get_line_edit().text = str(len(animation_image.data.animation))
 	%FramesSpinBox.set_value_no_signal(len(animation_image.data.animation))
 	if "filename" in animation_image:
@@ -417,8 +418,9 @@ func _on_unk_0x_10_edit_text_changed(new_text: String) -> void:
 	animation_image.data.unk_0x10 = int(new_text)
 
 
-func _on_animation_speed_edit_text_changed(new_text: String) -> void:
-	animation_image.data.animation_speed = int(new_text)
+func _on_animation_speed_spin_box_value_changed(value: float) -> void:
+	animation_image.data.animation_speed = int(value)
+	%AnimationTextureRect.speed = value
 
 
 func _on_as_images_check_button_toggled(toggled_on: bool) -> void:

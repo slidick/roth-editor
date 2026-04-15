@@ -597,9 +597,11 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Speed"
 
-[node name="AnimationSpeedEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=1154590057]
+[node name="AnimationSpeedSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=1459382804]
 unique_name_in_owner = true
 layout_mode = 2
+max_value = 255.0
+rounded = true
 
 [node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1003809134]
 unique_name_in_owner = true
@@ -730,7 +732,7 @@ item_2/id = 2
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4/FramesSpinBox" to="." method="_on_frames_spin_box_value_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer/Unk0x0EEdit" to="." method="_on_unk_0x0e_edit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2/Unk0x10Edit" to="." method="_on_unk_0x_10_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3/AnimationSpeedEdit" to="." method="_on_animation_speed_edit_text_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3/AnimationSpeedSpinBox" to="." method="_on_animation_speed_spin_box_value_changed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/AsImagesCheckButton" to="." method="_on_as_images_check_button_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ImportSpriteSheetButton" to="." method="_on_import_sprite_sheet_button_pressed"]

@@ -2,6 +2,16 @@ extends TextureRect
 class_name AnimatedTextureRect
 
 var animated_image: AnimatedSprite2D
+var speed: int :
+	set(p_speed):
+		if p_speed == 0:
+			p_speed = 1
+		speed = p_speed
+		# Not very good approximation
+		var fps: int = roundi(0.05 * pow(speed,2) - 2.50 * speed + 30)
+		if fps < 0:
+			fps = 30
+		animated_image.sprite_frames.set_animation_speed("default", fps)
 
 
 func _ready() -> void:
@@ -15,7 +25,7 @@ func _ready() -> void:
 
 func set_data(animation_data: Dictionary, raw_palette: PackedByteArray) -> void:
 	animated_image.sprite_frames.clear_all()
-	animated_image.sprite_frames.set_animation_speed("default", 12)
+	speed = animation_data.animation_speed
 	if len(animation_data.animation) == 0:
 		return
 	var is_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
