@@ -86,6 +86,13 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			var fat_index: int = das[key][item_index].index
 			das[key][item_index] = owner.copied_data.duplicate(true)
 			das[key][item_index].index = fat_index
+			if "data" in das[key][item_index]:
+				if "animation" in das[key][item_index].data:
+					%ItemList.set_item_text(item_index, "%d - Animation" % das[key][item_index].index)
+				elif "image_pack" in das[key][item_index].data:
+					%ItemList.set_item_text(item_index, "%d - Pack" % das[key][item_index].index)
+				else:
+					%ItemList.set_item_text(item_index, "%d - Image" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		2:
 			if await Dialog.confirm("Clear selected data?", "Confirm", false, Vector2(400,200)):
@@ -95,6 +102,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].flags_2 = 0
 				das[key][item_index].erase("data")
 				das[key][item_index].erase("filename")
+				%ItemList.set_item_text(item_index, "%d" % das[key][item_index].index)
 				_on_item_list_item_selected(item_index)
 		3:
 			var raw_image := PackedByteArray()
@@ -110,7 +118,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 0
-			%ItemList.set_item_text(item_index, "%d - Image" % item_index)
+			%ItemList.set_item_text(item_index, "%d - Image" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		4:
 			var raw_image := PackedByteArray()
@@ -130,7 +138,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 1
-			%ItemList.set_item_text(item_index, "%d - Animation" % item_index)
+			%ItemList.set_item_text(item_index, "%d - Animation" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		5:
 			var raw_image := PackedByteArray()
