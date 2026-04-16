@@ -97,8 +97,10 @@ func update_selections() -> void:
 	if (object.data.unk0x07 & (1<<0)) > 0:
 		%RenderBillboardCheckBox.button_pressed = true
 		%RenderBillboardCheckBox.disabled = true
+		%RenderDirectionalCheckBox.disabled = true
 	else:
 		%RenderBillboardCheckBox.disabled = false
+		%RenderDirectionalCheckBox.disabled = false
 	
 	update_texture(object)
 	
@@ -283,8 +285,10 @@ func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
 			object.data.unk0x07 |= (1 << 0)
 			%RenderBillboardCheckBox.button_pressed = true
 			%RenderBillboardCheckBox.disabled = true
+			%RenderDirectionalCheckBox.disabled = true
 		else:
 			%RenderBillboardCheckBox.disabled = false
+			%RenderDirectionalCheckBox.disabled = false
 			object.data.unk0x07 &= ~(1 << 0)
 	%EditObjectTimer.start()
 
