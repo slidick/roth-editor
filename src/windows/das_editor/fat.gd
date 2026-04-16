@@ -12,8 +12,7 @@ func reset() -> void:
 	key = ""
 	%ItemList.clear()
 	%GenericContainer.reset()
-	%StandardImageContainer.hide()
-	%AnimationContainer.hide()
+	%EmptyContainer.show()
 
 
 func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
@@ -40,17 +39,17 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 
 
 func _on_item_list_item_selected(index: int) -> void:
-	%GenericContainer.hide()
-	%StandardImageContainer.hide()
-	%AnimationContainer.hide()
 	if "data" in das[key][index] and "raw_image" in das[key][index].data:
 		%StandardImageContainer.show()
 		%StandardImageContainer.load_image_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
 	elif "data" in das[key][index] and "animation" in das[key][index].data:
 		%AnimationContainer.show()
 		%AnimationContainer.load_animation_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
+	elif "data" in das[key][index] and "image_pack" in das[key][index].data:
+		%ImagePackContainer.show()
+		%ImagePackContainer.load_pack_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
 	elif das[key][index].size == 0:
-		pass
+		%EmptyContainer.show()
 	else:
 		%GenericContainer.show()
 		%GenericContainer.reset()
@@ -133,6 +132,33 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index].flags_2 = 1
 			%ItemList.set_item_text(item_index, "%d - Animation" % item_index)
 			_on_item_list_item_selected(item_index)
+		5:
+			var raw_image := PackedByteArray()
+			raw_image.resize(16*16)
+			var data := {
+				"modifier": 1 << 6,
+				"image_type": 0,
+				"width": 16,
+				"height": 16,
+				"pack_type": 64,
+				"offsets_index": [0],
+				"offsets_flipped": [false],
+				"image_pack": [
+					{
+						"modifier": 0,
+						"image_type": 0,
+						"width": 16,
+						"height": 16,
+						"raw_image": raw_image,
+					},
+				],
+			}
+			das[key][item_index]["offset"] = 1
+			das[key][item_index]["data"] = data
+			das[key][item_index].flags_1 = 0
+			das[key][item_index].flags_2 = 0
+			%ItemList.set_item_text(item_index, "%d - Pack" % das[key][item_index].index)
+			_on_item_list_item_selected(item_index)
 
 
 func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
@@ -144,9 +170,11 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 		if das[key][index].offset == 0:
 			%PopupMenu.set_item_disabled(3, false)
 			%PopupMenu.set_item_disabled(4, false)
+			%PopupMenu.set_item_disabled(5, false)
 		else:
 			%PopupMenu.set_item_disabled(3, true)
 			%PopupMenu.set_item_disabled(4, true)
+			%PopupMenu.set_item_disabled(5, true)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
 
 

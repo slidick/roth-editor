@@ -593,79 +593,83 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	
 	
 	# Parse as directional images
-	elif texture.modifier & MODIFIER.HALF_SIZE > 0 and texture.modifier & MODIFIER.IMAGE_PACK > 0:
-		file.seek(texture["offset"] + 32)
-		var alignment := file.get_position() & 0xF
-		var img_reference := file.get_8()
-		var _type := file.get_8()
-		var width := file.get_16()
-		var height := file.get_16()
-		
-		texture["image"] = []
-		while true:
-			var raw_img := file.get_buffer(width * height)
-			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
-			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
-			var image_texture := ImageTexture.create_from_image(img)
-			texture["image"].append(image_texture)
-			
-			var lower_ptr_4_bits := file.get_position() & 0xF
-			var pos := file.get_position()
-			if lower_ptr_4_bits > alignment:
-				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-			else:
-				pos = pos + (alignment - lower_ptr_4_bits)
-			file.seek(pos)
-			
-			var img_reference_new := file.get_8()
-			_type = file.get_8()
-			width = file.get_16()
-			height = file.get_16()
-			if img_reference != img_reference_new:
-				break
-	
-	# Parse as 3d object images pack
 	elif texture.modifier & MODIFIER.IMAGE_PACK > 0:
-		var numImgs := 0
-		while file.get_16() != 0:
-			numImgs += 1
-		numImgs -= 1
+		var size_of_offsets: int = file.get_8()
+		var pack_type: int = file.get_8()
+		if pack_type & 128 > 0:
+			var unique_offsets: Array = []
+			for i in range(size_of_offsets/2.0):
+				var offset: int = file.get_16()
+				if offset & 0x7FF not in unique_offsets:
+					unique_offsets.append(offset & 0x7FF)
+			file.seek(texture["offset"] + 32)
+			var alignment := file.get_position() & 0xF
+			texture["image"] = []
+			for i in range(len(unique_offsets)):
+				var _modifier := file.get_8()
+				var _type := file.get_8()
+				var width := file.get_16()
+				var height := file.get_16()
+				var raw_img := file.get_buffer(width * height)
+				if len(raw_img) == 0:
+					print(texture)
+				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
+				var image_texture := ImageTexture.create_from_image(img)
+				texture["image"].append(image_texture)
+				
+				var lower_ptr_4_bits := file.get_position() & 0xF
+				var pos := file.get_position()
+				if lower_ptr_4_bits > alignment:
+					pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+				else:
+					pos = pos + (alignment - lower_ptr_4_bits)
+				file.seek(pos)
+				
 		
-		while file.get_8() == 0:
-			pass
-		file.seek(file.get_position() - 2)
-		
-		var alignment := file.get_position() & 0xF
-		var _img_reference := file.get_8()
-		var _type := file.get_8()
-		var width := file.get_16()
-		var height := file.get_16()
-		texture["image"] = []
-		for j in range(numImgs):
-			#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
-			if width == 0:
-				continue
+		# Parse as 3d object images pack
+		else:
+			file.seek(file.get_position() - 2)
+			var numImgs := 0
+			while file.get_16() != 0:
+				numImgs += 1
+			numImgs -= 1
 			
-			var raw_img := file.get_buffer(width * height)
-			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
-			var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
-			var image_texture := ImageTexture.create_from_image(img)
-			texture["image"].append(image_texture)
+			while file.get_8() == 0:
+				pass
+			file.seek(file.get_position() - 2)
 			
-			var lower_ptr_4_bits := file.get_position() & 0xF
-			var pos := file.get_position()
-			if lower_ptr_4_bits > alignment:
-				pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
-			else:
-				pos = pos + (alignment - lower_ptr_4_bits)
-			file.seek(pos)
-			
-			_img_reference = file.get_8()
-			_type = file.get_8()
-			width = file.get_16()
-			height = file.get_16()
+			var alignment := file.get_position() & 0xF
+			var _img_reference := file.get_8()
+			var _type := file.get_8()
+			var width := file.get_16()
+			var height := file.get_16()
+			texture["image"] = []
+			for j in range(numImgs):
+				#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
+				if width == 0:
+					continue
+				
+				var raw_img := file.get_buffer(width * height)
+				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
+				var image_texture := ImageTexture.create_from_image(img)
+				texture["image"].append(image_texture)
+				
+				var lower_ptr_4_bits := file.get_position() & 0xF
+				var pos := file.get_position()
+				if lower_ptr_4_bits > alignment:
+					pos = pos + (alignment + 0x10 - lower_ptr_4_bits)
+				else:
+					pos = pos + (alignment - lower_ptr_4_bits)
+				file.seek(pos)
+				
+				_img_reference = file.get_8()
+				_type = file.get_8()
+				width = file.get_16()
+				height = file.get_16()
 	
 	# Parse as plain image
 	else:
@@ -1088,12 +1092,21 @@ static func _parse_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
 	
 	texture_data["image_pack"] = []
 	for _unique_offset: int in unique_offsets:
-		var header: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
-		var raw_img := file.get_buffer(header.width * header.height)
-		texture_data["image_pack"].append({"header": header, "raw_image": raw_img})
+		var sub_image_data: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
+		sub_image_data["raw_image"] = file.get_buffer(sub_image_data.width * sub_image_data.height)
+		texture_data["image_pack"].append(sub_image_data)
 		
 		while (starting_offset - file.get_position()) % 16 != 0:
 			file.get_8()
+	
+	unique_offsets.sort()
+	var offsets_mappings := {}
+	for i in range(len(unique_offsets)):
+		offsets_mappings[unique_offsets[i]] = i
+	
+	texture_data["offsets_index"] = []
+	for offset: int in texture_data.offsets:
+		texture_data.offsets_index.append(offsets_mappings[offset])
 	
 	return texture_data
 
@@ -1500,15 +1513,24 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 				if "image_pack" in entry.data:
 					var starting_offset: int = size
 					size += 8 # Header
-					size += (2*len(entry.data.offsets)) # Additional header
-					size += 8
+					size += (2*len(entry.data.image_pack)) # Offsets
+					size += 8 # Padding
 					while (size-starting_offset) % 16 != 0:
 						size += 1
-					for sub_image: Dictionary in entry.data.image_pack:
+					entry.data.offsets = []
+					var offsets_mappings := {}
+					for i in range(len(entry.data.image_pack)):
+						var sub_image: Dictionary = entry.data.image_pack[i]
+						offsets_mappings[i] = int((size - starting_offset) / 16.0)
+						if entry.data.pack_type & 128 == 0:
+							entry.data.offsets.append(int((size - starting_offset) / 16.0))
 						size += 6 # Sub-image header
 						size += len(sub_image.raw_image)
 						while (size-starting_offset) % 16 != 0:
 							size += 1
+					if entry.data.pack_type & 128 > 0:
+						for index: int in entry.data.offsets_index:
+							entry.data.offsets.append(offsets_mappings[index])
 					if size % 2 != 0:
 						size += 1
 				if "num_vertices" in entry.data:
@@ -1754,10 +1776,10 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 					pos += 1
 					size += 1
 				for sub_image: Dictionary in entry.data.image_pack:
-					data.encode_u8(pos, sub_image.header.modifier)
-					data.encode_u8(pos+1, sub_image.header.image_type)
-					data.encode_u16(pos+2, sub_image.header.width)
-					data.encode_u16(pos+4, sub_image.header.height)
+					data.encode_u8(pos, sub_image.modifier)
+					data.encode_u8(pos+1, sub_image.image_type)
+					data.encode_u16(pos+2, sub_image.width)
+					data.encode_u16(pos+4, sub_image.height)
 					pos += 6
 					size += 6
 					for byte: int in sub_image.raw_image:

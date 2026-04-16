@@ -4,6 +4,9 @@
 [ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_fvdbs"]
 [ext_resource type="PackedScene" uid="uid://dh4pvj0xqsi7t" path="res://src/windows/das_editor/standard_image_container.tscn" id="3_6706r"]
 [ext_resource type="PackedScene" uid="uid://tvrovuq6tp52" path="res://src/windows/das_editor/animation_container.tscn" id="4_sfrjw"]
+[ext_resource type="PackedScene" uid="uid://b6e3t04mabre1" path="res://src/windows/das_editor/image_pack_container.tscn" id="5_26r83"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_26r83"]
 
 [node name="Fat" type="MarginContainer" unique_id=1097178025]
 anchors_preset = 15
@@ -37,7 +40,7 @@ allow_rmb_select = true
 
 [node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=427259160]
 unique_name_in_owner = true
-item_count = 5
+item_count = 6
 item_0/text = "Copy"
 item_0/id = 0
 item_1/text = "Paste"
@@ -48,12 +51,21 @@ item_3/text = "Init as Standard Image"
 item_3/id = 3
 item_4/text = "Init as Animation"
 item_4/id = 4
+item_5/text = "Init as Image Pack"
+item_5/id = 5
 
 [node name="FindEmptyButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=2069763857]
 layout_mode = 2
 text = "Find Next Empty"
 
-[node name="GenericContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1051257041]
+[node name="TabContainer" type="TabContainer" parent="HBoxContainer" unique_id=1195910988]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_26r83")
+current_tab = 4
+tabs_visible = false
+
+[node name="GenericContainer" type="MarginContainer" parent="HBoxContainer/TabContainer" unique_id=1051257041]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -63,24 +75,39 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("2_fvdbs")
+metadata/_tab_index = 0
 
-[node name="StandardImageContainer" parent="HBoxContainer" unique_id=1890185046 instance=ExtResource("3_6706r")]
+[node name="StandardImageContainer" parent="HBoxContainer/TabContainer" unique_id=1890185046 instance=ExtResource("3_6706r")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="AnimationContainer" parent="HBoxContainer/TabContainer" unique_id=1237815482 instance=ExtResource("4_sfrjw")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ImagePackContainer" parent="HBoxContainer/TabContainer" unique_id=914254406 instance=ExtResource("5_26r83")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="AnimationContainer" parent="HBoxContainer" unique_id=1237815482 instance=ExtResource("4_sfrjw")]
+[node name="EmptyContainer" type="Control" parent="HBoxContainer/TabContainer" unique_id=1274779725]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
+metadata/_tab_index = 4
 
 [connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="index_pressed" from="HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FindEmptyButton" to="." method="_on_find_empty_button_pressed"]
-[connection signal="jump_to_collision_pressed" from="HBoxContainer/GenericContainer" to="." method="_on_jump_to_collision_pressed"]
-[connection signal="jump_to_filename_pressed" from="HBoxContainer/GenericContainer" to="." method="_on_jump_to_filename_pressed"]
-[connection signal="jump_to_collision_pressed" from="HBoxContainer/StandardImageContainer" to="." method="_on_jump_to_collision_pressed"]
-[connection signal="jump_to_filename_pressed" from="HBoxContainer/StandardImageContainer" to="." method="_on_jump_to_filename_pressed"]
-[connection signal="jump_to_collision_pressed" from="HBoxContainer/AnimationContainer" to="." method="_on_jump_to_collision_pressed"]
-[connection signal="jump_to_filename_pressed" from="HBoxContainer/AnimationContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/GenericContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/GenericContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/StandardImageContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/StandardImageContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/AnimationContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/AnimationContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/ImagePackContainer" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/ImagePackContainer" to="." method="_on_jump_to_filename_pressed"]

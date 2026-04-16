@@ -155,7 +155,8 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Flag 1"
+disabled = true
+text = "Animation"
 
 [node name="Flags2CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=1408430778]
 unique_name_in_owner = true
