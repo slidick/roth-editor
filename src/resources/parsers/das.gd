@@ -918,7 +918,7 @@ static func _parse_standard_image(file: FileAccess, is_ademo: bool) -> Dictionar
 		file.seek(file.get_position()-4)
 		texture_data.shift_data = []
 		for i in range(2):
-			texture_data.shift_data.append(file.get_16())
+			texture_data.shift_data.append(Parser.unsigned16_to_signed(file.get_16()))
 	texture_data.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
 	if texture_data.width == 0 or texture_data.height == 0:
 		print("ZERO WIDTH OR HEIGHT")
@@ -938,7 +938,7 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 		file.seek(file.get_position()-4)
 		texture_data.shift_data = []
 		for i in range(2):
-			texture_data.shift_data.append(file.get_16())
+			texture_data.shift_data.append(Parser.unsigned16_to_signed(file.get_16()))
 	var start_offset: int = file.get_position()
 	texture_data.merge(Parser.parse_section(file, IMAGE_COMPRESSED_1_HEADER))
 	if texture_data.num_sub_images != 0xFFFE:
@@ -1071,7 +1071,7 @@ static func _parse_image_pack(file: FileAccess, is_ademo: bool) -> Dictionary:
 		file.seek(file.get_position()-4)
 		texture_data.shift_data = []
 		for i in range(2):
-			texture_data.shift_data.append(file.get_16())
+			texture_data.shift_data.append(Parser.unsigned16_to_signed(file.get_16()))
 	
 	var starting_offset: int = file.get_position()
 	
@@ -1120,7 +1120,7 @@ static func _parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
 		file.seek(file.get_position()-4)
 		object_data.shift_data = []
 		for i in range(2):
-			object_data.shift_data.append(file.get_16())
+			object_data.shift_data.append(Parser.unsigned16_to_signed(file.get_16()))
 	
 	object_data.merge(Parser.parse_section(file, THREE_DIMENSIONAL_OBJECT_HEADER))
 	
@@ -1684,7 +1684,7 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 			if "shift_data" in entry.data:
 				#pos -= 4
 				for word: int in entry.data.shift_data:
-					data.encode_u16(pos, word)
+					data.encode_s16(pos, word)
 					pos += 2
 			if "raw_image" in entry.data:
 				data.encode_u8(pos, entry.data.modifier)
