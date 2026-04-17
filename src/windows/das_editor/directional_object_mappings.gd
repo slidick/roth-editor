@@ -59,7 +59,14 @@ func _on_item_list_item_clicked(_index: int, at_position: Vector2, mouse_button_
 func _on_popup_menu_index_pressed(index: int) -> void:
 	match index:
 		0:
-			print("DELETE")
+			var selected: int = %ItemList.get_selected_items()[0]
+			das[key].pop_at(selected)
+			%ItemList.remove_item(selected)
+			%ItemList.clear()
+			%Container.hide()
+			for i in range(len(das[key])):
+				var idx: int = %ItemList.add_item(str(i))
+				%ItemList.set_item_metadata(idx, das[key][i])
 
 
 func _on_item_list_item_selected(index: int) -> void:
