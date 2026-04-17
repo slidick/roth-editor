@@ -1,0 +1,154 @@
+[gd_scene format=3 uid="uid://dr1767uott2uo"]
+
+[ext_resource type="Script" uid="uid://bb4hmtbc2qda4" path="res://src/windows/das_editor/directional_container.gd" id="1_3ddx1"]
+
+[node name="DirectionalContainer" type="MarginContainer" unique_id=1578364445]
+offset_right = 656.0
+offset_bottom = 428.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_3ddx1")
+metadata/_tab_index = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1481438144]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1566611860]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=929841863]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Name"
+
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=428552880]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="JumpToFilenameButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=268841546]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump to Filename"
+
+[node name="AddFilenameButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1503383875]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add Filename"
+
+[node name="JumpToObjectCollisionButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=94993147]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump to Object Collision"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1399114354]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=770358838]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=521239725]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Flags 1"
+
+[node name="Flags1Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=64993370]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=6872688]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flags1CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1434105680]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 1"
+
+[node name="Flags1CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1792571454]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Sky"
+
+[node name="Flags1CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=770835173]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Monster"
+
+[node name="Flags1CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1197169268]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 4"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1365841034]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Flags1CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=406231732]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 5"
+
+[node name="Flags1CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=4840664]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+disabled = true
+text = "Directional"
+
+[node name="Flags1CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=932243398]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 7"
+
+[node name="Flags1CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=167730764]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Flag 8"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1138120108]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=470020483]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=5755003]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Directional Object Index"
+
+[node name="Flags2SpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=844142203]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+rounded = true
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/AddFilenameButton" to="." method="_on_add_filename_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToObjectCollisionButton" to="." method="_on_jump_to_object_collision_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/HBoxContainer/Flags1Edit" to="." method="_on_flags_1_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox1" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox2" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox3" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox4" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox5" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox6" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox7" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox8" to="." method="_on_flags_1_check_box_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/HBoxContainer2/Flags2SpinBox" to="." method="_on_flags_2_spin_box_value_changed"]

@@ -30,7 +30,7 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 				fat_name += "  -  Animation"
 			if "image_pack" in das[key][i].data:
 				fat_name += "  -  Pack"
-		if das[key][i].flags_1 & 32 > 0 and das[key][i].flags_1 & 4 > 0 :
+		if das[key][i].flags_1 & 32 > 0 and das[key][i].flags_1 & 4 > 0:
 			fat_name += "  -  Monster"
 		elif das[key][i].flags_1 & 32 > 0:
 			fat_name += "  -  Directional"
@@ -48,6 +48,9 @@ func _on_item_list_item_selected(index: int) -> void:
 	elif "data" in das[key][index] and "image_pack" in das[key][index].data:
 		%ImagePackContainer.show()
 		%ImagePackContainer.load_pack_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
+	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 == 0:
+		%DirectionalContainer.show()
+		%DirectionalContainer.load_directional_data(das[key][index], das.directional_object_mappings, das.raw_palette, true if key == "fat_3" else false)
 	elif das[key][index].size == 0:
 		%EmptyContainer.show()
 	else:
@@ -169,6 +172,21 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 0
 			%ItemList.set_item_text(item_index, "%d - Pack" % das[key][item_index].index)
+			_on_item_list_item_selected(item_index)
+		6:
+			das[key][item_index]["offset"] = 1
+			das[key][item_index]["size"] = 1
+			das[key][item_index].flags_1 = 32
+			das[key][item_index].flags_2 = 0
+			var filename := {
+				"name": "NEW_DIRECTIONAL",
+				"desc": "",
+			}
+			if name == "Fat1" or name == "Fat2":
+				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
+			else:
+				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
+			%ItemList.set_item_text(item_index, "%d - Directional" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 
 
