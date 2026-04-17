@@ -80,7 +80,7 @@ func _on_item_list_item_selected(index: int) -> void:
 
 
 func _on_save_button_pressed() -> void:
-	Settings.update_settings("texture_presets", {das.das_file: texture_data})
+	Settings.update_settings("texture_presets", {das.das_info.name: texture_data})
 	toggle(false)
 	done.emit(true)
 
