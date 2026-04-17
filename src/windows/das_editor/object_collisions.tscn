@@ -23,6 +23,7 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 focus_neighbor_top = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
+allow_reselect = true
 
 [node name="Container" type="MarginContainer" parent="HBoxContainer" unique_id=653733156]
 unique_name_in_owner = true
@@ -63,7 +64,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="HBoxContainer/Container/VBoxContainer/RegularContainer" unique_id=1354719994]
 custom_minimum_size = Vector2(210, 0)
 layout_mode = 2
-text = "Width:"
+text = "Radius:"
 
 [node name="WidthEdit" type="LineEdit" parent="HBoxContainer/Container/VBoxContainer/RegularContainer" unique_id=1285088359]
 unique_name_in_owner = true

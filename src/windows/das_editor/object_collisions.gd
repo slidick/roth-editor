@@ -43,6 +43,12 @@ func _on_item_list_item_selected(index: int) -> void:
 			%WidthParallelEdit.text = "%d" % (int(data.raw_data & 4278190080) >> 24)
 			%"3DObjectContainer".show()
 			%RegularContainer.hide()
+	elif das.fat_3[index].flags_1 & 32 > 0:
+		%Container.show()
+		%"3DObjectContainer".hide()
+		%RegularContainer.show()
+		%HeightEdit.text = "%d" % int(data.raw_data & 65535)
+		%WidthEdit.text = "%d" % (int(data.raw_data & 4294901760) >> 16)
 	else:
 		%Container.hide()
 
