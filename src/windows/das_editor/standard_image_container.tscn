@@ -375,6 +375,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=932247721]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 20
@@ -382,6 +383,46 @@ theme_override_constants/separation = 20
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=456699821]
 layout_mode = 2
 text = "Standard Image"
+horizontal_alignment = 1
+
+[node name="ShiftDataContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1252343144]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer" unique_id=515180417]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer" unique_id=183600387]
+layout_mode = 2
+text = "Shift X"
+
+[node name="ShiftXSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer" unique_id=1724777220]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -32768.0
+max_value = 32767.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer" unique_id=647053771]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2" unique_id=1737143909]
+layout_mode = 2
+text = "Shift Y"
+
+[node name="ShiftYSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2" unique_id=647812168]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -32768.0
+max_value = 32767.0
+rounded = true
+
+[node name="ShowShiftCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer" unique_id=1801607413]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Show Shift"
 
 [node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1693324728]
 unique_name_in_owner = true
@@ -474,6 +515,9 @@ text = "Edit Image"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox6" to="." method="_on_image_type_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox7" to="." method="_on_image_type_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4/ImageTypeCheckBox8" to="." method="_on_image_type_check_box_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer/ShiftXSpinBox" to="." method="_on_shift_x_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2/ShiftYSpinBox" to="." method="_on_shift_y_spin_box_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/ShowShiftCheckButton" to="." method="_on_show_shift_check_button_pressed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
 [connection signal="gui_input" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
 [connection signal="index_pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/PopupMenu" to="." method="_on_popup_menu_index_pressed"]

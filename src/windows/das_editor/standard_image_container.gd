@@ -40,6 +40,13 @@ func load_image_data(p_standard_image: Dictionary, p_raw_palette: Array = [], is
 	
 	# Texture
 	update_texture()
+	
+	if "shift_data" in standard_image.data:
+		%ShiftDataContainer.show()
+		%ShiftXSpinBox.set_value_no_signal(standard_image.data.shift_data[0])
+		%ShiftYSpinBox.set_value_no_signal(standard_image.data.shift_data[1])
+	else:
+		%ShiftDataContainer.hide()
 
 
 func update_flags_1_checkboxes() -> void:
@@ -178,6 +185,14 @@ func update_texture() -> void:
 	var is_transparent: bool = standard_image.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or standard_image.data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
 	var is_fully_transparent: bool = standard_image.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
 	var image: Image = Image.create_from_data(standard_image.data.width, standard_image.data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, standard_image.data.raw_image, is_transparent, is_fully_transparent))
+	
+	
+	if "shift_data" in standard_image.data and %ShowShiftCheckButton.button_pressed:
+		var x: int = standard_image.data.width - 1 + (-1 * standard_image.data.shift_data[1]) / 2
+		var y: int = roundi(standard_image.data.height / 2) + (-1 * standard_image.data.shift_data[0]) / 2
+		if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+			image.set_pixel(x, y, Color.RED)
+	
 	var image_texture := ImageTexture.create_from_image(image)
 	%TextureRect.texture = image_texture
 	update_dimension()
@@ -301,3 +316,17 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			else:
 				standard_image.data.raw_image = Utility.flip_raw_image_vertical(standard_image.data.raw_image, standard_image.data.width, standard_image.data.height)
 			update_texture()
+
+
+func _on_shift_x_spin_box_value_changed(value: float) -> void:
+	standard_image.data.shift_data[0] = int(value)
+	update_texture()
+
+
+func _on_shift_y_spin_box_value_changed(value: float) -> void:
+	standard_image.data.shift_data[1] = int(value)
+	update_texture()
+
+
+func _on_show_shift_check_button_pressed() -> void:
+	update_texture()

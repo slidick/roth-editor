@@ -51,6 +51,13 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	#update_image_type_2_checkboxes()
 	
 	update_texture()
+	
+	if "shift_data" in animation_image.data:
+		%ShiftDataContainer.show()
+		%ShiftXSpinBox.set_value_no_signal(animation_image.data.shift_data[0])
+		%ShiftYSpinBox.set_value_no_signal(animation_image.data.shift_data[1])
+	else:
+		%ShiftDataContainer.hide()
 
 
 func update_flags_1_checkboxes() -> void:
@@ -252,7 +259,7 @@ func update_image_type_2_from_checkboxes() -> void:
 
 
 func update_texture() -> void:
-	%AnimationTextureRect.set_data(animation_image.data, raw_palette)
+	%AnimationTextureRect.set_data(animation_image.data, raw_palette, animation_image.data.shift_data if "shift_data" in animation_image.data else [])
 	update_dimension()
 	
 	for child: Node in %ImagesContainer.get_children():
@@ -265,6 +272,12 @@ func update_texture() -> void:
 		
 		var raw_img: PackedByteArray = animation_image.data.animation[i]
 		var image: Image = Image.create_from_data(animation_image.data.width, animation_image.data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, raw_img, is_transparent, is_fully_transparent))
+		
+		if "shift_data" in animation_image.data and %ShowShiftCheckButton.button_pressed:
+			var x: int = animation_image.data.width - 1 + (-1 * animation_image.data.shift_data[1]) / 2
+			var y: int = roundi(animation_image.data.height / 2) + (-1 * animation_image.data.shift_data[0]) / 2
+			if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+				image.set_pixel(x, y, Color.RED)
 		var image_texture := ImageTexture.create_from_image(image)
 		
 		var texture_rect := TextureRect.new()
@@ -526,3 +539,17 @@ func _on_animation_popup_menu_index_pressed(index: int) -> void:
 func _on_animation_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 		%AnimationPopupMenu.popup(Rect2(event.global_position.x, event.global_position.y, 0, 0))
+
+
+func _on_shift_x_spin_box_value_changed(value: float) -> void:
+	animation_image.data.shift_data[0] = int(value)
+	update_texture()
+
+
+func _on_shift_y_spin_box_value_changed(value: float) -> void:
+	animation_image.data.shift_data[1] = int(value)
+	update_texture()
+
+
+func _on_show_shift_check_button_pressed() -> void:
+	update_texture()
