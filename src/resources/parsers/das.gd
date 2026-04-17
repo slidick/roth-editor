@@ -725,6 +725,8 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		file.seek(das.header.img_fat_offset + (index*8))
 		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
+		if "data" in data:
+			data.data.erase("shift_data")
 		das["fat_1"].append(data)
 		index += 1
 
@@ -733,6 +735,8 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		file.seek(das.header.img_fat_offset + (index*8))
 		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
+		if "data" in data:
+			data.data.erase("shift_data")
 		das["fat_2"].append(data)
 		index += 1
 
@@ -741,6 +745,8 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		file.seek(das.header.img_fat_offset + (index*8))
 		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
 		data.index = index
+		if "data" in data:
+			data.data.erase("shift_data")
 		das["fat_3"].append(data)
 		index += 1
 
@@ -1551,7 +1557,7 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 		
 		total_size += size
 		
-		if is_ademo and size != 0:
+		if is_ademo and size != 0 and "shift_data" in entry.data:
 			total_size += 4
 			entry.offset += 4
 		
@@ -1661,7 +1667,7 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 	var size: int = 0
 	if entry.offset != 0:
 		#pos = entry.offset
-		if is_ademo:
+		if is_ademo and "data" in entry and "shift_data" in entry.data:
 			assert(pos == entry.offset-4)
 		else:
 			assert(pos == entry.offset)
