@@ -53,6 +53,9 @@ func _on_item_list_item_selected(index: int) -> void:
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 == 0:
 		%DirectionalContainer.show()
 		%DirectionalContainer.load_directional_data(das[key][index], das.directional_object_mappings, das.raw_palette, true if key == "fat_3" else false)
+	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 > 0:
+		%MonsterContainer.show()
+		%MonsterContainer.load_monster_data(das[key][index], das.monster_mappings, das.raw_palette, true if key == "fat_3" else false)
 	elif das[key][index].size == 0:
 		%EmptyContainer.show()
 	else:
@@ -222,6 +225,21 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			else:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Directional" % das[key][item_index].index)
+			_on_item_list_item_selected(item_index)
+		7:
+			das[key][item_index]["offset"] = 1
+			das[key][item_index]["size"] = 1
+			das[key][item_index].flags_1 = 36
+			das[key][item_index].flags_2 = 0
+			var filename := {
+				"name": "NEW_MONSTER",
+				"desc": "",
+			}
+			if name == "Fat1" or name == "Fat2":
+				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
+			else:
+				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
+			%ItemList.set_item_text(item_index, "%d - Monster" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 
 

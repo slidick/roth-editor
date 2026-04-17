@@ -61,6 +61,8 @@ func update_data() -> void:
 			data.raw_data = int(%HeightEdit.text) + (int(%WidthEdit.text) << 16)
 		else:
 			data.raw_data = int(%Unk0x00Edit.text) + (int(%HeightEdit.text) << 8) + (int(%WidthPerpendicularEdit.text) << 16) + (int(%WidthParallelEdit.text) << 24)
+	else:
+		data.raw_data = int(%HeightEdit.text) + (int(%WidthEdit.text) << 16)
 
 
 func _on_height_edit_text_changed(_new_text: String) -> void:
