@@ -86,6 +86,7 @@ func _on_unk_0x_00_edit_text_changed(_new_text: String) -> void:
 func select(index: int) -> void:
 	%ItemList.select(index)
 	_on_item_list_item_selected(index)
+	%ItemList.ensure_current_is_visible()
 
 
 func _on_jump_to_object_button_pressed() -> void:
