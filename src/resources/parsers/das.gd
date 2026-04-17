@@ -877,18 +877,21 @@ static func _parse_palette_shading(file: FileAccess, offset: int) -> Array:
 
 static func _parse_fat(file: FileAccess, is_ademo: bool, index: int) -> Dictionary:
 	var entry: Dictionary = Parser.parse_section(file, FAT_ENTRY)
-	if entry.offset != 0:
-		file.seek(entry.offset)
+	if entry.size != 0:
 		if (entry.flags_1 & 32) > 0:
-			if is_ademo:
-				entry.shift_data = []
-				file.seek(file.get_position() - 4)
-				for i in range(2):
-					entry.shift_data.append(file.get_16())
-			entry["raw_data"] = file.get_buffer(entry.size*2)
+			pass
+			#if is_ademo:
+				#entry.shift_data = []
+				#file.seek(file.get_position() - 4)
+				#for i in range(2):
+					#entry.shift_data.append(file.get_16())
+			#entry["raw_data"] = file.get_buffer(entry.size*2)
 			
-		else:
+		elif entry.offset > 0:
+			file.seek(entry.offset)
 			entry["data"] = _parse_image(file, is_ademo, index)
+		else:
+			assert(false)
 	return entry
 
 
@@ -1476,17 +1479,19 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) -> int:
 	for entry: Dictionary in fat:
 		var size: int = 0
-		if entry.offset != 0:
-			#if entry.flags_1 & 32 > 0:
+		if entry.size != 0:
+			if entry.flags_1 & 32 > 0:
 				#print(entry.index)
-				#entry.offset = 0
-				#continue
-			entry.offset = total_size
-			if "raw_data" in entry:
-				size += len(entry.raw_data)
-				if size % 2 != 0:
-					size += 1
+				entry.offset = 0
+				entry.size = 4
+				continue
+			
+			#if "raw_data" in entry:
+				#size += len(entry.raw_data)
+				#if size % 2 != 0:
+					#size += 1
 			if "data" in entry:
+				entry.offset = total_size
 				if "raw_image" in entry.data:
 					size += 6  # Header
 					size += len(entry.data.raw_image)
@@ -1551,12 +1556,12 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 			entry.offset += 4
 		
 		if entry.offset != 0:
-			if "raw_data" in entry:
-				#if entry.size != size >> 1:
-					#print("ERROR SIZE: ", entry.index)
-				#else:
-					entry.size = size >> 1
-			elif "data" in entry:
+			#if "raw_data" in entry:
+				##if entry.size != size >> 1:
+					##print("ERROR SIZE: ", entry.index)
+				##else:
+					#entry.size = size >> 1
+			if "data" in entry:
 				if "animation" in entry.data or "animation_2" in entry.data:
 					#if entry.size != size >>4:
 						#print("ERROR SIZE: ", entry.index)
@@ -1661,21 +1666,21 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 		else:
 			assert(pos == entry.offset)
 		
-		if "raw_data" in entry:
-			if "shift_data" in entry:
-				#pos -= 4
-				for word: int in entry.shift_data:
-					data.encode_u16(pos, word)
-					pos += 2
-			for byte: int in entry.raw_data:
-				data.encode_u8(pos, byte)
-				pos += 1
-				size += 1
-			if size % 2 != 0:
-				pos += 1
-				size += 1
+		#if "raw_data" in entry:
+			#if "shift_data" in entry:
+				##pos -= 4
+				#for word: int in entry.shift_data:
+					#data.encode_u16(pos, word)
+					#pos += 2
+			#for byte: int in entry.raw_data:
+				#data.encode_u8(pos, byte)
+				#pos += 1
+				#size += 1
+			#if size % 2 != 0:
+				#pos += 1
+				#size += 1
 		
-		elif "data" in entry:
+		if "data" in entry:
 			if "shift_data" in entry.data:
 				#pos -= 4
 				for word: int in entry.data.shift_data:

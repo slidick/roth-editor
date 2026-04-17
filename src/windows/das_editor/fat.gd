@@ -115,6 +115,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				"raw_image": raw_image,
 			}
 			das[key][item_index]["offset"] = 1
+			das[key][item_index]["size"] = 1
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 0
@@ -135,6 +136,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				"offsets_array": [],
 			}
 			das[key][item_index]["offset"] = 1
+			das[key][item_index]["size"] = 1
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 1
@@ -162,6 +164,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				],
 			}
 			das[key][item_index]["offset"] = 1
+			das[key][item_index]["size"] = 1
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 0
