@@ -899,7 +899,9 @@ func select_resource(resource: Variant, deselect_others: bool = true, update_sel
 	%DrawModeContainer.hide()
 	if not resource:
 		selected_faces.clear()
+		hovered_face = null
 		selected_sectors.clear()
+		hovered_sector = null
 		selected_objects.clear()
 		selected_sfx.clear()
 		selected_vertex_nodes.clear()
