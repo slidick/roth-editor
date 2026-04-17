@@ -33,11 +33,13 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	%FramesSpinBox.get_line_edit().text = str(len(animation_image.data.animation))
 	%FramesSpinBox.set_value_no_signal(len(animation_image.data.animation))
 	if "filename" in animation_image:
-		%NameEdit.text = "%s (%s)" % [animation_image.filename.name, animation_image.filename.desc]
+		%NameEdit.text = animation_image.filename.name
+		%DescriptionEdit.text = animation_image.filename.desc
 		%JumpToFilenameButton.show()
 		%AddFilenameButton.hide()
 	else:
 		%NameEdit.text = "No Name Set"
+		%DescriptionEdit.text = ""
 		%JumpToFilenameButton.hide()
 		%AddFilenameButton.show()
 	
@@ -322,6 +324,14 @@ func update_dimension() -> void:
 		%DimensionLabel.text = "%s x %s" % [animation_image.data.height, animation_image.data.width]
 	else:
 		%DimensionLabel.text = "%s x %s" % [animation_image.data.width, animation_image.data.height]
+
+
+func _on_name_edit_text_changed(new_text: String) -> void:
+	animation_image.filename.name = new_text
+
+
+func _on_description_edit_text_changed(new_text: String) -> void:
+	animation_image.filename.desc = new_text
 
 
 func _on_jump_to_filename_button_pressed() -> void:

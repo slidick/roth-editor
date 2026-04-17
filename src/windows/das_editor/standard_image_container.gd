@@ -23,11 +23,13 @@ func load_image_data(p_standard_image: Dictionary, p_raw_palette: Array = [], is
 	%ModifierEdit.text = str(standard_image.data.modifier)
 	%ImageTypeEdit.text = str(standard_image.data.image_type)
 	if "filename" in standard_image:
-		%NameEdit.text = "%s (%s)" % [standard_image.filename.name, standard_image.filename.desc]
+		%NameEdit.text = standard_image.filename.name
+		%DescriptionEdit.text = standard_image.filename.desc
 		%JumpToFilenameButton.show()
 		%AddFilenameButton.hide()
 	else:
 		%NameEdit.text = "No Name Set"
+		%DescriptionEdit.text = ""
 		%JumpToFilenameButton.hide()
 		%AddFilenameButton.show()
 	
@@ -193,6 +195,14 @@ func _on_edit_image_button_pressed() -> void:
 	if not new_texture.is_empty():
 		standard_image.data = new_texture
 		update_texture()
+
+
+func _on_name_edit_text_changed(new_text: String) -> void:
+	standard_image.filename.name = new_text
+
+
+func _on_description_edit_text_changed(new_text: String) -> void:
+	standard_image.filename.desc = new_text
 
 
 func _on_jump_to_filename_button_pressed() -> void:

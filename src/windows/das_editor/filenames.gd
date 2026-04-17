@@ -34,13 +34,17 @@ func select(filename: Dictionary) -> bool:
 	return false
 
 
-func _on_add_button_pressed(fat_index: int = 0) -> Dictionary:
+func _on_add_button_pressed(fat_index: int = 0, p_info: Dictionary = {}) -> Dictionary:
 	var filename_info := {
 		"name": "NAME",
 		"desc": "Description",
 		"index": fat_index,
 		"size": 21,
 	}
+	if not p_info.is_empty():
+		filename_info.name = p_info.name
+		filename_info.desc = p_info.desc
+		filename_info.size = 4 + len(p_info.name) + len(p_info.desc)
 	das[key].append(filename_info)
 	var idx: int = %ItemList.add_item(filename_info.name)
 	%ItemList.set_item_metadata(idx, filename_info)
@@ -67,6 +71,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 func _on_item_list_item_selected(index: int) -> void:
 	%FilenamesContainer.show()
 	var filename_info: Dictionary = %ItemList.get_item_metadata(index)
+	%ItemList.set_item_text(index, filename_info.name)
 	%IndexEdit.text = str(filename_info.index)
 	%NameEdit.text = str(filename_info.name)
 	%DescEdit.text = str(filename_info.desc)

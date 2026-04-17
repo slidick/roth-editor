@@ -31,7 +31,17 @@ text = "Name"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-editable = false
+size_flags_stretch_ratio = 0.5
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=121915607]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Description"
+
+[node name="DescriptionEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=2091491892]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="JumpToFilenameButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=2091085642]
 unique_name_in_owner = true
@@ -613,6 +623,8 @@ item_1/id = 1
 item_2/text = "Delete"
 item_2/id = 2
 
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/NameEdit" to="." method="_on_name_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DescriptionEdit" to="." method="_on_description_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/AddFilenameButton" to="." method="_on_add_filename_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToObjectCollisionButton" to="." method="_on_jump_to_object_collision_button_pressed"]

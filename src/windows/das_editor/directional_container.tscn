@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://bb4hmtbc2qda4" path="res://src/windows/das_editor/directional_container.gd" id="1_3ddx1"]
 
 [node name="DirectionalContainer" type="MarginContainer" unique_id=1578364445]
-offset_right = 656.0
-offset_bottom = 428.0
+offset_right = 1477.0
+offset_bottom = 763.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -27,7 +27,17 @@ text = "Name"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-editable = false
+size_flags_stretch_ratio = 0.5
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1812738277]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Description"
+
+[node name="DescriptionEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=140034800]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="JumpToFilenameButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=268841546]
 unique_name_in_owner = true
@@ -139,6 +149,8 @@ layout_mode = 2
 size_flags_vertical = 4
 rounded = true
 
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/NameEdit" to="." method="_on_name_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DescriptionEdit" to="." method="_on_description_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/AddFilenameButton" to="." method="_on_add_filename_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToObjectCollisionButton" to="." method="_on_jump_to_object_collision_button_pressed"]

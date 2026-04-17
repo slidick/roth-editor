@@ -24,11 +24,13 @@ func load_pack_data(p_pack_data: Dictionary, p_raw_palette: Array = [], is_fat_3
 	%ModifierEdit.text = str(pack_data.data.modifier)
 	%ImageTypeEdit.text = str(pack_data.data.image_type)
 	if "filename" in pack_data:
-		%NameEdit.text = "%s (%s)" % [pack_data.filename.name, pack_data.filename.desc]
+		%NameEdit.text = pack_data.filename.name
+		%DescriptionEdit.text = pack_data.filename.desc
 		%JumpToFilenameButton.show()
 		%AddFilenameButton.hide()
 	else:
 		%NameEdit.text = "No Name Set"
+		%DescriptionEdit.text = ""
 		%JumpToFilenameButton.hide()
 		%AddFilenameButton.show()
 	
@@ -348,6 +350,14 @@ func update_dimensions() -> void:
 		%DimensionLabel.text = "%s x %s" % [pack_data.data.height, pack_data.data.width]
 	else:
 		%DimensionLabel.text = "%s x %s" % [pack_data.data.width, pack_data.data.height]
+
+
+func _on_name_edit_text_changed(new_text: String) -> void:
+	pack_data.filename.name = new_text
+
+
+func _on_description_edit_text_changed(new_text: String) -> void:
+	pack_data.filename.desc = new_text
 
 
 func _on_jump_to_filename_button_pressed() -> void:

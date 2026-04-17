@@ -265,7 +265,6 @@ func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray) -> V
 
 func copy_data(p_data: Dictionary) -> void:
 	copied_data = p_data.duplicate(true)
-	copied_data.erase("filename")
 
 
 func _on_jump_to_collision_pressed(index: int) -> void:
@@ -289,15 +288,15 @@ func _on_jump_to_filename_pressed(filename: Dictionary) -> void:
 		_on_section_item_list_item_selected(14)
 
 
-func _on_add_filename_pressed(filename_index: int, fat_index: int) -> Dictionary:
+func _on_add_filename_pressed(filename_index: int, fat_index: int, info: Dictionary = {}) -> Dictionary:
 	if filename_index == 1:
-		%SectionItemList.select(13)
-		_on_section_item_list_item_selected(13)
-		return %Filenames1._on_add_button_pressed(fat_index)
+		#%SectionItemList.select(13)
+		#_on_section_item_list_item_selected(13)
+		return %Filenames1._on_add_button_pressed(fat_index, info)
 	else:
-		%SectionItemList.select(14)
-		_on_section_item_list_item_selected(14)
-		return %Filenames2._on_add_button_pressed(fat_index)
+		#%SectionItemList.select(14)
+		#_on_section_item_list_item_selected(14)
+		return %Filenames2._on_add_button_pressed(fat_index, info)
 
 
 func import_sprite_sheet(p_raw_palette: PackedByteArray) -> Dictionary:

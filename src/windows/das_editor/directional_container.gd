@@ -24,11 +24,13 @@ func load_directional_data(p_directional_data: Dictionary, p_directional_mapping
 	%Flags2SpinBox.set_value_no_signal(directional_data.flags_2)
 	%Flags2SpinBox.max_value = len(directional_mappings) - 1
 	if "filename" in directional_data:
-		%NameEdit.text = "%s (%s)" % [directional_data.filename.name, directional_data.filename.desc]
+		%NameEdit.text = directional_data.filename.name
+		%DescriptionEdit.text = directional_data.filename.desc
 		%JumpToFilenameButton.show()
 		%AddFilenameButton.hide()
 	else:
 		%NameEdit.text = "No Name Set"
+		%DescriptionEdit.text = ""
 		%JumpToFilenameButton.hide()
 		%AddFilenameButton.show()
 	
@@ -66,6 +68,14 @@ func update_flags_1_from_checkboxes() -> void:
 		new_value |= (1<<7)
 	directional_data.flags_1 = new_value
 	%Flags1Edit.text = str(new_value)
+
+
+func _on_name_edit_text_changed(new_text: String) -> void:
+	directional_data.filename.name = new_text
+
+
+func _on_description_edit_text_changed(new_text: String) -> void:
+	directional_data.filename.desc = new_text
 
 
 func _on_jump_to_filename_button_pressed() -> void:
