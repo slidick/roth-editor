@@ -26,8 +26,10 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 				fat_name += "  -  Image"
 			if "faces" in das[key][i].data:
 				fat_name += "  -  3D"
-			if "animation" in das[key][i].data or "animation_2" in das[key][i].data:
+			if "animation" in das[key][i].data:
 				fat_name += "  -  Animation"
+			if "animation_2" in das[key][i].data:
+				fat_name += "  -  Animation2"
 			if "image_pack" in das[key][i].data:
 				fat_name += "  -  Pack"
 		if das[key][i].flags_1 & 32 > 0 and das[key][i].flags_1 & 4 > 0:
