@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bl4ldhvm76xam" path="res://src/windows/das_editor/object_collisions.tscn" id="10_vwsjw"]
 [ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="14_iy22k"]
 [ext_resource type="PackedScene" uid="uid://cv1auqpk7ch8w" path="res://src/windows/graphics/sprite_sheet_importer_window.tscn" id="15_1uofs"]
+[ext_resource type="PackedScene" uid="uid://bqawctevx37j2" path="res://src/windows/das_editor/edit_alignments_window.tscn" id="16_viwmn"]
 
 [node name="DasEditorWindow" unique_id=452268762 instance=ExtResource("1_o2sbq")]
 offset_right = 1272.0
@@ -296,6 +297,22 @@ offset_left = -632.5
 offset_top = -385.0
 offset_right = 632.5
 offset_bottom = 385.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EditAlignments" parent="SubWindows" index="2" unique_id=877815195 instance=ExtResource("16_viwmn")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -701.5
+offset_top = -406.5
+offset_right = 701.5
+offset_bottom = 406.5
 grow_horizontal = 2
 grow_vertical = 2
 

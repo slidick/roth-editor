@@ -24,27 +24,56 @@ func _ready() -> void:
 
 
 func set_data(animation_data: Dictionary, raw_palette: PackedByteArray, shift_data: Array = []) -> void:
-	var current_frame: int = animated_image.frame
-	var current_progress: float = animated_image.frame_progress
-	animated_image.sprite_frames.clear_all()
-	speed = animation_data.animation_speed
-	if len(animation_data.animation) == 0:
-		return
-	var is_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-	var is_fully_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
-	for i in range(len(animation_data.animation)):
-		var raw_img: Array = animation_data.animation[i]
-		var image: Image = Image.create_from_data(animation_data.width, animation_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, raw_img, is_transparent, is_fully_transparent))
+	if "animation" in animation_data:
+		var current_frame: int = animated_image.frame
+		var current_progress: float = animated_image.frame_progress
+		animated_image.sprite_frames.clear_all()
+		speed = animation_data.animation_speed
+		if len(animation_data.animation) == 0:
+			return
+		var is_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+		var is_fully_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+		for i in range(len(animation_data.animation)):
+			var raw_img: Array = animation_data.animation[i]
+			var image: Image = Image.create_from_data(animation_data.width, animation_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, raw_img, is_transparent, is_fully_transparent))
+			
+			if not shift_data.is_empty() and %ShowShiftCheckButton.button_pressed:
+				var x: int = animation_data.width - 1 + (-1 * shift_data[1]) / 2
+				var y: int = roundi(animation_data.height / 2) + (-1 * shift_data[0]) / 2
+				if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+					image.set_pixel(x, y, Color.RED)
+			
+			var image_texture := ImageTexture.create_from_image(image)
+			animated_image.sprite_frames.add_frame("default", image_texture)
 		
-		if not shift_data.is_empty() and %ShowShiftCheckButton.button_pressed:
-			var x: int = animation_data.width - 1 + (-1 * shift_data[1]) / 2
-			var y: int = roundi(animation_data.height / 2) + (-1 * shift_data[0]) / 2
-			if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
-				image.set_pixel(x, y, Color.RED)
+		animated_image.play("default")
+		animated_image.set_frame_and_progress(current_frame, current_progress)
+		self.texture = animated_image.sprite_frames.get_frame_texture("default", current_frame)
+	elif "animation_2" in animation_data:
+		var current_frame: int = animated_image.frame
+		var current_progress: float = animated_image.frame_progress
+		animated_image.sprite_frames.clear_all()
+		speed = animation_data.first_image_offset
+		if len(animation_data.animation_2) == 0:
+			return
+		var is_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+		var is_fully_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+		for i in range(len(animation_data.animation_2)):
+			var image := Image.create_empty(animation_data.width, animation_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8)
+			var sub_image_data: Dictionary = animation_data.animation_2[i]
+			var sub_image: Image = Image.create_from_data(sub_image_data.width, sub_image_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, sub_image_data.raw_image, is_transparent, is_fully_transparent))
+			
+			image.blit_rect(sub_image, Rect2i(Vector2.ZERO, sub_image.get_size()), Vector2i(sub_image_data.x_offset, sub_image_data.y_offset))
+			
+			if not shift_data.is_empty() and %ShowShiftCheckButton.button_pressed:
+				var x: int = animation_data.width - 1 + (-1 * shift_data[1]) / 2
+				var y: int = roundi(animation_data.height / 2) + (-1 * shift_data[0]) / 2
+				if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height():
+					image.set_pixel(x, y, Color.RED)
+			
+			var image_texture := ImageTexture.create_from_image(image)
+			animated_image.sprite_frames.add_frame("default", image_texture)
 		
-		var image_texture := ImageTexture.create_from_image(image)
-		animated_image.sprite_frames.add_frame("default", image_texture)
-	
-	animated_image.play("default")
-	animated_image.set_frame_and_progress(current_frame, current_progress)
-	self.texture = animated_image.sprite_frames.get_frame_texture("default", 0)
+		animated_image.play("default")
+		animated_image.set_frame_and_progress(current_frame, current_progress)
+		self.texture = animated_image.sprite_frames.get_frame_texture("default", current_frame)

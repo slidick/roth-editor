@@ -301,3 +301,7 @@ func _on_add_filename_pressed(filename_index: int, fat_index: int, info: Diction
 
 func import_sprite_sheet(p_raw_palette: PackedByteArray) -> Dictionary:
 	return await %SpriteSheetImporter.import_sprite_sheet(p_raw_palette)
+
+
+func edit_animation_2_alignments(animation_image: Dictionary, raw_palette: PackedByteArray) -> Dictionary:
+	return await %EditAlignments.edit_alignments(animation_image, raw_palette)

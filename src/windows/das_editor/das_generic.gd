@@ -3,7 +3,7 @@ extends Control
 signal jump_to_collision_pressed
 signal jump_to_filename_pressed(filename: Dictionary)
 var das: Variant
-var SCRIPT: Script = preload("uid://daro30p1hipaw")
+#var SCRIPT: Script = preload("uid://daro30p1hipaw")
 
 func reset() -> void:
 	das = {}
@@ -145,26 +145,30 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				sprite_frames.set_animation_speed("default", 12)
 				var hbox2 := HBoxContainer.new()
 				vbox.add_child(hbox2)
-				for sub_image_data: Dictionary in das[p_key][key].slice(0,-1):
+				for sub_image_data: Dictionary in das[p_key][key]:
 					
 					var vbox2 := VBoxContainer.new()
 					hbox2.add_child(vbox2)
-					for key2: String in sub_image_data.header:
+					for key2: String in sub_image_data:
+						if key2 == "raw_image":
+							continue
 						var label2 := Label.new()
 						label2.text = key2
 						label2.custom_minimum_size.x = 150
 						var line_edit2 := LineEdit.new()
-						line_edit2.text = str(sub_image_data.header[key2])
+						line_edit2.text = str(sub_image_data[key2])
 						line_edit2.text_changed.connect(func (new_text: String) -> void:
-							sub_image_data.header[key2] = int(new_text)
+							sub_image_data[key2] = int(new_text)
 						)
 						var hbox3 := HBoxContainer.new()
 						hbox3.add_child(label2)
 						hbox3.add_child(line_edit2)
 						vbox2.add_child(hbox3)
-					var is_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.header.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-					var is_fully_transparent: bool = sub_image_data.header.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
-					var image: Image = Image.create_from_data(sub_image_data.header.width, sub_image_data.header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent, is_fully_transparent))
+					#var is_transparent: bool = sub_image_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or sub_image_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+					#var is_fully_transparent: bool = sub_image_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+					var is_transparent: bool = false
+					var is_fully_transparent: bool = false
+					var image: Image = Image.create_from_data(sub_image_data.width, sub_image_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(palette, sub_image_data.raw_image, is_transparent, is_fully_transparent))
 					var image_texture := ImageTexture.create_from_image(image)
 					sprite_frames.add_frame("default", image_texture)
 				animated_image.play("default")
@@ -314,20 +318,20 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 						
 						hbox2.add_child(label2)
 						hbox2.add_child(line_edit_2)
-			"data":
-				var margin_container := MarginContainer.new()
-				margin_container.add_theme_constant_override("margin_left", 10)
-				margin_container.add_theme_constant_override("margin_top", 10)
-				margin_container.add_theme_constant_override("margin_right", 10)
-				margin_container.add_theme_constant_override("margin_bottom", 10)
-				margin_container.set_script(SCRIPT)
-				margin_container.set_owner.call_deferred(owner)
-				margin_container.call_deferred("load_das", das[p_key], key, p_raw_palette)
-				margin_container.add_theme_constant_override("margin_right", 0)
-				margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				hbox.add_child(margin_container)
-				
-				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			#"data":
+				#var margin_container := MarginContainer.new()
+				#margin_container.add_theme_constant_override("margin_left", 10)
+				#margin_container.add_theme_constant_override("margin_top", 10)
+				#margin_container.add_theme_constant_override("margin_right", 10)
+				#margin_container.add_theme_constant_override("margin_bottom", 10)
+				#margin_container.set_script(SCRIPT)
+				#margin_container.set_owner.call_deferred(owner)
+				#margin_container.call_deferred("load_das", das[p_key], key, p_raw_palette)
+				#margin_container.add_theme_constant_override("margin_right", 0)
+				#margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				#hbox.add_child(margin_container)
+				#
+				#hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			"filename":
 				var line_edit := LineEdit.new()
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL

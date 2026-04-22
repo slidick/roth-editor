@@ -47,6 +47,9 @@ func _on_item_list_item_selected(index: int) -> void:
 	elif "data" in das[key][index] and "animation" in das[key][index].data:
 		%AnimationContainer.show()
 		%AnimationContainer.load_animation_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
+	elif "data" in das[key][index] and "animation_2" in das[key][index].data:
+		%Animation2Container.show()
+		%Animation2Container.load_animation_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
 	elif "data" in das[key][index] and "image_pack" in das[key][index].data:
 		%ImagePackContainer.show()
 		%ImagePackContainer.load_pack_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)

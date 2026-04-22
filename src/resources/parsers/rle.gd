@@ -77,27 +77,37 @@ static func decode_rle_image_data(image_data: Dictionary) -> PackedByteArray:
 	return decoded_sprite_buffer
 
 
-static func encode_rle_img(input_image: Dictionary) -> PackedByteArray:
+static func encode_rle_img(input_image: Dictionary, no_compression: bool = false) -> PackedByteArray:
 	if not "raw_image" in input_image:
 		return PackedByteArray()
 	
 	var output_data: PackedByteArray = []
-	var repeat: int = 1
-	var last_byte: int = input_image.raw_image[0]
 	
-	for i: int in range(1, len(input_image.raw_image), 1):
-		var byte: int = input_image.raw_image[i]
-		if byte == last_byte and repeat < 15:
-			repeat += 1
-		else:
-			if repeat > 1 or last_byte >= 0xF0:
-				output_data.append(0xF0 | repeat)
-			output_data.append(last_byte)
-			last_byte = byte
-			repeat = 1
-	if repeat > 1 or last_byte >= 0xF0:
-		output_data.append(0xF0 | repeat)
-	output_data.append(last_byte)
+	if no_compression:
+		for i: int in range(0, len(input_image.raw_image), 1):
+			if input_image.raw_image[i] < 0xF0:
+				output_data.append(input_image.raw_image[i])
+			else:
+				output_data.append(0xF1)
+				output_data.append(input_image.raw_image[i])
+	
+	else:
+		var repeat: int = 1
+		var last_byte: int = input_image.raw_image[0]
+		
+		for i: int in range(1, len(input_image.raw_image), 1):
+			var byte: int = input_image.raw_image[i]
+			if byte == last_byte and repeat < 15:
+				repeat += 1
+			else:
+				if repeat > 1 or last_byte >= 0xF0:
+					output_data.append(0xF0 | repeat)
+				output_data.append(last_byte)
+				last_byte = byte
+				repeat = 1
+		if repeat > 1 or last_byte >= 0xF0:
+			output_data.append(0xF0 | repeat)
+		output_data.append(last_byte)
 	
 	return output_data
 

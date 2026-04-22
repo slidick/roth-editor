@@ -171,7 +171,8 @@ text = "Animation"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Flag 2"
+disabled = true
+text = "Animation 2"
 
 [node name="Flags2CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=597711642]
 unique_name_in_owner = true

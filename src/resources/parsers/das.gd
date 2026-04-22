@@ -142,16 +142,16 @@ const IMAGE_COMPRESSED_2_HEADER := {
 }
 
 const SUB_IMAGE_COMPRESSED_2_HEADER := {
-	image_type = Parser.Type.Word,       # seems to be always 0x17
+	sub_image_type = Parser.Type.Word,       # seems to be always 0x17
 	unk_0x02 = Parser.Type.Word,            # seems to be always zero
 	buf_width = Parser.Type.Word,
 	buf_height = Parser.Type.Word,
 	num_images = Parser.Type.Word,
 	current_image_idx = Parser.Type.Word,
 	current_image_size = Parser.Type.DWord,    # including this header
-	unk_0x10 = Parser.Type.Word,
+	x_offset = Parser.Type.Word,
 	width = Parser.Type.Word,
-	unk_0x14 = Parser.Type.Word,
+	y_offset = Parser.Type.Word,
 	height = Parser.Type.Word,
 }
 
@@ -1034,14 +1034,12 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 		assert(file.get_position()-2 == start_offset+16)
 		file.seek(start_offset + 16)
 		texture_data["animation_2"] = []
-		texture_data["raw_animation_2"] = []
 		var starting_position: int = file.get_position()
 		var sub_image_header := Parser.parse_section(file, SUB_IMAGE_COMPRESSED_2_HEADER)
 		var num_imgs: int = sub_image_header.num_images
 		while num_imgs == sub_image_header.num_images:
-			file.seek(starting_position)
-			texture_data["raw_animation_2"].append(file.get_buffer(sub_image_header.current_image_size))
-			file.seek(starting_position + 24)
+			var raw_rle_image := file.get_buffer(sub_image_header.current_image_size-24)
+			file.seek(starting_position+24)
 			var image_size: int = sub_image_header.width * sub_image_header.height
 			var image_rid: Array = []
 			image_rid.resize(image_size)
@@ -1057,12 +1055,19 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 				else:
 					image_rid[pos] = byte
 					pos += 1
+			sub_image_header["raw_image"] = image_rid
+			sub_image_header["raw_rle_image"] = raw_rle_image
+			texture_data["animation_2"].append(sub_image_header)
 			
-			texture_data["animation_2"].append({"header": sub_image_header, "raw_image": image_rid})
+			while file.get_position() != starting_position + sub_image_header.current_image_size:
+				var byte: int = file.get_8()
+				assert(byte == 0)
 			file.seek(starting_position + sub_image_header.current_image_size)
 			starting_position = file.get_position()
 			
 			sub_image_header = Parser.parse_section(file, SUB_IMAGE_COMPRESSED_2_HEADER)
+			#if sub_image_header.sub_image_type != 0x17:
+				#break
 		
 		file.seek(file.get_position()-24)
 		
@@ -1517,8 +1522,15 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 						size += 1
 				if "animation_2" in entry.data:
 					size += 16 # Header
-					for sub_image: Array in entry.data.raw_animation_2:
-						size += len(sub_image)
+					for sub_image_data: Dictionary in entry.data.animation_2:
+						var sub_image_start: int = size
+						sub_image_data["rle_image"] = RLE.encode_rle_img(sub_image_data, true)
+						size += 24 # Sub-header
+						size += len(sub_image_data.rle_image)
+						size += 1 # Buffer
+						while size % 4 != 0:
+							size += 1
+						sub_image_data["current_image_size"] = size - sub_image_start
 					while size % 16 != 0:
 						size += 1
 				if "image_pack" in entry.data:
@@ -1750,15 +1762,34 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 				data.encode_u8(pos+1, entry.data.image_type)
 				data.encode_u16(pos+2, entry.data.width)
 				data.encode_u16(pos+4, entry.data.height)
-				data.encode_u32(pos+6, entry.data.total_block_size)
-				data.encode_u16(pos+10, entry.data.first_image_offset)
-				data.encode_u16(pos+12, entry.data.num_sub_images)
-				data.encode_u16(pos+14, entry.data.unk_0x0E)
+				data.encode_u32(pos+6, entry.data.total_block_size)       # 0
+				data.encode_u16(pos+10, entry.data.first_image_offset)    # speed?
+				data.encode_u16(pos+12, entry.data.num_sub_images)        # 0xFFFE
+				data.encode_u16(pos+14, entry.data.unk_0x0E)              # 0?
 				pos += 16
 				size += 16
-				for sub_image: Array in entry.data.raw_animation_2:
-					for byte: int in sub_image:
+				for i in range(len(entry.data.animation_2)):
+					var sub_image_data: Dictionary = entry.data.animation_2[i]
+					data.encode_u16(pos, sub_image_data.sub_image_type)
+					data.encode_u16(pos+2, sub_image_data.unk_0x02)
+					data.encode_u16(pos+4, entry.data.width)
+					data.encode_u16(pos+6, entry.data.height)
+					data.encode_u16(pos+8, len(entry.data.animation_2))
+					data.encode_u16(pos+10, i)
+					data.encode_u32(pos+12, sub_image_data.current_image_size)
+					data.encode_u16(pos+16, sub_image_data.x_offset)
+					data.encode_u16(pos+18, sub_image_data.width)
+					data.encode_u16(pos+20, sub_image_data.y_offset)
+					data.encode_u16(pos+22, sub_image_data.height)
+					pos += 24
+					size += 24
+					for byte: int in sub_image_data.rle_image:
 						data.encode_u8(pos, byte)
+						pos += 1
+						size += 1
+					pos += 1
+					size += 1
+					while size % 4 != 0:
 						pos += 1
 						size += 1
 				while size % 16 != 0:

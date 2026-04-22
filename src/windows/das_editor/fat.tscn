@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dh4pvj0xqsi7t" path="res://src/windows/das_editor/standard_image_container.tscn" id="3_6706r"]
 [ext_resource type="PackedScene" uid="uid://tvrovuq6tp52" path="res://src/windows/das_editor/animation_container.tscn" id="4_sfrjw"]
 [ext_resource type="PackedScene" uid="uid://b6e3t04mabre1" path="res://src/windows/das_editor/image_pack_container.tscn" id="5_26r83"]
+[ext_resource type="PackedScene" uid="uid://clpu44hw0burr" path="res://src/windows/das_editor/animation_2_container.tscn" id="5_87q5y"]
 [ext_resource type="PackedScene" uid="uid://dr1767uott2uo" path="res://src/windows/das_editor/directional_container.tscn" id="6_n2cov"]
 [ext_resource type="PackedScene" uid="uid://em40vlxultjc" path="res://src/windows/das_editor/monster_container.tscn" id="7_h5v58"]
 
@@ -68,7 +69,7 @@ text = "Find Next Empty"
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_26r83")
-current_tab = 6
+current_tab = 7
 tabs_visible = false
 
 [node name="GenericContainer" type="MarginContainer" parent="HBoxContainer/TabContainer" unique_id=1051257041]
@@ -95,26 +96,34 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
+[node name="Animation2Container" parent="HBoxContainer/TabContainer" unique_id=1513850404 instance=ExtResource("5_87q5y")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
 [node name="ImagePackContainer" parent="HBoxContainer/TabContainer" unique_id=914254406 instance=ExtResource("5_26r83")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+metadata/_tab_index = 4
 
 [node name="DirectionalContainer" parent="HBoxContainer/TabContainer" unique_id=1578364445 instance=ExtResource("6_n2cov")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+metadata/_tab_index = 5
 
 [node name="MonsterContainer" parent="HBoxContainer/TabContainer" unique_id=1566069493 instance=ExtResource("7_h5v58")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-metadata/_tab_index = 5
+metadata/_tab_index = 6
 
 [node name="EmptyContainer" type="Control" parent="HBoxContainer/TabContainer" unique_id=1274779725]
 unique_name_in_owner = true
 layout_mode = 2
-metadata/_tab_index = 6
+metadata/_tab_index = 7
 
 [connection signal="item_clicked" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
