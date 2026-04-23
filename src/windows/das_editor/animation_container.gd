@@ -321,6 +321,7 @@ func update_texture() -> void:
 			var new_texture: Dictionary = await owner.owner.edit_image(data, raw_palette)
 			if not new_texture.is_empty():
 				animation_image.data.animation[i] = new_texture.raw_image
+				animation_image.data = Das.compile_animation(animation_image.data)
 				update_texture()
 		)
 		
@@ -479,6 +480,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			copied_frame_data = animation_image.data.animation[right_clicked_frame].duplicate()
 		1:
 			animation_image.data.animation[right_clicked_frame] = copied_frame_data.duplicate()
+			animation_image.data = Das.compile_animation(animation_image.data)
 			update_texture()
 		2:
 			if await Dialog.confirm("Are you sure?", "Delete Frame", false, Vector2(400,150)):
@@ -486,6 +488,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				%ImagesContainer.get_child(right_clicked_frame).queue_free()
 				%FramesSpinBox.set_value_no_signal(len(animation_image.data.animation))
 				%FramesSpinBox.get_line_edit().text = str(len(animation_image.data.animation))
+				animation_image.data = Das.compile_animation(animation_image.data)
 
 
 func _on_import_sprite_sheet_button_pressed() -> void:
@@ -506,9 +509,11 @@ func _on_animation_popup_menu_index_pressed(index: int) -> void:
 					animation_image.data.animation[i] = Utility.rotate_raw_image_counter_clockwise(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
 				else:
 					animation_image.data.animation[i] = Utility.rotate_raw_image_clockwise(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			
 			var new_height: int = animation_image.data.width
 			animation_image.data.width = animation_image.data.height
 			animation_image.data.height = new_height
+			animation_image.data = Das.compile_animation(animation_image.data)
 			update_texture()
 		1:
 			for i in range(len(animation_image.data.animation)):
@@ -519,6 +524,7 @@ func _on_animation_popup_menu_index_pressed(index: int) -> void:
 			var new_height: int = animation_image.data.width
 			animation_image.data.width = animation_image.data.height
 			animation_image.data.height = new_height
+			animation_image.data = Das.compile_animation(animation_image.data)
 			update_texture()
 		2:
 			for i in range(len(animation_image.data.animation)):
@@ -526,6 +532,7 @@ func _on_animation_popup_menu_index_pressed(index: int) -> void:
 					animation_image.data.animation[i] = Utility.flip_raw_image_vertical(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
 				else:
 					animation_image.data.animation[i] = Utility.flip_raw_image_horizontal(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			animation_image.data = Das.compile_animation(animation_image.data)
 			update_texture()
 		3:
 			for i in range(len(animation_image.data.animation)):
@@ -533,6 +540,7 @@ func _on_animation_popup_menu_index_pressed(index: int) -> void:
 					animation_image.data.animation[i] = Utility.flip_raw_image_horizontal(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
 				else:
 					animation_image.data.animation[i] = Utility.flip_raw_image_vertical(animation_image.data.animation[i], animation_image.data.width, animation_image.data.height)
+			animation_image.data = Das.compile_animation(animation_image.data)
 			update_texture()
 
 

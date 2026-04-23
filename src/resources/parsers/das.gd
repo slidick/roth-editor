@@ -952,9 +952,10 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 		texture_data["offsets_array"] = []
 		for i in range(texture_data.num_sub_images):
 			texture_data["offsets_array"].append(file.get_32())
+		var offset_offset: int = (start_offset + texture_data.first_image_offset) - file.get_position()
 		while file.get_position() != (start_offset + texture_data.first_image_offset):
 			assert(file.get_8() == 0)
-		assert(file.get_position() == (start_offset + texture_data.first_image_offset))
+		offset_offset -= 8
 		texture_data.modifier_2 = file.get_8()
 		texture_data.image_type_2 = file.get_8()
 		texture_data.width_2 = file.get_16()
@@ -966,22 +967,26 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 		var raw_img := file.get_buffer(texture_data.width * texture_data.height)
 		texture_data["animation"] = [raw_img.duplicate()]
 		texture_data["offset_mapping"] = {}
+		texture_data["compiled_animation"] = []
 		
 		for j in range(texture_data.num_sub_images):
 			#Console.print("SubImage: %s" % j)
-			
 			var current_offset: int = (file.get_position() - start_offset) + 10
 			
+			var delta_animation: PackedByteArray = []
 			var finished := false
 			var pos := 0
 			while true:
 				var code := file.get_8()
+				delta_animation.append(code)
 				if code == 0:
 					code = file.get_8()
+					delta_animation.append(code)
 					if code == 0:
 						finished = true
 						break
 					var value := file.get_8()
+					delta_animation.append(value)
 					#Console.print("Repeating Bytes")
 					for k in range(code):
 						raw_img[pos+k] = value
@@ -994,15 +999,19 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 					#Console.print("Copying whole")
 					for k in range(code):
 						raw_img[pos+k] = file.get_8()
+						delta_animation.append(raw_img[pos+k])
 					pos += code
 				else:
 					var code_word := file.get_16()
+					delta_animation.append(code_word & 0xFF)
+					delta_animation.append((code_word & 0xFF00) >> 8)
 					if code_word == 0:
 						break
 					if code_word & 0x8000:
 						#Console.print("Codeword & 0x8000")
 						code_word &= 0x3FFF
 						var value := file.get_8()
+						delta_animation.append(value)
 						if value == 0:
 							#Console.print("Repeating 0s")
 							for k in range(code_word):
@@ -1015,14 +1024,16 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 			if finished:
 				break
 			
-			texture_data["offset_mapping"][current_offset] = raw_img.duplicate()
+			texture_data["offset_mapping"][current_offset-offset_offset] = raw_img.duplicate()
+			texture_data["compiled_animation"].append_array(delta_animation)
 		
 		for k in range(len(texture_data.offsets_array)):
 			var offset: int = texture_data.offsets_array[k]
 			if offset == 0:
 				texture_data["animation"].append(texture_data["animation"][k])
 			else:
-				texture_data["animation"].append(texture_data.offset_mapping[offset])
+				texture_data["animation"].append(texture_data.offset_mapping[offset-offset_offset])
+				texture_data.offsets_array[k] = offset-offset_offset
 		
 		# Last frame is always same as first so remove it
 		texture_data["animation"].pop_back()
@@ -1038,7 +1049,7 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 		var sub_image_header := Parser.parse_section(file, SUB_IMAGE_COMPRESSED_2_HEADER)
 		var num_imgs: int = sub_image_header.num_images
 		while num_imgs == sub_image_header.num_images:
-			var raw_rle_image := file.get_buffer(sub_image_header.current_image_size-24)
+			var rle_image := file.get_buffer(sub_image_header.current_image_size-24)
 			file.seek(starting_position+24)
 			var image_size: int = sub_image_header.width * sub_image_header.height
 			var image_rid: Array = []
@@ -1056,7 +1067,7 @@ static func _parse_animated_image(file: FileAccess, is_ademo: bool, _index: int)
 					image_rid[pos] = byte
 					pos += 1
 			sub_image_header["raw_image"] = image_rid
-			sub_image_header["raw_rle_image"] = raw_rle_image
+			sub_image_header["rle_image"] = rle_image
 			texture_data["animation_2"].append(sub_image_header)
 			
 			while file.get_position() != starting_position + sub_image_header.current_image_size:
@@ -1509,14 +1520,14 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 					if size % 2 != 0:
 						size += 1
 				if "animation" in entry.data:
-					var animation_data_size: int = _compile_animation(entry.data)
+					#compile_animation(entry.data)
 					size += 18 # Header
 					size += (len(entry.data.offsets_array) * 4)
 					size += 8 # Padding
 					entry.data.first_image_offset = size
 					size += 6 # Sub-header
 					size += len(entry.data.animation[0]) # Base image
-					size += animation_data_size
+					size += len(entry.data.compiled_animation)
 					entry.data.total_block_size = size
 					while size % 16 != 0:
 						size += 1
@@ -1524,7 +1535,6 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 					size += 16 # Header
 					for sub_image_data: Dictionary in entry.data.animation_2:
 						var sub_image_start: int = size
-						sub_image_data["rle_image"] = RLE.encode_rle_img(sub_image_data, true)
 						size += 24 # Sub-header
 						size += len(sub_image_data.rle_image)
 						size += 1 # Buffer
@@ -1596,7 +1606,8 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 	return total_size
 
 
-static func _compile_animation(animation_data: Dictionary) -> int:
+static func compile_animation(p_animation_data: Dictionary) -> Dictionary:
+	var animation_data: Dictionary = p_animation_data.duplicate(true)
 	var animation_array: Array = animation_data.animation.duplicate(true)
 	var base_image: PackedByteArray = animation_array[0]
 	animation_array.append(base_image)
@@ -1672,7 +1683,7 @@ static func _compile_animation(animation_data: Dictionary) -> int:
 	
 	animation_data["compiled_animation"] = compiled_animation
 	animation_data["offsets_array"] = offsets_array
-	return len(compiled_animation)
+	return animation_data
 
 
 static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int, is_ademo: bool) -> int:

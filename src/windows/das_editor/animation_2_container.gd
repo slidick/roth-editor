@@ -125,34 +125,12 @@ func update_texture() -> void:
 			var new_texture: Dictionary = await owner.owner.edit_image(data, raw_palette)
 			if not new_texture.is_empty():
 				animation_image.data.animation_2[i].raw_image = new_texture.raw_image
+				animation_image.data.animation_2[i].rle_image = RLE.encode_rle_img(new_texture, true)
 				animation_image.data.animation_2[i].width = new_texture.width
 				animation_image.data.animation_2[i].height = new_texture.height
 				update_texture()
 		)
 		vbox.add_child(edit_button)
-		
-		
-		
-		
-		var spin1 := SpinBox.new()
-		spin1.max_value = 65535
-		spin1.value = sub_image.num_images
-		
-		var spin2 := SpinBox.new()
-		spin2.max_value = 65535
-		spin2.value = sub_image.current_image_idx
-		
-		var spin3 := SpinBox.new()
-		spin3.max_value = 65535
-		spin3.value = sub_image.current_image_size
-		
-		
-		vbox.add_child(spin1)
-		vbox.add_child(spin2)
-		vbox.add_child(spin3)
-		
-		
-		
 		
 		vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		%ImagesContainer.add_child(vbox)

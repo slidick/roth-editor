@@ -527,6 +527,16 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="PopupMenu" type="PopupMenu" parent="." unique_id=402769976]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Copy"
+item_0/id = 0
+item_1/text = "Paste"
+item_1/id = 1
+item_2/text = "Delete"
+item_2/id = 2
+
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/NameEdit" to="." method="_on_name_edit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DescriptionEdit" to="." method="_on_description_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
