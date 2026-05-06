@@ -5,6 +5,10 @@ var enabled: bool = true :
 	set(p_enabled):
 		enabled = p_enabled
 		queue_sort()
+var mirror: bool = false :
+	set(p_mirror):
+		mirror = p_mirror
+		queue_sort()
 
 func _get_minimum_size() -> Vector2:
 	var children_size := Vector2.ZERO
@@ -26,9 +30,19 @@ func _notification(what: int) -> void:
 			for child in get_children():
 				if enabled:
 					child.rotation = PI / 2
-					child.scale.y = -1
+					if mirror:
+						child.scale.y = 1
+						child.set_deferred("position", Vector2(s.x, 0))
+					else:
+						child.scale.y = -1
+						child.set_deferred("position", Vector2(0, 0))
 					child.set_deferred("size", Vector2(s.y, s.x))
 				else:
 					child.rotation = 0
-					child.scale.y = 1
+					if mirror:
+						child.scale.y = -1
+						child.set_deferred("position", Vector2(0, s.x))
+					else:
+						child.scale.y = 1
+						child.set_deferred("position", Vector2(0, 0))
 					child.set_deferred("size", Vector2(s.x, s.y))
