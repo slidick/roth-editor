@@ -18,7 +18,14 @@ func reset() -> void:
 func load_das(p_das: Dictionary, p_key: String) -> void:
 	das = p_das
 	key = p_key
-	for filename_info: Dictionary in p_das[key]:
+
+func reload() -> void:
+	%ItemList.clear()
+	%FilenamesContainer.hide()
+	%IndexEdit.text = ""
+	%NameEdit.text = ""
+	%DescEdit.text = ""
+	for filename_info: Dictionary in das[key]:
 		var idx: int = %ItemList.add_item(filename_info.name)
 		%ItemList.set_item_metadata(idx, filename_info)
 

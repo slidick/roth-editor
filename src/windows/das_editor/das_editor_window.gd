@@ -313,3 +313,12 @@ func _on_directional_object_added() -> void:
 
 func add_fat_4_entry() -> void:
 	%Fat4._on_add_button_pressed()
+
+
+func erase_filename(filename: Dictionary) -> void:
+	if das.filenames_1.find(filename) != -1:
+		das.filenames_1.erase(filename)
+		%Filenames1.reload()
+	if das.filenames_2.find(filename) != -1:
+		das.filenames_2.erase(filename)
+		%Filenames2.reload()
