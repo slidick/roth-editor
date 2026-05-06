@@ -166,6 +166,8 @@ func _create_palette_node(palette: Array) -> Control:
 								return true
 							)
 						color_rect.selected = true
+						%ColorPicker.color = color_rect.color
+						%HueSlider.set_value_no_signal(color_rect.color.h)
 			)
 			color_rect.gui_input.connect(
 				func (event: InputEvent) -> void:
