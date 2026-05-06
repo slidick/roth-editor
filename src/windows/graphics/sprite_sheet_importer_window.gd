@@ -64,7 +64,6 @@ func update_preview() -> void:
 
 
 func _on_browse_button_pressed() -> void:
-	%FileDialog.current_path = "/home/slidick/Downloads/Alenia_Dynamic_Fire_Environments/T3/T3_Purple/spritesheet_fuego.png"
 	%FileDialog.popup_file_dialog()
 
 
