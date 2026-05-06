@@ -314,9 +314,16 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 			%PopupMenu.set_item_disabled(3, false)
 			%PopupMenu.set_item_disabled(4, false)
 			%PopupMenu.set_item_disabled(5, false)
-			%PopupMenu.set_item_disabled(6, false)
-			%PopupMenu.set_item_disabled(7, false)
-			%PopupMenu.set_item_disabled(8, false)
+			if name != "Fat4":
+				%PopupMenu.set_item_disabled(6, false)
+			else:
+				%PopupMenu.set_item_disabled(6, true)
+			if name == "Fat3":
+				%PopupMenu.set_item_disabled(7, false)
+				%PopupMenu.set_item_disabled(8, false)
+			else:
+				%PopupMenu.set_item_disabled(7, true)
+				%PopupMenu.set_item_disabled(8, true)
 		else:
 			%PopupMenu.set_item_disabled(3, true)
 			%PopupMenu.set_item_disabled(4, true)
