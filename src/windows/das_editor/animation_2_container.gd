@@ -25,7 +25,7 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	%ModifierEdit.text = str(animation_image.data.modifier)
 	%ImageTypeEdit.text = str(animation_image.data.image_type)
 	
-	%Unk0x0EEdit.text = str(animation_image.data.unk_0x0E)
+	#%Unk0x0EEdit.text = str(animation_image.data.unk_0x0E)
 	
 	%AnimationSpeedSpinBox.set_value_no_signal(animation_image.data.first_image_offset)
 	%AnimationSpeedSpinBox.get_line_edit().text = str(animation_image.data.first_image_offset)

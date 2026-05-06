@@ -43,7 +43,7 @@ allow_rmb_select = true
 
 [node name="PopupMenu" type="PopupMenu" parent="HBoxContainer/VBoxContainer/ItemList" unique_id=427259160]
 unique_name_in_owner = true
-item_count = 8
+item_count = 9
 item_0/text = "Copy"
 item_0/id = 0
 item_1/text = "Paste"
@@ -54,12 +54,14 @@ item_3/text = "Init as Standard Image"
 item_3/id = 3
 item_4/text = "Init as Animation"
 item_4/id = 4
-item_5/text = "Init as Image Pack"
-item_5/id = 5
-item_6/text = "Init as Directional Object"
-item_6/id = 6
-item_7/text = "Init as Monster"
-item_7/id = 7
+item_5/text = "Init as Animation 2"
+item_5/id = 8
+item_6/text = "Init as Image Pack"
+item_6/id = 5
+item_7/text = "Init as Directional Object"
+item_7/id = 6
+item_8/text = "Init as Monster"
+item_8/id = 7
 
 [node name="FindEmptyButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=2069763857]
 layout_mode = 2
@@ -135,6 +137,8 @@ metadata/_tab_index = 7
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/StandardImageContainer" to="." method="_on_jump_to_filename_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/AnimationContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/AnimationContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/Animation2Container" to="." method="_on_jump_to_collision_pressed"]
+[connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/Animation2Container" to="." method="_on_jump_to_filename_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/ImagePackContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/ImagePackContainer" to="." method="_on_jump_to_filename_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/DirectionalContainer" to="." method="_on_jump_to_collision_pressed"]

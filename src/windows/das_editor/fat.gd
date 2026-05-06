@@ -3,6 +3,18 @@ extends MarginContainer
 signal jump_to_collision_pressed(index: int)
 signal jump_to_filename_pressed(filename: Dictionary)
 
+enum InitMenu {
+	COPY,
+	PASTE,
+	CLEAR,
+	STANDARD,
+	ANIMATION,
+	ANIMATION_2,
+	IMAGE_PACK,
+	DIRECTIONAL,
+	MONSTER,
+}
+
 var das: Dictionary = {}
 var key: String = ""
 
@@ -87,10 +99,10 @@ func select(index: int) -> void:
 func _on_popup_menu_index_pressed(index: int) -> void:
 	var item_index: int = %ItemList.get_selected_items()[0]
 	match index:
-		0:
+		InitMenu.COPY:
 			var data: Dictionary = das[key][item_index]
 			owner.copy_data(data)
-		1:
+		InitMenu.PASTE:
 			if das[key][item_index].offset != 0:
 				if not await Dialog.confirm("Paste over selected data?", "Confirm", false, Vector2(400,200)):
 					return
@@ -114,7 +126,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				else:
 					%ItemList.set_item_text(item_index, "%d - Image" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
-		2:
+		InitMenu.CLEAR:
 			if await Dialog.confirm("Clear selected data?", "Confirm", false, Vector2(400,200)):
 				das[key][item_index].offset = 0
 				das[key][item_index].size = 0
@@ -124,7 +136,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].erase("filename")
 				%ItemList.set_item_text(item_index, "%d" % das[key][item_index].index)
 				_on_item_list_item_selected(item_index)
-		3:
+		InitMenu.STANDARD:
 			var raw_image := PackedByteArray()
 			raw_image.resize(16*16)
 			var data := {
@@ -149,7 +161,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Image" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
-		4:
+		InitMenu.ANIMATION:
 			var raw_image := PackedByteArray()
 			raw_image.resize(16*16)
 			var data := {
@@ -165,7 +177,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			}
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["size"] = 1
-			das[key][item_index]["data"] = data
+			das[key][item_index]["data"] = Das.compile_animation(data)
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 1
 			var filename := {
@@ -178,7 +190,43 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Animation" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
-		5:
+		InitMenu.ANIMATION_2:
+			var raw_image := PackedByteArray()
+			raw_image.resize(16*16)
+			var data := {
+				"modifier": 0,
+				"image_type": 1,
+				"width": 16,
+				"height": 16,
+				"first_image_offset": 8, # speed
+				"animation_2": [],
+			}
+			var sub_data := {
+				"sub_image_type": 0x17,
+				"width": 16,
+				"x_offset": 0,
+				"height": 16,
+				"y_offset": 0,
+				"raw_image": raw_image,
+			}
+			sub_data["rle_image"] = RLE.encode_rle_img(sub_data)
+			data.animation_2.append(sub_data)
+			das[key][item_index]["offset"] = 1
+			das[key][item_index]["size"] = 1
+			das[key][item_index]["data"] = data
+			das[key][item_index].flags_1 = 0
+			das[key][item_index].flags_2 = 2
+			var filename := {
+				"name": "NEW_ANIMATION2",
+				"desc": "",
+			}
+			if name == "Fat1" or name == "Fat2":
+				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
+			else:
+				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
+			%ItemList.set_item_text(item_index, "%d - Animation2" % das[key][item_index].index)
+			_on_item_list_item_selected(item_index)
+		InitMenu.IMAGE_PACK:
 			var raw_image := PackedByteArray()
 			raw_image.resize(16*16)
 			var data := {
@@ -214,7 +262,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Pack" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
-		6:
+		InitMenu.DIRECTIONAL:
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["size"] = 1
 			das[key][item_index].flags_1 = 32
@@ -229,7 +277,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Directional" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
-		7:
+		InitMenu.MONSTER:
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["size"] = 1
 			das[key][item_index].flags_1 = 36
@@ -256,10 +304,16 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 			%PopupMenu.set_item_disabled(3, false)
 			%PopupMenu.set_item_disabled(4, false)
 			%PopupMenu.set_item_disabled(5, false)
+			%PopupMenu.set_item_disabled(6, false)
+			%PopupMenu.set_item_disabled(7, false)
+			%PopupMenu.set_item_disabled(8, false)
 		else:
 			%PopupMenu.set_item_disabled(3, true)
 			%PopupMenu.set_item_disabled(4, true)
 			%PopupMenu.set_item_disabled(5, true)
+			%PopupMenu.set_item_disabled(6, true)
+			%PopupMenu.set_item_disabled(7, true)
+			%PopupMenu.set_item_disabled(8, true)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
 
 

@@ -1773,16 +1773,16 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 				data.encode_u8(pos+1, entry.data.image_type)
 				data.encode_u16(pos+2, entry.data.width)
 				data.encode_u16(pos+4, entry.data.height)
-				data.encode_u32(pos+6, entry.data.total_block_size)       # 0
-				data.encode_u16(pos+10, entry.data.first_image_offset)    # speed?
-				data.encode_u16(pos+12, entry.data.num_sub_images)        # 0xFFFE
-				data.encode_u16(pos+14, entry.data.unk_0x0E)              # 0?
+				data.encode_u32(pos+6, 0)       # 0 - total_block_size
+				data.encode_u16(pos+10, entry.data.first_image_offset)    # speed
+				data.encode_u16(pos+12, 0xFFFE)        # 0xFFFE - num_sub_images
+				data.encode_u16(pos+14, 0)              # 0 - 0x0E
 				pos += 16
 				size += 16
 				for i in range(len(entry.data.animation_2)):
 					var sub_image_data: Dictionary = entry.data.animation_2[i]
 					data.encode_u16(pos, sub_image_data.sub_image_type)
-					data.encode_u16(pos+2, sub_image_data.unk_0x02)
+					data.encode_u16(pos+2, 0)         # unk_0x02
 					data.encode_u16(pos+4, entry.data.width)
 					data.encode_u16(pos+6, entry.data.height)
 					data.encode_u16(pos+8, len(entry.data.animation_2))
