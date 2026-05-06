@@ -305,3 +305,11 @@ func import_sprite_sheet(p_raw_palette: PackedByteArray) -> Dictionary:
 
 func edit_animation_2_alignments(animation_image: Dictionary, raw_palette: PackedByteArray) -> Dictionary:
 	return await %EditAlignments.edit_alignments(animation_image, raw_palette)
+
+
+func _on_directional_object_added() -> void:
+	%DirectionalObjectMappings.reload()
+
+
+func add_fat_4_entry() -> void:
+	%Fat4._on_add_button_pressed()

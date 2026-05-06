@@ -26,6 +26,19 @@ func load_das(p_das: Dictionary, p_key: String) -> void:
 	das = p_das
 	key = p_key
 	
+
+func reload() -> void:
+	%ItemList.clear()
+	%Container.hide()
+	%HeaderEdit.text = ""
+	%Dir1Edit.text = ""
+	%Dir2Edit.text = ""
+	%Dir3Edit.text = ""
+	%Dir4Edit.text = ""
+	%Dir5Edit.text = ""
+	%Dir6Edit.text = ""
+	%Dir7Edit.text = ""
+	%Dir8Edit.text = ""
 	for i in range(len(das[key])):
 		var idx: int = %ItemList.add_item(str(i))
 		%ItemList.set_item_metadata(idx, das[key][i])

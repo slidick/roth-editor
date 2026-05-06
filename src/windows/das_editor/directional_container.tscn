@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dr1767uott2uo"]
 
 [ext_resource type="Script" uid="uid://bb4hmtbc2qda4" path="res://src/windows/das_editor/directional_container.gd" id="1_3ddx1"]
+[ext_resource type="Script" uid="uid://bdfvkk5hbrn6c" path="res://src/ui/roth_texture_container.gd" id="2_d0ymd"]
 
 [node name="DirectionalContainer" type="MarginContainer" unique_id=1578364445]
 offset_right = 1477.0
@@ -149,6 +150,413 @@ layout_mode = 2
 size_flags_vertical = 4
 rounded = true
 
+[node name="RemoveDirectionalButton" type="Button" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=1560864656]
+layout_mode = 2
+size_flags_vertical = 4
+disabled = true
+text = "Delete Object"
+
+[node name="AddDirectionalButton" type="Button" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=926231427]
+layout_mode = 2
+size_flags_vertical = 4
+text = "New Object"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1374742087]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=695590247]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1727961564]
+layout_mode = 2
+text = "Directional Object"
+horizontal_alignment = 1
+
+[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1272346273]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=1735830852]
+layout_mode = 2
+text = "Collision"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=7582892]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=1143210098]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Height"
+
+[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=1340472679]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=1546646332]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=584603695]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Radius"
+
+[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1264305260]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1936398440]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer" unique_id=1120642993]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer" unique_id=1145420464]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=1612380669]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=681314526]
+layout_mode = 2
+text = "Front"
+horizontal_alignment = 1
+
+[node name="FrontTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=911479294]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=773116271]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1475764248]
+layout_mode = 2
+text = "Index"
+
+[node name="FrontIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=116984943]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="FrontMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1535929270]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToFrontButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1724785388]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=1762346440]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=461343138]
+layout_mode = 2
+text = "Front-Left"
+horizontal_alignment = 1
+
+[node name="FrontLeftTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=1759533859]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=2018267184]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=586021045]
+layout_mode = 2
+text = "Index"
+
+[node name="FrontLeftIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=899799201]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="FrontLeftMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=1674384681]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToFrontLeftButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=1101240579]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=1929363511]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=1379014213]
+layout_mode = 2
+text = "Left"
+horizontal_alignment = 1
+
+[node name="LeftTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=1569174626]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=710283149]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=725821636]
+layout_mode = 2
+text = "Index"
+
+[node name="LeftIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1442501701]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="LeftMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=651635667]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToLeftButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=372651512]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=1750034096]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=1721102217]
+layout_mode = 2
+text = "Back-Left"
+horizontal_alignment = 1
+
+[node name="BackLeftTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=1144398537]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=722246187]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/HBoxContainer" unique_id=104540881]
+layout_mode = 2
+text = "Index"
+
+[node name="BackLeftIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/HBoxContainer" unique_id=955320914]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="BackLeftMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=1229099]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToBackLeftButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=941980364]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=1246602883]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=798860703]
+layout_mode = 2
+text = "Back"
+horizontal_alignment = 1
+
+[node name="BackTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=1169391434]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=1321673012]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/HBoxContainer" unique_id=1447385033]
+layout_mode = 2
+text = "Index"
+
+[node name="BackIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/HBoxContainer" unique_id=828221047]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="BackMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=1133782670]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToBackButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=112000899]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer6" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=991772645]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1998774366]
+layout_mode = 2
+text = "Back-Right"
+horizontal_alignment = 1
+
+[node name="BackRightTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=2135686162]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1240962581]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/HBoxContainer" unique_id=2040661012]
+layout_mode = 2
+text = "Index"
+
+[node name="BackRightIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/HBoxContainer" unique_id=53368253]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="BackRightMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1458781609]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToBackRightButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1231800906]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer7" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=969132690]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1432272392]
+layout_mode = 2
+text = "Right"
+horizontal_alignment = 1
+
+[node name="RightTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1228766880]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1681041519]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/HBoxContainer" unique_id=653305166]
+layout_mode = 2
+text = "Index"
+
+[node name="RightIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/HBoxContainer" unique_id=1713695662]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="RightMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1997585218]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToRightButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1034110337]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
+[node name="VBoxContainer8" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=847048489]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1935145589]
+layout_mode = 2
+text = "Front-Right"
+horizontal_alignment = 1
+
+[node name="FrontRightTextureContainer" type="Container" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1495607539]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_d0ymd")
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1568327911]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/HBoxContainer" unique_id=965775038]
+layout_mode = 2
+text = "Index"
+
+[node name="FrontRightIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/HBoxContainer" unique_id=44283044]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+rounded = true
+
+[node name="FrontRightMirroredCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=214551207]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Mirrored"
+
+[node name="JumpToFrontRightButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1796500426]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Jump To"
+
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/NameEdit" to="." method="_on_name_edit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DescriptionEdit" to="." method="_on_description_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
@@ -164,3 +572,31 @@ rounded = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox7" to="." method="_on_flags_1_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox8" to="." method="_on_flags_1_check_box_pressed"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/HBoxContainer2/Flags2SpinBox" to="." method="_on_flags_2_spin_box_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/RemoveDirectionalButton" to="." method="_on_remove_directional_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/AddDirectionalButton" to="." method="_on_add_directional_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/HBoxContainer/FrontIndexSpinBox" to="." method="_on_front_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/FrontMirroredCheckBox" to="." method="_on_front_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/JumpToFrontButton" to="." method="_on_jump_to_front_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/HBoxContainer/FrontLeftIndexSpinBox" to="." method="_on_front_left_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/FrontLeftMirroredCheckBox" to="." method="_on_front_left_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/JumpToFrontLeftButton" to="." method="_on_jump_to_front_left_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/HBoxContainer/LeftIndexSpinBox" to="." method="_on_left_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/LeftMirroredCheckBox" to="." method="_on_left_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/JumpToLeftButton" to="." method="_on_jump_to_left_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/HBoxContainer/BackLeftIndexSpinBox" to="." method="_on_back_left_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/BackLeftMirroredCheckBox" to="." method="_on_back_left_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/JumpToBackLeftButton" to="." method="_on_jump_to_back_left_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/HBoxContainer/BackIndexSpinBox" to="." method="_on_back_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/BackMirroredCheckBox" to="." method="_on_back_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/JumpToBackButton" to="." method="_on_jump_to_back_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/HBoxContainer/BackRightIndexSpinBox" to="." method="_on_back_right_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/BackRightMirroredCheckBox" to="." method="_on_back_right_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/JumpToBackRightButton" to="." method="_on_jump_to_back_right_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/HBoxContainer/RightIndexSpinBox" to="." method="_on_right_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/RightMirroredCheckBox" to="." method="_on_right_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/JumpToRightButton" to="." method="_on_jump_to_right_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/HBoxContainer/FrontRightIndexSpinBox" to="." method="_on_front_right_index_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/FrontRightMirroredCheckBox" to="." method="_on_front_right_mirrored_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/JumpToFrontRightButton" to="." method="_on_jump_to_front_right_button_pressed"]

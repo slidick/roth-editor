@@ -67,6 +67,11 @@ item_8/id = 7
 layout_mode = 2
 text = "Find Next Empty"
 
+[node name="AddButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=4215560]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add"
+
 [node name="TabContainer" type="TabContainer" parent="HBoxContainer" unique_id=1195910988]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -131,6 +136,7 @@ metadata/_tab_index = 7
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="index_pressed" from="HBoxContainer/VBoxContainer/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FindEmptyButton" to="." method="_on_find_empty_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/GenericContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/GenericContainer" to="." method="_on_jump_to_filename_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/StandardImageContainer" to="." method="_on_jump_to_collision_pressed"]
@@ -141,7 +147,9 @@ metadata/_tab_index = 7
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/Animation2Container" to="." method="_on_jump_to_filename_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/ImagePackContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/ImagePackContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="directional_object_added" from="HBoxContainer/TabContainer/DirectionalContainer" to="." method="_on_directional_object_added"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/DirectionalContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/DirectionalContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_index_pressed" from="HBoxContainer/TabContainer/DirectionalContainer" to="." method="_on_jump_to_index_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/MonsterContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/MonsterContainer" to="." method="_on_jump_to_filename_pressed"]

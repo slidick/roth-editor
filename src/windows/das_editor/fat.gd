@@ -2,6 +2,8 @@ extends MarginContainer
 
 signal jump_to_collision_pressed(index: int)
 signal jump_to_filename_pressed(filename: Dictionary)
+signal jump_to_index_pressed(index: int)
+signal directional_object_added
 
 enum InitMenu {
 	COPY,
@@ -17,7 +19,7 @@ enum InitMenu {
 
 var das: Dictionary = {}
 var key: String = ""
-
+var starting_index: int = -1
 
 func reset() -> void:
 	das = {}
@@ -30,6 +32,12 @@ func reset() -> void:
 func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 	das = p_das
 	key = p_key
+	starting_index = p_starting_index
+	
+	if name == "Fat4":
+		%AddButton.show()
+	else:
+		%AddButton.hide()
 	
 	for i in range(len(das[key])):
 		var fat_name: String = str(p_starting_index + i)
@@ -67,7 +75,7 @@ func _on_item_list_item_selected(index: int) -> void:
 		%ImagePackContainer.load_pack_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 == 0:
 		%DirectionalContainer.show()
-		%DirectionalContainer.load_directional_data(das[key][index], das.directional_object_mappings, das.raw_palette, true if key == "fat_3" else false)
+		%DirectionalContainer.load_directional_data(das[key][index], das.directional_object_mappings, true if key == "fat_3" else false, das)
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 > 0:
 		%MonsterContainer.show()
 		%MonsterContainer.load_monster_data(das[key][index], das.monster_mappings, das.raw_palette, true if key == "fat_3" else false)
@@ -333,3 +341,31 @@ func _on_jump_to_filename_pressed(filename: Dictionary) -> void:
 
 func _on_jump_to_collision_pressed() -> void:
 	jump_to_collision_pressed.emit(%ItemList.get_selected_items()[0])
+
+
+func _on_jump_to_index_pressed(index: int) -> void:
+	jump_to_index_pressed.emit(index)
+
+
+func _on_add_button_pressed() -> void:
+	var new_index: int = -1
+	if len(das[key]) == 0:
+		new_index = starting_index
+	else:
+		new_index = das[key][-1].index + 1
+	var fat_entry: Dictionary = {
+		"offset": 0,
+		"size": 0,
+		"flags_1": 0,
+		"flags_2": 0,
+		"index": new_index,
+	}
+	das[key].append(fat_entry)
+	var idx: int = %ItemList.add_item(str(new_index))
+	%ItemList.set_item_metadata(idx, das[key][len(das[key])-1])
+	%ItemList.select(idx)
+	%ItemList.ensure_current_is_visible()
+
+
+func _on_directional_object_added() -> void:
+	directional_object_added.emit()
