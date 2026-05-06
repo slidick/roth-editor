@@ -16,8 +16,14 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 		raw_palette = p_raw_palette
 	if is_fat_3:
 		%JumpToObjectCollisionButton.show()
+		%ObjectCollision.show()
+		%CollisionHeightSpinBox.set_value_no_signal(animation_image.object_collision.raw_data & 65535)
+		%CollisionHeightSpinBox.get_line_edit().text = "%d" % int(animation_image.object_collision.raw_data & 65535)
+		%CollisionRadiusSpinBox.set_value_no_signal((animation_image.object_collision.raw_data & 4294901760) >> 16)
+		%CollisionRadiusSpinBox.get_line_edit().text = "%d" % (int(animation_image.object_collision.raw_data & 4294901760) >> 16)
 	else:
 		%JumpToObjectCollisionButton.hide()
+		%ObjectCollision.hide()
 	
 	%Flags1Edit.text = str(animation_image.flags_1)
 	%Flags2Edit.text = str(animation_image.flags_2)
@@ -561,3 +567,11 @@ func _on_shift_y_spin_box_value_changed(value: float) -> void:
 
 func _on_show_shift_check_button_pressed() -> void:
 	update_texture()
+
+
+func _on_collision_height_spin_box_value_changed(value: float) -> void:
+	animation_image.object_collision.raw_data = int(%CollisionHeightSpinBox.value) + (int(%CollisionRadiusSpinBox.value) << 16)
+
+
+func _on_collision_radius_spin_box_value_changed(value: float) -> void:
+	animation_image.object_collision.raw_data = int(%CollisionHeightSpinBox.value) + (int(%CollisionRadiusSpinBox.value) << 16)

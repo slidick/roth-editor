@@ -814,6 +814,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 			"raw_data": file.get_32(),
 		}
 		object_collisions.append(object_collision_data)
+		das.fat_3[i]["object_collision"] = object_collision_data
 	das["object_collisions"] = object_collisions
 	
 	

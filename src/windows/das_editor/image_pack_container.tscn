@@ -386,12 +386,14 @@ horizontal_alignment = 1
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=5221880]
+custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "Count"
 
 [node name="ImageCountSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=658624525]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 min_value = 1.0
 value = 1.0
 rounded = true
@@ -399,15 +401,16 @@ allow_greater = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1263069555]
 layout_mode = 2
-size_flags_horizontal = 4
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2" unique_id=1311383109]
+custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "Type"
 
 [node name="PackTypeSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2" unique_id=379967118]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 255.0
 rounded = true
 
@@ -435,6 +438,45 @@ text = "Max"
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
+
+[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=423370717]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=695709474]
+layout_mode = 2
+text = "Collision"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=801851381]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=867802861]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Height"
+
+[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=212518902]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=1830627037]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1492120209]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Radius"
+
+[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1842761147]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
 
 [node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1335283331]
 unique_name_in_owner = true
@@ -669,6 +711,8 @@ item_2/id = 2
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2/PackTypeSpinBox" to="." method="_on_pack_type_spin_box_value_changed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/3DObjectTypeCheckBox" to="." method="_on_3d_object_type_check_box_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/DirectionalTypeCheckBox" to="." method="_on_directional_type_check_box_toggled"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer5/DirectionalContainer/HBoxContainer/FrontSpinBox" to="." method="_on_front_spin_box_value_changed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/DirectionalContainer/HBoxContainer/FrontFlipCheckBox" to="." method="_on_front_flip_check_box_toggled"]

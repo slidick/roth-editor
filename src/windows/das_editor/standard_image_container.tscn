@@ -425,6 +425,45 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Show Shift"
 
+[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1415280401]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=599831375]
+layout_mode = 2
+text = "Collision"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=647229311]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=830613047]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Height"
+
+[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=1350279535]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=161968544]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1256361252]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Radius"
+
+[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1773515534]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 65535.0
+rounded = true
+
 [node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1693324728]
 unique_name_in_owner = true
 layout_mode = 2
@@ -519,6 +558,8 @@ text = "Edit Image"
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer/ShiftXSpinBox" to="." method="_on_shift_x_spin_box_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2/ShiftYSpinBox" to="." method="_on_shift_y_spin_box_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/ShowShiftCheckButton" to="." method="_on_show_shift_check_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
 [connection signal="gui_input" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
 [connection signal="index_pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/PopupMenu" to="." method="_on_popup_menu_index_pressed"]

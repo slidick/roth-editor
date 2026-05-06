@@ -16,8 +16,14 @@ func load_pack_data(p_pack_data: Dictionary, p_raw_palette: Array = [], is_fat_3
 		raw_palette = p_raw_palette
 	if is_fat_3:
 		%JumpToObjectCollisionButton.show()
+		%ObjectCollision.show()
+		%CollisionHeightSpinBox.set_value_no_signal(pack_data.object_collision.raw_data & 65535)
+		%CollisionHeightSpinBox.get_line_edit().text = "%d" % int(pack_data.object_collision.raw_data & 65535)
+		%CollisionRadiusSpinBox.set_value_no_signal((pack_data.object_collision.raw_data & 4294901760) >> 16)
+		%CollisionRadiusSpinBox.get_line_edit().text = "%d" % (int(pack_data.object_collision.raw_data & 4294901760) >> 16)
 	else:
 		%JumpToObjectCollisionButton.hide()
+		%ObjectCollision.hide()
 	
 	%Flags1Edit.text = str(pack_data.flags_1)
 	%Flags2Edit.text = str(pack_data.flags_2)
@@ -562,3 +568,11 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				%ImagesContainer.get_child(right_clicked_frame*2).queue_free()
 				%ImagesContainer.get_child(right_clicked_frame*2+1).queue_free()
 				%ImageCountSpinBox.set_value_no_signal(len(pack_data.data.image_pack))
+
+
+func _on_collision_height_spin_box_value_changed(value: float) -> void:
+	pack_data.object_collision.raw_data = int(%CollisionHeightSpinBox.value) + (int(%CollisionRadiusSpinBox.value) << 16)
+
+
+func _on_collision_radius_spin_box_value_changed(value: float) -> void:
+	pack_data.object_collision.raw_data = int(%CollisionHeightSpinBox.value) + (int(%CollisionRadiusSpinBox.value) << 16)
