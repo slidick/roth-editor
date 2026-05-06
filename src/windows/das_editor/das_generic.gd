@@ -3,7 +3,7 @@ extends Control
 signal jump_to_collision_pressed
 signal jump_to_filename_pressed(filename: Dictionary)
 var das: Variant
-#var SCRIPT: Script = preload("uid://daro30p1hipaw")
+var SCRIPT: Script = preload("uid://daro30p1hipaw")
 
 func reset() -> void:
 	das = {}
@@ -27,7 +27,7 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 	add_child(scroll_container)
 	
 	for key: String in das[p_key]:
-		if key == "index" or key == "raw_animation" or key == "raw_animation_2":
+		if key == "index" or key == "raw_animation" or key == "raw_animation_2" or key == "object_collision":
 			continue
 		
 		var hbox := HBoxContainer.new()
@@ -318,20 +318,20 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 						
 						hbox2.add_child(label2)
 						hbox2.add_child(line_edit_2)
-			#"data":
-				#var margin_container := MarginContainer.new()
-				#margin_container.add_theme_constant_override("margin_left", 10)
-				#margin_container.add_theme_constant_override("margin_top", 10)
-				#margin_container.add_theme_constant_override("margin_right", 10)
-				#margin_container.add_theme_constant_override("margin_bottom", 10)
-				#margin_container.set_script(SCRIPT)
-				#margin_container.set_owner.call_deferred(owner)
-				#margin_container.call_deferred("load_das", das[p_key], key, p_raw_palette)
-				#margin_container.add_theme_constant_override("margin_right", 0)
-				#margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				#hbox.add_child(margin_container)
-				#
-				#hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			"data":
+				var margin_container := MarginContainer.new()
+				margin_container.add_theme_constant_override("margin_left", 10)
+				margin_container.add_theme_constant_override("margin_top", 10)
+				margin_container.add_theme_constant_override("margin_right", 10)
+				margin_container.add_theme_constant_override("margin_bottom", 10)
+				margin_container.set_script(SCRIPT)
+				margin_container.set_owner.call_deferred(owner)
+				margin_container.call_deferred("load_das", das[p_key], key, p_raw_palette)
+				margin_container.add_theme_constant_override("margin_right", 0)
+				margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				hbox.add_child(margin_container)
+				
+				hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			"filename":
 				var line_edit := LineEdit.new()
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
