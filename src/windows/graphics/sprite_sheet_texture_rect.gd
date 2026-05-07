@@ -12,7 +12,7 @@ func _draw() -> void:
 		var x: float = 0
 		var x_jump: float = texture.get_width()/float(columns)
 		
-		if expand_mode == TextureRect.EXPAND_FIT_WIDTH:
+		if expand_mode == TextureRect.EXPAND_FIT_WIDTH or size.x > texture.get_width():
 			y = size.y/2.0 - (texture.get_height()*(size.x / texture.get_width())/2.0)
 			y_jump *= size.x / texture.get_width()
 			x_jump *= size.x / texture.get_width()

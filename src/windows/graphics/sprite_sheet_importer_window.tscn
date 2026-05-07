@@ -13,6 +13,7 @@ offset_right = 1251.0
 offset_bottom = 702.0
 theme = ExtResource("2_onjrr")
 script = ExtResource("2_1g5jn")
+resizable = false
 exclusive = true
 show_close_button = false
 minimize_style = "fade_out"
