@@ -14,7 +14,7 @@ signal gdv_loading_updated(progress: float)
 @warning_ignore("unused_signal")
 signal close_map(map: Map)
 @warning_ignore("unused_signal")
-signal editor_action(p_map_info: Dictionary, p_name: String)
+signal editor_action(p_map: Map, p_name: String)
 @warning_ignore("unused_signal")
 signal edit_texture(p_das_info: Dictionary, p_index: int)
 

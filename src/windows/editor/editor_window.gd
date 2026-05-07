@@ -477,6 +477,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if results[0] == false:
 				return
 			selected[0].get_metadata(0).ref.metadata = results[1]
+			Roth.editor_action.emit(selected[0].get_metadata(0).ref, "Change map metadata")
 		MapMenu.EditArray02:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
