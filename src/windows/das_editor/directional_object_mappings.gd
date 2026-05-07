@@ -131,7 +131,7 @@ func _on_header_edit_text_changed(new_text: String) -> void:
 func _on_dir_1_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_1_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_1_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir1MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_1_fat_idx = int(new_text) | (0x8000 if %Dir1MirrorCheckBox.button_pressed else 0)
 
@@ -139,7 +139,7 @@ func _on_dir_1_edit_text_changed(new_text: String) -> void:
 func _on_dir_2_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_2_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_2_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir2MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_2_fat_idx = int(new_text) | (0x8000 if %Dir2MirrorCheckBox.button_pressed else 0)
 
@@ -147,7 +147,7 @@ func _on_dir_2_edit_text_changed(new_text: String) -> void:
 func _on_dir_3_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_3_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_3_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir3MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_3_fat_idx = int(new_text) | (0x8000 if %Dir3MirrorCheckBox.button_pressed else 0)
 
@@ -155,7 +155,7 @@ func _on_dir_3_edit_text_changed(new_text: String) -> void:
 func _on_dir_4_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_4_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_4_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir4MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_4_fat_idx = int(new_text) | (0x8000 if %Dir4MirrorCheckBox.button_pressed else 0)
 
@@ -163,7 +163,7 @@ func _on_dir_4_edit_text_changed(new_text: String) -> void:
 func _on_dir_5_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_5_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_5_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir5MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_5_fat_idx = int(new_text) | (0x8000 if %Dir5MirrorCheckBox.button_pressed else 0)
 
@@ -171,7 +171,7 @@ func _on_dir_5_edit_text_changed(new_text: String) -> void:
 func _on_dir_6_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_6_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_6_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir6MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_6_fat_idx = int(new_text) | (0x8000 if %Dir6MirrorCheckBox.button_pressed else 0)
 
@@ -179,7 +179,7 @@ func _on_dir_6_edit_text_changed(new_text: String) -> void:
 func _on_dir_7_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_7_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_7_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir7MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_7_fat_idx = int(new_text) | (0x8000 if %Dir7MirrorCheckBox.button_pressed else 0)
 
@@ -187,7 +187,7 @@ func _on_dir_7_edit_text_changed(new_text: String) -> void:
 func _on_dir_8_edit_text_changed(new_text: String) -> void:
 	var directional_mapping: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	if das.das_info.is_ademo:
-		directional_mapping.dir_8_fat_idx = int(new_text) + 4608
+		directional_mapping.dir_8_fat_idx = (int(new_text) + 4608) | (0x8000 if %Dir8MirrorCheckBox.button_pressed else 0)
 	else:
 		directional_mapping.dir_8_fat_idx = int(new_text) | (0x8000 if %Dir8MirrorCheckBox.button_pressed else 0)
 

@@ -348,7 +348,7 @@ func _on_collision_radius_spin_box_value_changed(value: float) -> void:
 func _on_front_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_5_fat_idx = int(value) + 4608
+		mapping.dir_5_fat_idx = (int(value) + 4608) | (0x8000 if %FrontMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_5_fat_idx = int(value) | (0x8000 if %FrontMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -357,7 +357,7 @@ func _on_front_index_spin_box_value_changed(value: float) -> void:
 func _on_front_left_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_6_fat_idx = int(value) + 4608
+		mapping.dir_6_fat_idx = (int(value) + 4608) | (0x8000 if %FrontLeftMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_6_fat_idx = int(value) | (0x8000 if %FrontLeftMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -366,7 +366,7 @@ func _on_front_left_index_spin_box_value_changed(value: float) -> void:
 func _on_left_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_7_fat_idx = int(value) + 4608
+		mapping.dir_7_fat_idx = (int(value) + 4608) | (0x8000 if %LeftMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_7_fat_idx = int(value) | (0x8000 if %LeftMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -375,7 +375,7 @@ func _on_left_index_spin_box_value_changed(value: float) -> void:
 func _on_back_left_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_8_fat_idx = int(value) + 4608
+		mapping.dir_8_fat_idx = (int(value) + 4608) | (0x8000 if %BackLeftMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_8_fat_idx = int(value) | (0x8000 if %BackLeftMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -384,7 +384,7 @@ func _on_back_left_index_spin_box_value_changed(value: float) -> void:
 func _on_back_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_1_fat_idx = int(value) + 4608
+		mapping.dir_1_fat_idx = (int(value) + 4608) | (0x8000 if %BackMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_1_fat_idx = int(value) | (0x8000 if %BackMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -393,7 +393,7 @@ func _on_back_index_spin_box_value_changed(value: float) -> void:
 func _on_back_right_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_2_fat_idx = int(value) + 4608
+		mapping.dir_2_fat_idx = (int(value) + 4608) | (0x8000 if %BackRightMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_2_fat_idx = int(value) | (0x8000 if %BackRightMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -402,7 +402,7 @@ func _on_back_right_index_spin_box_value_changed(value: float) -> void:
 func _on_right_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_3_fat_idx = int(value) + 4608
+		mapping.dir_3_fat_idx = (int(value) + 4608) | (0x8000 if %RightMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_3_fat_idx = int(value) | (0x8000 if %RightMirroredCheckBox.button_pressed else 0)
 	update_textures()
@@ -411,7 +411,7 @@ func _on_right_index_spin_box_value_changed(value: float) -> void:
 func _on_front_right_index_spin_box_value_changed(value: float) -> void:
 	var mapping: Dictionary = directional_mappings[directional_data.flags_2]
 	if das.das_info.is_ademo:
-		mapping.dir_4_fat_idx = int(value) + 4608
+		mapping.dir_4_fat_idx = (int(value) + 4608) | (0x8000 if %FrontRightMirroredCheckBox.button_pressed else 0)
 	else:
 		mapping.dir_4_fat_idx = int(value) | (0x8000 if %FrontRightMirroredCheckBox.button_pressed else 0)
 	update_textures()
