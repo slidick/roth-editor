@@ -339,7 +339,10 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 				%PopupMenu.set_item_disabled(6, true)
 			if name == "Fat3":
 				%PopupMenu.set_item_disabled(7, false)
-				%PopupMenu.set_item_disabled(8, false)
+				if das.das_info.is_ademo:
+					%PopupMenu.set_item_disabled(8, false)
+				else:
+					%PopupMenu.set_item_disabled(8, true)
 			else:
 				%PopupMenu.set_item_disabled(7, true)
 				%PopupMenu.set_item_disabled(8, true)
