@@ -21,7 +21,7 @@ func load_das(p_das: Dictionary) -> void:
 		_on_palette_slider_value_changed(0)
 
 
-func reload() -> void:
+func reload_palette() -> void:
 	if palette != das.palette:
 		palette = das.palette.duplicate(true)
 		for child: Control in %DefaultPalette.get_children():

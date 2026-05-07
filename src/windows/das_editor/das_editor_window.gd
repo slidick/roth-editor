@@ -222,8 +222,8 @@ func reset_das() -> void:
 
 func _on_section_item_list_item_selected(index: int) -> void:
 	%DASTabContainer.current_tab = index
-	if %DASTabContainer.get_child(index).has_method("reload"):
-		%DASTabContainer.get_child(index).reload()
+	if %DASTabContainer.get_child(index).has_method("reload_palette"):
+		%DASTabContainer.get_child(index).reload_palette()
 
 
 func load_das(p_das: Dictionary) -> void:

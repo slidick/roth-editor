@@ -18,6 +18,8 @@ func reset() -> void:
 func load_das(p_das: Dictionary, p_key: String) -> void:
 	das = p_das
 	key = p_key
+	reload()
+
 
 func reload() -> void:
 	%ItemList.clear()
