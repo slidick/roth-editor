@@ -35,10 +35,33 @@ func load_das(p_das: Dictionary, p_key: String) -> void:
 	)
 	vbox.add_child(tree)
 	
-	var root := tree.create_item()
-	for i in range(ceili(len(das[p_key].raw_data)/float(COLUMNS))):
-		var tree_item := root.create_child()
-		for j in range(COLUMNS):
-			if len(das[p_key].raw_data) > (i*COLUMNS+j):
-				tree_item.set_editable(j, true)
-				tree_item.set_text(j, str(das[p_key].raw_data[i*COLUMNS+j]))
+	var reset_tree: Callable = func() -> void:
+		tree.clear()
+		var root := tree.create_item()
+		for i in range(ceili(len(das[p_key].raw_data)/float(COLUMNS))):
+			var tree_item := root.create_child()
+			for j in range(COLUMNS):
+				if len(das[p_key].raw_data) > (i*COLUMNS+j):
+					tree_item.set_editable(j, true)
+					tree_item.set_text(j, str(das[p_key].raw_data[i*COLUMNS+j]))
+	
+	reset_tree.call()
+	
+	var hbox := HBoxContainer.new()
+	var button_1 := Button.new()
+	button_1.text = "Clear"
+	button_1.pressed.connect(func() -> void:
+		for i in range(len(das[p_key].raw_data)):
+			das[p_key].raw_data[i] = 0
+		reset_tree.call()
+	)
+	var button_2 := Button.new()
+	button_2.text = "Randomize"
+	button_2.pressed.connect(func() -> void:
+		for i in range(len(das[p_key].raw_data)):
+			das[p_key].raw_data[i] = randi_range(0, 255)
+		reset_tree.call()
+	)
+	hbox.add_child(button_1)
+	hbox.add_child(button_2)
+	vbox.add_child(hbox)
