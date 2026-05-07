@@ -118,6 +118,12 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index] = owner.copied_data.duplicate(true)
 			var original_filename: Dictionary = das[key][item_index].filename
 			das[key][item_index].index = fat_index
+			if name == "Fat3":
+				if "object_collision" in das[key][item_index]:
+					das.object_collisions[item_index].raw_data = das[key][item_index].object_collision.raw_data
+				das[key][item_index].object_collision = das.object_collisions[item_index]
+			else:
+				das[key][item_index].erase("object_collision")
 			var filename := {
 				"name": "%s (COPY)" % original_filename.name,
 				"desc": original_filename.desc,
