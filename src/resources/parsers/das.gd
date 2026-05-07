@@ -77,7 +77,8 @@ const DAS_HEADER := {
 	filenames_size = Parser.Type.Word,
 	directional_object_table_size = Parser.Type.Word,
 	directional_object_table_offset = Parser.Type.DWord,
-	unk_0x20 = Parser.Type.DWord,
+	unk_0x20 = Parser.Type.Word,
+	sky_index = Parser.Type.Word,
 	object_collision_section_offset = Parser.Type.DWord,
 	monster_mapping_section_offset = Parser.Type.DWord,
 	monster_mapping_section_size = Parser.Type.DWord,
@@ -1204,7 +1205,8 @@ static func compile(das: Dictionary) -> PackedByteArray:
 	data.encode_u16(pos+24, section_sizes.filenames.size)
 	data.encode_u16(pos+26, section_sizes.directional_objects.size)
 	data.encode_u32(pos+28, section_sizes.directional_objects.starts_at)
-	data.encode_u32(pos+32, das.header.unk_0x20)
+	data.encode_u16(pos+32, das.header.unk_0x20)
+	data.encode_u16(pos+34, das.header.sky_index)
 	data.encode_u32(pos+36, section_sizes.object_collisions.starts_at)
 	data.encode_u32(pos+40, section_sizes.monster_mappings.starts_at)
 	data.encode_u32(pos+44, section_sizes.monster_mappings.size)

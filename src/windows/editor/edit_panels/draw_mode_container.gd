@@ -223,7 +223,7 @@ func _on_draw_mode_roof_option_item_selected(index: int) -> void:
 	elif index == %DrawModeRoofOption.item_count - 3:
 		%DrawModeRoofOption.select(0)
 		var das: Dictionary = %Map2D.map.das
-		update_texture_options({"ceiling": das.textures[0].index, "floor": %DrawModeFloorOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
+		update_texture_options({"ceiling": das.header.sky_index, "floor": %DrawModeFloorOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 
 
 func _on_draw_mode_floor_option_item_selected(index: int) -> void:
@@ -246,7 +246,7 @@ func _on_draw_mode_floor_option_item_selected(index: int) -> void:
 	elif index == %DrawModeFloorOption.item_count - 3:
 		%DrawModeFloorOption.select(0)
 		var das: Dictionary = %Map2D.map.das
-		update_texture_options({"floor": das.textures[0].index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
+		update_texture_options({"floor": das.header.sky_index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "wall": %DrawModeWallOption.get_item_metadata(0)})
 
 
 func _on_draw_mode_wall_option_item_selected(index: int) -> void:
@@ -269,7 +269,7 @@ func _on_draw_mode_wall_option_item_selected(index: int) -> void:
 	elif index == %DrawModeWallOption.item_count - 3:
 		%DrawModeWallOption.select(0)
 		var das: Dictionary = %Map2D.map.das
-		update_texture_options({"wall": das.textures[0].index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
+		update_texture_options({"wall": das.header.sky_index, "ceiling": %DrawModeRoofOption.get_item_metadata(0), "floor": %DrawModeFloorOption.get_item_metadata(0)})
 
 
 func _on_auto_split_wall_check_box_toggled(toggled_on: bool) -> void:

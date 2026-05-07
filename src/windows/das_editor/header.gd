@@ -29,7 +29,7 @@ func load_das(p_das: Dictionary) -> void:
 		var line_edit := LineEdit.new()
 		line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		line_edit.text = str(das.header[key])
-		if key == "unk_0x20":
+		if key == "sky_index" or key == "unk_0x20":
 			line_edit.text_changed.connect(func (new_text: String) -> void:
 				das.header[key] = int(new_text)
 			)

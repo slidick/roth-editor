@@ -179,11 +179,11 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 			key = "wall"
 	match context_index:
 		0:
-			var tex: Texture2D = das.textures[0].image[0] if typeof(das.textures[0].image) == TYPE_ARRAY else das.textures[0].image
-			%RotatableItemList.set_item_text(index, "%s\n%d: %s" % [key, das.textures[0].index, das.textures[0].name])
+			var tex: Texture2D = das.mapping[das.header.sky_index].image[0] if typeof(das.mapping[das.header.sky_index].image) == TYPE_ARRAY else das.mapping[das.header.sky_index].image
+			%RotatableItemList.set_item_text(index, "%s\n%d: %s" % [key, das.header.sky_index, das.textures[0].name])
 			%RotatableItemList.set_item_icon(index, tex)
-			%RotatableItemList.set_item_metadata(index, das.textures[0].index)
-			texture_data[%ItemList.get_item_text(%ItemList.get_selected_items()[0])][key] = das.textures[0].index
+			%RotatableItemList.set_item_metadata(index, das.header.sky_index)
+			texture_data[%ItemList.get_item_text(%ItemList.get_selected_items()[0])][key] = das.header.sky_index
 		1:
 			%Palette.show_palette(das.palette)
 			var palette_index: int = await %Palette.color_selected

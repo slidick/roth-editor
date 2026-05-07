@@ -477,7 +477,7 @@ func _on_roof_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_sectors[0].map.das
 			for sector: Sector in owner.selected_sectors:
-				sector.data.ceilingTextureIndex = das.textures[0].index
+				sector.data.ceilingTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_sectors)
 			%EditSectorTimer.start()
@@ -520,7 +520,7 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_sectors[0].map.das
 			for sector: Sector in owner.selected_sectors:
-				sector.data.floorTextureIndex = das.textures[0].index
+				sector.data.floorTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_sectors)
 			%EditSectorTimer.start()
@@ -655,7 +655,7 @@ func _on_platform_floor_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_sectors[0].map.das
 			for sector: Sector in owner.selected_sectors:
-				sector.platform.floorTextureIndex = das.textures[0].index
+				sector.platform.floorTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_sectors)
 			%EditSectorTimer.start()
@@ -712,7 +712,7 @@ func _on_platform_roof_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_sectors[0].map.das
 			for sector: Sector in owner.selected_sectors:
-				sector.platform.ceilingTextureIndex = das.textures[0].index
+				sector.platform.ceilingTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_sectors)
 			%EditSectorTimer.start()
@@ -759,7 +759,7 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 				var face: Face = face_ref.get_ref()
 				if face.sister:
 					var sister: Face = face.sister.get_ref()
-					if sister.texture_data.midTextureIndex == das.textures[0].index:
+					if sister.texture_data.midTextureIndex == das.header.sky_index:
 						sister.texture_data.midTextureIndex = 2
 					var value := int(ceil(sister.face_length))
 					sister.texture_data.unk0x00 = int(value) & 255

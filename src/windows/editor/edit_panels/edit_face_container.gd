@@ -279,7 +279,7 @@ func _on_bottom_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_faces[0].map.das
 			for face: Face in owner.selected_faces:
-				face.texture_data.lowerTextureIndex = das.textures[0].index
+				face.texture_data.lowerTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_faces)
 			%EditFaceTimer.start()
@@ -322,7 +322,7 @@ func _on_mid_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_faces[0].map.das
 			for face: Face in owner.selected_faces:
-				face.texture_data.midTextureIndex = das.textures[0].index
+				face.texture_data.midTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_faces)
 			%EditFaceTimer.start()
@@ -365,7 +365,7 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 		SELECT_SKY:
 			var das: Dictionary = owner.selected_faces[0].map.das
 			for face: Face in owner.selected_faces:
-				face.texture_data.upperTextureIndex = das.textures[0].index
+				face.texture_data.upperTextureIndex = das.header.sky_index
 			update_selections(false)
 			owner.redraw(owner.selected_faces)
 			%EditFaceTimer.start()
