@@ -324,9 +324,11 @@ func update_texture() -> void:
 				"width": animation_image.data.width,
 				"height": animation_image.data.height,
 			}
-			var new_texture: Dictionary = await owner.owner.edit_image(data, raw_palette)
+			var new_texture: Dictionary = await owner.owner.edit_image(data, raw_palette, true)
 			if not new_texture.is_empty():
 				animation_image.data.animation[i] = new_texture.raw_image
+				if new_texture.width != animation_image.data.width or new_texture.height != animation_image.data.height:
+					update_frames_size(new_texture.width, new_texture.height, animation_image.data.width, animation_image.data.height)
 				animation_image.data = Das.compile_animation(animation_image.data)
 				update_texture()
 		)
@@ -337,6 +339,58 @@ func update_texture() -> void:
 		vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
 		%ImagesContainer.add_child(vbox)
+
+
+func update_frames_size(new_width: int, new_height: int, old_width: int, old_height: int) -> void:
+	for k in range(len(animation_image.data.animation)):
+		var frame: PackedByteArray = animation_image.data.animation[k]
+		if len(frame) != new_width * new_height:
+			var new_raw_image := PackedByteArray()
+			if new_width > old_width:
+				var index: int = 0
+				for i in range(old_height):
+					for j in range(old_width):
+						new_raw_image.append(frame[index])
+						index += 1
+					for j in range(new_width-old_width):
+						new_raw_image.append(0)
+			elif new_width < old_width:
+				var index: int = 0
+				for i in range(old_height):
+					for j in range(new_width):
+						new_raw_image.append(frame[index])
+						index += 1
+					for j in range(old_width-new_width):
+						index += 1
+			else:
+				new_raw_image = frame
+			
+			frame = new_raw_image
+			
+			new_raw_image = PackedByteArray()
+			if new_height > old_height:
+				var index: int = 0
+				for i in range(old_height):
+					for j in range(new_width):
+						new_raw_image.append(frame[index])
+						index += 1
+				for i in range(new_height-old_height):
+					for j in range(new_width):
+						new_raw_image.append(0)
+			elif new_height < old_height:
+				var index: int = 0
+				for i in range(new_height):
+					for j in range(new_width):
+						new_raw_image.append(frame[index])
+						index += 1
+			else:
+				new_raw_image = frame
+			
+			animation_image.data.animation[k] = new_raw_image
+			
+	
+	animation_image.data.width = new_width
+	animation_image.data.height = new_height
 
 
 func update_dimension() -> void:

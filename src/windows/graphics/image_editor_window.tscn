@@ -151,11 +151,15 @@ max_value = 64.0
 value = 1.0
 rounded = true
 
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="2" unique_id=1637433269]
+[node name="TextureSizeContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="2" unique_id=1643946416]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="0" unique_id=1637433269]
 layout_mode = 2
 text = "Width:"
 
-[node name="WidthSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="3" unique_id=1172273463]
+[node name="WidthSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="1" unique_id=1172273463]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
@@ -163,11 +167,11 @@ max_value = 1024.0
 value = 32.0
 rounded = true
 
-[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="4" unique_id=50821418]
+[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="2" unique_id=50821418]
 layout_mode = 2
 text = "Height:"
 
-[node name="HeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="5" unique_id=443703408]
+[node name="HeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="3" unique_id=443703408]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
@@ -311,8 +315,8 @@ editor_preview_indeterminate = false
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
 [connection signal="file_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer/BrowseButton/FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/DrawSizeSpinBox" to="." method="_on_draw_size_spin_box_value_changed"]
-[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/WidthSpinBox" to="." method="_on_width_spin_box_value_changed"]
-[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/HeightSpinBox" to="." method="_on_height_spin_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer/WidthSpinBox" to="." method="_on_width_spin_box_value_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer/HeightSpinBox" to="." method="_on_height_spin_box_value_changed"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/MenuBar/Transform" to="." method="_on_transform_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

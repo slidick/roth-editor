@@ -259,8 +259,8 @@ func _on_jump_to_index_pressed(index: int) -> void:
 		_on_section_item_list_item_selected(7)
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray) -> Variant:
-	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette)
+func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_lock_size: bool = false) -> Variant:
+	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, false, p_lock_size)
 
 
 func copy_data(p_data: Dictionary) -> void:
