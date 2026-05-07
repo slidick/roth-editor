@@ -313,7 +313,10 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 		if das[key][index].offset == 0:
 			%PopupMenu.set_item_disabled(3, false)
 			%PopupMenu.set_item_disabled(4, false)
-			%PopupMenu.set_item_disabled(5, false)
+			if name != "Fat3" and name != "Fat4":
+				%PopupMenu.set_item_disabled(5, true)
+			else:
+				%PopupMenu.set_item_disabled(5, false)
 			if name != "Fat4":
 				%PopupMenu.set_item_disabled(6, false)
 			else:
