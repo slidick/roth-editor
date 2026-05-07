@@ -126,13 +126,23 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
 			else:
 				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
+
+			
 			if "data" in das[key][item_index]:
 				if "animation" in das[key][item_index].data:
 					%ItemList.set_item_text(item_index, "%d - Animation" % das[key][item_index].index)
+				elif "animation_2" in das[key][item_index].data:
+					%ItemList.set_item_text(item_index, "%d - Animation2" % das[key][item_index].index)
 				elif "image_pack" in das[key][item_index].data:
 					%ItemList.set_item_text(item_index, "%d - Pack" % das[key][item_index].index)
+				elif "faces" in das[key][item_index].data:
+					%ItemList.set_item_text(item_index, "%d - 3D" % das[key][item_index].index)
 				else:
 					%ItemList.set_item_text(item_index, "%d - Image" % das[key][item_index].index)
+			if das[key][item_index].flags_1 & 32 > 0 and das[key][item_index].flags_1 & 4 > 0:
+				%ItemList.set_item_text(item_index, "%d - Monster" % das[key][item_index].index)
+			elif das[key][item_index].flags_1 & 32 > 0:
+				%ItemList.set_item_text(item_index, "%d - Directional" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		InitMenu.CLEAR:
 			if await Dialog.confirm("Clear selected data?", "Confirm", false, Vector2(400,200)):
