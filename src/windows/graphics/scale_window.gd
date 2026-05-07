@@ -23,6 +23,8 @@ func scale_image(p_image_data: Dictionary, is_rotated: bool) -> Dictionary:
 	
 	locked_width = original_width
 	locked_height = original_height
+	locked_width_percent = 100.0
+	locked_height_percent = 100.0
 	%ScaleWidthPixelSpinBox.set_value_no_signal(original_width)
 	%ScaleWidthPixelSpinBox.get_line_edit().text = str(original_width)
 	%ScaleWidthPixelSpinBox.max_value = int(65536.0 / original_height)
@@ -55,8 +57,8 @@ func _on_cancel_button_pressed() -> void:
 
 func _on_confirm_button_pressed() -> void:
 	done.emit({
-		"width": %ScaleWidthPixelSpinBox.value,
-		"height": %ScaleHeightPixelSpinBox.value,
+		"width": int(%ScaleWidthPixelSpinBox.value),
+		"height": int(%ScaleHeightPixelSpinBox.value),
 	})
 
 
