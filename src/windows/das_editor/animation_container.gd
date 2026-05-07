@@ -504,6 +504,7 @@ func _on_import_sprite_sheet_button_pressed() -> void:
 	animation_image.data.animation = spritesheet_data.animation
 	animation_image.data.width = spritesheet_data.width
 	animation_image.data.height = spritesheet_data.height
+	animation_image.data = Das.compile_animation(animation_image.data)
 	update_texture()
 
 
