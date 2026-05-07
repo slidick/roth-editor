@@ -1,10 +1,13 @@
 extends RotationContainer
 class_name RothTextureContainer
 
-
-func load_data(data: Dictionary, raw_palette: PackedByteArray) -> void:
+func clear() -> void:
 	for child: Node in get_children():
 		child.queue_free()
+
+
+func load_data(data: Dictionary, raw_palette: PackedByteArray) -> void:
+	clear()
 	
 	if not "data" in data:
 		return

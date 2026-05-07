@@ -153,3 +153,4 @@ metadata/_tab_index = 7
 [connection signal="jump_to_index_pressed" from="HBoxContainer/TabContainer/DirectionalContainer" to="." method="_on_jump_to_index_pressed"]
 [connection signal="jump_to_collision_pressed" from="HBoxContainer/TabContainer/MonsterContainer" to="." method="_on_jump_to_collision_pressed"]
 [connection signal="jump_to_filename_pressed" from="HBoxContainer/TabContainer/MonsterContainer" to="." method="_on_jump_to_filename_pressed"]
+[connection signal="jump_to_index_pressed" from="HBoxContainer/TabContainer/MonsterContainer" to="." method="_on_jump_to_index_pressed"]

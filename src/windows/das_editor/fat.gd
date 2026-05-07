@@ -78,7 +78,7 @@ func _on_item_list_item_selected(index: int) -> void:
 		%DirectionalContainer.load_directional_data(das[key][index], das.directional_object_mappings, true if key == "fat_3" else false, das)
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 > 0:
 		%MonsterContainer.show()
-		%MonsterContainer.load_monster_data(das[key][index], das.monster_mappings, das.raw_palette, true if key == "fat_3" else false)
+		%MonsterContainer.load_monster_data(das[key][index], das.monster_mappings, true if key == "fat_3" else false, das)
 	elif das[key][index].size == 0:
 		%EmptyContainer.show()
 	else:

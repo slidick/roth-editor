@@ -2,25 +2,33 @@ extends Control
 
 signal jump_to_collision_pressed
 signal jump_to_filename_pressed(filename: Dictionary)
+signal jump_to_index_pressed(index: int)
 
 var monster_data: Dictionary = {}
 var raw_palette: PackedByteArray = []
 var monster_mappings: Array = []
+var das: Dictionary = {}
 
 
-func load_monster_data(p_monster_data: Dictionary, p_monster_mappings: Array, p_raw_palette: Array = [], is_fat_3: bool = false) -> void:
+func load_monster_data(p_monster_data: Dictionary, p_monster_mappings: Array, is_fat_3: bool, p_das: Dictionary) -> void:
 	monster_data = p_monster_data
 	monster_mappings = p_monster_mappings
-	if p_raw_palette.is_empty():
+	das = p_das
+	if das.raw_palette.is_empty():
 		raw_palette = Das.DEFAULT_RAW_PALETTE
 	else:
-		raw_palette = p_raw_palette
+		raw_palette = das.raw_palette
 	if is_fat_3:
 		%JumpToObjectCollisionButton.show()
+		%ObjectCollision.show()
+		%CollisionHeightSpinBox.set_value_no_signal(monster_data.object_collision.raw_data & 65535)
+		%CollisionHeightSpinBox.get_line_edit().text = "%d" % int(monster_data.object_collision.raw_data & 65535)
+		%CollisionRadiusSpinBox.set_value_no_signal((monster_data.object_collision.raw_data & 4294901760) >> 16)
+		%CollisionRadiusSpinBox.get_line_edit().text = "%d" % (int(monster_data.object_collision.raw_data & 4294901760) >> 16)
 	else:
 		%JumpToObjectCollisionButton.hide()
+		%ObjectCollision.hide()
 	
-	%Flags1Edit.text = str(monster_data.flags_1)
 	%Flags2SpinBox.set_value_no_signal(monster_data.flags_2)
 	%Flags2SpinBox.max_value = len(monster_mappings) - 1
 	if "filename" in monster_data:
@@ -34,41 +42,107 @@ func load_monster_data(p_monster_data: Dictionary, p_monster_mappings: Array, p_
 		%JumpToFilenameButton.hide()
 		%AddFilenameButton.show()
 	
-	update_flags_1_checkboxes()
+	load_textures()
 
 
-func update_flags_1_checkboxes() -> void:
-	%Flags1CheckBox1.button_pressed = (monster_data.flags_1 & (1<<0)) > 0
-	%Flags1CheckBox2.button_pressed = (monster_data.flags_1 & (1<<1)) > 0
-	%Flags1CheckBox3.button_pressed = (monster_data.flags_1 & (1<<2)) > 0
-	%Flags1CheckBox4.button_pressed = (monster_data.flags_1 & (1<<3)) > 0
-	%Flags1CheckBox5.button_pressed = (monster_data.flags_1 & (1<<4)) > 0
-	%Flags1CheckBox6.button_pressed = (monster_data.flags_1 & (1<<5)) > 0
-	%Flags1CheckBox7.button_pressed = (monster_data.flags_1 & (1<<6)) > 0
-	%Flags1CheckBox8.button_pressed = (monster_data.flags_1 & (1<<7)) > 0
+func load_textures() -> void:
+	for node: Node in %Container.get_children():
+		node.queue_free()
+	for type: String in ["walking", "flying", "attack1", "attack2", "on_damage"]:
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 20)
+		
+		var section_vbox := VBoxContainer.new()
+		var section_label := Label.new()
+		section_label.text = type.to_pascal_case()
+		section_vbox.add_child(section_label)
+		section_vbox.add_child(hbox)
+		
+		for direction: String in ["front", "front_left", "left", "back_left", "back", "back_right", "right", "front_right"]:
+			var vbox: VBoxContainer = create_vbox(direction, type+"_"+direction)
+			hbox.add_child(vbox)
+		
+		%Container.add_child(section_vbox)
+		%Container.add_child(HSeparator.new())
+	
+	var hbox_2 := HBoxContainer.new()
+	hbox_2.add_theme_constant_override("separation", 20)
+	
+	var section_vbox_2 := VBoxContainer.new()
+	var section_label_2 := Label.new()
+	section_label_2.text = "Other"
+	section_vbox_2.add_child(section_label_2)
+	section_vbox_2.add_child(hbox_2)
+	%Container.add_child(section_vbox_2)
+	
+	for key: String in ["dying_normal", "dead_normal", "dying_crit", "dead_crit", "spawn"]:
+		var vbox: VBoxContainer = create_vbox(key, key)
+		hbox_2.add_child(vbox)
+	for i in range(3):
+		hbox_2.add_spacer(false)
 
 
-func update_flags_1_from_checkboxes() -> void:
-	var new_value: int = 0
-	if %Flags1CheckBox1.button_pressed:
-		new_value |= (1<<0)
-	if %Flags1CheckBox2.button_pressed:
-		new_value |= (1<<1)
-	if %Flags1CheckBox3.button_pressed:
-		new_value |= (1<<2)
-	if %Flags1CheckBox4.button_pressed:
-		new_value |= (1<<3)
-	if %Flags1CheckBox5.button_pressed:
-		new_value |= (1<<4)
-	if %Flags1CheckBox6.button_pressed:
-		new_value |= (1<<5)
-	if %Flags1CheckBox7.button_pressed:
-		new_value |= (1<<6)
-	if %Flags1CheckBox8.button_pressed:
-		new_value |= (1<<7)
-	monster_data.flags_1 = new_value
-	%Flags1Edit.text = str(new_value)
-
+func create_vbox(key_label: String, full_key: String) -> VBoxContainer:
+	var mapping: Dictionary = monster_mappings[monster_data.flags_2]
+	var label := Label.new()
+	label.text = key_label.to_pascal_case()
+	
+	var texture_container := RothTextureContainer.new()
+	texture_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var reload_texture: Callable = func () -> void:
+		var fat_4_index: int = (mapping[full_key] & 0x7FFF) - (len(das.fat_1) + len(das.fat_2) + len(das.fat_3)) - 4608
+		var fat_3_index: int = (mapping[full_key] & 0x7FFF) - (len(das.fat_1) + len(das.fat_2)) - 4608
+		if fat_4_index >= 0:
+			texture_container.load_data(das.fat_4[fat_4_index], raw_palette)
+		elif fat_3_index >= 0:
+			texture_container.load_data(das.fat_3[fat_3_index], raw_palette)
+		else:
+			texture_container.clear()
+		if mapping[full_key] & 0x8000:
+			texture_container.mirror = true
+		else:
+			texture_container.mirror = false
+	reload_texture.call_deferred()
+	
+	var checkbox := CheckBox.new()
+	checkbox.text = "Mirror"
+	checkbox.button_pressed = mapping[full_key] & 0x8000
+	checkbox.toggled.connect(func (toggled_on: bool) -> void:
+		if toggled_on:
+			mapping[full_key] |= 0x8000
+		else:
+			mapping[full_key] &= ~0x8000
+		reload_texture.call()
+	)
+	
+	var spinbox := SpinBox.new()
+	spinbox.min_value = -1
+	spinbox.max_value = len(das.fat_1) + len(das.fat_2) + len(das.fat_3) + len(das.fat_4) - 1
+	spinbox.rounded = true
+	spinbox.value = (mapping[full_key] & 0x7FFF) - 4608
+	spinbox.get_line_edit().text = str((mapping[full_key] & 0x7FFF) - 4608)
+	spinbox.value_changed.connect(func (value: float) -> void:
+		if int(value) == -1:
+			mapping[full_key] = 0
+		else:
+			mapping[full_key] = (int(value) + 4608) | (0x8000 if checkbox.button_pressed else 0)
+		reload_texture.call()
+	)
+	
+	var button := Button.new()
+	button.text = "Jump to"
+	button.pressed.connect(func () -> void:
+		jump_to_index_pressed.emit((mapping[full_key] & 0x7FFF) - 4608)
+	)
+	
+	var vbox := VBoxContainer.new()
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_child(label)
+	vbox.add_child(texture_container)
+	vbox.add_child(spinbox)
+	vbox.add_child(checkbox)
+	vbox.add_child(button)
+	return vbox
 
 func _on_name_edit_text_changed(new_text: String) -> void:
 	monster_data.filename.name = new_text
@@ -94,14 +168,14 @@ func _on_jump_to_object_collision_button_pressed() -> void:
 	jump_to_collision_pressed.emit()
 
 
-func _on_flags_1_edit_text_changed(new_text: String) -> void:
-	monster_data.flags_1 = int(new_text)
-	update_flags_1_checkboxes()
-
-
 func _on_flags_2_spin_box_value_changed(value: float) -> void:
 	monster_data.flags_2 = int(value)
+	load_textures()
 
 
-func _on_flags_1_check_box_pressed() -> void:
-	update_flags_1_from_checkboxes()
+func _on_collision_height_spin_box_value_changed(value: float) -> void:
+	monster_data.object_collision.raw_data = int(%CollisionHeightSpinBox.value) + (int(%CollisionRadiusSpinBox.value) << 16)
+
+
+func _on_collision_radius_spin_box_value_changed(value: float) -> void:
+	monster_data.object_collision.raw_data = int(%CollisionHeightSpinBox.value) + (int(%CollisionRadiusSpinBox.value) << 16)
