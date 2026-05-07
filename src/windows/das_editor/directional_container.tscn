@@ -56,164 +56,86 @@ layout_mode = 2
 text = "Jump to Object Collision"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1399114354]
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=770358838]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=521239725]
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-text = "Flags 1"
-
-[node name="Flags1Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=64993370]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=416441489]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=6872688]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Flags1CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1434105680]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Flag 1"
-
-[node name="Flags1CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1792571454]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Sky"
-
-[node name="Flags1CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=770835173]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-disabled = true
-text = "Monster"
-
-[node name="Flags1CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1197169268]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Flag 4"
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1365841034]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Flags1CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=406231732]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Flag 5"
-
-[node name="Flags1CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=4840664]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-disabled = true
-text = "Directional"
-
-[node name="Flags1CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=932243398]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Flag 7"
-
-[node name="Flags1CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=167730764]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Flag 8"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1138120108]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=470020483]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=470020483]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=5755003]
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=5755003]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Directional Object Index"
 
-[node name="Flags2SpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=844142203]
+[node name="Flags2SpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=844142203]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 size_flags_vertical = 4
 rounded = true
 
-[node name="RemoveDirectionalButton" type="Button" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=1560864656]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=481225024]
+layout_mode = 2
+
+[node name="RemoveDirectionalButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1560864656]
 layout_mode = 2
 size_flags_vertical = 4
 disabled = true
 text = "Delete Object"
 
-[node name="AddDirectionalButton" type="Button" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=926231427]
+[node name="AddDirectionalButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=926231427]
 layout_mode = 2
 size_flags_vertical = 4
 text = "New Object"
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1374742087]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=695590247]
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1727961564]
-layout_mode = 2
-text = "Directional Object"
-horizontal_alignment = 1
-
-[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1272346273]
+[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1272346273]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=1735830852]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=1735830852]
 layout_mode = 2
 text = "Collision"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=7582892]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=7582892]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=1143210098]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer" unique_id=1143210098]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "Height"
 
-[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=1340472679]
+[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer" unique_id=1340472679]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 65535.0
 rounded = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=1546646332]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=1546646332]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=584603695]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2" unique_id=584603695]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "Radius"
 
-[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1264305260]
+[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2" unique_id=1264305260]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 65535.0
 rounded = true
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1374742087]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1936398440]
 layout_mode = 2
@@ -562,20 +484,11 @@ text = "Jump To"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToFilenameButton" to="." method="_on_jump_to_filename_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/AddFilenameButton" to="." method="_on_add_filename_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/JumpToObjectCollisionButton" to="." method="_on_jump_to_object_collision_button_pressed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer/HBoxContainer/Flags1Edit" to="." method="_on_flags_1_edit_text_changed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox1" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox2" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox3" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer/Flags1CheckBox4" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox5" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox6" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox7" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2/Flags1CheckBox8" to="." method="_on_flags_1_check_box_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer/HBoxContainer2/Flags2SpinBox" to="." method="_on_flags_2_spin_box_value_changed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/RemoveDirectionalButton" to="." method="_on_remove_directional_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HBoxContainer2/AddDirectionalButton" to="." method="_on_add_directional_button_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/Flags2SpinBox" to="." method="_on_flags_2_spin_box_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/RemoveDirectionalButton" to="." method="_on_remove_directional_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/AddDirectionalButton" to="." method="_on_add_directional_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/HBoxContainer/FrontIndexSpinBox" to="." method="_on_front_index_spin_box_value_changed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/FrontMirroredCheckBox" to="." method="_on_front_mirrored_check_box_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/JumpToFrontButton" to="." method="_on_jump_to_front_button_pressed"]
