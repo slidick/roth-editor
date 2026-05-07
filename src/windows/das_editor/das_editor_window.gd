@@ -237,7 +237,7 @@ func load_das(p_das: Dictionary) -> void:
 	%Fat4.load_das(p_das, "fat_4", len(p_das["fat_1"])+len(p_das["fat_2"])+len(p_das["fat_3"]))
 	%DirectionalObjectMappings.load_das(p_das, "directional_object_mappings")
 	%ObjectCollisions.load_das(p_das, "object_collisions")
-	%MonsterMappings.load_das(p_das, "monster_mappings")
+	%MonsterMappings.load_das(p_das)
 	%Unk0x38.load_das(p_das, "unk_0x38_section")
 	%Unk0x40.load_das(p_das, "unk_0x40_section")
 	%Filenames1.load_das(p_das, "filenames_1")

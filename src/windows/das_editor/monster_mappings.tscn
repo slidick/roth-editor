@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b13db4skwnxbm"]
 
 [ext_resource type="Script" uid="uid://bo3cm20hv6gqn" path="res://src/windows/das_editor/monster_mappings.gd" id="1_nsgjt"]
-[ext_resource type="Script" uid="uid://daro30p1hipaw" path="res://src/windows/das_editor/das_generic.gd" id="2_fbref"]
 
 [node name="MonsterMappings" type="MarginContainer" unique_id=119751931]
 anchors_preset = 15
@@ -20,12 +19,21 @@ script = ExtResource("1_nsgjt")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=761126293]
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="HBoxContainer" unique_id=1675645498]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1369485077]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer/VBoxContainer" unique_id=1675645498]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 3
 focus_neighbor_top = NodePath(".")
 focus_neighbor_bottom = NodePath(".")
+allow_reselect = true
+
+[node name="AddButton" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=1060621518]
+layout_mode = 2
+text = "Add"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer" unique_id=1220535302]
 layout_mode = 2
@@ -40,6 +48,6 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-script = ExtResource("2_fbref")
 
-[connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]

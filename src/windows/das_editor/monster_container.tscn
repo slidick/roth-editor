@@ -80,12 +80,14 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+disabled = true
 text = "Flag 1"
 
 [node name="Flags1CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1792571454]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+disabled = true
 text = "Sky"
 
 [node name="Flags1CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=770835173]
@@ -99,6 +101,7 @@ text = "Monster"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+disabled = true
 text = "Flag 4"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1365841034]
@@ -109,6 +112,7 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+disabled = true
 text = "Flag 5"
 
 [node name="Flags1CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=4840664]
@@ -122,12 +126,14 @@ text = "Directional"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+disabled = true
 text = "Flag 7"
 
 [node name="Flags1CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=167730764]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+disabled = true
 text = "Flag 8"
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1138120108]
@@ -148,6 +154,7 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 size_flags_vertical = 4
 rounded = true
+allow_greater = true
 
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/NameEdit" to="." method="_on_name_edit_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DescriptionEdit" to="." method="_on_description_edit_text_changed"]
