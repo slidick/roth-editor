@@ -313,6 +313,37 @@ size_flags_vertical = 4
 indeterminate = true
 editor_preview_indeterminate = false
 
+[node name="Saving" parent="SubWindows" index="4" unique_id=1508630522 instance=ExtResource("1_o2sbq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -211.0
+offset_top = -112.0
+offset_right = 211.0
+offset_bottom = 112.0
+grow_horizontal = 2
+grow_vertical = 2
+movable = false
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_o307s")
+
+[node name="ProgressBar" type="ProgressBar" parent="SubWindows/Saving/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(1508630522, 2051013205) index="0" unique_id=1872677360]
+layout_mode = 2
+size_flags_vertical = 4
+indeterminate = true
+editor_preview_indeterminate = false
+
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_activated"]
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_selected"]
@@ -328,3 +359,4 @@ editor_preview_indeterminate = false
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 
 [editable path="SubWindows/Loading"]
+[editable path="SubWindows/Saving"]

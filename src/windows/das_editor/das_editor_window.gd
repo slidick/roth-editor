@@ -213,12 +213,14 @@ func _on_cancel_button_pressed() -> bool:
 
 
 func _on_save_button_pressed() -> void:
-	var bytes: PackedByteArray = Das.compile(das)
+	%Saving.toggle(true)
+	var bytes: PackedByteArray = await Das.compile(das)
 	if bytes.is_empty():
 		return
 	var file := FileAccess.open(das.das_info.filepath, FileAccess.WRITE)
 	file.store_buffer(bytes)
 	file.close()
+	%Saving.toggle(false)
 	original_das = das.duplicate(true)
 	%Palette.update_original()
 	if save_tween:

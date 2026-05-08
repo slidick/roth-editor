@@ -1172,10 +1172,18 @@ static func _parse_object_data(file: FileAccess, is_ademo: bool) -> Dictionary:
 
 #region Compile
 static func compile(das: Dictionary) -> PackedByteArray:
+	var thread := Thread.new()
+	thread.start(_compile_thread.bind(das))
+	var data: PackedByteArray = await Roth.das_compile_finished
+	thread.wait_to_finish()
+	return data
+
+
+static func _compile_thread(das: Dictionary) -> void:
 	# Calculate sizes and offsets
 	var section_sizes: Dictionary = _calculate_section_sizes_and_offsets(das)
 	if section_sizes.is_empty():
-		return []
+		Roth.das_compile_finished.emit.call_deferred([])
 	
 	
 	#print(JSON.stringify(section_sizes, '\t', false))
@@ -1395,7 +1403,7 @@ static func compile(das: Dictionary) -> PackedByteArray:
 				data.encode_u8(pos, 0)
 				pos += 1
 	
-	return data
+	Roth.das_compile_finished.emit.call_deferred(data)
 
 
 static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
