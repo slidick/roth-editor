@@ -160,6 +160,8 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				if "filename" in das[key][item_index]:
 					owner.erase_filename(das[key][item_index].filename)
 				das[key][item_index].erase("filename")
+				das[key][item_index].erase("directional_mapping")
+				das[key][item_index].erase("monster_mapping")
 				%ItemList.set_item_text(item_index, "%d" % das[key][item_index].index)
 				_on_item_list_item_selected(item_index)
 		InitMenu.STANDARD:

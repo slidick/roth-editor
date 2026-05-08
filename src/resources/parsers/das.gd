@@ -727,12 +727,32 @@ static func _parse_das_thread(das_info: Dictionary) -> void:
 		das["palette_shading"] = []
 	
 	
+	# Directional Objects
+	var directional_mappings: Array = []
+	file.seek(das.header.directional_object_table_offset)
+	for i in range(das.header.directional_object_table_size/20):
+		file.seek(das.header.directional_object_table_offset + (das.header.directional_object_table_size/20*2) + (i*18))
+		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+		directional_mappings.append(directional_mapping)
+	
+	das["directional_object_mappings"] = directional_mappings
+	
+	
+	# Monster Mapping Section
+	file.seek(das.header.monster_mapping_section_offset)
+	var monster_mappings: Array = []
+	for i in range(das.header.monster_mapping_section_size / 104):
+		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
+		monster_mappings.append(monster_mapping)
+	das["monster_mappings"] = monster_mappings
+	
+	
 	# FAT
 	das["fat_1"] = []
 	var index: int = 0
 	for i in range(das.header.fat_block_1_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index, das)
 		data.index = index
 		if "data" in data:
 			data.data.erase("shift_data")
@@ -742,7 +762,7 @@ static func _parse_das_thread(das_info: Dictionary) -> void:
 	das["fat_2"] = []
 	for i in range(das.header.fat_block_2_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index, das)
 		data.index = index
 		if "data" in data:
 			data.data.erase("shift_data")
@@ -752,7 +772,7 @@ static func _parse_das_thread(das_info: Dictionary) -> void:
 	das["fat_3"] = []
 	for i in range(das.header.fat_block_3_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index, das)
 		data.index = index
 		if "data" in data:
 			data.data.erase("shift_data")
@@ -762,7 +782,7 @@ static func _parse_das_thread(das_info: Dictionary) -> void:
 	das["fat_4"] = []
 	for i in range(das.header.fat_block_4_count):
 		file.seek(das.header.img_fat_offset + (index*8))
-		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index)
+		var data: Dictionary = _parse_fat(file, das_info.is_ademo, index, das)
 		data.index = index
 		das["fat_4"].append(data)
 		index += 1
@@ -797,24 +817,6 @@ static func _parse_das_thread(das_info: Dictionary) -> void:
 		das["filenames_2"].append(filename)
 	
 	
-	# Directional Objects
-	var directional_offsets: Array = []
-	var directional_mappings: Array = []
-	file.seek(das.header.directional_object_table_offset)
-	for i in range(das.header.directional_object_table_size/20):
-		directional_offsets.append(file.get_16())
-	for i in range(das.header.directional_object_table_size/20):
-		file.seek(das.header.directional_object_table_offset + (das.header.directional_object_table_size/20*2) + (i*18))
-		#var relative_offset: int = file.get_16()
-		#file.seek(das.header.directional_object_table_offset + relative_offset)
-		
-		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
-		directional_mappings.append(directional_mapping)
-	
-	das["directional_object_mappings"] = directional_mappings
-	
-	
-	
 	# Object Collision
 	file.seek(das.header.object_collision_section_offset)
 	var object_collisions: Array = []
@@ -825,15 +827,6 @@ static func _parse_das_thread(das_info: Dictionary) -> void:
 		object_collisions.append(object_collision_data)
 		das.fat_3[i]["object_collision"] = object_collision_data
 	das["object_collisions"] = object_collisions
-	
-	
-	# Monster Mapping Section
-	file.seek(das.header.monster_mapping_section_offset)
-	var monster_mappings: Array = []
-	for i in range(das.header.monster_mapping_section_size / 104):
-		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
-		monster_mappings.append(monster_mapping)
-	das["monster_mappings"] = monster_mappings
 	
 	
 	# Unk_0x10 Section
@@ -891,18 +884,14 @@ static func _parse_palette_shading(file: FileAccess, offset: int) -> Array:
 	return palette_shading_tables
 
 
-static func _parse_fat(file: FileAccess, is_ademo: bool, index: int) -> Dictionary:
+static func _parse_fat(file: FileAccess, is_ademo: bool, index: int, das: Dictionary) -> Dictionary:
 	var entry: Dictionary = Parser.parse_section(file, FAT_ENTRY)
 	if entry.size != 0:
 		if (entry.flags_1 & 32) > 0:
-			pass
-			#if is_ademo:
-				#entry.shift_data = []
-				#file.seek(file.get_position() - 4)
-				#for i in range(2):
-					#entry.shift_data.append(file.get_16())
-			#entry["raw_data"] = file.get_buffer(entry.size*2)
-			
+			if entry.flags_1 & 4 == 0:
+				entry["directional_mapping"] = das.directional_object_mappings[entry.flags_2].duplicate()
+			else:
+				entry["monster_mapping"] = das.monster_mappings[entry.flags_2].duplicate()
 		elif entry.offset > 0:
 			file.seek(entry.offset)
 			entry["data"] = _parse_image(file, is_ademo, index)
@@ -1427,14 +1416,17 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 		"size": len(das.unk_0x10_section.raw_data)
 	}
 	
+	das.directional_object_mappings = []
+	das.monster_mappings = []
+	
 	var start_data_offset: int = header.size + fat.size + palette.size + unk_0x10.size
 	if das.das_info.is_ademo:
 		start_data_offset += 4
 	
-	var final_data_offset: int = _calculate_data_size(das.fat_1, start_data_offset, das.das_info.is_ademo)
-	final_data_offset = _calculate_data_size(das.fat_2, final_data_offset, das.das_info.is_ademo)
-	final_data_offset = _calculate_data_size(das.fat_3, final_data_offset, das.das_info.is_ademo)
-	final_data_offset = _calculate_data_size(das.fat_4, final_data_offset, das.das_info.is_ademo)
+	var final_data_offset: int = _calculate_data_size(das.fat_1, start_data_offset, das.das_info.is_ademo, das)
+	final_data_offset = _calculate_data_size(das.fat_2, final_data_offset, das.das_info.is_ademo, das)
+	final_data_offset = _calculate_data_size(das.fat_3, final_data_offset, das.das_info.is_ademo, das)
+	final_data_offset = _calculate_data_size(das.fat_4, final_data_offset, das.das_info.is_ademo, das)
 	
 	var data := {
 		"starts_at": start_data_offset,
@@ -1509,7 +1501,7 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 	}
 
 
-static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) -> int:
+static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool, das: Dictionary) -> int:
 	for entry: Dictionary in fat:
 		var size: int = 0
 		if entry.size != 0:
@@ -1517,6 +1509,14 @@ static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool) ->
 				#print(entry.index)
 				entry.offset = 0
 				entry.size = 4
+				
+				if entry.flags_1 & 4 == 0:
+					das.directional_object_mappings.append(entry.directional_mapping)
+					entry.flags_2 = len(das.directional_object_mappings) - 1
+				else:
+					das.monster_mappings.append(entry.monster_mapping)
+					entry.flags_2 = len(das.monster_mappings) - 1
+				
 				continue
 			
 			#if "raw_data" in entry:
