@@ -10,10 +10,11 @@ var locked_width: int = -1
 var locked_height: int = -1
 var locked_width_percent: float = 0.0
 var locked_height_percent: float = 0.0
+var force_downsize: bool = false
 
-
-func scale_image(p_image_data: Dictionary, is_rotated: bool) -> Dictionary:
+func scale_image(p_image_data: Dictionary, is_rotated: bool, p_force_downsize: bool = false) -> Dictionary:
 	image_data = p_image_data
+	force_downsize = p_force_downsize
 	if is_rotated:
 		original_width = image_data.height
 		original_height = image_data.width
@@ -25,18 +26,31 @@ func scale_image(p_image_data: Dictionary, is_rotated: bool) -> Dictionary:
 	locked_height = original_height
 	locked_width_percent = 100.0
 	locked_height_percent = 100.0
+	
+	if force_downsize:
+		%ScaleWidthPixelSpinBox.max_value = original_height
+		%ScaleHeightPixelSpinBox.max_value = original_width
+		%ScaleWidthPercentSpinBox.max_value = 100
+		%ScaleHeightPercentSpinBox.max_value = 100
+		%ConfirmButton.disabled = true
+	else:
+		%ScaleWidthPixelSpinBox.max_value = int(65536.0 / original_height)
+		%ScaleHeightPixelSpinBox.max_value = int(65536.0 / original_width)
+		%ScaleWidthPercentSpinBox.max_value = 65536.0 / original_height / original_width * 100
+		%ScaleHeightPercentSpinBox.max_value = 65536.0 / original_width / original_height * 100
+	
 	%ScaleWidthPixelSpinBox.set_value_no_signal(original_width)
 	%ScaleWidthPixelSpinBox.get_line_edit().text = str(original_width)
-	%ScaleWidthPixelSpinBox.max_value = int(65536.0 / original_height)
+	
 	%ScaleHeightPixelSpinBox.set_value_no_signal(original_height)
 	%ScaleHeightPixelSpinBox.get_line_edit().text = str(original_height)
-	%ScaleHeightPixelSpinBox.max_value = int(65536.0 / original_width)
+	
 	%ScaleWidthPercentSpinBox.set_value_no_signal(100)
 	%ScaleWidthPercentSpinBox.get_line_edit().text = str(100)
-	%ScaleWidthPercentSpinBox.max_value = 65536.0 / original_height / original_width * 100
+	
 	%ScaleHeightPercentSpinBox.set_value_no_signal(100)
 	%ScaleHeightPercentSpinBox.get_line_edit().text = str(100)
-	%ScaleHeightPercentSpinBox.max_value = 65536.0 / original_width / original_height * 100
+	
 	toggle(true)
 	var data: Dictionary = await done
 	toggle(false)
@@ -49,6 +63,10 @@ func update() -> void:
 			"width": int(%ScaleWidthPixelSpinBox.value),
 			"height": int(%ScaleHeightPixelSpinBox.value),
 		})
+	if int(%ScaleWidthPixelSpinBox.value) * int(%ScaleHeightPixelSpinBox.value) <= 256*256:
+		%ConfirmButton.disabled = false
+	else:
+		%ConfirmButton.disabled = true
 
 
 func _on_cancel_button_pressed() -> void:
@@ -64,8 +82,9 @@ func _on_confirm_button_pressed() -> void:
 
 func _on_scale_width_pixel_spin_box_value_changed(value: float) -> void:
 	%ScaleWidthPercentSpinBox.set_value_no_signal(value/original_width * 100)
-	%ScaleHeightPixelSpinBox.max_value = int(65536 / value)
-	%ScaleHeightPercentSpinBox.max_value = 65536 / value / original_height * 100
+	if not force_downsize:
+		%ScaleHeightPixelSpinBox.max_value = int(65536 / value)
+		%ScaleHeightPercentSpinBox.max_value = 65536 / value / original_height * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
 		var percent_change: float = value / locked_width
 		%ScaleHeightPercentSpinBox.set_value_no_signal((percent_change * locked_height) / original_height * 100)
@@ -75,8 +94,9 @@ func _on_scale_width_pixel_spin_box_value_changed(value: float) -> void:
 
 func _on_scale_height_pixel_spin_box_value_changed(value: float) -> void:
 	%ScaleHeightPercentSpinBox.set_value_no_signal(value/original_height * 100)
-	%ScaleWidthPixelSpinBox.max_value = int(65536 / value)
-	%ScaleWidthPercentSpinBox.max_value = 65536 / value / original_width * 100
+	if not force_downsize:
+		%ScaleWidthPixelSpinBox.max_value = int(65536 / value)
+		%ScaleWidthPercentSpinBox.max_value = 65536 / value / original_width * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
 		var percent_change: float = value / locked_height
 		%ScaleWidthPercentSpinBox.set_value_no_signal((percent_change * locked_width) / original_width * 100)
@@ -86,23 +106,27 @@ func _on_scale_height_pixel_spin_box_value_changed(value: float) -> void:
 
 func _on_scale_width_percent_spin_box_value_changed(value: float) -> void:
 	%ScaleWidthPixelSpinBox.set_value_no_signal(original_width * value / 100.0)
-	%ScaleHeightPercentSpinBox.max_value = 65536.0 / (original_width * value / 100.0) / original_height * 100
+	if not force_downsize:
+		%ScaleHeightPercentSpinBox.max_value = 65536.0 / (original_width * value / 100.0) / original_height * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
 		var percent_change: float = value / locked_width_percent
 		%ScaleHeightPercentSpinBox.set_value_no_signal(percent_change * locked_height_percent)
 		%ScaleHeightPixelSpinBox.set_value_no_signal(original_height * percent_change * locked_height_percent / 100.0)
-		%ScaleWidthPercentSpinBox.max_value = 65536.0 / (original_height * percent_change * locked_height_percent / 100.0) / original_width * 100
+		if not force_downsize:
+			%ScaleWidthPercentSpinBox.max_value = 65536.0 / (original_height * percent_change * locked_height_percent / 100.0) / original_width * 100
 	update()
 
 
 func _on_scale_height_percent_spin_box_value_changed(value: float) -> void:
 	%ScaleHeightPixelSpinBox.set_value_no_signal(original_height * value / 100.0)
-	%ScaleWidthPercentSpinBox.max_value = 65536.0 / (original_height * value / 100.0) / original_width * 100
+	if not force_downsize:
+		%ScaleWidthPercentSpinBox.max_value = 65536.0 / (original_height * value / 100.0) / original_width * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
 		var percent_change: float = value / locked_height_percent
 		%ScaleWidthPercentSpinBox.set_value_no_signal(percent_change * locked_width_percent)
 		%ScaleWidthPixelSpinBox.set_value_no_signal(original_width * percent_change * locked_width_percent / 100.0)
-		%ScaleHeightPercentSpinBox.max_value = 65536.0 / (original_width * percent_change * locked_width_percent / 100.0) / original_height * 100
+		if not force_downsize:
+			%ScaleHeightPercentSpinBox.max_value = 65536.0 / (original_width * percent_change * locked_width_percent / 100.0) / original_height * 100
 	update()
 
 

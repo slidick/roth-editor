@@ -138,6 +138,7 @@ layout_mode = 2
 text = "Cancel"
 
 [node name="ConfirmButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer2/HBoxContainer" index="1" unique_id=1914690945]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Confirm"

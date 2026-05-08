@@ -390,7 +390,6 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	else:
 		%RotateCanvasCheckBox.button_pressed = false
 	
-	
 	#if import_image.get_size().x > 256:
 		#import_image.resize(256, roundi((256.0/import_image.get_size().x) * import_image.get_size().y), Image.INTERPOLATE_NEAREST)
 	#if import_image.get_size().y > 256:
@@ -415,6 +414,10 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	update_camera_center()
 	additional_zoom = 1
 	init_zoom()
+	
+	if import_image.get_size().x * import_image.get_size().y > 256*256:
+		if not await scale_image(true):
+			_on_reset_button_pressed()
 
 
 func _on_transform_index_pressed(index: int) -> void:
@@ -452,21 +455,29 @@ func _on_transform_index_pressed(index: int) -> void:
 				texture_data.raw_image = Utility.flip_raw_image_vertical(texture_data.raw_image, texture_data.width, texture_data.height)
 			redraw_image()
 		5:
-			var data: Dictionary = await %Scale.scale_image(texture_data, %RotateCanvasCheckBox.button_pressed)
-			if not data.is_empty():
-				_on_scale_changed(data)
-				%Scaling.toggle(true)
-				var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette)
-				%Scaling.toggle(false)
-				texture_data.raw_image = raw_image
-				if %RotateCanvasCheckBox.button_pressed:
-					texture_data.width = data.height
-					texture_data.height = data.width
-				else:
-					texture_data.width = data.width
-					texture_data.height = data.height
-				update_dimensions()
-			redraw_image()
+			scale_image()
+
+
+func scale_image(force_downsize: bool = false) -> bool:
+	var data: Dictionary = await %Scale.scale_image(texture_data, %RotateCanvasCheckBox.button_pressed, force_downsize)
+	if not data.is_empty():
+		_on_scale_changed(data)
+		%Scaling.toggle(true)
+		var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette)
+		%Scaling.toggle(false)
+		texture_data.raw_image = raw_image
+		if %RotateCanvasCheckBox.button_pressed:
+			texture_data.width = data.height
+			texture_data.height = data.width
+		else:
+			texture_data.width = data.width
+			texture_data.height = data.height
+		update_dimensions()
+		redraw_image()
+		return true
+	else:
+		redraw_image()
+		return false
 
 
 func _on_scale_changed(data: Dictionary) -> void:
