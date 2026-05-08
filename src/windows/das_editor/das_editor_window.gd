@@ -1,5 +1,18 @@
 extends BaseWindow
 
+enum Page {
+	HEADER,
+	PALETTE,
+	PALETTE_SHADING,
+	UNK_0x10,
+	FAT_1,
+	FAT_2,
+	FAT_3,
+	FAT_4,
+	UNK_0X38,
+	UNK_0X40,
+}
+
 var das: Dictionary = {}
 var original_das: Dictionary = {}
 var save_tween: Tween
@@ -236,28 +249,23 @@ func load_das(p_das: Dictionary) -> void:
 	%Fat2.load_das(p_das, "fat_2", len(p_das["fat_1"]))
 	%Fat3.load_das(p_das, "fat_3", len(p_das["fat_1"])+len(p_das["fat_2"]))
 	%Fat4.load_das(p_das, "fat_4", len(p_das["fat_1"])+len(p_das["fat_2"])+len(p_das["fat_3"]))
-	%DirectionalObjectMappings.load_das(p_das, "directional_object_mappings")
-	%ObjectCollisions.load_das(p_das, "object_collisions")
-	%MonsterMappings.load_das(p_das)
 	%Unk0x38.load_das(p_das, "unk_0x38_section")
 	%Unk0x40.load_das(p_das, "unk_0x40_section")
-	%Filenames1.load_das(p_das, "filenames_1")
-	%Filenames2.load_das(p_das, "filenames_2")
 
 
 func _on_jump_to_index_pressed(index: int) -> void:
 	if %Fat1.select_index(index):
-		%SectionItemList.select(4)
-		_on_section_item_list_item_selected(4)
+		%SectionItemList.select(Page.FAT_1)
+		_on_section_item_list_item_selected(Page.FAT_1)
 	if %Fat2.select_index(index):
-		%SectionItemList.select(5)
-		_on_section_item_list_item_selected(5)
+		%SectionItemList.select(Page.FAT_2)
+		_on_section_item_list_item_selected(Page.FAT_2)
 	if %Fat3.select_index(index):
-		%SectionItemList.select(6)
-		_on_section_item_list_item_selected(6)
+		%SectionItemList.select(Page.FAT_3)
+		_on_section_item_list_item_selected(Page.FAT_3)
 	if %Fat4.select_index(index):
-		%SectionItemList.select(7)
-		_on_section_item_list_item_selected(7)
+		%SectionItemList.select(Page.FAT_4)
+		_on_section_item_list_item_selected(Page.FAT_4)
 
 
 func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_lock_size: bool = false) -> Variant:
@@ -268,58 +276,9 @@ func copy_data(p_data: Dictionary) -> void:
 	copied_data = p_data.duplicate(true)
 
 
-func _on_jump_to_collision_pressed(index: int) -> void:
-	%SectionItemList.select(9)
-	_on_section_item_list_item_selected(9)
-	%ObjectCollisions.select(index)
-
-
-func _on_jump_to_object_pressed(index: int) -> void:
-	%SectionItemList.select(6)
-	_on_section_item_list_item_selected(6)
-	%Fat3.select(index)
-
-
-func _on_jump_to_filename_pressed(filename: Dictionary) -> void:
-	if %Filenames1.select(filename):
-		%SectionItemList.select(13)
-		_on_section_item_list_item_selected(13)
-	if %Filenames2.select(filename):
-		%SectionItemList.select(14)
-		_on_section_item_list_item_selected(14)
-
-
-func _on_add_filename_pressed(filename_index: int, fat_index: int, info: Dictionary = {}) -> Dictionary:
-	if filename_index == 1:
-		#%SectionItemList.select(13)
-		#_on_section_item_list_item_selected(13)
-		return %Filenames1._on_add_button_pressed(fat_index, info)
-	else:
-		#%SectionItemList.select(14)
-		#_on_section_item_list_item_selected(14)
-		return %Filenames2._on_add_button_pressed(fat_index, info)
-
-
 func import_sprite_sheet(p_raw_palette: PackedByteArray) -> Dictionary:
 	return await %SpriteSheetImporter.import_sprite_sheet(p_raw_palette)
 
 
 func edit_animation_2_alignments(animation_image: Dictionary, raw_palette: PackedByteArray) -> Dictionary:
 	return await %EditAlignments.edit_alignments(animation_image, raw_palette)
-
-
-func _on_directional_object_added() -> void:
-	%DirectionalObjectMappings.reload()
-
-
-func add_fat_4_entry() -> void:
-	%Fat4._on_add_button_pressed()
-
-
-func erase_filename(filename: Dictionary) -> void:
-	if das.filenames_1.find(filename) != -1:
-		das.filenames_1.erase(filename)
-		%Filenames1.reload()
-	if das.filenames_2.find(filename) != -1:
-		das.filenames_2.erase(filename)
-		%Filenames2.reload()

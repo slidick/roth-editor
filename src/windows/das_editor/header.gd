@@ -18,6 +18,8 @@ func load_das(p_das: Dictionary) -> void:
 	add_child(vbox)
 	
 	for key: String in das.header:
+		if key != "unk_0x20" and key != "sky_index":
+			continue
 		var hbox := HBoxContainer.new()
 		vbox.add_child(hbox)
 		

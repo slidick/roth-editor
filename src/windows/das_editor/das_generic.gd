@@ -1,7 +1,5 @@
 extends Control
 
-signal jump_to_collision_pressed
-signal jump_to_filename_pressed(filename: Dictionary)
 var das: Variant
 var SCRIPT: Script = preload("uid://daro30p1hipaw")
 
@@ -11,7 +9,7 @@ func reset() -> void:
 		child.queue_free()
 
 
-func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_3: bool = false) -> void:
+func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], _is_fat_3: bool = false) -> void:
 	das = p_das
 	if p_das is Dictionary and p_key not in p_das:
 		return
@@ -338,12 +336,6 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 				line_edit.text = "%s: %s" % [das[p_key][key].name, das[p_key][key].desc]
 				line_edit.editable = false
 				hbox.add_child(line_edit)
-				var button := Button.new()
-				button.text = "Jump to Filename"
-				button.pressed.connect(func() -> void:
-					jump_to_filename_pressed.emit(das[p_key][key])
-				)
-				hbox.add_child(button)
 			_:
 				var line_edit := LineEdit.new()
 				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -389,13 +381,6 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 						hbox.add_child(checkbox)
 				
 				
-				if key == "offset" and is_fat_3:
-					var button := Button.new()
-					button.text = "Jump to Object Collision"
-					button.pressed.connect(func() -> void:
-						jump_to_collision_pressed.emit()
-					)
-					hbox.add_child(button)
 				
 		vbox.add_child(hbox)
 	
@@ -405,15 +390,4 @@ func load_das(p_das: Variant, p_key: Variant, p_raw_palette: Array = [], is_fat_
 		label.text = "filename"
 		label.custom_minimum_size.x = 200
 		hbox.add_child(label)
-		var button := Button.new()
-		button.text = "Add Filename"
-		button.custom_minimum_size.x = 400
-		button.pressed.connect(func () -> void:
-			if owner.name == "Fat1" or owner.name == "Fat2":
-				das[p_key]["filename"] = owner.owner._on_add_filename_pressed(1, das[p_key].index)
-			else:
-				das[p_key]["filename"] = owner.owner._on_add_filename_pressed(2, das[p_key].index)
-			owner.select(p_key)
-		)
-		hbox.add_child(button)
 		vbox.add_child(hbox)

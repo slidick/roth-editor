@@ -1,8 +1,5 @@
 extends Control
 
-signal jump_to_collision_pressed
-signal jump_to_filename_pressed(filename: Dictionary)
-
 var animation_image: Dictionary = {}
 var raw_palette: PackedByteArray
 var right_clicked_frame: int = -1
@@ -15,14 +12,12 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	else:
 		raw_palette = p_raw_palette
 	if is_fat_3:
-		%JumpToObjectCollisionButton.show()
 		%ObjectCollision.show()
 		%CollisionHeightSpinBox.set_value_no_signal(animation_image.object_collision.raw_data & 65535)
 		%CollisionHeightSpinBox.get_line_edit().text = "%d" % int(animation_image.object_collision.raw_data & 65535)
 		%CollisionRadiusSpinBox.set_value_no_signal((animation_image.object_collision.raw_data & 4294901760) >> 16)
 		%CollisionRadiusSpinBox.get_line_edit().text = "%d" % (int(animation_image.object_collision.raw_data & 4294901760) >> 16)
 	else:
-		%JumpToObjectCollisionButton.hide()
 		%ObjectCollision.hide()
 	
 	%Flags1Edit.text = str(animation_image.flags_1)
@@ -38,16 +33,9 @@ func load_animation_data(p_animation_image: Dictionary, p_raw_palette: Array = [
 	%AnimationSpeedSpinBox.get_line_edit().text = str(animation_image.data.animation_speed)
 	%FramesSpinBox.get_line_edit().text = str(len(animation_image.data.animation))
 	%FramesSpinBox.set_value_no_signal(len(animation_image.data.animation))
-	if "filename" in animation_image:
-		%NameEdit.text = animation_image.filename.name
-		%DescriptionEdit.text = animation_image.filename.desc
-		%JumpToFilenameButton.show()
-		%AddFilenameButton.hide()
-	else:
-		%NameEdit.text = "No Name Set"
-		%DescriptionEdit.text = ""
-		%JumpToFilenameButton.hide()
-		%AddFilenameButton.show()
+	
+	%NameEdit.text = animation_image.filename.name
+	%DescriptionEdit.text = animation_image.filename.desc
 	
 	update_flags_1_checkboxes()
 	update_flags_2_checkboxes()
@@ -406,22 +394,6 @@ func _on_name_edit_text_changed(new_text: String) -> void:
 
 func _on_description_edit_text_changed(new_text: String) -> void:
 	animation_image.filename.desc = new_text
-
-
-func _on_jump_to_filename_button_pressed() -> void:
-	jump_to_filename_pressed.emit(animation_image.filename)
-
-
-func _on_add_filename_button_pressed() -> void:
-	if owner.name == "Fat1" or owner.name == "Fat2":
-		animation_image["filename"] = owner.owner._on_add_filename_pressed(1, animation_image.index)
-	else:
-		animation_image["filename"] = owner.owner._on_add_filename_pressed(2, animation_image.index)
-	%NameEdit.text = "%s (%s)" % [animation_image.filename.name, animation_image.filename.desc]
-
-
-func _on_jump_to_object_collision_button_pressed() -> void:
-	jump_to_collision_pressed.emit()
 
 
 func _on_flags_1_edit_text_changed(new_text: String) -> void:

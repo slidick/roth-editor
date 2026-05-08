@@ -1,8 +1,5 @@
 extends Control
 
-signal jump_to_collision_pressed
-signal jump_to_filename_pressed(filename: Dictionary)
-
 var pack_data: Dictionary = {}
 var raw_palette: PackedByteArray = []
 var right_clicked_frame: int = -1
@@ -15,30 +12,20 @@ func load_pack_data(p_pack_data: Dictionary, p_raw_palette: Array = [], is_fat_3
 	else:
 		raw_palette = p_raw_palette
 	if is_fat_3:
-		%JumpToObjectCollisionButton.show()
 		%ObjectCollision.show()
 		%CollisionHeightSpinBox.set_value_no_signal(pack_data.object_collision.raw_data & 65535)
 		%CollisionHeightSpinBox.get_line_edit().text = "%d" % int(pack_data.object_collision.raw_data & 65535)
 		%CollisionRadiusSpinBox.set_value_no_signal((pack_data.object_collision.raw_data & 4294901760) >> 16)
 		%CollisionRadiusSpinBox.get_line_edit().text = "%d" % (int(pack_data.object_collision.raw_data & 4294901760) >> 16)
 	else:
-		%JumpToObjectCollisionButton.hide()
 		%ObjectCollision.hide()
 	
 	%Flags1Edit.text = str(pack_data.flags_1)
 	%Flags2Edit.text = str(pack_data.flags_2)
 	%ModifierEdit.text = str(pack_data.data.modifier)
 	%ImageTypeEdit.text = str(pack_data.data.image_type)
-	if "filename" in pack_data:
-		%NameEdit.text = pack_data.filename.name
-		%DescriptionEdit.text = pack_data.filename.desc
-		%JumpToFilenameButton.show()
-		%AddFilenameButton.hide()
-	else:
-		%NameEdit.text = "No Name Set"
-		%DescriptionEdit.text = ""
-		%JumpToFilenameButton.hide()
-		%AddFilenameButton.show()
+	%NameEdit.text = pack_data.filename.name
+	%DescriptionEdit.text = pack_data.filename.desc
 	
 	%ImageCountSpinBox.set_value_no_signal(len(pack_data.data.image_pack))
 	%PackTypeSpinBox.set_value_no_signal(pack_data.data.pack_type)
@@ -364,22 +351,6 @@ func _on_name_edit_text_changed(new_text: String) -> void:
 
 func _on_description_edit_text_changed(new_text: String) -> void:
 	pack_data.filename.desc = new_text
-
-
-func _on_jump_to_filename_button_pressed() -> void:
-	jump_to_filename_pressed.emit(pack_data.filename)
-
-
-func _on_add_filename_button_pressed() -> void:
-	if owner.name == "Fat1" or owner.name == "Fat2":
-		pack_data["filename"] = owner.owner._on_add_filename_pressed(1, pack_data.index)
-	else:
-		pack_data["filename"] = owner.owner._on_add_filename_pressed(2, pack_data.index)
-	%NameEdit.text = "%s (%s)" % [pack_data.filename.name, pack_data.filename.desc]
-
-
-func _on_jump_to_object_collision_button_pressed() -> void:
-	jump_to_collision_pressed.emit()
 
 
 func _on_flags_1_edit_text_changed(new_text: String) -> void:

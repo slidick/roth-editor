@@ -8,11 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://hbab2mh1vu07" path="res://src/windows/das_editor/palette.tscn" id="5_8w6c1"]
 [ext_resource type="Script" uid="uid://dqmmnvuqaln08" path="res://src/windows/das_editor/unk_0x.gd" id="7_ap0jt"]
 [ext_resource type="PackedScene" uid="uid://c4jw70n45a6mx" path="res://src/windows/das_editor/palette_shading.tscn" id="7_iy22k"]
-[ext_resource type="PackedScene" uid="uid://bb554osdwyo68" path="res://src/windows/das_editor/filenames.tscn" id="7_yti35"]
 [ext_resource type="PackedScene" uid="uid://lfcqi7ovq54y" path="res://src/windows/das_editor/fat.tscn" id="8_nrdas"]
-[ext_resource type="PackedScene" uid="uid://drtcco1brsueg" path="res://src/windows/das_editor/directional_object_mappings.tscn" id="9_etu4s"]
-[ext_resource type="PackedScene" uid="uid://b13db4skwnxbm" path="res://src/windows/das_editor/monster_mappings.tscn" id="10_cd1io"]
-[ext_resource type="PackedScene" uid="uid://bl4ldhvm76xam" path="res://src/windows/das_editor/object_collisions.tscn" id="10_vwsjw"]
 [ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="14_iy22k"]
 [ext_resource type="PackedScene" uid="uid://cv1auqpk7ch8w" path="res://src/windows/graphics/sprite_sheet_importer_window.tscn" id="15_1uofs"]
 [ext_resource type="PackedScene" uid="uid://bqawctevx37j2" path="res://src/windows/das_editor/edit_alignments_window.tscn" id="16_viwmn"]
@@ -190,57 +186,27 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 7
 
-[node name="DirectionalObjectMappings" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="9" unique_id=897393256 instance=ExtResource("9_etu4s")]
+[node name="Unk0x38" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="9" unique_id=897593913]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("7_ap0jt")
 metadata/_tab_index = 8
 
-[node name="ObjectCollisions" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="10" unique_id=1306105614 instance=ExtResource("10_vwsjw")]
+[node name="Unk0x40" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="10" unique_id=100624804]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("7_ap0jt")
 metadata/_tab_index = 9
-
-[node name="MonsterMappings" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="11" unique_id=119751931 instance=ExtResource("10_cd1io")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-metadata/_tab_index = 10
-
-[node name="Unk0x38" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="12" unique_id=897593913]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-script = ExtResource("7_ap0jt")
-metadata/_tab_index = 11
-
-[node name="Unk0x40" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="13" unique_id=100624804]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-script = ExtResource("7_ap0jt")
-metadata/_tab_index = 12
-
-[node name="Filenames1" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="14" unique_id=1319212317 instance=ExtResource("7_yti35")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-metadata/_tab_index = 13
-
-[node name="Filenames2" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="15" unique_id=1984099617 instance=ExtResource("7_yti35")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-metadata/_tab_index = 14
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="1" unique_id=188975947]
 layout_mode = 2
@@ -357,18 +323,7 @@ editor_preview_indeterminate = false
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List/DAS2ListPopupMenu" to="." method="_on_das_2_list_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/EditDASButton" to="." method="_on_edit_das_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/SectionItemList" to="." method="_on_section_item_list_item_selected"]
-[connection signal="jump_to_filename_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat1" to="." method="_on_jump_to_filename_pressed"]
-[connection signal="jump_to_filename_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat2" to="." method="_on_jump_to_filename_pressed"]
-[connection signal="directional_object_added" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat3" to="." method="_on_directional_object_added"]
-[connection signal="jump_to_collision_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat3" to="." method="_on_jump_to_collision_pressed"]
-[connection signal="jump_to_filename_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat3" to="." method="_on_jump_to_filename_pressed"]
 [connection signal="jump_to_index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat3" to="." method="_on_jump_to_index_pressed"]
-[connection signal="jump_to_filename_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat4" to="." method="_on_jump_to_filename_pressed"]
-[connection signal="jump_to_index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/DirectionalObjectMappings" to="." method="_on_jump_to_index_pressed"]
-[connection signal="jump_to_object_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/ObjectCollisions" to="." method="_on_jump_to_object_pressed"]
-[connection signal="jump_to_index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/MonsterMappings" to="." method="_on_jump_to_index_pressed"]
-[connection signal="jump_to_index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Filenames1" to="." method="_on_jump_to_index_pressed"]
-[connection signal="jump_to_index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Filenames2" to="." method="_on_jump_to_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 

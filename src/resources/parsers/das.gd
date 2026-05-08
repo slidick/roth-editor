@@ -1418,15 +1418,17 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 	
 	das.directional_object_mappings = []
 	das.monster_mappings = []
+	das.filenames_1 = []
+	das.filenames_2 = []
 	
 	var start_data_offset: int = header.size + fat.size + palette.size + unk_0x10.size
 	if das.das_info.is_ademo:
 		start_data_offset += 4
 	
-	var final_data_offset: int = _calculate_data_size(das.fat_1, start_data_offset, das.das_info.is_ademo, das)
-	final_data_offset = _calculate_data_size(das.fat_2, final_data_offset, das.das_info.is_ademo, das)
-	final_data_offset = _calculate_data_size(das.fat_3, final_data_offset, das.das_info.is_ademo, das)
-	final_data_offset = _calculate_data_size(das.fat_4, final_data_offset, das.das_info.is_ademo, das)
+	var final_data_offset: int = _calculate_data_size(das.fat_1, start_data_offset, das.das_info.is_ademo, das, "filenames_1")
+	final_data_offset = _calculate_data_size(das.fat_2, final_data_offset, das.das_info.is_ademo, das, "filenames_1")
+	final_data_offset = _calculate_data_size(das.fat_3, final_data_offset, das.das_info.is_ademo, das, "filenames_2")
+	final_data_offset = _calculate_data_size(das.fat_4, final_data_offset, das.das_info.is_ademo, das, "filenames_2")
 	
 	var data := {
 		"starts_at": start_data_offset,
@@ -1501,10 +1503,11 @@ static func _calculate_section_sizes_and_offsets(das: Dictionary) -> Dictionary:
 	}
 
 
-static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool, das: Dictionary) -> int:
+static func _calculate_data_size(fat: Array, total_size: int, is_ademo: bool, das: Dictionary, filenames_key: String) -> int:
 	for entry: Dictionary in fat:
 		var size: int = 0
 		if entry.size != 0:
+			das[filenames_key].append(entry.filename)
 			if entry.flags_1 & 32 > 0:
 				#print(entry.index)
 				entry.offset = 0

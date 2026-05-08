@@ -1,9 +1,6 @@
 extends MarginContainer
 
-signal jump_to_collision_pressed(index: int)
-signal jump_to_filename_pressed(filename: Dictionary)
 signal jump_to_index_pressed(index: int)
-signal directional_object_added
 
 enum InitMenu {
 	COPY,
@@ -20,6 +17,7 @@ enum InitMenu {
 var das: Dictionary = {}
 var key: String = ""
 var starting_index: int = -1
+
 
 func reset() -> void:
 	das = {}
@@ -75,10 +73,10 @@ func _on_item_list_item_selected(index: int) -> void:
 		%ImagePackContainer.load_pack_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 == 0:
 		%DirectionalContainer.show()
-		%DirectionalContainer.load_directional_data(das[key][index], das.directional_object_mappings, true if key == "fat_3" else false, das)
+		%DirectionalContainer.load_directional_data(das[key][index], true if key == "fat_3" else false, das)
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 > 0:
 		%MonsterContainer.show()
-		%MonsterContainer.load_monster_data(das[key][index], das.monster_mappings, true if key == "fat_3" else false, das)
+		%MonsterContainer.load_monster_data(das[key][index], das)
 	elif das[key][index].size == 0:
 		%EmptyContainer.show()
 	else:
@@ -124,15 +122,13 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].object_collision = das.object_collisions[item_index]
 			else:
 				das[key][item_index].erase("object_collision")
-			var filename := {
+			
+			das[key][item_index]["filename"] = {
 				"name": "%s (COPY)" % original_filename.name,
 				"desc": original_filename.desc,
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
-
 			
 			if "data" in das[key][item_index]:
 				if "animation" in das[key][item_index].data:
@@ -157,8 +153,6 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].flags_1 = 0
 				das[key][item_index].flags_2 = 0
 				das[key][item_index].erase("data")
-				if "filename" in das[key][item_index]:
-					owner.erase_filename(das[key][item_index].filename)
 				das[key][item_index].erase("filename")
 				das[key][item_index].erase("directional_mapping")
 				das[key][item_index].erase("monster_mapping")
@@ -179,14 +173,12 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 0
-			var filename := {
+			das[key][item_index]["filename"] = {
 				"name": "NEW_IMAGE",
 				"desc": "",
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Image" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		InitMenu.ANIMATION:
@@ -208,14 +200,12 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["data"] = Das.compile_animation(data)
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 1
-			var filename := {
+			das[key][item_index]["filename"] = {
 				"name": "NEW_ANIMATION",
 				"desc": "",
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Animation" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		InitMenu.ANIMATION_2:
@@ -244,14 +234,12 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 2
-			var filename := {
+			das[key][item_index]["filename"] = {
 				"name": "NEW_ANIMATION2",
 				"desc": "",
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Animation2" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		InitMenu.IMAGE_PACK:
@@ -280,14 +268,12 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["data"] = data
 			das[key][item_index].flags_1 = 0
 			das[key][item_index].flags_2 = 0
-			var filename := {
+			das[key][item_index]["filename"] = {
 				"name": "NEW_PACK",
 				"desc": "",
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Pack" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		InitMenu.DIRECTIONAL:
@@ -295,14 +281,24 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["size"] = 1
 			das[key][item_index].flags_1 = 32
 			das[key][item_index].flags_2 = 0
-			var filename := {
+			das[key][item_index].directional_mapping = {
+				"header": 32784,
+				"dir_1_fat_idx": 0,
+				"dir_2_fat_idx": 0,
+				"dir_3_fat_idx": 0,
+				"dir_4_fat_idx": 0,
+				"dir_5_fat_idx": 0,
+				"dir_6_fat_idx": 0,
+				"dir_7_fat_idx": 0,
+				"dir_8_fat_idx": 0,
+			}
+			das[key][item_index]["filename"] = {
 				"name": "NEW_DIRECTIONAL",
 				"desc": "",
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
+			
 			%ItemList.set_item_text(item_index, "%d - Directional" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 		InitMenu.MONSTER:
@@ -310,14 +306,63 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			das[key][item_index]["size"] = 1
 			das[key][item_index].flags_1 = 36
 			das[key][item_index].flags_2 = 0
-			var filename := {
+			das[key][item_index].monster_mapping = {
+				"unk_0x00": 0,
+				"flying_back": 0,
+				"flying_back_right": 0,
+				"flying_right": 0,
+				"flying_front_right": 0,
+				"flying_front": 0,
+				"flying_front_left": 0,
+				"flying_left": 0,
+				"flying_back_left": 0,
+				"walking_back": 0,
+				"walking_back_right": 0,
+				"walking_right": 0,
+				"walking_front_right": 0,
+				"walking_front": 0,
+				"walking_front_left": 0,
+				"walking_left": 0,
+				"walking_back_left": 0,
+				"attack1_back": 0,
+				"attack1_back_right": 0,
+				"attack1_right": 0,
+				"attack1_front_right": 0,
+				"attack1_front": 0,
+				"attack1_front_left": 0,
+				"attack1_left": 0,
+				"attack1_back_left": 0,
+				"attack2_back": 0,
+				"attack2_back_right": 0,
+				"attack2_right": 0,
+				"attack2_front_right": 0,
+				"attack2_front": 0,
+				"attack2_front_left": 0,
+				"attack2_left": 0,
+				"attack2_back_left": 0,
+				"on_damage_back": 0,
+				"on_damage_back_right": 0,
+				"on_damage_right": 0,
+				"on_damage_front_right": 0,
+				"on_damage_front": 0,
+				"on_damage_front_left": 0,
+				"on_damage_left": 0,
+				"on_damage_back_left": 0,
+				"dying_normal": 0,
+				"dead_normal": 0,
+				"dying_crit": 0,
+				"dead_crit": 0,
+				"spawn": 0,
+				"unk_0x5E": 0,
+				"unk_0x60": 0,
+				"unk_0x64": 0,
+			}
+			das[key][item_index]["filename"] = {
 				"name": "NEW_MONSTER",
 				"desc": "",
+				"index": das[key][item_index].index,
+				"size": 4,
 			}
-			if name == "Fat1" or name == "Fat2":
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(1, das[key][item_index].index, filename)
-			else:
-				das[key][item_index]["filename"] = owner._on_add_filename_pressed(2, das[key][item_index].index, filename)
 			%ItemList.set_item_text(item_index, "%d - Monster" % das[key][item_index].index)
 			_on_item_list_item_selected(item_index)
 
@@ -368,14 +413,6 @@ func _on_find_empty_button_pressed() -> void:
 			break
 
 
-func _on_jump_to_filename_pressed(filename: Dictionary) -> void:
-	jump_to_filename_pressed.emit(filename)
-
-
-func _on_jump_to_collision_pressed() -> void:
-	jump_to_collision_pressed.emit(%ItemList.get_selected_items()[0])
-
-
 func _on_jump_to_index_pressed(index: int) -> void:
 	jump_to_index_pressed.emit(index)
 
@@ -400,5 +437,5 @@ func _on_add_button_pressed() -> void:
 	%ItemList.ensure_current_is_visible()
 
 
-func _on_directional_object_added() -> void:
-	directional_object_added.emit()
+#func _on_directional_object_added() -> void:
+	#directional_object_added.emit()
