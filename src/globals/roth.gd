@@ -10,6 +10,8 @@ signal das_loading_started
 signal das_loading_updated(progress: float, das_info: Dictionary)
 signal das_loading_finished(das: Dictionary)
 @warning_ignore("unused_signal")
+signal das_parse_finished(das: Dictionary)
+@warning_ignore("unused_signal")
 signal gdv_loading_updated(progress: float)
 @warning_ignore("unused_signal")
 signal close_map(map: Map)

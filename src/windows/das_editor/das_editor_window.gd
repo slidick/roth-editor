@@ -170,8 +170,8 @@ func _on_edit_texture(p_das_info: Dictionary, p_index: int) -> void:
 func _edit_das(das_info: Dictionary) -> void:
 	if "vanilla" in das_info:
 		return
-	
-	das = Das.parse_das(das_info)
+	%Loading.toggle(true)
+	das = await Das.parse_das(das_info)
 	if das.is_empty():
 		return
 	
@@ -183,6 +183,7 @@ func _edit_das(das_info: Dictionary) -> void:
 	
 	%ListContainer.hide()
 	%EditContainer.show()
+	%Loading.toggle(false)
 
 
 func _on_cancel_button_pressed() -> bool:

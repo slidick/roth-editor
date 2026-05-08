@@ -698,9 +698,17 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 
 #region Parse for editing
 static func parse_das(das_info: Dictionary) -> Dictionary:
+	var thread := Thread.new()
+	thread.start(_parse_das_thread.bind(das_info))
+	var das: Dictionary = await Roth.das_parse_finished
+	thread.wait_to_finish()
+	return das
+
+
+static func _parse_das_thread(das_info: Dictionary) -> void:
 	var file := FileAccess.open(das_info.filepath, FileAccess.READ)
 	if not file:
-		return {}
+		Roth.das_parse_finished.emit.call_deferred({})
 	
 	var das: Dictionary = {
 		"das_info": das_info
@@ -852,7 +860,7 @@ static func parse_das(das_info: Dictionary) -> Dictionary:
 		das["unk_0x40_section"] = {"raw_data": []}
 	
 	
-	return das
+	Roth.das_parse_finished.emit.call_deferred(das)
 
 
 static func _parse_palette(file: FileAccess, offset: int) -> Dictionary:
