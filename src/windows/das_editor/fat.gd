@@ -71,6 +71,9 @@ func _on_item_list_item_selected(index: int) -> void:
 	elif "data" in das[key][index] and "image_pack" in das[key][index].data:
 		%ImagePackContainer.show()
 		%ImagePackContainer.load_pack_data(das[key][index], das.raw_palette, true if key == "fat_3" else false)
+	elif "data" in das[key][index] and "faces" in das[key][index].data:
+		%"3DObjectContainer".show()
+		%"3DObjectContainer".load_3d_object_data(das[key][index], das.raw_palette)
 	elif das[key][index].flags_1 & 32 > 0 and das[key][index].flags_1 & 4 == 0:
 		%DirectionalContainer.show()
 		%DirectionalContainer.load_directional_data(das[key][index], true if key == "fat_3" else false, das)
@@ -80,9 +83,7 @@ func _on_item_list_item_selected(index: int) -> void:
 	elif das[key][index].size == 0:
 		%EmptyContainer.show()
 	else:
-		%GenericContainer.show()
-		%GenericContainer.reset()
-		%GenericContainer.load_das(das[key], index, das.raw_palette, true if key == "fat_3" else false)
+		assert(false)
 
 
 func select_index(index: int) -> bool:
