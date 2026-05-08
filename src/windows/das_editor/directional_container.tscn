@@ -148,7 +148,6 @@ size_flags_vertical = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer" unique_id=1145420464]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/separation = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer" unique_id=1612380669]
@@ -169,10 +168,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=773116271]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1475764248]
-layout_mode = 2
-text = "Index"
 
 [node name="FrontIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=116984943]
 unique_name_in_owner = true
@@ -211,10 +206,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=2018267184]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=586021045]
-layout_mode = 2
-text = "Index"
-
 [node name="FrontLeftIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=899799201]
 unique_name_in_owner = true
 layout_mode = 2
@@ -251,10 +242,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=710283149]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=725821636]
-layout_mode = 2
-text = "Index"
 
 [node name="LeftIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1442501701]
 unique_name_in_owner = true
@@ -293,10 +280,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=722246187]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/HBoxContainer" unique_id=104540881]
-layout_mode = 2
-text = "Index"
-
 [node name="BackLeftIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4/HBoxContainer" unique_id=955320914]
 unique_name_in_owner = true
 layout_mode = 2
@@ -333,10 +316,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=1321673012]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/HBoxContainer" unique_id=1447385033]
-layout_mode = 2
-text = "Index"
 
 [node name="BackIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5/HBoxContainer" unique_id=828221047]
 unique_name_in_owner = true
@@ -375,10 +354,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1240962581]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/HBoxContainer" unique_id=2040661012]
-layout_mode = 2
-text = "Index"
-
 [node name="BackRightIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6/HBoxContainer" unique_id=53368253]
 unique_name_in_owner = true
 layout_mode = 2
@@ -416,10 +391,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1681041519]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/HBoxContainer" unique_id=653305166]
-layout_mode = 2
-text = "Index"
-
 [node name="RightIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7/HBoxContainer" unique_id=1713695662]
 unique_name_in_owner = true
 layout_mode = 2
@@ -456,10 +427,6 @@ metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1568327911]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/HBoxContainer" unique_id=965775038]
-layout_mode = 2
-text = "Index"
 
 [node name="FrontRightIndexSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8/HBoxContainer" unique_id=44283044]
 unique_name_in_owner = true
