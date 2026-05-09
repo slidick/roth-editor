@@ -1,3 +1,43 @@
+**0.22.0**
+### New Features
+  - DAS Editor Improvements
+    - Show image type in FAT list
+    - Simplify extraneous file sections
+      - No longer need to know about the filename table, the collision table, the directional mapping table, and the monster mapping table
+      - Edit filenames and collisions directly from their cooresponding data blocks
+    - Change texture index to use as transparent 'sky' texture
+    - Image Editor
+      - Rotate, mirror, and scale images
+      - Interpolate mouse motion for smoother drawing
+      - Images can be any size up to 65536 pixels large
+      - Swap width and height values when rotating canvas
+    - Animation Editor
+      - Create new and edit existing animations
+      - Sprite sheet importer
+      - Edit individual frames
+      - Edit offsets of sub-image style animations
+      - Change speed of animations
+         - Speed values goes from 0 (fastest) to 16 (slowest) then 17-18 have random pauses. Any higher goes back to fastest
+    - Directional Objects / Monster Editor
+      - Create and edit directional objects and monsters
+      - Monsters can only be created in an ADEMO type DAS file
+    - Image Packs Editor
+      - Create and edit image packs for use with 3d objects
+      - Image packs can also be used to create directional objects
+    - Edit Shift Data
+      - ADEMO sprites in FAT4 can be shifted. Useful to shift enemies downward slightly so their not floating right at the floor. Also used to align any directional/monster sprites that aren't perfectly circular
+      - Select 'Show Shift' to show the new origin point
+      - At first I thought this was just applied to all of FAT4 and only in the ADEMO.DAS file, but I now believe it actually has to do with a specific flag. This is untested but seems likely, so in the future shifting will hopefully be available across both DAS types and potentially more FAT tables
+
+### Bug Fixes
+  - Fix memory leak regression
+  - Fix palette selector not showing up after opening an ADEMO DAS then opening a regular DAS file
+  - Clear 2d hovered faces and sectors when clearing selection
+  - Add map metadata editing to undo/redo
+  - Correctly determine which index is the trasparent 'sky' texture
+
+---
+
 **0.21.0**
 ### New Features
   - Initial Texture Editing Support
