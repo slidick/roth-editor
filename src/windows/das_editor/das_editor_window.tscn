@@ -4,7 +4,6 @@
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_c0goi"]
 [ext_resource type="Script" uid="uid://dd5mborxd2u0j" path="res://src/windows/das_editor/das_editor_window.gd" id="2_tkvrf"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_o307s"]
-[ext_resource type="Script" uid="uid://ct1c37fhkwan1" path="res://src/windows/das_editor/header.gd" id="5_7rfvp"]
 [ext_resource type="PackedScene" uid="uid://hbab2mh1vu07" path="res://src/windows/das_editor/palette.tscn" id="5_8w6c1"]
 [ext_resource type="Script" uid="uid://dqmmnvuqaln08" path="res://src/windows/das_editor/unk_0x.gd" id="7_ap0jt"]
 [ext_resource type="PackedScene" uid="uid://c4jw70n45a6mx" path="res://src/windows/das_editor/palette_shading.tscn" id="7_iy22k"]
@@ -129,29 +128,17 @@ size_flags_horizontal = 3
 current_tab = 0
 tabs_visible = false
 
-[node name="Header" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="1" unique_id=339946173]
+[node name="Palette" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="1" unique_id=1248536281 instance=ExtResource("5_8w6c1")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-script = ExtResource("5_7rfvp")
 metadata/_tab_index = 0
 
-[node name="Palette" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="2" unique_id=1248536281 instance=ExtResource("5_8w6c1")]
+[node name="PaletteShading" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="2" unique_id=1091046701 instance=ExtResource("7_iy22k")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-metadata/_tab_index = 1
 
-[node name="PaletteShading" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="3" unique_id=1091046701 instance=ExtResource("7_iy22k")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-metadata/_tab_index = 2
-
-[node name="Unk0x10" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="4" unique_id=542071631]
+[node name="Unk0x10" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="3" unique_id=542071631]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -160,33 +147,44 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("7_ap0jt")
+metadata/_tab_index = 2
+
+[node name="Fat1" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="4" unique_id=1097178025 instance=ExtResource("8_nrdas")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="Fat1" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="5" unique_id=1097178025 instance=ExtResource("8_nrdas")]
+[node name="Fat2" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="5" unique_id=375235494 instance=ExtResource("8_nrdas")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="Fat2" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="6" unique_id=375235494 instance=ExtResource("8_nrdas")]
+[node name="Fat3" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="6" unique_id=628532286 instance=ExtResource("8_nrdas")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
-[node name="Fat3" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="7" unique_id=628532286 instance=ExtResource("8_nrdas")]
+[node name="Fat4" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="7" unique_id=865687499 instance=ExtResource("8_nrdas")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 
-[node name="Fat4" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="8" unique_id=865687499 instance=ExtResource("8_nrdas")]
+[node name="Unk0x38" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="8" unique_id=897593913]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("7_ap0jt")
 metadata/_tab_index = 7
 
-[node name="Unk0x38" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="9" unique_id=897593913]
+[node name="Unk0x40" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="9" unique_id=100624804]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -196,17 +194,6 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("7_ap0jt")
 metadata/_tab_index = 8
-
-[node name="Unk0x40" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer" index="10" unique_id=100624804]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-script = ExtResource("7_ap0jt")
-metadata/_tab_index = 9
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="1" unique_id=188975947]
 layout_mode = 2
@@ -354,7 +341,11 @@ editor_preview_indeterminate = false
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List/DAS2ListPopupMenu" to="." method="_on_das_2_list_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/EditDASButton" to="." method="_on_edit_das_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/SectionItemList" to="." method="_on_section_item_list_item_selected"]
+[connection signal="set_new_sky" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat1" to="." method="_on_set_new_sky"]
+[connection signal="set_new_sky" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat2" to="." method="_on_set_new_sky"]
 [connection signal="jump_to_index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat3" to="." method="_on_jump_to_index_pressed"]
+[connection signal="set_new_sky" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat3" to="." method="_on_set_new_sky"]
+[connection signal="set_new_sky" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat4" to="." method="_on_set_new_sky"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 

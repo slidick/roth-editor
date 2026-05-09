@@ -1,11 +1,15 @@
 extends MarginContainer
 
 signal jump_to_index_pressed(index: int)
+signal set_new_sky(old_index: int)
 
 enum InitMenu {
 	COPY,
 	PASTE,
 	CLEAR,
+	SEP1,
+	SET_SKY,
+	SEP2,
 	STANDARD,
 	ANIMATION,
 	ANIMATION_2,
@@ -53,6 +57,8 @@ func load_das(p_das: Dictionary, p_key: String, p_starting_index: int) -> void:
 			fat_name += "  -  Monster"
 		elif das[key][i].flags_1 & 32 > 0:
 			fat_name += "  -  Directional"
+		if p_starting_index + i == p_das.header.sky_index:
+			fat_name = "*SKY* " + fat_name
 		var idx: int = %ItemList.add_item(fat_name)
 		%ItemList.set_item_metadata(idx, das[key][i])
 
@@ -100,6 +106,10 @@ func select(index: int) -> void:
 		%ItemList.select(index)
 		%ItemList.ensure_current_is_visible()
 		_on_item_list_item_selected(index)
+
+
+func remove_old_sky(item_index: int) -> void:
+	%ItemList.set_item_text(item_index, %ItemList.get_item_text(item_index).trim_prefix("*SKY* "))
 
 
 func _on_popup_menu_index_pressed(index: int) -> void:
@@ -156,8 +166,17 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				das[key][item_index].erase("filename")
 				das[key][item_index].erase("directional_mapping")
 				das[key][item_index].erase("monster_mapping")
-				%ItemList.set_item_text(item_index, "%d" % das[key][item_index].index)
+				var fat_name: String = "%d" % das[key][item_index].index
+				if das[key][item_index].index == das.header.sky_index:
+					fat_name = "*SKY* " + fat_name
+				%ItemList.set_item_text(item_index, fat_name)
 				_on_item_list_item_selected(item_index)
+		InitMenu.SET_SKY:
+			var new_index: int = das[key][item_index].index
+			var old_index: int = das.header.sky_index
+			das.header.sky_index = new_index
+			%ItemList.set_item_text(item_index, "*SKY* "+%ItemList.get_item_text(item_index))
+			set_new_sky.emit(old_index)
 		InitMenu.STANDARD:
 			var raw_image := PackedByteArray()
 			raw_image.resize(16*16)
@@ -370,36 +389,40 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
 		if owner.copied_data.is_empty():
-			%PopupMenu.set_item_disabled(1, true)
+			%PopupMenu.set_item_disabled(InitMenu.PASTE, true)
 		else:
-			%PopupMenu.set_item_disabled(1, false)
+			%PopupMenu.set_item_disabled(InitMenu.PASTE, false)
+		if %ItemList.get_item_metadata(index).index == das.header.sky_index:
+			%PopupMenu.set_item_disabled(InitMenu.SET_SKY, true)
+		else:
+			%PopupMenu.set_item_disabled(InitMenu.SET_SKY, false)
 		if das[key][index].offset == 0:
-			%PopupMenu.set_item_disabled(3, false)
-			%PopupMenu.set_item_disabled(4, false)
+			%PopupMenu.set_item_disabled(InitMenu.STANDARD, false)
+			%PopupMenu.set_item_disabled(InitMenu.ANIMATION, false)
 			if name != "Fat3" and name != "Fat4":
-				%PopupMenu.set_item_disabled(5, true)
+				%PopupMenu.set_item_disabled(InitMenu.ANIMATION_2, true)
 			else:
-				%PopupMenu.set_item_disabled(5, false)
+				%PopupMenu.set_item_disabled(InitMenu.ANIMATION_2, false)
 			if name != "Fat4":
-				%PopupMenu.set_item_disabled(6, false)
+				%PopupMenu.set_item_disabled(InitMenu.IMAGE_PACK, false)
 			else:
-				%PopupMenu.set_item_disabled(6, true)
+				%PopupMenu.set_item_disabled(InitMenu.IMAGE_PACK, true)
 			if name == "Fat3":
-				%PopupMenu.set_item_disabled(7, false)
+				%PopupMenu.set_item_disabled(InitMenu.DIRECTIONAL, false)
 				if das.das_info.is_ademo:
-					%PopupMenu.set_item_disabled(8, false)
+					%PopupMenu.set_item_disabled(InitMenu.MONSTER, false)
 				else:
-					%PopupMenu.set_item_disabled(8, true)
+					%PopupMenu.set_item_disabled(InitMenu.MONSTER, true)
 			else:
-				%PopupMenu.set_item_disabled(7, true)
-				%PopupMenu.set_item_disabled(8, true)
+				%PopupMenu.set_item_disabled(InitMenu.DIRECTIONAL, true)
+				%PopupMenu.set_item_disabled(InitMenu.MONSTER, true)
 		else:
-			%PopupMenu.set_item_disabled(3, true)
-			%PopupMenu.set_item_disabled(4, true)
-			%PopupMenu.set_item_disabled(5, true)
-			%PopupMenu.set_item_disabled(6, true)
-			%PopupMenu.set_item_disabled(7, true)
-			%PopupMenu.set_item_disabled(8, true)
+			%PopupMenu.set_item_disabled(InitMenu.STANDARD, true)
+			%PopupMenu.set_item_disabled(InitMenu.ANIMATION, true)
+			%PopupMenu.set_item_disabled(InitMenu.ANIMATION_2, true)
+			%PopupMenu.set_item_disabled(InitMenu.IMAGE_PACK, true)
+			%PopupMenu.set_item_disabled(InitMenu.DIRECTIONAL, true)
+			%PopupMenu.set_item_disabled(InitMenu.MONSTER, true)
 		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
 
 

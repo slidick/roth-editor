@@ -1,7 +1,6 @@
 extends BaseWindow
 
 enum Page {
-	HEADER,
 	PALETTE,
 	PALETTE_SHADING,
 	UNK_0x10,
@@ -243,7 +242,6 @@ func _on_section_item_list_item_selected(index: int) -> void:
 
 
 func load_das(p_das: Dictionary) -> void:
-	%Header.load_das(p_das)
 	%Palette.load_das(p_das)
 	%PaletteShading.load_das(p_das)
 	%Unk0x10.load_das(p_das, "unk_0x10_section")
@@ -284,3 +282,16 @@ func import_sprite_sheet(p_raw_palette: PackedByteArray) -> Dictionary:
 
 func edit_animation_2_alignments(animation_image: Dictionary, raw_palette: PackedByteArray) -> Dictionary:
 	return await %EditAlignments.edit_alignments(animation_image, raw_palette)
+
+
+func _on_set_new_sky(old_index: int) -> void:
+	if old_index < len(das.fat_1):
+		%Fat1.remove_old_sky(old_index)
+	elif old_index < len(das.fat_1)+len(das.fat_2):
+		%Fat2.remove_old_sky(old_index-len(das.fat_1))
+	elif old_index < len(das.fat_1)+len(das.fat_2)+len(das.fat_3):
+		%Fat3.remove_old_sky(old_index-len(das.fat_1)-len(das.fat_2))
+	elif old_index < len(das.fat_1)+len(das.fat_2)+len(das.fat_3)+len(das.fat_4):
+		%Fat4.remove_old_sky(old_index-len(das.fat_1)-len(das.fat_2)-len(das.fat_3))
+	else:
+		assert(false)
