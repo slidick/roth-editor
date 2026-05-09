@@ -3,11 +3,11 @@ extends BaseWindow
 enum Page {
 	PALETTE,
 	PALETTE_SHADING,
-	UNK_0x10,
 	FAT_1,
 	FAT_2,
 	FAT_3,
 	FAT_4,
+	UNK_0x10,
 	UNK_0X38,
 	UNK_0X40,
 }
@@ -25,7 +25,16 @@ func _ready() -> void:
 	%ListContainer.show()
 	%EditContainer.hide()
 	for child: Node in %DASTabContainer.get_children():
-		%SectionItemList.add_item(child.name)
+		var item_name: String = child.name
+		if item_name == "Fat1":
+			item_name = "Fat1 - Textures"
+		if item_name == "Fat2":
+			item_name = "Fat2 - Textures"
+		if item_name == "Fat3":
+			item_name = "Fat3 - Objects"
+		if item_name == "Fat4":
+			item_name = "Fat4 - Directional"
+		%SectionItemList.add_item(item_name)
 	%SectionItemList.select(0)
 	%SuccessLabel.modulate.a = 0.0
 
