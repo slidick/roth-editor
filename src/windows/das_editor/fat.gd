@@ -23,7 +23,6 @@ func reset() -> void:
 	das = {}
 	key = ""
 	%ItemList.clear()
-	%GenericContainer.reset()
 	%EmptyContainer.show()
 
 
