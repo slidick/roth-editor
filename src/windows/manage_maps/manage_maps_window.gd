@@ -230,3 +230,6 @@ func _on_change_das_button_pressed() -> void:
 	map_info.das_info = new_das
 	Roth.save_metadata(map_info)
 	%DASFile.text = new_das.name
+	%ExportButton.disabled = false
+	%RunButton.disabled = false
+	%OpenButton.disabled = false
