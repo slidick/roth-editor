@@ -392,8 +392,8 @@ func _on_show_shift_check_button_pressed() -> void:
 func _on_edit_alignment_button_pressed() -> void:
 	var new_data: Dictionary = await owner.owner.edit_animation_2_alignments(animation_image, raw_palette)
 	if not new_data.is_empty():
-		animation_image.data.width = new_data.data.width
-		animation_image.data.height = new_data.data.height
+		animation_image.data.width = new_data.data.animation_2[0].buffer_width
+		animation_image.data.height = new_data.data.animation_2[0].buffer_height
 		animation_image.data.animation_2 = new_data.data.animation_2
 		update_texture()
 

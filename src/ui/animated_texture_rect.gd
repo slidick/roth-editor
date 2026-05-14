@@ -23,7 +23,7 @@ func _ready() -> void:
 	add_child(animated_image)
 
 
-func set_data(animation_data: Dictionary, raw_palette: PackedByteArray, shift_data: Array = []) -> void:
+func set_data(animation_data: Dictionary, raw_palette: PackedByteArray, shift_data: Array = [], force_partial_transparency: bool = false) -> void:
 	if "animation" in animation_data:
 		var current_frame: int = animated_image.frame
 		var current_progress: float = animated_image.frame_progress
@@ -33,6 +33,9 @@ func set_data(animation_data: Dictionary, raw_palette: PackedByteArray, shift_da
 			return
 		var is_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
 		var is_fully_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+		if force_partial_transparency:
+			is_transparent = true
+			is_fully_transparent = false
 		for i in range(len(animation_data.animation)):
 			var raw_img: Array = animation_data.animation[i]
 			var image: Image = Image.create_from_data(animation_data.width, animation_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, raw_img, is_transparent, is_fully_transparent))
@@ -53,14 +56,24 @@ func set_data(animation_data: Dictionary, raw_palette: PackedByteArray, shift_da
 		var current_frame: int = animated_image.frame
 		var current_progress: float = animated_image.frame_progress
 		animated_image.sprite_frames.clear_all()
-		speed = animation_data.first_image_offset
+		if "first_image_offset" in animation_data:
+			speed = animation_data.first_image_offset
+		else:
+			speed = 5
 		if len(animation_data.animation_2) == 0:
 			return
-		var is_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-		var is_fully_transparent: bool = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+		var is_transparent: bool
+		var is_fully_transparent: bool
+		if force_partial_transparency:
+			is_transparent = true
+			is_fully_transparent = false
+		else:
+			is_transparent = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+			is_fully_transparent = animation_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+		
 		for i in range(len(animation_data.animation_2)):
-			var image := Image.create_empty(animation_data.width, animation_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8)
 			var sub_image_data: Dictionary = animation_data.animation_2[i]
+			var image := Image.create_empty(sub_image_data.buffer_width, sub_image_data.buffer_height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8)
 			var sub_image: Image = Image.create_from_data(sub_image_data.width, sub_image_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, sub_image_data.raw_image, is_transparent, is_fully_transparent))
 			
 			image.blit_rect(sub_image, Rect2i(Vector2.ZERO, sub_image.get_size()), Vector2i(sub_image_data.x_offset, sub_image_data.y_offset))

@@ -1,7 +1,7 @@
 extends Container
 class_name RotationContainer
 
-var enabled: bool = true :
+@export var enabled: bool = true :
 	set(p_enabled):
 		enabled = p_enabled
 		queue_sort()

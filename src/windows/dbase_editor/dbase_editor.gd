@@ -184,6 +184,12 @@ func _on_save_button_pressed() -> void:
 	file.store_buffer(data)
 	file.close()
 	
+	var data4 := DBase200.compile(dbase_data["dbase100"])
+	
+	var file4 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE200.DAT"), FileAccess.WRITE)
+	file4.store_buffer(data4)
+	file4.close()
+	
 	var data2 := DBase100.compile(dbase_data["dbase100"])
 	
 	var file2 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE100.DAT"), FileAccess.WRITE)
@@ -347,8 +353,8 @@ func ademo_object_selection() -> Dictionary:
 	return await %ObjectSelection.ademo_object_selection()
 
 
-func dbase200_object_selection() -> int:
-	return await %ObjectSelection.dbase200_object_selection()
+func dbase200_object_selection() -> Dictionary:
+	return await %ObjectSelection.dbase200_object_selection(dbase_data.dbase100.directory.path_join("DBASE200.DAT"))
 
 
 func dbase300_object_selection() -> int:
@@ -361,3 +367,11 @@ func action_selection(current_opcode: int = -1, as_hex: bool = false, hide_item_
 
 func trigger_selection(current_trigger: int = -1, as_hex: bool = false) -> int:
 	return await %ActionSelector.trigger_selection(current_trigger, as_hex)
+
+
+func edit_weapon_animation(command: Dictionary) -> void:
+	await %WeaponAnimationEditor.edit(command)
+
+
+func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_force_partial_alpha: bool = false) -> Dictionary:
+	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, p_force_partial_alpha)

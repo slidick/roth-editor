@@ -77,6 +77,61 @@ static func decode_rle_image_data(image_data: Dictionary) -> PackedByteArray:
 	return decoded_sprite_buffer
 
 
+static func decode_row_rle_image(input_image: Dictionary) -> PackedByteArray:
+	var data := PackedByteArray()
+	data.resize(input_image.width * input_image.height)
+	
+	var src_index: int = input_image.height * 4
+	var pos: int = 0
+	var row_start_index: int = 0
+	for i in range(input_image.height):
+		var starting_offset: int = input_image.encoded_image.decode_u16(pos)
+		var pixel_run: int = input_image.encoded_image.decode_u16(pos+2)
+		pos += 4
+		for j in range(pixel_run):
+			data[row_start_index+starting_offset+j] = input_image.encoded_image[src_index]
+			src_index += 1
+		row_start_index += input_image.width
+	
+	return data
+
+
+static func encode_row_rle_image(input_image: Dictionary) -> PackedByteArray:
+	if not "raw_image" in input_image:
+		return PackedByteArray()
+	
+	var output_data := PackedByteArray()
+	output_data.resize(4*input_image.height)
+	
+	var row_offset: int = 0
+	
+	for row: int in range(input_image.height):
+		var left_offset: int = 0
+		while input_image.raw_image[row_offset+left_offset] == 0 and left_offset < input_image.width-1:
+			left_offset += 1
+		
+		var right_offset: int = 0
+		while input_image.raw_image[row_offset+input_image.width-1-right_offset] == 0 and right_offset < input_image.width-1:
+			right_offset += 1
+		
+		var pixel_run: int = input_image.width - left_offset - right_offset
+		if pixel_run <= 0:
+			left_offset = 0
+			pixel_run = 0
+		
+		
+		output_data.encode_u16(row*4, left_offset)
+		output_data.encode_u16(row*4+2, pixel_run)
+		
+		for i in range(pixel_run):
+			output_data.append(input_image.raw_image[row_offset+left_offset+i])
+		
+		row_offset += input_image.width
+	
+	
+	return output_data
+
+
 static func encode_rle_img(input_image: Dictionary, no_compression: bool = false) -> PackedByteArray:
 	if not "raw_image" in input_image:
 		return PackedByteArray()

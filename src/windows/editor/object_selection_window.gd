@@ -62,19 +62,16 @@ func ademo_object_selection() -> Dictionary:
 	return item
 
 
-func dbase200_object_selection() -> int:
+func dbase200_object_selection(dbase200_filepath: String) -> Dictionary:
 	%FavRecentContainer.hide()
 	%InfoContainer.hide()
 	%RotatableItemList.clear()
 	%SearchEdit.hide()
-	load_dbase200()
+	load_dbase200(dbase200_filepath)
 	toggle(true)
 	var item: Dictionary = await item_selected
 	toggle(false)
-	if item.is_empty():
-		return -1
-	
-	return item.offset
+	return item
 
 
 func dbase300_object_selection() -> int:
@@ -171,12 +168,15 @@ func load_ademo(p_show_add_to_favorites: bool = false) -> void:
 		%RotatableItemList.set_item_metadata(idx, texture)
 
 
-func load_dbase200() -> void:
-	for item: Dictionary in DBase200.parse_full():
-		var tex := ImageTexture.create_from_image(item.image)
-		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
-		%RotatableItemList.set_item_metadata(idx, item)
-		%RotatableItemList.set_rotated(idx, false)
+func load_dbase200(dbase200_filepath: String) -> void:
+	var icons: Array = DBase200.get_icons(dbase200_filepath)
+	for icon: Dictionary in icons:
+		if "raw_image" in icon:
+			var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
+			var tex := ImageTexture.create_from_image(image)
+			var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
+			%RotatableItemList.set_item_metadata(idx, icon)
+			%RotatableItemList.set_rotated(idx, false)
 
 
 func load_dbase300() -> void:

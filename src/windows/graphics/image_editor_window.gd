@@ -86,7 +86,7 @@ func update_camera_center() -> void:
 		%Camera2D.position = image.get_size() / 2.0
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = true) -> Dictionary:
+func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = false) -> Dictionary:
 	original_texture_data = p_texture_data.duplicate(true)
 	texture_data = p_texture_data.duplicate(true)
 	force_partial_alpha = p_force_partial_alpha
@@ -121,7 +121,7 @@ func _on_reset_button_pressed() -> void:
 
 func redraw_image() -> void:
 	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or force_partial_alpha
-	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+	var is_fully_transparent: bool = (texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0) and not force_partial_alpha
 	image = Image.create_from_data(
 		texture_data.width,
 		texture_data.height,

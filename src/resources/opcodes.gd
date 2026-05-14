@@ -29,7 +29,7 @@ static var dbase100: Dictionary = {
 	26: {"name": "Change Music", "only_item": false, "desc": "DBase300 Offset / 8"},
 	28: {"name": "?", "only_item": false, "desc": "Always 16777215 (0xFFFFFF)"},
 	29: {"name": "Jump to different command", "only_item": false, "desc": "DBASE100 command index"},
-	31: {"name": "?", "only_item": true, "desc": "None"},
+	31: {"name": "WeaponReloadAnimation", "only_item": true, "desc": "Reload animation. DBASE200 Offset / 8"},
 	32: {"name": "WeaponAmmoRecharge", "only_item": true, "desc": "the inventory index of the ammo refill. when second byte is 80, it's a rechargeable weapon and the first byte represents ammo recharge rate"},
 	33: {"name": "?", "only_item": true, "desc": "None"},
 	35: {"name": "MapCommandIndexCallback", "only_item": false, "desc": "Performs a script from the current .RAW map file. value is the command index"},

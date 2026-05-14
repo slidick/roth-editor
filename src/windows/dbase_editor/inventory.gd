@@ -38,14 +38,12 @@ func _reset_item() -> void:
 	%CloseUpTypeEdit.text = ""
 	%ItemTypeEdit.text = ""
 	%CloseUpImageOffsetEdit.text = ""
-	%InventoryImageOffsetEdit.text = ""
 	%NameEdit.text = ""
 	
 	%ObjectTextureIndexEdit.editable = false
 	%CloseUpTypeEdit.editable = false
 	%ItemTypeEdit.editable = false
 	%CloseUpImageOffsetEdit.editable = false
-	%InventoryImageOffsetEdit.editable = false
 	%AddTriggerButton.disabled = true
 	%AddOpcodeButton.disabled = true
 	%ChangeNameButton.disabled = true
@@ -53,7 +51,7 @@ func _reset_item() -> void:
 	%ChangeInventoryImageButton.disabled = true
 	%ChangeCloseUpButton.disabled = true
 	%ClearObjectTextureButton.disabled = true
-	%ClearInventoryImageButton2.disabled = true
+	%ClearInventoryImageButton.disabled = true
 	%ClearCloseUpButton.disabled = true
 	
 	%ObjectTextureRect.texture = null
@@ -230,6 +228,27 @@ func _update_commands() -> void:
 			else:
 				tree_item.set_text(2, "(Empty)")
 				command.text_entry = {}
+		elif (command.opcode == 18
+			or command.opcode == 31
+		):
+			command.args = 0
+			if "data" not in command:
+				command.data = {"animation_2": []}
+				var raw_image := PackedByteArray()
+				raw_image.resize(16 * 16)
+				var frame_data: Dictionary = {
+					image_type = 30,
+					buffer_width = 320,
+					buffer_height = 200,
+					x_offset = 0,
+					width = 16,
+					y_offset = 0,
+					height = 16,
+					raw_image = raw_image,
+				}
+				frame_data["encoded_image"] = RLE.encode_row_rle_image(frame_data)
+				command.data.animation_2.append(frame_data)
+			tree_item.set_text(2, "[Edit Animation]")
 		else:
 			if tree_item.get_text(2).is_valid_hex_number(true):
 				command.args = tree_item.get_text(2).hex_to_int()
@@ -261,13 +280,11 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	%Flag8CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 7)) > 0)
 	%ItemTypeEdit.text = str(inventory_item.item_type)
 	%CloseUpImageOffsetEdit.text = str(inventory_item.closeup_image)
-	%InventoryImageOffsetEdit.text = str(inventory_item.inventory_image)
 	%NameEdit.text = str(inventory_item.text_entry.string if "string" in inventory_item.text_entry else "(Empty)")
 	%ObjectTextureIndexEdit.editable = true
 	#%CloseUpTypeEdit.editable = true
 	#%ItemTypeEdit.editable = true
 	#%CloseUpImageOffsetEdit.editable = true
-	#%InventoryImageOffsetEdit.editable = true
 	%ChangeNameButton.disabled = false
 	%AddTriggerButton.disabled = false
 	%AddOpcodeButton.disabled = true
@@ -275,7 +292,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	%ChangeInventoryImageButton.disabled = false
 	%ChangeCloseUpButton.disabled = false
 	%ClearObjectTextureButton.disabled = false
-	%ClearInventoryImageButton2.disabled = false
+	%ClearInventoryImageButton.disabled = false
 	%ClearCloseUpButton.disabled = false
 	
 	%Flag1CheckButton.disabled = false
@@ -312,8 +329,9 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		var image: Dictionary = Roth.get_index_from_das(inventory_item["object_texture_index"]-512, Roth.get_active_ademo())
 		if "image" in image:
 			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
-	if "inventory_image" in inventory_item and inventory_item["inventory_image"] != 0:
-		var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8)
+	if not inventory_item.image_data.is_empty():
+		var icon: Dictionary = inventory_item.image_data
+		var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
 		if image:
 			%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
 	if "closeup_image" in inventory_item and inventory_item["closeup_image"] != 0:
@@ -397,10 +415,6 @@ func _on_close_up_image_offset_edit_text_changed(new_text: String) -> void:
 	inventory_item.closeup_image = int(new_text)
 
 
-func _on_inventory_image_offset_edit_text_changed(new_text: String) -> void:
-	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	inventory_item.inventory_image = int(new_text)
-
 
 func _on_name_offset_edit_text_changed(new_text: String) -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
@@ -442,6 +456,8 @@ func _add_tree_item(command: Dictionary) -> void:
 			tree_item.set_text(2, command.text_entry.string)
 		else:
 			tree_item.set_text(2, "(Empty)")
+	elif "data" in command:
+		tree_item.set_text(2, "[Edit Animation]")
 	else:
 		tree_item.set_text(2, "%d" % command.args)
 	
@@ -583,6 +599,8 @@ func _on_tree_item_selected() -> void:
 			and tree_item.get_text(0) != "8"
 			and tree_item.get_text(0) != "15"
 			and tree_item.get_text(0) != "16"
+			and tree_item.get_text(0) != "18"
+			and tree_item.get_text(0) != "31"
 	):
 		tree_item.set_editable(2, true)
 	await get_tree().create_timer(0.5).timeout
@@ -604,6 +622,13 @@ func _on_tree_item_activated() -> void:
 		if opcode != -1:
 			tree_item.set_text(0, "%d" % opcode)
 			_update_commands()
+		return
+	
+	if (tree_item.get_text(0) == "18"
+		or tree_item.get_text(0) == "31"
+	):
+		var command: Dictionary = tree_item.get_metadata(0)
+		await owner.edit_weapon_animation(command)
 		return
 	
 	if (tree_item.get_text(0) != "5"
@@ -693,15 +718,6 @@ func _on_close_up_image_offset_edit_text_submitted(_new_text: String = "") -> vo
 		%CloseUpTextureRect.texture = null
 
 
-func _on_inventory_image_offset_edit_text_submitted(_new_text: String = "") -> void:
-	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8)
-	if image:
-		%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
-	else:
-		%InventoryTextureRect.texture = null
-
-
 func _on_object_texture_index_edit_text_submitted(_new_text: String = "") -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	if inventory_item["object_texture_index"] >= 512:
@@ -773,12 +789,20 @@ func _on_change_close_up_button_pressed() -> void:
 
 
 func _on_change_inventory_image_button_pressed() -> void:
-	var offset: int = await owner.dbase200_object_selection()
-	if offset < 0:
+	var icon: Dictionary = await owner.dbase200_object_selection()
+	if icon.is_empty():
 		return
-	%InventoryImageOffsetEdit.text = str(int(offset / 8.0))
-	_on_inventory_image_offset_edit_text_changed(str(int(offset / 8.0)))
-	_on_inventory_image_offset_edit_text_submitted()
+	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
+	inventory_item.image_data = icon
+	
+	var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
+	%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
+
+
+func _on_clear_inventory_image_button_pressed() -> void:
+	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
+	inventory_item.image_data = {}
+	%InventoryTextureRect.texture = null
 
 
 func _on_change_object_texture_button_pressed() -> void:
@@ -796,13 +820,27 @@ func _on_clear_object_texture_button_pressed() -> void:
 	_on_object_texture_index_edit_text_submitted()
 
 
-func _on_clear_inventory_image_button_2_pressed() -> void:
-	%InventoryImageOffsetEdit.text = "0"
-	_on_inventory_image_offset_edit_text_changed("0")
-	_on_inventory_image_offset_edit_text_submitted()
-
-
 func _on_clear_close_up_button_pressed() -> void:
 	%CloseUpImageOffsetEdit.text = "0"
 	_on_close_up_image_offset_edit_text_changed("0")
 	_on_close_up_image_offset_edit_text_submitted()
+
+
+func _on_edit_inventory_image_button_pressed() -> void:
+	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
+	var image_data: Dictionary = inventory_item.image_data
+	if image_data.is_empty():
+		var raw_image := PackedByteArray()
+		raw_image.resize(24*24)
+		image_data = {
+			"image_type": 3,
+			"width": 24,
+			"height": 24,
+			"raw_image": raw_image
+		}
+	var new_image: Dictionary = await owner.edit_image(image_data, Das.DEFAULT_RAW_PALETTE, true)
+	if not new_image.is_empty():
+		inventory_item.image_data = new_image
+		inventory_item.image_data.rle_data = RLE.encode_rle_img(new_image)
+		var image: Image = Image.create_from_data(new_image.width, new_image.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, new_image.raw_image, true, false))
+		%InventoryTextureRect.texture = ImageTexture.create_from_image(image)

@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://gxfiwph6tqkc" path="res://src/windows/dbase_editor/text_entry_dialog.tscn" id="11_kn3rg"]
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/editor/object_selection_window.tscn" id="12_6d4ud"]
 [ext_resource type="PackedScene" uid="uid://debuc4xxgfvt6" path="res://src/windows/dbase_editor/action_selector_window.tscn" id="13_pryu3"]
+[ext_resource type="PackedScene" uid="uid://cape11x6rkx43" path="res://src/windows/dbase_editor/weapon_animation_editor.tscn" id="14_gv1bg"]
+[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="15_egm7p"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fspgq"]
 
@@ -243,16 +245,16 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_fspgq")
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 
 [node name="DBase100Header" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="1" unique_id=1833103597 instance=ExtResource("5_yc78u")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Cutscenes" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="2" unique_id=478264843 instance=ExtResource("6_k7imk")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -365,6 +367,38 @@ offset_left = -482.145
 offset_top = -263.0
 offset_right = 482.145
 offset_bottom = 263.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WeaponAnimationEditor" parent="SubWindows" index="3" unique_id=1495221184 instance=ExtResource("14_gv1bg")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -631.0
+offset_top = -388.5
+offset_right = 631.0
+offset_bottom = 388.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ImageEditor" parent="SubWindows" index="4" unique_id=1671538512 instance=ExtResource("15_egm7p")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -640.0
+offset_top = -400.0
+offset_right = 640.0
+offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
 

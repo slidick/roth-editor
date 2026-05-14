@@ -523,6 +523,7 @@ metadata/_custom_type_script = "uid://2rrlixceot6j"
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+expand_mode = 1
 stretch_mode = 5
 script = ExtResource("3_yl0ar")
 

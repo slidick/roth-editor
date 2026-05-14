@@ -15,31 +15,46 @@ var zoom: float = 1.0
 var additional_zoom: float = 1.0
 var zooming: bool = false
 var mouse_drag_enabled: bool = false
+var rotate_canvas: bool = true
 
 
-func edit_alignments(p_animation_data: Dictionary, p_raw_palette: PackedByteArray) -> Dictionary:
+func edit_alignments(p_animation_data: Dictionary, p_raw_palette: PackedByteArray, p_rotate_canvas: bool = true, force_partial_transparency: bool = false) -> Dictionary:
+	if len(p_animation_data.data.animation_2) == 0:
+		return {}
 	animation_data = p_animation_data.duplicate(true)
 	raw_palette = p_raw_palette
+	rotate_canvas = p_rotate_canvas
 	
 	for child: Node in %RotationContainer.get_children():
 		child.queue_free()
 	
-	var background_image := Image.create_empty(animation_data.data.width, animation_data.data.height, false, Image.FORMAT_RGB8)
+	var background_image := Image.create_empty(animation_data.data.animation_2[0].buffer_width, animation_data.data.animation_2[0].buffer_height, false, Image.FORMAT_RGB8)
 	background_image.fill(Color.WHITE)
 	var background := TextureRect.new()
 	background.texture = ImageTexture.create_from_image(background_image)
 	background.stretch_mode = TextureRect.STRETCH_KEEP
 	%RotationContainer.add_child(background)
-	%WidthSpinBox.set_value_no_signal(animation_data.data.height)
-	%HeightSpinBox.set_value_no_signal(animation_data.data.width)
+	if rotate_canvas:
+		%WidthSpinBox.set_value_no_signal(animation_data.data.animation_2[0].buffer_height)
+		%HeightSpinBox.set_value_no_signal(animation_data.data.animation_2[0].buffer_width)
+		%RotationContainer.enabled = true
+	else:
+		%WidthSpinBox.set_value_no_signal(animation_data.data.animation_2[0].buffer_width)
+		%HeightSpinBox.set_value_no_signal(animation_data.data.animation_2[0].buffer_height)
+		%RotationContainer.enabled = false
 	
 	%XOffsetSpinBox.editable = false
 	%YOffsetSpinBox.editable = false
 	%XOffsetSpinBox.set_value_no_signal(0)
 	%YOffsetSpinBox.set_value_no_signal(0)
-	
-	var is_transparent: bool = animation_data.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-	var is_fully_transparent: bool = animation_data.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+	var is_transparent: bool
+	var is_fully_transparent: bool
+	if force_partial_transparency:
+		is_transparent = true
+		is_fully_transparent = false
+	else:
+		is_transparent = animation_data.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or animation_data.data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
+		is_fully_transparent = animation_data.data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
 	
 	%Tree.clear()
 	var root_item: TreeItem = %Tree.create_item()
@@ -62,7 +77,10 @@ func edit_alignments(p_animation_data: Dictionary, p_raw_palette: PackedByteArra
 		texture_rect.texture = ImageTexture.create_from_image(image)
 		texture_rect.stretch_mode = TextureRect.STRETCH_KEEP
 		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		texture_rect.position = Vector2(frame.y_offset, frame.x_offset)
+		if rotate_canvas:
+			texture_rect.position = Vector2(frame.y_offset, frame.x_offset)
+		else:
+			texture_rect.position = Vector2(frame.x_offset, frame.y_offset)
 		texture_rect.focus_mode = Control.FOCUS_ALL
 		texture_rect.focus_neighbor_bottom = "."
 		texture_rect.focus_neighbor_left = "."
@@ -89,17 +107,26 @@ func edit_alignments(p_animation_data: Dictionary, p_raw_palette: PackedByteArra
 
 func update_camera_center() -> void:
 	var _size := Vector2.ZERO
-	_size.x = animation_data.data.height
-	_size.y = animation_data.data.width
+	if rotate_canvas:
+		_size.x = animation_data.data.animation_2[0].buffer_height
+		_size.y = animation_data.data.animation_2[0].buffer_width
+	else:
+		_size.x = animation_data.data.animation_2[0].buffer_width
+		_size.y = animation_data.data.animation_2[0].buffer_height
 	%Camera2D.position = _size / 2.0
 
 
 func init_zoom() -> void:
 	while %Camera2D.get_viewport().size.y < 5:
 		await get_tree().process_frame
-	var zoom_y: float = %Camera2D.get_viewport().size.y / float(animation_data.data.width)
-	var zoom_x: float = %Camera2D.get_viewport().size.x / float(animation_data.data.height)
-	zoom = min(zoom_x, zoom_y) * 0.98
+	if rotate_canvas:
+		var zoom_y: float = %Camera2D.get_viewport().size.y / float(animation_data.data.animation_2[0].buffer_width)
+		var zoom_x: float = %Camera2D.get_viewport().size.x / float(animation_data.data.animation_2[0].buffer_height)
+		zoom = min(zoom_x, zoom_y) * 0.98
+	else:
+		var zoom_y: float = %Camera2D.get_viewport().size.y / float(animation_data.data.animation_2[0].buffer_height)
+		var zoom_x: float = %Camera2D.get_viewport().size.x / float(animation_data.data.animation_2[0].buffer_width)
+		zoom = min(zoom_x, zoom_y) * 0.98
 	adjust_zoom()
 
 
@@ -187,15 +214,26 @@ func update_offset() -> void:
 		item = %Tree.get_next_selected(item)
 	if len(selected_items) == 1:
 		var frame: Dictionary = selected_items[0].get_metadata(0)
-		frame.y_offset = int(%XOffsetSpinBox.value)
-		frame.x_offset = int(%YOffsetSpinBox.value)
-		%RotationContainer.get_child(selected_items[0].get_index()+1).position = Vector2(frame.y_offset, frame.x_offset)
+		if rotate_canvas:
+			frame.y_offset = int(%XOffsetSpinBox.value)
+			frame.x_offset = int(%YOffsetSpinBox.value)
+			%RotationContainer.get_child(selected_items[0].get_index()+1).position = Vector2(frame.y_offset, frame.x_offset)
+		else:
+			frame.x_offset = int(%XOffsetSpinBox.value)
+			frame.y_offset = int(%YOffsetSpinBox.value)
+			%RotationContainer.get_child(selected_items[0].get_index()+1).position = Vector2(frame.x_offset, frame.y_offset)
+		
 
 
 func update_canvas_size() -> void:
-	animation_data.data.width = int(%HeightSpinBox.value)
-	animation_data.data.height = int(%WidthSpinBox.value)
-	var background_image := Image.create_empty(animation_data.data.width, animation_data.data.height, false, Image.FORMAT_RGB8)
+	for frame: Dictionary in animation_data.data.animation_2:
+		if rotate_canvas:
+			frame.buffer_width = int(%HeightSpinBox.value)
+			frame.buffer_height = int(%WidthSpinBox.value)
+		else:
+			frame.buffer_height = int(%HeightSpinBox.value)
+			frame.buffer_width = int(%WidthSpinBox.value)
+	var background_image := Image.create_empty(animation_data.data.animation_2[0].buffer_width, animation_data.data.animation_2[0].buffer_height, false, Image.FORMAT_RGB8)
 	background_image.fill(Color.WHITE)
 	%RotationContainer.get_child(0).texture.set_image(background_image)
 	update_camera_center()
@@ -244,8 +282,12 @@ func _on_tree_cell_selected() -> void:
 		item = %Tree.get_next_selected(item)
 	if len(selected_items) == 1 and %Tree.get_selected() in selected_items:
 		var frame: Dictionary = selected_items[0].get_metadata(0)
-		%XOffsetSpinBox.set_value_no_signal(frame.y_offset)
-		%YOffsetSpinBox.set_value_no_signal(frame.x_offset)
+		if rotate_canvas:
+			%XOffsetSpinBox.set_value_no_signal(frame.y_offset)
+			%YOffsetSpinBox.set_value_no_signal(frame.x_offset)
+		else:
+			%XOffsetSpinBox.set_value_no_signal(frame.x_offset)
+			%YOffsetSpinBox.set_value_no_signal(frame.y_offset)
 		%XOffsetSpinBox.editable = true
 		%YOffsetSpinBox.editable = true
 		if %RotationContainer.get_child(selected_items[0].get_index()+1).visible:

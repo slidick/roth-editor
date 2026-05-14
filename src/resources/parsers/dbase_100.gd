@@ -64,16 +64,10 @@ const DBASE_100_OPCODE := {
 }
 
 static func parse() -> Dictionary:
-	var dbase100_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE100.DAT")
-	if not FileAccess.file_exists(dbase100_filepath):
-		return {}
-	var dbase400_filepath: String = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
-	if not FileAccess.file_exists(dbase400_filepath):
-		return {}
-	return parse_files(dbase100_filepath, dbase400_filepath)
+	return parse_files_at_directory(Roth.install_directory.path_join("..").path_join("DATA"))
 
 
-static func parse_files(dbase100_filepath: String, dbase400_filepath: String) -> Dictionary:
+static func parse_files(dbase100_filepath: String, dbase200_filepath: String, dbase400_filepath: String) -> Dictionary:
 	var dbase100 := FileAccess.open(dbase100_filepath, FileAccess.READ)
 	var dbase400 := FileAccess.open(dbase400_filepath, FileAccess.READ)
 	
@@ -134,6 +128,10 @@ static func parse_files(dbase100_filepath: String, dbase400_filepath: String) ->
 		var position: int = dbase100.get_position()
 		dbase100.seek(offset)
 		var inventory_item := Parser.parse_section(dbase100, DBASE100_INVENTORY_ENTRY)
+		if inventory_item.inventory_image != 0:
+			inventory_item["image_data"] = DBase200.get_at_offset(dbase200_filepath, inventory_item.inventory_image*8)
+		else:
+			inventory_item["image_data"] = {}
 		inventory_item["actions_section"] = []
 		
 		var v1 := dbase100.get_8()
@@ -166,6 +164,10 @@ static func parse_files(dbase100_filepath: String, dbase400_filepath: String) ->
 						text_entrys.append(command.text_entry)
 					else:
 						command["text_entry"] = text_offsets[command_args]
+				if (command_opcode == 18
+					or command_opcode == 31
+				):
+					command["data"] = DBase200.get_at_offset(dbase200_filepath, command_args*8)
 			v1 = dbase100.get_8()
 			v2 = dbase100.get_8()
 			v3 = dbase100.get_8() 
@@ -246,11 +248,14 @@ static func parse_files_at_directory(directory: String) -> Dictionary:
 	var dbase100_filepath: String =  directory.path_join("DBASE100.DAT")
 	if not FileAccess.file_exists(dbase100_filepath):
 		return {}
+	var dbase200_filepath: String =  directory.path_join("DBASE200.DAT")
+	if not FileAccess.file_exists(dbase200_filepath):
+		return {}
 	var dbase400_filepath: String = directory.path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
 		return {}
 	
-	var dbase_data: Dictionary = parse_files(dbase100_filepath, dbase400_filepath)
+	var dbase_data: Dictionary = parse_files(dbase100_filepath, dbase200_filepath, dbase400_filepath)
 	dbase_data.directory = directory
 	DBase500.add_entries_to_dbase(dbase_data)
 	

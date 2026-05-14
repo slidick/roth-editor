@@ -24,6 +24,7 @@ layout_mode = 2
 current_tab = 0
 
 [node name="Commands" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="1" unique_id=255095649 instance=ExtResource("5_rtctb")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="2" unique_id=331652790]
@@ -245,5 +246,4 @@ metadata/_tab_index = 9
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer/PauseVideoButton" to="." method="_on_pause_video_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/TabContainer/Cutscenes/HBoxContainer/HSplitContainer/PanelContainer/VBoxContainer/VideoControlsContainer/StopVideoButton" to="." method="_on_stop_video_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/HBoxContainer/DBase200List" to="." method="_on_d_base_200_list_item_selected"]
-[connection signal="timeout" from="Contents/VBoxContainer/MainContainer/TabContainer/Animations/AnimationTimer" to="." method="_on_animation_timer_timeout"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/TabContainer/SFX/HBoxContainer/SFXList" to="." method="_on_sfx_list_item_activated"]

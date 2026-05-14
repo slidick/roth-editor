@@ -48,6 +48,7 @@ func _on_settings_loaded() -> void:
 	
 	# DBase100 Parse
 	dbase100 = DBase100.parse()
+	%Commands.load_dbase(dbase100)
 	if not dbase100.is_empty():
 		# Cutscenes
 		for i in range(len(dbase100.cutscenes)):
@@ -76,10 +77,9 @@ func _on_settings_loaded() -> void:
 	%DBase200List.clear()
 	for node: Node in %DBase200Panel.get_children():
 		node.queue_free()
-	%AnimationTimer.stop()
 	
 	# DBase200 Parse
-	var dbase200_offsets: Array = DBase200.get_animation_offsets()
+	var dbase200_offsets: Array = DBase200.get_animation_offsets(Roth.install_directory.path_join("../DATA/DBASE200.DAT"))
 	if not dbase200_offsets.is_empty():
 		# DBase200 Init
 		for i in range(len(dbase200_offsets)):
@@ -118,6 +118,12 @@ func _on_settings_loaded() -> void:
 	var backdrop_image: Image = Backdrop.parse()
 	if backdrop_image:
 		%BackdropRect.texture = ImageTexture.create_from_image(backdrop_image)
+
+
+func toggle(_bool: Variant = null) -> void:
+	super.toggle(_bool)
+	for node: Node in %DBase200Panel.get_children():
+		node.queue_free()
 
 
 func _on_cutscene_list_item_selected(index: int) -> void:
@@ -204,7 +210,7 @@ func play_video() -> void:
 
 
 func parse_thread(gdv_name: String) -> void:
-	var gdv_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("GDV").path_join("%s.GDV" % gdv_name)
+	var gdv_filepath: String =  Roth.install_directory.path_join("../DATA/GDV/%s.GDV" % gdv_name)
 	var gdv: Dictionary = RothExt.get_video_by_path(gdv_filepath, func (percent: float) -> void: Roth.gdv_loading_updated.emit(percent))
 	#var gdv: Dictionary = GDV.get_video_by_path(gdv_filepath)
 	gdv_parsing_done.emit.call_deferred(gdv)
@@ -328,7 +334,9 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	vbox_main.add_child(image_hbox)
 	
 	if "inventory_image" in inventory_item and inventory_item["inventory_image"] != 0:
-		var image: Image = DBase200.get_at_offset(inventory_item["inventory_image"]*8)
+		var image_data: Dictionary = DBase200.get_at_offset(Roth.install_directory.path_join("../DATA/DBASE200.DAT"), inventory_item["inventory_image"]*8)
+		
+		var image := Image.create_from_data(image_data.width, image_data.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, image_data.raw_image, true, false))
 		var texture_rect := TextureRect.new()
 		texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -479,42 +487,17 @@ func _on_inventory_list_item_selected(index: int) -> void:
 func _on_d_base_200_list_item_selected(index: int) -> void:
 	for node: Node in %DBase200Panel.get_children():
 		node.queue_free()
-	%AnimationTimer.stop()
 	var image_offset: int = %DBase200List.get_item_metadata(index)
-	var image: Variant = DBase200.get_at_offset(image_offset)
-	match typeof(image):
-		TYPE_ARRAY:
-			animation_position = 0
-			animation = image
-			animation_rect = TextureRect.new()
-			animation_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			animation_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			animation_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			animation_rect.custom_minimum_size.y = 100
-			animation_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])
-			%DBase200Panel.add_child(animation_rect)
-			%AnimationTimer.start()
-		TYPE_OBJECT:
-			var texture_rect := TextureRect.new()
-			texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			texture_rect.custom_minimum_size.y = 100
-			texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			texture_rect.texture = ImageTexture.create_from_image(image)
-			%DBase200Panel.add_child(texture_rect)
-
-
-func _on_animation_timer_timeout() -> void:
-	if len(animation) == 1:
-		return
-	animation_position = (animation_position + 1) % (len(animation) - 1)
-	animation_rect.texture = ImageTexture.create_from_image(animation[animation_position])
+	var image_data: Dictionary = DBase200.get_at_offset(Roth.install_directory.path_join("../DATA/DBASE200.DAT"), image_offset)
+	var roth_texture := RothTextureContainer.new()
+	roth_texture.load_data.call_deferred({"data": image_data}, Das.DEFAULT_RAW_PALETTE, true)
+	roth_texture.enabled = false
+	%DBase200Panel.add_child(roth_texture)
 
 
 func _on_tab_container_tab_changed(_tab: int) -> void:
-	%AnimationTimer.stop()
+	for node: Node in %DBase200Panel.get_children():
+		node.queue_free()
 
 
 func _on_sfx_list_item_activated(index: int) -> void:

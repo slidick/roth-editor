@@ -4,13 +4,13 @@ var dbase100: Dictionary = {}
 
 
 func _ready() -> void:
-	Roth.settings_loaded.connect(_on_settings_loaded)
 	%CommandTree.create_item()
 	%CommandTree.set_column_title(0, "Command")
 	%CommandTree.set_column_title(1, "Value")
 
 
-func _on_settings_loaded() -> void:
+func load_dbase(p_dbase100: Dictionary) -> void:
+	dbase100 = p_dbase100
 	# Actions/Commands Clear
 	%CommandList.clear()
 	for tree_item: TreeItem in %CommandTree.get_root().get_children():
@@ -18,7 +18,6 @@ func _on_settings_loaded() -> void:
 	for node: Node in %CommandPanel.get_children():
 		node.queue_free()
 	
-	dbase100 = DBase100.parse()
 	if not dbase100.is_empty():
 		# Actions/Commands
 		for i in range(len(dbase100.actions)):
