@@ -43,6 +43,10 @@ func open() -> void:
 	var maps: Array = get_selected_maps()
 	if maps.is_empty():
 		return
+	for map_info: Dictionary in maps:
+		if "invalid" in map_info.das_info:
+			Dialog.information("Map has invalid das file!", "Error", false, Vector2(300,150))
+			return
 	Roth.load_maps(maps)
 	_hide()
 
