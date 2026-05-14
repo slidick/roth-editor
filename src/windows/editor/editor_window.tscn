@@ -76,15 +76,11 @@ content_margin_right = 20.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dyevs"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_y8pqo"]
-
 [sub_resource type="Sky" id="Sky_5ukvr"]
-sky_material = SubResource("ProceduralSkyMaterial_y8pqo")
 
 [sub_resource type="Environment" id="Environment_kc8ui"]
 background_mode = 2
 sky = SubResource("Sky_5ukvr")
-sky_custom_fov = 95.0
 tonemap_mode = 2
 volumetric_fog_density = 0.0045
 volumetric_fog_anisotropy = -0.66
@@ -568,6 +564,7 @@ grow_vertical = 2
 script = ExtResource("6_rysh3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="1" unique_id=225792394]
+unique_name_in_owner = true
 environment = SubResource("Environment_kc8ui")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="2" unique_id=1803112455]

@@ -594,7 +594,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	
 	
 	# Parse as directional images
-	elif texture.modifier & MODIFIER.IMAGE_PACK > 0:
+	elif texture.modifier & MODIFIER.IMAGE_PACK > 0 and texture.flags_1 & (1<<1) == 0:
 		var size_of_offsets: int = file.get_8()
 		var pack_type: int = file.get_8()
 		if pack_type & 128 > 0:
@@ -894,13 +894,13 @@ static func _parse_fat(file: FileAccess, is_ademo: bool, index: int, das: Dictio
 				entry["monster_mapping"] = das.monster_mappings[entry.flags_2].duplicate()
 		elif entry.offset > 0:
 			file.seek(entry.offset)
-			entry["data"] = _parse_image(file, is_ademo, index)
+			entry["data"] = _parse_image(file, is_ademo, entry.flags_1 & (1<<1) > 0, index)
 		else:
 			assert(false)
 	return entry
 
 
-static func _parse_image(file: FileAccess, is_ademo: bool, _index: int) -> Dictionary:
+static func _parse_image(file: FileAccess, is_ademo: bool, is_sky: bool, _index: int) -> Dictionary:
 	var modifier: int = file.get_8()
 	var image_type: int = file.get_8()
 	file.seek(file.get_position() - 2)
@@ -909,7 +909,7 @@ static func _parse_image(file: FileAccess, is_ademo: bool, _index: int) -> Dicti
 		data = _parse_animated_image(file, is_ademo, _index)
 	elif image_type & IMAGE_TYPE.OBJECT_DATA > 0:
 		data = _parse_object_data(file, is_ademo)
-	elif modifier & MODIFIER.IMAGE_PACK > 0:
+	elif modifier & MODIFIER.IMAGE_PACK > 0 and not is_sky:
 		data = _parse_image_pack(file, is_ademo)
 	else:
 		data = _parse_standard_image(file, is_ademo)

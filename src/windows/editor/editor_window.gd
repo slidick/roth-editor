@@ -239,6 +239,8 @@ func close_map(map: Map) -> void:
 			close_undo_redo(tree_item.get_metadata(0).ref.map_info)
 			tree_item.get_metadata(0).ref.unload()
 			tree_item.free()
+			
+			reload_skybox()
 
 
 func load_map(map: Map) -> void:
@@ -311,7 +313,33 @@ func load_map(map: Map) -> void:
 	if tree_root.get_child_count() == 1:
 		first_load = true
 	
+	reload_skybox()
+	
 	add_to_undo_redo(map, "Map Opened")
+
+
+func reload_skybox() -> void:
+	if %Map2D.map and Settings.settings.get("options", {}).get("show_sky", true):
+		var texture_data: Dictionary =  Das.get_index_from_das(%Map2D.map.map_info.das_info, %Map2D.map.metadata.skyTexture)[0]
+		var texture_image: Image = texture_data.image.get_image()
+		var vertical_size: int = 600
+		var vertical_offset: int = int(vertical_size/2.0) - 96 - texture_data.modifier
+		vertical_offset = max(0, vertical_offset)
+		var sky_image := Image.create_empty(texture_image.get_width()*4, vertical_size, false, texture_image.get_format())
+		for y: int in range(vertical_offset):
+			for x: int in range(sky_image.get_width()):
+				sky_image.set_pixel(x, y, texture_image.get_pixel(0,0))
+		for y: int in range(vertical_offset+texture_image.get_height(), sky_image.get_height()):
+			for x: int in range(sky_image.get_width()):
+				sky_image.set_pixel(x, y, texture_image.get_pixel(0,texture_image.get_height()-1))
+		for x: int in range(0, sky_image.get_width(), texture_image.get_width()):
+			sky_image.blit_rect(texture_image, Rect2i(0,0,texture_image.get_width(), texture_image.get_height()), Vector2i(x, vertical_offset))
+		sky_image.flip_x()
+		var panorama := PanoramaSkyMaterial.new()
+		panorama.panorama = ImageTexture.create_from_image(sky_image)
+		%WorldEnvironment.environment.sky.sky_material = panorama
+	else:
+		%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
 
 
 func _on_map_loaded(map: Map) -> void:
@@ -498,6 +526,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
 			%Map2D.setup(selected[0].get_metadata(0).ref)
+			reload_skybox()
 			%SFXZoneIndexEdit.max_value = len(selected[0].get_metadata(0).ref.sfx_zones)
 		MapMenu.ReloadDAS:
 			var das_packs: Array = []
@@ -515,6 +544,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				Roth.map_loading_started.emit("Reloading DAS")
 				map.das = await Roth.get_das(map.map_info.das_info)
 				replace_map(map)
+				reload_skybox()
 		MapMenu.Close:
 			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).ref.map_info.name))], "Confirm Close", false):
 				for item: TreeItem in selected:

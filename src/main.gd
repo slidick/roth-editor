@@ -20,6 +20,7 @@ enum Tools {
 	ConcaveSectors,
 	SFXZones,
 	MousePoint,
+	ShowSky,
 }
 
 enum WindowID {
@@ -44,6 +45,7 @@ func _ready() -> void:
 	%Tools.set_item_checked(Tools.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
 	%Tools.set_item_checked(Tools.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
 	%Tools.set_item_checked(Tools.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", true))
+	%Tools.set_item_checked(Tools.ShowSky, Settings.settings.get("options", {}).get("show_sky", true))
 
 
 func _process(_delta: float) -> void:
@@ -185,6 +187,13 @@ func _on_tools_index_pressed(index: int) -> void:
 			var checked: bool = not %Tools.is_item_checked(Tools.MousePoint)
 			Settings.update_settings("options", {"show_mouse_point": checked })
 			%Tools.set_item_checked(Tools.MousePoint, checked)
+		Tools.ShowSky:
+			var checked: bool = not %Tools.is_item_checked(Tools.ShowSky)
+			Settings.update_settings("options", {"show_sky": checked})
+			%Tools.set_item_checked(Tools.ShowSky, checked)
+			var editor: Node = find_child("Editor", true, false)
+			if editor:
+				editor.reload_skybox()
 
 
 func _on_windows_index_pressed(index: int) -> void:
