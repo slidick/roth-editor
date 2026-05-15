@@ -419,6 +419,11 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	# Read standard header
 	texture.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
 	
+	
+	var is_fat3: bool = false
+	if texture.index >= das.header.fat_block_1_count + das.header.fat_block_2_count and texture.index < das.header.fat_block_1_count + das.header.fat_block_2_count + das.header.fat_block_3_count:
+		is_fat3 = true
+	
 	# Parse as Monster
 	if (texture.flags_1 & FLAGS_1.DIRECTIONAL > 0 and texture.flags_1 & FLAGS_1.MONSTER > 0):
 		if das.das_info.is_ademo:
@@ -468,8 +473,9 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 			var _h: int = file.get_16()
 			
 			var raw_img := file.get_buffer(texture.width * texture.height)
-			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+			var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
+			var is_fully_transparent: bool = texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+			var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
 			var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 			var image_texture := ImageTexture.create_from_image(img)
 			texture["image"] = image_texture
@@ -513,7 +519,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				if finished:
 					break
 				
-				var data2: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+				var data2: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
 				var img2 := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data2)
 				var image_texture2 := ImageTexture.create_from_image(img2)
 				texture["animation"].append(image_texture2)
@@ -549,8 +555,9 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 						img_buffer[pos] = byte
 						pos += 1
 				
-				var is_transparent: bool = texture.image_type & IMAGE_TYPE.TRANSPARENT > 0 or texture.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-				var data: Array = Utility.convert_palette_image(das.raw_palette, img_buffer, is_transparent)
+				var is_transparent: bool = texture.image_type & IMAGE_TYPE.TRANSPARENT > 0 or texture.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
+				var is_fully_transparent: bool = texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+				var data: Array = Utility.convert_palette_image(das.raw_palette, img_buffer, is_transparent, is_fully_transparent)
 				var img := Image.create_from_data(sub_img_header.width, sub_img_header.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
 				texture["animation"].append(image_texture)
@@ -614,8 +621,9 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				var raw_img := file.get_buffer(width * height)
 				if len(raw_img) == 0:
 					print(texture)
-				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
+				var is_fully_transparent: bool = texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
 				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
 				texture["image"].append(image_texture)
@@ -653,8 +661,9 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 					continue
 				
 				var raw_img := file.get_buffer(width * height)
-				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
+				var is_fully_transparent: bool = texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
 				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
 				texture["image"].append(image_texture)
@@ -686,8 +695,9 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 			das.loading_errors.append("Unexpected image mismatch! (Read past end of file) Expected: %s (%sx%s), Found: %s, Index: %s, Name: %s, Unk: %s" % [texture.width * texture.height, texture.width, texture.height, len(raw_img), texture.index, texture.name, texture.unk])
 			return texture
 		
-		var is_transparent: bool = texture.image_type & IMAGE_TYPE.TRANSPARENT > 0 or texture.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0
-		var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent)
+		var is_transparent: bool = texture.image_type & IMAGE_TYPE.TRANSPARENT > 0 or texture.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
+		var is_fully_transparent: bool = texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+		var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
 		var img := Image.create_from_data(texture.width, texture.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 		var image_texture := ImageTexture.create_from_image(img)
 		texture["image"] = image_texture
