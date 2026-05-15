@@ -234,7 +234,8 @@ func _initialize_mesh_actual() -> void:
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	else:
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-	
+	material.grow = true
+	material.grow_amount = 0.001
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	if "image" in texture:
 		material.albedo_texture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
