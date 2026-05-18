@@ -23,6 +23,9 @@ func _ready() -> void:
 		%RothResFileDialog.root_subfolder = "/"
 		%DosboxFileDialog.root_subfolder = "/"
 		%DosboxConfigFileDialog.root_subfolder = "/"
+		%RothResFileDialog.use_native_dialog = false
+		%DosboxFileDialog.use_native_dialog = false
+		%DosboxConfigFileDialog.use_native_dialog = false
 	if OS.get_name() == "Windows":
 		%DosboxFileDialog.filters.append("*.exe")
 	_reset()
@@ -89,7 +92,7 @@ func _on_roth_res_button_pressed() -> void:
 	else:
 		%RothResFileDialog.current_path = %RothResEdit.text
 		%RothResFileDialog.current_dir = %RothResEdit.text.get_base_dir()
-	%RothResFileDialog.popup(Rect2i(get_viewport().content_scale_size.x / 2, get_viewport().content_scale_size.y / 2, 1000, 600))
+	%RothResFileDialog.popup_file_dialog()
 
 
 func _on_dosbox_button_pressed() -> void:
@@ -99,7 +102,7 @@ func _on_dosbox_button_pressed() -> void:
 	else:
 		%DosboxFileDialog.current_path = %DosboxEdit.text
 		%DosboxFileDialog.current_dir = %DosboxEdit.text.get_base_dir()
-	%DosboxFileDialog.popup(Rect2i(get_viewport().content_scale_size.x / 2, get_viewport().content_scale_size.y / 2, 1000, 600))
+	%DosboxFileDialog.popup_file_dialog()
 
 
 func _on_dosbox_config_button_pressed() -> void:
@@ -109,7 +112,7 @@ func _on_dosbox_config_button_pressed() -> void:
 	else:
 		%DosboxConfigFileDialog.current_path = %DosboxConfigEdit.text
 		%DosboxConfigFileDialog.current_dir = %DosboxConfigEdit.text.get_base_dir()
-	%DosboxConfigFileDialog.popup(Rect2i(get_viewport().content_scale_size.x / 2, get_viewport().content_scale_size.y / 2, 1000, 600))
+	%DosboxConfigFileDialog.popup_file_dialog()
 
 
 func _on_roth_res_file_dialog_file_selected(path: String) -> void:
