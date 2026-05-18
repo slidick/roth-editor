@@ -56,7 +56,6 @@ func clear_texture() -> void:
 		node.queue_free()
 	for node in %DataContainer.get_children():
 		node.queue_free()
-	%AnimationTimer.stop()
 
 
 func _on_roth_settings_loaded() -> void:

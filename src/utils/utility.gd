@@ -91,7 +91,7 @@ static func remove_dir_recursive(directory: String) -> void:
 
 
 static func init_delta_table() -> Array:
-	var delta_table := []
+	var delta_table: Array = []
 	delta_table.resize(256)
 	delta_table[0] = 0
 	var delta := 0
@@ -107,12 +107,17 @@ static func init_delta_table() -> Array:
 	return delta_table
 
 
-static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool = true) -> Array:
+static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool = true, p_rendering_device: RenderingDevice = null) -> Array:
 	# Renderer
-	if not rd:
-		rd = RenderingServer.create_local_rendering_device()
+	var rendering_device: RenderingDevice
+	if p_rendering_device:
+		rendering_device = p_rendering_device
+	else:
+		if not rd:
+			rd = RenderingServer.create_local_rendering_device()
+		rendering_device = rd
 	
-	if not rd:
+	if not rendering_device:
 		var data: Array = []
 		for pixel in p_raw_img:
 			data.append((p_raw_palette[3*pixel] * 259 + 33) >> 6)
@@ -139,11 +144,11 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 			shader_spirv = CONVERT_SHADER_FILE_WITH_ALPHA.get_spirv()
 	else:
 		shader_spirv = CONVERT_SHADER_FILE.get_spirv()
-	var shader: RID = rd.shader_create_from_spirv(shader_spirv)
+	var shader: RID = rendering_device.shader_create_from_spirv(shader_spirv)
 	
 	# Input Image
 	var image_bytes: PackedByteArray = PackedInt32Array(Array(p_raw_img)).to_byte_array()
-	var image_rid: RID = rd.storage_buffer_create(image_bytes.size(), image_bytes)
+	var image_rid: RID = rendering_device.storage_buffer_create(image_bytes.size(), image_bytes)
 	
 	var image_uniform := RDUniform.new()
 	image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
@@ -153,7 +158,7 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 	
 	# Palette
 	var palette_bytes: PackedByteArray = PackedInt32Array(Array(p_raw_palette)).to_byte_array()
-	var palette_rid: RID = rd.storage_buffer_create(palette_bytes.size(), palette_bytes)
+	var palette_rid: RID = rendering_device.storage_buffer_create(palette_bytes.size(), palette_bytes)
 	
 	var palette_uniform := RDUniform.new()
 	palette_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
@@ -165,7 +170,7 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 	var size_multiplier: int = 3
 	if p_with_alpha:
 		size_multiplier = 4
-	var output_image_rid: RID = rd.storage_buffer_create(image_bytes.size()*size_multiplier)
+	var output_image_rid: RID = rendering_device.storage_buffer_create(image_bytes.size()*size_multiplier)
 	
 	var output_image_uniform := RDUniform.new()
 	output_image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
@@ -173,31 +178,31 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 	output_image_uniform.add_id(output_image_rid)
 	
 	
-	var uniform_set: RID = rd.uniform_set_create([image_uniform, palette_uniform, output_image_uniform], shader, 0)
-	var pipeline: RID = rd.compute_pipeline_create(shader)
+	var uniform_set: RID = rendering_device.uniform_set_create([image_uniform, palette_uniform, output_image_uniform], shader, 0)
+	var pipeline: RID = rendering_device.compute_pipeline_create(shader)
 	
 	
 	# Execute shader
-	var compute_list := rd.compute_list_begin()
-	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
-	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-	rd.compute_list_dispatch(compute_list, ceili(image_bytes.size()/32.0), 1, 1)
-	rd.compute_list_end()
-	rd.submit()
-	rd.sync()
+	var compute_list := rendering_device.compute_list_begin()
+	rendering_device.compute_list_bind_compute_pipeline(compute_list, pipeline)
+	rendering_device.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
+	rendering_device.compute_list_dispatch(compute_list, ceili(image_bytes.size()/32.0), 1, 1)
+	rendering_device.compute_list_end()
+	rendering_device.submit()
+	rendering_device.sync()
 	
 	
 	# Output
-	var output := rd.buffer_get_data(output_image_rid)
+	var output := rendering_device.buffer_get_data(output_image_rid)
 	
 	
 	# Cleanup
-	rd.free_rid(pipeline)
-	rd.free_rid(uniform_set)
-	rd.free_rid(image_rid)
-	rd.free_rid(palette_rid)
-	rd.free_rid(output_image_rid)
-	rd.free_rid(shader)
+	rendering_device.free_rid(pipeline)
+	rendering_device.free_rid(uniform_set)
+	rendering_device.free_rid(image_rid)
+	rendering_device.free_rid(palette_rid)
+	rendering_device.free_rid(output_image_rid)
+	rendering_device.free_rid(shader)
 	pipeline = RID()
 	uniform_set = RID()
 	image_rid = RID()
@@ -248,3 +253,17 @@ static func flip_raw_image_vertical(raw_image: PackedByteArray, width: int, heig
 		for x in range(width):
 			new_data.append(raw_image[x + width * (height - 1 - y)])
 	return new_data
+
+
+static func seconds_to_time(total: int) -> String:
+	var seconds: int = total % 60
+	@warning_ignore("integer_division")
+	var minutes: int = total / 60
+	@warning_ignore("integer_division")
+	var hours: int = minutes / 60
+	if minutes >= 60:
+		minutes = minutes % 60
+	var result := "%02d:%02d:%02d" % [hours,minutes,seconds]
+	if hours == 0:
+		result = "%02d:%02d" % [minutes,seconds]
+	return result

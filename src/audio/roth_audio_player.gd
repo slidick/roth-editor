@@ -10,6 +10,8 @@ var playback: AudioStreamGeneratorPlayback
 func stop_buffer() -> void:
 	if playback:
 		playback.stop()
+	playback = null
+	stream = null
 
 
 func play_buffer(_buffer: PackedVector2Array, sample_rate: int = SAMPLE_RATE) -> void:
@@ -21,6 +23,19 @@ func play_buffer(_buffer: PackedVector2Array, sample_rate: int = SAMPLE_RATE) ->
 	stream = generator
 	play()
 	playback = self.get_stream_playback()
+	for frame: Vector2 in _buffer:
+		playback.push_frame(frame)
+
+
+func append_buffer(_buffer: PackedVector2Array, sample_rate: int = SAMPLE_RATE) -> void:
+	if not stream or stream.mix_rate != sample_rate:
+		var generator := AudioStreamGenerator.new()
+		generator.mix_rate = sample_rate
+		generator.buffer_length = MAX_LENGTH
+		stream = generator
+	if not playing:
+		play()
+		playback = self.get_stream_playback()
 	for frame: Vector2 in _buffer:
 		playback.push_frame(frame)
 

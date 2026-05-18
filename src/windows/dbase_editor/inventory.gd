@@ -27,6 +27,7 @@ func reset() -> void:
 	%InventoryList.clear()
 	%InventoryList.get_v_scroll_bar().value = 0
 	_reset_item()
+	%GDVVideoPlayer.unload()
 
 
 func _reset_item() -> void:
@@ -35,29 +36,23 @@ func _reset_item() -> void:
 	for tree_item: TreeItem in %Tree.get_root().get_children():
 		tree_item.free()
 	%ObjectTextureIndexEdit.text = ""
-	%CloseUpTypeEdit.text = ""
-	%ItemTypeEdit.text = ""
-	%CloseUpImageOffsetEdit.text = ""
 	%NameEdit.text = ""
 	
 	%ObjectTextureIndexEdit.editable = false
-	%CloseUpTypeEdit.editable = false
-	%ItemTypeEdit.editable = false
-	%CloseUpImageOffsetEdit.editable = false
 	%AddTriggerButton.disabled = true
 	%AddOpcodeButton.disabled = true
 	%ChangeNameButton.disabled = true
 	%ChangeObjectTextureButton.disabled = true
 	%ChangeInventoryImageButton.disabled = true
 	%ChangeCloseUpButton.disabled = true
+	%EditInventoryImageButton.disabled = true
 	%ClearObjectTextureButton.disabled = true
 	%ClearInventoryImageButton.disabled = true
 	%ClearCloseUpButton.disabled = true
 	
 	%ObjectTextureRect.texture = null
 	%InventoryTextureRect.texture = null
-	%AnimatedSprite2D.sprite_frames = null
-	%CloseUpTextureRect.texture = null
+	%GDVVideoPlayer.reset()
 	
 	%Flag1CheckButton.set_pressed_no_signal(false)
 	%Flag2CheckButton.set_pressed_no_signal(false)
@@ -100,7 +95,7 @@ func load_dbase(p_dbase_data: Dictionary) -> void:
 
 func _add_inventory_item(p_inventory_item: Dictionary = {}) -> void:
 	var inventory_item: Dictionary = {
-		"closeup_image": 0,
+		"closeup_video_offset": 0,
 		"closeup_type": 0,
 		"actions_section": [],
 		"inventory_image": 0,
@@ -269,7 +264,6 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		%ObjectTextureIndexEdit.text = str(inventory_item.object_texture_index-512)
 	else:
 		%ObjectTextureIndexEdit.text = "0"
-	%CloseUpTypeEdit.text = str(inventory_item.closeup_type)
 	%Flag1CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 0)) > 0)
 	%Flag2CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 1)) > 0)
 	%Flag3CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 2)) > 0)
@@ -278,19 +272,15 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	%Flag6CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 5)) > 0)
 	%Flag7CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 6)) > 0)
 	%Flag8CheckButton.set_pressed_no_signal((inventory_item.closeup_type & (1 << 7)) > 0)
-	%ItemTypeEdit.text = str(inventory_item.item_type)
-	%CloseUpImageOffsetEdit.text = str(inventory_item.closeup_image)
 	%NameEdit.text = str(inventory_item.text_entry.string if "string" in inventory_item.text_entry else "(Empty)")
 	%ObjectTextureIndexEdit.editable = true
-	#%CloseUpTypeEdit.editable = true
-	#%ItemTypeEdit.editable = true
-	#%CloseUpImageOffsetEdit.editable = true
 	%ChangeNameButton.disabled = false
 	%AddTriggerButton.disabled = false
 	%AddOpcodeButton.disabled = true
 	%ChangeObjectTextureButton.disabled = false
 	%ChangeInventoryImageButton.disabled = false
 	%ChangeCloseUpButton.disabled = false
+	%EditInventoryImageButton.disabled = false
 	%ClearObjectTextureButton.disabled = false
 	%ClearInventoryImageButton.disabled = false
 	%ClearCloseUpButton.disabled = false
@@ -334,18 +324,8 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
 		if image:
 			%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
-	if "closeup_image" in inventory_item and inventory_item["closeup_image"] != 0:
-		var video: Variant = DBase300.get_at_offset(inventory_item["closeup_image"]*8)
-		if video:
-			var sprite_frames := SpriteFrames.new()
-			%AnimatedSprite2D.sprite_frames = sprite_frames
-			sprite_frames.set_animation_speed("default", 12)
-			for image: Image in video.video:
-				sprite_frames.add_frame("default", ImageTexture.create_from_image(image))
-			if inventory_item.closeup_type & 1 > 0:
-				sprite_frames.set_animation_loop("default", false)
-			%AnimatedSprite2D.play("default")
-	
+	if inventory_item.closeup_video:
+		%GDVVideoPlayer.load_gdv_data(inventory_item.closeup_video, true, inventory_item.closeup_type & 1 == 0)
 	
 	for tree_item: TreeItem in %TriggerTree.get_root().get_children():
 		tree_item.free()
@@ -408,12 +388,6 @@ func _on_close_up_type_edit_text_changed(new_text: String) -> void:
 func _on_item_type_edit_text_changed(new_text: String) -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	inventory_item.item_type = int(new_text)
-
-
-func _on_close_up_image_offset_edit_text_changed(new_text: String) -> void:
-	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	inventory_item.closeup_image = int(new_text)
-
 
 
 func _on_name_offset_edit_text_changed(new_text: String) -> void:
@@ -675,19 +649,12 @@ func jump_to_reference(p_reference: Dictionary) -> void:
 		%Tree.scroll_to_item(%Tree.get_selected())
 
 
-func _on_animated_sprite_2d_frame_changed() -> void:
-	%CloseUpTextureRect.texture = %AnimatedSprite2D.sprite_frames.get_frame_texture("default", %AnimatedSprite2D.frame)
-
-
 func _on_page_shown() -> void:
-	if (%AnimatedSprite2D.sprite_frames
-			and "default" in %AnimatedSprite2D.sprite_frames.get_animation_names()
-	):
-		%AnimatedSprite2D.play()
+	%GDVVideoPlayer.play()
 
 
 func _on_page_hidden() -> void:
-	%AnimatedSprite2D.pause()
+	%GDVVideoPlayer.pause()
 
 
 func _on_change_name_button_pressed() -> void:
@@ -699,23 +666,6 @@ func _on_change_name_button_pressed() -> void:
 	else:
 		%NameEdit.text = "(Empty)"
 		%InventoryList.set_item_text(%InventoryList.get_selected_items()[0], "%d: (Empty)" % (%InventoryList.get_selected_items()[0]+1))
-
-
-func _on_close_up_image_offset_edit_text_submitted(_new_text: String = "") -> void:
-	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	var video: Variant = DBase300.get_at_offset(inventory_item["closeup_image"]*8)
-	if video:
-		var sprite_frames := SpriteFrames.new()
-		%AnimatedSprite2D.sprite_frames = sprite_frames
-		sprite_frames.set_animation_speed("default", 12)
-		for image: Image in video.video:
-			sprite_frames.add_frame("default", ImageTexture.create_from_image(image))
-		if inventory_item.closeup_type & 1 > 0:
-			sprite_frames.set_animation_loop("default", false)
-		%AnimatedSprite2D.play("default")
-	else:
-		%AnimatedSprite2D.sprite_frames = null
-		%CloseUpTextureRect.texture = null
 
 
 func _on_object_texture_index_edit_text_submitted(_new_text: String = "") -> void:
@@ -780,12 +730,12 @@ func _on_name_edit_gui_input(event: InputEvent) -> void:
 
 
 func _on_change_close_up_button_pressed() -> void:
-	var offset: int = await owner.dbase300_object_selection()
-	if offset < 0:
+	var new_gdv: Dictionary = await owner.dbase300_object_selection()
+	if new_gdv.is_empty():
 		return
-	%CloseUpImageOffsetEdit.text = str(int(offset / 8.0))
-	_on_close_up_image_offset_edit_text_changed(str(int(offset / 8.0)))
-	_on_close_up_image_offset_edit_text_submitted()
+	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
+	inventory_item.closeup_video = new_gdv
+	%GDVVideoPlayer.load_gdv_data(new_gdv, true, inventory_item.closeup_type & 1 == 0)
 
 
 func _on_change_inventory_image_button_pressed() -> void:
@@ -821,9 +771,9 @@ func _on_clear_object_texture_button_pressed() -> void:
 
 
 func _on_clear_close_up_button_pressed() -> void:
-	%CloseUpImageOffsetEdit.text = "0"
-	_on_close_up_image_offset_edit_text_changed("0")
-	_on_close_up_image_offset_edit_text_submitted()
+	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
+	inventory_item.closeup_video = null
+	%GDVVideoPlayer.reset()
 
 
 func _on_edit_inventory_image_button_pressed() -> void:

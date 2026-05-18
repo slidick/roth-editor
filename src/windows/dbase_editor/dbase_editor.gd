@@ -354,11 +354,11 @@ func ademo_object_selection() -> Dictionary:
 
 
 func dbase200_object_selection() -> Dictionary:
-	return await %ObjectSelection.dbase200_object_selection(dbase_data.dbase100.directory.path_join("DBASE200.DAT"))
+	return await %ObjectSelection.dbase200_object_selection(dbase_data.dbase100)
 
 
-func dbase300_object_selection() -> int:
-	return await %ObjectSelection.dbase300_object_selection()
+func dbase300_object_selection() -> Dictionary:
+	return await %ObjectSelection.dbase300_object_selection(dbase_data.dbase100)
 
 
 func action_selection(current_opcode: int = -1, as_hex: bool = false, hide_item_actions: bool = false) -> int:

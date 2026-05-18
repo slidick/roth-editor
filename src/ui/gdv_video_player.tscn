@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://1ctja148oubs"]
+
+[ext_resource type="Script" uid="uid://yhtntt3f1g3l" path="res://src/ui/gdv_video_player.gd" id="1_83gxn"]
+[ext_resource type="Texture2D" uid="uid://c8h1cdfugwtk7" path="res://assets/icons/player-play.svg" id="2_0lwi7"]
+[ext_resource type="Script" uid="uid://hqjksjutyo1q" path="res://src/ui/seek_slider_loading.gd" id="2_jpyhl"]
+[ext_resource type="Texture2D" uid="uid://caffbwravy0jl" path="res://assets/icons/player-pause.svg" id="3_jpyhl"]
+[ext_resource type="Texture2D" uid="uid://banqkcj06qkj7" path="res://assets/icons/player-stop.svg" id="4_f2ku8"]
+
+[node name="GDVVideoPlayer" type="MarginContainer" unique_id=553342259]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_83gxn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=541302935]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=1490656164]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=579622527]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VideoRect" type="TextureRect" parent="VBoxContainer" unique_id=87352144]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+stretch_mode = 5
+
+[node name="SubtitleLabel" type="Label" parent="VBoxContainer/VideoRect" unique_id=602632349]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.9
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ControlsContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1839020292]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SeekSlider" type="HSlider" parent="VBoxContainer/ControlsContainer" unique_id=846279633]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+scrollable = false
+script = ExtResource("2_jpyhl")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ControlsContainer" unique_id=292124114]
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="VBoxContainer/ControlsContainer/HBoxContainer" unique_id=1640395173]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("2_0lwi7")
+
+[node name="PauseButton" type="Button" parent="VBoxContainer/ControlsContainer/HBoxContainer" unique_id=843074522]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("3_jpyhl")
+
+[node name="StopButton" type="Button" parent="VBoxContainer/ControlsContainer/HBoxContainer" unique_id=616550152]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("4_f2ku8")
+
+[node name="CinematicButton" type="CheckButton" parent="VBoxContainer/ControlsContainer/HBoxContainer" unique_id=1876978655]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="DragLabel" type="Label" parent="VBoxContainer/ControlsContainer/HBoxContainer" unique_id=515862632]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="TimeLabel" type="Label" parent="VBoxContainer/ControlsContainer/HBoxContainer" unique_id=711345750]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+
+[connection signal="drag_ended" from="VBoxContainer/ControlsContainer/SeekSlider" to="." method="_on_seek_slider_drag_ended"]
+[connection signal="drag_started" from="VBoxContainer/ControlsContainer/SeekSlider" to="." method="_on_seek_slider_drag_started"]
+[connection signal="value_changed" from="VBoxContainer/ControlsContainer/SeekSlider" to="." method="_on_seek_slider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/ControlsContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ControlsContainer/HBoxContainer/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ControlsContainer/HBoxContainer/StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ControlsContainer/HBoxContainer/CinematicButton" to="." method="_on_cinematic_button_pressed"]

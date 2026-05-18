@@ -700,6 +700,10 @@ func play_audio_buffer(buffer: PackedVector2Array, sample_rate: int) -> void:
 	audio_player.play_buffer(buffer, sample_rate)
 
 
+func append_audio_buffer(buffer: PackedVector2Array, sample_rate: int) -> void:
+	audio_player.append_buffer(buffer, sample_rate)
+
+
 ## Plays audio by passing an entry returned from FXScript.get_from_entry
 func play_audio_entry(entry: Dictionary) -> void:
 	audio_player.play_entry(entry)

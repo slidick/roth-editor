@@ -35,7 +35,7 @@ const DBASE100_INVENTORY_ENTRY := {
 	"item_type": Parser.Type.Byte,
 	"unk_byte_02": Parser.Type.Byte,            # always 0
 	"unk_byte_03": Parser.Type.Byte,            # always 0
-	"closeup_image": Parser.Type.DWord,         # animated image in inventory
+	"closeup_video_offset": Parser.Type.DWord,         # animated image in inventory
 	"inventory_image": Parser.Type.DWord,       # image in inventory
 	"offset_dbase400": Parser.Type.DWord,
 	#"add_length": Parser.Type.Word,
@@ -67,7 +67,32 @@ static func parse() -> Dictionary:
 	return parse_files_at_directory(Roth.install_directory.path_join("..").path_join("DATA"))
 
 
-static func parse_files(dbase100_filepath: String, dbase200_filepath: String, dbase400_filepath: String) -> Dictionary:
+static func parse_cutscenes() -> Array:
+	var dbase100 := FileAccess.open(Roth.install_directory.path_join("../DATA/DBASE100.DAT"), FileAccess.READ)
+	var dbase400 := FileAccess.open(Roth.install_directory.path_join("../DATA/DBASE400.DAT"), FileAccess.READ)
+	var header := Parser.parse_section(dbase100, DBASE100_HEADER)
+	assert(dbase100.get_position() == header["cutscene_offset"])
+	
+	var cutscenes := []
+	for i in range(header["cutscene_count"]):
+		var cutscene := Parser.parse_section(dbase100, DBASE100_CUTSCENE_ENTRY)
+		if cutscene["offset_dbase400"] != 0:
+			dbase400.seek(cutscene["offset_dbase400"])
+			cutscene["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
+			cutscene["text_entry"].erase("length_str")
+		else:
+			cutscene["text_entry"] = {}
+		if cutscene["offset_dbase400_subtitles"] != 0:
+			dbase400.seek(cutscene["offset_dbase400_subtitles"])
+			cutscene["subtitles"] = DBase400.parse_cutscene_subtitle(dbase400, cutscene["offset_dbase400_subtitles"])
+		else:
+			cutscene["subtitles"] = {}
+		
+		cutscenes.append(cutscene)
+	return cutscenes
+
+
+static func parse_files(dbase100_filepath: String, dbase200_filepath: String, dbase300_filepath: String, dbase400_filepath: String) -> Dictionary:
 	var dbase100 := FileAccess.open(dbase100_filepath, FileAccess.READ)
 	var dbase400 := FileAccess.open(dbase400_filepath, FileAccess.READ)
 	
@@ -83,6 +108,9 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 	var cutscenes := []
 	for i in range(header["cutscene_count"]):
 		var cutscene := Parser.parse_section(dbase100, DBASE100_CUTSCENE_ENTRY)
+		#var gdv_filepath: String = Roth.install_directory.path_join("../DATA/GDV/%s.GDV" % cutscene.name)
+		#if cutscene.name != "" and FileAccess.file_exists(gdv_filepath):
+			#cutscene.merge(GDV.get_video_by_path(gdv_filepath))
 		if cutscene["offset_dbase400"] != 0:
 			dbase400.seek(cutscene["offset_dbase400"])
 			cutscene["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)
@@ -133,6 +161,11 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 		else:
 			inventory_item["image_data"] = {}
 		inventory_item["actions_section"] = []
+		
+		if inventory_item.closeup_video_offset != 0:
+			inventory_item["closeup_video"] = DBase300.get_at_offset(dbase300_filepath, inventory_item.closeup_video_offset*8)
+		else:
+			inventory_item["closeup_video"] = null
 		
 		var v1 := dbase100.get_8()
 		var v2 := dbase100.get_8()
@@ -251,11 +284,14 @@ static func parse_files_at_directory(directory: String) -> Dictionary:
 	var dbase200_filepath: String =  directory.path_join("DBASE200.DAT")
 	if not FileAccess.file_exists(dbase200_filepath):
 		return {}
+	var dbase300_filepath: String =  directory.path_join("DBASE300.DAT")
+	if not FileAccess.file_exists(dbase300_filepath):
+		return {}
 	var dbase400_filepath: String = directory.path_join("DBASE400.DAT")
 	if not FileAccess.file_exists(dbase400_filepath):
 		return {}
 	
-	var dbase_data: Dictionary = parse_files(dbase100_filepath, dbase200_filepath, dbase400_filepath)
+	var dbase_data: Dictionary = parse_files(dbase100_filepath, dbase200_filepath, dbase300_filepath, dbase400_filepath)
 	dbase_data.directory = directory
 	DBase500.add_entries_to_dbase(dbase_data)
 	
@@ -341,7 +377,7 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 		data.encode_u8(position + 5, item.item_type)
 		data.encode_u8(position + 6, 0) # unk_byte_02
 		data.encode_u8(position + 7, 0) # unk_byte_03
-		data.encode_u32(position + 8, item.closeup_image)
+		data.encode_u32(position + 8, item.closeup_video_offset)
 		data.encode_u32(position + 12, item.inventory_image)
 		
 		if not item.text_entry.is_empty():

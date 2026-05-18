@@ -62,31 +62,28 @@ func ademo_object_selection() -> Dictionary:
 	return item
 
 
-func dbase200_object_selection(dbase200_filepath: String) -> Dictionary:
+func dbase200_object_selection(dbase100: Dictionary) -> Dictionary:
 	%FavRecentContainer.hide()
 	%InfoContainer.hide()
 	%RotatableItemList.clear()
 	%SearchEdit.hide()
-	load_dbase200(dbase200_filepath)
+	load_dbase200(dbase100)
 	toggle(true)
 	var item: Dictionary = await item_selected
 	toggle(false)
 	return item
 
 
-func dbase300_object_selection() -> int:
+func dbase300_object_selection(dbase100: Dictionary) -> Dictionary:
 	%FavRecentContainer.hide()
 	%InfoContainer.hide()
 	%RotatableItemList.clear()
 	%SearchEdit.hide()
-	load_dbase300()
+	load_dbase300(dbase100)
 	toggle(true)
 	var item: Dictionary = await item_selected
 	toggle(false)
-	if item.is_empty():
-		return -1
-	
-	return item.offset
+	return item
 
 
 func load_das(p_das: Dictionary) -> void:
@@ -168,26 +165,29 @@ func load_ademo(p_show_add_to_favorites: bool = false) -> void:
 		%RotatableItemList.set_item_metadata(idx, texture)
 
 
-func load_dbase200(dbase200_filepath: String) -> void:
-	var icons: Array = DBase200.get_icons(dbase200_filepath)
-	for icon: Dictionary in icons:
-		if "raw_image" in icon:
-			var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
-			var tex := ImageTexture.create_from_image(image)
-			var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
-			%RotatableItemList.set_item_metadata(idx, icon)
-			%RotatableItemList.set_rotated(idx, false)
+func load_dbase200(dbase100: Dictionary) -> void:
+	var unique: Array = []
+	for inventory_item: Dictionary in dbase100.inventory:
+		if inventory_item.image_data:
+			if inventory_item.image_data not in unique:
+				unique.append(inventory_item.image_data)
+				var image: Image = Image.create_from_data(inventory_item.image_data.width, inventory_item.image_data.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, inventory_item.image_data.raw_image, true, false))
+				var tex := ImageTexture.create_from_image(image)
+				var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
+				%RotatableItemList.set_item_metadata(idx, inventory_item.image_data)
+				%RotatableItemList.set_rotated(idx, false)
 
 
-func load_dbase300() -> void:
-	var offsets: Array = DBase300.get_gdv_offsets()
-	for offset: int in offsets:
-		var gdv: Dictionary = DBase300.get_at_offset(offset)
-		gdv.offset = offset
-		var tex := ImageTexture.create_from_image(gdv.video[0])
-		var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
-		%RotatableItemList.set_item_metadata(idx, gdv)
-		%RotatableItemList.set_rotated(idx, false)
+func load_dbase300(dbase100: Dictionary) -> void:
+	var unique: Array = []
+	for inventory_item: Dictionary in dbase100.inventory:
+		if inventory_item.closeup_video:
+			if inventory_item.closeup_video not in unique:
+				unique.append(inventory_item.closeup_video)
+				var tex := ImageTexture.create_from_image(GDV.get_first_frame(inventory_item.closeup_video))
+				var idx: int = %RotatableItemList.add_item("" , tex, Vector2(150,150))
+				%RotatableItemList.set_item_metadata(idx, inventory_item.closeup_video)
+				%RotatableItemList.set_rotated(idx, false)
 
 
 func select_object(p_object: ObjectRoth) -> void:
@@ -237,12 +237,13 @@ func _on_rotatable_item_list_item_selected(index: int) -> void:
 
 
 func display_texture_data(texture_data: Dictionary) -> void:
-	for child: Node in %ObjectInfoContainer.get_children():
-		child.queue_free()
-	for key: String in texture_data:
-		var label := Label.new()
-		label.text = "%s: %s" % [key, texture_data[key]]
-		%ObjectInfoContainer.add_child(label)
+	if %InfoContainer.visible:
+		for child: Node in %ObjectInfoContainer.get_children():
+			child.queue_free()
+		for key: String in texture_data:
+			var label := Label.new()
+			label.text = "%s: %s" % [key, texture_data[key]]
+			%ObjectInfoContainer.add_child(label)
 
 
 func _on_recent_item_list_item_activated(index: int) -> void:

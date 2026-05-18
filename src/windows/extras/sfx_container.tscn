@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://siejah6pwkvh"]
+
+[ext_resource type="Script" uid="uid://b3bjqhe82inva" path="res://src/windows/extras/sfx_container.gd" id="1_q17xq"]
+
+[node name="SFX" type="MarginContainer" unique_id=1851793509]
+script = ExtResource("1_q17xq")
+metadata/_tab_index = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1831354597]
+layout_mode = 2
+
+[node name="SFXList" type="ItemList" parent="HBoxContainer" unique_id=1271777326]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="item_activated" from="HBoxContainer/SFXList" to="." method="_on_sfx_list_item_activated"]

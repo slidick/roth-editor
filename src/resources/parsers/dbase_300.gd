@@ -36,45 +36,6 @@ const IMG7_HDR := {
 	"height2": Parser.Type.Word,
 }
 
-static var dbase300: Dictionary = {}
-
-static func parse() -> void:
-	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
-	if not FileAccess.file_exists(dbase300_filepath):
-		return
-	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
-	var header := Parser.parse_section(file, HEADER)
-	assert(header.signature == "DBASE300")
-	
-	var count: int = 0
-	while file.get_position() < file.get_length():
-		print(file.get_position())
-		var size: int = file.get_32()
-		var ending_position: int = file.get_position() + size
-		var filetype: int = file.get_32()
-		file.seek(file.get_position() - 4)
-		match filetype:
-			FILETYPE_GDV:
-				pass
-			FILETYPE_HMP:
-				pass
-			FILETYPE_MIDI:
-				pass
-			FILETYPE_IMG1:
-				pass
-				#parse_rle_image(file)
-			FILETYPE_IMG3:
-				pass
-				#parse_rle_image(file)
-			FILETYPE_IMG7:
-				pass
-				#parse_rle_image(file)
-		file.seek(ending_position)
-		count += 1
-		file.seek((file.get_position() + 7) & ~7)
-	
-	print("Count: %s" % count)
-
 
 static func get_midi_offsets() -> Array:
 	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
@@ -193,37 +154,32 @@ static func save_hmps() -> void:
 				print(filetype)
 		file.seek(ending_position)
 		file.seek((file.get_position() + 7) & ~7)
-	
 	return
 
-static func get_at_offset(offset: int ) -> Variant:
-	if offset in dbase300:
-		return dbase300[offset]
-	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+
+static func get_at_offset(dbase300_filepath: String, offset: int ) -> Variant:
 	if not FileAccess.file_exists(dbase300_filepath):
 		return {}
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
 	file.seek(offset)
-	var _size := file.get_32()
-	var filetype := file.get_32()
+	var size: int = file.get_32()
+	var filetype: int = file.get_32()
 	file.seek(file.get_position() - 4)
 	match filetype:
 		FILETYPE_GDV:
-			#var video: Dictionary = GDV.parse_file(file)
-			dbase300[offset] = RothExt.get_video_by_file(file)
+			return GDV.get_video_by_file(file)
 		FILETYPE_HMP:
-			dbase300[offset] = file.get_buffer(_size)
+			return file.get_buffer(size)
 		FILETYPE_MIDI:
-			dbase300[offset] = file.get_buffer(_size)
+			return file.get_buffer(size)
 		FILETYPE_IMG1:
-			dbase300[offset] = parse_rle_image(file)
+			return parse_rle_image(file)
 		FILETYPE_IMG3:
-			dbase300[offset] = parse_rle_image(file)
+			return parse_rle_image(file)
 		FILETYPE_IMG7:
-			dbase300[offset] = parse_rle_image(file)
+			return parse_rle_image(file)
 		_:
-			dbase300[offset] = null
-	return dbase300[offset]
+			return null
 
 
 static func parse_rle_image(file: FileAccess) -> Image:

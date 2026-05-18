@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://c07nlcvy3kflx"]
+
+[ext_resource type="Script" uid="uid://dty0b55hg6ljq" path="res://src/windows/extras/cutscenes_container.gd" id="1_q4xev"]
+[ext_resource type="PackedScene" uid="uid://1ctja148oubs" path="res://src/ui/gdv_video_player.tscn" id="2_rpjdd"]
+
+[node name="Cutscenes" type="MarginContainer" unique_id=38437870]
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_q4xev")
+metadata/_tab_index = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1255333605]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer" unique_id=809290443]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="GDVVideoPlayer" parent="HBoxContainer" unique_id=553342259 instance=ExtResource("2_rpjdd")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="item_selected" from="HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]

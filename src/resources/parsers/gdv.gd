@@ -32,13 +32,6 @@ const FRAME_HEADER := {
 	"type_flags": Parser.Type.DWord,
 }
 
-static var _stop_loading: bool = false
-#static var is_loading: bool = false
-
-
-static func stop_loading() -> void:
-	_stop_loading = true
-
 
 static func get_video_by_path(gdv_filepath: String) -> Dictionary:
 	var file := FileAccess.open(gdv_filepath, FileAccess.READ)
@@ -48,91 +41,46 @@ static func get_video_by_path(gdv_filepath: String) -> Dictionary:
 
 
 static func get_video_by_file(file: FileAccess) -> Dictionary:
-	# Header
 	var header := Parser.parse_section(file, HEADER)
-	assert(header.signature == 688986516)
-	#print(JSON.stringify(header, '\t', false))
-	
-	# Palette
-	#var palette: Array = []
-	var raw_palette: PackedByteArray = []
 	if header.image_type & PIXEL_8_BITS > 0:
-		raw_palette = file.get_buffer(256*3)
-		#for i in range(0, len(raw_palette), 3):
-			#palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
-	else:
-		raw_palette = Das.DEFAULT_RAW_PALETTE
-		#palette = Das.DEFAULT_PALETTE
-	
-	# Audio Init
-	var delta_table := Utility.init_delta_table()
+		header["raw_palette"] = file.get_buffer(256*3)
 	var audio: Array = []
-	var left_state: float = 0
-	var right_state: float = 0
-	
-	# Video init
 	var video: Array = []
-	var previous_frame: PackedByteArray = []
-	_stop_loading = false
-	# Chunk
+	var audio_length: int = _get_length_audio_data(header)
 	for i in range(header.nb_frames):
-		# Audio
 		if header.sound_flags & AUDIO_PRESENT > 0:
-			var audio_length: int = _get_length_audio_data(header)
 			var raw_audio: PackedByteArray = file.get_buffer(audio_length)
-			var audio_frame: Array = []
-			if header.sound_flags & AUDIO_CODING_DPCM > 0:
-				for j in range(0, audio_length, 2):
-					left_state += delta_table[raw_audio[j]]
-					if left_state > 32767:
-						left_state -= 65536
-					if left_state < -32768:
-						left_state += 65536
-					
-					right_state += delta_table[raw_audio[j+1]]
-					if right_state > 32767:
-						right_state -= 65536
-					if right_state < -32768:
-						right_state += 65536
-					
-					audio_frame.append(Vector2((left_state/pow(2,15)),(right_state/pow(2,15))))
-			else:
-				for j in range(0, len(raw_audio), 4):
-					var left_frame: float = (raw_audio[j]) + (raw_audio[j+1] << 8)
-					left_frame = Parser.unsigned16_to_signed(int(left_frame))
-					var right_frame: float = (raw_audio[j+2]) + (raw_audio[j+3] << 8)
-					right_frame = Parser.unsigned16_to_signed(int(right_frame))
-					audio_frame.append(Vector2((left_frame/pow(2,15)),(right_frame/pow(2,15))))
-			
-			audio.append_array(audio_frame)
-		
-		
-		# Video
+			audio.append({"raw_audio": raw_audio})
 		if header.frame_size != 0:
 			var frame_header := Parser.parse_section(file, FRAME_HEADER)
-			assert(frame_header.signature == 4869)
-			var data: PackedByteArray = file.get_buffer(frame_header.length)
-			var frame := FrameDecoder.new(header.frame_width, header.frame_height, frame_header, data, raw_palette, previous_frame)
-			frame.decode()
-			previous_frame = frame.get_pixels()
-			video.append(_create_frame_image(previous_frame, frame.raw_palette, header))
-		
-		if _stop_loading:
-			_stop_loading = false
-			Utility.deinit_shader()
-			return {}
-		Roth.gdv_loading_updated.emit.call_deferred(float(i) / header.nb_frames)
-	Utility.deinit_shader()
-	return {
-		"header": header,
-		"audio": audio,
-		"video": video,
+			var raw_video: PackedByteArray = file.get_buffer(frame_header.length)
+			video.append({"header": frame_header, "raw_video": raw_video})
+	var data: Dictionary = {
+		header = header,
+		audio = audio,
+		video = video,
 	}
+	#_decode_first_frame(data)
+	return data
 
 
-static func _create_frame_image(raw_img: PackedByteArray, raw_palette: Array, header: Dictionary) -> Image:
-	var data: Array = Utility.convert_palette_image(raw_palette, raw_img, false)
-	return Image.create_from_data(header.frame_width, header.frame_height, false, Image.FORMAT_RGB8, data)
+static func _decode_first_frame(gdv_data: Dictionary) -> void:
+	if len(gdv_data.video) > 1:
+		var raw_video: PackedByteArray = gdv_data.video[0].raw_video
+		var frame := GDV.FrameDecoder.new(gdv_data.header.frame_width, gdv_data.header.frame_height, gdv_data.video[0].header, raw_video, gdv_data.header.raw_palette, [])
+		frame.decode()
+		var image_data: Array = Utility.convert_palette_image(frame.raw_palette, frame.get_pixels(), false, false)
+		gdv_data.video[0]["decoded_video"] = Image.create_from_data(gdv_data.header.frame_width, gdv_data.header.frame_height, false, Image.FORMAT_RGB8, image_data)
+
+
+static func get_first_frame(gdv_data: Dictionary) -> Image:
+	if len(gdv_data.video) > 1:
+		var raw_video: PackedByteArray = gdv_data.video[0].raw_video
+		var frame := GDV.FrameDecoder.new(gdv_data.header.frame_width, gdv_data.header.frame_height, gdv_data.video[0].header, raw_video, gdv_data.header.raw_palette, [])
+		frame.decode()
+		var image_data: Array = Utility.convert_palette_image(frame.raw_palette, frame.get_pixels(), false, false)
+		return Image.create_from_data(gdv_data.header.frame_width, gdv_data.header.frame_height, false, Image.FORMAT_RGB8, image_data)
+	return Image.new()
 
 
 static func _get_length_audio_data(header: Dictionary) -> int:
@@ -239,7 +187,6 @@ class FrameDecoder extends RefCounted:
 			for j in range(8):
 				pixels.append(i)
 		pixels.append_array(pixels)
-		
 		if prev_frame.is_empty():
 			for i in range(frame_width):
 				for j in range(frame_height):
@@ -297,10 +244,6 @@ class FrameDecoder extends RefCounted:
 	func decode_method_01() -> void:
 		assert(len(reader.bytes) == 256 * 3)
 		raw_palette = reader.bytes
-		#palette.clear()
-		#for i in range(0, len(raw_palette), 3):
-			#palette.append([(raw_palette[i] * 259 + 33) >> 6, (raw_palette[i+1] * 259 + 33) >> 6, (raw_palette[i+2] * 259 + 33) >> 6 ])
-		
 		if pixel_skip == 0:
 			pixels.fill(0)
 		else:
@@ -445,4 +388,55 @@ class FrameDecoder extends RefCounted:
 			return true
 		offset = 4096 - offset
 		copy_pixels(-offset, length)
+		return true
+
+
+class GDVDecodeThread extends Thread:
+	static var delta_table: Array = Utility.init_delta_table()
+	var stop_loading: bool = false
+	
+	func _clamp_and_wrap(value: int, min_val: int, max_val: int) -> int:
+		var range_size: int = (max_val - min_val) + 1
+		var wrapped_value: int = ((value - min_val) % range_size + range_size) % range_size + min_val
+		return wrapped_value
+	
+	func _decode_gdv_thread(gdv_data: Dictionary, callback: Callable) -> bool:
+		var left_state: int = 0
+		var right_state: int = 0
+		var previous_frame := PackedByteArray()
+		var rendering_device := RenderingServer.create_local_rendering_device()
+		if not rendering_device:
+			return false
+		for i in range(gdv_data.header.nb_frames):
+			if len(gdv_data.audio) > i:
+				var raw_audio: PackedByteArray = gdv_data.audio[i].raw_audio
+				var audio_frame := PackedVector2Array()
+				if gdv_data.header.sound_flags & GDV.AUDIO_CODING_DPCM > 0:
+					for j in range(0, len(raw_audio), 2):
+						left_state += delta_table[raw_audio[j]]
+						left_state = _clamp_and_wrap(left_state, -32768, 32767)
+						right_state += delta_table[raw_audio[j+1]]
+						right_state = _clamp_and_wrap(right_state, -32768, 32767)
+						audio_frame.append(Vector2((left_state/pow(2,15)),(right_state/pow(2,15))))
+				else:
+					for j in range(0, len(raw_audio), 4):
+						var left_frame: float = (raw_audio[j]) + (raw_audio[j+1] << 8)
+						left_frame = Parser.unsigned16_to_signed(int(left_frame))
+						var right_frame: float = (raw_audio[j+2]) + (raw_audio[j+3] << 8)
+						right_frame = Parser.unsigned16_to_signed(int(right_frame))
+						audio_frame.append(Vector2((left_frame/pow(2,15)),(right_frame/pow(2,15))))
+				gdv_data.audio[i]["decoded_audio"] = audio_frame
+			if len(gdv_data.video) > 1:
+				var raw_video: PackedByteArray = gdv_data.video[i].raw_video
+				var frame := GDV.FrameDecoder.new(gdv_data.header.frame_width, gdv_data.header.frame_height, gdv_data.video[i].header, raw_video, gdv_data.header.raw_palette, previous_frame)
+				frame.decode()
+				previous_frame = frame.get_pixels()
+				var image_data: Array = Utility.convert_palette_image(frame.raw_palette, previous_frame, false, false, rendering_device)
+				gdv_data.header.raw_palette = frame.raw_palette
+				gdv_data.video[i]["decoded_video"] = Image.create_from_data(gdv_data.header.frame_width, gdv_data.header.frame_height, false, Image.FORMAT_RGB8, image_data)
+			callback.call_deferred((i+1.0) / gdv_data.header.nb_frames)
+			if stop_loading:
+				stop_loading = false
+				break
+		rendering_device.free()
 		return true
