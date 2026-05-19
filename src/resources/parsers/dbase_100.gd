@@ -201,6 +201,8 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 					or command_opcode == 31
 				):
 					command["data"] = DBase200.get_at_offset(dbase200_filepath, command_args*8)
+				if command_opcode == 0:
+					command["data"] = DBase300.get_at_offset(dbase300_filepath, command_args*8)
 			v1 = dbase100.get_8()
 			v2 = dbase100.get_8()
 			v3 = dbase100.get_8() 
@@ -258,7 +260,8 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 							text_entrys.append(command.text_entry)
 						else:
 							command["text_entry"] = text_offsets[command_args]
-						
+					if command.opcode == 26 or command.opcode == 14:
+						command["data"] = DBase300.get_at_offset(dbase300_filepath, command_args*8)
 			dbase100.seek(position)
 		action.erase("offset")
 		action.erase("length")

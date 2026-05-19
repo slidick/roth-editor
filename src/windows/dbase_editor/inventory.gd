@@ -243,7 +243,20 @@ func _update_commands() -> void:
 				}
 				frame_data["encoded_image"] = RLE.encode_row_rle_image(frame_data)
 				command.data.animation_2.append(frame_data)
-			tree_item.set_text(2, "[Edit Animation]")
+			tree_item.set_text(2, "[Edit]")
+		elif command.opcode == 0:
+			command.args = 0
+			if "data" not in command:
+				var raw_image := PackedByteArray()
+				raw_image.resize(32*32)
+				command.data = {
+					"image_type": 3,
+					"width": 32,
+					"height": 32,
+					"raw_image": raw_image,
+				}
+				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+			tree_item.set_text(2, "[Edit]")
 		else:
 			if tree_item.get_text(2).is_valid_hex_number(true):
 				command.args = tree_item.get_text(2).hex_to_int()
@@ -306,7 +319,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		%TypeOption.select(4)
 	elif (inventory_item.item_type & 0b111) == 3:
 		%TypeOption.select(2)
-	elif (inventory_item.item_type & 0b111) == 3:
+	elif (inventory_item.item_type & 0b111) == 4:
 		%TypeOption.select(3)
 	
 	
@@ -380,16 +393,6 @@ func _on_object_texture_index_edit_text_changed(new_text: String) -> void:
 		inventory_item.object_texture_index = 0
 
 
-func _on_close_up_type_edit_text_changed(new_text: String) -> void:
-	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	inventory_item.closeup_type = int(new_text)
-
-
-func _on_item_type_edit_text_changed(new_text: String) -> void:
-	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
-	inventory_item.item_type = int(new_text)
-
-
 func _on_name_offset_edit_text_changed(new_text: String) -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	inventory_item.offset_dbase400 = int(new_text)
@@ -431,7 +434,7 @@ func _add_tree_item(command: Dictionary) -> void:
 		else:
 			tree_item.set_text(2, "(Empty)")
 	elif "data" in command:
-		tree_item.set_text(2, "[Edit Animation]")
+		tree_item.set_text(2, "[Edit]")
 	else:
 		tree_item.set_text(2, "%d" % command.args)
 	
@@ -575,6 +578,7 @@ func _on_tree_item_selected() -> void:
 			and tree_item.get_text(0) != "16"
 			and tree_item.get_text(0) != "18"
 			and tree_item.get_text(0) != "31"
+			and tree_item.get_text(0) != "0"
 	):
 		tree_item.set_editable(2, true)
 	await get_tree().create_timer(0.5).timeout
@@ -598,27 +602,36 @@ func _on_tree_item_activated() -> void:
 			_update_commands()
 		return
 	
-	if (tree_item.get_text(0) == "18"
-		or tree_item.get_text(0) == "31"
-	):
-		var command: Dictionary = tree_item.get_metadata(0)
-		await owner.edit_weapon_animation(command)
-		return
-	
-	if (tree_item.get_text(0) != "5"
-		and tree_item.get_text(0) != "8"
-		and tree_item.get_text(0) != "15"
-		and tree_item.get_text(0) != "16"
-	):
-		return
-	
 	if tree_item.is_selected(2):
-		var command: Dictionary = tree_item.get_metadata(0)
-		await owner.edit_item_with_text_entry(command)
-		if "string" in command.text_entry:
-			tree_item.set_text(2, command.text_entry.string)
-		else:
-			tree_item.set_text(2, "(Empty)")
+		if tree_item.get_text(0) == "0":
+			var command: Dictionary = tree_item.get_metadata(0)
+			var new_image: Dictionary = await owner.edit_image(command.data, command.data.raw_palette if "raw_palette" in command.data else Das.DEFAULT_RAW_PALETTE, false, false, false)
+			if not new_image.is_empty():
+				command.data = new_image
+				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+			return
+		
+		if (tree_item.get_text(0) == "18"
+				or tree_item.get_text(0) == "31"
+		):
+			var command: Dictionary = tree_item.get_metadata(0)
+			await owner.edit_weapon_animation(command)
+			return
+		
+		if (tree_item.get_text(0) == "5"
+				or tree_item.get_text(0) == "8"
+				or tree_item.get_text(0) == "15"
+				or tree_item.get_text(0) == "16"
+		):
+			var command: Dictionary = tree_item.get_metadata(0)
+			await owner.edit_item_with_text_entry(command)
+			if "string" in command.text_entry:
+				tree_item.set_text(2, command.text_entry.string)
+			else:
+				tree_item.set_text(2, "(Empty)")
+			return
+
+
 
 
 func refresh_text(text_entry: Dictionary) -> void:
@@ -688,10 +701,8 @@ func _on_flag_check_button_toggled(toggled_on: bool, shift: int) -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	if toggled_on:
 		inventory_item.closeup_type |= (1 << shift)
-		%CloseUpTypeEdit.text = str(inventory_item.closeup_type)
 	else:
 		inventory_item.closeup_type &= ~(1 << shift)
-		%CloseUpTypeEdit.text = str(inventory_item.closeup_type)
 
 
 func _on_type_option_item_selected(index: int) -> void:
@@ -708,17 +719,14 @@ func _on_type_option_item_selected(index: int) -> void:
 			inventory_item.item_type |= 4
 		4:
 			inventory_item.item_type |= 2
-	%ItemTypeEdit.text = str(inventory_item.item_type)
 
 
 func _on_type_flag_check_button_toggled(toggled_on: bool, shift: int) -> void:
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	if toggled_on:
 		inventory_item.item_type |= (1 << shift)
-		%ItemTypeEdit.text = str(inventory_item.item_type)
 	else:
 		inventory_item.item_type &= ~(1 << shift)
-		%ItemTypeEdit.text = str(inventory_item.item_type)
 
 
 func _on_name_edit_gui_input(event: InputEvent) -> void:

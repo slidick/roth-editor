@@ -172,29 +172,36 @@ func _on_cancel_button_pressed() -> void:
 
 
 func _on_save_button_pressed() -> void:
+	# DBase500
 	if audio_changed:
-		var data3 := DBase500.compile(dbase_data["dbase100"])
-		var file3 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE500.DAT"), FileAccess.WRITE)
-		file3.store_buffer(data3)
-		file3.close()
+		var data5 := DBase500.compile(dbase_data["dbase100"])
+		var file5 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE500.DAT"), FileAccess.WRITE)
+		file5.store_buffer(data5)
+		file5.close()
 	
+	# DBase400
 	var data := DBase400.compile(dbase_data["dbase100"])
-	
 	var file := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE400.DAT"), FileAccess.WRITE)
 	file.store_buffer(data)
 	file.close()
 	
-	var data4 := DBase200.compile(dbase_data["dbase100"])
+	# DBase300
+	data = DBase300.compile(dbase_data["dbase100"])
+	file = FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE300.DAT"), FileAccess.WRITE)
+	file.store_buffer(data)
+	file.close()
 	
-	var file4 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE200.DAT"), FileAccess.WRITE)
-	file4.store_buffer(data4)
-	file4.close()
+	# DBase200
+	data = DBase200.compile(dbase_data["dbase100"])
+	file = FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE200.DAT"), FileAccess.WRITE)
+	file.store_buffer(data)
+	file.close()
 	
-	var data2 := DBase100.compile(dbase_data["dbase100"])
-	
-	var file2 := FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE100.DAT"), FileAccess.WRITE)
-	file2.store_buffer(data2)
-	file2.close()
+	# DBase100
+	data = DBase100.compile(dbase_data["dbase100"])
+	file = FileAccess.open(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_data["dbase_info"].name).path_join("DBASE100.DAT"), FileAccess.WRITE)
+	file.store_buffer(data)
+	file.close()
 	
 	# Update metadata
 	var dbase_info: Dictionary = dbase_data["dbase_info"]
@@ -202,7 +209,7 @@ func _on_save_button_pressed() -> void:
 	dbase_info.action_count = len(dbase_data["dbase100"].actions)
 	dbase_info.cutscene_count = len(dbase_data["dbase100"].cutscenes)
 	dbase_info.interface_count = len(dbase_data["dbase100"].interfaces)
-	dbase_info.filesize = len(data2)
+	dbase_info.filesize = len(data)
 	%DBaseNameLabel.text = dbase_info.name
 	%InventoryCountLabel.text = str(dbase_info.inventory_count)
 	%ActionCountLabel.text = str(dbase_info.action_count)
@@ -373,5 +380,5 @@ func edit_weapon_animation(command: Dictionary) -> void:
 	await %WeaponAnimationEditor.edit(command)
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_force_partial_alpha: bool = false) -> Dictionary:
-	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, p_force_partial_alpha)
+func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true) -> Dictionary:
+	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, p_force_partial_alpha, p_lock_size, p_limit_size)

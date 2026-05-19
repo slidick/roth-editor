@@ -27,6 +27,14 @@ var palette: Array = []
 var force_partial_alpha: bool = false
 var previous_mouse_position := Vector2.ZERO
 var lock_size: bool = false
+var limit_size: bool = true
+
+
+func _ready() -> void:
+	super._ready()
+	if OS.get_name() == "Linux":
+		%FileDialog.use_native_dialog = false
+
 
 func _input(event: InputEvent) -> void:
 	if canvas_has_focus:
@@ -86,11 +94,12 @@ func update_camera_center() -> void:
 		%Camera2D.position = image.get_size() / 2.0
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = false) -> Dictionary:
+func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true) -> Dictionary:
 	original_texture_data = p_texture_data.duplicate(true)
 	texture_data = p_texture_data.duplicate(true)
 	force_partial_alpha = p_force_partial_alpha
 	lock_size = p_lock_size
+	limit_size = p_limit_size
 	if palette != p_raw_palette:
 		palette = p_raw_palette
 		load_palette(palette)
@@ -141,15 +150,23 @@ func update_dimensions() -> void:
 		%WidthSpinBox.get_line_edit().text = str(texture_data.height)
 		%HeightSpinBox.set_value_no_signal(texture_data.width)
 		%HeightSpinBox.get_line_edit().text = str(texture_data.width)
-		%HeightSpinBox.max_value = int(65536 / texture_data.height)
-		%WidthSpinBox.max_value = int(65536 / texture_data.width)
+		if limit_size:
+			%HeightSpinBox.max_value = int(65536 / texture_data.height)
+			%WidthSpinBox.max_value = int(65536 / texture_data.width)
+		else:
+			%HeightSpinBox.max_value = 100000
+			%WidthSpinBox.max_value = 100000
 	else:
 		%WidthSpinBox.set_value_no_signal(texture_data.width)
 		%WidthSpinBox.get_line_edit().text = str(texture_data.width)
 		%HeightSpinBox.set_value_no_signal(texture_data.height)
 		%HeightSpinBox.get_line_edit().text = str(texture_data.height)
-		%HeightSpinBox.max_value = int(65536 / texture_data.width)
-		%WidthSpinBox.max_value = int(65536 / texture_data.height)
+		if limit_size:
+			%HeightSpinBox.max_value = int(65536 / texture_data.width)
+			%WidthSpinBox.max_value = int(65536 / texture_data.height)
+		else:
+			%HeightSpinBox.max_value = 100000
+			%WidthSpinBox.max_value = 100000
 
 
 func _on_save_button_pressed() -> void:
@@ -312,7 +329,8 @@ func _on_width_spin_box_value_changed(value: float) -> void:
 		update_height(value)
 	else:
 		update_width(value)
-	%HeightSpinBox.max_value = int(65536 / value)
+	if limit_size:
+		%HeightSpinBox.max_value = int(65536 / value)
 
 
 func update_width(value: float) -> void:
@@ -347,7 +365,8 @@ func _on_height_spin_box_value_changed(value: float) -> void:
 		update_width(value)
 	else:
 		update_height(value)
-	%WidthSpinBox.max_value = int(65536 / value)
+	if limit_size:
+		%WidthSpinBox.max_value = int(65536 / value)
 
 
 func update_height(value: float) -> void:
@@ -377,7 +396,7 @@ func update_height(value: float) -> void:
 
 
 func _on_browse_button_pressed() -> void:
-	%FileDialog.popup()
+	%FileDialog.popup_file_dialog()
 
 
 func _on_file_dialog_file_selected(path: String) -> void:
@@ -459,7 +478,7 @@ func _on_transform_index_pressed(index: int) -> void:
 
 
 func scale_image(force_downsize: bool = false) -> bool:
-	var data: Dictionary = await %Scale.scale_image(texture_data, %RotateCanvasCheckBox.button_pressed, force_downsize)
+	var data: Dictionary = await %Scale.scale_image(texture_data, %RotateCanvasCheckBox.button_pressed, force_downsize, limit_size)
 	if not data.is_empty():
 		_on_scale_changed(data)
 		%Scaling.toggle(true)
@@ -482,7 +501,7 @@ func scale_image(force_downsize: bool = false) -> bool:
 
 func _on_scale_changed(data: Dictionary) -> void:
 	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or force_partial_alpha
-	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 and not force_partial_alpha
 	image = Image.create_from_data(
 		texture_data.width,
 		texture_data.height,

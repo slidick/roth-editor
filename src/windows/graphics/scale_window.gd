@@ -11,10 +11,12 @@ var locked_height: int = -1
 var locked_width_percent: float = 0.0
 var locked_height_percent: float = 0.0
 var force_downsize: bool = false
+var limit_size: bool = true
 
-func scale_image(p_image_data: Dictionary, is_rotated: bool, p_force_downsize: bool = false) -> Dictionary:
+func scale_image(p_image_data: Dictionary, is_rotated: bool, p_force_downsize: bool = false, p_limit_size: bool = true) -> Dictionary:
 	image_data = p_image_data
 	force_downsize = p_force_downsize
+	limit_size = p_limit_size
 	if is_rotated:
 		original_width = image_data.height
 		original_height = image_data.width
@@ -28,16 +30,22 @@ func scale_image(p_image_data: Dictionary, is_rotated: bool, p_force_downsize: b
 	locked_height_percent = 100.0
 	
 	if force_downsize:
-		%ScaleWidthPixelSpinBox.max_value = original_height
-		%ScaleHeightPixelSpinBox.max_value = original_width
+		%ScaleWidthPixelSpinBox.max_value = original_width
+		%ScaleHeightPixelSpinBox.max_value = original_height
 		%ScaleWidthPercentSpinBox.max_value = 100
 		%ScaleHeightPercentSpinBox.max_value = 100
 		%ConfirmButton.disabled = true
-	else:
+	elif limit_size:
 		%ScaleWidthPixelSpinBox.max_value = int(65536.0 / original_height)
 		%ScaleHeightPixelSpinBox.max_value = int(65536.0 / original_width)
 		%ScaleWidthPercentSpinBox.max_value = 65536.0 / original_height / original_width * 100
 		%ScaleHeightPercentSpinBox.max_value = 65536.0 / original_width / original_height * 100
+	else:
+		%ScaleWidthPixelSpinBox.max_value = 100000
+		%ScaleHeightPixelSpinBox.max_value = 100000
+		%ScaleWidthPercentSpinBox.max_value = 10000
+		%ScaleHeightPercentSpinBox.max_value = 10000
+		%ConfirmButton.disabled = false
 	
 	%ScaleWidthPixelSpinBox.set_value_no_signal(original_width)
 	%ScaleWidthPixelSpinBox.get_line_edit().text = str(original_width)
@@ -63,10 +71,11 @@ func update() -> void:
 			"width": int(%ScaleWidthPixelSpinBox.value),
 			"height": int(%ScaleHeightPixelSpinBox.value),
 		})
-	if int(%ScaleWidthPixelSpinBox.value) * int(%ScaleHeightPixelSpinBox.value) <= 256*256:
-		%ConfirmButton.disabled = false
-	else:
-		%ConfirmButton.disabled = true
+	if limit_size:
+		if int(%ScaleWidthPixelSpinBox.value) * int(%ScaleHeightPixelSpinBox.value) <= 256*256:
+			%ConfirmButton.disabled = false
+		else:
+			%ConfirmButton.disabled = true
 
 
 func _on_cancel_button_pressed() -> void:
@@ -82,7 +91,7 @@ func _on_confirm_button_pressed() -> void:
 
 func _on_scale_width_pixel_spin_box_value_changed(value: float) -> void:
 	%ScaleWidthPercentSpinBox.set_value_no_signal(value/original_width * 100)
-	if not force_downsize:
+	if not force_downsize and limit_size:
 		%ScaleHeightPixelSpinBox.max_value = int(65536 / value)
 		%ScaleHeightPercentSpinBox.max_value = 65536 / value / original_height * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
@@ -94,7 +103,7 @@ func _on_scale_width_pixel_spin_box_value_changed(value: float) -> void:
 
 func _on_scale_height_pixel_spin_box_value_changed(value: float) -> void:
 	%ScaleHeightPercentSpinBox.set_value_no_signal(value/original_height * 100)
-	if not force_downsize:
+	if not force_downsize and limit_size:
 		%ScaleWidthPixelSpinBox.max_value = int(65536 / value)
 		%ScaleWidthPercentSpinBox.max_value = 65536 / value / original_width * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
@@ -106,26 +115,26 @@ func _on_scale_height_pixel_spin_box_value_changed(value: float) -> void:
 
 func _on_scale_width_percent_spin_box_value_changed(value: float) -> void:
 	%ScaleWidthPixelSpinBox.set_value_no_signal(original_width * value / 100.0)
-	if not force_downsize:
+	if not force_downsize and limit_size:
 		%ScaleHeightPercentSpinBox.max_value = 65536.0 / (original_width * value / 100.0) / original_height * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
 		var percent_change: float = value / locked_width_percent
 		%ScaleHeightPercentSpinBox.set_value_no_signal(percent_change * locked_height_percent)
 		%ScaleHeightPixelSpinBox.set_value_no_signal(original_height * percent_change * locked_height_percent / 100.0)
-		if not force_downsize:
+		if not force_downsize and limit_size:
 			%ScaleWidthPercentSpinBox.max_value = 65536.0 / (original_height * percent_change * locked_height_percent / 100.0) / original_width * 100
 	update()
 
 
 func _on_scale_height_percent_spin_box_value_changed(value: float) -> void:
 	%ScaleHeightPixelSpinBox.set_value_no_signal(original_height * value / 100.0)
-	if not force_downsize:
+	if not force_downsize and limit_size:
 		%ScaleWidthPercentSpinBox.max_value = 65536.0 / (original_height * value / 100.0) / original_width * 100
 	if %KeepAspectRatioCheckBox.button_pressed:
 		var percent_change: float = value / locked_height_percent
 		%ScaleWidthPercentSpinBox.set_value_no_signal(percent_change * locked_width_percent)
 		%ScaleWidthPixelSpinBox.set_value_no_signal(original_width * percent_change * locked_width_percent / 100.0)
-		if not force_downsize:
+		if not force_downsize and limit_size:
 			%ScaleHeightPercentSpinBox.max_value = 65536.0 / (original_width * percent_change * locked_width_percent / 100.0) / original_height * 100
 	update()
 

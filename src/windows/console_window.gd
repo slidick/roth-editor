@@ -10,6 +10,7 @@ func _handle_command(command: String) -> void:
 				Console.print(map)
 		"save_hmps":
 			DBase300.save_hmps()
-		"clear_audio":
-			Roth.audio_player.stream = null
-			Roth.audio_player.playback = null
+		"get_midi_offsets":
+			print(DBase300.get_offsets_by_type(Roth.install_directory.path_join("../DATA/DBASE300.DAT"), DBase300.FILETYPE_MIDI))
+		"stop_audio":
+			Roth.audio_player.stop()

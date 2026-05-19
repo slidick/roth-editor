@@ -148,7 +148,7 @@ static func compile(dbase100: Dictionary) -> PackedByteArray:
 	for inventory_item: Dictionary in dbase100.inventory:
 		if not inventory_item.image_data.is_empty():
 			assert(unique_icons.find(inventory_item.image_data) != -1)
-			inventory_item.inventory_image = icon_offsets[unique_icons.find(inventory_item.image_data)] # Update animation offset
+			inventory_item.inventory_image = icon_offsets[unique_icons.find(inventory_item.image_data)] # Update icon offset
 		for action: Dictionary in inventory_item.actions_section:
 			if action.trigger == 5:
 				for command: Dictionary in action.commands:
