@@ -4,6 +4,7 @@ var dbase_data: Dictionary
 var copy_command: Dictionary = {}
 var last_selected_opcode: int = -1
 
+
 func _ready() -> void:
 	%Tree.create_item()
 	%Tree.set_column_title(0, "opcode")
@@ -22,6 +23,8 @@ func reset() -> void:
 		tree_item.free()
 	
 	%AddOpcodeButton.disabled = true
+	%OpcodeSearchEdit.text = ""
+	%ValueSearchEdit.text = ""
 
 
 func load_dbase(p_dbase_data: Dictionary) -> void:
@@ -121,7 +124,7 @@ func _on_action_list_item_selected(index: int) -> void:
 	var action: Dictionary = %ActionList.get_item_metadata(index)
 	for command: Dictionary in action.commands:
 		_add_tree_item(command)
-		
+
 
 func _add_tree_item(p_command: Dictionary) -> void:
 	var tree_item: TreeItem = %Tree.get_root().create_child()
@@ -293,3 +296,33 @@ func _on_tree_item_activated() -> void:
 			tree_item.set_text(2, command.text_entry.string)
 		else:
 			tree_item.set_text(2, "(Empty)")
+
+
+func _on_opcode_search_edit_text_changed(_new_text: String) -> void:
+	_search()
+
+
+func _on_value_search_edit_text_changed(_new_text: String) -> void:
+	_search()
+
+
+func _search() -> void:
+	%ActionList.clear()
+	for tree_item: TreeItem in %Tree.get_root().get_children():
+		tree_item.free()
+	%AddOpcodeButton.disabled = true
+	for i in len(dbase_data["dbase100"].actions):
+		var search_found: bool = false
+		if not %OpcodeSearchEdit.text.is_empty() or not %ValueSearchEdit.text.is_empty():
+			for command: Dictionary in dbase_data["dbase100"].actions[i].commands:
+				if int(%OpcodeSearchEdit.text) == command.opcode and %ValueSearchEdit.text.is_empty():
+					search_found = true
+				if int(%ValueSearchEdit.text) == command.args and %OpcodeSearchEdit.text.is_empty():
+					search_found = true
+				if int(%OpcodeSearchEdit.text) == command.opcode and int(%ValueSearchEdit.text) == command.args:
+					search_found = true
+		else:
+			search_found = true
+		if search_found:
+			var idx: int = %ActionList.add_item("%d" % (i+1))
+			%ActionList.set_item_metadata(idx, dbase_data["dbase100"].actions[i])

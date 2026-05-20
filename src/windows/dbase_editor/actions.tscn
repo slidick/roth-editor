@@ -3,29 +3,49 @@
 [ext_resource type="Script" uid="uid://datm5vblg3i6x" path="res://src/windows/dbase_editor/actions.gd" id="1_r38q4"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_gj8af"]
 
-[node name="Actions" type="HBoxContainer" unique_id=1308281101]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -1003.0
-offset_bottom = -418.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
+[node name="Actions" type="VBoxContainer" unique_id=783366954]
+offset_right = 675.584
+offset_bottom = 402.19202
 script = ExtResource("1_r38q4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=32520770]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=853870258]
+layout_mode = 2
+text = "Search:"
+
+[node name="OpcodeSearchEdit" type="LineEdit" parent="HBoxContainer" unique_id=398533657]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Opcode..."
+
+[node name="ValueSearchEdit" type="LineEdit" parent="HBoxContainer" unique_id=993169854]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Args..."
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1308281101]
+layout_mode = 2
+size_flags_vertical = 3
 metadata/_tab_index = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=481191017]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer2" unique_id=481191017]
 layout_mode = 2
 
-[node name="ActionList" type="ItemList" parent="VBoxContainer" unique_id=767808756]
+[node name="ActionList" type="ItemList" parent="HBoxContainer2/VBoxContainer" unique_id=767808756]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
 
-[node name="ActionListPopupMenu" type="PopupMenu" parent="VBoxContainer/ActionList" unique_id=1797286362]
+[node name="ActionListPopupMenu" type="PopupMenu" parent="HBoxContainer2/VBoxContainer/ActionList" unique_id=1797286362]
 unique_name_in_owner = true
 item_count = 3
 item_0/text = "Duplicate"
@@ -35,16 +55,16 @@ item_1/id = 1
 item_2/text = "Delete"
 item_2/id = 2
 
-[node name="AddActionButton" type="Button" parent="VBoxContainer" unique_id=1320140265]
+[node name="AddActionButton" type="Button" parent="HBoxContainer2/VBoxContainer" unique_id=1320140265]
 layout_mode = 2
 text = "Add Action"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=245529068]
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer2" unique_id=245529068]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 
-[node name="Tree" type="Tree" parent="VBoxContainer2" unique_id=71283802]
+[node name="Tree" type="Tree" parent="HBoxContainer2/VBoxContainer2" unique_id=71283802]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -56,7 +76,7 @@ hide_folding = true
 hide_root = true
 script = ExtResource("2_gj8af")
 
-[node name="PopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree" unique_id=1700333638]
+[node name="PopupMenu" type="PopupMenu" parent="HBoxContainer2/VBoxContainer2/Tree" unique_id=1700333638]
 unique_name_in_owner = true
 item_count = 2
 item_0/text = "Copy"
@@ -64,7 +84,7 @@ item_0/id = 0
 item_1/text = "Delete"
 item_1/id = 1
 
-[node name="EmptyPopupMenu" type="PopupMenu" parent="VBoxContainer2/Tree" unique_id=291126574]
+[node name="EmptyPopupMenu" type="PopupMenu" parent="HBoxContainer2/VBoxContainer2/Tree" unique_id=291126574]
 unique_name_in_owner = true
 auto_translate_mode = 1
 item_count = 2
@@ -73,21 +93,23 @@ item_0/id = 0
 item_1/text = "Paste"
 item_1/id = 1
 
-[node name="AddOpcodeButton" type="Button" parent="VBoxContainer2" unique_id=69956499]
+[node name="AddOpcodeButton" type="Button" parent="HBoxContainer2/VBoxContainer2" unique_id=69956499]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add Opcode"
 
-[connection signal="item_clicked" from="VBoxContainer/ActionList" to="." method="_on_action_list_item_clicked"]
-[connection signal="item_selected" from="VBoxContainer/ActionList" to="." method="_on_action_list_item_selected"]
-[connection signal="index_pressed" from="VBoxContainer/ActionList/ActionListPopupMenu" to="." method="_on_action_list_popup_menu_index_pressed"]
-[connection signal="pressed" from="VBoxContainer/AddActionButton" to="." method="_on_add_action_button_pressed"]
-[connection signal="empty_clicked" from="VBoxContainer2/Tree" to="." method="_on_tree_empty_clicked"]
-[connection signal="item_activated" from="VBoxContainer2/Tree" to="." method="_on_tree_item_activated"]
-[connection signal="item_edited" from="VBoxContainer2/Tree" to="." method="_on_tree_item_edited"]
-[connection signal="item_mouse_selected" from="VBoxContainer2/Tree" to="." method="_on_tree_item_mouse_selected"]
-[connection signal="item_moved" from="VBoxContainer2/Tree" to="." method="_on_tree_item_moved"]
-[connection signal="item_selected" from="VBoxContainer2/Tree" to="." method="_on_tree_item_selected"]
-[connection signal="index_pressed" from="VBoxContainer2/Tree/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
-[connection signal="index_pressed" from="VBoxContainer2/Tree/EmptyPopupMenu" to="." method="_on_empty_popup_menu_index_pressed"]
-[connection signal="pressed" from="VBoxContainer2/AddOpcodeButton" to="." method="_on_add_opcode_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer/OpcodeSearchEdit" to="." method="_on_opcode_search_edit_text_changed"]
+[connection signal="text_changed" from="HBoxContainer/ValueSearchEdit" to="." method="_on_value_search_edit_text_changed"]
+[connection signal="item_clicked" from="HBoxContainer2/VBoxContainer/ActionList" to="." method="_on_action_list_item_clicked"]
+[connection signal="item_selected" from="HBoxContainer2/VBoxContainer/ActionList" to="." method="_on_action_list_item_selected"]
+[connection signal="index_pressed" from="HBoxContainer2/VBoxContainer/ActionList/ActionListPopupMenu" to="." method="_on_action_list_popup_menu_index_pressed"]
+[connection signal="pressed" from="HBoxContainer2/VBoxContainer/AddActionButton" to="." method="_on_add_action_button_pressed"]
+[connection signal="empty_clicked" from="HBoxContainer2/VBoxContainer2/Tree" to="." method="_on_tree_empty_clicked"]
+[connection signal="item_activated" from="HBoxContainer2/VBoxContainer2/Tree" to="." method="_on_tree_item_activated"]
+[connection signal="item_edited" from="HBoxContainer2/VBoxContainer2/Tree" to="." method="_on_tree_item_edited"]
+[connection signal="item_mouse_selected" from="HBoxContainer2/VBoxContainer2/Tree" to="." method="_on_tree_item_mouse_selected"]
+[connection signal="item_moved" from="HBoxContainer2/VBoxContainer2/Tree" to="." method="_on_tree_item_moved"]
+[connection signal="item_selected" from="HBoxContainer2/VBoxContainer2/Tree" to="." method="_on_tree_item_selected"]
+[connection signal="index_pressed" from="HBoxContainer2/VBoxContainer2/Tree/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="index_pressed" from="HBoxContainer2/VBoxContainer2/Tree/EmptyPopupMenu" to="." method="_on_empty_popup_menu_index_pressed"]
+[connection signal="pressed" from="HBoxContainer2/VBoxContainer2/AddOpcodeButton" to="." method="_on_add_opcode_button_pressed"]
