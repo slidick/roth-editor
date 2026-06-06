@@ -380,8 +380,8 @@ func edit_weapon_animation(command: Dictionary) -> void:
 	await %WeaponAnimationEditor.edit(command)
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true) -> Dictionary:
-	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, p_force_partial_alpha, p_lock_size, p_limit_size)
+func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true, p_8bit_palette: bool = false) -> Dictionary:
+	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, p_force_partial_alpha, p_lock_size, p_limit_size, p_8bit_palette)
 
 
 func change_music_selection(p_command: Dictionary) -> bool:

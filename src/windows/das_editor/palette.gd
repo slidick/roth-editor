@@ -23,6 +23,18 @@ func load_das(p_das: Dictionary) -> void:
 		%SidePanel.hide()
 
 
+func load_8bit_palette(p_8bit_palette: Array) -> void:
+	das = {}
+	for child: Control in %DefaultPalette.get_children():
+		child.queue_free()
+	var node: Node = _create_palette_node(p_8bit_palette)
+	if node:
+		%DefaultPalette.add_child(node)
+		%SidePanel.show()
+	else:
+		%SidePanel.hide()
+
+
 func reset() -> void:
 	das = {}
 	for child: Control in %DefaultPalette.get_children():

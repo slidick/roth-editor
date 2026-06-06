@@ -28,6 +28,7 @@ var force_partial_alpha: bool = false
 var previous_mouse_position := Vector2.ZERO
 var lock_size: bool = false
 var limit_size: bool = true
+var _8bit_palette: bool = false
 
 
 func _ready() -> void:
@@ -94,15 +95,20 @@ func update_camera_center() -> void:
 		%Camera2D.position = image.get_size() / 2.0
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true) -> Dictionary:
+func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true, p_8bit_palette: bool = false) -> Dictionary:
 	original_texture_data = p_texture_data.duplicate(true)
 	texture_data = p_texture_data.duplicate(true)
 	force_partial_alpha = p_force_partial_alpha
 	lock_size = p_lock_size
 	limit_size = p_limit_size
+	_8bit_palette = p_8bit_palette
 	if palette != p_raw_palette:
 		palette = p_raw_palette
-		load_palette(palette)
+	if _8bit_palette:
+		%EditPaletteButton.show()
+	else:
+		%EditPaletteButton.hide()
+	load_palette(palette)
 	_on_reset_button_pressed()
 	update_camera_center()
 	additional_zoom = 1
@@ -117,6 +123,7 @@ func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partia
 
 func _on_cancel_button_pressed() -> void:
 	done.emit({})
+	toggle(false)
 
 
 func _on_reset_button_pressed() -> void:
@@ -136,7 +143,7 @@ func redraw_image() -> void:
 		texture_data.height,
 		false,
 		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
-		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent)
+		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent, null, _8bit_palette)
 	)
 	var texture := ImageTexture.create_from_image(image)
 	%TextureRect.texture = texture
@@ -174,6 +181,8 @@ func _on_save_button_pressed() -> void:
 		if texture_data.width != original_texture_data.width or texture_data.height != original_texture_data.height:
 			if not await Dialog.confirm("The size of the image has changed.\nThis will cause all other frames to be resized!"):
 				return
+	if _8bit_palette:
+		texture_data.raw_palette = palette
 	done.emit(texture_data)
 
 
@@ -194,10 +203,16 @@ func load_palette(p_raw_palette: Array) -> void:
 				color_rect.selected = true
 				color_rect.queue_redraw()
 			color_rect.palette_index = i
-			if i == 0:
-				color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255), 0.0)
+			if _8bit_palette:
+				if i == 0:
+					color_rect.color = Color((p_raw_palette[3*i+0]) / float(255), (p_raw_palette[3*i+1]) / float(255), (p_raw_palette[3*i+2]) / float(255), 0.0)
+				else:
+					color_rect.color = Color((p_raw_palette[3*i+0]) / float(255), (p_raw_palette[3*i+1]) / float(255), (p_raw_palette[3*i+2]) / float(255))
 			else:
-				color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255))
+				if i == 0:
+					color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255), 0.0)
+				else:
+					color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255))
 			
 			color_rect.custom_minimum_size = Vector2(20,20)
 			color_rect.gui_input.connect(
@@ -414,7 +429,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	#if import_image.get_size().y > 256:
 		#import_image.resize(roundi((256.0/import_image.get_size().y) * import_image.get_size().x), 256, Image.INTERPOLATE_NEAREST)
 	
-	var import_raw_image: PackedByteArray = await RLE.convert_to_paletted_image(import_image, palette)
+	var import_raw_image: PackedByteArray = await RLE.convert_to_paletted_image(import_image, palette, _8bit_palette)
 	
 	var new_texture_data: Dictionary = {}
 	if "modifier" in texture_data:
@@ -434,9 +449,9 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	additional_zoom = 1
 	init_zoom()
 	
-	if import_image.get_size().x * import_image.get_size().y > 256*256:
-		if not await scale_image(true):
-			_on_reset_button_pressed()
+	#if import_image.get_size().x * import_image.get_size().y > 256*256:
+		#if not await scale_image(true):
+			#_on_reset_button_pressed()
 
 
 func _on_transform_index_pressed(index: int) -> void:
@@ -482,7 +497,7 @@ func scale_image(force_downsize: bool = false) -> bool:
 	if not data.is_empty():
 		_on_scale_changed(data)
 		%Scaling.toggle(true)
-		var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette)
+		var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette, _8bit_palette)
 		%Scaling.toggle(false)
 		texture_data.raw_image = raw_image
 		if %RotateCanvasCheckBox.button_pressed:
@@ -507,7 +522,7 @@ func _on_scale_changed(data: Dictionary) -> void:
 		texture_data.height,
 		false,
 		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
-		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent)
+		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent, null, _8bit_palette)
 	)
 	if %RotateCanvasCheckBox.button_pressed:
 		image.resize(data.height, data.width, Image.INTERPOLATE_NEAREST)
@@ -517,3 +532,12 @@ func _on_scale_changed(data: Dictionary) -> void:
 	%TextureRect.texture = texture
 	%PreviewTextureRect.texture = texture
 	%BackgroundCanvas.queue_redraw()
+
+
+func _on_edit_palette_button_pressed() -> void:
+	var new_palette: Array = await %PaletteEditor.edit_8bit_palette(palette)
+	if new_palette:
+		palette = new_palette
+		print("Palette changed")
+		load_palette(palette)
+		redraw_image()

@@ -15,10 +15,54 @@ layout(set = 0, binding = 2, std430) restrict writeonly buffer OutputBuffer {
   uint data[];
 } output_buffer;
 
+layout(set = 0, binding = 3, std430) restrict readonly buffer OptionsBuffer {
+  bool partial_alpha;
+  bool full_alpha;
+  bool eight_bit_palette;
+} options_buffer;
+
 void main() {
   uint pixel = input_buffer.data[gl_GlobalInvocationID.x];
-  output_buffer.data[3*gl_GlobalInvocationID.x+0] = ((palette_buffer.data[3*pixel+0] * 259 + 33) >> 6);
-  output_buffer.data[3*gl_GlobalInvocationID.x+1] = ((palette_buffer.data[3*pixel+1] * 259 + 33) >> 6);
-  output_buffer.data[3*gl_GlobalInvocationID.x+2] = ((palette_buffer.data[3*pixel+2] * 259 + 33) >> 6);
+  if (options_buffer.full_alpha) {
+    if (options_buffer.eight_bit_palette) {
+      output_buffer.data[4*gl_GlobalInvocationID.x+0] = palette_buffer.data[3*pixel+0];
+      output_buffer.data[4*gl_GlobalInvocationID.x+1] = palette_buffer.data[3*pixel+1];
+      output_buffer.data[4*gl_GlobalInvocationID.x+2] = palette_buffer.data[3*pixel+2];
+    } else {
+      output_buffer.data[4*gl_GlobalInvocationID.x+0] = ((palette_buffer.data[3*pixel+0] * 259 + 33) >> 6);
+      output_buffer.data[4*gl_GlobalInvocationID.x+1] = ((palette_buffer.data[3*pixel+1] * 259 + 33) >> 6);
+      output_buffer.data[4*gl_GlobalInvocationID.x+2] = ((palette_buffer.data[3*pixel+2] * 259 + 33) >> 6);
+    }
+    if (pixel == 0)
+      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 0;
+    else if (pixel > 0 && pixel < 128)
+      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 255;
+    else
+      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 128;
+  } else if (options_buffer.partial_alpha) {
+    if (options_buffer.eight_bit_palette) {
+      output_buffer.data[4*gl_GlobalInvocationID.x+0] = palette_buffer.data[3*pixel+0];
+      output_buffer.data[4*gl_GlobalInvocationID.x+1] = palette_buffer.data[3*pixel+1];
+      output_buffer.data[4*gl_GlobalInvocationID.x+2] = palette_buffer.data[3*pixel+2];
+    } else {
+      output_buffer.data[4*gl_GlobalInvocationID.x+0] = ((palette_buffer.data[3*pixel+0] * 259 + 33) >> 6);
+      output_buffer.data[4*gl_GlobalInvocationID.x+1] = ((palette_buffer.data[3*pixel+1] * 259 + 33) >> 6);
+      output_buffer.data[4*gl_GlobalInvocationID.x+2] = ((palette_buffer.data[3*pixel+2] * 259 + 33) >> 6);
+    }
+    if (pixel == 0)
+      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 0;
+    else
+      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 255;
+  } else {
+    if (options_buffer.eight_bit_palette) {
+      output_buffer.data[3*gl_GlobalInvocationID.x+0] = palette_buffer.data[3*pixel+0];
+      output_buffer.data[3*gl_GlobalInvocationID.x+1] = palette_buffer.data[3*pixel+1];
+      output_buffer.data[3*gl_GlobalInvocationID.x+2] = palette_buffer.data[3*pixel+2];
+    } else {
+      output_buffer.data[3*gl_GlobalInvocationID.x+0] = ((palette_buffer.data[3*pixel+0] * 259 + 33) >> 6);
+      output_buffer.data[3*gl_GlobalInvocationID.x+1] = ((palette_buffer.data[3*pixel+1] * 259 + 33) >> 6);
+      output_buffer.data[3*gl_GlobalInvocationID.x+2] = ((palette_buffer.data[3*pixel+2] * 259 + 33) >> 6);
+    }
+  }
 }
 

@@ -103,6 +103,22 @@ func _update_current_action() -> void:
 			else:
 				tree_item.set_text(2, "(Empty)")
 				command.text_entry = {}
+		elif command.opcode == 14:
+			tree_item.set_text(2, "[Edit Image]")
+			if "data" not in command:
+				var raw_image := PackedByteArray()
+				raw_image.resize(320*200)
+				var raw_palette := Das.DEFAULT_RAW_PALETTE.duplicate()
+				for i in range(len(raw_palette)):
+					raw_palette[i] = (raw_palette[i] * 259 + 33) >> 6
+				command.data = {
+					"image_type": 1,
+					"width": 320,
+					"height": 200,
+					"raw_palette": raw_palette,
+					"raw_image": raw_image,
+				}
+				command.data["rle_data"] = RLE.encode_rle_img(command.data)
 		else:
 			if tree_item.get_text(2).is_valid_hex_number(true):
 				command.args = tree_item.get_text(2).hex_to_int()
@@ -149,6 +165,9 @@ func _add_tree_item(p_command: Dictionary) -> void:
 	
 	if (p_command.opcode == 26):
 		tree_item.set_text(2, Music.hash_mapping[p_command.data.hash])
+	
+	if p_command.opcode == 14:
+		tree_item.set_text(2, "[Edit Image]")
 	
 	# Needed to update cell spacing after auto-wrap
 	await get_tree().process_frame
@@ -255,6 +274,7 @@ func _on_tree_item_selected() -> void:
 			and tree_item.get_text(0) != "15"
 			and tree_item.get_text(0) != "16"
 			and tree_item.get_text(0) != "26"
+			and tree_item.get_text(0) != "14"
 	):
 		tree_item.set_editable(2, true)
 	await get_tree().create_timer(0.5).timeout
@@ -309,6 +329,14 @@ func _on_tree_item_activated() -> void:
 			var changed: bool = await owner.change_music_selection(command)
 			if changed:
 				_update_current_action()
+		
+		if tree_item.get_text(0) == "14":
+			var command: Dictionary = tree_item.get_metadata(0)
+			var new_image: Dictionary = await owner.edit_image(command.data, command.data.raw_palette if "raw_palette" in command.data else Das.DEFAULT_RAW_PALETTE, false, false, false, true)
+			if not new_image.is_empty():
+				command.data = new_image
+				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+			return
 
 
 func _on_opcode_search_edit_text_changed(_new_text: String) -> void:

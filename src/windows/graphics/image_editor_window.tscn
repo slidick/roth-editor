@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bfku4hdh4y3qg" path="res://src/windows/graphics/texture_background_canvas.gd" id="5_v6fcf"]
 [ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="6_5dcxl"]
 [ext_resource type="PackedScene" uid="uid://b67ib6ly5uucg" path="res://src/windows/graphics/scale_window.tscn" id="9_g8fcc"]
+[ext_resource type="PackedScene" uid="uid://bnidlbyql4cyw" path="res://src/windows/graphics/palette_editor_window.tscn" id="10_x2dtj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5his"]
 content_margin_left = 0.0
@@ -62,7 +63,7 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(732, 647)
+size = Vector2i(732, 685)
 render_target_update_mode = 4
 
 [node name="RotationContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1696174823]
@@ -200,6 +201,12 @@ item_4/separator = true
 item_5/text = "Scale"
 item_5/id = 5
 
+[node name="EditPaletteButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3" index="1" unique_id=1101502197]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Edit Palette"
+
 [node name="PaletteContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3" unique_id=1977510581]
 unique_name_in_owner = true
 layout_mode = 2
@@ -247,6 +254,7 @@ text = "Save"
 [node name="Subwindows" type="Control" parent="." index="2" unique_id=1991079483]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="Scale" parent="Subwindows" index="0" unique_id=452268762 instance=ExtResource("9_g8fcc")]
 unique_name_in_owner = true
@@ -306,6 +314,22 @@ layout_mode = 2
 indeterminate = true
 editor_preview_indeterminate = false
 
+[node name="PaletteEditor" parent="Subwindows" index="2" unique_id=1599711012 instance=ExtResource("10_x2dtj")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -726.5
+offset_top = -438.0
+offset_right = 726.5
+offset_bottom = 438.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
@@ -318,6 +342,7 @@ editor_preview_indeterminate = false
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer/WidthSpinBox" to="." method="_on_width_spin_box_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer/HeightSpinBox" to="." method="_on_height_spin_box_value_changed"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/MenuBar/Transform" to="." method="_on_transform_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/EditPaletteButton" to="." method="_on_edit_palette_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

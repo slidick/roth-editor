@@ -2,8 +2,6 @@ extends Object
 class_name Utility
 
 const CONVERT_SHADER_FILE: RDShaderFile = preload("uid://ctypdd4htadqj")
-const CONVERT_SHADER_FILE_WITH_ALPHA: RDShaderFile = preload("uid://cbrjcrstq4vkq")
-const CONVERT_SHADER_FILE_WITH_FULL_ALPHA: RDShaderFile = preload("uid://dewa4njpsve7v")
 static var rd: RenderingDevice
 
 static func are_points_collinear(points_list: Array) -> bool:
@@ -107,7 +105,7 @@ static func init_delta_table() -> Array:
 	return delta_table
 
 
-static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool = true, p_rendering_device: RenderingDevice = null) -> Array:
+static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool = true, p_rendering_device: RenderingDevice = null, p_8bit_palette: bool = false) -> Array:
 	# Renderer
 	var rendering_device: RenderingDevice
 	if p_rendering_device:
@@ -120,13 +118,18 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 	if not rendering_device:
 		var data: Array = []
 		for pixel in p_raw_img:
-			data.append((p_raw_palette[3*pixel] * 259 + 33) >> 6)
-			data.append((p_raw_palette[3*pixel+1] * 259 + 33) >> 6)
-			data.append((p_raw_palette[3*pixel+2] * 259 + 33) >> 6)
+			if p_8bit_palette:
+				data.append(p_raw_palette[3*pixel])
+				data.append(p_raw_palette[3*pixel+1])
+				data.append(p_raw_palette[3*pixel+2])
+			else:
+				data.append((p_raw_palette[3*pixel] * 259 + 33) >> 6)
+				data.append((p_raw_palette[3*pixel+1] * 259 + 33) >> 6)
+				data.append((p_raw_palette[3*pixel+2] * 259 + 33) >> 6)
 			if p_with_alpha:
 				if pixel == 0:
 					data.append(0)
-				if p_with_full_alpha:
+				elif p_with_full_alpha:
 					if pixel > 0 and pixel < 128:
 						data.append(255)
 					else:
@@ -136,14 +139,7 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 		return data
 	
 	# Shader
-	var shader_spirv: RDShaderSPIRV
-	if p_with_alpha:
-		if p_with_full_alpha:
-			shader_spirv = CONVERT_SHADER_FILE_WITH_FULL_ALPHA.get_spirv()
-		else:
-			shader_spirv = CONVERT_SHADER_FILE_WITH_ALPHA.get_spirv()
-	else:
-		shader_spirv = CONVERT_SHADER_FILE.get_spirv()
+	var shader_spirv: RDShaderSPIRV = CONVERT_SHADER_FILE.get_spirv()
 	var shader: RID = rendering_device.shader_create_from_spirv(shader_spirv)
 	
 	# Input Image
@@ -178,7 +174,17 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 	output_image_uniform.add_id(output_image_rid)
 	
 	
-	var uniform_set: RID = rendering_device.uniform_set_create([image_uniform, palette_uniform, output_image_uniform], shader, 0)
+	# Options
+	var options: PackedByteArray = PackedInt32Array([p_with_alpha, p_with_full_alpha, p_8bit_palette]).to_byte_array()
+	var options_rid: RID = rendering_device.storage_buffer_create(options.size(), options)
+	
+	var options_uniform := RDUniform.new()
+	options_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+	options_uniform.binding = 3
+	options_uniform.add_id(options_rid)
+	
+	
+	var uniform_set: RID = rendering_device.uniform_set_create([image_uniform, palette_uniform, output_image_uniform, options_uniform], shader, 0)
 	var pipeline: RID = rendering_device.compute_pipeline_create(shader)
 	
 	
@@ -202,12 +208,14 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 	rendering_device.free_rid(image_rid)
 	rendering_device.free_rid(palette_rid)
 	rendering_device.free_rid(output_image_rid)
+	rendering_device.free_rid(options_rid)
 	rendering_device.free_rid(shader)
 	pipeline = RID()
 	uniform_set = RID()
 	image_rid = RID()
 	palette_rid = RID()
 	output_image_rid = RID()
+	options_rid = RID()
 	shader = RID()
 	
 	
