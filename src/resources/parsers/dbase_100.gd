@@ -228,6 +228,7 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 	assert(dbase100.get_position() == header["action_offset"])
 	
 	var actions := []
+	var songs: Dictionary = {}
 	for i in range(header["action_count"]):
 		var action := {}
 		action["offset"] = dbase100.get_32()
@@ -260,8 +261,13 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 							text_entrys.append(command.text_entry)
 						else:
 							command["text_entry"] = text_offsets[command_args]
-					if command.opcode == 26 or command.opcode == 14:
+					if command.opcode == 14:
 						command["data"] = DBase300.get_at_offset(dbase300_filepath, command_args*8)
+					if command.opcode == 26:
+						var data: Dictionary = DBase300.get_at_offset(dbase300_filepath, command_args*8)
+						command["data"] = data
+						if data.hash not in songs:
+							songs[data.hash] = data
 			dbase100.seek(position)
 		action.erase("offset")
 		action.erase("length")
@@ -276,7 +282,8 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 		"interfaces": interfaces,
 		"actions": actions,
 		"text_entrys": text_entrys,
-		"subtitle_entrys": subtitle_entrys
+		"subtitle_entrys": subtitle_entrys,
+		"songs": songs,
 	}
 
 

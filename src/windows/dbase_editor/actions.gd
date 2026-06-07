@@ -112,6 +112,10 @@ func _update_current_action() -> void:
 				command.args = 0
 			tree_item.set_text(2, "%d" % command.args)
 			command.erase("text_entry")
+		
+		if (command.opcode == 26):
+			tree_item.set_text(2, Music.hash_mapping[command.data.hash])
+		
 		new_commands.append(command)
 		
 	action.commands = new_commands
@@ -142,6 +146,10 @@ func _add_tree_item(p_command: Dictionary) -> void:
 			tree_item.set_text(2, "(Empty)")
 	else:
 		tree_item.set_text(2, "%d" % p_command.args)
+	
+	if (p_command.opcode == 26):
+		tree_item.set_text(2, Music.hash_mapping[p_command.data.hash])
+	
 	# Needed to update cell spacing after auto-wrap
 	await get_tree().process_frame
 	%Tree.queue_redraw()
@@ -246,6 +254,7 @@ func _on_tree_item_selected() -> void:
 			and tree_item.get_text(0) != "8"
 			and tree_item.get_text(0) != "15"
 			and tree_item.get_text(0) != "16"
+			and tree_item.get_text(0) != "26"
 	):
 		tree_item.set_editable(2, true)
 	await get_tree().create_timer(0.5).timeout
@@ -280,22 +289,26 @@ func _on_tree_item_activated() -> void:
 			_update_current_action()
 		return
 	
-	if (tree_item.get_text(0) != "5"
-			and tree_item.get_text(0) != "8"
-			and tree_item.get_text(0) != "15"
-			and tree_item.get_text(0) != "16"
-	):
-		return
-	
 	if tree_item.is_selected(2):
-		var command: Dictionary = tree_item.get_metadata(0)
-		if "text_entry" not in command:
-			command.text_entry = {}
-		await owner.edit_item_with_text_entry(command)
-		if "string" in command.text_entry:
-			tree_item.set_text(2, command.text_entry.string)
-		else:
-			tree_item.set_text(2, "(Empty)")
+		if (tree_item.get_text(0) == "5"
+			or tree_item.get_text(0) == "8"
+			or tree_item.get_text(0) == "15"
+			or tree_item.get_text(0) == "16"
+		):
+			var command: Dictionary = tree_item.get_metadata(0)
+			if "text_entry" not in command:
+				command.text_entry = {}
+			await owner.edit_item_with_text_entry(command)
+			if "string" in command.text_entry:
+				tree_item.set_text(2, command.text_entry.string)
+			else:
+				tree_item.set_text(2, "(Empty)")
+		
+		if tree_item.get_text(0) == "26":
+			var command: Dictionary = tree_item.get_metadata(0)
+			var changed: bool = await owner.change_music_selection(command)
+			if changed:
+				_update_current_action()
 
 
 func _on_opcode_search_edit_text_changed(_new_text: String) -> void:

@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://r37kuymf0w46"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_usf03"]
+[ext_resource type="Script" uid="uid://cbxi1o6nidd0w" path="res://src/windows/dbase_editor/music_selector_window.gd" id="2_bdq8h"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_bef2x"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_35eqm"]
+
+[node name="MusicSelectorWindow" unique_id=452268762 instance=ExtResource("1_usf03")]
+offset_right = 890.0
+offset_bottom = 632.0
+theme = ExtResource("2_bef2x")
+script = ExtResource("2_bdq8h")
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_35eqm")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=356818082]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1777931869]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1866649508]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=1717676654]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1835354849]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+text = "Cancel"
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=158870537]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Change"
+
+[connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

@@ -382,3 +382,7 @@ func edit_weapon_animation(command: Dictionary) -> void:
 
 func edit_image(p_texture_data: Dictionary, p_raw_palette: PackedByteArray, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true) -> Dictionary:
 	return await %ImageEditor.edit_image(p_texture_data, p_raw_palette, p_force_partial_alpha, p_lock_size, p_limit_size)
+
+
+func change_music_selection(p_command: Dictionary) -> bool:
+	return await %MusicSelector.select_music(p_command, dbase_data.dbase100)

@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://debuc4xxgfvt6" path="res://src/windows/dbase_editor/action_selector_window.tscn" id="13_pryu3"]
 [ext_resource type="PackedScene" uid="uid://cape11x6rkx43" path="res://src/windows/dbase_editor/weapon_animation_editor.tscn" id="14_gv1bg"]
 [ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="15_egm7p"]
+[ext_resource type="PackedScene" uid="uid://r37kuymf0w46" path="res://src/windows/dbase_editor/music_selector_window.tscn" id="16_gcuy8"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fspgq"]
 
@@ -272,6 +273,7 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+metadata/_tab_index = 4
 
 [node name="Text" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" index="6" unique_id=1900002993 instance=ExtResource("10_snwk0")]
 unique_name_in_owner = true
@@ -399,6 +401,22 @@ offset_left = -640.0
 offset_top = -400.0
 offset_right = 640.0
 offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MusicSelector" parent="SubWindows" index="5" unique_id=2093027154 instance=ExtResource("16_gcuy8")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -399.99997
+offset_top = -250.0
+offset_right = 400.00006
+offset_bottom = 270.0
 grow_horizontal = 2
 grow_vertical = 2
 
