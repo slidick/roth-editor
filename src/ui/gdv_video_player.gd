@@ -149,13 +149,24 @@ func _next_frame(clear_audio: bool) -> void:
 
 
 func _update_texture(continue_playing: bool) -> void:
+	if gdv_data.video[current_frame].header.type_flags & 0b10000000:
+		while "decoded_video" not in gdv_data.video[current_frame+1]:
+			player_state = PlayerState.PAUSED
+			if not dragging_slider:
+				%DragLabel.text = "Decoding..."
+			await get_tree().process_frame
+			if "video" not in gdv_data:
+				return
+		gdv_data.video[current_frame].decoded_video = gdv_data.video[current_frame+1].decoded_video
 	while "decoded_video" not in gdv_data.video[current_frame]:
 		player_state = PlayerState.PAUSED
-		%DragLabel.text = "Decoding..."
+		if not dragging_slider:
+			%DragLabel.text = "Decoding..."
 		await get_tree().process_frame
 		if "video" not in gdv_data:
 			return
-	%DragLabel.text = ""
+	if not dragging_slider:
+		%DragLabel.text = ""
 	if continue_playing:
 		player_state = PlayerState.PLAYING
 	_load_frame(gdv_data.video[current_frame].decoded_video)
