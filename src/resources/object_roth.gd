@@ -369,7 +369,8 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		var material := StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-		
+		material.grow = true
+		material.grow_amount = 0.001
 		if object_face.render_flag_1 & (1<<1) > 0:
 			material.uv1_scale.y *= -1
 			material.uv1_offset.y *= -1
