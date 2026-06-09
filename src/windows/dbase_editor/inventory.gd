@@ -333,10 +333,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		if "image" in image:
 			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
 	if not inventory_item.image_data.is_empty():
-		var icon: Dictionary = inventory_item.image_data
-		var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
-		if image:
-			%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
+		draw_inventory_icon()
 	if inventory_item.closeup_video:
 		%GDVVideoPlayer.load_gdv_data(inventory_item.closeup_video, true, inventory_item.closeup_type & 1 == 0)
 	
@@ -752,9 +749,7 @@ func _on_change_inventory_image_button_pressed() -> void:
 		return
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	inventory_item.image_data = icon
-	
-	var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
-	%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
+	draw_inventory_icon()
 
 
 func _on_clear_inventory_image_button_pressed() -> void:
@@ -800,5 +795,26 @@ func _on_edit_inventory_image_button_pressed() -> void:
 	if not new_image.is_empty():
 		inventory_item.image_data = new_image
 		inventory_item.image_data.rle_data = RLE.encode_rle_img(new_image)
-		var image: Image = Image.create_from_data(new_image.width, new_image.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, new_image.raw_image, true, false))
+		draw_inventory_icon()
+
+
+func _on_correct_aspect_check_button_toggled(_toggled_on: bool) -> void:
+	draw_inventory_icon()
+
+
+func draw_inventory_icon() -> void:
+	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
+	if inventory_item.image_data.is_empty():
+		return
+	var icon: Dictionary = inventory_item.image_data
+	var image: Image = Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8, Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, icon.raw_image, true, false))
+	if not image:
+		return
+	if %CorrectAspectCheckButton.button_pressed:
+		var dup_image: Image = image.duplicate()
+		#var canvas_image := Image.create_empty(dup_image.get_width(), dup_image.get_height(), false, dup_image.get_format())
+		dup_image.resize(dup_image.get_width(), roundi(dup_image.get_height()/2.0), Image.INTERPOLATE_NEAREST)
+		#canvas_image.blit_rect(dup_image, Rect2i(Vector2i.ZERO, dup_image.get_size()), Vector2i(0, int(canvas_image.get_height()/4.0)))
+		%InventoryTextureRect.texture = ImageTexture.create_from_image(dup_image)
+	else:
 		%InventoryTextureRect.texture = ImageTexture.create_from_image(image)
