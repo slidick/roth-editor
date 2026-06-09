@@ -40,3 +40,10 @@ func save() -> void:
 	var new_song: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
 	command.data = new_song
 	done.emit(true)
+
+
+func _on_edit_button_pressed() -> void:
+	var song: Dictionary = %ItemList.get_item_metadata(%ItemList.get_selected_items()[0])
+	var new_song: Dictionary = await %MusicEditor.load_song(song)
+	if new_song:
+		%ItemList.set_item_metadata(%ItemList.get_selected_items()[0], new_song)

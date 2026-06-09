@@ -139,7 +139,9 @@ static func get_at_offset(dbase300_filepath: String, offset: int ) -> Variant:
 			return GDV.get_video_by_file(file)
 		FILETYPE_HMP:
 			var buffer: PackedByteArray = file.get_buffer(size)
-			return {"raw_hmp": buffer, "hash": Array(buffer).hash()}
+			file.seek(file.get_position() - size - 4)
+			var data: Dictionary = Hmp.parse_file(file)
+			return {"raw_hmp": buffer, "hash": Array(buffer).hash(), "data": data}
 		FILETYPE_MIDI:
 			return {"raw_midi": file.get_buffer(size)}
 		FILETYPE_IMG1:

@@ -14,3 +14,16 @@ func _handle_command(command: String) -> void:
 			print(DBase300.get_offsets_by_type(Roth.install_directory.path_join("../DATA/DBASE300.DAT"), DBase300.FILETYPE_MIDI))
 		"stop_audio":
 			Roth.audio_player.stop()
+		"hmp":
+			var filepath := Roth.install_directory.path_join("../DATA/DBASE300.DAT")
+			var offset := 21620072
+			var data: Dictionary = Hmp.parse_at_offset(filepath, offset)
+			print(JSON.stringify(data, '\t', false))
+		"bnk":
+			var filepath: String = Roth.install_directory.path_join("../DATA/MIDI/MELODIC.BNK")
+			var data: Dictionary = Bnk.parse_filepath(filepath)
+			Console.print(JSON.stringify(data, '\t', false))
+		"drum":
+			var filepath: String = Roth.install_directory.path_join("../DATA/MIDI/DRUM.BNK")
+			var data: Dictionary = Bnk.parse_filepath(filepath)
+			Console.print(JSON.stringify(data, '\t', false))

@@ -7,6 +7,7 @@ const Type := {
 	Byte="get_8",
 	Word="get_16",
 	DWord="get_32",
+	QWord="get_64",
 	SignedByte="get_8_signed",
 	SignedWord="get_16_signed",
 	SignedDWord="get_32_signed",

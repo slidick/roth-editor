@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cbxi1o6nidd0w" path="res://src/windows/dbase_editor/music_selector_window.gd" id="2_bdq8h"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_bef2x"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_35eqm"]
+[ext_resource type="PackedScene" uid="uid://bjt1rhijx6fso" path="res://src/windows/dbase_editor/music_editor_window.tscn" id="5_35eqm"]
 
 [node name="MusicSelectorWindow" unique_id=452268762 instance=ExtResource("1_usf03")]
 offset_right = 890.0
@@ -41,13 +42,41 @@ custom_minimum_size = Vector2(120, 50)
 layout_mode = 2
 text = "Cancel"
 
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=158870537]
+[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1803193460]
+visible = false
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Edit"
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=158870537]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 50)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Change"
 
+[node name="Subwindows" type="Control" parent="." index="2" unique_id=42248922]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MusicEditor" parent="Subwindows" index="0" unique_id=322344266 instance=ExtResource("5_35eqm")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -779.5
+offset_top = -435.5
+offset_right = 779.5
+offset_bottom = 435.5
+grow_horizontal = 2
+grow_vertical = 2
+
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
