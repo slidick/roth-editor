@@ -803,6 +803,8 @@ func _on_correct_aspect_check_button_toggled(_toggled_on: bool) -> void:
 
 
 func draw_inventory_icon() -> void:
+	if %InventoryList.get_selected_items().is_empty():
+		return
 	var inventory_item: Dictionary = %InventoryList.get_item_metadata(%InventoryList.get_selected_items()[0])
 	if inventory_item.image_data.is_empty():
 		return
@@ -813,7 +815,7 @@ func draw_inventory_icon() -> void:
 	if %CorrectAspectCheckButton.button_pressed:
 		var dup_image: Image = image.duplicate()
 		#var canvas_image := Image.create_empty(dup_image.get_width(), dup_image.get_height(), false, dup_image.get_format())
-		dup_image.resize(dup_image.get_width(), roundi(dup_image.get_height()/2.0), Image.INTERPOLATE_NEAREST)
+		dup_image.resize(dup_image.get_width()*2, dup_image.get_height(), Image.INTERPOLATE_NEAREST)
 		#canvas_image.blit_rect(dup_image, Rect2i(Vector2i.ZERO, dup_image.get_size()), Vector2i(0, int(canvas_image.get_height()/4.0)))
 		%InventoryTextureRect.texture = ImageTexture.create_from_image(dup_image)
 	else:
