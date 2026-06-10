@@ -63,7 +63,7 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(732, 685)
+size = Vector2i(732, 647)
 render_target_update_mode = 4
 
 [node name="RotationContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1696174823]
@@ -330,6 +330,48 @@ offset_bottom = 438.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Importing" parent="Subwindows" index="3" unique_id=2019852713 instance=ExtResource("1_5g3s7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -201.0
+offset_top = -88.0
+offset_right = 201.0
+offset_bottom = 88.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_v7f7k")
+movable = false
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("3_vgo61")
+
+[node name="MarginContainer" type="MarginContainer" parent="Subwindows/Importing/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2019852713, 2051013205) index="0" unique_id=799201554]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Subwindows/Importing/Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=408199506]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Subwindows/Importing/Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1921509187]
+layout_mode = 2
+size_flags_vertical = 6
+indeterminate = true
+editor_preview_indeterminate = false
+
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
@@ -349,3 +391,4 @@ grow_vertical = 2
 [connection signal="changed" from="Subwindows/Scale" to="." method="_on_scale_changed"]
 
 [editable path="Subwindows/Scaling"]
+[editable path="Subwindows/Importing"]

@@ -415,6 +415,8 @@ func _on_browse_button_pressed() -> void:
 
 
 func _on_file_dialog_file_selected(path: String) -> void:
+	%Importing.toggle(true)
+	
 	var import_image: Image = Image.load_from_file(path)
 	
 	if %FileDialog.get_selected_options()["Rotate on Import"]:
@@ -448,7 +450,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	update_camera_center()
 	additional_zoom = 1
 	init_zoom()
-	
+	%Importing.toggle(false)
 	#if import_image.get_size().x * import_image.get_size().y > 256*256:
 		#if not await scale_image(true):
 			#_on_reset_button_pressed()
