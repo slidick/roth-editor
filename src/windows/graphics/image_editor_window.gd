@@ -1,8 +1,8 @@
 extends BaseWindow
 
 const ZOOM_SPEED : float = 1.10
-const MAX_ZOOM : int = 10
-const MIN_ZOOM : float = .05
+const MAX_ZOOM : int = 80
+const MIN_ZOOM : float = .5
 const COLOR_PICKER_CURSOR: Texture2D = preload("uid://cgxhrl6daxi3u")
 
 signal done(texture: Dictionary)
@@ -41,13 +41,15 @@ func _input(event: InputEvent) -> void:
 	if canvas_has_focus:
 		if event.is_action_pressed("map_2d_zoom_in"):
 			additional_zoom *= ZOOM_SPEED
-			additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
+			var clamped: float = clamp(zoom*additional_zoom, MIN_ZOOM, MAX_ZOOM)
+			additional_zoom = clamped/zoom
 			zooming = true
 			adjust_zoom()
 		
 		if event.is_action_pressed("map_2d_zoom_out"):
 			additional_zoom /= ZOOM_SPEED
-			additional_zoom = clamp(additional_zoom, MIN_ZOOM, MAX_ZOOM)
+			var clamped: float = clamp(zoom*additional_zoom, MIN_ZOOM, MAX_ZOOM)
+			additional_zoom = clamped/zoom
 			zooming = true
 			adjust_zoom()
 		
