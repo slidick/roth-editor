@@ -164,6 +164,8 @@ func _add_tree_item(p_command: Dictionary) -> void:
 		tree_item.set_text(2, "%d" % p_command.args)
 	
 	if (p_command.opcode == 26):
+		if "data" not in p_command:
+			p_command.data = dbase_data.dbase100.songs.values()[0]
 		tree_item.set_text(2, Music.hash_mapping[p_command.data.hash])
 	
 	if p_command.opcode == 14:
