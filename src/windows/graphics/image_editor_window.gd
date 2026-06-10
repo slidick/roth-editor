@@ -492,15 +492,17 @@ func _on_transform_index_pressed(index: int) -> void:
 			redraw_image()
 		5:
 			scale_image()
+		6:
+			crop_image()
 
 
 func scale_image(force_downsize: bool = false) -> bool:
 	var data: Dictionary = await %Scale.scale_image(texture_data, %RotateCanvasCheckBox.button_pressed, force_downsize, limit_size)
 	if not data.is_empty():
 		_on_scale_changed(data)
-		%Scaling.toggle(true)
+		%Applying.toggle(true)
 		var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette, _8bit_palette)
-		%Scaling.toggle(false)
+		%Applying.toggle(false)
 		texture_data.raw_image = raw_image
 		if %RotateCanvasCheckBox.button_pressed:
 			texture_data.width = data.height
@@ -536,6 +538,25 @@ func _on_scale_changed(data: Dictionary) -> void:
 	%BackgroundCanvas.queue_redraw()
 
 
+func crop_image() -> void:
+	var data: Dictionary = await %Crop.crop_image(texture_data, %RotateCanvasCheckBox.button_pressed)
+	if data:
+		_on_crop_changed(data)
+		%Applying.toggle(true)
+		var raw_image: PackedByteArray = await RLE.convert_to_paletted_image(image, palette, _8bit_palette)
+		%Applying.toggle(false)
+		texture_data.raw_image = raw_image
+		if %RotateCanvasCheckBox.button_pressed:
+			texture_data.width = texture_data.width - data.top - data.bottom
+			texture_data.height = texture_data.height - data.left - data.right
+		else:
+			texture_data.width = texture_data.width - data.left - data.right
+			texture_data.height = texture_data.height - data.top - data.bottom
+		update_dimensions()
+		redraw_image()
+	else:
+		redraw_image()
+
 func _on_edit_palette_button_pressed() -> void:
 	var new_palette: Array = await %PaletteEditor.edit_8bit_palette(palette)
 	if new_palette:
@@ -543,3 +564,28 @@ func _on_edit_palette_button_pressed() -> void:
 		print("Palette changed")
 		load_palette(palette)
 		redraw_image()
+
+
+func _on_crop_changed(data: Dictionary) -> void:
+	var is_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 or texture_data.image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or force_partial_alpha
+	var is_fully_transparent: bool = texture_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0 and not force_partial_alpha
+	var cropping_image := Image.create_from_data(
+		texture_data.width,
+		texture_data.height,
+		false,
+		Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8,
+		Utility.convert_palette_image(palette, texture_data.raw_image, is_transparent, is_fully_transparent, null, _8bit_palette)
+	)
+	if %RotateCanvasCheckBox.button_pressed:
+		image = Image.create_empty(texture_data.width - data.top - data.bottom, texture_data.height - data.left - data.right, false, cropping_image.get_format())
+	else:
+		image = Image.create_empty(texture_data.width - data.left - data.right, texture_data.height - data.top - data.bottom, false, cropping_image.get_format())
+	
+	if %RotateCanvasCheckBox.button_pressed:
+		image.blit_rect(cropping_image, Rect2i(data.top, data.left, texture_data.width - data.top - data.bottom, texture_data.height - data.left - data.right), Vector2i.ZERO)
+	else:
+		image.blit_rect(cropping_image, Rect2i(data.left, data.top, texture_data.width - data.left - data.right, texture_data.height - data.top - data.bottom), Vector2i.ZERO)
+	var texture := ImageTexture.create_from_image(image)
+	%TextureRect.texture = texture
+	%PreviewTextureRect.texture = texture
+	%BackgroundCanvas.queue_redraw()

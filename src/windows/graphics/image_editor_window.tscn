@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="6_5dcxl"]
 [ext_resource type="PackedScene" uid="uid://b67ib6ly5uucg" path="res://src/windows/graphics/scale_window.tscn" id="9_g8fcc"]
 [ext_resource type="PackedScene" uid="uid://bnidlbyql4cyw" path="res://src/windows/graphics/palette_editor_window.tscn" id="10_x2dtj"]
+[ext_resource type="PackedScene" uid="uid://ddtpxv32pf5ku" path="res://src/windows/graphics/crop_window.tscn" id="11_vd0ym"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5his"]
 content_margin_left = 0.0
@@ -187,7 +188,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Transform" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/MenuBar" index="0" unique_id=1543449975]
-item_count = 6
+item_count = 7
 item_0/text = "Rotate Clockwise"
 item_0/id = 0
 item_1/text = "Rotate Counter-Clockwise"
@@ -200,6 +201,8 @@ item_4/id = 4
 item_4/separator = true
 item_5/text = "Scale"
 item_5/id = 5
+item_6/text = "Crop"
+item_6/id = 6
 
 [node name="EditPaletteButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3" index="1" unique_id=1101502197]
 unique_name_in_owner = true
@@ -272,7 +275,7 @@ offset_bottom = 139.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Scaling" parent="Subwindows" index="1" unique_id=98207036 instance=ExtResource("1_5g3s7")]
+[node name="Applying" parent="Subwindows" index="1" unique_id=98207036 instance=ExtResource("1_5g3s7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -297,19 +300,14 @@ minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_vgo61")
 
-[node name="Background" parent="Subwindows/Scaling/Control" parent_id_path=PackedInt32Array(98207036, 1456915901) index="0" unique_id=1555277503]
+[node name="Background" parent="Subwindows/Applying/Control" parent_id_path=PackedInt32Array(98207036, 1456915901) index="0" unique_id=1555277503]
 visible = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Subwindows/Scaling/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(98207036, 2051013205) index="0" unique_id=1059760051]
+[node name="VBoxContainer" type="VBoxContainer" parent="Subwindows/Applying/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(98207036, 2051013205) index="0" unique_id=1059760051]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="Subwindows/Scaling/Contents/VBoxContainer/MainContainer/VBoxContainer" index="0" unique_id=1246679599]
-layout_mode = 2
-text = "Scaling"
-horizontal_alignment = 1
-
-[node name="ProgressBar" type="ProgressBar" parent="Subwindows/Scaling/Contents/VBoxContainer/MainContainer/VBoxContainer" index="1" unique_id=542687911]
+[node name="ProgressBar" type="ProgressBar" parent="Subwindows/Applying/Contents/VBoxContainer/MainContainer/VBoxContainer" index="0" unique_id=542687911]
 layout_mode = 2
 indeterminate = true
 editor_preview_indeterminate = false
@@ -372,6 +370,22 @@ size_flags_vertical = 6
 indeterminate = true
 editor_preview_indeterminate = false
 
+[node name="Crop" parent="Subwindows" index="4" unique_id=513996222 instance=ExtResource("11_vd0ym")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -194.0
+offset_top = -121.0
+offset_right = 194.0
+offset_bottom = 121.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport/RotationContainer/TextureRect" to="." method="_on_texture_rect_gui_input"]
@@ -389,6 +403,7 @@ editor_preview_indeterminate = false
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="changed" from="Subwindows/Scale" to="." method="_on_scale_changed"]
+[connection signal="changed" from="Subwindows/Crop" to="." method="_on_crop_changed"]
 
-[editable path="Subwindows/Scaling"]
+[editable path="Subwindows/Applying"]
 [editable path="Subwindows/Importing"]
