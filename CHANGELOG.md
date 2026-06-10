@@ -1,10 +1,37 @@
+**0.23.0**
+### New Features
+  - DBase200 Editing Support - Edit inventory icons and weapon animations
+    - Found in the DBase Editor inventory & monster screen
+    - Icons max size 28x56
+    - Icons get stretched horizontally by two when in the game
+    - Animations are found on weapons in the WeaponAction tab. Double-click [Edit Animation] to edit.
+    - Weapon animations are sub-image style animations
+    - First frame of animations are used as default weapon image
+  - DBase300 Editing Support - Edit inventory documents
+    - Max width 800, no max height
+    - Select music by song title
+    - Modify ending screen image with customizable 8bit palette
+  - Image Editor
+    - Cropping
+  - GDV Player
+    - Subtitles are now shown at the correct times while playing
+    - Videos can now have cinematic letterboxing
+
+### Bugfixes
+  - 3D Editor: Fixed flickering when fixed rotation objects aligned with a wall
+  - GDV Decoder: Frames that get updated over multiple frames no longer show the partially updated frame
+  - DBase Editor: Document types now show as correct type
+  - Map Manager: Double-clicking a map with a non-existent das file will properly throw an error
+
+---
+
 **0.22.0**
 ### New Features
   - DAS Editor Improvements
     - Show image type in FAT list
     - Simplify extraneous file sections
       - No longer need to know about the filename table, the collision table, the directional mapping table, and the monster mapping table
-      - Edit filenames and collisions directly from their cooresponding data blocks
+      - Edit filenames and collisions directly from their corresponding data blocks
     - Change texture index to use as transparent 'sky' texture
     - Image Editor
       - Rotate, mirror, and scale images
@@ -34,7 +61,7 @@
   - Fix palette selector not showing up after opening an ADEMO DAS then opening a regular DAS file
   - Clear 2d hovered faces and sectors when clearing selection
   - Add map metadata editing to undo/redo
-  - Correctly determine which index is the trasparent 'sky' texture
+  - Correctly determine which index is the transparent 'sky' texture
 
 ---
 
