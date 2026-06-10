@@ -2,7 +2,7 @@ name: "godot-ci export"
 on: push
 
 env:
-  GODOT_VERSION: 4.6.1
+  GODOT_VERSION: 4.6.3
   EXPORT_NAME: RotH_Editor
   PROJECT_PATH: "."
 
@@ -11,10 +11,10 @@ jobs:
     name: Linux Export
     runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:4.6.1
+      image: barichello/godot-ci:4.6.3
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           lfs: true
           submodules: recursive
@@ -36,7 +36,7 @@ jobs:
           sed -i 's/config\/version="[^"]*"/config\/version="${{env.VERSION}}"/g' project.godot
           godot --headless --verbose --export-debug "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{env.EXPORT_NAME}}-${{env.VERSION}}_linux
           path: build/linux
@@ -46,7 +46,7 @@ jobs:
           cd build/linux
           tar -czf ../../${{env.EXPORT_NAME}}-${{env.VERSION}}_linux.tar.gz *
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.ref_type == 'tag'
         with:
           name: ${{env.EXPORT_NAME}}-${{env.VERSION}}
@@ -57,10 +57,10 @@ jobs:
     name: Windows Export
     runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:4.6.1
+      image: barichello/godot-ci:4.6.3
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           lfs: true
           submodules: recursive
@@ -84,7 +84,7 @@ jobs:
           sed -i 's/config\/version="[^"]*"/config\/version="${{env.VERSION}}"/g' project.godot
           godot --headless --verbose --export-debug "Windows Desktop" "$EXPORT_DIR/windows/$EXPORT_NAME.exe"
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{env.EXPORT_NAME}}-${{env.VERSION}}_windows
           path: build/windows
@@ -94,7 +94,7 @@ jobs:
           cd build/windows
           zip ../../${{env.EXPORT_NAME}}-${{env.VERSION}}_windows.zip *
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.ref_type == 'tag'
         with:
           name: ${{env.EXPORT_NAME}}-${{env.VERSION}}
