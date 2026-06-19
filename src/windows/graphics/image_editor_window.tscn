@@ -188,6 +188,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Transform" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer3/MenuBar" index="0" unique_id=1543449975]
+unique_name_in_owner = true
 item_count = 7
 item_0/text = "Rotate Clockwise"
 item_0/id = 0

@@ -26,7 +26,7 @@ var texture_data: Dictionary = {}
 var palette: Array = []
 var force_partial_alpha: bool = false
 var previous_mouse_position := Vector2.ZERO
-var lock_size: bool = false
+var animation_warn_size: bool = false
 var limit_size: bool = true
 var _8bit_palette: bool = false
 
@@ -97,13 +97,27 @@ func update_camera_center() -> void:
 		%Camera2D.position = image.get_size() / 2.0
 
 
-func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_lock_size: bool = false, p_limit_size: bool = true, p_8bit_palette: bool = false) -> Dictionary:
+func edit_image(p_texture_data: Dictionary, p_raw_palette: Array, p_force_partial_alpha: bool = false, p_animation_warn_size: bool = false, p_limit_size: bool = true, p_8bit_palette: bool = false, p_lock_size: bool = false) -> Dictionary:
 	original_texture_data = p_texture_data.duplicate(true)
 	texture_data = p_texture_data.duplicate(true)
 	force_partial_alpha = p_force_partial_alpha
-	lock_size = p_lock_size
+	animation_warn_size = p_animation_warn_size
 	limit_size = p_limit_size
 	_8bit_palette = p_8bit_palette
+	if p_lock_size:
+		%HeightSpinBox.editable = false
+		%WidthSpinBox.editable = false
+		%Transform.set_item_disabled(0, true)
+		%Transform.set_item_disabled(1, true)
+		%Transform.set_item_disabled(5, true)
+		%Transform.set_item_disabled(6, true)
+	else:
+		%HeightSpinBox.editable = true
+		%WidthSpinBox.editable = true
+		%Transform.set_item_disabled(0, false)
+		%Transform.set_item_disabled(1, false)
+		%Transform.set_item_disabled(5, false)
+		%Transform.set_item_disabled(6, false)
 	if palette != p_raw_palette:
 		palette = p_raw_palette
 	if _8bit_palette:
@@ -179,7 +193,7 @@ func update_dimensions() -> void:
 
 
 func _on_save_button_pressed() -> void:
-	if lock_size:
+	if animation_warn_size:
 		if texture_data.width != original_texture_data.width or texture_data.height != original_texture_data.height:
 			if not await Dialog.confirm("The size of the image has changed.\nThis will cause all other frames to be resized!"):
 				return
