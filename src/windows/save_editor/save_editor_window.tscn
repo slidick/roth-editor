@@ -1,0 +1,326 @@
+[gd_scene format=3 uid="uid://dls7vlyk3w24o"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_2nlbb"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_fwyg2"]
+[ext_resource type="Script" uid="uid://cbyruk5k2flpg" path="res://src/windows/save_editor/save_editor_window.gd" id="2_r7e4w"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_3tewp"]
+[ext_resource type="Script" uid="uid://bdfvkk5hbrn6c" path="res://src/ui/roth_texture_container.gd" id="5_3tewp"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="6_dlptc"]
+[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="7_ek6vp"]
+
+[node name="SaveEditorWindow" unique_id=452268762 instance=ExtResource("1_2nlbb")]
+offset_right = 1125.0
+offset_bottom = 700.0
+theme = ExtResource("2_fwyg2")
+script = ExtResource("2_r7e4w")
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_3tewp")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1335659834]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=728824620]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=990282129]
+layout_mode = 2
+
+[node name="DirectoryEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1566465354]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="BrowseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=2124471359]
+layout_mode = 2
+text = "Browse"
+
+[node name="FileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/BrowseButton" index="0" unique_id=634012189]
+unique_name_in_owner = true
+title = "Open a Directory"
+initial_position = 2
+file_mode = 2
+access = 2
+use_native_dialog = true
+
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=1805666621]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="3" unique_id=2145829198]
+layout_mode = 2
+text = "Quick Load"
+
+[node name="DefaultInstallButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="4" unique_id=2099918501]
+layout_mode = 2
+text = "Configured Install"
+
+[node name="EditorInstallButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="5" unique_id=2090144215]
+layout_mode = 2
+text = "Editor Install"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=712674148]
+layout_mode = 2
+
+[node name="SelectLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=2029619667]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Select Save Directory"
+
+[node name="Container" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3" unique_id=1533360662]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SaveList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container" index="0" unique_id=1421479279]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+allow_reselect = true
+allow_rmb_select = true
+max_text_lines = 2
+auto_width = true
+icon_scale = 1.2
+
+[node name="SaveListMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/SaveList" index="2" unique_id=1044823816]
+unique_name_in_owner = true
+item_count = 5
+item_0/text = "Copy"
+item_0/id = 0
+item_1/text = "Paste"
+item_1/id = 1
+item_1/disabled = true
+item_2/text = "Duplicate"
+item_2/id = 2
+item_3/text = "Rename"
+item_3/id = 3
+item_4/text = "Delete"
+item_4/id = 4
+
+[node name="ItemList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container" index="1" unique_id=1799900793]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+focus_neighbor_top = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+
+[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container" index="2" unique_id=698556686]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 0
+tabs_visible = false
+
+[node name="General" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer" index="1" unique_id=1680405025]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General" index="0" unique_id=288027407]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer" index="0" unique_id=923369110]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer" index="0" unique_id=1949033917]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Save Name"
+
+[node name="SaveNameEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer" index="1" unique_id=1445023775]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 48
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer" index="1" unique_id=1271122222]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer2" index="0" unique_id=572064419]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Current Map"
+
+[node name="CurrentMapEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer2" index="1" unique_id=1777747217]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 48
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer" index="2" unique_id=540810781]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer3" index="0" unique_id=815376845]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "File Header"
+
+[node name="FileHeaderEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer3" index="1" unique_id=668114690]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 48
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer" index="3" unique_id=1965926349]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer4" index="0" unique_id=1786455064]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "File Footer"
+
+[node name="FileFooterEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer4" index="1" unique_id=1881466775]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 48
+
+[node name="RothTextureContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer" index="4" unique_id=60124360]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("5_3tewp")
+enabled = false
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
+
+[node name="EditImageButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer" index="5" unique_id=75492037]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Edit Image"
+
+[node name="Player" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer" index="2" unique_id=685604932]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 1
+
+[node name="Inventory" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer" index="3" unique_id=1844281292]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Tree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/Inventory" index="0" unique_id=801532344]
+layout_mode = 2
+script = ExtResource("6_dlptc")
+
+[node name="MapData" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer" index="4" unique_id=1138843424]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData" index="0" unique_id=912514636]
+layout_mode = 2
+
+[node name="MapList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer" index="0" unique_id=903050224]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+allow_rmb_select = true
+
+[node name="MapListMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer/MapList" index="2" unique_id=1578432301]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Delete"
+item_0/id = 0
+
+[node name="MapDataEdit" type="TextEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer" index="1" unique_id=1863959211]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+wrap_mode = 1
+caret_blink = true
+
+[node name="Unknown" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer" index="5" unique_id=2065988982]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 4
+
+[node name="UnknownContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/Unknown" index="0" unique_id=353903965]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4" unique_id=1187576414]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5" unique_id=3410163]
+layout_mode = 2
+
+[node name="SaveLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=2092047184]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+text = "Save Successful!"
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=1655617705]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+disabled = true
+text = "Save"
+
+[node name="Subwindows" type="Control" parent="." index="2" unique_id=658337067]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="ImageEditor" parent="Subwindows" index="0" unique_id=1671538512 instance=ExtResource("7_ek6vp")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -640.0
+offset_top = -400.0
+offset_right = 640.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="dir_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/BrowseButton/FileDialog" to="." method="_on_file_dialog_dir_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/DefaultInstallButton" to="." method="_on_default_install_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/EditorInstallButton" to="." method="_on_editor_install_button_pressed"]
+[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/SaveList" to="." method="_on_save_list_item_clicked"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/SaveList" to="." method="_on_save_list_item_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/SaveList/SaveListMenu" to="." method="_on_save_list_menu_index_pressed"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer/SaveNameEdit" to="." method="_on_save_name_edit_text_changed"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer2/CurrentMapEdit" to="." method="_on_current_map_edit_text_changed"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer3/FileHeaderEdit" to="." method="_on_file_header_edit_text_changed"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/HBoxContainer4/FileFooterEdit" to="." method="_on_file_footer_edit_text_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/General/VBoxContainer/EditImageButton" to="." method="_on_edit_image_button_pressed"]
+[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer/MapList" to="." method="_on_map_list_item_clicked"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer/MapList" to="." method="_on_map_list_item_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer/MapList/MapListMenu" to="." method="_on_map_list_menu_index_pressed"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Container/TabContainer/MapData/HBoxContainer/MapDataEdit" to="." method="_on_map_data_edit_text_changed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/SaveButton" to="." method="_on_save_button_pressed"]

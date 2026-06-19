@@ -27,3 +27,7 @@ func _handle_command(command: String) -> void:
 			var filepath: String = Roth.install_directory.path_join("../DATA/MIDI/DRUM.BNK")
 			var data: Dictionary = Bnk.parse_filepath(filepath)
 			Console.print(JSON.stringify(data, '\t', false))
+		"save":
+			var filepath: String = Roth.install_directory.path_join("../ROTH/SAVEGAME/SAVE2.SAV")
+			var data: Dictionary = SaveGame.parse_filepath(filepath)
+			Console.print(JSON.stringify(data, '\t', false))

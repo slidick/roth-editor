@@ -8,6 +8,7 @@ enum Main {
 	ManageDAS,
 	CreateBackdrop,
 	CreateIcons,
+	SaveEditor,
 	Sep0,
 	TestMap,
 	Sep1,
@@ -159,6 +160,8 @@ func _on_main_index_pressed(index: int) -> void:
 			%BackdropEditor.toggle(true)
 		Main.CreateIcons:
 			%IconsEditor.toggle(true)
+		Main.SaveEditor:
+			%SaveEditor.toggle(true)
 		Main.Settings:
 			%Settings.toggle(true)
 		Main.Quit:
