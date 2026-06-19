@@ -88,6 +88,13 @@ static func remove_dir_recursive(directory: String) -> void:
 		DirAccess.remove_absolute(directory)
 
 
+static func reference_in_array(p_array: Array, p_reference: Variant) -> bool:
+	for reference: Variant in p_array:
+		if is_same(reference, p_reference):
+			return true
+	return false
+
+
 static func init_delta_table() -> Array:
 	var delta_table: Array = []
 	delta_table.resize(256)

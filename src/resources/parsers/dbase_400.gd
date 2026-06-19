@@ -1,7 +1,6 @@
 extends Node
 class_name DBase400
 
-
 const ARRAY01_ENTRY := {
 	"dbase500_offset": Parser.Type.DWord,
 	"length_str": Parser.Type.Word,
@@ -43,133 +42,6 @@ static func parse(filepath: String) -> Array:
 	return array_01
 
 
-static func parse_full(filepath: String) -> Dictionary:
-	var file := FileAccess.open(filepath, FileAccess.READ)
-	
-	var _header: String = Parser.parse_section(file, HEADER).header
-	
-	var array_01 := []
-	# First Array -- In Game Subtitles
-	while file.get_position() < file.get_length():
-		var entry: Dictionary = Parser.parse_section(file, ARRAY01_ENTRY)
-		entry.erase("length_str")
-		while file.get_position() % 4 > 0:
-			var _padding := file.get_8()
-		array_01.append(entry)
-		#print("Offset: %s, Length: %s, Color: %s, String: %s" % [entry.offset, entry.length_str, entry.font_color, entry.string])
-		if entry.string.to_lower() == "chullum ashdar in derias.":
-			break
-	
-	#return array_01
-	
-	# Second Array -- Video Subtitles
-	var array_02 := []
-	var subtitle := {}
-	subtitle["entries"] = []
-	while file.get_position() < file.get_length():
-		var length := file.get_16()
-		var timestamp := file.get_16()
-		if timestamp == 0xFFFF:
-			var _padding := file.get_32()
-			var length_str := file.get_16()
-			_padding = file.get_16()
-			var title := ""
-			for i in range(length_str):
-				title += String.chr(file.get_8())
-			#print("Video title: %s" % title)
-			while file.get_position() % 4 > 0:
-				_padding = file.get_8()
-			subtitle["title"] = title
-			array_02.append(subtitle)
-			subtitle = {}
-			subtitle["entries"] = []
-			continue
-		if length == 0:
-			file.seek(file.get_position()-4)
-			var entry: Dictionary = Parser.parse_section(file, ARRAY01_ENTRY)
-			entry.erase("length_str")
-			while file.get_position() % 4 > 0:
-				var _padding := file.get_8()
-			array_02.append(entry)
-			continue
-		var font_color := file.get_8()
-		var string := ""
-		#for i in range(length_str-5):
-			#string += String.chr(file.get_8())
-		string = file.get_line()
-		while file.get_position() % 2 > 0:
-			var _padding := file.get_8()
-		#print("Length: %s, Timestamp: %s, Color: %s, String: %s" % [length, timestamp, font_color, string])
-		subtitle["entries"].append({
-			#"length": length,
-			"timestamp": timestamp,
-			"font_color": font_color,
-			"string": string,
-		})
-	return {
-		"game": array_01,
-		"videos": array_02,
-	}
-
-
-static func get_at_offset(offset: int) -> Dictionary:
-	var filepath: String = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE400.DAT")
-	if not FileAccess.file_exists(filepath):
-		return {}
-	var file := FileAccess.open(filepath, FileAccess.READ)
-	file.seek(offset)
-	var entry := Parser.parse_section(file, ARRAY01_ENTRY)
-	entry.erase("length_str")
-	file.close()
-	return entry
-
-
-static func get_entry_from_file(filepath: String, offset: int) -> Dictionary:
-	if not FileAccess.file_exists(filepath):
-		return {}
-	var file := FileAccess.open(filepath, FileAccess.READ)
-	file.seek(offset)
-	var entry := Parser.parse_section(file, ARRAY01_ENTRY)
-	entry.erase("length_str")
-	file.close()
-	return entry
-
-
-static func get_subtitle_from_file(filepath: String, offset: int) -> Dictionary:
-	if not FileAccess.file_exists(filepath):
-		return {}
-	var file := FileAccess.open(filepath, FileAccess.READ)
-	file.seek(offset)
-	var subtitle := {}
-	subtitle["entries"] = []
-	while file.get_position() < file.get_length():
-		var length := file.get_16()
-		var timestamp := file.get_16()
-		if timestamp == 0xFFFF:
-			print("0xFFFF")
-			break
-			var entry: Dictionary = Parser.parse_section(file, ARRAY01_ENTRY)
-			entry.erase("length_str")
-			while file.get_position() % 2 > 0:
-				file.get_8()
-			subtitle["title_entry"] = entry
-			break
-		if length == 0:
-			file.seek(file.get_position()-2)
-			continue
-		var font_color := file.get_8()
-		var string := file.get_buffer(length-5).get_string_from_ascii()
-		while file.get_position() % 2 > 0:
-			file.get_8()
-		subtitle["entries"].append({
-			"timestamp": timestamp,
-			"font_color": font_color,
-			"string": string,
-		})
-	file.close()
-	return subtitle
-
-
 static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary:
 	var position: int = file.get_position()
 	file.seek(offset)
@@ -182,12 +54,7 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 			var _padding := file.get_32()
 			var length_str := file.get_16()
 			_padding = file.get_16()
-			var title := ""
-			var bytes2 := PackedByteArray()
-			for i in range(length_str):
-				bytes2.append(file.get_8())
-				#title += String.chr(file.get_8())
-			title = bytes2.get_string_from_ascii()
+			var title := file.get_buffer(length_str).get_string_from_ascii()
 			while file.get_position() % 2 > 0:
 				_padding = file.get_8()
 			subtitle["title"] = title
@@ -196,29 +63,10 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 			file.seek(file.get_position()-2)
 			continue
 		var font_color := file.get_8()
-		var string := ""
-		#for i in range(length_str-5):
-			#string += String.chr(file.get_8())
-		#string = file.get_line()
-		var bytes := file.get_buffer(length-5)
-		#var bytes := PackedByteArray()
-		#var byte: int = file.get_8()
-		#while byte != 0:
-			#bytes.append(byte)
-			#byte = file.get_8()
-		string = bytes.get_string_from_ascii()
+		var string := file.get_buffer(length-5).get_string_from_ascii()
 		while file.get_position() % 2 > 0:
 			var _padding := file.get_8()
-		#if length != len(string) + 5:
-			#print(length - (len(string) + 5), " ", string)
-			##print({
-				##"length": length,
-				##"timestamp": timestamp,
-				##"font_color": font_color,
-				##"string": string,
-			##})
 		subtitle["entries"].append({
-			#"length": length,
 			"timestamp": timestamp,
 			"font_color": font_color,
 			"string": string,
@@ -228,25 +76,16 @@ static func parse_cutscene_subtitle(file: FileAccess, offset: int) -> Dictionary
 	return subtitle
 
 
-# Array.has() or the 'in' keyword only checks for the same value.
-# This will check for the same ref.
-static func text_entry_in_array(p_text_array: Array, p_text_entry: Dictionary) -> bool:
-	for text_entry: Dictionary in p_text_array:
-		if is_same(text_entry, p_text_entry):
-			return true
-	return false
-
-
 static func assemble_text_array(dbase100: Dictionary) -> Array:
 	var text_array := []
 	for interface: Dictionary in dbase100.interfaces:
 		if (not interface.text_entry.is_empty()
-				and not text_entry_in_array(text_array, interface.text_entry)
+				and not Utility.reference_in_array(text_array, interface.text_entry)
 		):
 			text_array.append(interface.text_entry)
 	for inventory_item: Dictionary in dbase100.inventory:
 		if (not inventory_item.text_entry.is_empty()
-				and not text_entry_in_array(text_array, inventory_item.text_entry)
+				and not Utility.reference_in_array(text_array, inventory_item.text_entry)
 		):
 			text_array.append(inventory_item.text_entry)
 		for action: Dictionary in inventory_item.actions_section:
@@ -257,7 +96,7 @@ static func assemble_text_array(dbase100: Dictionary) -> Array:
 						or command.opcode == 16
 				):
 					if (not command.text_entry.is_empty()
-							and not text_entry_in_array(text_array, command.text_entry)
+							and not Utility.reference_in_array(text_array, command.text_entry)
 					):
 						text_array.append(command.text_entry)
 	for action: Dictionary in dbase100.actions:
@@ -268,7 +107,7 @@ static func assemble_text_array(dbase100: Dictionary) -> Array:
 					or command.opcode == 16
 			):
 				if (not command.text_entry.is_empty()
-						and not text_entry_in_array(text_array, command.text_entry)
+						and not Utility.reference_in_array(text_array, command.text_entry)
 				):
 					text_array.append(command.text_entry)
 	return text_array
