@@ -18,7 +18,6 @@ enum MapMenu {
 	Close,
 }
 
-
 var tree_root: TreeItem
 var context_collision: Dictionary
 var previous_search: String
@@ -44,6 +43,7 @@ var selected_sectors: Array = []
 var selected_objects: Array = []
 var selected_sfx: Array = []
 var selected_vertex_nodes: Array = []
+
 
 func _ready() -> void:
 	super._ready()
@@ -210,7 +210,7 @@ func test_map() -> void:
 	
 	
 	var player_position: Vector3 = %Camera3D.global_position
-	player_position.y -= 1.2
+	player_position.y -= (map.metadata["playerHeight"]*2) / Roth.SCALE_3D_WORLD
 	player_position *= Roth.SCALE_3D_WORLD
 	var player_rotation: int = Roth.player_degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
 	
@@ -362,7 +362,7 @@ func _on_map_completely_loaded() -> void:
 			
 		)
 		%Camera3D.global_position = starting_position / Roth.SCALE_3D_WORLD
-		%Camera3D.global_position.y += 1.2
+		%Camera3D.global_position.y += (%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["playerHeight"]*2) / Roth.SCALE_3D_WORLD
 		%Camera3D.rotation_degrees = Vector3(
 			0,
 			Roth.player_rotation_to_degrees(%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["rotation"]),

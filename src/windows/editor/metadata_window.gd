@@ -10,7 +10,7 @@ func _fade_out() -> void:
 
 
 func show_metadata(metadata: Dictionary) -> Array:
-	%StartingPositionXEdit.text = "%d" % metadata.initPosX
+	%StartingPositionXEdit.text = "%d" % -metadata.initPosX
 	%StartingPositionYEdit.text = "%d" % metadata.initPosY
 	%StartingPositionZEdit.text = "%d" % metadata.initPosZ
 	%StartingRotationEdit.text = "%d" % metadata.rotation
@@ -35,11 +35,12 @@ func show_metadata(metadata: Dictionary) -> Array:
 
 func _on_cancel_button_pressed() -> void:
 	finished.emit([false])
+	toggle(false)
 
 
 func _on_save_button_pressed() -> void:
 	var metadata := {}
-	metadata.initPosX = int(%StartingPositionXEdit.text)
+	metadata.initPosX = -int(%StartingPositionXEdit.text)
 	metadata.initPosY = int(%StartingPositionYEdit.text)
 	metadata.initPosZ = int(%StartingPositionZEdit.text)
 	metadata.rotation = int(%StartingRotationEdit.text)
@@ -61,9 +62,9 @@ func _on_save_button_pressed() -> void:
 
 func _on_set_current_location_button_pressed() -> void:
 	var player_position: Vector3 = %Camera3D.global_position
-	player_position.y -= 1.2
+	player_position.y -= %Map2D.map.metadata.playerHeight*2 / Roth.SCALE_3D_WORLD
 	player_position *= Roth.SCALE_3D_WORLD
-	%StartingPositionXEdit.text = "%d" % -player_position.x
+	%StartingPositionXEdit.text = "%d" % player_position.x
 	%StartingPositionYEdit.text = "%d" % player_position.z
 	%StartingPositionZEdit.text = "%d" % player_position.y
 	%StartingRotationEdit.text = "%d" % Roth.player_degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
