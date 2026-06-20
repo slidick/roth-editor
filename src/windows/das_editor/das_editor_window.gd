@@ -181,10 +181,10 @@ func _on_edit_texture(p_das_info: Dictionary, p_index: int) -> void:
 			_on_jump_to_index_pressed(p_index)
 		else:
 			if await _on_cancel_button_pressed():
-				_edit_das(p_das_info)
+				await _edit_das(p_das_info)
 				_on_jump_to_index_pressed(p_index)
 	else:
-		_edit_das(p_das_info)
+		await _edit_das(p_das_info)
 		_on_jump_to_index_pressed(p_index)
 
 
