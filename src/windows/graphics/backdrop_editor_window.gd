@@ -33,7 +33,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	var image := Image.new()
 	var error: Error = image.load(path)
 	if error:
-		await Dialog.information("Error opening image", "Erro", false, Vector2(400, 150))
+		await Dialog.information("Error opening image", "Error", false, Vector2(400, 150))
 		return
 	image.resize(640, 400, Image.INTERPOLATE_LANCZOS)
 	%"Original Texture".texture = ImageTexture.create_from_image(image)
@@ -49,35 +49,36 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	dup.convert(Image.FORMAT_RGB8)
 	cancel_load = false
 	paletted_image = {
-		"header": {
-			"image_type": 3,
-			"x_offset": 0,
-			"y_offset": 0,
-			"width": image.get_width(),
-			"height": image.get_height(),
-		},
+		"image_type": 3,
+		"x_offset": 0,
+		"y_offset": 0,
+		"width": image.get_width(),
+		"height": image.get_height(),
 		"raw_image": await RLE.convert_to_paletted_image(dup, Das.DEFAULT_RAW_PALETTE)
 	}
 	if cancel_load:
 		reset()
 		return
-	var reconstructed_image: Array = []
-	var palette := Das.DEFAULT_PALETTE
-	for pixel: int in paletted_image.raw_image:
-		var pixel_array := [palette[pixel][0],palette[pixel][1],palette[pixel][2]]
-		reconstructed_image.append_array(pixel_array)
-	var texture_image := Image.create_from_data(paletted_image.header.width, paletted_image.header.height, false, Image.FORMAT_RGB8, reconstructed_image)
-	%"Paletted Texture".texture = ImageTexture.create_from_image(texture_image)
+	_redraw_texture()
 	%ProgressBarContainer.hide()
 	%BrowseButton.disabled = false
 	%"Paletted Texture".show()
 	%SaveButton.disabled = false
 
+func _redraw_texture() -> void:
+	var texture_image := Image.create_from_data(
+		paletted_image.width,
+		paletted_image.height,
+		false,
+		Image.FORMAT_RGB8,
+		Utility.convert_palette_image(Das.DEFAULT_RAW_PALETTE, paletted_image.raw_image, false, false)
+	)
+	%"Paletted Texture".texture = ImageTexture.create_from_image(texture_image)
 
 func _on_save_button_pressed() -> void:
 	if paletted_image:
 		%SaveFileDialog.current_file = "BACKDROP.RAW"
-		%SaveFileDialog.popup_centered()
+		%SaveFileDialog.popup_file_dialog()
 
 
 func _on_save_file_dialog_file_selected(path: String) -> void:
@@ -87,3 +88,10 @@ func _on_save_file_dialog_file_selected(path: String) -> void:
 		var file := FileAccess.open(path, FileAccess.WRITE)
 		file.store_buffer(buffer)
 		file.close()
+
+
+func _on_edit_image_button_pressed() -> void:
+	var new_data: Dictionary = await %ImageEditor.edit_image(paletted_image, Das.DEFAULT_RAW_PALETTE, false, false, false, false, true)
+	if new_data:
+		paletted_image.raw_image = new_data.raw_image
+		_redraw_texture()
