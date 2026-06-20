@@ -112,7 +112,7 @@ static func init_delta_table() -> Array:
 	return delta_table
 
 
-static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool = true, p_rendering_device: RenderingDevice = null, p_8bit_palette: bool = false) -> Array:
+static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: PackedByteArray, p_with_alpha: bool, p_with_full_alpha: bool, p_rendering_device: RenderingDevice = null, p_8bit_palette: bool = false) -> Array:
 	# Renderer
 	var rendering_device: RenderingDevice
 	if p_rendering_device:
