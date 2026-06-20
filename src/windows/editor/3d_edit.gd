@@ -13,7 +13,7 @@ var has_focus: bool = false :
 			if moused_over_resource and moused_over_resource not in owner.selected_faces and (moused_over_resource not in owner.selected_sectors or len(owner.selected_faces) == 1):
 				if moused_over_resource.node:
 					moused_over_resource.node.unhighlight()
-				moused_over_resource = null
+			moused_over_resource = null
 var picking_enabled: bool = true
 var copied_face_texture_data: Dictionary = {}
 var copied_face_data: Dictionary = {}
@@ -136,19 +136,7 @@ func _process(_delta: float) -> void:
 	
 	var viewport_size: Vector2i = viewport.size
 	if viewport.get("content_scale_size"):
-		
 		viewport_size = viewport.content_scale_size
-	
-	if (	(mouse_position.x < 0 or
-			mouse_position.y < 0 or
-			mouse_position.x > viewport_size.x or
-			mouse_position.y > viewport_size.y) and 
-			Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
-	):
-		if moused_over_resource and moused_over_resource not in owner.selected_faces and moused_over_resource not in owner.selected_sectors:
-			moused_over_resource.node.unhighlight()
-			moused_over_resource = null
-		return
 	
 	var camera := viewport.get_camera_3d()
 	var origin_position: Vector2 = mouse_position
