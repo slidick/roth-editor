@@ -162,13 +162,17 @@ func _process(_delta: float) -> void:
 	var query := PhysicsRayQueryParameters3D.create(origin, end)
 	var result := space_state.intersect_ray(query)
 	var moused_node_changed: bool = false
+	var double_check: bool = false
 	
+	if shift_switched != Input.is_physical_key_pressed(KEY_SHIFT):
+		shift_switched = Input.is_physical_key_pressed(KEY_SHIFT)
+		double_check = true
 	
 	if not result.is_empty():
 		if moused_over_resource and not moused_over_resource.node:
 			moused_over_resource = null
 		
-		if moused_over_resource != result.collider.get_parent().ref:
+		if moused_over_resource != result.collider.get_parent().ref or double_check:
 			if moused_over_resource and moused_over_resource not in owner.selected_faces and (moused_over_resource not in owner.selected_sectors or len(owner.selected_faces) == 1) and moused_over_resource not in owner.selected_objects and moused_over_resource not in owner.selected_sfx:
 				moused_over_resource.node.unhighlight()
 			moused_node_changed = true
@@ -250,10 +254,6 @@ func _process(_delta: float) -> void:
 			if moused_over_resource.node:
 				moused_over_resource.node.unhighlight()
 			moused_over_resource = null
-	
-	if shift_switched != Input.is_physical_key_pressed(KEY_SHIFT):
-		shift_switched = Input.is_physical_key_pressed(KEY_SHIFT)
-		moused_over_resource = null
 
 
 func update_selections() -> void:
