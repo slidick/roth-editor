@@ -2,56 +2,7 @@ extends Node
 class_name RLE
 
 
-static func decode_rle_img(rle_image_hdr: Dictionary, file: FileAccess, palette: Array, with_alpha: bool = true) -> Image:
-	var decoded_sprite_size: int = rle_image_hdr.width * rle_image_hdr.height
-	if with_alpha:
-		decoded_sprite_size *= 4
-	else:
-		decoded_sprite_size *= 3
-	var decoded_sprite_buffer: Array = []
-	decoded_sprite_buffer.resize(decoded_sprite_size)
-	
-	var dest_idx: int = 0
-	while dest_idx < decoded_sprite_size:
-		var byte: int = file.get_8()
-		if byte > 0xF0:
-			var pixel_count: int = byte & 0x0F
-			var value: int = file.get_8()
-			var pixel_value: Array = palette[value].duplicate()
-			if palette[value] == [0,0,0] and value == 0:
-				pixel_value.append(0)
-			else:
-				pixel_value.append(255)
-			for i in range(pixel_count):
-				decoded_sprite_buffer[dest_idx] = pixel_value[0]
-				decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
-				decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
-				if with_alpha:
-					decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
-					dest_idx += 4
-				else:
-					dest_idx += 3
-		else:
-			var pixel_value: Array = palette[byte].duplicate()
-			if palette[byte] == [0,0,0] and byte == 0:
-				pixel_value.append(0)
-			else:
-				pixel_value.append(255)
-			decoded_sprite_buffer[dest_idx] = pixel_value[0]
-			decoded_sprite_buffer[dest_idx+1] = pixel_value[1]
-			decoded_sprite_buffer[dest_idx+2] = pixel_value[2]
-			if with_alpha:
-				decoded_sprite_buffer[dest_idx+3] = pixel_value[3]
-				dest_idx += 4
-			else:
-				dest_idx += 3
-	
-	var image := Image.create_from_data(rle_image_hdr.width, rle_image_hdr.height, false, Image.FORMAT_RGBA8, decoded_sprite_buffer)
-	
-	return image
-
-
-static func decode_rle_image_data(image_data: Dictionary) -> PackedByteArray:
+static func decode_rle_image(image_data: Dictionary) -> PackedByteArray:
 	if not "rle_data" in image_data:
 		return PackedByteArray()
 	
@@ -73,8 +24,43 @@ static func decode_rle_image_data(image_data: Dictionary) -> PackedByteArray:
 		for i in range(pixel_count):
 			decoded_sprite_buffer[dest_idx] = byte
 			dest_idx += 1
-		
+	
 	return decoded_sprite_buffer
+
+
+static func encode_rle_image(input_image: Dictionary, no_compression: bool = false) -> PackedByteArray:
+	if not "raw_image" in input_image:
+		return PackedByteArray()
+	
+	var output_data: PackedByteArray = []
+	
+	if no_compression:
+		for i: int in range(0, len(input_image.raw_image), 1):
+			if input_image.raw_image[i] < 0xF0:
+				output_data.append(input_image.raw_image[i])
+			else:
+				output_data.append(0xF1)
+				output_data.append(input_image.raw_image[i])
+	
+	else:
+		var repeat: int = 1
+		var last_byte: int = input_image.raw_image[0]
+		
+		for i: int in range(1, len(input_image.raw_image), 1):
+			var byte: int = input_image.raw_image[i]
+			if byte == last_byte and repeat < 15:
+				repeat += 1
+			else:
+				if repeat > 1 or last_byte >= 0xF0:
+					output_data.append(0xF0 | repeat)
+				output_data.append(last_byte)
+				last_byte = byte
+				repeat = 1
+		if repeat > 1 or last_byte >= 0xF0:
+			output_data.append(0xF0 | repeat)
+		output_data.append(last_byte)
+	
+	return output_data
 
 
 static func decode_row_rle_image(input_image: Dictionary) -> PackedByteArray:
@@ -128,41 +114,6 @@ static func encode_row_rle_image(input_image: Dictionary) -> PackedByteArray:
 		
 		row_offset += input_image.width
 	
-	
-	return output_data
-
-
-static func encode_rle_img(input_image: Dictionary, no_compression: bool = false) -> PackedByteArray:
-	if not "raw_image" in input_image:
-		return PackedByteArray()
-	
-	var output_data: PackedByteArray = []
-	
-	if no_compression:
-		for i: int in range(0, len(input_image.raw_image), 1):
-			if input_image.raw_image[i] < 0xF0:
-				output_data.append(input_image.raw_image[i])
-			else:
-				output_data.append(0xF1)
-				output_data.append(input_image.raw_image[i])
-	
-	else:
-		var repeat: int = 1
-		var last_byte: int = input_image.raw_image[0]
-		
-		for i: int in range(1, len(input_image.raw_image), 1):
-			var byte: int = input_image.raw_image[i]
-			if byte == last_byte and repeat < 15:
-				repeat += 1
-			else:
-				if repeat > 1 or last_byte >= 0xF0:
-					output_data.append(0xF0 | repeat)
-				output_data.append(last_byte)
-				last_byte = byte
-				repeat = 1
-		if repeat > 1 or last_byte >= 0xF0:
-			output_data.append(0xF0 | repeat)
-		output_data.append(last_byte)
 	
 	return output_data
 

@@ -63,13 +63,10 @@ const DBASE_100_OPCODE := {
 	"opcode": Parser.Type.Byte,
 }
 
-static func parse() -> Dictionary:
-	return parse_files_at_directory(Roth.install_directory.path_join("..").path_join("DATA"))
 
-
-static func parse_cutscenes() -> Array:
-	var dbase100 := FileAccess.open(Roth.install_directory.path_join("../DATA/DBASE100.DAT"), FileAccess.READ)
-	var dbase400 := FileAccess.open(Roth.install_directory.path_join("../DATA/DBASE400.DAT"), FileAccess.READ)
+static func parse_cutscenes(directory: String) -> Array:
+	var dbase100 := FileAccess.open(directory.path_join("../DATA/DBASE100.DAT"), FileAccess.READ)
+	var dbase400 := FileAccess.open(directory.path_join("../DATA/DBASE400.DAT"), FileAccess.READ)
 	var header := Parser.parse_section(dbase100, DBASE100_HEADER)
 	assert(dbase100.get_position() == header["cutscene_offset"])
 	
@@ -108,9 +105,6 @@ static func parse_files(dbase100_filepath: String, dbase200_filepath: String, db
 	var cutscenes := []
 	for i in range(header["cutscene_count"]):
 		var cutscene := Parser.parse_section(dbase100, DBASE100_CUTSCENE_ENTRY)
-		#var gdv_filepath: String = Roth.install_directory.path_join("../DATA/GDV/%s.GDV" % cutscene.name)
-		#if cutscene.name != "" and FileAccess.file_exists(gdv_filepath):
-			#cutscene.merge(GDV.get_video_by_path(gdv_filepath))
 		if cutscene["offset_dbase400"] != 0:
 			dbase400.seek(cutscene["offset_dbase400"])
 			cutscene["text_entry"] = Parser.parse_section(dbase400, DBase400.ARRAY01_ENTRY)

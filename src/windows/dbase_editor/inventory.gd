@@ -255,7 +255,7 @@ func _update_commands() -> void:
 					"height": 32,
 					"raw_image": raw_image,
 				}
-				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+				command.data["rle_data"] = RLE.encode_rle_image(command.data)
 			tree_item.set_text(2, "[Edit]")
 		else:
 			if tree_item.get_text(2).is_valid_hex_number(true):
@@ -605,7 +605,7 @@ func _on_tree_item_activated() -> void:
 			var new_image: Dictionary = await owner.edit_image(command.data, command.data.raw_palette if "raw_palette" in command.data else Das.DEFAULT_RAW_PALETTE, false, false, false)
 			if not new_image.is_empty():
 				command.data = new_image
-				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+				command.data["rle_data"] = RLE.encode_rle_image(command.data)
 			return
 		
 		if (tree_item.get_text(0) == "18"
@@ -794,7 +794,7 @@ func _on_edit_inventory_image_button_pressed() -> void:
 	var new_image: Dictionary = await owner.edit_image(image_data, Das.DEFAULT_RAW_PALETTE, true)
 	if not new_image.is_empty():
 		inventory_item.image_data = new_image
-		inventory_item.image_data.rle_data = RLE.encode_rle_img(new_image)
+		inventory_item.image_data.rle_data = RLE.encode_rle_image(new_image)
 		draw_inventory_icon()
 
 

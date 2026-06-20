@@ -48,8 +48,7 @@ static func get_data_for_entry(entry: Dictionary, directory: String) -> Dictiona
 	return wav
 
 
-static func get_entry_at_offset(offset: int) -> Dictionary:
-	var filepath: String = Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE500.DAT")
+static func get_entry_at_offset(offset: int, filepath: String) -> Dictionary:
 	if not FileAccess.file_exists(filepath):
 		return {}
 	var file := FileAccess.open(filepath, FileAccess.READ)

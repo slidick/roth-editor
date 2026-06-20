@@ -87,8 +87,8 @@ static func get_offsets_by_type(dbase300_filepath: String, type: int) -> Array:
 	return offsets
 
 
-static func save_hmps() -> void:
-	var dbase300_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+static func save_hmps(directory: String) -> void:
+	var dbase300_filepath: String =  directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
 	if not FileAccess.file_exists(dbase300_filepath):
 		return
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)
@@ -163,15 +163,15 @@ static func _parse_image(file: FileAccess, size: int) -> Dictionary:
 			data = Parser.parse_section(file, IMG1_HDR)
 			data["raw_palette"] = file.get_buffer(256*3)
 			data["rle_data"] = file.get_buffer(size-(256*3)-8)
-			data["raw_image"] = RLE.decode_rle_image_data(data)
+			data["raw_image"] = RLE.decode_rle_image(data)
 		FILETYPE_IMG3:
 			data = Parser.parse_section(file, IMG3_HDR)
 			data["rle_data"] = file.get_buffer(size-8)
-			data["raw_image"] = RLE.decode_rle_image_data(data)
+			data["raw_image"] = RLE.decode_rle_image(data)
 		FILETYPE_IMG7:
 			data = Parser.parse_section(file, IMG7_HDR)
 			data["rle_data"] = file.get_buffer(size-16)
-			data["raw_image"] = RLE.decode_rle_image_data(data)
+			data["raw_image"] = RLE.decode_rle_image(data)
 	return data
 
 static func compile(dbase100: Dictionary) -> PackedByteArray:

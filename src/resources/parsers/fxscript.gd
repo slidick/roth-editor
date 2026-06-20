@@ -28,7 +28,7 @@ const SND_NAME_ENTRY := {
 }
 
 
-static func get_sfx_entries(sfx_filepath: String = Roth.install_directory.path_join("../DATA/DATA/FX22.SFX")) -> Array:
+static func get_sfx_entries(sfx_filepath: String) -> Array:
 	
 	if not FileAccess.file_exists(sfx_filepath):
 		return []
@@ -74,22 +74,10 @@ static func get_from_entry(entry: Dictionary) -> Dictionary:
 	return entry.merged({"data": data})
 
 
-static func get_from_index(index: int) -> Dictionary:
-	var current_sfx_pack: Dictionary = Roth.get_active_sfx_info()
-	
-	if not current_sfx_pack:
-		return {}
-	
-	var sfx_filepath: String
-	if "vanilla" in current_sfx_pack:
-		sfx_filepath = Roth.install_directory.path_join("../DATA/DATA/FX22.SFX")
-	else:
-		sfx_filepath = Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(current_sfx_pack.name).path_join("FXSCRIPT.SFX")
-	
-	var entries: Array = get_sfx_entries(sfx_filepath)
+static func get_by_index(filepath: String, index: int) -> Dictionary:
+	var entries: Array = get_sfx_entries(filepath)
 	if index < len(entries):
 		return get_from_entry(entries[index])
-	
 	return {}
 
 

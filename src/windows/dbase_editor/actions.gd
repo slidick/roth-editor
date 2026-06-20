@@ -118,7 +118,7 @@ func _update_current_action() -> void:
 					"raw_palette": raw_palette,
 					"raw_image": raw_image,
 				}
-				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+				command.data["rle_data"] = RLE.encode_rle_image(command.data)
 		else:
 			if tree_item.get_text(2).is_valid_hex_number(true):
 				command.args = tree_item.get_text(2).hex_to_int()
@@ -337,7 +337,7 @@ func _on_tree_item_activated() -> void:
 			var new_image: Dictionary = await owner.edit_image(command.data, command.data.raw_palette if "raw_palette" in command.data else Das.DEFAULT_RAW_PALETTE, false, false, false, true)
 			if not new_image.is_empty():
 				command.data = new_image
-				command.data["rle_data"] = RLE.encode_rle_img(command.data)
+				command.data["rle_data"] = RLE.encode_rle_image(command.data)
 			return
 
 

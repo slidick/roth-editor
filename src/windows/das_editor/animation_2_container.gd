@@ -118,7 +118,7 @@ func update_texture() -> void:
 			var new_texture: Dictionary = await owner.owner.edit_image(data, raw_palette)
 			if not new_texture.is_empty():
 				animation_image.data.animation_2[i].raw_image = new_texture.raw_image
-				animation_image.data.animation_2[i].rle_image = RLE.encode_rle_img(new_texture, true)
+				animation_image.data.animation_2[i].rle_image = RLE.encode_rle_image(new_texture, true)
 				animation_image.data.animation_2[i].width = new_texture.width
 				animation_image.data.animation_2[i].height = new_texture.height
 				update_texture()

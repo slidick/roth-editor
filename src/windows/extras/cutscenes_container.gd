@@ -7,7 +7,7 @@ func _ready() -> void:
 
 func _on_settings_loaded() -> void:
 	%ItemList.clear()
-	var cutscenes: Array = DBase100.parse_cutscenes()
+	var cutscenes: Array = DBase100.parse_cutscenes(Roth.install_directory)
 	for cutscene: Dictionary in cutscenes:
 		cutscene["filepath"] = Roth.install_directory.path_join("../DATA/GDV/%s.GDV" % cutscene.name)
 		if cutscene.name != "" and FileAccess.file_exists(cutscene.filepath):

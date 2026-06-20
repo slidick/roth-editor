@@ -59,7 +59,6 @@ func clear_texture() -> void:
 
 
 func _on_roth_settings_loaded() -> void:
-	Console.print("Settings Loaded")
 	set_das_list(Roth.das_packs)
 
 

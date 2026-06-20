@@ -40,7 +40,7 @@ static func get_icons(dbase200_filepath: String) -> Array:
 		match image.image_type:
 			IMGTYPE_RLE:
 				image["rle_data"] = file.get_buffer(size - 8)
-				image["raw_image"] = RLE.decode_rle_image_data(image)
+				image["raw_image"] = RLE.decode_rle_image(image)
 				data.append(image)
 			IMGTYPE_ROWBGN_LEN:
 				file.seek(file.get_position() - 8 + size)
@@ -83,7 +83,7 @@ static func get_at_offset(dbase200_filepath: String, offset: int) -> Dictionary:
 	match data.image_type:
 		IMGTYPE_RLE:
 			data["rle_data"] = file.get_buffer(size - 8)
-			data["raw_image"] = RLE.decode_rle_image_data(data)
+			data["raw_image"] = RLE.decode_rle_image(data)
 		IMGTYPE_ROWBGN_LEN:
 			file.seek(file.get_position() - 8)
 			var sub_image: Dictionary = Parser.parse_section(file, ROW_RLE_IMG_HDR)

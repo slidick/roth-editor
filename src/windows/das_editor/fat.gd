@@ -246,7 +246,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 				"y_offset": 0,
 				"raw_image": raw_image,
 			}
-			sub_data["rle_image"] = RLE.encode_rle_img(sub_data)
+			sub_data["rle_image"] = RLE.encode_rle_image(sub_data)
 			data.animation_2.append(sub_data)
 			das[key][item_index]["offset"] = 1
 			das[key][item_index]["size"] = 1

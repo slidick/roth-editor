@@ -20,32 +20,28 @@ static func get_icon_offsets() -> Array:
 	if not FileAccess.file_exists(icon_filepath):
 		return []
 	var file := FileAccess.open(icon_filepath, FileAccess.READ)
-	
 	var first_offset: int = file.get_32()
 	file.seek(0)
 	var offsets := []
 	for i in range(first_offset/float(8)):
 		var icon_header := Parser.parse_section(file, ICON_HEADER)
 		offsets.append(icon_header.offset)
-	
 	return offsets
 
 
-static func get_at_offset(offset: int) -> Variant:
+static func get_at_offset(offset: int, size: int) -> Dictionary:
 	var icon_filepath: String =  Roth.install_directory.path_join("..").path_join("DATA").path_join("DATA").path_join("ICONS.ALL")
 	if not FileAccess.file_exists(icon_filepath):
-		return
-	var palette: Array = Das.DEFAULT_PALETTE
-	if palette.is_empty():
-		return
+		return {}
 	var file := FileAccess.open(icon_filepath, FileAccess.READ)
-	
 	file.seek(offset)
-	var rle_image_hdr := Parser.parse_section(file, RLE_IMG_HDR)
-	return RLE.decode_rle_img(rle_image_hdr, file, palette)
+	var rle_image: Dictionary = Parser.parse_section(file, RLE_IMG_HDR)
+	rle_image["rle_data"] = file.get_buffer(size - 8)
+	rle_image["raw_image"] = RLE.decode_rle_image(rle_image)
+	return rle_image
 
 
-static func parse_for_editing(icon_filepath: String) -> Array:
+static func parse(icon_filepath: String) -> Array:
 	if not FileAccess.file_exists(icon_filepath):
 		return []
 	var file := FileAccess.open(icon_filepath, FileAccess.READ)
@@ -61,7 +57,7 @@ static func parse_for_editing(icon_filepath: String) -> Array:
 		file.seek(offset.offset)
 		var icon_data: Dictionary = Parser.parse_section(file, RLE_IMG_HDR)
 		icon_data["rle_data"] = file.get_buffer(offset.size-8)
-		icon_data["raw_image"] = RLE.decode_rle_image_data(icon_data)
+		icon_data["raw_image"] = RLE.decode_rle_image(icon_data)
 		data.append(icon_data)
 	
 	return data

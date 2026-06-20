@@ -155,7 +155,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	%SaveButton.disabled = false
 	%BrowseLineEdit.text = path
 	%SaveFileDialog.current_dir = %FileDialog.current_dir
-	var icons_data: Array = IconsAll.parse_for_editing(path)
+	var icons_data: Array = IconsAll.parse(path)
 	
 	for i in range(len(icons_data)):
 		var icon: Dictionary = icons_data[i]
@@ -176,7 +176,7 @@ func _on_save_file_dialog_file_selected(path: String) -> void:
 	var icons_data: Array = []
 	for i in range(%IconsList.item_count):
 		var icon: Dictionary = %IconsList.get_item_metadata(i)
-		icon.rle_data = RLE.encode_rle_img(icon)
+		icon.rle_data = RLE.encode_rle_image(icon)
 		icons_data.append(icon)
 		
 	var data: PackedByteArray = IconsAll.compile(icons_data)

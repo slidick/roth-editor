@@ -82,7 +82,7 @@ func _on_save_button_pressed() -> void:
 
 func _on_save_file_dialog_file_selected(path: String) -> void:
 	if paletted_image:
-		paletted_image.rle_data = RLE.encode_rle_img(paletted_image)
+		paletted_image.rle_data = RLE.encode_rle_image(paletted_image)
 		var buffer: PackedByteArray = Backdrop.compile(paletted_image)
 		var file := FileAccess.open(path, FileAccess.WRITE)
 		file.store_buffer(buffer)

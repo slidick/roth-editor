@@ -7,7 +7,7 @@ func _ready() -> void:
 
 func _on_settings_loaded() -> void:
 	%SFXList.clear()
-	var sfx_entries: Array = FXScript.get_sfx_entries()
+	var sfx_entries: Array = FXScript.get_sfx_entries(Roth.install_directory.path_join("../DATA/DATA/FX22.SFX"))
 	if not sfx_entries.is_empty():
 		for i in range(len(sfx_entries)):
 			var entry: Dictionary = sfx_entries[i]
