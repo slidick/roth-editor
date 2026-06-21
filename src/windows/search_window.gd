@@ -82,10 +82,12 @@ func _on_settings_loaded() -> void:
 	var index: int = 0
 	%MapsOption.add_item("All Maps")
 	%MapsOption.set_item_metadata(index, {"name": "All Maps"})
-	for map: Map in Roth.maps:
-		index += 1
-		%MapsOption.add_item(map.map_info.name)
-		%MapsOption.set_item_metadata(index, map)
+	for map_pack: Dictionary in Roth.map_packs:
+		for map: Map in map_pack.maps:
+	#for map: Map in Roth.maps:
+			index += 1
+			%MapsOption.add_item(map.map_info.name)
+			%MapsOption.set_item_metadata(index, map)
 
 
 func search() -> void:
@@ -110,13 +112,15 @@ func search() -> void:
 	var sfx := []
 	var commands := []
 	if %MapsOption.get_item_index(%MapsOption.get_selected_id()) == 0:
-		for map: Map in Roth.maps:
-			map.load_map()
-			sectors.append_array(map.sectors)
-			faces.append_array(map.faces)
-			objects.append_array(map.objects)
-			sfx.append_array(map.sound_effects)
-			commands.append_array(map.commands_section.allCommands)
+		for map_pack: Dictionary in Roth.map_packs:
+			for map: Map in map_pack.maps:
+		#for map: Map in Roth.maps:
+				map.load_map()
+				sectors.append_array(map.sectors)
+				faces.append_array(map.faces)
+				objects.append_array(map.objects)
+				sfx.append_array(map.sound_effects)
+				commands.append_array(map.commands_section.allCommands)
 	else:
 		var map: Map = %MapsOption.get_selected_metadata()
 		sectors = map.sectors

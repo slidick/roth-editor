@@ -1987,8 +1987,8 @@ static func get_texture_from_object(p_object: ObjectRoth) -> Dictionary:
 		object_index = p_object.data.textureIndex + 4096 + 256
 		object_texture = object_das.mapping[object_index]
 	elif p_object.data.textureSource == 2:
-		object_texture = Roth.get_index_from_das(p_object.data.textureIndex, Roth.get_active_ademo())
+		object_texture = Roth.get_index_from_das(p_object.data.textureIndex, p_object.map.map_info.map_pack.das2_info)
 	elif p_object.data.textureSource == 3:
-		object_texture = Roth.get_index_from_das(p_object.data.textureIndex + 256, Roth.get_active_ademo())
+		object_texture = Roth.get_index_from_das(p_object.data.textureIndex + 256, p_object.map.map_info.map_pack.das2_info)
 	return object_texture
 #endregion

@@ -156,7 +156,7 @@ func update_selections() -> void:
 		else:
 			%EditObjectDASButton.show()
 	if object.data.textureSource == 2 or object.data.textureSource ==  3:
-		if "vanilla" in Roth.get_active_ademo():
+		if "vanilla" in object.map.map_info.map_pack.das2_info:
 			%EditObjectDASButton.hide()
 		else:
 			%EditObjectDASButton.show()
@@ -172,10 +172,10 @@ func update_texture(object: ObjectRoth) -> void:
 		object_das = object.map.map_info.das_info
 		object_index = object.data.textureIndex + 4096 + 256
 	elif object.data.textureSource == 2:
-		object_das = Roth.get_active_ademo()
+		object_das = object.map.map_info.map_pack.das2_info
 		object_index = object.data.textureIndex
 	elif object.data.textureSource == 3:
-		object_das = Roth.get_active_ademo()
+		object_das = object.map.map_info.map_pack.das2_info
 		object_index = object.data.textureIndex + 256
 	else:
 		%TextureNameLabel.text = "Invalid Source"
@@ -382,7 +382,7 @@ func _on_browse_objects_button_pressed() -> void:
 	if new_object.is_empty():
 		return
 	var i: int = 0
-	var active_ademo: Dictionary = Roth.get_active_ademo()
+	var active_ademo: Dictionary = owner.selected_objects[0].map.map_info.map_pack.das2_info
 	for object: ObjectRoth in owner.selected_objects:
 		var source := 0
 		var index := 0
@@ -425,9 +425,9 @@ func _on_edit_object_das_button_pressed() -> void:
 		object_das = object.map.map_info.das_info
 		object_index = object.data.textureIndex + 4096 + 256
 	elif object.data.textureSource == 2:
-		object_das = Roth.get_active_ademo()
+		object_das = object.map.map_info.map_pack.das2_info
 		object_index = object.data.textureIndex
 	elif object.data.textureSource == 3:
-		object_das = Roth.get_active_ademo()
+		object_das = object.map.map_info.map_pack.das2_info
 		object_index = object.data.textureIndex + 256
 	Roth.edit_texture.emit(object_das, object_index)

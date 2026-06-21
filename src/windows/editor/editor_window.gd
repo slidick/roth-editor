@@ -201,12 +201,12 @@ func test_map() -> void:
 	if not map:
 		return
 	
-	var maps: Array = []
-	maps.append(map)
-	
-	for tree_item: TreeItem in %MapsTree.get_root().get_children():
-		if tree_item.get_metadata(0).ref not in maps:
-			maps.append(tree_item.get_metadata(0).ref)
+	#var maps: Array = []
+	#maps.append(map)
+	#
+	#for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		#if tree_item.get_metadata(0).ref not in maps:
+			#maps.append(tree_item.get_metadata(0).ref)
 	
 	
 	var player_position: Vector3 = %Camera3D.global_position
@@ -219,7 +219,7 @@ func test_map() -> void:
 		"rotation": player_rotation,
 	}
 	
-	Roth.test_run_maps(maps, player_data)
+	Roth.test_run_maps(map.map_info.map_pack, map, player_data)
 
 
 func close_map(map: Map) -> void:
@@ -236,7 +236,6 @@ func close_map(map: Map) -> void:
 			%"Command Editor".close(map)
 			close_undo_redo(map)
 			reload_skybox()
-			Roth.loaded_maps.erase(map)
 			map.close_map(true)
 
 
@@ -474,15 +473,15 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
 				return
-			var new_map_name: String = await Roth.query_for_map_name("Save As")
-			if new_map_name.is_empty():
-				return
-			Console.print("Saving file as: %s" % new_map_name)
 			var map: Map = selected[0].get_metadata(0).ref
-			map.save_map_as(new_map_name)
-			selected[0].set_text(0, new_map_name)
-			undo_lists[map].name = new_map_name
-			Roth.settings_loaded.emit()
+			var results: Array = await %ModifyMap.modify_map(map, %ModifyMap.Modification.SAVE_AS)
+			if results[0]:
+				var new_map_name: String = results[1]
+				Console.print("Saving file as: %s" % new_map_name)
+				selected[0].set_text(0, new_map_name)
+				undo_lists[map].name = new_map_name
+				Roth.settings_loaded.emit()
+		
 		MapMenu.EditMetadata:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
@@ -524,6 +523,9 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				var das_info: Dictionary = item.get_metadata(0).ref.map_info.das_info
 				if das_info not in das_packs:
 					das_packs.append(das_info)
+				var das2_info: Dictionary = item.get_metadata(0).ref.map_info.map_pack.das2_info
+				if das2_info not in das_packs:
+					das_packs.append(das2_info)
 			for das_info: Dictionary in das_packs:
 				Roth.unload_das(das_info)
 				%Texture.unload_das(das_info)
@@ -531,6 +533,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				var map: Map = Map.load_from_bytes(item.get_metadata(0).ref.map_info, item.get_metadata(0).ref.compile())
 				if not map:
 					return
+				Roth.get_index_from_das(0, map.map_info.map_pack.das2_info, 293)
 				Roth.map_loading_started.emit("Reloading DAS")
 				await map.load_das()
 				replace_map(item.get_metadata(0).ref, map)
@@ -829,8 +832,9 @@ func replace_map(old_map: Map, new_map: Map) -> void:
 			undo_lists.erase(old_map)
 			undo_positions.erase(old_map)
 			undo_stacks.erase(old_map)
-			Roth.loaded_maps.erase(old_map)
-			Roth.loaded_maps.append(new_map)
+			old_map.preview_map.editable_map = new_map
+			#Roth.loaded_maps.erase(old_map)
+			#Roth.loaded_maps.append(new_map)
 			new_map.preview_map = old_map.preview_map
 			old_map.unload()
 			

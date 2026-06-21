@@ -58,29 +58,29 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 			map_info["import"] = true
 			hbox.add_child(checkbox)
 			
-			if map_info.name in Roth.maps.map(func (m: Dictionary) -> String:
-				if "vanilla" in m:
-					return m.name
-				return ""
-			):
-				var label := Label.new()
-				label.text = "Can't import vanilla maps!"
-				label.add_theme_color_override("font_color", Color.RED)
-				checkbox.button_pressed = false
-				checkbox.disabled = true
-				map_info["import"] = false
-				hbox.add_child(label)
-			elif map_info.name in Roth.maps.map(func (m: Dictionary) -> String:
-				if "vanilla" in m:
-					return ""
-				return m.name
-			):
-				var label := Label.new()
-				label.text = "Map exists locally and will be overwritten on import!"
-				label.add_theme_color_override("font_color", Color.RED)
-				checkbox.button_pressed = false
-				map_info["import"] = false
-				hbox.add_child(label)
+			#if map_info.name in Roth.maps.map(func (m: Dictionary) -> String:
+				#if "vanilla" in m:
+					#return m.name
+				#return ""
+			#):
+				#var label := Label.new()
+				#label.text = "Can't import vanilla maps!"
+				#label.add_theme_color_override("font_color", Color.RED)
+				#checkbox.button_pressed = false
+				#checkbox.disabled = true
+				#map_info["import"] = false
+				#hbox.add_child(label)
+			#elif map_info.name in Roth.maps.map(func (m: Dictionary) -> String:
+				#if "vanilla" in m:
+					#return ""
+				#return m.name
+			#):
+				#var label := Label.new()
+				#label.text = "Map exists locally and will be overwritten on import!"
+				#label.add_theme_color_override("font_color", Color.RED)
+				#checkbox.button_pressed = false
+				#map_info["import"] = false
+				#hbox.add_child(label)
 			
 			checkbox.toggled.connect(func (toggled: bool) -> void:
 				map_info["import"] = toggled

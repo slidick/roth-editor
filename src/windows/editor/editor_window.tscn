@@ -36,6 +36,7 @@
 [ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/editor/paste_options_dialog.tscn" id="21_dyevs"]
 [ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="27_6txe1"]
 [ext_resource type="PackedScene" uid="uid://83l60nlqs38r" path="res://src/windows/editor/texture_presets_window.tscn" id="29_wknxc"]
+[ext_resource type="PackedScene" uid="uid://vokegmkg3lq8" path="res://src/windows/manage_maps/modify_map_window.tscn" id="37_yi0n0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf4qd"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
@@ -3463,6 +3464,22 @@ offset_bottom = 318.0
 grow_horizontal = 2
 grow_vertical = 2
 exclusive = true
+
+[node name="ModifyMap" parent="Dialogs" index="8" unique_id=2133154669 instance=ExtResource("37_yi0n0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -104.0
+offset_right = 225.0
+offset_bottom = 104.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="3DObjectContextMenu" type="PopupMenu" parent="." index="3" unique_id=556158273]
 unique_name_in_owner = true

@@ -202,14 +202,7 @@ size_flags_horizontal = 6
 disabled = true
 text = "Duplicate"
 
-[node name="ActivateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="2" unique_id=1546291386]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_horizontal = 6
-text = "Make Active"
-
-[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="3" unique_id=1227157679]
+[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer" index="2" unique_id=1227157679]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -321,6 +314,7 @@ text = "Save"
 [node name="SubWindows" type="Control" parent="." index="2" unique_id=744681772]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="EditTextEntry" parent="SubWindows" index="0" unique_id=1752548386 instance=ExtResource("11_kn3rg")]
 unique_name_in_owner = true
@@ -426,7 +420,6 @@ grow_vertical = 2
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList/DBasePopupMenu" to="." method="_on_d_base_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer/NewButton" to="." method="_on_new_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer/DuplicateButton" to="." method="_on_duplicate_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer/ActivateButton" to="." method="_on_activate_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/VBoxContainer/DBase100ContentsList" to="." method="_on_d_base_100_contents_list_item_selected"]
 [connection signal="tab_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer/TabContainer" to="." method="_on_tab_container_tab_changed"]

@@ -4,19 +4,11 @@ extends BaseWindow
 func _ready() -> void:
 	super._ready()
 	Roth.settings_loaded.connect(_on_settings_loaded)
-	%MapTree.set_column_title(0, "Maps")
-	%MapTree.create_item()
-
-
-func _show() -> void:
-	super._show()
-	%MapTree.grab_focus()
-	%MapTree.get_root().select(0)
-
-
-func _hide() -> void:
-	super._hide()
-	clear()
+	%ExportButton.disabled = true
+	%NewMapButton.disabled = true
+	%RunButton.disabled = true
+	%EditMapPackButton.disabled = true
+	%ReorderMapsCheckBox.disabled = true
 
 
 func clear() -> void:
@@ -29,8 +21,7 @@ func clear() -> void:
 	%MapName.text = ""
 	%DASFile.text = ""
 	%Commands.text = ""
-	%ExportButton.disabled = true
-	%RunButton.disabled = true
+	%UUID.text = ""
 	%OpenButton.disabled = true
 	%ChangeDASButton.hide()
 
@@ -64,21 +55,53 @@ func get_selected_maps() -> Array:
 
 func _on_settings_loaded() -> void:
 	clear()
+	%MapPackList.clear()
+	for map_pack: Dictionary in Roth.map_packs:
+		var idx: int = %MapPackList.add_item(map_pack.name)
+		%MapPackList.set_item_metadata(idx, map_pack)
+	if %MapPackList.item_count > 0:
+		%MapPackList.select(0)
+		_on_map_pack_list_item_selected(0)
+
+
+func _on_map_pack_list_item_selected(index: int) -> void:
+	clear()
+	var map_pack: Dictionary = %MapPackList.get_item_metadata(index)
 	%MapTree.clear()
 	%MapTree.create_item()
-	for map: Map in Roth.maps:
-		if "vanilla" not in map.map_info:
+	
+	var maps: Array = map_pack.maps
+	
+	if "unassigned" in map_pack:
+		maps.sort_custom(func (m1: Map, m2: Map) -> bool: return m1.map_info.name < m2.map_info.name)
+	
+	for map: Map in maps:
+		#if "vanilla" not in map.map_info:
 			var tree_item: TreeItem = %MapTree.get_root().create_child()
 			tree_item.set_text(0, map.map_info.name)
 			tree_item.set_metadata(0, map)
-	for map: Map in Roth.maps:
-		if "vanilla" in map.map_info:
-			var tree_item: TreeItem = %MapTree.get_root().create_child()
-			tree_item.set_text(0, map.map_info.name)
-			tree_item.set_metadata(0, map)
+	#for map: Map in Roth.maps:
+		#if "vanilla" in map.map_info:
+			#var tree_item: TreeItem = %MapTree.get_root().create_child()
+			#tree_item.set_text(0, map.map_info.name)
+			#tree_item.set_metadata(0, map)
 	if not Roth.install_directory.is_empty():
 		%NewMapButton.disabled = false
-		%ImportButton.disabled = false
+		%ExportButton.disabled = false
+		%RunButton.disabled = false
+		%EditMapPackButton.disabled = false
+	
+	if "vanilla" in map_pack or "unassigned" in map_pack:
+		%ReorderMapsCheckBox.disabled = true
+		%ReorderMapsCheckBox.button_pressed = false
+	else:
+		%ReorderMapsCheckBox.disabled = false
+		%ReorderMapsCheckBox.button_pressed = false
+	%DBaseLabel.text = map_pack.dbase_info.name
+	%DAS2Label.text = map_pack.das2_info.name
+	%SFXLabel.text = map_pack.sfx_info.name
+	%BackdropLabel.text = map_pack.backdrop
+	%IconsLabel.text = map_pack.icons
 
 
 func _on_cancel_button_pressed() -> void:
@@ -100,12 +123,18 @@ func _on_map_tree_cell_selected() -> void:
 	%MapName.text = "%s" % map.map_info.name
 	%DASFile.text = "%s" % map.map_info.das_info.name
 	%Commands.text = "%s" % len(map.commands_section.allCommands)
+	if "uuid" in map.map_info:
+		%UUID.text = "%s" % map.map_info.uuid
+		%UUID.tooltip_text = "%s" % map.map_info.uuid
+		%UUID.show()
+		%UUIDLabel.show()
+	else:
+		%UUID.hide()
+		%UUIDLabel.hide()
 	if "invalid" in map.map_info.das_info:
-		%ExportButton.disabled = true
 		%RunButton.disabled = true
 		%OpenButton.disabled = true
 	else:
-		%ExportButton.disabled = false
 		%RunButton.disabled = false
 		%OpenButton.disabled = false
 	if "vanilla" in map.map_info:
@@ -129,19 +158,31 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 				if map and "vanilla" not in map.map_info:
 					maps.append(tree_item)
 				tree_item = %MapTree.get_next_selected(tree_item)
+			
+			
 			if len(maps) > 1:
-				await Dialog.information("Please select only one map to rename.", "Info", false, Vector2(400,150))
-				return
+				maps = maps.map(func (item: TreeItem) -> Map: return item.get_metadata(0))
+				var results: Array = await %ModifyMap.modify_map(maps, %ModifyMap.Modification.MOVE)
+				if results[0]:
+					select_maps(maps)
+			else:
+				tree_item = maps[0]
+				map = maps[0].get_metadata(0)
+				
+				var results: Array = await %ModifyMap.modify_map(map, %ModifyMap.Modification.RENAME)
+				
+				if results[1]:
+					select_maps([map])
+				elif results[0]:
+					tree_item.set_text(0, results[2])
 			
-			tree_item = maps[0]
-			map = maps[0].get_metadata(0)
 			
-			var new_map_name := await Roth.query_for_map_name("Rename %s" % map.map_info.name)
-			if new_map_name.is_empty() or new_map_name == map.map_info.name:
-				return
-			map.rename_map(new_map_name)
-			tree_item.set_text(0, new_map_name)
-			
+			#var new_map_name := await Roth.query_for_map_name("Rename %s" % map.map_info.name)
+			#if new_map_name.is_empty() or new_map_name == map.map_info.name:
+				#return
+			#map.rename_map(new_map_name)
+			#tree_item.set_text(0, new_map_name)
+		
 		1:
 			var maps: Array = []
 			var maps_string: String = ""
@@ -156,18 +197,29 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 			if results[0]:
 				for map: Map in maps:
 					map.delete_map(results[1])
-				_on_settings_loaded()
+				tree_item = %MapTree.get_root().get_first_child()
+				while tree_item:
+					if tree_item.get_metadata(0) in maps:
+						tree_item.free.call_deferred()
+					tree_item = tree_item.get_next()
+				clear()
 		2:
 			var maps: Array = get_selected_maps()
 			if len(maps) > 1:
-				await Dialog.information("Only duplicate one at a time", "Info", false, Vector2(200,150))
-				return
-			var map: Map = maps[0]
-			var new_map_name := await Roth.query_for_map_name("Duplicate %s" % map.map_info.name)
-			if new_map_name.is_empty():
-				return
-			map.duplicate_map(new_map_name)
-			_on_settings_loaded()
+				var results: Array = await %ModifyMap.modify_map(maps, %ModifyMap.Modification.DUPLICATE_MULTIPLE)
+				if results[0]:
+					select_maps(results[1])
+			else:
+				var map: Map = maps[0]
+				var results: Array = await %ModifyMap.modify_map(map, %ModifyMap.Modification.DUPLICATE)
+				if results[0]:
+					select_maps([results[1]])
+			
+			#var new_map_name := await Roth.query_for_map_name("Duplicate %s" % map.map_info.name)
+			#if new_map_name.is_empty():
+				#return
+			
+			#_on_settings_loaded()
 
 
 func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
@@ -181,33 +233,51 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 				else:
 					%MapPopupMenu.set_item_disabled(0, true)
 					%MapPopupMenu.set_item_disabled(1, true)
+				if len(get_selected_maps()) > 1:
+					%MapPopupMenu.set_item_text(0, "Move Maps")
+					%MapPopupMenu.set_item_text(1, "Delete Maps")
+					%MapPopupMenu.set_item_text(2, "Duplicate Maps")
+				else:
+					%MapPopupMenu.set_item_text(0, "Rename/Move Map")
+					%MapPopupMenu.set_item_text(1, "Delete Map")
+					%MapPopupMenu.set_item_text(2, "Duplicate Map")
 				%MapPopupMenu.popup(Rect2i(int(mouse_position.x + %MapTree.global_position.x), int(mouse_position.y + %MapTree.global_position.y), 0, 0))
 
 
 func _on_run_button_pressed() -> void:
-	var maps: Array = []
-	if %MapTree.get_selected().get_metadata(0):
-		maps.append(%MapTree.get_selected().get_metadata(0))
-	var tree_item: TreeItem = %MapTree.get_next_selected(null)
-	while tree_item:
-		var map: Variant = tree_item.get_metadata(0)
-		if map and map not in maps:
-			maps.append(map)
-		tree_item = %MapTree.get_next_selected(tree_item)
-	if len(maps) == 0:
-		return
-	Roth.test_run_maps(maps)
+	#var maps: Array = []
+	#if %MapTree.get_selected().get_metadata(0):
+		#maps.append(%MapTree.get_selected().get_metadata(0))
+	#var tree_item: TreeItem = %MapTree.get_next_selected(null)
+	#while tree_item:
+		#var map: Variant = tree_item.get_metadata(0)
+		#if map and map not in maps:
+			#maps.append(map)
+		#tree_item = %MapTree.get_next_selected(tree_item)
+	#if len(maps) == 0:
+		#return
+	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+	var tree_item: TreeItem = %MapTree.get_selected()
+	Roth.test_run_maps(map_pack, tree_item.get_metadata(0) if tree_item else null)
 
 
 func _on_new_map_button_pressed() -> void:
-	%NewMap.toggle()
+	var map: Map = await %NewMap.new_map(%MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0]))
+	if map:
+		select_maps([map])
 
 
-func _on_new_map_map_created(map: Map) -> void:
-	_on_settings_loaded()
+func select_maps(maps: Array) -> void:
+	if len(maps) == 0:
+		return
+	var map: Map = maps[0]
+	for i in range(%MapPackList.item_count):
+		if %MapPackList.get_item_metadata(i) == map.map_info.map_pack:
+			%MapPackList.select(i)
+			_on_map_pack_list_item_selected(i)
 	%MapTree.deselect_all()
 	for tree_item: TreeItem in %MapTree.get_root().get_children():
-		if tree_item.get_metadata(0) == map:
+		if tree_item.get_metadata(0) in maps:
 			tree_item.select(0)
 			_on_map_tree_cell_selected()
 
@@ -231,6 +301,93 @@ func _on_change_das_button_pressed() -> void:
 	map.map_info.das_info = new_das
 	map.save_metadata()
 	%DASFile.text = new_das.name
-	%ExportButton.disabled = false
 	%RunButton.disabled = false
 	%OpenButton.disabled = false
+
+
+func _on_edit_map_pack_button_pressed() -> void:
+	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EDIT, map_pack)
+	if changed:
+		%MapPackList.set_item_text(%MapPackList.get_selected_items()[0], map_pack.name)
+		%DBaseLabel.text = map_pack.dbase_info.name
+		%DAS2Label.text = map_pack.das2_info.name
+		%SFXLabel.text = map_pack.sfx_info.name
+		%BackdropLabel.text = map_pack.backdrop
+		%IconsLabel.text = map_pack.icons
+
+
+func _on_new_map_pack_button_pressed() -> void:
+	var map_pack: Dictionary = await %MapPack.map_pack(%MapPack.Type.CREATE)
+	if map_pack:
+		var idx: int = %MapPackList.add_item(map_pack.name)
+		%MapPackList.set_item_metadata(idx, map_pack)
+		%MapPackList.move_item(idx, idx-1)
+		%DBaseLabel.text = map_pack.dbase_info.name
+		%DAS2Label.text = map_pack.das2_info.name
+		%SFXLabel.text = map_pack.sfx_info.name
+		%BackdropLabel.text = map_pack.backdrop
+		%IconsLabel.text = map_pack.icons
+		%MapPackList.select(idx-1)
+		_on_map_pack_list_item_selected(idx-1)
+
+
+func _on_reorder_maps_check_box_toggled(toggled_on: bool) -> void:
+	%MapTree.reorder_enabled = toggled_on
+
+
+func _on_map_tree_item_moved() -> void:
+	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+	var new_map_order: Array = []
+	var tree_item: TreeItem = %MapTree.get_root().get_first_child()
+	while tree_item:
+		var map: Map = tree_item.get_metadata(0)
+		new_map_order.append(map)
+		tree_item = tree_item.get_next()
+	map_pack.maps = new_map_order
+	Roth.save_map_pack(map_pack)
+
+
+func _on_map_pack_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+			print("DUP: %s" % map_pack.name)
+		1:
+			var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+			print("DEL: %s" % map_pack.name)
+			
+			var results: Array = await Dialog.confirm_additional("Deleting map pack\n%s" % map_pack.name, "Confirm Delete", "Also delete maps and backups!")
+			if results[0]:
+				Roth.delete_map_pack(map_pack, results[1])
+				for i in range(%MapPackList.item_count):
+					if %MapPackList.get_item_metadata(i) == map_pack:
+						%MapPackList.remove_item(i)
+						break
+				clear()
+				%MapTree.clear()
+				%DBaseLabel.text = ""
+				%DAS2Label.text = ""
+				%SFXLabel.text = ""
+				%BackdropLabel.text = ""
+				%IconsLabel.text = ""
+				%ExportButton.disabled = true
+				%NewMapButton.disabled = true
+				%RunButton.disabled = true
+				%EditMapPackButton.disabled = true
+				%ReorderMapsCheckBox.disabled = true
+
+
+func _on_map_pack_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+	match mouse_button_index:
+		MOUSE_BUTTON_RIGHT:
+			var map_pack: Dictionary = %MapPackList.get_item_metadata(index)
+			if "unassigned" in map_pack:
+				%MapPackMenu.set_item_disabled(0, true)
+			else:
+				%MapPackMenu.set_item_disabled(0, false)
+			if "vanilla" in map_pack or "unassigned" in map_pack:
+				%MapPackMenu.set_item_disabled(1, true)
+			else:
+				%MapPackMenu.set_item_disabled(1, false)
+			%MapPackMenu.popup(Rect2(%MapPackList.global_position+at_position, Vector2.ZERO))

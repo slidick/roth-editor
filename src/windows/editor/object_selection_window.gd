@@ -33,9 +33,9 @@ func wait_for_object_selection(p_current_object: ObjectRoth) -> Dictionary:
 	%FavoriteItemList.clear()
 	%SearchEdit.show()
 	load_das(p_current_object.map.das)
-	load_favorites(p_current_object.map.das.das_info)
-	load_recents(p_current_object.map.das.das_info)
-	load_ademo(true)
+	load_favorites(p_current_object.map.das.das_info, p_current_object.map.map_info.map_pack.das2_info)
+	load_recents(p_current_object.map.das.das_info, p_current_object.map.map_info.map_pack.das2_info)
+	load_ademo(p_current_object.map.map_info.map_pack.das2_info, true)
 	_on_search_edit_text_changed(%SearchEdit.text)
 	select_object(p_current_object)
 	toggle(true)
@@ -52,7 +52,7 @@ func ademo_object_selection() -> Dictionary:
 	%FavoriteItemList.clear()
 	%SearchEdit.show()
 	%SearchEdit.clear()
-	load_ademo(false)
+	load_ademo(Roth.get_vanilla_ademo(), false)
 	toggle(true)
 	var item: Dictionary = await item_selected
 	toggle(false)
@@ -108,8 +108,7 @@ func load_das(p_das: Dictionary) -> void:
 			%RotatableItemList.set_item_metadata(idx, texture)
 
 
-func load_favorites(p_das_info: Dictionary) -> void:
-	var active_ademo: Dictionary = Roth.get_active_ademo()
+func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 	for favorite_data: Dictionary in favorites:
 		var das_info: Dictionary = Roth.get_das_info_by_name(favorite_data.das)
 		var texture_data: Dictionary = Roth.get_index_from_das(favorite_data.index, das_info)
@@ -120,12 +119,11 @@ func load_favorites(p_das_info: Dictionary) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 		%FavoriteItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != active_ademo:
+		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != p_das2_info:
 			%FavoriteItemList.set_hidden(idx, true)
 
 
-func load_recents(p_das_info: Dictionary) -> void:
-	var active_ademo: Dictionary = Roth.get_active_ademo()
+func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 	for recent_data: Dictionary in recents:
 		var das_info: Dictionary = Roth.get_das_info_by_name(recent_data.das)
 		var texture_data: Dictionary = Roth.get_index_from_das(recent_data.index, das_info)
@@ -136,23 +134,23 @@ func load_recents(p_das_info: Dictionary) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 		%RecentItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != active_ademo:
+		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != p_das2_info:
 			%RecentItemList.set_hidden(idx, true)
 
 
-func load_ademo(p_show_add_to_favorites: bool = false) -> void:
+func load_ademo(p_das2_info: Dictionary, p_show_add_to_favorites: bool = false) -> void:
 	for i in range(293):
-		var texture: Dictionary = Roth.get_index_from_das(i, Roth.get_active_ademo())
+		var texture: Dictionary = Roth.get_index_from_das(i, p_das2_info)
 		if texture.name == "Invalid":
 			continue
 		var tex: Texture2D
 		if "image" in texture:
 			tex = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
 		elif "monster_index" in texture:
-			var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, Roth.get_active_ademo())
+			var monster_texture: Dictionary = Roth.get_index_from_das(texture.monster_index, p_das2_info)
 			tex = monster_texture.image
 		elif "directional_index" in texture:
-			var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, Roth.get_active_ademo())
+			var directional_texture: Dictionary = Roth.get_index_from_das(texture.directional_index, p_das2_info)
 			tex = directional_texture.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))

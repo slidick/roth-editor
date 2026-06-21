@@ -9,7 +9,6 @@ var audio_changed: bool = false
 
 func _ready() -> void:
 	super._ready()
-	%ActivateButton.disabled = true
 	%EditButton.disabled = true
 	Roth.settings_loaded.connect(_on_settings_loaded)
 	%ListControl.show()
@@ -23,19 +22,12 @@ func _on_settings_loaded() -> void:
 		%NewButton.disabled = false
 	%DBaseList.clear()
 	for dbase_info: Dictionary in Roth.dbase_packs:
-		var idx: int = %DBaseList.add_item(dbase_info.name+" (Active)" if dbase_info.active else dbase_info.name)
+		var idx: int = %DBaseList.add_item(dbase_info.name)
 		%DBaseList.set_item_metadata(idx, dbase_info)
-		if dbase_info.active:
-			%DBaseList.select(idx)
-			_on_d_base_list_item_selected(idx)
 
 
 func _on_d_base_list_item_selected(index: int) -> void:
 	var dbase_info: Dictionary = %DBaseList.get_item_metadata(index)
-	if dbase_info.active:
-		%ActivateButton.disabled = true
-	else:
-		%ActivateButton.disabled = false
 	if "vanilla" in dbase_info:
 		%EditButton.disabled = true
 	else:
@@ -95,33 +87,19 @@ func duplicate_dbase(index: int) -> void:
 		err = Roth.check_dbase_pack_name(results[1])
 	Roth.duplicate_dbase_pack(dbase_info, results[1])
 	%DBaseList.select(%DBaseList.item_count - 1)
-	%ActivateButton.disabled = false
+	_on_d_base_list_item_selected(%DBaseList.item_count - 1)
 	%EditButton.disabled = false
 
 
 func _on_d_base_list_item_activated(_index: int) -> void:
-	activate()
-
-
-func _on_activate_button_pressed() -> void:
-	activate()
-
-
-func activate() -> void:
-	var new_index: int = %DBaseList.get_selected_items()[0]
-	for i in range(%DBaseList.item_count):
-		var dbase_info: Dictionary = %DBaseList.get_item_metadata(i)
-		if i == new_index:
-			dbase_info.active = true
-			%DBaseList.set_item_text(i, dbase_info.name+" (Active)")
-			Settings.update_settings("options", {"active_dbase": dbase_info.name})
-		else:
-			dbase_info.active = false
-			%DBaseList.set_item_text(i, dbase_info.name)
-	%ActivateButton.disabled = true
+	edit()
 
 
 func _on_edit_button_pressed() -> void:
+	edit()
+
+
+func edit() -> void:
 	if Roth.install_directory.is_empty():
 		return
 	var dbase_info: Dictionary = %DBaseList.get_item_metadata(%DBaseList.get_selected_items()[0])

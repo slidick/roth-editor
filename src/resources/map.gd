@@ -40,6 +40,7 @@ var editor_metadata := {}
 var das: Dictionary
 var is_loaded: bool = false
 var preview_map: Map = null
+var editable_map: Map = null
 
 
 static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) -> Map:
@@ -144,6 +145,8 @@ func load_das() -> void:
 
 func unload() -> void:
 	free.call_deferred()
+	if preview_map:
+		preview_map.editable_map = null
 
 
 func delete_map(p_delete_backups: bool = false) -> void:
@@ -160,11 +163,15 @@ func delete_map(p_delete_backups: bool = false) -> void:
 		while FileAccess.file_exists(map_info.filepath_json + ".%d" % count):
 			DirAccess.remove_absolute(map_info.filepath_json + ".%d" % count)
 			count += 1
-	Roth.maps.erase(self)
+	#Roth.maps.erase(self)
+	map_info.map_pack.maps.erase(self)
+	Roth.save_map_pack(map_info.map_pack)
 	unload()
 
 
 func rename_map(new_map_name: String) -> void:
+	if map_info.name == new_map_name:
+		return
 	Console.print("Renaming map from %s to %s" % [map_info.name, new_map_name])
 	var old_map_info: Dictionary = map_info.duplicate()
 	
@@ -191,20 +198,27 @@ func rename_map(new_map_name: String) -> void:
 	name_changed.emit(new_map_name)
 
 
-func duplicate_map(new_map_name: String) -> void:
+func duplicate_map(new_map_name: String, map_pack: Dictionary) -> Map:
 	var new_map: Map = Map.new(map_info.duplicate())
 	new_map.map_info.name = new_map_name
+	new_map.map_info.map_pack = map_pack
 	new_map.map_info.erase("filepath")
 	new_map.map_info.erase("filepath_json")
 	new_map.map_info.erase("vanilla")
+	new_map.map_info.erase("uuid")
 	new_map.save_metadata()
-	Roth.maps.append(new_map)
+	#Roth.maps.append(new_map)
+	map_pack.maps.append(new_map)
+	Roth.save_map_pack(map_pack)
 	DirAccess.copy_absolute(map_info.filepath, new_map.map_info.filepath)
+	return new_map
 
 
-func create_editable_map() -> Map:
+func create_editable_map(temp: bool = false) -> Map:
 	var map := Map.new(map_info.duplicate())
-	map.preview_map = self
+	if not temp:
+		map.preview_map = self
+		editable_map = map
 	return map
 
 
@@ -274,31 +288,31 @@ func _reload_map_info() -> void:
 
 
 func save_map(directory: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
-	var raw_map := compile(player_data)
-	var raw_filepath := directory.path_join(map_info.name.to_upper() + ".RAW")
+	_add_missing_map_info()
 	
-	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY and FileAccess.file_exists(raw_filepath):
-		var json_filepath: = directory.path_join(map_info.name.to_upper() + ".json")
+	var raw_map := compile(player_data)
+	
+	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY and FileAccess.file_exists(map_info.filepath):
 		var count: int = 1
-		while FileAccess.file_exists(raw_filepath + ".%d" % count):
+		while FileAccess.file_exists(map_info.filepath + ".%d" % count):
 			count += 1
 		count -= 1
 		for i in range(count, 0, -1):
-			DirAccess.rename_absolute(raw_filepath + ".%d" % i, raw_filepath + ".%d" % (i+1))
-			DirAccess.rename_absolute(json_filepath + ".%d" % i, json_filepath + ".%d" % (i+1))
+			DirAccess.rename_absolute(map_info.filepath + ".%d" % i, map_info.filepath + ".%d" % (i+1))
+			DirAccess.rename_absolute(map_info.filepath_json + ".%d" % i, map_info.filepath_json + ".%d" % (i+1))
 		
-		DirAccess.rename_absolute(raw_filepath, raw_filepath + ".1")
-		DirAccess.rename_absolute(json_filepath, json_filepath + ".1")
+		DirAccess.rename_absolute(map_info.filepath, map_info.filepath + ".1")
+		DirAccess.rename_absolute(map_info.filepath_json, map_info.filepath_json + ".1")
 		
 		count += 1
 		while count > Settings.settings.get("options", {}).get("backup_saves", 5):
-			DirAccess.remove_absolute(raw_filepath + ".%d" % count)
-			DirAccess.remove_absolute(json_filepath + ".%d" % count)
+			DirAccess.remove_absolute(map_info.filepath + ".%d" % count)
+			DirAccess.remove_absolute(map_info.filepath_json + ".%d" % count)
 			count -= 1
 			if count < 1:
 				break
 	
-	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
+	var file := FileAccess.open(map_info.filepath, FileAccess.WRITE)
 	file.store_buffer(raw_map)
 	file.close()
 	
@@ -309,35 +323,51 @@ func save_map(directory: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY, player_data: D
 		preview_map.close_map()
 
 
+func _add_missing_map_info() -> void:
+	if "vanilla" not in map_info:
+		if "uuid" not in map_info:
+			map_info["uuid"] = Utility.uuidv4()
+			while FileAccess.file_exists(Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.uuid + ".RAW")):
+				map_info["uuid"] = Utility.uuidv4()
+		
+		if "filepath" not in map_info:
+			map_info["filepath"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.uuid + ".RAW")
+		
+		if "filepath_json" not in map_info:
+			map_info["filepath_json"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.uuid + ".json")
+
+
 func save_metadata() -> void:
-	var json_filepath: String
-	if "filepath_json" in map_info:
-		json_filepath = map_info.filepath_json
-	else:
-		json_filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".json")
-		map_info["filepath_json"] = json_filepath
-	if "filepath" not in map_info:
-		map_info["filepath"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".RAW")
+	
+	_add_missing_map_info()
 	
 	var save_info: Dictionary = map_info.duplicate()
 	save_info.erase("filepath")
 	save_info.erase("filepath_json")
 	save_info["das"] = save_info.das_info.name
 	save_info.erase("das_info")
+	save_info.erase("map_pack")
+	save_info.erase("uuid")
 	
-	var json_file := FileAccess.open(json_filepath, FileAccess.WRITE)
+	var json_file := FileAccess.open(map_info.filepath_json, FileAccess.WRITE)
 	json_file.store_string(JSON.stringify(save_info, "\t"))
 	json_file.close()
 
 
-func save_map_as(new_map_name: String) -> void:
+func save_map_as(new_map_name: String, map_pack: Dictionary) -> void:
 	map_info.name = new_map_name
+	map_info.map_pack = map_pack
 	map_info.erase("filepath")
 	map_info.erase("filepath_json")
 	map_info.erase("vanilla")
+	map_info.erase("uuid")
 	save_map()
+	preview_map.editable_map = null
 	preview_map = Map.new(map_info.duplicate())
-	Roth.maps.append(preview_map)
+	preview_map.editable_map = self
+	#Roth.maps.append(preview_map)
+	map_pack.maps.append(preview_map)
+	Roth.save_map_pack(map_pack)
 	name_changed.emit(new_map_name)
 
 

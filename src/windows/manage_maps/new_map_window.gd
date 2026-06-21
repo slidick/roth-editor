@@ -1,64 +1,63 @@
 extends BaseWindow
 
-signal map_created(map_info: Dictionary)
-
-func _ready() -> void:
-	super._ready()
-	Roth.settings_loaded.connect(_on_settings_loaded)
+signal done(map: Map)
 
 
-func toggle(_bool: Variant = null) -> void:
-	super.toggle(_bool)
+func new_map(p_map_pack: Dictionary) -> Map:
 	%MapNameEdit.text = ""
-	%DasOption.select(-1)
+	%ErrorLabel.text = ""
 	%CreateButton.disabled = true
-
-
-func _on_settings_loaded() -> void:
 	%DasOption.clear()
-	var idx: int = 0
+	%MapPackOption.clear()
 	for das_info: Dictionary in Roth.das_packs:
 		%DasOption.add_item(das_info.name)
-		%DasOption.set_item_metadata(idx, das_info)
-		idx += 1
+		%DasOption.set_item_metadata(%DasOption.item_count-1, das_info)
+	for map_pack: Dictionary in Roth.map_packs:
+		if "vanilla" in map_pack:
+			continue
+		%MapPackOption.add_item(map_pack.name)
+		%MapPackOption.set_item_metadata(%MapPackOption.item_count-1, map_pack)
+		if p_map_pack == map_pack:
+			%MapPackOption.select(%MapPackOption.item_count-1)
+	if "unassigned" in p_map_pack or "vanilla" in p_map_pack:
+		%MapPackOption.select(%MapPackOption.item_count-1)
+	
+	toggle(true)
+	var map: Map = await done
+	toggle(false)
+	return map
 
 
 func _on_cancel_button_pressed() -> void:
 	toggle(false)
+	done.emit(null)
 
 
-func _on_create_button_pressed() -> void:
-	create()
-
-
-func create() -> void:
+func _submit() -> void:
 	var map_name: String = %MapNameEdit.text.to_upper()
-	var error := Roth.check_map_name(map_name)
+	var map_pack: Dictionary = %MapPackOption.get_selected_metadata()
+	var error := Roth.check_map_name(map_name, map_pack)
 	if not error.is_empty():
 		await Dialog.information(error, "Name Error", false, Vector2(400,150))
 		return
+	
 	var create_info := {
 		"name": map_name,
 		"das_info": %DasOption.get_selected_metadata(),
+		"map_pack": map_pack,
 	}
-	var new_map := Map.new(create_info)
-	new_map.save_map()
-	Roth.maps.append(new_map)
-	toggle(false)
-	map_created.emit(new_map)
+	var map := Map.new(create_info)
+	map.save_map()
+	map_pack.maps.append(map)
+	Roth.save_map_pack(map.map_info.map_pack)
+	done.emit(map)
 
 
-func _on_das_option_item_selected(_index: int) -> void:
-	if not %MapNameEdit.text.is_empty():
-		%CreateButton.disabled = false
-
-
-func _on_map_name_edit_text_changed(new_text: String) -> void:
-	if %DasOption.selected != -1 and not new_text.is_empty():
-		%CreateButton.disabled = false
-	else:
+func _changed() -> void:
+	var error: String = Roth.check_map_name(%MapNameEdit.text, %MapPackOption.get_selected_metadata())
+	if not error.is_empty():
+		%ErrorLabel.text = error
 		%CreateButton.disabled = true
-
-
-func _on_map_name_edit_text_submitted(_new_text: String) -> void:
-	create()
+	else:
+		%CreateButton.disabled = false
+		%ErrorLabel.text = ""

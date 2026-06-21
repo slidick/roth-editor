@@ -47,7 +47,7 @@ func _on_settings_loaded() -> void:
 		%DASList.set_item_metadata(idx, das_info)
 	%DAS2List.clear()
 	for das_info: Dictionary in Roth.das2_packs:
-		var idx: int = %DAS2List.add_item(das_info.name+" (Active)" if das_info.active else das_info.name)
+		var idx: int = %DAS2List.add_item(das_info.name)
 		%DAS2List.set_item_metadata(idx, das_info)
 
 
@@ -120,10 +120,6 @@ func _on_das_2_list_item_clicked(index: int, at_position: Vector2, mouse_button_
 			else:
 				%DAS2ListPopupMenu.set_item_disabled(0, false)
 				%DAS2ListPopupMenu.set_item_disabled(1, false)
-			if %DAS2List.get_item_metadata(index).active:
-				%DAS2ListPopupMenu.set_item_disabled(3, true)
-			else:
-				%DAS2ListPopupMenu.set_item_disabled(3, false)
 			%DAS2ListPopupMenu.popup(Rect2(%DAS2List.global_position.x+at_position.x, %DAS2List.global_position.y+at_position.y, 0, 0))
 
 
@@ -148,17 +144,6 @@ func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:
 			Roth.duplicate_das2_pack(das_info, results[1])
 			%DAS2List.select(%DAS2List.item_count - 1)
 			_on_das_2_list_item_selected(%DAS2List.item_count - 1)
-		3:
-			var new_index: int = %DAS2List.get_selected_items()[0]
-			for i in range(%DAS2List.item_count):
-				var das_info: Dictionary = %DAS2List.get_item_metadata(i)
-				if i == new_index:
-					das_info.active = true
-					%DAS2List.set_item_text(i, das_info.name+" (Active)")
-					Settings.update_settings("options", {"active_ademo": das_info.name})
-				else:
-					das_info.active = false
-					%DAS2List.set_item_text(i, das_info.name)
 
 
 func _on_das_2_list_item_activated(_index: int) -> void:

@@ -20,15 +20,11 @@ func export_maps(p_maps: Array) -> void:
 	for dbase_info: Dictionary in Roth.dbase_packs:
 		%DBaseOption.add_item(dbase_info.name)
 		%DBaseOption.set_item_metadata(%DBaseOption.item_count-1, dbase_info)
-		if dbase_info.active:
-			%DBaseOption.select(%DBaseOption.item_count-1)
 	
 	%SFXOption.clear()
 	for sfx_info: Dictionary in Roth.sfx_packs:
 		%SFXOption.add_item(sfx_info.name)
 		%SFXOption.set_item_metadata(%SFXOption.item_count-1, sfx_info)
-		if sfx_info.active:
-			%SFXOption.select(%SFXOption.item_count-1)
 	
 	for map: Map in p_maps:
 		var tree_item: TreeItem = %MapsTree.get_root().create_child()

@@ -238,12 +238,12 @@ func _on_edit_sfx_timer_timeout() -> void:
 
 
 func _on_sfx_play_button_pressed() -> void:
-	var data := FXScript.get_by_index(Roth.get_active_sfx_info().filepath, %SFXSoundIndexEdit.value-1)
+	var data := FXScript.get_by_index(owner.selected_sfx[0].map.map_info.map_pack.sfx_info.filepath, %SFXSoundIndexEdit.value-1)
 	Roth.play_audio_entry(data)
 
 
 func _on_select_sfx_button_pressed() -> void:
-	var sfx_entry: Dictionary = await %SFXSelector.select_sfx()
+	var sfx_entry: Dictionary = await %SFXSelector.select_sfx({}, owner.selected_sfx[0].map.map_info.map_pack.sfx_info)
 	if sfx_entry.is_empty():
 		return
 	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx_entry.index)

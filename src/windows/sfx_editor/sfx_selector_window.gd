@@ -16,9 +16,9 @@ func _ready() -> void:
 	%Tree.set_column_title(2, "Description")
 
 
-func select_sfx(p_fxscript: Dictionary = {}) -> Dictionary:
+func select_sfx(p_fxscript: Dictionary = {}, p_sfx_info: Dictionary = {}) -> Dictionary:
 	if p_fxscript.is_empty():
-		fxscript = FXScript.parse_sfx_info(Roth.get_active_sfx_info())
+		fxscript = FXScript.parse_sfx_info(p_sfx_info)
 	else:
 		fxscript = p_fxscript
 	

@@ -146,14 +146,7 @@ size_flags_horizontal = 6
 disabled = true
 text = "Duplicate"
 
-[node name="ActivateButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="2" unique_id=898486624]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_horizontal = 6
-text = "Make Active"
-
-[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="3" unique_id=1615752206]
+[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="2" unique_id=1615752206]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
@@ -200,6 +193,7 @@ text = "Save"
 [node name="SubWindows" type="Control" parent="." index="2" unique_id=878829912]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="AudioClipEditor" parent="SubWindows" index="0" unique_id=1664303492 instance=ExtResource("6_bp70a")]
 unique_name_in_owner = true
@@ -239,7 +233,6 @@ grow_vertical = 2
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/MarginContainer/VBoxContainer/SFXPackList/SFXPackPopupMenu" to="." method="_on_sfx_pack_popup_menu_index_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/NewButton" to="." method="_on_new_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/DuplicateButton" to="." method="_on_duplicate_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/ActivateButton" to="." method="_on_activate_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]

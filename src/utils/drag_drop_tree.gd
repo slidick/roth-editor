@@ -1,8 +1,11 @@
 extends Tree
 
 signal item_moved
+@export var reorder_enabled: bool = true
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
+	if not reorder_enabled:
+		return null
 	var items := []
 	var next: TreeItem = get_next_selected(null)
 	var v := VBoxContainer.new()
@@ -18,6 +21,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	if not reorder_enabled:
+		return false
 	drop_mode_flags = Tree.DROP_MODE_INBETWEEN
 	var drop_section := get_drop_section_at_position(at_position)
 	if drop_section == -100:
@@ -31,6 +36,8 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
+	if not reorder_enabled:
+		return
 	var drop_section := get_drop_section_at_position(at_position)
 	var other_item := get_item_at_position(at_position)
 	for i: int in range(data.size()):
