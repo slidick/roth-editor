@@ -93,9 +93,9 @@ func _on_map_name_changed(new_map_name: String) -> void:
 	%MapLabel.text = new_map_name
 
 
-func close(p_map_name: String) -> void:
+func close(p_map: Map) -> void:
 	if map:
-		if p_map_name == map.map_info.name:
+		if p_map == map:
 			if graph_edit:
 				graph_edit.queue_free()
 				graph_edit = null
@@ -807,5 +807,5 @@ func _on_graph_edit_end_node_move() -> void:
 
 func _on_close_button_pressed() -> void:
 	if map:
-		Roth.editor_action.emit(map.map_info, "Edit Commands")
+		Roth.editor_action.emit(map, "Edit Commands")
 		close(map.map_info.name)

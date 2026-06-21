@@ -293,7 +293,6 @@ offset_right = 0.0
 offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
-exclusive = false
 
 [node name="ManageSFX" parent="Windows" unique_id=1506724836 instance=ExtResource("12_d3u4l")]
 unique_name_in_owner = true

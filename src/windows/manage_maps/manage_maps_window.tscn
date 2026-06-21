@@ -23,7 +23,6 @@ offset_right = 1290.0
 offset_bottom = 805.0
 theme = ExtResource("2_vlo3g")
 script = ExtResource("2_xqje8")
-exclusive = true
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_fy7uo")
 

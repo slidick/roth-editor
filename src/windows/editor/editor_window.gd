@@ -225,27 +225,24 @@ func test_map() -> void:
 func close_map(map: Map) -> void:
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
 		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref == map:
-			tree_item.get_metadata(0).queue_free()
-			Roth.loaded_maps.erase(tree_item.get_metadata(0).ref.map_info.name)
 			for child_item: TreeItem in tree_item.get_children():
 				child_item.free()
-			%Map2D.close_map(tree_item.get_metadata(0).ref)
+			tree_item.free()
+			%Map2D.close_map(map)
 			selected_faces.clear()
 			selected_sectors.clear()
 			hovered_face = null
 			hovered_sector = null
-			%"Command Editor".close(tree_item.get_metadata(0).ref.map_info.name)
-			Roth.reload_map_info(tree_item.get_metadata(0).ref.map_info)
-			close_undo_redo(tree_item.get_metadata(0).ref.map_info)
-			tree_item.get_metadata(0).ref.unload()
-			tree_item.free()
-			
+			%"Command Editor".close(map)
+			close_undo_redo(map)
 			reload_skybox()
+			Roth.loaded_maps.erase(map)
+			map.close_map(true)
 
 
 func load_map(map: Map) -> void:
 	for i in range(tree_root.get_child_count()):
-		if map == tree_root.get_child(i).get_metadata(0).ref:
+		if map.preview_map == tree_root.get_child(i).get_metadata(0).ref.preview_map:
 			Console.print("Map loaded already")
 			return
 	
@@ -466,68 +463,58 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save.", "Info", false, Vector2(400,150))
 				return
-			if "vanilla" not in selected[0].get_metadata(0).ref.map_info:
-				Console.print("Saving file: %s" % selected[0].get_metadata(0).ref.map_info.name)
-				var map: Map = selected[0].get_metadata(0).ref
-				Roth.save_map(map)
+			var map: Map = selected[0].get_metadata(0).ref
+			if "vanilla" not in map.map_info:
+				Console.print("Saving file: %s" % map.map_info.name)
+				map.save_map()
 		MapMenu.SaveAs:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
 				return
-			
 			var new_map_name: String = await Roth.query_for_map_name("Save As")
 			if new_map_name.is_empty():
 				return
-			
 			Console.print("Saving file as: %s" % new_map_name)
-			var old_map_name: String = selected[0].get_metadata(0).ref.map_info.name
 			var map: Map = selected[0].get_metadata(0).ref
-			Roth.loaded_maps.erase(map.map_info.name)
-			Roth.maps.erase(map.map_info)
-			Roth.maps.append(map.map_info.duplicate())
-			map.map_info.name = new_map_name
-			map.map_info.filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(new_map_name + ".RAW")
-			map.map_info.erase("filepath_json")
-			map.map_info.erase("vanilla")
-			Roth.loaded_maps[map.map_info.name] = map
-			Roth.save_map(map)
+			map.save_map_as(new_map_name)
 			selected[0].set_text(0, new_map_name)
-			map.name_changed.emit(new_map_name)
-			
-			#Roth.load_roth_settings()
+			undo_lists[map].name = new_map_name
 			Roth.settings_loaded.emit()
-			rename_undo_redo(old_map_name, new_map_name)
 		MapMenu.EditMetadata:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			var results: Array = await %Metadata.show_metadata(selected[0].get_metadata(0).ref.metadata)
+			var map: Map = selected[0].get_metadata(0).ref
+			var results: Array = await %Metadata.show_metadata(map.metadata)
 			if results[0] == false:
 				return
-			selected[0].get_metadata(0).ref.metadata = results[1]
-			Roth.editor_action.emit(selected[0].get_metadata(0).ref, "Change map metadata")
+			map.metadata = results[1]
+			Roth.editor_action.emit(map, "Change map metadata")
 		MapMenu.EditArray02:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			var results: Array = await %SFXZones.edit_data(selected[0].get_metadata(0).ref.sfx_zones)
+			var map: Map = selected[0].get_metadata(0).ref
+			var results: Array = await %SFXZones.edit_data(map.sfx_zones)
 			if results[0] == false:
 				return
-			selected[0].get_metadata(0).ref.sfx_zones = results[1]
+			map.sfx_zones = results[1]
 			%SFXZoneIndexEdit.max_value = len(results[1])
 		MapMenu.EditCommands:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			%"Command Editor".load_command_editor(selected[0].get_metadata(0).ref)
+			var map: Map = selected[0].get_metadata(0).ref
+			%"Command Editor".load_command_editor(map)
 			%TabBar.current_tab = 1
 		MapMenu.EditMode:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
-			%Map2D.setup(selected[0].get_metadata(0).ref)
+			var map: Map = selected[0].get_metadata(0).ref
+			%Map2D.setup(map)
 			reload_skybox()
-			%SFXZoneIndexEdit.max_value = len(selected[0].get_metadata(0).ref.sfx_zones)
+			%SFXZoneIndexEdit.max_value = len(map.sfx_zones)
 		MapMenu.ReloadDAS:
 			var das_packs: Array = []
 			for item: TreeItem in selected:
@@ -542,8 +529,8 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				if not map:
 					return
 				Roth.map_loading_started.emit("Reloading DAS")
-				map.das = await Roth.get_das(map.map_info.das_info)
-				replace_map(map)
+				await map.load_das()
+				replace_map(item.get_metadata(0).ref, map)
 				reload_skybox()
 		MapMenu.Close:
 			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).ref.map_info.name))], "Confirm Close", false):
@@ -566,16 +553,16 @@ func _on_search_text_submitted(search_text: String) -> void:
 	previous_search = search_text
 	
 	var type: String = %SearchOption.get_item_text(%SearchOption.selected)
-	select_face(int(search_text), type, "", search_count)
+	select_face(int(search_text), type, null, search_count)
 
 
 func _on_search_result_activated(search_result: Dictionary) -> void:
-	await Roth.load_maps([search_result.map_info])
+	await Roth.load_maps([search_result.map])
 	%Search.text = str(search_result.index)
 	for i in range(%SearchOption.item_count):
 		if %SearchOption.get_item_text(i) == search_result.type:
 			%SearchOption.select(i)
-	select_face(search_result.index, search_result.type, search_result.map_info.name)
+	select_face(search_result.index, search_result.type, search_result.map)
 
 
 func _on_search_option_item_selected(_index: int) -> void:
@@ -682,26 +669,32 @@ func copy_sfx(sfx_list: Array) -> void:
 
 #region Undo/Redo
 
+func _on_undo_list_item_selected(index: int, item_list: ItemList) -> void:
+	var effected_map: Map
+	for i_map: Map in undo_lists:
+		if item_list == undo_lists[i_map]:
+			effected_map = i_map
+	undo_positions[effected_map] = len(undo_stacks[effected_map]) - index
+	var undo_state: Dictionary = undo_stacks[effected_map][ undo_positions[effected_map] - 1]
+	var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
+	if not map:
+		return
+	map.das = await Roth.get_das(map.map_info.das_info)
+	replace_map(effected_map, map)
+
+
 func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 	%CountAndSizeContainer.recalculate()
 	%Map2D.update_concave_sectors()
-	var map_name: String = p_map.map_info.name
-	if p_map.map_info.name not in undo_stacks:
-		undo_stacks[p_map.map_info.name] = []
-		undo_positions[p_map.map_info.name] = 0
-		undo_lists[p_map.map_info.name] = ItemList.new()
-		undo_lists[p_map.map_info.name].name = p_map.map_info.name
-		compilation_failure_warning_given[p_map.map_info.name] = false
-		%HistoryTabContainer.add_child(undo_lists[p_map.map_info.name])
-		undo_lists[p_map.map_info.name].item_selected.connect(func (index: int) -> void:
-			undo_positions[map_name] = len(undo_stacks[map_name]) - index
-			var undo_state: Dictionary = undo_stacks[map_name][ undo_positions[map_name] - 1]
-			var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
-			if not map:
-				return
-			map.das = await Roth.get_das(map.map_info.das_info)
-			replace_map(map)
-		)
+	if p_map not in undo_stacks:
+		undo_stacks[p_map] = []
+		undo_positions[p_map] = 0
+		var item_list := ItemList.new()
+		undo_lists[p_map] = item_list
+		undo_lists[p_map].name = p_map.map_info.name
+		compilation_failure_warning_given[p_map] = false
+		%HistoryTabContainer.add_child(undo_lists[p_map])
+		undo_lists[p_map].item_selected.connect(_on_undo_list_item_selected, CONNECT_APPEND_SOURCE_OBJECT)
 	
 	if Settings.settings.get("options", {}).get("undo_history", 50) != 0:
 	
@@ -713,56 +706,45 @@ func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 		
 		# Check if map actually compiles, if not give a warning
 		if action.bytes.is_empty():
-			if not compilation_failure_warning_given[p_map.map_info.name]:
-				compilation_failure_warning_given[p_map.map_info.name] = true
+			if not compilation_failure_warning_given[p_map]:
+				compilation_failure_warning_given[p_map] = true
 				Dialog.information("Map %s is too large!\nMap cannot be saved!\nUndo history will not be recorded until corrected!" % p_map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
 			return
-		compilation_failure_warning_given[p_map.map_info.name] = false
+		compilation_failure_warning_given[p_map] = false
 		
 		# Check if state is same as previous state
-		if not undo_stacks[p_map.map_info.name].is_empty() and action.bytes == undo_stacks[p_map.map_info.name][undo_positions[p_map.map_info.name]-1].bytes:
+		if not undo_stacks[p_map].is_empty() and action.bytes == undo_stacks[p_map][undo_positions[p_map]-1].bytes:
 			return
 		
-		while undo_positions[p_map.map_info.name] < len(undo_stacks[p_map.map_info.name]):
-			undo_stacks[p_map.map_info.name].pop_back()
+		while undo_positions[p_map] < len(undo_stacks[p_map]):
+			undo_stacks[p_map].pop_back()
 		
-		undo_stacks[p_map.map_info.name].append(action)
-		undo_positions[p_map.map_info.name] += 1
+		undo_stacks[p_map].append(action)
+		undo_positions[p_map] += 1
 	
-	while len(undo_stacks[p_map.map_info.name]) > Settings.settings.get("options", {}).get("undo_history", 50):
-		undo_stacks[p_map.map_info.name].pop_front()
-		undo_positions[p_map.map_info.name] -= 1
+	while len(undo_stacks[p_map]) > Settings.settings.get("options", {}).get("undo_history", 50):
+		undo_stacks[p_map].pop_front()
+		undo_positions[p_map] -= 1
 	
-	undo_lists[p_map.map_info.name].clear()
-	for i in range(len(undo_stacks[p_map.map_info.name])-1, -1, -1):
-		undo_lists[p_map.map_info.name].add_item(undo_stacks[p_map.map_info.name][i].name)
-	if undo_lists[p_map.map_info.name].item_count > 0:
-		undo_lists[p_map.map_info.name].select(0)
+	undo_lists[p_map].clear()
+	for i in range(len(undo_stacks[p_map])-1, -1, -1):
+		undo_lists[p_map].add_item(undo_stacks[p_map][i].name)
+	if undo_lists[p_map].item_count > 0:
+		undo_lists[p_map].select(0)
 
 
-func close_undo_redo(p_map_info: Dictionary) -> void:
-	undo_stacks.erase(p_map_info.name)
-	undo_positions.erase(p_map_info.name)
-	if p_map_info.name in undo_lists:
-		undo_lists[p_map_info.name].queue_free()
-	undo_lists.erase(p_map_info.name)
-	compilation_failure_warning_given.erase(p_map_info.name)
+func close_undo_redo(p_map: Map) -> void:
+	undo_stacks.erase(p_map)
+	undo_positions.erase(p_map)
+	if p_map in undo_lists:
+		undo_lists[p_map].queue_free()
+	undo_lists.erase(p_map)
+	compilation_failure_warning_given.erase(p_map)
 
 
-func rename_undo_redo(p_old_map_name: String, p_new_map_name: String) -> void:
-	undo_stacks[p_new_map_name] = undo_stacks[p_old_map_name]
-	undo_positions[p_new_map_name] = undo_positions[p_old_map_name]
-	undo_lists[p_new_map_name] = undo_lists[p_old_map_name]
-	undo_lists[p_new_map_name].name = p_new_map_name
-	undo_stacks.erase(p_old_map_name)
-	undo_positions.erase(p_old_map_name)
-	undo_lists.erase(p_old_map_name)
-
-
-func replace_map(map: Map) -> void:
+func replace_map(old_map: Map, new_map: Map) -> void:
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
-		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref.map_info == map.map_info:
-			
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref == old_map:
 			for i in range(len(selected_objects)-1, -1, -1):
 				var object: ObjectRoth = selected_objects[i]
 				if object.map == tree_item.get_metadata(0).ref:
@@ -782,50 +764,49 @@ func replace_map(map: Map) -> void:
 			
 			
 			var folded: bool = %CountAndSizeContainer.folded
-			if %Map2D.close_map(tree_item.get_metadata(0).ref, false):
-				%Map2D.setup(map, false)
+			if %Map2D.close_map(old_map, false):
+				%Map2D.setup(new_map, false)
 				%CountAndSizeContainer.folded = folded
 			
 			
-			Roth.loaded_maps[map.map_info.name] = map
 			
 			var old_map_node: Map.MapNode3D = tree_item.get_metadata(0)
 			
 			var sectors_node := Node3D.new()
 			sectors_node.name = "Sectors"
-			for sector: Sector in map.sectors:
+			for sector: Sector in new_map.sectors:
 				var mesh := sector.initialize_mesh()
 				sectors_node.add_child(mesh)
 			
 			var faces_node := Node3D.new()
 			faces_node.name = "Faces"
-			for face: Face in map.faces:
+			for face: Face in new_map.faces:
 				var mesh := face.initialize_mesh()
 				faces_node.add_child(mesh)
 			
 			var objects_node := Node3D.new()
 			objects_node.name = "Objects"
-			for object: ObjectRoth in map.objects:
+			for object: ObjectRoth in new_map.objects:
 				var mesh := object.initialize_mesh()
 				objects_node.add_child(mesh)
 			
 			var sfx_node := Node3D.new()
 			sfx_node.name = "SFX"
-			for sfx: SFX in map.sound_effects:
+			for sfx: SFX in new_map.sound_effects:
 				var mesh := sfx.initialize_mesh()
 				sfx_node.add_child(mesh)
 			
 			var map_node := Map.MapNode3D.new()
-			map_node.ref = map
+			map_node.ref = new_map
 			map_node.add_child(sectors_node)
 			map_node.add_child(faces_node)
 			map_node.add_child(objects_node)
 			map_node.add_child(sfx_node)
-			map_node.name = map.map_info.name
+			map_node.name = new_map.map_info.name
 			map_node.visible = old_map_node.visible
 			map_node.process_mode = old_map_node.process_mode
 			%Maps.add_child(map_node)
-			map.node = map_node
+			new_map.node = map_node
 			
 			tree_item.set_metadata(0, map_node)
 			
@@ -834,26 +815,36 @@ func replace_map(map: Map) -> void:
 			
 			old_map_node.queue_free()
 			
-			if not is_same(old_map_node.ref.commands_section, map.commands_section) and %"Command Editor".map and %"Command Editor".map.map_info == map.map_info:
-				%"Command Editor".load_command_editor(map, false)
+			if not is_same(old_map_node.ref.commands_section, new_map.commands_section) and %"Command Editor".map and %"Command Editor".map.map_info == new_map.map_info:
+				%"Command Editor".load_command_editor(new_map, false)
 			
-			compilation_failure_warning_given[map.map_info.name] = false
+			compilation_failure_warning_given[new_map] = false
+			undo_lists[new_map] = undo_lists[old_map]
+			undo_positions[new_map] = undo_positions[old_map]
+			undo_stacks[new_map] = undo_stacks[old_map]
+			compilation_failure_warning_given.erase(old_map)
+			undo_lists.erase(old_map)
+			undo_positions.erase(old_map)
+			undo_stacks.erase(old_map)
+			Roth.loaded_maps.erase(old_map)
+			Roth.loaded_maps.append(new_map)
+			new_map.preview_map = old_map.preview_map
+			old_map.unload()
 			
-			old_map_node.ref.unload()
 
 #endregion
 
 #region Editor Functions
 
-func select_face(index: int, type: String, p_map_name: String = "", count: int = 0, deselect_others: bool = true) -> void:
+func select_face(index: int, type: String, p_map: Map = null, count: int = 0, deselect_others: bool = true) -> void:
 	var maps_available := []
 	
 	for i in range(tree_root.get_child_count()):
-		if p_map_name.is_empty():
+		if p_map == null:
 			if tree_root.get_child(i).get_metadata(0).visible:
 				maps_available.append(tree_root.get_child(i).get_metadata(0))
 		else:
-			if tree_root.get_child(i).get_text(0) == p_map_name:
+			if tree_root.get_child(i).get_metadata(0).ref.preview_map == p_map:
 				maps_available.append(tree_root.get_child(i).get_metadata(0))
 	
 	for map_node: Node3D in maps_available:
@@ -912,7 +903,7 @@ func select_face(index: int, type: String, p_map_name: String = "", count: int =
 	if search_count > 0:
 		search_count = 0
 		previous_search = str(index)
-		select_face(index, type, p_map_name, search_count)
+		select_face(index, type, p_map, search_count)
 
 
 func select_resources(resource_list: Array, deselect_others: bool = true) -> void:

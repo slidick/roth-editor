@@ -82,10 +82,10 @@ func _on_settings_loaded() -> void:
 	var index: int = 0
 	%MapsOption.add_item("All Maps")
 	%MapsOption.set_item_metadata(index, {"name": "All Maps"})
-	for map_info: Dictionary in Roth.maps:
+	for map: Map in Roth.maps:
 		index += 1
-		%MapsOption.add_item(map_info.name)
-		%MapsOption.set_item_metadata(index, map_info)
+		%MapsOption.add_item(map.map_info.name)
+		%MapsOption.set_item_metadata(index, map)
 
 
 func search() -> void:
@@ -103,25 +103,27 @@ func search() -> void:
 	
 	var search_value := int(search_string)
 	
-	var search_map: Dictionary = %MapsOption.get_selected_metadata()
+	
 	var sectors := []
 	var faces := []
 	var objects := []
 	var sfx := []
 	var commands := []
-	if search_map.name == "All Maps":
-		for map_info:Dictionary in Roth.maps:
-			sectors.append_array(Roth.get_map(map_info).sectors)
-			faces.append_array(Roth.get_map(map_info).faces)
-			objects.append_array(Roth.get_map(map_info).objects)
-			sfx.append_array(Roth.get_map(map_info).sound_effects)
-			commands.append_array(Roth.get_map(map_info).commands_section.allCommands)
+	if %MapsOption.get_item_index(%MapsOption.get_selected_id()) == 0:
+		for map: Map in Roth.maps:
+			map.load_map()
+			sectors.append_array(map.sectors)
+			faces.append_array(map.faces)
+			objects.append_array(map.objects)
+			sfx.append_array(map.sound_effects)
+			commands.append_array(map.commands_section.allCommands)
 	else:
-		sectors = Roth.get_map(search_map).sectors
-		faces = Roth.get_map(search_map).faces
-		objects = Roth.get_map(search_map).objects
-		sfx = Roth.get_map(search_map).sound_effects
-		commands = Roth.get_map(search_map).commands_section.allCommands
+		var map: Map = %MapsOption.get_selected_metadata()
+		sectors = map.sectors
+		faces = map.faces
+		objects = map.objects
+		sfx = map.sound_effects
+		commands = map.commands_section.allCommands
 		
 	
 	var search_field: String = %FieldsOption.text
@@ -229,7 +231,7 @@ func search() -> void:
 		%ResultsList.grab_focus()
 		for result: Dictionary in results:
 			var index: int  = %ResultsList.add_item("%s -- %s: %s" % [result.value.map.map_info.name, result.type, result.value.index])
-			%ResultsList.set_item_metadata(index, {"map_info": result.value.map.map_info, "type": result.type, "index": result.value.index})
+			%ResultsList.set_item_metadata(index, {"map": result.value.map, "type": result.type, "index": result.value.index})
 	else:
 		%ResultsList.add_item("No results.")
 		# Quirk Fix: Needed to allow reediting of search value when pressing enter and no results.

@@ -16,8 +16,11 @@ func toggle(_bool: Variant = null) -> void:
 
 func _on_settings_loaded() -> void:
 	%DasOption.clear()
+	var idx: int = 0
 	for das_info: Dictionary in Roth.das_packs:
 		%DasOption.add_item(das_info.name)
+		%DasOption.set_item_metadata(idx, das_info)
+		idx += 1
 
 
 func _on_cancel_button_pressed() -> void:
@@ -36,11 +39,13 @@ func create() -> void:
 		return
 	var create_info := {
 		"name": map_name,
-		"das": %DasOption.text.to_upper(),
+		"das_info": %DasOption.get_selected_metadata(),
 	}
-	Roth.create_new_map(create_info)
+	var new_map := Map.new(create_info)
+	new_map.save_map()
+	Roth.maps.append(new_map)
 	toggle(false)
-	map_created.emit(create_info)
+	map_created.emit(new_map)
 
 
 func _on_das_option_item_selected(_index: int) -> void:

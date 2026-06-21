@@ -30,11 +30,11 @@ func export_maps(p_maps: Array) -> void:
 		if sfx_info.active:
 			%SFXOption.select(%SFXOption.item_count-1)
 	
-	for map_info: Dictionary in p_maps:
+	for map: Map in p_maps:
 		var tree_item: TreeItem = %MapsTree.get_root().create_child()
-		tree_item.set_text(0, map_info.name)
-		tree_item.set_text(1, map_info.das_info.name)
-		tree_item.set_metadata(0, map_info)
+		tree_item.set_text(0, map.map_info.name)
+		tree_item.set_text(1, map.map_info.das_info.name)
+		tree_item.set_metadata(0, map)
 	
 	toggle(true)
 
@@ -97,8 +97,9 @@ func _on_file_dialog_file_selected(_path: String) -> void:
 	export_info.erase("export_path")
 	export_info.maps = []
 	for tree_item: TreeItem in %MapsTree.get_root().get_children():
-		var map_info: Dictionary = tree_item.get_metadata(0).duplicate()
-		map_info["raw"] = Marshalls.raw_to_base64(Roth.get_map(map_info).compile())
+		var map: Map = tree_item.get_metadata(0).duplicate()
+		var map_info: Dictionary = map.map_info.duplicate(true)
+		map_info["raw"] = Marshalls.raw_to_base64(map.compile())
 		map_info.erase("filepath")
 		map_info.erase("filepath_json")
 		map_info.erase("vanilla")

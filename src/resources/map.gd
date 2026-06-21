@@ -1,7 +1,6 @@
 extends Object
 class_name Map
 
-@warning_ignore("unused_signal")
 signal name_changed(new_name: String)
 
 var metadata := {
@@ -39,83 +38,16 @@ var commands_section := {
 var node: MapNode3D
 var editor_metadata := {}
 var das: Dictionary
+var is_loaded: bool = false
+var preview_map: Map = null
 
 
 static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) -> Map:
 	var map_json: Dictionary = Raw.parse_bytes(p_bytes)
 	if map_json.is_empty():
 		return
-	return load_from_dict(p_map_info, map_json)
-
-
-static func load_from_file(p_map_info: Dictionary) -> Map:
-	Console.print("Loading map: %s" % p_map_info.filepath)
-	var map_json: Dictionary = Raw.parse_file(p_map_info.filepath)
-	if map_json.is_empty():
-		return
-	return load_from_dict(p_map_info, map_json)
-
-
-static func load_from_dict(p_map_info: Dictionary, map_json: Dictionary) -> Map:
-	var loaded_map := Map.new()
-	loaded_map.map_info = p_map_info
-	
-	for i in range(len(map_json.sectorsSection.sectors)):
-		loaded_map.sectors.append( Sector.new( 
-				map_json.sectorsSection.sectors[i],
-				loaded_map,
-				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
-			)
-		)
-		for object_data: Dictionary in loaded_map.sectors[i].data.objectInformation:
-			loaded_map.objects.append( ObjectRoth.new(
-					object_data,
-					loaded_map,
-					loaded_map.sectors[i]
-				)
-			)
-	
-	for i in range(len(map_json.facesSection.faces)):
-		loaded_map.faces.append( Face.new(
-				map_json.facesSection.faces[i],
-				loaded_map,
-				map_json.verticesSection.vertices,
-				loaded_map.sectors,
-				map_json.faceTextureMappingSection.mappings,
-			)
-		)
-	
-	for face: Face in loaded_map.faces:
-		face.update_sister_face(loaded_map.faces)
-	
-	for sector: Sector in loaded_map.sectors:
-		sector.update_faces(loaded_map.faces)
-	
-	for i in range(len(map_json.section7.unkArray01)):
-		loaded_map.sound_effects.append(SFX.new(map_json.section7.unkArray01[i], loaded_map))
-	
-	if "unkArray02" in map_json.section7:
-		loaded_map.sfx_zones = map_json.section7.unkArray02
-	
-	loaded_map.metadata = map_json.mapMetadataSection
-	loaded_map.vertices_count = len(map_json.verticesSection.vertices)
-	loaded_map.commands_section = map_json.commandsSection
-	
-	for i in range(len(loaded_map.commands_section.allCommands)):
-		loaded_map.commands_section.allCommands[i]["map"] = loaded_map
-		loaded_map.commands_section.allCommands[i]["index"] = i+1
-	
-	if "vanilla" in p_map_info and p_map_info.name == "RAQUIA2":
-		for sector: Sector in loaded_map.sectors:
-			for face_ref: WeakRef in sector.faces:
-				var face: Face = face_ref.get_ref()
-				if face.v1.y > 20000:
-					face.v1.y -= 65536
-				if face.v2.y > 20000:
-					face.v2.y -= 65536
-			sector._update_vertices()
-	
-	
+	var loaded_map := Map.new(p_map_info)
+	loaded_map.load_json(map_json)
 	return loaded_map
 
 
@@ -135,12 +67,269 @@ static func get_triggering_ids(command_section: Dictionary, command_index: int) 
 	return triggering_ids
 
 
+func _init(p_map_info: Dictionary) -> void:
+	map_info = p_map_info
+
+
+func load_map() -> void:
+	if not is_loaded:
+		var map_json: Dictionary = Raw.parse_file(map_info.filepath)
+		if map_json.is_empty():
+			return
+		load_json(map_json)
+		is_loaded = true
+
+
+func load_json(map_json: Dictionary) -> void:
+	for i in range(len(map_json.sectorsSection.sectors)):
+		sectors.append( Sector.new( 
+				map_json.sectorsSection.sectors[i],
+				self,
+				map_json.midPlatformsSection.platforms if "midPlatformsSection" in map_json else [],
+			)
+		)
+		for object_data: Dictionary in sectors[i].data.objectInformation:
+			objects.append( ObjectRoth.new(
+					object_data,
+					self,
+					sectors[i]
+				)
+			)
+	
+	for i in range(len(map_json.facesSection.faces)):
+		faces.append( Face.new(
+				map_json.facesSection.faces[i],
+				self,
+				map_json.verticesSection.vertices,
+				sectors,
+				map_json.faceTextureMappingSection.mappings,
+			)
+		)
+	
+	for face: Face in faces:
+		face.update_sister_face(faces)
+	
+	for sector: Sector in sectors:
+		sector.update_faces(faces)
+	
+	for i in range(len(map_json.section7.unkArray01)):
+		sound_effects.append(SFX.new(map_json.section7.unkArray01[i], self))
+	
+	if "unkArray02" in map_json.section7:
+		sfx_zones = map_json.section7.unkArray02
+	
+	metadata = map_json.mapMetadataSection
+	vertices_count = len(map_json.verticesSection.vertices)
+	commands_section = map_json.commandsSection
+	
+	for i in range(len(commands_section.allCommands)):
+		commands_section.allCommands[i]["map"] = self
+		commands_section.allCommands[i]["index"] = i+1
+	
+	if "vanilla" in map_info and map_info.name == "RAQUIA2":
+		for sector: Sector in sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				if face.v1.y > 20000:
+					face.v1.y -= 65536
+				if face.v2.y > 20000:
+					face.v2.y -= 65536
+			sector._update_vertices()
+
+
 func load_das() -> void:
 	das = await Roth.get_das(map_info.das_info)
 
 
 func unload() -> void:
 	free.call_deferred()
+
+
+func delete_map(p_delete_backups: bool = false) -> void:
+	if FileAccess.file_exists(map_info.filepath):
+		DirAccess.remove_absolute(map_info.filepath)
+	if FileAccess.file_exists(map_info.filepath_json):
+		DirAccess.remove_absolute(map_info.filepath_json)
+	if p_delete_backups:
+		var count: int = 1
+		while FileAccess.file_exists(map_info.filepath + ".%d" % count):
+			DirAccess.remove_absolute(map_info.filepath + ".%d" % count)
+			count += 1
+		count = 1
+		while FileAccess.file_exists(map_info.filepath_json + ".%d" % count):
+			DirAccess.remove_absolute(map_info.filepath_json + ".%d" % count)
+			count += 1
+	Roth.maps.erase(self)
+	unload()
+
+
+func rename_map(new_map_name: String) -> void:
+	Console.print("Renaming map from %s to %s" % [map_info.name, new_map_name])
+	var old_map_info: Dictionary = map_info.duplicate()
+	
+	map_info.name = new_map_name
+	map_info.erase("filepath")
+	map_info.erase("filepath_json")
+	
+	save_map()
+	
+	if FileAccess.file_exists(map_info.filepath) and map_info.filepath != old_map_info.filepath:
+		if FileAccess.file_exists(old_map_info.filepath):
+			DirAccess.remove_absolute(old_map_info.filepath)
+		if FileAccess.file_exists(old_map_info.filepath_json):
+			DirAccess.remove_absolute(old_map_info.filepath_json)
+	
+	name_changed.emit(new_map_name)
+
+
+func duplicate_map(new_map_name: String) -> void:
+	var new_map: Map = Map.new(map_info.duplicate())
+	new_map.map_info.name = new_map_name
+	new_map.map_info.erase("filepath")
+	new_map.map_info.erase("filepath_json")
+	new_map.map_info.erase("vanilla")
+	new_map.save_metadata()
+	Roth.maps.append(new_map)
+	DirAccess.copy_absolute(map_info.filepath, new_map.map_info.filepath)
+
+
+func create_editable_map() -> Map:
+	var map := Map.new(map_info.duplicate())
+	map.preview_map = self
+	return map
+
+
+func close_map(unload_map: bool = false) -> void:
+	metadata = {
+		"initPosX": 0,
+		"initPosZ": 0,
+		"initPosY": 0,
+		"rotation": 0,
+		"moveSpeed": 5,
+		"playerHeight": 72,
+		"maxClimb": 32,
+		"minFit": 48,
+		"unk0x10": 2,
+		"candleGlow": 8,
+		"lightAmbience": 0,
+		"unk0x16": 0,
+		"skyTexture": 0,
+		"unk0x1A": 0,
+	}
+	
+	sectors = []
+	faces = []
+	objects = []
+	sound_effects = []
+	sfx_zones = []
+	vertices_count = 0
+	#map_info = {}
+	commands_section = {
+		"header": {
+			"signature": "3u",
+			"unk0x02": 0
+		},
+		"entryCommandIndexes": [],
+		"allCommands": []
+	}
+	if node:
+		node.queue_free()
+	node = null
+	editor_metadata = {}
+	das = {}
+	is_loaded = false
+	if unload_map:
+		unload()
+	else:
+		_reload_map_info()
+
+
+func _reload_map_info() -> void:
+	if "vanilla" in map_info:
+		map_info.erase("command_positions")
+	else:
+		var file_string := FileAccess.get_file_as_string(map_info.filepath_json)
+		if not file_string.is_empty():
+			var file_json: Variant = JSON.parse_string(file_string)
+			if file_json:
+				file_json["filepath"] = map_info.filepath
+				file_json["filepath_json"] = map_info.filepath_json
+				for key: String in map_info:
+					if key in file_json:
+						map_info[key] = file_json[key]
+					else:
+						map_info.erase(key)
+				for das_info: Dictionary in Roth.das_packs:
+					if das_info.name == file_json.das.get_basename().get_file():
+						map_info.das_info = das_info
+
+
+func save_map(directory: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
+	var raw_map := compile(player_data)
+	var raw_filepath := directory.path_join(map_info.name.to_upper() + ".RAW")
+	
+	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY and FileAccess.file_exists(raw_filepath):
+		var json_filepath: = directory.path_join(map_info.name.to_upper() + ".json")
+		var count: int = 1
+		while FileAccess.file_exists(raw_filepath + ".%d" % count):
+			count += 1
+		count -= 1
+		for i in range(count, 0, -1):
+			DirAccess.rename_absolute(raw_filepath + ".%d" % i, raw_filepath + ".%d" % (i+1))
+			DirAccess.rename_absolute(json_filepath + ".%d" % i, json_filepath + ".%d" % (i+1))
+		
+		DirAccess.rename_absolute(raw_filepath, raw_filepath + ".1")
+		DirAccess.rename_absolute(json_filepath, json_filepath + ".1")
+		
+		count += 1
+		while count > Settings.settings.get("options", {}).get("backup_saves", 5):
+			DirAccess.remove_absolute(raw_filepath + ".%d" % count)
+			DirAccess.remove_absolute(json_filepath + ".%d" % count)
+			count -= 1
+			if count < 1:
+				break
+	
+	var file := FileAccess.open(raw_filepath, FileAccess.WRITE)
+	file.store_buffer(raw_map)
+	file.close()
+	
+	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY:
+		save_metadata()
+	
+	if preview_map:
+		preview_map.close_map()
+
+
+func save_metadata() -> void:
+	var json_filepath: String
+	if "filepath_json" in map_info:
+		json_filepath = map_info.filepath_json
+	else:
+		json_filepath = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".json")
+		map_info["filepath_json"] = json_filepath
+	if "filepath" not in map_info:
+		map_info["filepath"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.name.to_upper() + ".RAW")
+	
+	var save_info: Dictionary = map_info.duplicate()
+	save_info.erase("filepath")
+	save_info.erase("filepath_json")
+	save_info["das"] = save_info.das_info.name
+	save_info.erase("das_info")
+	
+	var json_file := FileAccess.open(json_filepath, FileAccess.WRITE)
+	json_file.store_string(JSON.stringify(save_info, "\t"))
+	json_file.close()
+
+
+func save_map_as(new_map_name: String) -> void:
+	map_info.name = new_map_name
+	map_info.erase("filepath")
+	map_info.erase("filepath_json")
+	map_info.erase("vanilla")
+	save_map()
+	preview_map = Map.new(map_info.duplicate())
+	Roth.maps.append(preview_map)
+	name_changed.emit(new_map_name)
 
 
 func delete_sector(sector_to_delete: Sector) -> void:
