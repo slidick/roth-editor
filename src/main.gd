@@ -6,8 +6,8 @@ enum Main {
 	ManageDBase,
 	ManageSFX,
 	ManageDAS,
-	CreateBackdrop,
-	CreateIcons,
+	BackdropEditor,
+	IconsEditor,
 	SaveEditor,
 	Sep0,
 	TestMap,
@@ -159,9 +159,9 @@ func _on_main_index_pressed(index: int) -> void:
 			%ManageSFX.toggle(true)
 		Main.ManageDAS:
 			%ManageDAS.toggle(true)
-		Main.CreateBackdrop:
+		Main.BackdropEditor:
 			%BackdropEditor.toggle(true)
-		Main.CreateIcons:
+		Main.IconsEditor:
 			%IconsEditor.toggle(true)
 		Main.SaveEditor:
 			%SaveEditor.toggle(true)

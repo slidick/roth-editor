@@ -161,7 +161,6 @@ offset_right = 640.0
 offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
-exclusive = true
 
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HSplitContainer/IconsList" to="." method="_on_icons_list_item_activated"]

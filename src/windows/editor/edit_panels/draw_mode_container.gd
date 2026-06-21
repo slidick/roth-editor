@@ -2,13 +2,9 @@ extends MarginContainer
 
 var current_das: String = ""
 
+
 func _ready() -> void:
-	Roth.settings_loaded.connect(_on_settings_loaded)
 	%Map3D.properties_copied.connect(_on_properties_copied)
-
-
-func _on_settings_loaded() -> void:
-	pass
 
 
 func enter_draw_mode(force_reload: bool = false) -> void:
