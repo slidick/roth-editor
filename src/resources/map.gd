@@ -178,6 +178,14 @@ func rename_map(new_map_name: String) -> void:
 			DirAccess.remove_absolute(old_map_info.filepath)
 		if FileAccess.file_exists(old_map_info.filepath_json):
 			DirAccess.remove_absolute(old_map_info.filepath_json)
+		var count: int = 1
+		while FileAccess.file_exists(old_map_info.filepath + ".%d" % count):
+			DirAccess.rename_absolute(old_map_info.filepath + ".%d" % count, map_info.filepath + ".%d" % count)
+			count += 1
+		count = 1
+		while FileAccess.file_exists(old_map_info.filepath_json + ".%d" % count):
+			DirAccess.rename_absolute(old_map_info.filepath_json + ".%d" % count, map_info.filepath_json + ".%d" % count)
+			count += 1
 	
 	name_changed.emit(new_map_name)
 
