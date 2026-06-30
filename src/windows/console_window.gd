@@ -31,3 +31,8 @@ func _handle_command(command: String) -> void:
 			var filepath: String = Roth.install_directory.path_join("../ROTH/SAVEGAME/SAVE2.SAV")
 			var data: Dictionary = SaveGame.parse_filepath(filepath)
 			Console.print(JSON.stringify(data, '\t', false))
+		"create_patch":
+			if len(command_array) != 4:
+				Console.print("Usage: create_patch [a_dir] [b_dir] [out_dir]")
+				return
+			Patch.create_patch_from_folders(command_array[1], command_array[2], command_array[3])
