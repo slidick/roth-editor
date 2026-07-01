@@ -1157,9 +1157,9 @@ func _on_sfx_context_popup_menu_index_pressed(index: int) -> void:
 			Roth.editor_action.emit(map, "Add SFX")
 		1:
 			owner.select_resource(null)
-			var origin := Vector2(-owner.copied_sfx_data[0].data.unk0x00, owner.copied_sfx_data[0].data.unk0x02)
+			var origin := Vector2(-owner.copied_sfx_data[0].data.posX, owner.copied_sfx_data[0].data.posY)
 			for each_sfx: SFX in owner.copied_sfx_data:
-				var offset := origin - Vector2(-each_sfx.data.unk0x00, each_sfx.data.unk0x02)
+				var offset := origin - Vector2(-each_sfx.data.posX, each_sfx.data.posY)
 				var new_sfx := SFX.new_from_copied_sfx(each_sfx, (mouse_paste_position.snappedf(snap) * Roth.SCALE_2D_WORLD) - offset)
 				if not each_sfx:
 					continue

@@ -54,56 +54,56 @@ func update_selections() -> void:
 	elif len(owner.selected_sfx) > 1:
 		%SFXIndexLabel.text = "SFX: %d Selected" % len(owner.selected_sfx)
 	
-	%SFXPosXEdit.get_line_edit().text = "%d" % -sfx.data.unk0x00
-	%SFXPosXEdit.set_value_no_signal(-sfx.data.unk0x00)
-	%SFXPosYEdit.get_line_edit().text = "%d" % sfx.data.unk0x02
-	%SFXPosYEdit.set_value_no_signal(sfx.data.unk0x02)
-	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx.data.unk0x04+1)
-	%SFXSoundIndexEdit.set_value_no_signal(sfx.data.unk0x04+1)
-	%SFXUnk0x06Edit.get_line_edit().text = "%d" % sfx.data.unk0x06
-	%SFXUnk0x06Edit.set_value_no_signal(sfx.data.unk0x06)
-	%SFXUnk0x08Edit.get_line_edit().text = "%d" % sfx.data.unk0x08
-	%SFXUnk0x08Edit.set_value_no_signal(sfx.data.unk0x08)
+	%SFXPosXEdit.get_line_edit().text = "%d" % -sfx.data.posX
+	%SFXPosXEdit.set_value_no_signal(-sfx.data.posX)
+	%SFXPosYEdit.get_line_edit().text = "%d" % sfx.data.posY
+	%SFXPosYEdit.set_value_no_signal(sfx.data.posY)
+	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx.data.sfxIndex+1)
+	%SFXSoundIndexEdit.set_value_no_signal(sfx.data.sfxIndex+1)
+	%SFXUnk0x06Edit.get_line_edit().text = "%d" % sfx.data.sfxID
+	%SFXUnk0x06Edit.set_value_no_signal(sfx.data.sfxID)
+	%SFXUnk0x08Edit.get_line_edit().text = "%d" % sfx.data.flags
+	%SFXUnk0x08Edit.set_value_no_signal(sfx.data.flags)
 	%SFXZoneIndexEdit.get_line_edit().text = "%d" % sfx.data.zoneIndex
 	%SFXZoneIndexEdit.set_value_no_signal(sfx.data.zoneIndex)
-	%SFXUnk0x0AEdit.get_line_edit().text = "%d" % sfx.data.unk0x0A
-	%SFXUnk0x0AEdit.set_value_no_signal(sfx.data.unk0x0A)
-	%SFXUnk0x0CEdit.get_line_edit().text = "%d" % sfx.data.unk0x0C
-	%SFXUnk0x0CEdit.set_value_no_signal(sfx.data.unk0x0C)
+	%SFXUnk0x0AEdit.get_line_edit().text = "%d" % sfx.data.audibleRadius
+	%SFXUnk0x0AEdit.set_value_no_signal(sfx.data.audibleRadius)
+	%SFXUnk0x0CEdit.get_line_edit().text = "%d" % sfx.data.loopDelay
+	%SFXUnk0x0CEdit.set_value_no_signal(sfx.data.loopDelay)
 	%SFXUnk0x0EEdit.get_line_edit().text = "%d" % sfx.data.unk0x0E
 	%SFXUnk0x0EEdit.set_value_no_signal(sfx.data.unk0x0E)
 	%SFXVolumeEdit.get_line_edit().text = "%d" % sfx.data.volume
 	%SFXVolumeEdit.set_value_no_signal(sfx.data.volume)
 	%SFXUnk0x11Edit.get_line_edit().text = "%d" % sfx.data.unk0x11
 	%SFXUnk0x11Edit.set_value_no_signal(sfx.data.unk0x11)
-	%SFXFlag1CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<0)) > 0)
-	%SFXFlag2CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<1)) > 0)
-	%SFXFlag3CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<2)) > 0)
-	%SFXFlag4CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<3)) > 0)
-	%SFXFlag5CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<4)) > 0)
-	%SFXFlag6CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<5)) > 0)
-	%SFXFlag7CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<6)) > 0)
-	%SFXFlag8CheckBox.set_pressed_no_signal((sfx.data.unk0x08 & (1<<7)) > 0)
+	%SFXFlag1CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<0)) > 0)
+	%SFXFlag2CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<1)) > 0)
+	%SFXFlag3CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<2)) > 0)
+	%SFXFlag4CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<3)) > 0)
+	%SFXFlag5CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<4)) > 0)
+	%SFXFlag6CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<5)) > 0)
+	%SFXFlag7CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<6)) > 0)
+	%SFXFlag8CheckBox.set_pressed_no_signal((sfx.data.flags & (1<<7)) > 0)
 	load_sfx_zone_data()
 	
 	for each_sfx: SFX in owner.selected_sfx:
-		if each_sfx.data.unk0x00 != sfx.data.unk0x00:
+		if each_sfx.data.posX != sfx.data.posX:
 			%SFXPosXEdit.get_line_edit().clear.call_deferred()
-		if each_sfx.data.unk0x02 != sfx.data.unk0x02:
+		if each_sfx.data.posY != sfx.data.posY:
 			%SFXPosYEdit.get_line_edit().clear.call_deferred()
-		if each_sfx.data.unk0x04 != sfx.data.unk0x04:
+		if each_sfx.data.sfxIndex != sfx.data.sfxIndex:
 			%SFXSoundIndexEdit.get_line_edit().clear.call_deferred()
 			%SFXPlayButton.hide()
-		if each_sfx.data.unk0x06 != sfx.data.unk0x06:
+		if each_sfx.data.sfxID != sfx.data.sfxID:
 			%SFXUnk0x06Edit.get_line_edit().clear.call_deferred()
-		if each_sfx.data.unk0x08 != sfx.data.unk0x08:
+		if each_sfx.data.flags != sfx.data.flags:
 			%SFXUnk0x08Edit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.zoneIndex != sfx.data.zoneIndex:
 			%SFXZoneIndexEdit.get_line_edit().clear.call_deferred()
 			%SFXZoneDataContainer.hide()
-		if each_sfx.data.unk0x0A != sfx.data.unk0x0A:
+		if each_sfx.data.audibleRadius != sfx.data.audibleRadius:
 			%SFXUnk0x0AEdit.get_line_edit().clear.call_deferred()
-		if each_sfx.data.unk0x0C != sfx.data.unk0x0C:
+		if each_sfx.data.loopDelay != sfx.data.loopDelay:
 			%SFXUnk0x0CEdit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.unk0x0E != sfx.data.unk0x0E:
 			%SFXUnk0x0EEdit.get_line_edit().clear.call_deferred()
@@ -111,21 +111,21 @@ func update_selections() -> void:
 			%SFXVolumeEdit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.unk0x11 != sfx.data.unk0x11:
 			%SFXUnk0x11Edit.get_line_edit().clear.call_deferred()
-		if ((each_sfx.data.unk0x08 & (1<<0)) > 0) != ((sfx.data.unk0x08 & (1<<0)) > 0):
+		if ((each_sfx.data.flags & (1<<0)) > 0) != ((sfx.data.flags & (1<<0)) > 0):
 			%SFXFlag1CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<1)) > 0) != ((sfx.data.unk0x08 & (1<<1)) > 0):
+		if ((each_sfx.data.flags & (1<<1)) > 0) != ((sfx.data.flags & (1<<1)) > 0):
 			%SFXFlag2CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<2)) > 0) != ((sfx.data.unk0x08 & (1<<2)) > 0):
+		if ((each_sfx.data.flags & (1<<2)) > 0) != ((sfx.data.flags & (1<<2)) > 0):
 			%SFXFlag3CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<3)) > 0) != ((sfx.data.unk0x08 & (1<<3)) > 0):
+		if ((each_sfx.data.flags & (1<<3)) > 0) != ((sfx.data.flags & (1<<3)) > 0):
 			%SFXFlag4CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<4)) > 0) != ((sfx.data.unk0x08 & (1<<4)) > 0):
+		if ((each_sfx.data.flags & (1<<4)) > 0) != ((sfx.data.flags & (1<<4)) > 0):
 			%SFXFlag5CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<5)) > 0) != ((sfx.data.unk0x08 & (1<<5)) > 0):
+		if ((each_sfx.data.flags & (1<<5)) > 0) != ((sfx.data.flags & (1<<5)) > 0):
 			%SFXFlag6CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<6)) > 0) != ((sfx.data.unk0x08 & (1<<6)) > 0):
+		if ((each_sfx.data.flags & (1<<6)) > 0) != ((sfx.data.flags & (1<<6)) > 0):
 			%SFXFlag7CheckBox.indeterminate = true
-		if ((each_sfx.data.unk0x08 & (1<<7)) > 0) != ((sfx.data.unk0x08 & (1<<7)) > 0):
+		if ((each_sfx.data.flags & (1<<7)) > 0) != ((sfx.data.flags & (1<<7)) > 0):
 			%SFXFlag8CheckBox.indeterminate = true
 
 
@@ -160,34 +160,34 @@ func load_sfx_zone_data() -> void:
 
 func _on_sfx_pos_x_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x00 = -value
+		sfx.data.posX = -value
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_pos_y_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x02 = value
+		sfx.data.posY = value
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
   
 func _on_sfx_sound_index_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x04 = (value-1)
+		sfx.data.sfxIndex = (value-1)
 	%SFXPlayButton.show()
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_06_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x06 = value
+		sfx.data.sfxID = value
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_08_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x08 = value
+		sfx.data.flags = value
 	%EditSFXTimer.start()
 
 
@@ -201,14 +201,14 @@ func _on_sfx_zone_index_edit_value_changed(value: float) -> void:
 
 func _on_sfx_unk_0x_0a_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x0A = value
+		sfx.data.audibleRadius = value
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_unk_0x_0c_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
-		sfx.data.unk0x0C = value
+		sfx.data.loopDelay = value
 	%EditSFXTimer.start()
 
 
@@ -254,72 +254,72 @@ func _on_select_sfx_button_pressed() -> void:
 func _on_sfx_flag_1_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 0)
+			sfx.data.flags |= (1 << 0)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 0)
+			sfx.data.flags &= ~(1 << 0)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_2_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 1)
+			sfx.data.flags |= (1 << 1)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 1)
+			sfx.data.flags &= ~(1 << 1)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_3_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 2)
+			sfx.data.flags |= (1 << 2)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 2)
+			sfx.data.flags &= ~(1 << 2)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_4_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 3)
+			sfx.data.flags |= (1 << 3)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 3)
+			sfx.data.flags &= ~(1 << 3)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_5_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 4)
+			sfx.data.flags |= (1 << 4)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 4)
+			sfx.data.flags &= ~(1 << 4)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_6_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 5)
+			sfx.data.flags |= (1 << 5)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 5)
+			sfx.data.flags &= ~(1 << 5)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_7_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 6)
+			sfx.data.flags |= (1 << 6)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 6)
+			sfx.data.flags &= ~(1 << 6)
 	%EditSFXTimer.start()
 
 
 func _on_sfx_flag_8_check_box_toggled(toggled_on: bool) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		if toggled_on:
-			sfx.data.unk0x08 |= (1 << 7)
+			sfx.data.flags |= (1 << 7)
 		else:
-			sfx.data.unk0x08 &= ~(1 << 7)
+			sfx.data.flags &= ~(1 << 7)
 	%EditSFXTimer.start()
 
 

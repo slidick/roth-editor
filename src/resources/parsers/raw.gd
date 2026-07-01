@@ -139,20 +139,20 @@ const SECTION_7_HEADER := {
 }
 
 const SOUND_EFFECT := {
-	"unk0x00": Parser.Type.SignedWord,
-	"unk0x02": Parser.Type.SignedWord,
-	"unk0x04": Parser.Type.Word,
-	"unk0x06": Parser.Type.Word,
-	"unk0x08": Parser.Type.Byte,
-	"zoneIndex": Parser.Type.Byte,
-	"unk0x0A": Parser.Type.Word,
-	"unk0x0C": Parser.Type.Word,
-	"unk0x0E": Parser.Type.Word,
-	"volume": Parser.Type.Byte,
-	"unk0x11": Parser.Type.Byte,
+	"posX": Parser.Type.SignedWord,      # Pos X
+	"posY": Parser.Type.SignedWord,      # Pos Y
+	"sfxIndex": Parser.Type.Word,        # SFX Index
+	"sfxID": Parser.Type.Word,           # SFX ID
+	"flags": Parser.Type.Byte,           # Flags (Loop, Loop w/delay, Unused*4, Unknown, Autoplay)
+	"zoneIndex": Parser.Type.Byte,       # Zone Index
+	"audibleRadius": Parser.Type.Word,   # Radius
+	"loopDelay": Parser.Type.Word,       # Max Loop Delay
+	"unk0x0E": Parser.Type.Word,         # Unused
+	"volume": Parser.Type.Byte,          # Volume
+	"unk0x11": Parser.Type.Byte,         # Only 0 or 128
 }
 
-const UNKOWN_ARRAY_2 := {
+const SOUND_EFFECT_ZONE := {
 	"zoneCount": Parser.Type.Word,
 	"zone1Dampen": Parser.Type.Byte,
 	"zone1Flags": Parser.Type.Byte,
@@ -342,7 +342,7 @@ static func parse(file: FileAccess) -> Dictionary:
 	if header["section7Size"] > section_7_header["sizeA"]:
 		while file.get_position() < header["section7Size"] + header["commandSectionSize"] + header["verticesOffset"] + header["verticesSectionSize"]:
 			unk_array_02.append(
-				Parser.parse_section(file, UNKOWN_ARRAY_2)
+				Parser.parse_section(file, SOUND_EFFECT_ZONE)
 			)
 	
 	
@@ -769,14 +769,14 @@ static func _write_section7(buffer: PackedByteArray, json: Dictionary, section_s
 	buffer.encode_u16(position + 0x02, len(json.section7.unkArray01))
 	position += 0x04
 	for array1_obj: Dictionary in json.section7.unkArray01:
-		buffer.encode_s16(position + 0x00, array1_obj.unk0x00)
-		buffer.encode_s16(position + 0x02, array1_obj.unk0x02)
-		buffer.encode_u16(position + 0x04, array1_obj.unk0x04)
-		buffer.encode_u16(position + 0x06, array1_obj.unk0x06)
-		buffer.encode_u8(position + 0x08, array1_obj.unk0x08)
+		buffer.encode_s16(position + 0x00, array1_obj.posX)
+		buffer.encode_s16(position + 0x02, array1_obj.posY)
+		buffer.encode_u16(position + 0x04, array1_obj.sfxIndex)
+		buffer.encode_u16(position + 0x06, array1_obj.sfxID)
+		buffer.encode_u8(position + 0x08, array1_obj.flags)
 		buffer.encode_u8(position + 0x09, array1_obj.zoneIndex)
-		buffer.encode_u16(position + 0x0A, array1_obj.unk0x0A)
-		buffer.encode_u16(position + 0x0C, array1_obj.unk0x0C)
+		buffer.encode_u16(position + 0x0A, array1_obj.audibleRadius)
+		buffer.encode_u16(position + 0x0C, array1_obj.loopDelay)
 		if "unk0x0E" in array1_obj:
 			buffer.encode_u16(position + 0x0E, array1_obj.unk0x0E)
 		buffer.encode_u8(position + 0x10, array1_obj.volume)

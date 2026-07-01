@@ -12,30 +12,30 @@ var node_2d: SFXNode2D
 
 static func new_from_copied_sfx(p_sfx: SFX, p_position: Vector2) -> SFX:	
 	var sfx := SFX.new(p_sfx.data.duplicate(true), p_sfx.map)
-	sfx.data.unk0x00 = -p_position.x
-	sfx.data.unk0x02 = p_position.y
+	sfx.data.posX = -p_position.x
+	sfx.data.posY = p_position.y
 	
 	return sfx
 
 
 static func new_sfx(p_map: Map, p_position: Vector2) -> SFX:
 	var default_data := {
-		"unk0x00": 0,
-		"unk0x02": 0,
-		"unk0x04": 0,
-		"unk0x06": 0,
-		"unk0x08": 0,
+		"posX": 0,
+		"posY": 0,
+		"sfxIndex": 0,
+		"sfxID": 0,
+		"flags": 0,
 		"zoneIndex": 0,
-		"unk0x0A": 64,
-		"unk0x0C": 0,
+		"audibleRadius": 64,
+		"loopDelay": 0,
 		"unk0x0E": 0,
 		"volume": 64,
 		"unk0x11": 0,
 	}
 	
 	var sfx := SFX.new(default_data, p_map)
-	sfx.data.unk0x00 = -p_position.x
-	sfx.data.unk0x02 = p_position.y
+	sfx.data.posX = -p_position.x
+	sfx.data.posY = p_position.y
 	
 	return sfx
 
@@ -75,11 +75,11 @@ func _initialize_mesh() -> void:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color.ORANGE_RED
 	mesh_instance.material_override = material
-	var sector_floor_height:int = map.get_sector_floor_height_from_vertex(Vector2(-data.unk0x00, data.unk0x02))
+	var sector_floor_height:int = map.get_sector_floor_height_from_vertex(Vector2(-data.posX, data.posY))
 	mesh_instance.position = Vector3(
-			-data.unk0x00 / Roth.SCALE_3D_WORLD,
+			-data.posX / Roth.SCALE_3D_WORLD,
 			sector_floor_height / Roth.SCALE_3D_WORLD,
-			data.unk0x02 / Roth.SCALE_3D_WORLD,
+			data.posY / Roth.SCALE_3D_WORLD,
 	)
 	mesh_instance.ref = self
 	node.add_child(mesh_instance)
@@ -120,7 +120,7 @@ class CircleDraw2D extends Node2D:
 			color = Color.CORAL
 		draw_circle(Vector2.ZERO, radius, color)
 		if (selected or highlighted or Settings.settings.get("options", {}).get("always_show_sfx_zones", false)):
-			draw_circle(Vector2.ZERO, ref.data.unk0x0A / Roth.SCALE_2D_WORLD, color, false)
+			draw_circle(Vector2.ZERO, ref.data.audibleRadius / Roth.SCALE_2D_WORLD, color, false)
 			if ref.data.zoneIndex > 0:
 				if len(ref.map.sfx_zones) < ref.data.zoneIndex:
 					return
@@ -172,8 +172,8 @@ class SFXNode2D extends Node2D:
 	
 	func set_position_from_data() -> void:
 		position = Vector2(
-			-ref.data.unk0x00 / Roth.SCALE_2D_WORLD,
-			ref.data.unk0x02 / Roth.SCALE_2D_WORLD
+			-ref.data.posX / Roth.SCALE_2D_WORLD,
+			ref.data.posY / Roth.SCALE_2D_WORLD
 		)
 	
 	func _on_mouse_entered() -> void:
@@ -241,8 +241,8 @@ class SFXNode2D extends Node2D:
 			position.x * Roth.SCALE_2D_WORLD,
 			position.y * Roth.SCALE_2D_WORLD
 		)
-		ref.data.unk0x00 = -int(pos.x)
-		ref.data.unk0x02 = int(pos.y)
+		ref.data.posX = -int(pos.x)
+		ref.data.posY = int(pos.y)
 		ref.initialize_mesh()
 
 
