@@ -318,6 +318,9 @@ func load_map(map: Map) -> void:
 func reload_skybox() -> void:
 	if %Map2D.map and Settings.settings.get("options", {}).get("show_sky", true):
 		var texture_data: Dictionary =  Das.get_index_from_das(%Map2D.map.map_info.das_info, %Map2D.map.metadata.skyTexture)[0]
+		if "image" not in texture_data:
+			%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
+			return
 		var texture_image: Image = texture_data.image.get_image()
 		var vertical_size: int = 600
 		var vertical_offset: int = int(vertical_size/2.0) - 96 - texture_data.modifier
