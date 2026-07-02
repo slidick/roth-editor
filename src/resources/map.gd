@@ -48,6 +48,7 @@ static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) ->
 		return
 	var loaded_map := Map.new(p_map_info)
 	loaded_map.load_json(map_json)
+	loaded_map.is_loaded = true
 	return loaded_map
 
 
