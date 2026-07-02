@@ -240,6 +240,8 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			}
 			var sub_data := {
 				"sub_image_type": 0x17,
+				"buffer_width": 16,
+				"buffer_height": 16,
 				"width": 16,
 				"x_offset": 0,
 				"height": 16,

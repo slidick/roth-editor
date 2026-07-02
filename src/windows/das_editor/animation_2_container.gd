@@ -347,6 +347,8 @@ func _on_frames_spin_box_value_changed(value: float) -> void:
 			var raw_image := PackedByteArray()
 			raw_image.resize(16 * 16)
 			var frame_data: Dictionary = {
+				buffer_width = animation_image.data.width,
+				buffer_height = animation_image.data.height,
 				x_offset = 0,
 				width = 16,
 				y_offset = 0,
