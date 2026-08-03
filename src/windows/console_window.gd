@@ -35,4 +35,4 @@ func _handle_command(command: String) -> void:
 			if len(command_array) != 4:
 				Console.print("Usage: create_patch [a_dir] [b_dir] [out_dir]")
 				return
-			Patch.create_patch_from_folders(command_array[1], command_array[2], command_array[3])
+			ROTHPatch.create_patch_from_folders(command_array[1], command_array[2], command_array[3])

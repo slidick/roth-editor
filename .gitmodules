@@ -8,3 +8,6 @@
 	path = addons/roth_gdextension/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.4
+[submodule "addons/roth_shared"]
+	path = addons/roth_shared
+	url = https://github.com/slidick/roth-shared
