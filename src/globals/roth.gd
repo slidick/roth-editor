@@ -355,7 +355,7 @@ func test_run_maps(maps_to_run: Array, player_data: Dictionary = {}) -> void:
 		if map.is_loaded:
 			map.save_map(ROTH_TEMP_DIRECTORY, player_data if i == 0 else {})
 		else:
-			if Settings.settings.get("options", {}).get("always_recompile_maps", true):
+			if Settings.settings.get("options", {}).get("always_recompile_maps", false):
 				var tmp_map: Map = map.create_editable_map()
 				tmp_map.load_map()
 				tmp_map.save_map(ROTH_TEMP_DIRECTORY, player_data if i == 0 else {})
@@ -435,10 +435,10 @@ maps {
 	# Only the older version allows command line arguments
 	if res.exe_version == OLD_EXE:
 		# Increase starting gamma
-		autoexec.store_string("ROTH.EXE /G 03 @D:\\test.res\n")
+		autoexec.store_string("ROTH_DEV.EXE /G 03 @D:\\test.res\n")
 	else:
 		# Newer version should save gamma anyway
-		autoexec.store_string("ROTH.EXE @D:\\test.res\n")
+		autoexec.store_string("ROTH_DEV.EXE @D:\\test.res\n")
 	autoexec.store_string("exit\n")
 	autoexec.close()
 	
@@ -579,10 +579,12 @@ func create_install(installation_directory: String, roth_directory: String) -> v
 		Dialog.information("Couldn't find required file", "Invalid installation", false, Vector2(350, 150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
 		return
 	
+	DirAccess.copy_absolute(roth_directory.path_join("ROTH.EXE"), roth_directory.path_join("ROTH_DEV.EXE"))
 	var seek_value: int = 0
 	if (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f0f93c7931b9a678469095d3d7f54c04" or 
 			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "c11ab446c6d92e4e89d557864aa62997"):
 		seek_value = 145767
+		ROTHPatch._patch_file(roth_directory.path_join("ROTH_DEV.EXE"), ROTHPatch.DEV_MODE_PATCH)
 	elif (FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "d56e7641e8f5d4ec3144bb1c140a7677" or 
 			FileAccess.get_md5(roth_directory.path_join("ROTH.EXE")) == "f588469eb868373a339bebb5fba5a9bb"):
 		seek_value = 147338
@@ -591,7 +593,7 @@ func create_install(installation_directory: String, roth_directory: String) -> v
 		return
 	
 	# Patch the EXE to read the GDV files from G:\
-	var roth_exe_file := FileAccess.open(roth_directory.path_join("ROTH.EXE"), FileAccess.READ_WRITE)
+	var roth_exe_file := FileAccess.open(roth_directory.path_join("ROTH_DEV.EXE"), FileAccess.READ_WRITE)
 	roth_exe_file.seek(seek_value)
 	roth_exe_file.store_8(0x47)
 	roth_exe_file.store_8(0x3A)
