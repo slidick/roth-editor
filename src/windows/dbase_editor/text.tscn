@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cdyj16x3u3s1x"]
 
 [ext_resource type="Script" uid="uid://ksuc4oa65rxe" path="res://src/windows/dbase_editor/text.gd" id="1_jtjpg"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_1u102"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="2_1u102"]
 
 [node name="Text" type="Control" unique_id=5649499]
 layout_mode = 3

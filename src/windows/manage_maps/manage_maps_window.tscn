@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://1sjkxava6kb5" path="res://src/windows/manage_maps/manage_maps_window.gd" id="2_xqje8"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_fy7uo"]
 [ext_resource type="Script" uid="uid://dplewkjlqcsb8" path="res://src/windows/editor/2d_view.gd" id="5_a6cut"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_xet6p"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="5_xet6p"]
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/manage_maps/new_map_window.tscn" id="6_yjel5"]
 [ext_resource type="PackedScene" uid="uid://bl4vofcsfauae" path="res://src/windows/manage_maps/export_window.tscn" id="7_x7qhk"]
 [ext_resource type="PackedScene" uid="uid://be7yk2ubuv2c8" path="res://src/windows/manage_maps/import_window.tscn" id="8_lah0d"]

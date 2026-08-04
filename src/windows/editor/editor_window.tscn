@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://cxmxrvias15hw" path="res://src/windows/editor/metadata_window.tscn" id="12_kytel"]
 [ext_resource type="Script" uid="uid://da08m6ghedkbl" path="res://src/windows/editor/draw_tools/box_tool.gd" id="12_uyfwr"]
 [ext_resource type="Script" uid="uid://n65j26i32ams" path="res://src/windows/editor/mouse_pointer.gd" id="12_y0aww"]
-[ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/utils/tri_state_check_box.gd" id="13_tep3q"]
+[ext_resource type="Script" uid="uid://b2syyeyobq8es" path="res://src/ui/tri_state_check_box.gd" id="13_tep3q"]
 [ext_resource type="Script" uid="uid://djuyvhq6u2tq2" path="res://src/windows/editor/draw_tools/stair_tool.gd" id="13_vjvk8"]
 [ext_resource type="Script" uid="uid://cp1cjottq6oww" path="res://src/windows/editor/draw_tools/circle_tool.gd" id="14_l6b3v"]
 [ext_resource type="Script" uid="uid://kh0asdqye1q3" path="res://src/windows/editor/draw_tools/free_tool.gd" id="15_cg06i"]

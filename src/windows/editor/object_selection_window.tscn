@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_0liay"]
 [ext_resource type="Script" uid="uid://cri8v44atwsun" path="res://src/windows/editor/object_selection_window.gd" id="3_a2r2s"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ldnej"]
-[ext_resource type="PackedScene" uid="uid://d0qwk04pu2mgq" path="res://src/utils/rotatable_item_list.tscn" id="5_a2r2s"]
+[ext_resource type="PackedScene" uid="uid://d0qwk04pu2mgq" path="res://src/ui/rotatable_item_list.tscn" id="5_a2r2s"]
 
 [node name="ObjectSelectionWindow" unique_id=1401260369 instance=ExtResource("1_vjf0r")]
 offset_right = 1084.0

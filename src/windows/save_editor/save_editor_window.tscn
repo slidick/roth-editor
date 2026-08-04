@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cbyruk5k2flpg" path="res://src/windows/save_editor/save_editor_window.gd" id="2_r7e4w"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_3tewp"]
 [ext_resource type="Script" uid="uid://bdfvkk5hbrn6c" path="res://src/ui/roth_texture_container.gd" id="5_3tewp"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="6_dlptc"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="6_dlptc"]
 [ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="7_ek6vp"]
 
 [node name="SaveEditorWindow" unique_id=452268762 instance=ExtResource("1_2nlbb")]

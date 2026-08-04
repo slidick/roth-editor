@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://f3u4ruk6n31t"]
 
 [ext_resource type="Script" uid="uid://bq7t4lm72xi2e" path="res://src/windows/dbase_editor/cutscenes.gd" id="1_tokwl"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_6cmor"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="2_6cmor"]
 
 [node name="Cutscenes" type="Control" unique_id=317043270]
 layout_mode = 3

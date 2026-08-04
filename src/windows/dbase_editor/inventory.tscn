@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bxh7bquhkgigb"]
 
 [ext_resource type="Script" uid="uid://476tw27np1bf" path="res://src/windows/dbase_editor/inventory.gd" id="1_diksd"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_0mebd"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="2_0mebd"]
 [ext_resource type="Script" uid="uid://2rrlixceot6j" path="res://src/ui/rotation_container.gd" id="2_s2ad5"]
 [ext_resource type="PackedScene" uid="uid://1ctja148oubs" path="res://src/ui/gdv_video_player.tscn" id="3_xjtn1"]
 

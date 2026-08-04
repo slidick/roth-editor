@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d0qwk04pu2mgq"]
 
-[ext_resource type="Script" uid="uid://dq8tj4o0sku2b" path="res://src/utils/rotatable_item_list.gd" id="1_uwxbx"]
+[ext_resource type="Script" uid="uid://dq8tj4o0sku2b" path="res://src/ui/rotatable_item_list.gd" id="1_uwxbx"]
 
 [node name="RotatableItemList" type="PanelContainer" unique_id=935232374]
 offset_right = 832.0

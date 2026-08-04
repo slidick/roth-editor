@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://ce2ns2ct4fr35" path="res://src/windows/manage_maps/export_window.gd" id="2_ivu1h"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_lnd0k"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_i6gxu"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="5_i6gxu"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="5_i6gxu"]
 
 [node name="ExportWindow" unique_id=1044781614 instance=ExtResource("1_ns3js")]
 offset_right = 1195.0

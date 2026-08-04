@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bccjtuuhk3gl4"]
 
 [ext_resource type="Script" uid="uid://datm5vblg3i6x" path="res://src/windows/dbase_editor/actions.gd" id="1_r38q4"]
-[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/utils/drag_drop_tree.gd" id="2_gj8af"]
+[ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="2_gj8af"]
 
 [node name="Actions" type="VBoxContainer" unique_id=783366954]
 offset_right = 675.584
