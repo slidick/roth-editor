@@ -20,6 +20,7 @@ func reset() -> void:
 	%BrowseButton.disabled = false
 	%InputEdit.clear()
 	cancel_load = true
+	%EditImageButton.disabled = true
 
 
 func _on_browse_button_pressed() -> void:
@@ -64,6 +65,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	%BrowseButton.disabled = false
 	%"Paletted Texture".show()
 	%SaveButton.disabled = false
+	%EditImageButton.disabled = false
 
 func _redraw_texture() -> void:
 	var texture_image := Image.create_from_data(

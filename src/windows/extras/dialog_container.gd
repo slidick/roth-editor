@@ -95,6 +95,8 @@ func _on_play_button_pressed() -> void:
 			current = %DialogList.get_root().get_next_in_tree()
 		else:
 			current = playlist.pop_back()
+	if not current:
+		return
 	current.select(0)
 	%DialogList.scroll_to_item(current, true)
 	playlist.erase(current)

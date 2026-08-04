@@ -45,6 +45,8 @@ func toggle(_bool: Variant = null) -> void:
 
 
 func load_savegame_directory(directory: String) -> void:
+	if not DirAccess.dir_exists_absolute(directory):
+		return
 	%SaveList.clear()
 	original_data = []
 	for filename: String in DirAccess.get_files_at(directory):

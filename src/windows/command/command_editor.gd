@@ -808,4 +808,4 @@ func _on_graph_edit_end_node_move() -> void:
 func _on_close_button_pressed() -> void:
 	if map:
 		Roth.editor_action.emit(map, "Edit Commands")
-		close(map.map_info.name)
+		close(map)

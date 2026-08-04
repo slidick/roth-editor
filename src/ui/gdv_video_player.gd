@@ -55,6 +55,7 @@ func load_gdv_data(p_gdv_data: Dictionary, p_autoplay: bool = false, p_loop: boo
 		return
 	gdv_data = p_gdv_data.duplicate(true)
 	%SeekSlider.max_value = len(gdv_data.video)-1
+	%SeekSlider.editable = true
 	if "name" in gdv_data:
 		if "subtitles" in gdv_data and "title" in gdv_data.subtitles:
 			%TitleLabel.text = gdv_data.subtitles.title
@@ -149,6 +150,8 @@ func _next_frame(clear_audio: bool) -> void:
 
 
 func _update_texture(continue_playing: bool) -> void:
+	if "video" not in gdv_data:
+		return
 	if gdv_data.video[current_frame].header.type_flags & 0b10000000:
 		while "decoded_video" not in gdv_data.video[current_frame+1]:
 			player_state = PlayerState.PAUSED
@@ -213,6 +216,8 @@ func _on_pause_button_pressed() -> void:
 
 
 func _on_stop_button_pressed() -> void:
+	if gdv_data.is_empty():
+		return
 	Roth.stop_audio_buffer()
 	%SeekSlider.value = 0
 	current_frame = 0
@@ -232,6 +237,8 @@ func _on_seek_slider_drag_started() -> void:
 
 
 func _on_seek_slider_drag_ended(value_changed: bool) -> void:
+	if gdv_data.is_empty():
+		return
 	dragging_slider = false
 	%DragLabel.text = ""
 	if value_changed:
@@ -241,6 +248,8 @@ func _on_seek_slider_drag_ended(value_changed: bool) -> void:
 
 
 func _on_seek_slider_value_changed(value: float) -> void:
+	if gdv_data.is_empty():
+		return
 	if dragging_slider:
 		%DragLabel.text = "%s" % Utility.seconds_to_time(roundi(float(value)/gdv_data.header.framerate))
 		if player_state == PlayerState.PAUSED or player_state == PlayerState.STOPPED:
