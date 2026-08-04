@@ -13,11 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://dtbrelqsvvtuh" path="res://src/windows/dbase_editor/dbase_editor.tscn" id="10_srxbw"]
 [ext_resource type="PackedScene" uid="uid://dq8sxf6oabjnm" path="res://src/windows/extras/extras_window.tscn" id="11_tb146"]
 [ext_resource type="PackedScene" uid="uid://cg7cw5eoa4pcd" path="res://src/windows/sfx_editor/sfx_editor_window.tscn" id="12_d3u4l"]
-[ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings_window.tscn" id="12_srxbw"]
+[ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings/old_settings_window.tscn" id="12_srxbw"]
 [ext_resource type="PackedScene" uid="uid://bfe5dwpkm1ius" path="res://src/windows/graphics/backdrop_editor_window.tscn" id="13_tb146"]
 [ext_resource type="PackedScene" uid="uid://3uxl7yogw1g2" path="res://src/windows/das_editor/das_editor_window.tscn" id="14_e7lu8"]
 [ext_resource type="PackedScene" uid="uid://berunrqt716n1" path="res://src/windows/graphics/icons_editor_window.tscn" id="14_tb146"]
 [ext_resource type="PackedScene" uid="uid://dls7vlyk3w24o" path="res://src/windows/save_editor/save_editor_window.tscn" id="16_okx7f"]
+[ext_resource type="PackedScene" uid="uid://caonekdgi1ngy" path="res://src/windows/settings/settings_window.tscn" id="17_sta5p"]
 
 [node name="Main" type="Control" unique_id=2029515927]
 layout_mode = 3
@@ -137,12 +138,12 @@ item_11/separator = true
 item_12/text = "Quit"
 item_12/id = 2
 
-[node name="Tools" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1812286878]
+[node name="Options" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1812286878]
 unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_styles/panel = ExtResource("5_5mrjc")
-item_count = 4
+item_count = 6
 item_0/text = "Highlight Concave Sectors"
 item_0/checkable = 1
 item_0/id = 0
@@ -155,6 +156,10 @@ item_2/id = 2
 item_3/text = "Show Sky"
 item_3/checkable = 1
 item_3/id = 3
+item_4/id = 4
+item_4/separator = true
+item_5/text = "Settings"
+item_5/id = 5
 
 [node name="Windows" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1040920327]
 unique_name_in_owner = true
@@ -374,6 +379,22 @@ offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Settings" parent="Windows" unique_id=1618745702 instance=ExtResource("17_sta5p")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -325.0
+offset_right = 500.0
+offset_bottom = 325.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="AlwaysInFrontWindows" type="Control" parent="." unique_id=1615074608]
 layout_mode = 1
 anchors_preset = 15
@@ -383,7 +404,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Settings" parent="AlwaysInFrontWindows" unique_id=397550644 instance=ExtResource("12_srxbw")]
+[node name="OldSettings" parent="AlwaysInFrontWindows" unique_id=397550644 instance=ExtResource("12_srxbw")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -430,7 +451,7 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Main" to="." method="_on_main_index_pressed"]
-[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Tools" to="." method="_on_tools_index_pressed"]
+[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Options" to="." method="_on_options_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Windows" to="." method="_on_windows_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Help" to="." method="_on_help_index_pressed"]
 [connection signal="window_shown" from="AlwaysBehindWindows/Editor" to="." method="_on_view_3d_window_window_shown"]

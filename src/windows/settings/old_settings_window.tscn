@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://cs2y7pjd3ec63"]
 
-[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_s8lde"]
-[ext_resource type="Script" uid="uid://c0d5udm4mtt7j" path="res://src/windows/settings_window.gd" id="2_721jg"]
-[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_iwex4"]
-[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_2y2o5"]
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_np7d6"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_j6up8"]
+[ext_resource type="Script" uid="uid://c0d5udm4mtt7j" path="res://src/windows/settings/old_settings_window.gd" id="3_65gwj"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_luj3p"]
 
-[node name="SettingsWindow" unique_id=698840783 instance=ExtResource("1_s8lde")]
+[node name="OldSettingsWindow" unique_id=698840783 instance=ExtResource("1_np7d6")]
 offset_right = 810.0
 offset_bottom = 464.0
-theme = ExtResource("2_iwex4")
-script = ExtResource("2_721jg")
+theme = ExtResource("2_j6up8")
+script = ExtResource("3_65gwj")
 exclusive = true
 panel_corner_radius = 0
-panel_style_override = ExtResource("4_2y2o5")
+panel_style_override = ExtResource("4_luj3p")
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1996629581]
 layout_mode = 2

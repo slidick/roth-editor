@@ -17,11 +17,13 @@ enum Main {
 	Quit,
 }
 
-enum Tools {
+enum Options {
 	ConcaveSectors,
 	SFXZones,
 	MousePoint,
 	ShowSky,
+	Sep0,
+	Settings
 }
 
 enum WindowID {
@@ -43,10 +45,10 @@ func _ready() -> void:
 	var shortcut := Shortcut.new()
 	shortcut.events.append(input)
 	%Main.set_item_shortcut(Main.TestMap, shortcut, true)
-	%Tools.set_item_checked(Tools.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
-	%Tools.set_item_checked(Tools.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
-	%Tools.set_item_checked(Tools.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", true))
-	%Tools.set_item_checked(Tools.ShowSky, Settings.settings.get("options", {}).get("show_sky", true))
+	%Options.set_item_checked(Options.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
+	%Options.set_item_checked(Options.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
+	%Options.set_item_checked(Options.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", true))
+	%Options.set_item_checked(Options.ShowSky, Settings.settings.get("options", {}).get("show_sky", true))
 
 
 func _process(_delta: float) -> void:
@@ -170,40 +172,42 @@ func _on_main_index_pressed(index: int) -> void:
 		Main.SaveEditor:
 			%SaveEditor.toggle(true)
 		Main.Settings:
-			%Settings.toggle(true)
+			%OldSettings.toggle(true)
 		Main.Quit:
 			quit()
 		Main.TestMap:
 			%Editor.test_map()
 
 
-func _on_tools_index_pressed(index: int) -> void:
+func _on_options_index_pressed(index: int) -> void:
 	match index:
-		Tools.ConcaveSectors:
-			var checked: bool = not %Tools.is_item_checked(Tools.ConcaveSectors)
+		Options.ConcaveSectors:
+			var checked: bool = not %Options.is_item_checked(Options.ConcaveSectors)
 			Settings.update_settings("options", {"highlight_concave_sectors": checked })
-			%Tools.set_item_checked(Tools.ConcaveSectors, checked)
+			%Options.set_item_checked(Options.ConcaveSectors, checked)
 			var map_2d: Node = find_child("Map2D", true, false)
 			if map_2d:
 				map_2d.queue_redraw()
-		Tools.SFXZones:
-			var checked: bool = not %Tools.is_item_checked(Tools.SFXZones)
+		Options.SFXZones:
+			var checked: bool = not %Options.is_item_checked(Options.SFXZones)
 			Settings.update_settings("options", {"always_show_sfx_zones": checked })
-			%Tools.set_item_checked(Tools.SFXZones, checked)
+			%Options.set_item_checked(Options.SFXZones, checked)
 			var map_2d: Node = find_child("Map2D", true, false)
 			if map_2d:
 				map_2d.redraw_sfx()
-		Tools.MousePoint:
-			var checked: bool = not %Tools.is_item_checked(Tools.MousePoint)
+		Options.MousePoint:
+			var checked: bool = not %Options.is_item_checked(Options.MousePoint)
 			Settings.update_settings("options", {"show_mouse_point": checked })
-			%Tools.set_item_checked(Tools.MousePoint, checked)
-		Tools.ShowSky:
-			var checked: bool = not %Tools.is_item_checked(Tools.ShowSky)
+			%Options.set_item_checked(Options.MousePoint, checked)
+		Options.ShowSky:
+			var checked: bool = not %Options.is_item_checked(Options.ShowSky)
 			Settings.update_settings("options", {"show_sky": checked})
-			%Tools.set_item_checked(Tools.ShowSky, checked)
+			%Options.set_item_checked(Options.ShowSky, checked)
 			var editor: Node = find_child("Editor", true, false)
 			if editor:
 				editor.reload_skybox()
+		Options.Settings:
+			%Settings.toggle(true)
 
 
 func _on_windows_index_pressed(index: int) -> void:
