@@ -5,18 +5,17 @@
 [ext_resource type="FontFile" uid="uid://bmx77ca0le7ge" path="res://assets/fonts/Kenney Pixel.ttf" id="3_rlaii"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="4_rlaii"]
 [ext_resource type="StyleBox" uid="uid://cy0f7oold3swp" path="res://src/themes/pop_up_menu_theme.tres" id="5_5mrjc"]
-[ext_resource type="PackedScene" uid="uid://d06ghcmejei5d" path="res://src/windows/editor/editor_window.tscn" id="5_fyndt"]
-[ext_resource type="PackedScene" uid="uid://osgu4pclsqcs" path="res://src/windows/manage_maps/manage_maps_window.tscn" id="8_5mrjc"]
+[ext_resource type="PackedScene" uid="uid://d06ghcmejei5d" path="res://src/windows/map_editor/editor_window.tscn" id="5_fyndt"]
+[ext_resource type="PackedScene" uid="uid://osgu4pclsqcs" path="res://src/windows/map_editor/manage_maps/manage_maps_window.tscn" id="8_5mrjc"]
 [ext_resource type="PackedScene" uid="uid://ctidddlqpgfo3" path="res://src/windows/controls_window.tscn" id="8_mgm53"]
 [ext_resource type="PackedScene" uid="uid://dxr5najj0quo3" path="res://src/windows/loading_window.tscn" id="9_kf8lf"]
 [ext_resource type="PackedScene" uid="uid://c18j0kkjserp8" path="res://src/windows/search_window.tscn" id="9_uewes"]
 [ext_resource type="PackedScene" uid="uid://dtbrelqsvvtuh" path="res://src/windows/dbase_editor/dbase_editor.tscn" id="10_srxbw"]
 [ext_resource type="PackedScene" uid="uid://dq8sxf6oabjnm" path="res://src/windows/extras/extras_window.tscn" id="11_tb146"]
 [ext_resource type="PackedScene" uid="uid://cg7cw5eoa4pcd" path="res://src/windows/sfx_editor/sfx_editor_window.tscn" id="12_d3u4l"]
-[ext_resource type="PackedScene" uid="uid://cs2y7pjd3ec63" path="res://src/windows/settings/old_settings_window.tscn" id="12_srxbw"]
-[ext_resource type="PackedScene" uid="uid://bfe5dwpkm1ius" path="res://src/windows/graphics/backdrop_editor_window.tscn" id="13_tb146"]
+[ext_resource type="PackedScene" uid="uid://bfe5dwpkm1ius" path="res://src/windows/backdrop_editor/backdrop_editor_window.tscn" id="13_tb146"]
 [ext_resource type="PackedScene" uid="uid://3uxl7yogw1g2" path="res://src/windows/das_editor/das_editor_window.tscn" id="14_e7lu8"]
-[ext_resource type="PackedScene" uid="uid://berunrqt716n1" path="res://src/windows/graphics/icons_editor_window.tscn" id="14_tb146"]
+[ext_resource type="PackedScene" uid="uid://berunrqt716n1" path="res://src/windows/icons_editor/icons_editor_window.tscn" id="14_tb146"]
 [ext_resource type="PackedScene" uid="uid://dls7vlyk3w24o" path="res://src/windows/save_editor/save_editor_window.tscn" id="16_okx7f"]
 [ext_resource type="PackedScene" uid="uid://caonekdgi1ngy" path="res://src/windows/settings/settings_window.tscn" id="17_sta5p"]
 
@@ -88,6 +87,7 @@ horizontal_alignment = 1
 
 [node name="MenuPanel" type="PanelContainer" parent="Menu" unique_id=607647534]
 custom_minimum_size = Vector2(0, 32)
+clip_contents = true
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -96,47 +96,41 @@ theme_override_styles/panel = ExtResource("2_gh0ne")
 
 [node name="MenuBar" type="MenuBar" parent="Menu/MenuPanel" unique_id=1739407161]
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 mouse_filter = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_rlaii")
 theme_override_font_sizes/font_size = 32
 flat = true
+prefer_global_menu = false
 
-[node name="Main" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=579036751]
+[node name="Editors" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=579036751]
 unique_name_in_owner = true
 theme = ExtResource("4_rlaii")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_accelerator_color = Color(0.244148, 0.280182, 0.530773, 1)
 theme_override_styles/panel = ExtResource("5_5mrjc")
-item_count = 13
-item_0/text = "Manage Maps"
+item_count = 10
+item_0/text = "Map Editor"
 item_0/id = 3
-item_1/text = "Manage DBase Packs"
+item_1/text = "DBase Editor"
 item_1/id = 7
-item_2/text = "Manage SFX Packs"
+item_2/text = "SFX Editor"
 item_2/id = 8
-item_3/text = "Manage DAS Files"
+item_3/text = "Texture Editor"
 item_3/id = 11
 item_4/text = "Backdrop Editor"
 item_4/id = 9
 item_5/text = "Icons Editor"
 item_5/id = 10
-item_6/text = "Save Editor"
-item_6/id = 12
-item_7/id = 4
-item_7/separator = true
-item_8/text = "Run Maps"
-item_8/id = 7
-item_9/id = 5
-item_9/separator = true
-item_10/text = "Settings"
-item_10/id = 0
-item_11/id = 1
-item_11/separator = true
-item_12/text = "Quit"
-item_12/id = 2
+item_6/id = 4
+item_6/separator = true
+item_7/text = "Save Editor"
+item_7/id = 12
+item_8/id = 9
+item_8/separator = true
+item_9/text = "Quit"
+item_9/id = 2
 
 [node name="Options" type="PopupMenu" parent="Menu/MenuPanel/MenuBar" unique_id=1812286878]
 unique_name_in_owner = true
@@ -187,6 +181,21 @@ item_count = 1
 item_0/text = "Controls"
 item_0/checkable = 1
 item_0/id = 2
+
+[node name="HiddenMenuBar" type="MenuBar" parent="Menu/MenuPanel" unique_id=1098209346]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(400, 50)
+offset_transform_visual_only = false
+prefer_global_menu = false
+
+[node name="Shortcuts" type="PopupMenu" parent="Menu/MenuPanel/HiddenMenuBar" unique_id=1128245576]
+unique_name_in_owner = true
+oversampling_override = 1.0
+size = Vector2i(117, 100)
+item_count = 1
+item_0/text = "Run Maps"
+item_0/id = 0
 
 [node name="AlwaysBehindWindows" type="Control" parent="." unique_id=62832486]
 layout_mode = 1
@@ -314,6 +323,15 @@ offset_right = 477.0
 offset_bottom = 338.5
 grow_horizontal = 2
 grow_vertical = 2
+movable = null
+resizable = null
+allow_click_through = null
+show_maximize_button = null
+show_close_button = null
+show_focus_highlight = null
+minimize_style = null
+start_maximized = null
+header = null
 
 [node name="BackdropEditor" parent="Windows" unique_id=312449859 instance=ExtResource("13_tb146")]
 unique_name_in_owner = true
@@ -388,9 +406,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -500.0
+offset_left = -600.0
 offset_top = -325.0
-offset_right = 500.0
+offset_right = 600.0
 offset_bottom = 325.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -403,22 +421,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="OldSettings" parent="AlwaysInFrontWindows" unique_id=397550644 instance=ExtResource("12_srxbw")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -437.5
-offset_top = -220.5
-offset_right = 437.5
-offset_bottom = 220.5
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="Loading" parent="AlwaysInFrontWindows" unique_id=318526067 instance=ExtResource("9_kf8lf")]
 unique_name_in_owner = true
@@ -450,10 +452,11 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Main" to="." method="_on_main_index_pressed"]
+[connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Editors" to="." method="_on_main_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Options" to="." method="_on_options_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Windows" to="." method="_on_windows_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Help" to="." method="_on_help_index_pressed"]
+[connection signal="index_pressed" from="Menu/MenuPanel/HiddenMenuBar/Shortcuts" to="." method="_on_shortcuts_menu_index_pressed"]
 [connection signal="window_shown" from="AlwaysBehindWindows/Editor" to="." method="_on_view_3d_window_window_shown"]
 [connection signal="window_shown" from="Windows/Controls" to="." method="_on_controls_window_shown"]
 [connection signal="search_result_activated" from="Windows/Search" to="AlwaysBehindWindows/Editor" method="_on_search_result_activated"]

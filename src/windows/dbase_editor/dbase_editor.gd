@@ -10,18 +10,18 @@ var audio_changed: bool = false
 func _ready() -> void:
 	super._ready()
 	%EditButton.disabled = true
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 	%ListControl.show()
 	%EditControl.hide()
 	window_title = "Manage DBASE Packs"
 	%SuccessLabel.modulate.a = 0.0
 
 
-func _on_settings_loaded() -> void:
-	if not Roth.install_directory.is_empty():
+func _on_settings_updated() -> void:
+	if Roth.current_installation:
 		%NewButton.disabled = false
 	%DBaseList.clear()
-	for dbase_info: Dictionary in Roth.dbase_packs:
+	for dbase_info: Dictionary in DBasePack.dbase_packs:
 		var idx: int = %DBaseList.add_item(dbase_info.name)
 		%DBaseList.set_item_metadata(idx, dbase_info)
 
@@ -65,13 +65,13 @@ func _on_d_base_popup_menu_index_pressed(index: int) -> void:
 				results = await Dialog.input("New Name", "Renaming DBase: %s" % dbase_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
 				if not results[0]:
 					return
-				err = Roth.check_dbase_pack_name(results[1])
-			Roth.rename_dbase_pack(dbase_info, results[1])
+				err = DBasePack.check_name(results[1])
+			DBasePack.rename(dbase_info, results[1])
 		1:
 			var dbase_info: Dictionary = %DBaseList.get_item_metadata(right_click_index)
 			if not await Dialog.confirm("Are you sure?", "Deleting DBase: %s" % dbase_info.name, false, Vector2(400,150)):
 				return
-			Roth.delete_dbase_pack(dbase_info)
+			DBasePack.delete(dbase_info)
 		2:
 			duplicate_dbase(right_click_index)
 
@@ -84,8 +84,8 @@ func duplicate_dbase(index: int) -> void:
 		results = await Dialog.input("New Name", "Duplicating DBase: %s" % dbase_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
 		if not results[0]:
 			return
-		err = Roth.check_dbase_pack_name(results[1])
-	Roth.duplicate_dbase_pack(dbase_info, results[1])
+		err = DBasePack.check_name(results[1])
+	DBasePack.duplicate_pack(dbase_info, results[1])
 	%DBaseList.select(%DBaseList.item_count - 1)
 	_on_d_base_list_item_selected(%DBaseList.item_count - 1)
 	%EditButton.disabled = false
@@ -100,7 +100,7 @@ func _on_edit_button_pressed() -> void:
 
 
 func edit() -> void:
-	if Roth.install_directory.is_empty():
+	if Roth.current_installation.directory.is_empty():
 		return
 	var dbase_info: Dictionary = %DBaseList.get_item_metadata(%DBaseList.get_selected_items()[0])
 	if "vanilla" in dbase_info:
@@ -319,8 +319,8 @@ func _on_new_button_pressed() -> void:
 		results = await Dialog.input("Name:", "New DBase Pack", results[1], err if err != "init" else "", false, Vector2(400,150))
 		if not results[0]:
 			return
-		err = Roth.check_dbase_pack_name(results[1])
-	Roth.create_dbase_pack(results[1])
+		err = DBasePack.check_name(results[1])
+	DBasePack.create(results[1])
 
 
 func get_hex_preference() -> bool:

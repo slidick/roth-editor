@@ -14,21 +14,24 @@ var playlist: Array = []
 
 
 func _ready() -> void:
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 	%DialogList.set_column_expand(0, true)
 	%DialogList.set_column_expand(1, false)
 	tree_root = %DialogList.create_item()
 
 
-func _on_settings_loaded() -> void:
+func _on_settings_updated() -> void:
+	if not Roth.current_installation:
+		return
+	
 	for tree_item: TreeItem in tree_root.get_children():
 		tree_root.remove_child(tree_item)
 		tree_item.free()
 	
-	dbase400_filepath = Roth.install_directory.path_join("../DATA/DBASE400.DAT")
+	dbase400_filepath = Roth.current_installation.dbase400
 	if not FileAccess.file_exists(dbase400_filepath):
 		return
-	dbase500_filepath = Roth.install_directory.path_join("../DATA/DBASE500.DAT")
+	dbase500_filepath = Roth.current_installation.dbase500
 	if not FileAccess.file_exists(dbase500_filepath):
 		return
 	
@@ -53,8 +56,8 @@ func _on_dialog_list_item_activated() -> void:
 func play(entry_request: Dictionary) -> void:
 	if entry_request.dbase500_offset == 0:
 		return
-	var entry: Dictionary = DBase500.get_entry_at_offset(entry_request.dbase500_offset, Roth.install_directory.path_join("../DATA/DBASE500.DAT"))
-	Roth.play_audio_buffer(entry.data, entry.sampleRate)
+	var entry: Dictionary = DBase500.get_entry_at_offset(entry_request.dbase500_offset, Roth.current_installation.dbase500)
+	RothAudio.play_buffer(entry.data, entry.sampleRate)
 	%Waveform.setup(entry)
 	%HSlider.value = 0
 	%HSlider.max_value = (len(entry.data) / float(entry.sampleRate)) * 10
@@ -105,7 +108,7 @@ func _on_play_button_pressed() -> void:
 
 func _on_stop_button_pressed() -> void:
 	play_all = false
-	Roth.stop_audio_buffer()
+	RothAudio.stop()
 	%Timer.stop()
 	%HSlider.value = 0
 

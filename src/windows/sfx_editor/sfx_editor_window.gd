@@ -7,18 +7,18 @@ var save_tween: Tween
 func _ready() -> void:
 	super._ready()
 	%EditButton.disabled = true
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 	%ListContainer.show()
 	%EditContainer.hide()
 	window_title = "Manage SFX Packs"
 	%SuccessLabel.modulate.a = 0.0
 
 
-func _on_settings_loaded() -> void:
-	if not Roth.install_directory.is_empty():
+func _on_settings_updated() -> void:
+	if Roth.current_installation:
 		%NewButton.disabled = false
 	%SFXPackList.clear()
-	for sfx_info: Dictionary in Roth.sfx_packs:
+	for sfx_info: Dictionary in SFXPack.sfx_packs:
 		var idx: int = %SFXPackList.add_item(sfx_info.name)
 		%SFXPackList.set_item_metadata(idx, sfx_info)
 
@@ -59,13 +59,13 @@ func _on_sfx_pack_popup_menu_index_pressed(index: int) -> void:
 				results = await Dialog.input("New Name", "Renaming SFX Pack: %s" % sfx_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
 				if not results[0]:
 					return
-				err = Roth.check_sfx_pack_name(results[1])
-			Roth.rename_sfx_pack(sfx_info, results[1])
+				err = SFXPack.check_name(results[1])
+			SFXPack.rename(sfx_info, results[1])
 		1:
 			var sfx_info: Dictionary = %SFXPackList.get_item_metadata(%SFXPackList.get_selected_items()[0])
 			if not await Dialog.confirm("Are you sure?", "Deleting SFX Pack: %s" % sfx_info.name, false, Vector2(400,150)):
 				return
-			Roth.delete_sfx_pack(sfx_info)
+			SFXPack.delete(sfx_info)
 		2:
 			duplicate_sfx_pack(%SFXPackList.get_selected_items()[0])
 
@@ -82,8 +82,8 @@ func duplicate_sfx_pack(index: int) -> void:
 		results = await Dialog.input("New Name:", "Duplicating SFX Pack: %s" % sfx_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
 		if not results[0]:
 			return
-		err = Roth.check_sfx_pack_name(results[1])
-	Roth.duplicate_sfx_pack(sfx_info, results[1])
+		err = SFXPack.check_name(results[1])
+	SFXPack.duplicate_pack(sfx_info, results[1])
 	%SFXPackList.select(%SFXPackList.item_count - 1)
 	_on_sfx_pack_list_item_selected(%SFXPackList.item_count - 1)
 	%EditButton.disabled = false
@@ -96,8 +96,8 @@ func _on_new_button_pressed() -> void:
 		results = await Dialog.input("Name:", "New SFX Pack", results[1], err if err != "init" else "", false, Vector2(400,150))
 		if not results[0]:
 			return
-		err = Roth.check_sfx_pack_name(results[1])
-	Roth.create_sfx_pack(results[1])
+		err = SFXPack.check_name(results[1])
+	SFXPack.create(results[1])
 
 
 func _on_duplicate_button_pressed() -> void:
@@ -110,7 +110,7 @@ func _on_edit_button_pressed() -> void:
 
 
 func edit() -> void:
-	if Roth.install_directory.is_empty():
+	if Roth.current_installation.directory.is_empty():
 		return
 	var sfx_info: Dictionary = %SFXPackList.get_item_metadata(%SFXPackList.get_selected_items()[0])
 	if "vanilla" in sfx_info:

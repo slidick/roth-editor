@@ -69,7 +69,7 @@ const FIELDS: Array = [
 
 func _ready() -> void:
 	super._ready()
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 	for field: String in FIELDS:
 		if field.ends_with("Data"):
 			%FieldsOption.add_separator(field.replace("Data", ""))
@@ -77,12 +77,12 @@ func _ready() -> void:
 			%FieldsOption.add_item(field)
 
 
-func _on_settings_loaded() -> void:
+func _on_settings_updated() -> void:
 	%MapsOption.clear()
 	var index: int = 0
 	%MapsOption.add_item("All Maps")
 	%MapsOption.set_item_metadata(index, {"name": "All Maps"})
-	for map_pack: Dictionary in Roth.map_packs:
+	for map_pack: Dictionary in MapPack.map_packs:
 		for map: Map in map_pack.maps:
 	#for map: Map in Roth.maps:
 			index += 1
@@ -112,7 +112,7 @@ func search() -> void:
 	var sfx := []
 	var commands := []
 	if %MapsOption.get_item_index(%MapsOption.get_selected_id()) == 0:
-		for map_pack: Dictionary in Roth.map_packs:
+		for map_pack: Dictionary in MapPack.map_packs:
 			for map: Map in map_pack.maps:
 		#for map: Map in Roth.maps:
 				map.load_map()

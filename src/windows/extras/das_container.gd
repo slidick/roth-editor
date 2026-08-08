@@ -2,20 +2,32 @@ extends Control
 
 
 func _ready() -> void:
-	Roth.das_loading_started.connect(_on_das_loading_start)
-	Roth.das_loading_updated.connect(_on_das_loading_update)
+	Roth.das_loading_started.connect(_on_das_loading_started)
+	Roth.das_loading_updated.connect(_on_das_loading_updated)
 	Roth.das_loading_finished.connect(_on_das_loading_finished)
-	Roth.settings_loaded.connect(_on_roth_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
+
+
+func _on_settings_updated() -> void:
+	%DASFiles.clear()
+	var index := 0
+	for das_info: Dictionary in DASPack.das_packs:
+		%DASFiles.add_item(das_info.name)
+		%DASFiles.set_item_metadata(index, das_info)
+		index += 1
+	%DASFiles.select(-1)
 
 
 func load_das(das_variant: Dictionary) -> void:
 	clear_das()
 	var das: Dictionary
 	if "das_info" not in das_variant:
+		_on_das_loading_started()
 		for i in range(%DASFiles.item_count):
 			if %DASFiles.get_item_metadata(i) == das_variant:
 				%DASFiles.select(i)
-		das = await Roth.get_das(das_variant)
+		das = await Das.get_das(das_variant)
+		%ProgressBar.hide()
 		if das.is_empty():
 			return
 	else:
@@ -36,16 +48,6 @@ func load_das(das_variant: Dictionary) -> void:
 			%TextureList.set_item_icon(index, ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8)))
 
 
-func set_das_list(das_list: Array) -> void:
-	%DASFiles.clear()
-	var index := 0
-	for das_info: Dictionary in das_list:
-		%DASFiles.add_item(das_info.name)
-		%DASFiles.set_item_metadata(index, das_info)
-		index += 1
-	%DASFiles.select(-1)
-
-
 func clear_das() -> void:
 	clear_texture()
 	%TextureList.clear()
@@ -58,15 +60,7 @@ func clear_texture() -> void:
 		node.queue_free()
 
 
-func _on_roth_settings_loaded() -> void:
-	set_das_list(Roth.das_packs)
-
-
 func _on_das_files_item_selected(_index: int) -> void:
-	load_das(%DASFiles.get_selected_metadata())
-
-
-func _on_load_button_pressed() -> void:
 	load_das(%DASFiles.get_selected_metadata())
 
 
@@ -172,12 +166,12 @@ func show_texture_animation(array: Array) -> void:
 	animation_rect.texture = sprite_frames.get_frame_texture("default", 0)
 
 
-func _on_das_loading_start() -> void:
+func _on_das_loading_started(_value: String = "") -> void:
 	%ProgressBar.show()
 	%ProgressBar.value = 0
 
 
-func _on_das_loading_update(progress: float, _das_info: Dictionary) -> void:
+func _on_das_loading_updated(progress: float, _das_info: Dictionary) -> void:
 	%ProgressBar.value = progress * 100
 
 

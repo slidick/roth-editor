@@ -2,17 +2,17 @@ extends Control
 
 
 func _ready() -> void:
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 
 
-func _on_settings_loaded() -> void:
+func _on_settings_updated() -> void:
 	%ItemList.clear()
-	if Roth.install_directory.is_empty():
+	if not Roth.current_installation:
 		return
-	var cutscenes: Array = DBase100.parse_cutscenes(Roth.install_directory)
+	var cutscenes: Array = DBase100.parse_cutscenes(Roth.current_installation)
 	for cutscene: Dictionary in cutscenes:
-		cutscene["filepath"] = Roth.install_directory.path_join("../DATA/GDV/%s.GDV" % cutscene.name)
-		if cutscene.name != "" and FileAccess.file_exists(cutscene.filepath):
+		cutscene["filepath"] = Roth.current_installation.get(cutscene.name.to_lower()+"_gdv")
+		if cutscene.filepath and FileAccess.file_exists(cutscene.filepath):
 			var idx: int = %ItemList.add_item(cutscene.name)
 			%ItemList.set_item_metadata(idx, cutscene)
 

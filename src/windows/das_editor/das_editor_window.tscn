@@ -8,8 +8,8 @@
 [ext_resource type="Script" uid="uid://dqmmnvuqaln08" path="res://src/windows/das_editor/unk_0x.gd" id="7_ap0jt"]
 [ext_resource type="PackedScene" uid="uid://c4jw70n45a6mx" path="res://src/windows/das_editor/palette_shading.tscn" id="7_iy22k"]
 [ext_resource type="PackedScene" uid="uid://lfcqi7ovq54y" path="res://src/windows/das_editor/fat.tscn" id="8_nrdas"]
-[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="14_iy22k"]
-[ext_resource type="PackedScene" uid="uid://cv1auqpk7ch8w" path="res://src/windows/graphics/sprite_sheet_importer_window.tscn" id="15_1uofs"]
+[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/image_editor/image_editor_window.tscn" id="14_iy22k"]
+[ext_resource type="PackedScene" uid="uid://cv1auqpk7ch8w" path="res://src/windows/das_editor/sprite_sheet_importer_window.tscn" id="15_1uofs"]
 [ext_resource type="PackedScene" uid="uid://bqawctevx37j2" path="res://src/windows/das_editor/edit_alignments_window.tscn" id="16_viwmn"]
 
 [node name="DasEditorWindow" unique_id=452268762 instance=ExtResource("1_o2sbq")]
@@ -30,14 +30,13 @@ theme_override_constants/margin_bottom = 10
 
 [node name="ListContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1733006299]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="0" unique_id=1811360519]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
-theme_override_constants/separation = 200
+theme_override_constants/separation = 250
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="0" unique_id=837781354]
 layout_mode = 2
@@ -48,12 +47,10 @@ text = "Map DAS Files"
 
 [node name="DASList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer" index="1" unique_id=2134718135]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 400)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 allow_rmb_select = true
-auto_width = true
-auto_height = true
 
 [node name="DASListPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" index="2" unique_id=1664026929]
 unique_name_in_owner = true
@@ -74,12 +71,10 @@ text = "Global DAS Files"
 
 [node name="DAS2List" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2" index="1" unique_id=2094834470]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 400)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 allow_rmb_select = true
-auto_width = true
-auto_height = true
 
 [node name="DAS2ListPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List" index="2" unique_id=1654986323]
 unique_name_in_owner = true
@@ -106,6 +101,7 @@ text = "Edit DAS"
 
 [node name="EditContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="1" unique_id=1062511653]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer" index="0" unique_id=586946910]

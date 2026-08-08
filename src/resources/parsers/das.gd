@@ -284,10 +284,12 @@ const THREE_DIMENSIONAL_OBJECT_FACE_HEADER := {
 	edge_count = Parser.Type.Word,
 }
 
+static var loaded_das: Dictionary = {}
+static var loading_das: Dictionary = {}
+
 
 static func load_das(das_info: Dictionary) -> Dictionary:
 	Utility.deinit_shader()
-	Roth.das_loading_started.emit()
 	var thread := Thread.new()
 	Console.print("Loading das: %s" % das_info.filepath)
 	var _err: Error = thread.start(_load_das_thread.bind(das_info))
@@ -349,8 +351,39 @@ static func _load_das_thread(das_info: Dictionary) -> Dictionary:
 	return das
 
 
-static func get_index_from_das(das_info: Dictionary, index: int, p_range: int = 1) -> Array:
+static func unload_das(das_info: Dictionary) -> void:
+	loaded_das.erase(das_info)
+
+
+static func get_das(das_info: Dictionary) -> Dictionary:
+	if das_info in loaded_das and "textures" in loaded_das[das_info]:
+		return loaded_das[das_info]
+	elif das_info in loading_das:
+		return await Roth.das_loading_finished
+	else:
+		loading_das[das_info] = true
+		loaded_das[das_info] = await Das.load_das(das_info)
+		loading_das.erase(das_info)
+		return loaded_das[das_info]
+
+
+static func get_index_from_das(index: int, das_info: Dictionary, p_range: int = 1) -> Dictionary:
+	if das_info in loaded_das:
+		if index not in loaded_das[das_info].mapping:
+			var results: Array = _get_index_from_das(index, das_info, p_range)
+			for i in range(p_range):
+				loaded_das[das_info].mapping[results[i].index] = results[i]
+	else:
+		loaded_das[das_info] = {"mapping": {}}
+		var results: Array = _get_index_from_das(index, das_info, p_range)
+		for i in range(p_range):
+			loaded_das[das_info].mapping[results[i].index] = results[i]
+	return loaded_das[das_info].mapping[index]
+
+
+static func _get_index_from_das(index: int, das_info: Dictionary, p_range: int = 1) -> Array:
 	#print("Getting index: %d from das: %s" %[index, das_info.name])
+
 	
 	# Init
 	var das: Dictionary = {
@@ -705,6 +738,26 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	
 	return texture
 
+
+#region Utility
+static func get_texture_from_object(p_object: ObjectRoth) -> Dictionary:
+	var object_das: Dictionary = {}
+	var object_index: int = -1
+	var object_texture: Dictionary = {}
+	if p_object.data.textureSource == 0:
+		object_das = p_object.map.das
+		object_index = p_object.data.textureIndex + 4096
+		object_texture = object_das.mapping[object_index]
+	elif p_object.data.textureSource == 1:
+		object_das = p_object.map.das
+		object_index = p_object.data.textureIndex + 4096 + 256
+		object_texture = object_das.mapping[object_index]
+	elif p_object.data.textureSource == 2:
+		object_texture = get_index_from_das(p_object.data.textureIndex, p_object.map.map_info.map_pack.das2_info)
+	elif p_object.data.textureSource == 3:
+		object_texture = get_index_from_das(p_object.data.textureIndex + 256, p_object.map.map_info.map_pack.das2_info)
+	return object_texture
+#endregion
 
 #region Parse for editing
 static func parse_das(das_info: Dictionary) -> Dictionary:
@@ -1971,24 +2024,4 @@ static func _write_data_entry(entry: Dictionary, data: PackedByteArray, pos: int
 					size += 1
 	
 	return pos
-#endregion
-
-#region Utility
-static func get_texture_from_object(p_object: ObjectRoth) -> Dictionary:
-	var object_das: Dictionary = {}
-	var object_index: int = -1
-	var object_texture: Dictionary = {}
-	if p_object.data.textureSource == 0:
-		object_das = p_object.map.das
-		object_index = p_object.data.textureIndex + 4096
-		object_texture = object_das.mapping[object_index]
-	elif p_object.data.textureSource == 1:
-		object_das = p_object.map.das
-		object_index = p_object.data.textureIndex + 4096 + 256
-		object_texture = object_das.mapping[object_index]
-	elif p_object.data.textureSource == 2:
-		object_texture = Roth.get_index_from_das(p_object.data.textureIndex, p_object.map.map_info.map_pack.das2_info)
-	elif p_object.data.textureSource == 3:
-		object_texture = Roth.get_index_from_das(p_object.data.textureIndex + 256, p_object.map.map_info.map_pack.das2_info)
-	return object_texture
 #endregion

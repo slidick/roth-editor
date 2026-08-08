@@ -28,13 +28,14 @@ func _ready() -> void:
 	%SelectLabel.show()
 	%Container.hide()
 	%SaveLabel.modulate.a = 0.0
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 
 
-func _on_settings_loaded() -> void:
-	if first_call:
-		first_call = false
-		%FileDialog.current_dir = Roth.install_directory.path_join("../ROTH/SAVEGAME")
+func _on_settings_updated() -> void:
+	if Roth.current_installation:
+		if first_call:
+			first_call = false
+			%FileDialog.current_dir = Roth.current_installation.save_directory
 
 
 func toggle(_bool: Variant = null) -> void:
@@ -86,11 +87,11 @@ func _on_browse_button_pressed() -> void:
 
 
 func _on_default_install_button_pressed() -> void:
-	_on_file_dialog_dir_selected(Roth.install_directory.path_join("../ROTH/SAVEGAME"))
+	_on_file_dialog_dir_selected(Roth.current_installation.save_directory)
 
 
 func _on_editor_install_button_pressed() -> void:
-	_on_file_dialog_dir_selected(Roth.ROTH_CUSTOM_INSTALL_DIRECTORY.path_join("SAVEGAME"))
+	_on_file_dialog_dir_selected(Roth.ROTH_CUSTOM_INSTALLS_DIRECTORY.path_join(Roth.current_installation.id).path_join("SAVEGAME"))
 
 
 func _on_file_dialog_dir_selected(dir: String) -> void:

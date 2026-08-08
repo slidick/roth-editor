@@ -2,12 +2,14 @@ extends Control
 
 
 func _ready() -> void:
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 
 
-func _on_settings_loaded() -> void:
+func _on_settings_updated() -> void:
+	if not Roth.current_installation:
+		return
 	%SFXList.clear()
-	var sfx_entries: Array = FXScript.get_sfx_entries(Roth.install_directory.path_join("../DATA/DATA/FX22.SFX"))
+	var sfx_entries: Array = FXScript.get_sfx_entries(Roth.current_installation.fx22)
 	if not sfx_entries.is_empty():
 		for i in range(len(sfx_entries)):
 			var entry: Dictionary = sfx_entries[i]
@@ -18,4 +20,4 @@ func _on_settings_loaded() -> void:
 func _on_sfx_list_item_activated(index: int) -> void:
 	var entry: Dictionary = %SFXList.get_item_metadata(index)
 	var entry_data := FXScript.get_from_entry(entry)
-	Roth.play_audio_entry(entry_data)
+	RothAudio.play_entry(entry_data)

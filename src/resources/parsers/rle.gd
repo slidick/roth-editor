@@ -197,13 +197,13 @@ static func convert_to_paletted_image(input_image: Image, raw_palette: Array, p_
 	
 	while threads[0].is_alive():
 		#%ProgressBar.value = float(progress.value) / len(input_image_data) * 100
-		await Roth.get_tree().process_frame
+		await Engine.get_main_loop().process_frame
 	
 	var paletted_image_data: PackedByteArray = []
 	for i in range(num_threads):
 		while threads[i].is_alive():
 			#%ProgressBar.value = float(progress.value) / len(input_image_data) * 100
-			await Roth.get_tree().process_frame
+			await Engine.get_main_loop().process_frame
 		var results: PackedByteArray = threads[i].wait_to_finish()
 		paletted_image_data.append_array(results)
 	

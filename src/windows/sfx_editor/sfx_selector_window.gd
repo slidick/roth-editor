@@ -50,7 +50,7 @@ func _on_tree_item_activated() -> void:
 	if %Tree.get_selected_column() == 0:
 		var tree_item: TreeItem = %Tree.get_selected()
 		var entry: Dictionary = tree_item.get_metadata(0)
-		Roth.play_audio_entry(FXScript.convert_to_playable_entry(entry))
+		RothAudio.play_entry(FXScript.convert_to_playable_entry(entry))
 	else:
 		select()
 

@@ -1,0 +1,1300 @@
+extends BaseWindow
+
+const EYE_ICON: Texture2D = preload("uid://crb7de5pvofid")
+const EYE_CLOSED_ICON: Texture2D = preload("uid://d8l1uefa8sbq")
+
+enum MapMenu {
+	Save,
+	SaveAs,
+	Sep1,
+	EditMetadata,
+	EditArray02,
+	EditCommands,
+	Sep2,
+	EditMode,
+	Sep3,
+	ReloadDAS,
+	Sep4,
+	Close,
+}
+
+var tree_root: TreeItem
+var context_collision: Dictionary
+var previous_search: String
+var search_count: int = 0
+var copied_object_data: Array
+var copied_sfx_data: Array
+var copied_sector_data: Array
+var paste_sectors_mode: bool = false
+var pin_paste: bool = false
+var original_copied_sector_center := Vector2.ZERO
+var original_pasted_sector_data: Array = []
+var current_copied_sector_center := Vector2.ZERO
+var current_pasted_sector_data: Array = []
+var first_load: bool = false
+var undo_stacks: Dictionary = {}
+var undo_positions: Dictionary = {}
+var undo_lists: Dictionary = {}
+var compilation_failure_warning_given: Dictionary = {}
+var hovered_sector: Variant = null
+var hovered_face: Variant = null
+var selected_faces: Array = []
+var selected_sectors: Array = []
+var selected_objects: Array = []
+var selected_sfx: Array = []
+var selected_vertex_nodes: Array = []
+
+
+func _ready() -> void:
+	super._ready()
+	Roth.map_loading_finished.connect(_on_map_loaded)
+	Roth.map_loading_completely_finished.connect(_on_map_completely_loaded)
+	Roth.close_map.connect(close_map)
+	Roth.editor_action.connect(add_to_undo_redo)
+	tree_root = %MapsTree.create_item()
+	%MapsTree.set_column_title(0, "Maps")
+	%MapContainer.hide()
+	%EditorHeader.hide()
+	
+	%EditFaceTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditSectorTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditObjectTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditSFXTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+
+
+func _input(event: InputEvent) -> void:
+	if %Camera3D.has_focus:
+	
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouse and %Camera3D.has_focus == true:
+			%SubViewport.push_input(event)
+			get_viewport().set_input_as_handled()
+		
+		if event.is_action_pressed("move_object_to_ceiling"):
+			var maps: Array = []
+			for object: ObjectRoth in selected_objects:
+				object.data.posZ = object.sector.get_ref().data.ceilingHeight
+				redraw(selected_objects)
+				%EditObjectContainer.update_selections()
+				if object.map not in maps:
+					maps.append(object.map)
+			for map: Map in maps:
+				Roth.editor_action.emit(map, "Snap to Ceiling")
+		if event.is_action_pressed("move_object_to_floor"):
+			var maps: Array = []
+			for object: ObjectRoth in selected_objects:
+				object.data.posZ = object.sector.get_ref().data.floorHeight
+				redraw(selected_objects)
+				%EditObjectContainer.update_selections()
+				if object.map not in maps:
+					maps.append(object.map)
+			for map: Map in maps:
+				Roth.editor_action.emit(map, "Snap to Floor")
+		if event.is_action_pressed("open_3d_context_menu"):
+			var viewport := %Map3D.get_viewport()
+			var mouse_position := viewport.get_mouse_position()
+			var viewport_size: Vector2i = viewport.size
+			if viewport.get("content_scale_size"):
+				viewport_size = viewport.content_scale_size
+			if ((mouse_position.x < 0 or
+					mouse_position.y < 0 or
+					mouse_position.x > viewport_size.x or
+					mouse_position.y > viewport_size.y) and 
+					Input.mouse_mode != Input.MOUSE_MODE_CAPTURED
+			):
+				return
+			var camera := viewport.get_camera_3d()
+			var origin_position: Vector2 = mouse_position
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				origin_position = viewport_size / 2.0
+			var origin := camera.project_ray_origin(origin_position)
+			var direction := camera.project_ray_normal(origin_position)
+			var ray_length := camera.far
+			var end := origin + direction * ray_length
+			var space_state: PhysicsDirectSpaceState3D = %Map3D.get_world_3d().direct_space_state
+			var query := PhysicsRayQueryParameters3D.create(origin, end)
+			var result: Dictionary = space_state.intersect_ray(query)
+			if result:
+				if (result.collider.get_parent().ref is Face
+					or result.collider.get_parent().ref is Sector
+				):
+					context_collision = result
+					var pos: Vector2 = get_viewport().get_mouse_position()
+					if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+						pos = %SubViewportContainer.global_position
+						pos += %SubViewportContainer.size / 2
+						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+						get_viewport().warp_mouse(pos)
+						
+					%"3DContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+				if result.collider.get_parent().ref is ObjectRoth:
+					if result.collider.get_parent().ref not in selected_objects:
+						select_resource(result.collider.get_parent().ref, not event.shift_pressed)
+					context_collision = result
+					var pos: Vector2 = get_viewport().get_mouse_position()
+					if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+						pos = %SubViewportContainer.global_position
+						pos += %SubViewportContainer.size / 2
+						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+						get_viewport().warp_mouse(pos)
+					%"3DObjectContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+		
+		if Input.is_action_just_pressed("paste_options_dialog"):
+			%PasteOptions.toggle(true)
+	
+	if %Map3D.has_focus or %Map2D.has_focus:
+		if event.is_action_pressed("delete_selected"):
+			if len(selected_faces) == 1 and selected_faces[0].sister:
+				delete_selected_face()
+			elif selected_faces.is_empty() and not selected_sectors.is_empty():
+				delete_selected_sectors()
+			elif not selected_objects.is_empty():
+				delete_selected_objects()
+			elif not selected_sfx.is_empty():
+				delete_selected_sfx()
+			elif not selected_vertex_nodes.is_empty():
+				delete_selected_vertices()
+			
+		if event.is_action_pressed("merge_sectors"):
+			if len(selected_sectors) > 1 and len(selected_faces) == 0:
+				merge_selected_sectors()
+		if event.is_action_pressed("hide_selected_sectors", false, true):
+			hide_selected_sectors()
+		if event.is_action_pressed("hide_non_selected_sectors", false, true):
+			hide_non_selected_sectors()
+		if event.is_action_pressed("show_hidden_sectors"):
+			show_hidden_sectors()
+	if %Map2D.has_focus:
+		if event.is_action_pressed("copy_sectors", false, true):
+			copy_selected_sectors()
+		if event.is_action_pressed("start_paste_sectors", false, true):
+			enter_paste_sectors_mode()
+		if event.is_action_pressed("cancel_paste_sectors"):
+			cancel_paste_sectors_mode()
+		if event.is_action_pressed("complete_paste_sectors"):
+			complete_paste_sectors_mode()
+		if event.is_action_pressed("cut_sectors", false, true):
+			cut_selected_sectors()
+		if event.is_action_pressed("pin_paste"):
+			pin_paste = not pin_paste
+		if event.is_action_pressed("reset_paste_position"):
+			if paste_sectors_mode:
+				var offset: Vector2 = original_copied_sector_center - current_copied_sector_center
+				for sector: Sector in current_pasted_sector_data:
+					for face: Face in sector.faces:
+						face.v1 += offset
+						face.v2 += offset
+					for object_data: Dictionary in sector.data.objectInformation:
+						object_data.posX += -offset.x
+						object_data.posY += offset.y
+				current_copied_sector_center = original_copied_sector_center
+				%Map2D.queue_redraw()
+
+
+func _on_paste_options_button_pressed() -> void:
+	%PasteOptions.toggle(true)
+
+
+#region Map / Viewports
+
+func test_map() -> void:
+	var map: Map = %Map2D.map
+	if not map:
+		return
+	
+	var player_position: Vector3 = %Camera3D.global_position
+	player_position.y -= (map.metadata["playerHeight"]*2) / Roth.SCALE_3D_WORLD
+	player_position *= Roth.SCALE_3D_WORLD
+	var player_rotation: int = Utility.player_degrees_to_rotation(%Camera3D.global_rotation_degrees.y)
+	
+	var player_data: Dictionary = {
+		"position": player_position,
+		"rotation": player_rotation,
+	}
+	
+	Roth.test_run_maps(map.map_info.map_pack, map, player_data)
+
+
+func close_map(map: Map) -> void:
+	for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref == map:
+			for child_item: TreeItem in tree_item.get_children():
+				child_item.free()
+			tree_item.free()
+			%Map2D.close_map(map)
+			selected_faces.clear()
+			selected_sectors.clear()
+			hovered_face = null
+			hovered_sector = null
+			%"Command Editor".close(map)
+			close_undo_redo(map)
+			reload_skybox()
+			map.close_map(true)
+
+
+func load_map(map: Map) -> void:
+	for i in range(tree_root.get_child_count()):
+		if map.preview_map == tree_root.get_child(i).get_metadata(0).ref.preview_map:
+			Console.print("Map loaded already")
+			return
+	
+	var sectors_node := Node3D.new()
+	sectors_node.name = "Sectors"
+	for sector: Sector in map.sectors:
+		var mesh := sector.initialize_mesh()
+		sectors_node.add_child(mesh)
+	
+	var faces_node := Node3D.new()
+	faces_node.name = "Faces"
+	for face: Face in map.faces:
+		var mesh := face.initialize_mesh()
+		faces_node.add_child(mesh)
+	
+	var objects_node := Node3D.new()
+	objects_node.name = "Objects"
+	for object: ObjectRoth in map.objects:
+		var mesh := object.initialize_mesh()
+		objects_node.add_child(mesh)
+	
+	var sfx_node := Node3D.new()
+	sfx_node.name = "SFX"
+	for sfx: SFX in map.sound_effects:
+		var mesh := sfx.initialize_mesh()
+		sfx_node.add_child(mesh)
+	
+	
+	%Map2D.setup(map)
+	
+	var map_node := Map.MapNode3D.new()
+	map_node.ref = map
+	map_node.add_child(sectors_node)
+	map_node.add_child(faces_node)
+	map_node.add_child(objects_node)
+	map_node.add_child(sfx_node)
+	map_node.name = map.map_info.name
+	map_node.visible = false
+	map_node.process_mode = PROCESS_MODE_DISABLED
+	%Maps.add_child(map_node)
+	map.node = map_node
+	
+	var tree_child: TreeItem = tree_root.create_child()
+	tree_child.set_text(0, map.map_info.name)
+	tree_child.set_metadata(0, map_node)
+	tree_child.add_button(0, EYE_CLOSED_ICON)
+	
+	var objects_child: TreeItem = tree_child.create_child()
+	objects_child.set_text(0, "Objects")
+	objects_child.set_metadata(0, objects_node)
+	objects_child.add_button(0, EYE_ICON)
+	
+	var sfx_child: TreeItem = tree_child.create_child()
+	sfx_child.set_text(0, "SFX")
+	sfx_child.set_metadata(0, sfx_node)
+	sfx_child.add_button(0, EYE_ICON)
+	
+	%NoMapLoaded.hide()
+	%MapContainer.show()
+	%EditorHeader.show()
+	
+	%SFXZoneIndexEdit.max_value = len(map.sfx_zones)
+	
+	
+	if tree_root.get_child_count() == 1:
+		first_load = true
+	
+	reload_skybox()
+	
+	add_to_undo_redo(map, "Map Opened")
+
+
+func reload_skybox() -> void:
+	if %Map2D.map and Settings.settings.get("options", {}).get("show_sky", true):
+		var texture_data: Dictionary =  Das.get_index_from_das(%Map2D.map.metadata.skyTexture, %Map2D.map.map_info.das_info)
+		if "image" not in texture_data:
+			%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
+			return
+		var texture_image: Image = texture_data.image.get_image()
+		var vertical_size: int = 600
+		var vertical_offset: int = int(vertical_size/2.0) - 96 - texture_data.modifier
+		vertical_offset = max(0, vertical_offset)
+		var sky_image := Image.create_empty(texture_image.get_width()*4, vertical_size, false, texture_image.get_format())
+		for y: int in range(vertical_offset):
+			for x: int in range(sky_image.get_width()):
+				sky_image.set_pixel(x, y, texture_image.get_pixel(0,0))
+		for y: int in range(vertical_offset+texture_image.get_height(), sky_image.get_height()):
+			for x: int in range(sky_image.get_width()):
+				sky_image.set_pixel(x, y, texture_image.get_pixel(0,texture_image.get_height()-1))
+		for x: int in range(0, sky_image.get_width(), texture_image.get_width()):
+			sky_image.blit_rect(texture_image, Rect2i(0,0,texture_image.get_width(), texture_image.get_height()), Vector2i(x, vertical_offset))
+		sky_image.flip_x()
+		var panorama := PanoramaSkyMaterial.new()
+		panorama.panorama = ImageTexture.create_from_image(sky_image)
+		%WorldEnvironment.environment.sky.sky_material = panorama
+	else:
+		%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
+
+
+func _on_map_loaded(map: Map) -> void:
+	load_map(map)
+
+
+func _on_map_completely_loaded() -> void:
+	if not visible:
+		_show()
+	%Maps.get_child(%Maps.get_child_count() - 1).visible = true
+	tree_root.get_child(%Maps.get_child_count() - 1).set_button(0, 0, EYE_ICON)
+	%Maps.get_child(%Maps.get_child_count() - 1).process_mode = PROCESS_MODE_INHERIT
+	
+	if first_load:
+		first_load = false
+		var starting_position := Vector3(
+			-%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["initPosX"],
+			%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["initPosZ"],
+			%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["initPosY"],
+		)
+		%Camera3D.global_position = starting_position / Roth.SCALE_3D_WORLD
+		%Camera3D.global_position.y += (%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["playerHeight"]*2) / Roth.SCALE_3D_WORLD
+		%Camera3D.rotation_degrees = Vector3(
+			0,
+			Utility.player_rotation_to_degrees(%Maps.get_child(%Maps.get_child_count() - 1).ref.metadata["rotation"]),
+			0,
+		)
+
+
+func _on_sub_viewport_container_focus_entered() -> void:
+	%Camera3D.has_focus = true
+	%Map3D.has_focus = true
+	%ViewportBorder.self_modulate.a = 1.0
+
+
+func _on_sub_viewport_container_focus_exited() -> void:
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
+	%Camera3D.has_focus = false
+	%Map3D.has_focus = false
+	%ViewportBorder.self_modulate.a = 0.0
+
+
+func _on_sub_viewport_container_mouse_entered() -> void:
+	%SubViewportContainer.grab_focus()
+
+
+func _on_sub_viewport_container_mouse_exited() -> void:
+	%SubViewportContainer.release_focus()
+
+
+func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		%SubViewportContainer.grab_focus()
+
+
+func _on_sub_viewport_container_2d_mouse_entered() -> void:
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
+	%Map2D.has_focus = true
+	%ViewportBorder2.self_modulate.a = 1.0
+	%SubViewportContainer2D.grab_focus()
+	if Input.get_mouse_button_mask() & MOUSE_BUTTON_MASK_LEFT == 0:
+		%SubViewportContainer2D.grab_click_focus()
+
+
+func _on_sub_viewport_container_2d_mouse_exited() -> void:
+	%Map2D.has_focus = false
+	%ViewportBorder2.self_modulate.a = 0.0
+	if hovered_sector:
+		hovered_sector = null
+		%Map2D.queue_redraw()
+	if hovered_face:
+		hovered_face = null
+		%Map2D.queue_redraw()
+
+
+func _on_tab_bar_tab_changed(tab: int) -> void:
+	%EditorTab.current_tab = tab
+	match tab:
+		0:
+			%MapPanelContainer.show()
+			%InspectorSidePanel.show()
+			if %"Command Editor".map:
+				Roth.editor_action.emit(%"Command Editor".map, "Edit Commands")
+		1:
+			%MapPanelContainer.hide()
+			%InspectorSidePanel.hide()
+
+#endregion
+
+#region MapTree
+
+func _on_maps_tree_button_clicked(item: TreeItem, _column: int, id: int, _mouse_button_index: int) -> void:
+	if item.get_metadata(0).visible:
+		item.set_button(0, id, EYE_CLOSED_ICON)
+		item.get_metadata(0).process_mode = PROCESS_MODE_DISABLED
+	else:
+		item.set_button(0, id, EYE_ICON)
+		item.get_metadata(0).process_mode = PROCESS_MODE_INHERIT
+	item.get_metadata(0).visible = not item.get_metadata(0).visible
+
+
+func _on_maps_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+	var tree_item: TreeItem = %MapsTree.get_item_at_position(mouse_position)
+	if mouse_button_index == MOUSE_BUTTON_RIGHT and tree_item.get_parent() == tree_root:
+		if not "vanilla" in tree_item.get_metadata(0).ref.map_info:
+			%MapsTreeMenu.set_item_disabled(MapMenu.Save, false)
+		else:
+			%MapsTreeMenu.set_item_disabled(MapMenu.Save, true)
+		%MapsTreeMenu.popup(Rect2i(int(%MapsTree.global_position.x+mouse_position.x), int(%MapsTree.global_position.y+mouse_position.y), 0, 0))
+
+
+func _on_maps_tree_menu_index_pressed(index: int) -> void:
+	var selected: Array = []
+	var tree_item: TreeItem = %MapsTree.get_next_selected(null)
+	while tree_item:
+		if tree_item.get_parent() == tree_root:
+			selected.append(tree_item)
+		tree_item = %MapsTree.get_next_selected(tree_item)
+	match index:
+		MapMenu.Save:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to save.", "Info", false, Vector2(400,150))
+				return
+			var map: Map = selected[0].get_metadata(0).ref
+			if "vanilla" not in map.map_info:
+				Console.print("Saving file: %s" % map.map_info.name)
+				map.save_map()
+		MapMenu.SaveAs:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
+				return
+			var map: Map = selected[0].get_metadata(0).ref
+			var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.SAVE_AS)
+			if results[0]:
+				var new_map_name: String = results[1]
+				Console.print("Saving file as: %s" % new_map_name)
+				selected[0].set_text(0, new_map_name)
+				undo_lists[map].name = new_map_name
+				Roth.settings_updated.emit()
+		
+		MapMenu.EditMetadata:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			var map: Map = selected[0].get_metadata(0).ref
+			var results: Array = await %Metadata.show_metadata(map.metadata)
+			if results[0] == false:
+				return
+			map.metadata = results[1]
+			Roth.editor_action.emit(map, "Change map metadata")
+		MapMenu.EditArray02:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			var map: Map = selected[0].get_metadata(0).ref
+			var results: Array = await %SFXZones.edit_data(map.sfx_zones)
+			if results[0] == false:
+				return
+			map.sfx_zones = results[1]
+			%SFXZoneIndexEdit.max_value = len(results[1])
+		MapMenu.EditCommands:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			var map: Map = selected[0].get_metadata(0).ref
+			%"Command Editor".load_command_editor(map)
+			%TabBar.current_tab = 1
+		MapMenu.EditMode:
+			if len(selected) != 1:
+				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
+				return
+			var map: Map = selected[0].get_metadata(0).ref
+			%Map2D.setup(map)
+			reload_skybox()
+			%SFXZoneIndexEdit.max_value = len(map.sfx_zones)
+		MapMenu.ReloadDAS:
+			var das_packs: Array = []
+			for item: TreeItem in selected:
+				var das_info: Dictionary = item.get_metadata(0).ref.map_info.das_info
+				if das_info not in das_packs:
+					das_packs.append(das_info)
+				var das2_info: Dictionary = item.get_metadata(0).ref.map_info.map_pack.das2_info
+				if das2_info not in das_packs:
+					das_packs.append(das2_info)
+			for das_info: Dictionary in das_packs:
+				Das.unload_das(das_info)
+				%Texture.unload_das(das_info)
+			for item: TreeItem in selected:
+				var map: Map = Map.load_from_bytes(item.get_metadata(0).ref.map_info, item.get_metadata(0).ref.compile())
+				if not map:
+					return
+				Das.get_index_from_das(0, map.map_info.map_pack.das2_info, 293)
+				Roth.das_loading_started.emit("Reloading DAS")
+				await map.load_das()
+				replace_map(item.get_metadata(0).ref, map)
+				reload_skybox()
+		MapMenu.Close:
+			if await Dialog.confirm("Close map%s?\n %s" % ["s" if len(selected) > 1 else "", ", ".join(selected.map(func (item: TreeItem) -> String: return item.get_metadata(0).ref.map_info.name))], "Confirm Close", false):
+				for item: TreeItem in selected:
+					close_map(item.get_metadata(0).ref)
+
+#endregion
+
+#region Search
+
+func _on_search_text_submitted(search_text: String) -> void:
+	if search_text.is_empty():
+		select_resource(null)
+		return
+	
+	if search_text == previous_search:
+		search_count += 1
+	else:
+		search_count = 0
+	previous_search = search_text
+	
+	var type: String = %SearchOption.get_item_text(%SearchOption.selected)
+	select_face(int(search_text), type, null, search_count)
+
+
+func _on_search_result_activated(search_result: Dictionary) -> void:
+	await Roth.load_maps([search_result.map])
+	%Search.text = str(search_result.index)
+	for i in range(%SearchOption.item_count):
+		if %SearchOption.get_item_text(i) == search_result.type:
+			%SearchOption.select(i)
+	select_face(search_result.index, search_result.type, search_result.map)
+
+
+func _on_search_option_item_selected(_index: int) -> void:
+	search_count = 0
+	previous_search = ""
+
+#endregion
+
+#region Objects
+
+func _on_3d_context_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			var map: Map = context_collision.collider.get_parent().ref.map
+			var extra_info: Dictionary = {
+				"render_type": "billboard",
+				"rotation": 0,
+				"sector_index": -1,
+			}
+			var pos: Vector3 = context_collision.position * Roth.SCALE_3D_WORLD
+			if context_collision.collider.get_parent().ref is Face:
+				extra_info["render_type"] = "fixed"
+				extra_info["sector_index"] = context_collision.collider.get_parent().ref.sector.index
+				var angle: float = rad_to_deg(atan2(context_collision.normal.x, -context_collision.normal.z))
+				if angle < 0:
+					angle += 360
+				extra_info["rotation"] = int((angle / 360) * 256)
+				if not context_collision.collider.get_parent().ref.sister:
+					pos += (context_collision.normal * 2)
+			elif context_collision.collider.get_parent().ref is Sector:
+				extra_info["sector_index"] = context_collision.collider.get_parent().ref.index
+			
+			var new_object := ObjectRoth.new_object_3d(map, pos, extra_info)
+			if not new_object:
+				return
+			map.add_object(new_object)
+			%Map2D.add_object_to_2d_map(new_object)
+			select_resource(new_object, true)
+			Roth.editor_action.emit(new_object.map, "Add Object")
+		1:
+			var map: Map = context_collision.collider.get_parent().ref.map
+			var extra_info: Dictionary = {
+				"render_type": "billboard",
+				"rotation": 0,
+				"sector_index": -1,
+			}
+			var pos: Vector3 = context_collision.position * Roth.SCALE_3D_WORLD
+			if context_collision.collider.get_parent().ref is Face:
+				extra_info["render_type"] = "fixed"
+				extra_info["sector_index"] = context_collision.collider.get_parent().ref.sector.index
+				var angle: float = rad_to_deg(atan2(context_collision.normal.x, -context_collision.normal.z))
+				if angle < 0:
+					angle += 360
+				extra_info["rotation"] = int((angle / 360) * 256)
+				if not context_collision.collider.get_parent().ref.sister:
+					pos += (context_collision.normal * 2)
+			elif context_collision.collider.get_parent().ref is Sector:
+				extra_info["sector_index"] = context_collision.collider.get_parent().ref.index
+			
+			select_resource(null)
+			var origin := Vector3(-copied_object_data[0].data.posX, copied_object_data[0].data.posZ, copied_object_data[0].data.posY)
+			for each_object: ObjectRoth in copied_object_data:
+				var offset := origin - Vector3(-each_object.data.posX, each_object.data.posZ, each_object.data.posY)
+				extra_info.rotation = each_object.data.rotation
+				var new_object := ObjectRoth.new_from_copied_object_3d(map, copied_object_data[0], pos - offset, extra_info)
+				if not new_object:
+					continue
+				map.add_object(new_object)
+				%Map2D.add_object_to_2d_map(new_object)
+				select_resource(new_object, false)
+			Roth.editor_action.emit(map, "Paste Object%s" % ("s" if len(copied_object_data) > 1 else ""))
+
+
+func _on_3d_object_context_menu_index_pressed(index: int) -> void:
+	match index:
+		0:
+			var object: ObjectRoth = context_collision.collider.get_parent().ref
+			if object not in selected_objects:
+				return
+			selected_objects.erase(object)
+			selected_objects.insert(0, object)
+			copy_objects(selected_objects)
+		1:
+			var object: ObjectRoth = context_collision.collider.get_parent().ref
+			object.delete()
+			select_resource(null)
+			Roth.editor_action.emit(object.map, "Delete Object")
+
+
+func copy_objects(object_list: Array) -> void:
+	copied_object_data.clear()
+	for object: ObjectRoth in object_list:
+		copied_object_data.append(object.duplicate())
+	%"3DContextMenu".set_item_disabled(1, false)
+	%ObjectContextPopupMenu.set_item_disabled(1, false)
+
+func copy_sfx(sfx_list: Array) -> void:
+	copied_sfx_data.clear()
+	for sfx: SFX in sfx_list:
+		copied_sfx_data.append(sfx.duplicate())
+	%SFXContextPopupMenu.set_item_disabled(1, false)
+
+#endregion
+
+#region Undo/Redo
+
+func _on_undo_list_item_selected(index: int, item_list: ItemList) -> void:
+	var effected_map: Map
+	for i_map: Map in undo_lists:
+		if item_list == undo_lists[i_map]:
+			effected_map = i_map
+	undo_positions[effected_map] = len(undo_stacks[effected_map]) - index
+	var undo_state: Dictionary = undo_stacks[effected_map][ undo_positions[effected_map] - 1]
+	var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
+	if not map:
+		return
+	await map.load_das()
+	replace_map(effected_map, map)
+
+
+func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
+	%CountAndSizeContainer.recalculate()
+	%Map2D.update_concave_sectors()
+	if p_map not in undo_stacks:
+		undo_stacks[p_map] = []
+		undo_positions[p_map] = 0
+		var item_list := ItemList.new()
+		undo_lists[p_map] = item_list
+		undo_lists[p_map].name = p_map.map_info.name
+		compilation_failure_warning_given[p_map] = false
+		%HistoryTabContainer.add_child(undo_lists[p_map])
+		undo_lists[p_map].item_selected.connect(_on_undo_list_item_selected, CONNECT_APPEND_SOURCE_OBJECT)
+	
+	if Settings.settings.get("options", {}).get("undo_history", 50) != 0:
+	
+		var action: Dictionary = {
+			"name": p_name,
+			"map_info": p_map.map_info,
+			"bytes": p_map.compile(),
+		}
+		
+		# Check if map actually compiles, if not give a warning
+		if action.bytes.is_empty():
+			if not compilation_failure_warning_given[p_map]:
+				compilation_failure_warning_given[p_map] = true
+				Dialog.information("Map %s is too large!\nMap cannot be saved!\nUndo history will not be recorded until corrected!" % p_map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
+			return
+		compilation_failure_warning_given[p_map] = false
+		
+		# Check if state is same as previous state
+		if not undo_stacks[p_map].is_empty() and action.bytes == undo_stacks[p_map][undo_positions[p_map]-1].bytes:
+			return
+		
+		while undo_positions[p_map] < len(undo_stacks[p_map]):
+			undo_stacks[p_map].pop_back()
+		
+		undo_stacks[p_map].append(action)
+		undo_positions[p_map] += 1
+	
+	while len(undo_stacks[p_map]) > Settings.settings.get("options", {}).get("undo_history", 50):
+		undo_stacks[p_map].pop_front()
+		undo_positions[p_map] -= 1
+	
+	undo_lists[p_map].clear()
+	for i in range(len(undo_stacks[p_map])-1, -1, -1):
+		undo_lists[p_map].add_item(undo_stacks[p_map][i].name)
+	if undo_lists[p_map].item_count > 0:
+		undo_lists[p_map].select(0)
+
+
+func close_undo_redo(p_map: Map) -> void:
+	undo_stacks.erase(p_map)
+	undo_positions.erase(p_map)
+	if p_map in undo_lists:
+		undo_lists[p_map].queue_free()
+	undo_lists.erase(p_map)
+	compilation_failure_warning_given.erase(p_map)
+
+
+func replace_map(old_map: Map, new_map: Map) -> void:
+	for tree_item: TreeItem in %MapsTree.get_root().get_children():
+		if tree_item.get_parent() == tree_root and tree_item.get_metadata(0).ref == old_map:
+			for i in range(len(selected_objects)-1, -1, -1):
+				var object: ObjectRoth = selected_objects[i]
+				if object.map == tree_item.get_metadata(0).ref:
+					selected_objects.pop_at(i)
+			for i in range(len(selected_sfx)-1, -1, -1):
+				var sfx: SFX = selected_sfx[i]
+				if sfx.map == tree_item.get_metadata(0).ref:
+					selected_sfx.pop_at(i)
+			for i in range(len(selected_faces)-1, -1, -1):
+				var face: Face = selected_faces[i]
+				if face.map == tree_item.get_metadata(0).ref:
+					selected_faces.pop_at(i)
+			for i in range(len(selected_sectors)-1, -1, -1):
+				var sector: Sector = selected_sectors[i]
+				if sector.map == tree_item.get_metadata(0).ref:
+					selected_sectors.pop_at(i)
+			
+			
+			var folded: bool = %CountAndSizeContainer.folded
+			if %Map2D.close_map(old_map, false):
+				%Map2D.setup(new_map, false)
+				%CountAndSizeContainer.folded = folded
+			
+			
+			
+			var old_map_node: Map.MapNode3D = tree_item.get_metadata(0)
+			
+			var sectors_node := Node3D.new()
+			sectors_node.name = "Sectors"
+			for sector: Sector in new_map.sectors:
+				var mesh := sector.initialize_mesh()
+				sectors_node.add_child(mesh)
+			
+			var faces_node := Node3D.new()
+			faces_node.name = "Faces"
+			for face: Face in new_map.faces:
+				var mesh := face.initialize_mesh()
+				faces_node.add_child(mesh)
+			
+			var objects_node := Node3D.new()
+			objects_node.name = "Objects"
+			for object: ObjectRoth in new_map.objects:
+				var mesh := object.initialize_mesh()
+				objects_node.add_child(mesh)
+			
+			var sfx_node := Node3D.new()
+			sfx_node.name = "SFX"
+			for sfx: SFX in new_map.sound_effects:
+				var mesh := sfx.initialize_mesh()
+				sfx_node.add_child(mesh)
+			
+			var map_node := Map.MapNode3D.new()
+			map_node.ref = new_map
+			map_node.add_child(sectors_node)
+			map_node.add_child(faces_node)
+			map_node.add_child(objects_node)
+			map_node.add_child(sfx_node)
+			map_node.name = new_map.map_info.name
+			map_node.visible = old_map_node.visible
+			map_node.process_mode = old_map_node.process_mode
+			%Maps.add_child(map_node)
+			new_map.node = map_node
+			
+			tree_item.set_metadata(0, map_node)
+			
+			tree_item.get_child(0).set_metadata(0, objects_node)
+			tree_item.get_child(1).set_metadata(0, sfx_node)
+			
+			old_map_node.queue_free()
+			
+			if not is_same(old_map_node.ref.commands_section, new_map.commands_section) and %"Command Editor".map and %"Command Editor".map.map_info == new_map.map_info:
+				%"Command Editor".load_command_editor(new_map, false)
+			
+			compilation_failure_warning_given[new_map] = false
+			undo_lists[new_map] = undo_lists[old_map]
+			undo_positions[new_map] = undo_positions[old_map]
+			undo_stacks[new_map] = undo_stacks[old_map]
+			compilation_failure_warning_given.erase(old_map)
+			undo_lists.erase(old_map)
+			undo_positions.erase(old_map)
+			undo_stacks.erase(old_map)
+			old_map.preview_map.editable_map = new_map
+			#Roth.loaded_maps.erase(old_map)
+			#Roth.loaded_maps.append(new_map)
+			new_map.preview_map = old_map.preview_map
+			old_map.unload()
+			
+
+#endregion
+
+#region Editor Functions
+
+func select_face(index: int, type: String, p_map: Map = null, count: int = 0, deselect_others: bool = true) -> void:
+	var maps_available := []
+	
+	for i in range(tree_root.get_child_count()):
+		if p_map == null:
+			if tree_root.get_child(i).get_metadata(0).visible:
+				maps_available.append(tree_root.get_child(i).get_metadata(0))
+		else:
+			if tree_root.get_child(i).get_metadata(0).ref.preview_map == p_map:
+				maps_available.append(tree_root.get_child(i).get_metadata(0))
+	
+	for map_node: Node3D in maps_available:
+		match type:
+			"Sector":
+				for sector: Node3D in map_node.get_node("Sectors").get_children():
+					if index == sector.ref.index:
+						select_resource(sector.ref, deselect_others)
+						return
+			"Sector ID":
+				for sector: Node3D in map_node.get_node("Sectors").get_children():
+					if index == sector.ref.data.floorTriggerID:
+						if count == 0:
+							select_resource(sector.ref, deselect_others)
+							return
+						count -= 1
+			"Face":
+				for face: Node3D in map_node.get_node("Faces").get_children():
+					if index == face.ref.index:
+						if face.get_child_count() > 0:
+							select_resource(face.get_child(0).ref, deselect_others)
+							return
+			"Face ID":
+				for face: Node3D in map_node.get_node("Faces").get_children():
+					if ("additionalMetadata" in face.ref.texture_data
+						and index == face.ref.texture_data.additionalMetadata.unk0x0C
+					):
+						if face.get_child_count() > 0:
+							if count == 0:
+								select_resource(face.get_child(0).ref, deselect_others)
+								return
+							count -= 1
+			"Object":
+				for object: Node3D in map_node.get_node("Objects").get_children():
+					if index == object.ref.index:
+						select_resource(object.ref, deselect_others)
+			"Object ID":
+				for object: Node3D in map_node.get_node("Objects").get_children():
+					if index == object.ref.data.unk0x0E:
+						if count == 0:
+							select_resource(object.ref, deselect_others)
+							return
+						count -= 1
+			"SFX":
+				for sfx: Node3D in map_node.get_node("SFX").get_children():
+					if index == sfx.ref.index:
+						select_resource(sfx.ref, deselect_others)
+			"SFX ID":
+				for sfx: Node3D in map_node.get_node("SFX").get_children():
+					if index == sfx.ref.data.unk0x06:
+						if count == 0:
+							select_resource(sfx.ref, deselect_others)
+							return
+						count -= 1
+				
+	if search_count > 0:
+		search_count = 0
+		previous_search = str(index)
+		select_face(index, type, p_map, search_count)
+
+
+func select_resources(resource_list: Array, deselect_others: bool = true) -> void:
+	for i in range(len(resource_list)-1):
+		select_resource(resource_list[i], deselect_others, false)
+	select_resource(resource_list[-1], deselect_others, true)
+
+
+func select_resource(resource: Variant, deselect_others: bool = true, update_selections: bool = true) -> void:
+	%EditFaceContainer.clear()
+	%EditSectorContainer.clear()
+	%EditObjectContainer.clear()
+	%EditSFXContainer.clear()
+	%EditVertexContainer.clear()
+	%DrawModeContainer.hide()
+	if not resource:
+		selected_faces.clear()
+		hovered_face = null
+		selected_sectors.clear()
+		hovered_sector = null
+		selected_objects.clear()
+		selected_sfx.clear()
+		selected_vertex_nodes.clear()
+		for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+			object_node.deselect()
+		for sfx_node: SFX.SFXNode2D in %SFX.get_children():
+			sfx_node.deselect()
+		%Arrow3D.clear_target()
+		%Map2D.update_selections()
+		%Map3D.update_selections()
+		return
+	
+	if resource is ObjectRoth:
+		selected_faces.clear()
+		selected_sectors.clear()
+		selected_sfx.clear()
+		selected_vertex_nodes.clear()
+		if deselect_others:
+			selected_objects.clear()
+		if resource not in selected_objects:
+			selected_objects.append(resource)
+		if update_selections:
+			%EditObjectContainer.update_selections()
+	elif resource is SFX:
+		selected_faces.clear()
+		selected_sectors.clear()
+		selected_objects.clear()
+		selected_vertex_nodes.clear()
+		if deselect_others:
+			selected_sfx.clear()
+		if resource not in selected_sfx:
+			selected_sfx.append(resource)
+		if update_selections:
+			%EditSFXContainer.update_selections()
+	elif resource is Face:
+		selected_objects.clear()
+		selected_sfx.clear()
+		selected_vertex_nodes.clear()
+		if deselect_others:
+			selected_faces.clear()
+			selected_sectors.clear()
+			selected_faces.append(resource)
+			selected_sectors.append(resource.sector)
+		else:
+			if resource not in selected_faces:
+				selected_faces.append(resource)
+			if len(selected_faces) > 1:
+				selected_sectors.clear()
+			elif len(selected_faces) == 1:
+				selected_sectors.clear()
+				selected_sectors.append(selected_faces[0].sector)
+		if update_selections:
+			%EditFaceContainer.update_selections()
+	elif resource is Sector:
+		selected_faces.clear()
+		selected_objects.clear()
+		selected_sfx.clear()
+		selected_vertex_nodes.clear()
+		hovered_face = null
+		if deselect_others:
+			selected_sectors.clear()
+		if resource not in selected_sectors:
+			selected_sectors.append(resource)
+		if update_selections:
+			%EditSectorContainer.update_selections()
+	elif resource is VertexNode:
+		selected_sectors.clear()
+		selected_faces.clear()
+		selected_objects.clear()
+		selected_sfx.clear()
+		if deselect_others:
+			selected_vertex_nodes.clear()
+		if resource not in selected_vertex_nodes and not resource.split_vertex:
+			selected_vertex_nodes.append(resource)
+		if update_selections:
+			%EditVertexContainer.update_selections()
+	
+	if update_selections:
+		%Arrow3D.set_target(resource)
+		%Map2D.update_selections()
+		%Map3D.update_selections()
+
+
+func deselect_resource(resource: Variant) -> void:
+	if resource is Face:
+		if resource in selected_faces:
+			selected_faces.erase(resource)
+			if len(selected_faces) == 1:
+				selected_sectors.clear()
+				selected_sectors.append(selected_faces[0].sector)
+			elif len(selected_faces) == 0:
+				selected_sectors.clear()
+		%EditFaceContainer.update_selections()
+	elif resource is Sector:
+		selected_sectors.erase(resource)
+		%EditSectorContainer.update_selections()
+	elif resource is ObjectRoth:
+		selected_objects.erase(resource)
+		%EditObjectContainer.update_selections()
+	elif resource is SFX:
+		selected_sfx.erase(resource)
+		%EditSFXContainer.update_selections()
+	elif resource is VertexNode:
+		selected_vertex_nodes.erase(resource)
+		%EditVertexContainer.update_selections()
+	%Arrow3D.unset_target(resource)
+	%Map2D.update_selections()
+	%Map3D.update_selections()
+
+
+func redraw(redraw_list: Array) -> void:
+	for resource: Variant in redraw_list:
+		resource.initialize_mesh()
+		if resource is Sector:
+			for face_ref: WeakRef in resource.faces:
+				var face: Face = face_ref.get_ref()
+				if face.sister:
+					face.sister.get_ref().initialize_mesh()
+				face.initialize_mesh()
+		if resource is Object:
+			if %ObjectCheckBox.button_pressed:
+				for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
+					if object_node.ref == resource:
+						object_node.circle.roth_rotation = resource.data.rotation
+						object_node.circle.queue_redraw()
+		if resource is SFX:
+			if %SFXCheckBox.button_pressed:
+				for sfx_node: SFX.SFXNode2D in %SFX.get_children():
+					if sfx_node.ref == resource:
+						sfx_node.set_position_from_data()
+						sfx_node.circle.queue_redraw()
+	%Map2D.queue_redraw()
+	%Map3D.update_selections()
+
+
+func delete_selected_face() -> void:
+	assert(len(selected_faces) == 1)
+	assert(len(selected_sectors) == 1)
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete selected double-sided face?", "Confirm Deletion", false):
+		selected_faces[0].map.merge_sectors(selected_faces[0])
+		Roth.editor_action.emit(selected_faces[0].map, "Delete Double-Sided Face")
+		hovered_face = null
+		select_resource(selected_sectors[0])
+
+
+func delete_selected_sectors() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected sector%s?" % [len(selected_sectors), ("s" if len(selected_sectors) > 1 else "")], "Confirm Deletion", false):
+		var map_groups: Dictionary = _delete_selected_sectors()
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete Sector%s" % ("s" if len(map_groups[map]) > 1 else ""))
+		select_resource(null)
+		if %VertexCheckBox.button_pressed or %DrawModeCheckBox.button_pressed:
+			%Map2D.show_vertices(%Map2D.last_allow_move)
+
+
+func _delete_selected_sectors() -> Dictionary:
+	var map_groups: Dictionary = {}
+	for sector: Sector in selected_sectors:
+		sector.delete_sector()
+		if sector.map not in map_groups:
+			map_groups[sector.map] = []
+		map_groups[sector.map].append(sector)
+	return map_groups
+
+
+func merge_selected_sectors() -> void:
+	var all_sector_faces: Array = []
+	for sector: Sector in selected_sectors:
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			all_sector_faces.append(face)
+	var map: Map = selected_sectors[0].map
+	var found: bool = true
+	while found:
+		found = false
+		for sector: Sector in selected_sectors:
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				if face.sister:
+					var face_sister: Face = face.sister.get_ref()
+					if face_sister in all_sector_faces:
+						selected_sectors.erase(face_sister.sector)
+						face_sister.map.merge_sectors(face)
+						found = true
+						hovered_face = null
+						hovered_sector = null
+						%Map2D.update_selections()
+						%Map3D.update_selections()
+						break
+			if found:
+				break
+	
+	Roth.editor_action.emit(map, "Merge Multiple Sectors")
+
+
+func hide_selected_sectors() -> void:
+	var maps: Array = []
+	for sector: Sector in selected_sectors:
+		if sector.map not in maps:
+			maps.append(sector.map)
+		sector.hidden = true
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			face.hidden = true
+	for map: Map in maps:
+		for object: ObjectRoth in map.objects:
+			if object.sector.get_ref().hidden:
+				object.initialize_mesh()
+	redraw(selected_sectors)
+	selected_sectors.clear()
+	hovered_sector = null
+	if %ObjectCheckBox.button_pressed:
+		%Map2D.show_objects()
+	%Map2D.update_selections()
+	%Map3D.update_selections()
+
+
+func hide_non_selected_sectors() -> void:
+	var map: Map = %Map2D.map
+	if not map:
+		return
+	
+	var hidden_sectors: Array = []
+	for sector: Sector in map.sectors:
+		if sector not in selected_sectors:
+			sector.hidden = true
+			hidden_sectors.append(sector)
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				face.hidden = true
+	
+	for object: ObjectRoth in map.objects:
+		if object.sector.get_ref().hidden:
+			object.initialize_mesh()
+	redraw(hidden_sectors)
+	selected_sectors.clear()
+	hovered_sector = null
+	if %ObjectCheckBox.button_pressed:
+		%Map2D.show_objects()
+	%Map2D.update_selections()
+	%Map3D.update_selections()
+
+
+func show_hidden_sectors() -> void:
+	var map: Map = %Map2D.map
+	if not map:
+		return
+	var hidden_sectors: Array = []
+	
+	for object: ObjectRoth in map.objects:
+		if object.sector.get_ref().hidden:
+			object.sector.get_ref().hidden = false
+			object.initialize_mesh()
+			object.sector.get_ref().hidden = true
+	for sector: Sector in map.sectors:
+		if sector.hidden:
+			hidden_sectors.append(sector)
+			sector.hidden = false
+			for face_ref: WeakRef in sector.faces:
+				var face: Face = face_ref.get_ref()
+				face.hidden = false
+	redraw(hidden_sectors)
+	if %ObjectCheckBox.button_pressed:
+		%Map2D.show_objects()
+
+
+func copy_selected_sectors() -> void:
+	if selected_sectors.is_empty():
+		return
+	copied_sector_data.clear()
+	original_copied_sector_center = Vector2.ZERO
+	var count: int = 0
+	for sector: Sector in selected_sectors:
+		copied_sector_data.append(sector.duplicate(true))
+		for face_ref: WeakRef in sector.faces:
+			var face: Face = face_ref.get_ref()
+			original_copied_sector_center += face.v1
+			original_copied_sector_center += face.v2
+			count += 2
+	original_copied_sector_center /= count
+	current_copied_sector_center = original_copied_sector_center
+
+
+func cut_selected_sectors() -> void:
+	if not %SectorCheckBox.button_pressed or selected_sectors.is_empty():
+		return
+	copy_selected_sectors()
+	var map_groups: Dictionary = _delete_selected_sectors()
+	for map: Map in map_groups:
+		Roth.editor_action.emit(map, "Cut Sector%s" % ("s" if len(map_groups[map]) > 1 else ""))
+	enter_paste_sectors_mode()
+
+
+func enter_paste_sectors_mode() -> void:
+	if not %SectorCheckBox.button_pressed:
+		return
+	paste_sectors_mode = true
+	current_copied_sector_center = original_copied_sector_center
+	original_pasted_sector_data.clear()
+	current_pasted_sector_data.clear()
+	pin_paste = false
+	
+	for sector: Sector in copied_sector_data:
+		original_pasted_sector_data.append(sector.duplicate(true))
+		current_pasted_sector_data.append(sector.duplicate(true))
+	%Map2D.queue_redraw()
+
+
+func cancel_paste_sectors_mode() -> void:
+	if not paste_sectors_mode:
+		return
+	paste_sectors_mode = false
+	%Map2D.queue_redraw()
+
+
+func complete_paste_sectors_mode() -> void:
+	if not paste_sectors_mode:
+		return
+	var new_data := []
+	for sector: Sector in current_pasted_sector_data:
+		new_data.append(sector.duplicate(true))
+	%Map2D.map.add_copied_sectors(new_data, copied_sector_data)
+	Roth.editor_action.emit(%Map2D.map, "Paste Sectors")
+	select_resource(null)
+	for sector: Sector in new_data:
+		select_resource(sector, false)
+	paste_sectors_mode = false
+	get_viewport().set_input_as_handled()
+
+
+func delete_selected_objects() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected object%s?" % [len(selected_objects), ("s" if len(selected_objects) > 1 else "")], "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for object: ObjectRoth in selected_objects:
+			if object.map not in map_groups:
+				map_groups[object.map] = []
+			map_groups[object.map].append(object)
+			object.delete()
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete Object%s" % ("s" if len(map_groups[map]) > 1 else ""))
+		select_resource(null)
+
+
+func delete_selected_sfx() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected sfx%s?" % [len(selected_sfx), ("s" if len(selected_sfx) > 1 else "")], "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for sfx: SFX in selected_sfx:
+			if sfx.map not in map_groups:
+				map_groups[sfx.map] = []
+			map_groups[sfx.map].append(sfx)
+			sfx.delete()
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete SFX%s" % ("s" if len(map_groups[map]) > 1 else ""))
+		select_resource(null)
+
+
+func delete_selected_vertices() -> void:
+	await get_tree().process_frame # Fixes double input bug somehow caused from the confirmation dialog
+	if await Dialog.confirm("Delete %d selected %s?" % [len(selected_vertex_nodes), ("vertices" if len(selected_vertex_nodes) > 1 else "vertex")], "Confirm Deletion", false):
+		var map_groups: Dictionary = {}
+		for vertex_node: VertexNode in selected_vertex_nodes:
+			if vertex_node.map not in map_groups:
+				map_groups[vertex_node.map] = []
+			map_groups[vertex_node.map].append(vertex_node)
+			for sector: Sector in vertex_node.sectors:
+				sector.delete_vertex(vertex_node)
+		for map: Map in map_groups:
+			Roth.editor_action.emit(map, "Delete %s" % ("Vertices" if len(map_groups[map]) > 1 else "Vertex"))
+		select_resource(null)
+		%Map2D.show_vertices(true)
+		%Map2D.queue_redraw()
+#endregion

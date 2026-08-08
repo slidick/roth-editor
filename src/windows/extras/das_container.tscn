@@ -29,12 +29,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 allow_reselect = true
 
-[node name="LoadButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1473553995]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Load"
-
 [node name="ProgressBar" type="ProgressBar" parent="VBoxContainer" unique_id=1864771488]
 unique_name_in_owner = true
 visible = false
@@ -96,6 +90,5 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer/DASFiles" to="." method="_on_das_files_item_selected"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="item_selected" from="VBoxContainer/Textures/VBoxContainer/TextureLayoutOption" to="." method="_on_texture_layout_option_item_selected"]
 [connection signal="item_selected" from="VBoxContainer/Textures/VBoxContainer/TextureList" to="." method="_on_texture_list_item_selected"]

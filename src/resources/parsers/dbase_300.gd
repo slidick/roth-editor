@@ -87,8 +87,8 @@ static func get_offsets_by_type(dbase300_filepath: String, type: int) -> Array:
 	return offsets
 
 
-static func save_hmps(directory: String) -> void:
-	var dbase300_filepath: String =  directory.path_join("..").path_join("DATA").path_join("DBASE300.DAT")
+static func save_hmps(installation: ROTHInstallation) -> void:
+	var dbase300_filepath: String =  installation.dbase300
 	if not FileAccess.file_exists(dbase300_filepath):
 		return
 	var file := FileAccess.open(dbase300_filepath, FileAccess.READ)

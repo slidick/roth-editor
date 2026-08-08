@@ -1,0 +1,377 @@
+[gd_scene format=3 uid="uid://dtc6slaihq8s4"]
+
+[ext_resource type="Script" uid="uid://bxdb5dwytl7t7" path="res://src/windows/settings/dosbox_container.gd" id="1_mpoud"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_etre1"]
+
+[node name="DosboxContainer" type="MarginContainer" unique_id=43770463]
+offset_right = 927.0
+offset_bottom = 503.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+script = ExtResource("1_mpoud")
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1986676707]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2127686769]
+layout_mode = 2
+
+[node name="UseInstallDosboxCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer" unique_id=95019577]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+button_pressed = true
+text = "Use Dosbox included in installation"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=535487261]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=438852736]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Dosbox Executable"
+
+[node name="DosboxExecutableEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=1544848660]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DosboxExecutableTimer" type="Timer" parent="VBoxContainer/HBoxContainer2/DosboxExecutableEdit" unique_id=893013181]
+unique_name_in_owner = true
+wait_time = 2.5
+one_shot = true
+
+[node name="DosboxExecutableBrowseButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1526608886]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Browse"
+
+[node name="DosboxExecutableFileDialog" type="FileDialog" parent="VBoxContainer/HBoxContainer2/DosboxExecutableBrowseButton" unique_id=295629305]
+unique_name_in_owner = true
+title = "Open a File"
+file_mode = 0
+access = 2
+use_native_dialog = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=395629876]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=860031298]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=964704870]
+layout_mode = 2
+text = "Use Config:"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=53101477]
+layout_mode = 2
+
+[node name="UseInternalDosboxConfigCheckBox" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=269069427]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+button_group = SubResource("ButtonGroup_etre1")
+text = "Defined Below"
+text_overrun_behavior = 3
+
+[node name="UseInstallDosboxConfigCheckBox" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=959718273]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_group = SubResource("ButtonGroup_etre1")
+text = "Included in installation"
+text_overrun_behavior = 3
+
+[node name="UseLocationDosboxConfigCheckBox" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=848947374]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_group = SubResource("ButtonGroup_etre1")
+text = "At Location"
+text_overrun_behavior = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=524104110]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=41563340]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Dosbox Config"
+
+[node name="DosboxConfigEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3" unique_id=1379337326]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DosboxConfigTimer" type="Timer" parent="VBoxContainer/HBoxContainer3/DosboxConfigEdit" unique_id=354727208]
+unique_name_in_owner = true
+wait_time = 2.5
+one_shot = true
+
+[node name="DosboxConfigBrowseButton" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1768730280]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Browse"
+
+[node name="DosboxConfigFileDialog" type="FileDialog" parent="VBoxContainer/HBoxContainer3/DosboxConfigBrowseButton" unique_id=1604945760]
+unique_name_in_owner = true
+title = "Open a File"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.conf")
+use_native_dialog = true
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=10652567]
+layout_mode = 2
+
+[node name="DosboxSettingsContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1928251748]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="VBoxContainer/DosboxSettingsContainer" unique_id=1593019005]
+layout_mode = 2
+text = "Dosbox Settings"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/DosboxSettingsContainer" unique_id=1116430992]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer" unique_id=390146122]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=689606938]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Fullscreen:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1566209720]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Fullscreen Double Buffering:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1485045579]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Fullscreen Resolution:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1349907600]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Window Resolution:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label5" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=189398023]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Output:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label6" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1052829263]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Mouse Autolock:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label7" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1413522961]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Scaler:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label8" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1825325440]
+custom_minimum_size = Vector2(340, 34)
+layout_mode = 2
+text = "Cycles:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer" unique_id=972930551]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="FullscreenCheckButton" type="CheckButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=384492429]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FulldoubleCheckButton" type="CheckButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=971603175]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 0
+button_pressed = true
+
+[node name="FullResolutionOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1888535637]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+selected = 7
+item_count = 8
+popup/item_0/text = "640x480"
+popup/item_0/id = 0
+popup/item_1/text = "800x600"
+popup/item_1/id = 1
+popup/item_2/text = "1024x768"
+popup/item_2/id = 2
+popup/item_3/text = "1152x864"
+popup/item_3/id = 3
+popup/item_4/text = "1280x960"
+popup/item_4/id = 4
+popup/item_5/text = "1400x1050"
+popup/item_5/id = 5
+popup/item_6/text = "1600x1200"
+popup/item_6/id = 6
+popup/item_7/text = "Desktop"
+popup/item_7/id = 7
+
+[node name="WindowResolutionOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1157057961]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+selected = 2
+item_count = 7
+popup/item_0/text = "640x480"
+popup/item_0/id = 0
+popup/item_1/text = "800x600"
+popup/item_1/id = 1
+popup/item_2/text = "1024x768"
+popup/item_2/id = 2
+popup/item_3/text = "1152x864"
+popup/item_3/id = 3
+popup/item_4/text = "1280x960"
+popup/item_4/id = 4
+popup/item_5/text = "1400x1050"
+popup/item_5/id = 5
+popup/item_6/text = "1600x1200"
+popup/item_6/id = 6
+
+[node name="OutputOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1719583381]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+selected = 2
+item_count = 5
+popup/item_0/text = "Overlay"
+popup/item_0/id = 0
+popup/item_1/text = "OpenGL"
+popup/item_1/id = 1
+popup/item_2/text = "OpenGLnb"
+popup/item_2/id = 2
+popup/item_3/text = "DDraw"
+popup/item_3/id = 3
+popup/item_4/text = "Surface"
+popup/item_4/id = 4
+
+[node name="AutolockCheckButton" type="CheckButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=403449344]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 0
+button_pressed = true
+
+[node name="ScalerOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1766118241]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+selected = 1
+item_count = 18
+popup/item_0/text = "none"
+popup/item_0/id = 0
+popup/item_1/text = "normal2x"
+popup/item_1/id = 1
+popup/item_2/text = "normal3x"
+popup/item_2/id = 2
+popup/item_3/text = "advmame2x"
+popup/item_3/id = 3
+popup/item_4/text = "advmame3x"
+popup/item_4/id = 4
+popup/item_5/text = "hq2x"
+popup/item_5/id = 5
+popup/item_6/text = "hq3x"
+popup/item_6/id = 6
+popup/item_7/text = "2xsai"
+popup/item_7/id = 7
+popup/item_8/text = "super2xsai"
+popup/item_8/id = 8
+popup/item_9/text = "supereagle"
+popup/item_9/id = 9
+popup/item_10/text = "advinterp2x"
+popup/item_10/id = 10
+popup/item_11/text = "advinterp3x"
+popup/item_11/id = 11
+popup/item_12/text = "tv2x"
+popup/item_12/id = 12
+popup/item_13/text = "tv3x"
+popup/item_13/id = 13
+popup/item_14/text = "rgb2x"
+popup/item_14/id = 14
+popup/item_15/text = "rgb3x"
+popup/item_15/id = 15
+popup/item_16/text = "scan2x"
+popup/item_16/id = 16
+popup/item_17/text = "scan3x"
+popup/item_17/id = 17
+
+[node name="CyclesOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=723858566]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+selected = 0
+item_count = 9
+popup/item_0/text = "auto"
+popup/item_0/id = 0
+popup/item_1/text = "max"
+popup/item_1/id = 1
+popup/item_2/text = "80000"
+popup/item_2/id = 2
+popup/item_3/text = "90000"
+popup/item_3/id = 3
+popup/item_4/text = "100000"
+popup/item_4/id = 4
+popup/item_5/text = "110000"
+popup/item_5/id = 5
+popup/item_6/text = "120000"
+popup/item_6/id = 6
+popup/item_7/text = "130000"
+popup/item_7/id = 7
+popup/item_8/text = "140000"
+popup/item_8/id = 8
+
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/UseInstallDosboxCheckButton" to="." method="_on_use_install_dosbox_check_button_toggled"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DosboxExecutableEdit" to="." method="_on_dosbox_executable_edit_text_changed"]
+[connection signal="timeout" from="VBoxContainer/HBoxContainer2/DosboxExecutableEdit/DosboxExecutableTimer" to="." method="_on_dosbox_executable_timer_timeout"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/DosboxExecutableBrowseButton" to="." method="_on_dosbox_executable_browse_button_pressed"]
+[connection signal="file_selected" from="VBoxContainer/HBoxContainer2/DosboxExecutableBrowseButton/DosboxExecutableFileDialog" to="." method="_on_dosbox_executable_file_dialog_file_selected"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/UseInternalDosboxConfigCheckBox" to="." method="_on_use_internal_dosbox_config_check_box_toggled"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/UseInstallDosboxConfigCheckBox" to="." method="_on_use_install_dosbox_config_check_box_toggled"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/UseLocationDosboxConfigCheckBox" to="." method="_on_use_location_dosbox_config_check_box_toggled"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/DosboxConfigEdit" to="." method="_on_dosbox_config_edit_text_changed"]
+[connection signal="timeout" from="VBoxContainer/HBoxContainer3/DosboxConfigEdit/DosboxConfigTimer" to="." method="_on_dosbox_config_timer_timeout"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/DosboxConfigBrowseButton" to="." method="_on_dosbox_config_browse_button_pressed"]
+[connection signal="file_selected" from="VBoxContainer/HBoxContainer3/DosboxConfigBrowseButton/DosboxConfigFileDialog" to="." method="_on_dosbox_config_file_dialog_file_selected"]
+[connection signal="toggled" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FullscreenCheckButton" to="." method="_save"]
+[connection signal="toggled" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FulldoubleCheckButton" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FullResolutionOption" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/WindowResolutionOption" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/OutputOption" to="." method="_save"]
+[connection signal="toggled" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/AutolockCheckButton" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/ScalerOption" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/CyclesOption" to="." method="_save"]

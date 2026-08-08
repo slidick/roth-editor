@@ -93,7 +93,7 @@ func _on_stop_button_pressed() -> void:
 	if effect.is_recording_active():
 		stop_recording()
 	else:
-		Roth.stop_audio_buffer()
+		RothAudio.stop()
 		%Timer.stop()
 		play_position = 0
 		%Waveform.update_position((play_position / end_position) if not is_equal_approx(end_position, 0.0) else 0.0)
@@ -101,7 +101,7 @@ func _on_stop_button_pressed() -> void:
 
 func _on_play_button_pressed() -> void:
 	var sample_rate: float = 22050.0
-	Roth.play_audio_entry(FXScript.convert_to_playable_entry(audio_entry, start_index, end_index))
+	RothAudio.play_entry(FXScript.convert_to_playable_entry(audio_entry, start_index, end_index))
 	if audio_entry.type == 1:
 		sample_rate = 11025.0
 	elif audio_entry.type == 3:

@@ -64,9 +64,9 @@ const DBASE_100_OPCODE := {
 }
 
 
-static func parse_cutscenes(directory: String) -> Array:
-	var dbase100 := FileAccess.open(directory.path_join("../DATA/DBASE100.DAT"), FileAccess.READ)
-	var dbase400 := FileAccess.open(directory.path_join("../DATA/DBASE400.DAT"), FileAccess.READ)
+static func parse_cutscenes(installation: ROTHInstallation) -> Array:
+	var dbase100 := FileAccess.open(installation.dbase100, FileAccess.READ)
+	var dbase400 := FileAccess.open(installation.dbase400, FileAccess.READ)
 	var header := Parser.parse_section(dbase100, DBASE100_HEADER)
 	assert(dbase100.get_position() == header["cutscene_offset"])
 	
@@ -82,8 +82,6 @@ static func parse_cutscenes(directory: String) -> Array:
 		if cutscene["offset_dbase400_subtitles"] != 0:
 			dbase400.seek(cutscene["offset_dbase400_subtitles"])
 			cutscene["subtitles"] = DBase400.parse_cutscene_subtitle(dbase400, cutscene["offset_dbase400_subtitles"])
-		else:
-			cutscene["subtitles"] = {}
 		
 		cutscenes.append(cutscene)
 	return cutscenes

@@ -3,14 +3,19 @@
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_g6kqm"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_hggqv"]
 [ext_resource type="Script" uid="uid://c3k8pxcys36s0" path="res://src/windows/settings/settings_window.gd" id="3_njcte"]
+[ext_resource type="PackedScene" uid="uid://dfk6h0rsc5sia" path="res://src/windows/settings/installations_container.tscn" id="4_hggqv"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ooyma"]
+[ext_resource type="PackedScene" uid="uid://dtc6slaihq8s4" path="res://src/windows/settings/dosbox_container.tscn" id="5_njcte"]
+[ext_resource type="PackedScene" uid="uid://2pgkmy7djuv4" path="res://src/windows/settings/dosbox_keys_container.tscn" id="8_jcdax"]
+[ext_resource type="PackedScene" uid="uid://crhommatho1p7" path="res://src/windows/settings/history_container.tscn" id="8_ywjcv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o4xq7"]
 
 [node name="SettingsWindow" unique_id=452268762 instance=ExtResource("1_g6kqm")]
 offset_right = 1000.0
 offset_bottom = 650.0
 theme = ExtResource("2_hggqv")
 script = ExtResource("3_njcte")
-show_focus_highlight = false
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_ooyma")
 
@@ -28,112 +33,36 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-item_count = 2
+item_count = 4
 item_0/text = "Installations"
-item_1/text = "General"
+item_1/text = "Dosbox"
+item_2/text = "Dosbox - Keys"
+item_3/text = "History"
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1" unique_id=1432676521]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_o4xq7")
 current_tab = 0
 tabs_visible = false
 
-[node name="InstallationsContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="1" unique_id=1150485149]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-metadata/_tab_index = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer" index="0" unique_id=1642578402]
+[node name="InstallationsContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="1" unique_id=1326368766 instance=ExtResource("4_hggqv")]
+visible = true
 layout_mode = 2
 
-[node name="InstallationsList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer" index="0" unique_id=167742777]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-allow_reselect = true
-allow_rmb_select = true
-
-[node name="InstallationsMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/InstallationsList" index="2" unique_id=1010589172]
-unique_name_in_owner = true
-item_count = 1
-item_0/text = "Remove Installation"
-item_0/id = 0
-
-[node name="AddInstallationButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer" index="1" unique_id=693714990]
-layout_mode = 2
-text = "Add Installation"
-
-[node name="InstallationFileDialog" type="FileDialog" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/AddInstallationButton" index="0" unique_id=1611979534]
-unique_name_in_owner = true
-title = "Open a Directory"
-file_mode = 2
-access = 2
-use_native_dialog = true
-
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer" index="2" unique_id=636581250]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer" index="3" unique_id=267820922]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer" index="0" unique_id=1623221273]
-layout_mode = 2
-text = "Install Information"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer" index="1" unique_id=1321494868]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=983435333]
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-text = "Language:"
-
-[node name="LanguageLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1058128016]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer" index="2" unique_id=1708182152]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=171623788]
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-text = "Exe Version:"
-
-[node name="ExeVersionLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=865241735]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer" index="3" unique_id=1971167717]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=271688893]
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=837902384]
-layout_mode = 2
-
-[node name="GeneralContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="2" unique_id=1074127521]
+[node name="DosboxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="2" unique_id=43770463 node_paths=PackedStringArray("settings_window") instance=ExtResource("5_njcte")]
 visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-metadata/_tab_index = 1
+settings_window = NodePath("../../../../../../..")
+
+[node name="DosboxKeysContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="3" unique_id=1947084000 instance=ExtResource("8_jcdax")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="HistoryContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="4" unique_id=652967712 instance=ExtResource("8_ywjcv")]
+visible = false
+layout_mode = 2
 
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/SettingsList" to="." method="_on_settings_list_item_selected"]
-[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_clicked"]
-[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_selected"]
-[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/InstallationsList/InstallationsMenu" to="." method="_on_installations_menu_index_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/AddInstallationButton" to="." method="_on_add_installation_button_pressed"]
-[connection signal="dir_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer/InstallationsContainer/VBoxContainer/AddInstallationButton/InstallationFileDialog" to="." method="_on_installation_file_dialog_dir_selected"]

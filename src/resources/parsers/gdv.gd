@@ -42,6 +42,8 @@ static func get_video_by_path(gdv_filepath: String) -> Dictionary:
 
 static func get_video_by_file(file: FileAccess) -> Dictionary:
 	var header := Parser.parse_section(file, HEADER)
+	if header.signature != 688986516:
+		return {}
 	if header.image_type & PIXEL_8_BITS > 0:
 		header["raw_palette"] = file.get_buffer(256*3)
 	var audio: Array = []

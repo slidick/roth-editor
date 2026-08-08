@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://dfk6h0rsc5sia"]
+
+[ext_resource type="Script" uid="uid://bvioc2vn6t853" path="res://src/windows/settings/installations_container.gd" id="1_da88d"]
+
+[node name="InstallationsContainer" type="MarginContainer" unique_id=1326368766]
+visible = false
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+script = ExtResource("1_da88d")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=128774149]
+layout_mode = 2
+
+[node name="InstallationsList" type="ItemList" parent="VBoxContainer" unique_id=819228288]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+allow_rmb_select = true
+
+[node name="InstallationsMenu" type="PopupMenu" parent="VBoxContainer/InstallationsList" unique_id=1398055492]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Remove Installation"
+item_0/id = 0
+
+[node name="AddInstallationButton" type="Button" parent="VBoxContainer" unique_id=1306065960]
+layout_mode = 2
+text = "Add Installation"
+
+[node name="InstallationFileDialog" type="FileDialog" parent="VBoxContainer/AddInstallationButton" unique_id=1637932594]
+unique_name_in_owner = true
+title = "Open a Directory"
+file_mode = 2
+access = 2
+use_native_dialog = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=957580887]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=616285052]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=2093919754]
+layout_mode = 2
+text = "Install Information"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=2082787315]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1801849902]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Language:"
+
+[node name="LanguageLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=235458610]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=768442768]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=973968793]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Exe Version:"
+
+[node name="ExeVersionLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=2001616821]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=932371467]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer3" unique_id=1584738923]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "ID:"
+
+[node name="IDLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer3" unique_id=301183551]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="item_activated" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_activated"]
+[connection signal="item_clicked" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_clicked"]
+[connection signal="item_selected" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_selected"]
+[connection signal="index_pressed" from="VBoxContainer/InstallationsList/InstallationsMenu" to="." method="_on_installations_menu_index_pressed"]
+[connection signal="pressed" from="VBoxContainer/AddInstallationButton" to="." method="_on_add_installation_button_pressed"]
+[connection signal="dir_selected" from="VBoxContainer/AddInstallationButton/InstallationFileDialog" to="." method="_on_installation_file_dialog_dir_selected"]

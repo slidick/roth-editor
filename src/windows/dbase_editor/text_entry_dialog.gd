@@ -46,7 +46,7 @@ func edit_text_entry(p_text_entry: Dictionary, p_references: Array = []) -> void
 	
 	toggle(true)
 	await done
-	Roth.stop_audio_buffer()
+	RothAudio.stop()
 	toggle(false)
 
 
@@ -85,7 +85,7 @@ func _on_clear_button_pressed() -> void:
 
 func _on_play_audio_button_pressed() -> void:
 	if not text_entry.dbase500.is_empty():
-		Roth.play_audio_entry(FXScript.convert_to_playable_entry(text_entry.dbase500.duplicate(true)))
+		RothAudio.play_entry(FXScript.convert_to_playable_entry(text_entry.dbase500.duplicate(true)))
 
 
 func _on_edit_audio_button_pressed() -> void:
@@ -149,7 +149,7 @@ func _on_clear_audio_button_pressed() -> void:
 
 
 func _on_stop_audio_button_pressed() -> void:
-	Roth.stop_audio_buffer()
+	RothAudio.stop()
 
 
 func select_sfx() -> Dictionary:

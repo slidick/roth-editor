@@ -19,7 +19,7 @@ var copied_data: Dictionary
 
 func _ready() -> void:
 	super._ready()
-	Roth.settings_loaded.connect(_on_settings_loaded)
+	Roth.settings_updated.connect(_on_settings_updated)
 	Roth.edit_texture.connect(_on_edit_texture)
 	window_title = "Manage DAS Files"
 	%ListContainer.show()
@@ -39,14 +39,14 @@ func _ready() -> void:
 	%SuccessLabel.modulate.a = 0.0
 
 
-func _on_settings_loaded() -> void:
+func _on_settings_updated() -> void:
 	%EditDASButton.disabled = true
 	%DASList.clear()
-	for das_info: Dictionary in Roth.das_packs:
+	for das_info: Dictionary in DASPack.das_packs:
 		var idx: int = %DASList.add_item(das_info.name)
 		%DASList.set_item_metadata(idx, das_info)
 	%DAS2List.clear()
-	for das_info: Dictionary in Roth.das2_packs:
+	for das_info: Dictionary in DASPack.das2_packs:
 		var idx: int = %DAS2List.add_item(das_info.name)
 		%DAS2List.set_item_metadata(idx, das_info)
 
@@ -81,7 +81,7 @@ func _on_das_list_popup_menu_index_pressed(index: int) -> void:
 			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
 			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
 				return
-			Roth.delete_das_pack(das_info)
+			DASPack.delete_das_pack(das_info)
 		2:
 			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
 			var err: String = "init"
@@ -90,8 +90,8 @@ func _on_das_list_popup_menu_index_pressed(index: int) -> void:
 				results = await Dialog.input("New Name:", "Duplicating DAS File: %s" % das_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
 				if not results[0]:
 					return
-				err = Roth.check_das_pack_name(results[1])
-			Roth.duplicate_das_pack(das_info, results[1])
+				err = DASPack.check_name(results[1])
+			DASPack.duplicate_das_pack(das_info, results[1])
 			%DASList.select(%DASList.item_count - 1)
 			_on_das_list_item_selected(%DASList.item_count - 1)
 
@@ -131,7 +131,7 @@ func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:
 			var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
 			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
 				return
-			Roth.delete_das2_pack(das_info)
+			DASPack.delete_das2_pack(das_info)
 		2:
 			var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
 			var err: String = "init"
@@ -140,8 +140,8 @@ func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:
 				results = await Dialog.input("New Name:", "Duplicating DAS File: %s" % das_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
 				if not results[0]:
 					return
-				err = Roth.check_das_pack_name(results[1])
-			Roth.duplicate_das2_pack(das_info, results[1])
+				err = DASPack.check_name(results[1])
+			DASPack.duplicate_das2_pack(das_info, results[1])
 			%DAS2List.select(%DAS2List.item_count - 1)
 			_on_das_2_list_item_selected(%DAS2List.item_count - 1)
 

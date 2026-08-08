@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_o4g3v"]
 [ext_resource type="Script" uid="uid://ca6qmkfpwiva6" path="res://src/windows/dbase_editor/text_entry_dialog.gd" id="3_o7ktg"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ng8ic"]
-[ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/editor/palette_window.tscn" id="4_o7ktg"]
+[ext_resource type="PackedScene" uid="uid://dkqacuc6f5k1d" path="res://src/windows/map_editor/palette_window.tscn" id="4_o7ktg"]
 [ext_resource type="PackedScene" uid="uid://vh534r141vnm" path="res://src/windows/dbase_editor/text_selection.tscn" id="6_hp3o2"]
 [ext_resource type="PackedScene" uid="uid://c4n3x17743rei" path="res://src/windows/sfx_editor/audio_clip_editor_window.tscn" id="7_xpkcl"]
 

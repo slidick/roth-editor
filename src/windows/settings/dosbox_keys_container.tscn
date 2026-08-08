@@ -1,0 +1,2253 @@
+[gd_scene format=3 uid="uid://2pgkmy7djuv4"]
+
+[ext_resource type="Script" uid="uid://cay0yquw8xcnw" path="res://src/windows/settings/dosbox_keys_container.gd" id="1_0g644"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_k14rc"]
+[ext_resource type="Script" uid="uid://gjnsyehl50qy" path="res://src/ui/label_tooltip.gd" id="3_wqx06"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vuhwf"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0.80784315)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gpixv"]
+bg_color = Color(0.044439174, 0.2742512, 0.4675315, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[node name="DosboxKeysContainer" type="MarginContainer" unique_id=1947084000]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_k14rc")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_0g644")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1107229469]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=748665292]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=575449981]
+layout_mode = 2
+text = "Presets:"
+
+[node name="PresetOption" type="OptionButton" parent="VBoxContainer/HBoxContainer2" unique_id=900658233]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=2061497664]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"
+
+[node name="SaveAsButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1748554079]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save As"
+
+[node name="DeleteButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1174855857]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Delete"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1807432473]
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=986516925]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 1
+
+[node name="Basic Controls" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=1148319331]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls" unique_id=677461021]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer" unique_id=1356403973]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1747961519]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=382515729]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Move Forward:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="move_forward" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=302841403]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer/move_forward" unique_id=999900026]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=969731868]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=2146332533]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=246278916]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=267464704]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Move Backward:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="move_backward" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1468325215]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2/move_backward" unique_id=49253234]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=2004497604]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1443411729]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=819767631]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=147714213]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Strafe Left:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="strafe_left" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=522300176]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3/strafe_left" unique_id=1402206599]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=444661780]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=1880045131]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1742011819]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=1783289428]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Strafe Right:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="strafe_right" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=564270203]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4/strafe_right" unique_id=1489566980]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=105521761]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=393526924]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=731213422]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=394395782]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Turn Left:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="turn_left" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=397622895]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5/turn_left" unique_id=656364408]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=561089108]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=834363866]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=850821369]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=2030034537]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Turn Right: "
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="turn_right" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=702579037]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6/turn_right" unique_id=1822153258]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1571973281]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1490616014]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="Control" type="Control" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=462745046]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1985028247]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=1072241034]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Look Up:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="look_up" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=143276874]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7/look_up" unique_id=1162057729]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=361535121]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=917048421]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=571787686]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=250689403]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Look Down:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="look_down" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1328466180]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8/look_down" unique_id=1065539207]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=731997254]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=2040658659]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1103448975]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=585797728]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tilt Up:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="tilt_up" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=2035384107]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9/tilt_up" unique_id=117614257]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=152275511]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1736178273]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1077683103]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1286212115]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tilt Down:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="tilt_down" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1058432485]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10/tilt_down" unique_id=699621195]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=121723670]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1916809615]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="ChangeAllButton" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1356101745]
+custom_minimum_size = Vector2(130, 42)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 10
+text = "Change All"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer" unique_id=1389500269]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1617789278]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1940306723]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Jump:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="jump" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1303829005]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer/jump" unique_id=1004021432]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1541333373]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=654547209]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=327771878]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=640597989]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Crouch:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="crouch" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=2011817909]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2/crouch" unique_id=1521806917]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=17030137]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=862293238]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1650735583]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=1857552013]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Attack:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="attack" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=624993559]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3/attack" unique_id=1671889799]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=1672209198]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=509093864]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=297680238]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=286706955]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Inventory:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="inventory" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=988516571]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4/inventory" unique_id=226111879]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=760615528]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=165132661]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=405350244]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=888428110]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toggle Run:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="toggle_run" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=1295301239]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5/toggle_run" unique_id=913227587]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=1638080765]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=1898302063]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer20" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1510548186]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=144539000]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20/HBoxContainer" unique_id=244979623]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hold Run:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="hold_run" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=585660203]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20/hold_run" unique_id=678224455]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=1782678712]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=821374509]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="Control" type="Control" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1775210820]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=849372477]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=897809759]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Unarmed:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="unarmed" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=488891197]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8/unarmed" unique_id=1309265853]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=1165405652]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=1545624713]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=54055068]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=984855893]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quickslot 1:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quickslot_1" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=1563759216]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9/quickslot_1" unique_id=1967974792]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=960551279]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=221458376]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1309377486]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=656303462]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quickslot 2:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quickslot_2" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=285065506]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10/quickslot_2" unique_id=1731614954]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=868035206]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=815969597]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=431798113]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=725943858]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quickslot 3:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quickslot_3" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=1179306852]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11/quickslot_3" unique_id=1786144302]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=1385695713]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=263424160]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1528962156]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=1182559382]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quickslot 4:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quickslot_4" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=1806103047]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12/quickslot_4" unique_id=2097475211]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=477660147]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=2067489105]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=736271359]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=1199036352]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quickslot 5:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quickslot_5" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=1502031440]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13/quickslot_5" unique_id=125080429]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=40738113]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=1188360647]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="Advanced Controls" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=427162944]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls" unique_id=450301187]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer" unique_id=826720935]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1064264546]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=635957489]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quicksave:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quicksave" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1262803025]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6/quicksave" unique_id=775078986]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=833250098]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1934307894]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=435914287]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1753949094]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quickload:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="quickload" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=665247194]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9/quickload" unique_id=892309530]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1064450471]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=811505351]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=491392947]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=964422297]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Escape:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="escape" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=1223885677]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7/escape" unique_id=1962864827]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=948938710]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=177676870]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=2103606887]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=2119230612]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enter:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="enter" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1243001666]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8/enter" unique_id=341517704]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1159653585]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=57493963]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=234439769]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=1022141455]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hide Weapon:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="hide_weapon" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=1899702784]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11/hide_weapon" unique_id=1863241551]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=616562176]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=796220964]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1101168726]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=294666288]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toggle Subtitles:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="toggle_subtitles" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=114210050]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12/toggle_subtitles" unique_id=379256821]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=1061836265]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=32712588]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1898666823]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=1173339143]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toggle
+Adventure Mode:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="toggle_adventure_mode" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=124730614]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13/toggle_adventure_mode" unique_id=1207706660]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=770367837]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=86969898]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer17" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1777986490]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=440241181]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Main Menu:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="main_menu" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=625271631]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17/main_menu" unique_id=2131443480]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=370693738]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=477513623]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer19" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1051216832]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=1169332965]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Examine /
+Dev Open Door /
+Reload after Death:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="reload_after_death" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=1277729670]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19/reload_after_death" unique_id=937104320]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=1588638560]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=64953498]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="ChangeAllAdvancedButton" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=393304032]
+custom_minimum_size = Vector2(130, 42)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
+text = "Change All"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer" unique_id=355710630]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1817828755]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=802422935]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Increase Gamma:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="increase_gamma" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=1371021337]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9/increase_gamma" unique_id=619290678]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=721150599]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=1097329416]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=2118250932]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=194514252]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Decrease Gamma:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="decrease_gamma" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=1419252470]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10/decrease_gamma" unique_id=1094835091]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=1393935065]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=611373292]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer14" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=2135634848]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=637305779]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Increase Viewport:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="increase_viewport" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=1444341283]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14/increase_viewport" unique_id=1213694791]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=1707827464]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=2074848247]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer15" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=378858361]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=1481011208]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Decrease Viewport:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="decrease_viewport" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=1864797470]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15/decrease_viewport" unique_id=1975672600]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=765568348]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=553613139]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer16" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=127731591]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=1084291261]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Redraw Screen:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="redraw_screen" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=964613966]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16/redraw_screen" unique_id=350333178]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=2060423498]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=619015984]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer18" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=529549639]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=62642489]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toggle Textures:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="toggle_textures" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=756586757]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18/toggle_textures" unique_id=485604540]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=1776472457]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=1458317709]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer21" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=2132334034]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=383911552]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toggle Mouse Buttons:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="toggle_mouse_buttons" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=1843443761]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21/toggle_mouse_buttons" unique_id=1787108496]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=962285764]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=1030030009]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer22" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1987476530]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=768285855]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Display Version:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="display_version" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=897693646]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22/display_version" unique_id=422160191]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=233595187]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=1302103590]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer23" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1196858361]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=1234164181]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Dev Map Warp:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="map_warp" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=1343748598]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23/map_warp" unique_id=326350266]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=1609603832]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=706013765]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer24" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1454269274]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=802394121]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Dev Map Overlay:"
+horizontal_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="map_overlay" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=835283152]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24/map_overlay" unique_id=1615041579]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=581281227]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=1921190680]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="DosBox Controls" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=1971308343]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_tab_index = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls" unique_id=1146018756]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer" unique_id=1593845680]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=1388012378]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=807834085]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Toggle Fullscreen:"
+horizontal_alignment = 2
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="toggle_fullscreen" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=2081588759]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6/toggle_fullscreen" unique_id=1590230739]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=470166435]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=861568286]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=2096115323]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1908623485]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Capture Mouse:"
+horizontal_alignment = 2
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="capture_mouse" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=765674963]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10/capture_mouse" unique_id=2085301715]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=915841214]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1442556176]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=2144377258]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=532624481]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cycles Up:"
+horizontal_alignment = 2
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="cycles_up" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=70564547]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7/cycles_up" unique_id=1184916925]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=614908440]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=1099913697]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=1411480032]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=528901439]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cycles Down:"
+horizontal_alignment = 2
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="cycles_down" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1639646039]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8/cycles_down" unique_id=1288494104]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=449804353]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1478032635]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=623031985]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=2093991333]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Debugger:"
+horizontal_alignment = 2
+text_overrun_behavior = 3
+script = ExtResource("3_wqx06")
+
+[node name="debugger" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1584490828]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9/debugger" unique_id=1084191142]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=45211145]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1274755719]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=364129305]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=2080236343]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fast Forward:"
+horizontal_alignment = 2
+text_overrun_behavior = 3
+
+[node name="fast_forward" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=953204768]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+mouse_filter = 0
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11/fast_forward" unique_id=253837229]
+visible = false
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.565382, 0.436127, 0.398421, 1)
+
+[node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=1530376472]
+layout_mode = 2
+text = "Change"
+
+[node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=421886052]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.4
+text = "Add"
+
+[node name="ChangeAllDosBoxButton" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=335733050]
+custom_minimum_size = Vector2(130, 42)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
+text = "Change All"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer" unique_id=1627245944]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="KeyInputPanel" type="Panel" parent="." unique_id=1645069495]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vuhwf")
+
+[node name="PanelContainer" type="PanelContainer" parent="KeyInputPanel" unique_id=1893555268]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -117.5
+offset_top = -30.0
+offset_right = 117.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gpixv")
+
+[node name="MarginContainer" type="MarginContainer" parent="KeyInputPanel/PanelContainer" unique_id=294643793]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="KeyInputPanel/PanelContainer/MarginContainer" unique_id=1324396308]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="ChangingKeyLabel" type="Label" parent="KeyInputPanel/PanelContainer/MarginContainer/VBoxContainer" unique_id=1974747531]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Move Forward"
+horizontal_alignment = 1
+
+[node name="KeyEdit" type="LineEdit" parent="KeyInputPanel/PanelContainer/MarginContainer/VBoxContainer" unique_id=1411918461]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Waiting for key press..."
+alignment = 1
+editable = false
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="PopupMenu" type="PopupMenu" parent="." unique_id=654357514]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Clear"
+item_0/id = 0
+
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer2/PresetOption" to="." method="_on_preset_option_item_selected"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveAsButton" to="." method="_on_save_as_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer/move_forward" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_pressed" binds= ["move_forward"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer/Button2" to="." method="_on_button_pressed" binds= ["move_forward", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2/move_backward" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2/Button" to="." method="_on_button_pressed" binds= ["move_backward"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2/Button2" to="." method="_on_button_pressed" binds= ["move_backward", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3/strafe_left" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3/Button" to="." method="_on_button_pressed" binds= ["strafe_left"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3/Button2" to="." method="_on_button_pressed" binds= ["strafe_left", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4/strafe_right" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4/Button" to="." method="_on_button_pressed" binds= ["strafe_right"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4/Button2" to="." method="_on_button_pressed" binds= ["strafe_right", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5/turn_left" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5/Button" to="." method="_on_button_pressed" binds= ["turn_left"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5/Button2" to="." method="_on_button_pressed" binds= ["turn_left", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6/turn_right" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6/Button" to="." method="_on_button_pressed" binds= ["turn_right"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6/Button2" to="." method="_on_button_pressed" binds= ["turn_right", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7/look_up" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7/Button" to="." method="_on_button_pressed" binds= ["look_up"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7/Button2" to="." method="_on_button_pressed" binds= ["look_up", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8/look_down" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8/Button" to="." method="_on_button_pressed" binds= ["look_down"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8/Button2" to="." method="_on_button_pressed" binds= ["look_down", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9/tilt_up" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9/Button" to="." method="_on_button_pressed" binds= ["tilt_up"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9/Button2" to="." method="_on_button_pressed" binds= ["tilt_up", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10/tilt_down" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10/Button" to="." method="_on_button_pressed" binds= ["tilt_down"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10/Button2" to="." method="_on_button_pressed" binds= ["tilt_down", true]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/ChangeAllButton" to="." method="_on_change_all_button_pressed"]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer/jump" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer/Button" to="." method="_on_button_pressed" binds= ["jump"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer/Button2" to="." method="_on_button_pressed" binds= ["jump", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2/crouch" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2/Button" to="." method="_on_button_pressed" binds= ["crouch"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2/Button2" to="." method="_on_button_pressed" binds= ["crouch", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3/attack" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3/Button" to="." method="_on_button_pressed" binds= ["attack"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3/Button2" to="." method="_on_button_pressed" binds= ["attack", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4/inventory" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4/Button" to="." method="_on_button_pressed" binds= ["inventory"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4/Button2" to="." method="_on_button_pressed" binds= ["inventory", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5/toggle_run" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5/Button" to="." method="_on_button_pressed" binds= ["toggle_run"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5/Button2" to="." method="_on_button_pressed" binds= ["toggle_run", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20/hold_run" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20/Button" to="." method="_on_button_pressed" binds= ["hold_run"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20/Button2" to="." method="_on_button_pressed" binds= ["hold_run", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8/unarmed" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8/Button" to="." method="_on_button_pressed" binds= ["unarmed"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8/Button2" to="." method="_on_button_pressed" binds= ["unarmed", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9/quickslot_1" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9/Button" to="." method="_on_button_pressed" binds= ["quickslot_1"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9/Button2" to="." method="_on_button_pressed" binds= ["quickslot_1", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10/quickslot_2" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10/Button" to="." method="_on_button_pressed" binds= ["quickslot_2"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10/Button2" to="." method="_on_button_pressed" binds= ["quickslot_2", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11/quickslot_3" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11/Button" to="." method="_on_button_pressed" binds= ["quickslot_3"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11/Button2" to="." method="_on_button_pressed" binds= ["quickslot_3", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12/quickslot_4" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12/Button" to="." method="_on_button_pressed" binds= ["quickslot_4"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12/Button2" to="." method="_on_button_pressed" binds= ["quickslot_4", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13/quickslot_5" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13/Button" to="." method="_on_button_pressed" binds= ["quickslot_5"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13/Button2" to="." method="_on_button_pressed" binds= ["quickslot_5", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6/quicksave" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6/Button" to="." method="_on_button_pressed" binds= ["quicksave"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6/Button2" to="." method="_on_button_pressed" binds= ["quicksave", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9/quickload" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9/Button" to="." method="_on_button_pressed" binds= ["quickload"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9/Button2" to="." method="_on_button_pressed" binds= ["quickload", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7/escape" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7/Button" to="." method="_on_button_pressed" binds= ["escape"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7/Button2" to="." method="_on_button_pressed" binds= ["escape", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8/enter" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8/Button" to="." method="_on_button_pressed" binds= ["enter"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8/Button2" to="." method="_on_button_pressed" binds= ["enter", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11/hide_weapon" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11/Button" to="." method="_on_button_pressed" binds= ["hide_weapon"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11/Button2" to="." method="_on_button_pressed" binds= ["hide_weapon", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12/toggle_subtitles" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12/Button" to="." method="_on_button_pressed" binds= ["toggle_subtitles"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12/Button2" to="." method="_on_button_pressed" binds= ["toggle_subtitles", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13/toggle_adventure_mode" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13/Button" to="." method="_on_button_pressed" binds= ["toggle_adventure_mode"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13/Button2" to="." method="_on_button_pressed" binds= ["toggle_adventure_mode", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17/main_menu" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17/Button" to="." method="_on_button_pressed" binds= ["main_menu"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17/Button2" to="." method="_on_button_pressed" binds= ["main_menu", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19/reload_after_death" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19/Button" to="." method="_on_button_pressed" binds= ["reload_after_death"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19/Button2" to="." method="_on_button_pressed" binds= ["reload_after_death", true]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/ChangeAllAdvancedButton" to="." method="_on_change_all_advanced_button_pressed"]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9/increase_gamma" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9/Button" to="." method="_on_button_pressed" binds= ["increase_gamma"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9/Button2" to="." method="_on_button_pressed" binds= ["increase_gamma", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10/decrease_gamma" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10/Button" to="." method="_on_button_pressed" binds= ["decrease_gamma"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10/Button2" to="." method="_on_button_pressed" binds= ["decrease_gamma", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14/increase_viewport" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14/Button" to="." method="_on_button_pressed" binds= ["increase_viewport"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14/Button2" to="." method="_on_button_pressed" binds= ["increase_viewport", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15/decrease_viewport" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15/Button" to="." method="_on_button_pressed" binds= ["decrease_viewport"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15/Button2" to="." method="_on_button_pressed" binds= ["decrease_viewport", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16/redraw_screen" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16/Button" to="." method="_on_button_pressed" binds= ["redraw_screen"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16/Button2" to="." method="_on_button_pressed" binds= ["redraw_screen", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18/toggle_textures" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18/Button" to="." method="_on_button_pressed" binds= ["toggle_textures"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18/Button2" to="." method="_on_button_pressed" binds= ["toggle_textures", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21/toggle_mouse_buttons" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21/Button" to="." method="_on_button_pressed" binds= ["toggle_mouse_buttons"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21/Button2" to="." method="_on_button_pressed" binds= ["toggle_mouse_buttons", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22/display_version" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22/Button" to="." method="_on_button_pressed" binds= ["display_version"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22/Button2" to="." method="_on_button_pressed" binds= ["display_version", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23/map_warp" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23/Button" to="." method="_on_button_pressed" binds= ["map_warp"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23/Button2" to="." method="_on_button_pressed" binds= ["map_warp", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24/map_overlay" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24/Button" to="." method="_on_button_pressed" binds= ["map_overlay"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24/Button2" to="." method="_on_button_pressed" binds= ["map_overlay", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6/toggle_fullscreen" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6/Button" to="." method="_on_button_pressed" binds= ["toggle_fullscreen"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6/Button2" to="." method="_on_button_pressed" binds= ["toggle_fullscreen", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10/capture_mouse" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10/Button" to="." method="_on_button_pressed" binds= ["capture_mouse"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10/Button2" to="." method="_on_button_pressed" binds= ["capture_mouse", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7/cycles_up" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7/Button" to="." method="_on_button_pressed" binds= ["cycles_up"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7/Button2" to="." method="_on_button_pressed" binds= ["cycles_up", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8/cycles_down" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8/Button" to="." method="_on_button_pressed" binds= ["cycles_down"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8/Button2" to="." method="_on_button_pressed" binds= ["cycles_down", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9/debugger" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9/Button" to="." method="_on_button_pressed" binds= ["debugger"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer9/Button2" to="." method="_on_button_pressed" binds= ["debugger", true]]
+[connection signal="gui_input" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11/fast_forward" to="." method="_on_label_gui_input"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11/Button" to="." method="_on_button_pressed" binds= ["fast_forward"]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11/Button2" to="." method="_on_button_pressed" binds= ["fast_forward", true]]
+[connection signal="pressed" from="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/ChangeAllDosBoxButton" to="." method="_on_change_all_dos_box_button_pressed"]
+[connection signal="gui_input" from="KeyInputPanel/PanelContainer/MarginContainer/VBoxContainer/KeyEdit" to="." method="_on_key_edit_gui_input"]
+[connection signal="index_pressed" from="PopupMenu" to="." method="_on_popup_menu_index_pressed"]

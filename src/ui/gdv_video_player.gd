@@ -44,6 +44,11 @@ func _process(delta: float) -> void:
 
 
 func load_gdv_data(p_gdv_data: Dictionary, p_autoplay: bool = false, p_loop: bool = false) -> void:
+	if "video" not in p_gdv_data:
+		if thread:
+			thread.stop_loading = true
+		reset()
+		return
 	if is_loading:
 		load_next = p_gdv_data
 		if thread:
@@ -129,7 +134,7 @@ func _next_frame(clear_audio: bool) -> void:
 		current_frame = 0
 	if current_frame >= len(gdv_data.video)-1:
 		player_state = PlayerState.STOPPED
-		Roth.stop_audio_buffer()
+		RothAudio.stop()
 		current_frame = len(gdv_data.video)-1
 		accumulated_delta = 0.0
 		_update_texture(false)
@@ -141,9 +146,9 @@ func _next_frame(clear_audio: bool) -> void:
 		if player_state == PlayerState.PLAYING:
 			if "audio" in gdv_data and len(gdv_data.audio) > current_frame:
 				if clear_audio:
-					Roth.play_audio_buffer(gdv_data.audio[current_frame].decoded_audio, gdv_data.header.playback_frequency)
+					RothAudio.play_buffer(gdv_data.audio[current_frame].decoded_audio, gdv_data.header.playback_frequency)
 				else:
-					Roth.append_audio_buffer(gdv_data.audio[current_frame].decoded_audio, gdv_data.header.playback_frequency)
+					RothAudio.append_buffer(gdv_data.audio[current_frame].decoded_audio, gdv_data.header.playback_frequency)
 		current_frame += 1
 	if not dragging_slider:
 		%SeekSlider.value = current_frame
@@ -152,15 +157,6 @@ func _next_frame(clear_audio: bool) -> void:
 func _update_texture(continue_playing: bool) -> void:
 	if "video" not in gdv_data:
 		return
-	if gdv_data.video[current_frame].header.type_flags & 0b10000000:
-		while "decoded_video" not in gdv_data.video[current_frame+1]:
-			player_state = PlayerState.PAUSED
-			if not dragging_slider:
-				%DragLabel.text = "Decoding..."
-			await get_tree().process_frame
-			if "video" not in gdv_data:
-				return
-		gdv_data.video[current_frame].decoded_video = gdv_data.video[current_frame+1].decoded_video
 	while "decoded_video" not in gdv_data.video[current_frame]:
 		player_state = PlayerState.PAUSED
 		if not dragging_slider:
@@ -172,7 +168,8 @@ func _update_texture(continue_playing: bool) -> void:
 		%DragLabel.text = ""
 	if continue_playing:
 		player_state = PlayerState.PLAYING
-	_load_frame(gdv_data.video[current_frame].decoded_video)
+	if not (gdv_data.video[current_frame].header.type_flags & 0b10000000):
+		_load_frame(gdv_data.video[current_frame].decoded_video)
 
 
 func _load_frame(image: Image) -> void:
@@ -218,7 +215,7 @@ func _on_pause_button_pressed() -> void:
 func _on_stop_button_pressed() -> void:
 	if gdv_data.is_empty():
 		return
-	Roth.stop_audio_buffer()
+	RothAudio.stop()
 	%SeekSlider.value = 0
 	current_frame = 0
 	accumulated_delta = 0.0
@@ -255,4 +252,6 @@ func _on_seek_slider_value_changed(value: float) -> void:
 		if player_state == PlayerState.PAUSED or player_state == PlayerState.STOPPED:
 			_update_subtitle(int(value))
 			if "decoded_video" in gdv_data.video[value]:
+				while gdv_data.video[value].header.type_flags & 0b10000000:
+					value -= 1
 				_load_frame(gdv_data.video[value].decoded_video)

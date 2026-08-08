@@ -6,7 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_b5f7p"]
 [ext_resource type="Script" uid="uid://bdfvkk5hbrn6c" path="res://src/ui/roth_texture_container.gd" id="5_b5f7p"]
 [ext_resource type="PackedScene" uid="uid://bqawctevx37j2" path="res://src/windows/das_editor/edit_alignments_window.tscn" id="6_jggmm"]
-[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/graphics/image_editor_window.tscn" id="7_r5eq3"]
+[ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/image_editor/image_editor_window.tscn" id="7_r5eq3"]
 
 [node name="WeaponAnimationEditor" unique_id=452268762 instance=ExtResource("1_gghyv")]
 offset_right = 1262.0

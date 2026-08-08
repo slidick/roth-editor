@@ -8,12 +8,9 @@ enum Main {
 	ManageDAS,
 	BackdropEditor,
 	IconsEditor,
-	SaveEditor,
 	Sep0,
-	TestMap,
+	SaveEditor,
 	Sep1,
-	Settings,
-	Sep2,
 	Quit,
 }
 
@@ -36,6 +33,10 @@ enum HelpID {
 	Controls=0,
 }
 
+enum Shortcuts {
+	Run,
+}
+
 
 func _ready() -> void:
 	get_tree().auto_accept_quit = false
@@ -44,7 +45,7 @@ func _ready() -> void:
 	input.action = "test_map"
 	var shortcut := Shortcut.new()
 	shortcut.events.append(input)
-	%Main.set_item_shortcut(Main.TestMap, shortcut, true)
+	%Shortcuts.set_item_shortcut(Shortcuts.Run, shortcut, true)
 	%Options.set_item_checked(Options.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
 	%Options.set_item_checked(Options.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
 	%Options.set_item_checked(Options.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", true))
@@ -70,7 +71,7 @@ func _notification(what: int) -> void:
 		if await Dialog.confirm("Are you sure?\nMake sure to save!", "Confirm Quit", false):
 			Utility.deinit_shader()
 			Console.print("Quitting...")
-			for map_pack: Dictionary in Roth.map_packs:
+			for map_pack: Dictionary in MapPack.map_packs:
 				for map: Map in map_pack.maps:
 			#for map: Map in Roth.maps:
 					if map.editable_map:
@@ -171,12 +172,8 @@ func _on_main_index_pressed(index: int) -> void:
 			%IconsEditor.toggle(true)
 		Main.SaveEditor:
 			%SaveEditor.toggle(true)
-		Main.Settings:
-			%OldSettings.toggle(true)
 		Main.Quit:
 			quit()
-		Main.TestMap:
-			%Editor.test_map()
 
 
 func _on_options_index_pressed(index: int) -> void:
@@ -218,6 +215,12 @@ func _on_windows_index_pressed(index: int) -> void:
 			%Search.toggle()
 		WindowID.Extras:
 			%Extras.toggle()
+
+
+func _on_shortcuts_menu_index_pressed(index: int) -> void:
+	match index:
+		Shortcuts.Run:
+			%Editor.test_map()
 
 
 func _on_help_index_pressed(index: int) -> void:
