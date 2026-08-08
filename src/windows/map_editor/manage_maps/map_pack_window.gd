@@ -40,6 +40,11 @@ func map_pack(p_type: Type, p_map_pack: Dictionary = {}) -> Variant:
 		if p_map_pack and sfx_info == p_map_pack.sfx_info:
 			%SFXOption.select(%SFXOption.item_count-1)
 	%BackdropOption.clear()
+	for backdrop_info: Dictionary in BackdropPack.backdrop_packs:
+		%BackdropOption.add_item(backdrop_info.name)
+		%BackdropOption.set_item_metadata(%BackdropOption.item_count-1, backdrop_info)
+		if p_map_pack and backdrop_info == p_map_pack.backdrop_info:
+			%BackdropOption.select(%BackdropOption.item_count-1)
 	%IconsOption.clear()
 	%SaveButton.disabled = true
 	if p_map_pack:
@@ -59,14 +64,13 @@ func map_pack(p_type: Type, p_map_pack: Dictionary = {}) -> Variant:
 				p_map_pack.dbase_info = new_pack.dbase_info
 				p_map_pack.das2_info = new_pack.das2_info
 				p_map_pack.sfx_info = new_pack.sfx_info
-				#p_map_pack.backdrop = new_pack.backdrop
+				p_map_pack.backdrop_info = new_pack.backdrop_info
 				#p_map_pack.icons = new_pack.icons
 				MapPack.save(p_map_pack)
 				return true
 			return false
 		Type.CREATE:
 			if not new_pack.is_empty():
-				new_pack["backdrop"] = "Original"
 				new_pack["icons"] = "Original"
 				new_pack["maps"] = []
 				MapPack.save(new_pack)
@@ -87,6 +91,7 @@ func _save() -> void:
 		"dbase_info": %DBASEOption.get_selected_metadata(),
 		"das2_info": %DAS2Option.get_selected_metadata(),
 		"sfx_info": %SFXOption.get_selected_metadata(),
+		"backdrop_info": %BackdropOption.get_selected_metadata(),
 	})
 
 
@@ -102,5 +107,6 @@ func _changed() -> void:
 	if (%DBASEOption.get_selected_id() == -1
 		or %DAS2Option.get_selected_id() == -1
 		or %SFXOption.get_selected_id() == -1
+		or %BackdropOption.get_selected_id() == -1
 	):
 		%SaveButton.disabled = true

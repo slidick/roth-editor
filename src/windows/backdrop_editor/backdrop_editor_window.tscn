@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://nysme33ujet7" path="res://src/windows/backdrop_editor/backdrop_editor_window.gd" id="2_2gdtu"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_v7f7k"]
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_vgo61"]
+[ext_resource type="Script" uid="uid://bdfvkk5hbrn6c" path="res://src/ui/roth_texture_container.gd" id="5_koah1"]
 [ext_resource type="PackedScene" uid="uid://453133w4dgmj" path="res://src/windows/image_editor/image_editor_window.tscn" id="5_t8wiq"]
 
 [node name="BackdropEditorWindow" unique_id=379413849 instance=ExtResource("1_5g3s7")]
@@ -14,113 +15,67 @@ script = ExtResource("2_2gdtu")
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_vgo61")
 
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1790510737]
+[node name="ListContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1814011250]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1108272606]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/ListContainer" index="0" unique_id=380381413]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=92231128]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer" index="0" unique_id=2038371214]
 layout_mode = 2
 
-[node name="InputEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=338448068]
-unique_name_in_owner = true
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=1658734677]
 layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="BrowseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1523336641]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 0)
-layout_mode = 2
-text = "Browse"
-
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=2073452646]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=2048487842]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-
-[node name="ProgressBarContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Control" index="0" unique_id=251131764]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Control/ProgressBarContainer" index="0" unique_id=1797589005]
-layout_mode = 2
-text = "Converting: "
-
-[node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Control/ProgressBarContainer" index="1" unique_id=134117164]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-indeterminate = true
-editor_preview_indeterminate = false
-
-[node name="NoImageLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3" unique_id=1590296253]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 6
-text = "No Image Loaded"
+text = "Backdrops"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4" unique_id=971974953]
+[node name="ItemList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2" index="1" unique_id=2094437596]
 unique_name_in_owner = true
-visible = false
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+allow_rmb_select = true
 
-[node name="Original Texture" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="1" unique_id=202053419]
+[node name="PopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2/ItemList" index="2" unique_id=1900778970]
 unique_name_in_owner = true
-texture_filter = 1
+item_count = 3
+item_0/text = "Rename"
+item_0/id = 0
+item_1/text = "Delete"
+item_1/id = 1
+item_2/text = "Duplicate"
+item_2/id = 2
+
+[node name="NewButton" type="Button" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=823139347]
+layout_mode = 2
+text = "New"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer" index="1" unique_id=33255291]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RothTexture" type="Container" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer" index="0" unique_id=23304514]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-expand_mode = 1
-stretch_mode = 5
-metadata/_tab_index = 0
+script = ExtResource("5_koah1")
+texture_expand_mode = 1
+enabled = false
+metadata/_custom_type_script = "uid://bdfvkk5hbrn6c"
 
-[node name="Paletted Texture" type="TextureRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/TabContainer" index="2" unique_id=221114381]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer" index="1" unique_id=2030961730]
+layout_mode = 2
+
+[node name="EditButton" type="Button" parent="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=986058177]
 unique_name_in_owner = true
-visible = false
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 3
-expand_mode = 1
-stretch_mode = 5
-metadata/_tab_index = 1
-
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5" unique_id=2011956773]
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6" unique_id=665592550]
-layout_mode = 2
-
-[node name="EditImageButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1742970779]
-unique_name_in_owner = true
-layout_mode = 2
-disabled = true
-text = "Edit Image"
-
-[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=527172082]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 0)
+custom_minimum_size = Vector2(120, 35)
 layout_mode = 2
 size_flags_horizontal = 10
-disabled = true
-text = "Save RAW"
+text = "Edit"
 
 [node name="Subwindows" type="Control" parent="." index="2" unique_id=250620150]
 layout_mode = 2
@@ -141,6 +96,7 @@ offset_right = 640.0
 offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
+start_rotated = false
 
 [node name="FileDialog" type="FileDialog" parent="Subwindows" index="1" unique_id=777225729]
 unique_name_in_owner = true
@@ -160,8 +116,10 @@ size = Vector2i(1280, 800)
 access = 2
 filters = PackedStringArray("*.RAW")
 
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/EditImageButton" to="." method="_on_edit_image_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2/ItemList" to="." method="_on_item_list_item_clicked"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2/ItemList/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer2/NewButton" to="." method="_on_new_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="file_selected" from="Subwindows/FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="Subwindows/SaveFileDialog" to="." method="_on_save_file_dialog_file_selected"]

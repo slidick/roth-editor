@@ -30,6 +30,7 @@ var ROTH_CUSTOM_SFX_DIRECTORY: String = OS.get_user_data_dir().path_join("sfx")
 var ROTH_CUSTOM_DAS_DIRECTORY: String = OS.get_user_data_dir().path_join("das")
 var ROTH_CUSTOM_DAS2_DIRECTORY: String = OS.get_user_data_dir().path_join("das2")
 var ROTH_CUSTOM_INSTALLS_DIRECTORY: String = OS.get_user_data_dir().path_join("installs")
+var ROTH_CUSTOM_BACKDROPS_DIRECTORY: String = OS.get_user_data_dir().path_join("backdrops")
 var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
 const SEQUENTIAL_UNDO_TIMEOUT: float = 1.5
@@ -86,6 +87,8 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DAS_DIRECTORY)
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_DAS2_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DAS2_DIRECTORY)
+	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_BACKDROPS_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_BACKDROPS_DIRECTORY)
 	
 	# Initialize default texture presets
 	if Settings.settings.get("texture_presets", {}).is_empty():
@@ -111,9 +114,11 @@ func _ready() -> void:
 			DASPack.init_vanilla_das2_pack(installation)
 			DBasePack.init_vanilla(installation)
 			SFXPack.init_vanilla(installation)
+			BackdropPack.init_vanilla(installation)
 	DASPack.init_custom_das2_packs(ROTH_CUSTOM_DAS2_DIRECTORY)
 	DBasePack.init_custom(ROTH_CUSTOM_DBASE_DIRECTORY)
 	SFXPack.init_custom(ROTH_CUSTOM_SFX_DIRECTORY)
+	BackdropPack.init_custom(ROTH_CUSTOM_BACKDROPS_DIRECTORY)
 	
 	# Create das and map packs
 	if current_install < len(roth_installations):
@@ -220,6 +225,7 @@ func add_installation(directory: String) -> void:
 	DASPack.init_vanilla_das2_pack(installation)
 	DBasePack.init_vanilla(installation)
 	SFXPack.init_vanilla(installation)
+	BackdropPack.init_vanilla(installation)
 	MapPack.init_vanilla(installation)
 	settings_updated.emit()
 
@@ -241,6 +247,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 	options.erase("%s_das2" % installation.id)
 	options.erase("%s_dbase" % installation.id)
 	options.erase("%s_sfx" % installation.id)
+	options.erase("%s_backdrop" % installation.id)
 	Settings.update_settings("pack_options", options, true)
 	
 	# Remove map's das packs
@@ -268,6 +275,13 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var dbase_info: Dictionary = DBasePack.dbase_packs[i]
 		if "vanilla" in dbase_info and dbase_info.vanilla == installation:
 			DBasePack.dbase_packs.pop_at(i)
+			break
+	
+	# Remove backdrop pack
+	for i in range(len(BackdropPack.backdrop_packs)):
+		var backdrop_info: Dictionary = BackdropPack.backdrop_packs[i]
+		if "vanilla" in backdrop_info and backdrop_info.vanilla == installation:
+			BackdropPack.backdrop_packs.pop_at(i)
 			break
 	
 	# Remove runtime install
@@ -400,13 +414,16 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 			DirAccess.copy_absolute(map.map_info.das_info.filepath, dest_filepath)
 	
 	
-	# Copy dbase into temporary install directory
+	# Copy dbase into temporary directory
 	for filepath: String in [map_pack.dbase_info.dbase100_filepath, map_pack.dbase_info.dbase200_filepath, map_pack.dbase_info.dbase300_filepath, map_pack.dbase_info.dbase400_filepath, map_pack.dbase_info.dbase500_filepath]:
 		#var dest_filepath: String = roth_directory.path_join(filepath.get_file())
 		var dest_filepath: String = ROTH_TEMP_DIRECTORY.path_join(filepath.get_file().replace("DBASE", "DB"))
 		DirAccess.copy_absolute(filepath, dest_filepath)
 	
-	DirAccess.copy_absolute(current_installation.backdrop, ROTH_TEMP_DIRECTORY.path_join("BACKDROP.RAW"))
+	# Copy backdrop into temporary directory
+	DirAccess.copy_absolute(map_pack.backdrop_info.filepath, ROTH_TEMP_DIRECTORY.path_join("BACKDROP.RAW"))
+	
+	# Copy icons into temporary directory
 	DirAccess.copy_absolute(current_installation.icons, ROTH_TEMP_DIRECTORY.path_join("ICONS.ALL"))
 	
 	

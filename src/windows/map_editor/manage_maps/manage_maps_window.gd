@@ -109,7 +109,7 @@ func _on_map_pack_list_item_selected(index: int) -> void:
 	%DBaseLabel.text = map_pack.dbase_info.name
 	%DAS2Label.text = map_pack.das2_info.name
 	%SFXLabel.text = map_pack.sfx_info.name
-	%BackdropLabel.text = map_pack.backdrop
+	%BackdropLabel.text = map_pack.backdrop_info.name
 	%IconsLabel.text = map_pack.icons
 
 
@@ -322,7 +322,7 @@ func _on_edit_map_pack_button_pressed() -> void:
 		%DBaseLabel.text = map_pack.dbase_info.name
 		%DAS2Label.text = map_pack.das2_info.name
 		%SFXLabel.text = map_pack.sfx_info.name
-		%BackdropLabel.text = map_pack.backdrop
+		%BackdropLabel.text = map_pack.backdrop_info.name
 		%IconsLabel.text = map_pack.icons
 
 
@@ -335,7 +335,7 @@ func _on_new_map_pack_button_pressed() -> void:
 		%DBaseLabel.text = map_pack.dbase_info.name
 		%DAS2Label.text = map_pack.das2_info.name
 		%SFXLabel.text = map_pack.sfx_info.name
-		%BackdropLabel.text = map_pack.backdrop
+		%BackdropLabel.text = map_pack.backdrop_info.name
 		%IconsLabel.text = map_pack.icons
 		%MapPackList.select(idx-1)
 		_on_map_pack_list_item_selected(idx-1)

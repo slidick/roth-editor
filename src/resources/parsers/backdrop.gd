@@ -1,6 +1,24 @@
 extends Node
 class_name Backdrop
 
+const RLE_IMG_HDR := {
+	"image_type": Parser.Type.Word,
+	"x_offset": Parser.Type.Byte,
+	"y_offset": Parser.Type.Byte,
+	"width": Parser.Type.Word,
+	"height": Parser.Type.Word,
+}
+
+
+static func parse(filepath: String) -> Dictionary:
+	if not FileAccess.file_exists(filepath):
+		return {}
+	var file := FileAccess.open(filepath, FileAccess.READ)
+	var data: Dictionary = Parser.parse_section(file, RLE_IMG_HDR)
+	data["rle_data"] = file.get_buffer(file.get_length()-file.get_position())
+	data["raw_image"] = RLE.decode_rle_image(data)
+	return data
+
 
 static func compile(input_data: Dictionary) -> PackedByteArray:
 	var output_data := PackedByteArray()
