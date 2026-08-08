@@ -11,6 +11,7 @@ static func save(p_map_pack: Dictionary) -> void:
 			"%s_das2" % p_map_pack.vanilla.id: p_map_pack.das2_info.name,
 			"%s_sfx" % p_map_pack.vanilla.id: p_map_pack.sfx_info.name,
 			"%s_backdrop" % p_map_pack.vanilla.id: p_map_pack.backdrop_info.name,
+			"%s_icon" % p_map_pack.vanilla.id: p_map_pack.icon_info.name,
 		}
 		Settings.update_settings("pack_options", options)
 	elif "unassigned" in p_map_pack:
@@ -19,6 +20,7 @@ static func save(p_map_pack: Dictionary) -> void:
 			"unassigned_das2": p_map_pack.das2_info.name,
 			"unassigned_sfx": p_map_pack.sfx_info.name,
 			"unassigned_backdrop": p_map_pack.backdrop_info.name,
+			"unassigned_icon": p_map_pack.icon_info.name,
 		}
 		Settings.update_settings("pack_options", options)
 	else:
@@ -28,7 +30,7 @@ static func save(p_map_pack: Dictionary) -> void:
 			"das2_name": p_map_pack.das2_info.name,
 			"sfx_name": p_map_pack.sfx_info.name,
 			"backdrop_name": p_map_pack.backdrop_info.name,
-			"icons": p_map_pack.icons,
+			"icon_name": p_map_pack.icon_info.name,
 			"map_uuids": []
 		}
 		for map: Map in p_map_pack.maps:
@@ -107,7 +109,7 @@ static func init_vanilla(p_installation: ROTHInstallation) -> void:
 		"das2_info": DASPack.get_das2_pack_by_name_then_installation(options.get("%s_das2" % p_installation.id, ""), p_installation),
 		"sfx_info": SFXPack.get_by_name_then_installation(options.get("%s_sfx" % p_installation.id, ""), p_installation),
 		"backdrop_info": BackdropPack.get_by_name_then_installation(options.get("%s_backdrop" % p_installation.id, ""), p_installation),
-		"icons": "Original",
+		"icon_info": IconPack.get_by_name_then_installation(options.get("%s_icon" % p_installation.id, ""), p_installation),
 	}
 	map_packs.append(vanilla_map_pack)
 	
@@ -156,10 +158,12 @@ static func init_custom(p_map_directory: String, p_map_pack_directory: String) -
 					map_pack["das2_info"] = DASPack.get_das2_pack_by_name(map_pack.das2_name)
 					map_pack["sfx_info"] = SFXPack.get_by_name(map_pack.sfx_name)
 					map_pack["backdrop_info"] = BackdropPack.get_by_name(map_pack.backdrop_name)
+					map_pack["icon_info"] = IconPack.get_by_name(map_pack.icon_name)
 					map_pack.erase("dbase_name")
 					map_pack.erase("das2_name")
 					map_pack.erase("sfx_name")
 					map_pack.erase("backdrop_name")
+					map_pack.erase("icon_name")
 					map_pack.erase("map_uuids")
 					map_packs.append(map_pack)
 	
@@ -174,7 +178,7 @@ static func init_custom(p_map_directory: String, p_map_pack_directory: String) -
 		"das2_info": DASPack.get_das2_pack_by_name(options.get("unassigned_das2", "")),
 		"sfx_info": SFXPack.get_by_name(options.get("unassigned_sfx", "")),
 		"backdrop_info": BackdropPack.get_by_name(options.get("unassigned_backdrop", "")),
-		"icons": "Original",
+		"icon_info": IconPack.get_by_name(options.get("unassigned_icon", "")),
 	}
 	map_packs.append(unassigned_map_pack)
 	

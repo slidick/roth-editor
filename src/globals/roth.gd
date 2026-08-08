@@ -31,6 +31,7 @@ var ROTH_CUSTOM_DAS_DIRECTORY: String = OS.get_user_data_dir().path_join("das")
 var ROTH_CUSTOM_DAS2_DIRECTORY: String = OS.get_user_data_dir().path_join("das2")
 var ROTH_CUSTOM_INSTALLS_DIRECTORY: String = OS.get_user_data_dir().path_join("installs")
 var ROTH_CUSTOM_BACKDROPS_DIRECTORY: String = OS.get_user_data_dir().path_join("backdrops")
+var ROTH_CUSTOM_ICONS_DIRECTORY: String = OS.get_user_data_dir().path_join("icons")
 var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
 
 const SEQUENTIAL_UNDO_TIMEOUT: float = 1.5
@@ -89,6 +90,8 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_DAS2_DIRECTORY)
 	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_BACKDROPS_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_BACKDROPS_DIRECTORY)
+	if not DirAccess.dir_exists_absolute(ROTH_CUSTOM_ICONS_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(ROTH_CUSTOM_ICONS_DIRECTORY)
 	
 	# Initialize default texture presets
 	if Settings.settings.get("texture_presets", {}).is_empty():
@@ -115,10 +118,12 @@ func _ready() -> void:
 			DBasePack.init_vanilla(installation)
 			SFXPack.init_vanilla(installation)
 			BackdropPack.init_vanilla(installation)
+			IconPack.init_vanilla(installation)
 	DASPack.init_custom_das2_packs(ROTH_CUSTOM_DAS2_DIRECTORY)
 	DBasePack.init_custom(ROTH_CUSTOM_DBASE_DIRECTORY)
 	SFXPack.init_custom(ROTH_CUSTOM_SFX_DIRECTORY)
 	BackdropPack.init_custom(ROTH_CUSTOM_BACKDROPS_DIRECTORY)
+	IconPack.init_custom(ROTH_CUSTOM_ICONS_DIRECTORY)
 	
 	# Create das and map packs
 	if current_install < len(roth_installations):
@@ -226,6 +231,7 @@ func add_installation(directory: String) -> void:
 	DBasePack.init_vanilla(installation)
 	SFXPack.init_vanilla(installation)
 	BackdropPack.init_vanilla(installation)
+	IconPack.init_vanilla(installation)
 	MapPack.init_vanilla(installation)
 	settings_updated.emit()
 
@@ -248,6 +254,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 	options.erase("%s_dbase" % installation.id)
 	options.erase("%s_sfx" % installation.id)
 	options.erase("%s_backdrop" % installation.id)
+	options.erase("%s_icon" % installation.id)
 	Settings.update_settings("pack_options", options, true)
 	
 	# Remove map's das packs
@@ -282,6 +289,13 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var backdrop_info: Dictionary = BackdropPack.backdrop_packs[i]
 		if "vanilla" in backdrop_info and backdrop_info.vanilla == installation:
 			BackdropPack.backdrop_packs.pop_at(i)
+			break
+	
+	# Remove icon pack
+	for i in range(len(IconPack.icon_packs)):
+		var icon_info: Dictionary = IconPack.icon_packs[i]
+		if "vanilla" in icon_info and icon_info.vanilla == installation:
+			IconPack.icon_packs.pop_at(i)
 			break
 	
 	# Remove runtime install
@@ -424,7 +438,7 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 	DirAccess.copy_absolute(map_pack.backdrop_info.filepath, ROTH_TEMP_DIRECTORY.path_join("BACKDROP.RAW"))
 	
 	# Copy icons into temporary directory
-	DirAccess.copy_absolute(current_installation.icons, ROTH_TEMP_DIRECTORY.path_join("ICONS.ALL"))
+	DirAccess.copy_absolute(map_pack.icon_info.filepath, ROTH_TEMP_DIRECTORY.path_join("ICONS.ALL"))
 	
 	
 	# Create the dosbox auto exec .conf file
