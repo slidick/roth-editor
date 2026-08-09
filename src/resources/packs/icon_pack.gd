@@ -31,6 +31,7 @@ static func rename(p_icon_info: Dictionary, p_new_name: String) -> void:
 	)
 	p_icon_info.name = p_new_name
 	p_icon_info.filepath = Roth.ROTH_CUSTOM_ICONS_DIRECTORY.path_join(p_new_name+".ALL")
+	MapPack.update_subpack_name(p_icon_info)
 	Roth.settings_updated.emit()
 
 

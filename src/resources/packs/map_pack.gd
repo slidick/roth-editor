@@ -187,3 +187,14 @@ static func init_custom(p_map_directory: String, p_map_pack_directory: String) -
 		if "invalid" in map_info.map_pack:
 			map_info.map_pack = unassigned_map_pack
 			unassigned_map_pack.maps.append(Map.new(map_info))
+
+
+static func update_subpack_name(p_pack_info: Dictionary) -> void:
+	for map_pack: Dictionary in map_packs:
+		if (map_pack.sfx_info == p_pack_info
+			or map_pack.dbase_info == p_pack_info
+			or map_pack.das2_info == p_pack_info
+			or map_pack.backdrop_info == p_pack_info
+			or map_pack.icon_info == p_pack_info
+		):
+			save(map_pack)

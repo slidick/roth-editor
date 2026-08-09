@@ -31,6 +31,7 @@ static func rename(p_sfx_info: Dictionary, p_new_name: String) -> void:
 	)
 	p_sfx_info.name = p_new_name
 	p_sfx_info.filepath = Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_new_name).path_join("FXSCRIPT.SFX")
+	MapPack.update_subpack_name(p_sfx_info)
 	Roth.settings_updated.emit()
 
 

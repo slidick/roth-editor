@@ -31,6 +31,7 @@ static func rename(p_backdrop_info: Dictionary, p_new_name: String) -> void:
 	)
 	p_backdrop_info.name = p_new_name
 	p_backdrop_info.filepath = Roth.ROTH_CUSTOM_BACKDROPS_DIRECTORY.path_join(p_new_name+".RAW")
+	MapPack.update_subpack_name(p_backdrop_info)
 	Roth.settings_updated.emit()
 
 

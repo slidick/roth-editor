@@ -261,6 +261,7 @@ static func rename(p_dbase_info: Dictionary, p_new_name: String) -> void:
 	p_dbase_info.dbase300_filepath = new_dir.path_join("DBASE300.DAT")
 	p_dbase_info.dbase400_filepath = new_dir.path_join("DBASE400.DAT")
 	p_dbase_info.dbase500_filepath = new_dir.path_join("DBASE500.DAT")
+	MapPack.update_subpack_name(p_dbase_info)
 	Roth.settings_updated.emit()
 
 
