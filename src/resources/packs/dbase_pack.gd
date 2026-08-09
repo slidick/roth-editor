@@ -254,7 +254,13 @@ static func rename(p_dbase_info: Dictionary, p_new_name: String) -> void:
 		Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name),
 		Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_new_name)
 	)
+	var new_dir: String = Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_new_name)
 	p_dbase_info.name = p_new_name
+	p_dbase_info.dbase100_filepath = new_dir.path_join("DBASE100.DAT")
+	p_dbase_info.dbase200_filepath = new_dir.path_join("DBASE200.DAT")
+	p_dbase_info.dbase300_filepath = new_dir.path_join("DBASE300.DAT")
+	p_dbase_info.dbase400_filepath = new_dir.path_join("DBASE400.DAT")
+	p_dbase_info.dbase500_filepath = new_dir.path_join("DBASE500.DAT")
 	Roth.settings_updated.emit()
 
 
