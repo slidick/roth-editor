@@ -1,15 +1,20 @@
 extends BaseWindow
 
+signal done(texture: Dictionary)
+
+enum Mode {
+	DRAW,
+	COLOR_PICKER,
+}
+
 const ZOOM_SPEED : float = 1.10
 const MAX_ZOOM : int = 80
 const MIN_ZOOM : float = .5
 const COLOR_PICKER_CURSOR: Texture2D = preload("uid://cgxhrl6daxi3u")
 
-signal done(texture: Dictionary)
-enum Mode {
-	DRAW,
-	COLOR_PICKER,
-}
+@export var start_rotated: bool = true
+
+
 var current_mode := Mode.DRAW
 
 var color_rects: Array = []
@@ -33,8 +38,9 @@ var _8bit_palette: bool = false
 
 func _ready() -> void:
 	super._ready()
-	if OS.get_name() == "Linux":
-		%FileDialog.use_native_dialog = false
+	%RotateCanvasCheckBox.set_pressed_no_signal(start_rotated)
+	%RotationContainer.enabled = start_rotated
+	%RotationPreviewContainer.enabled = start_rotated
 
 
 func _input(event: InputEvent) -> void:
