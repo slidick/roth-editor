@@ -6,7 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_aik1h"]
 
 [node name="NewMapWindow" unique_id=800789804 instance=ExtResource("1_hmf5h")]
-offset_right = 708.0
+offset_right = 750.0
 offset_bottom = 248.0
 theme = ExtResource("2_lnj40")
 script = ExtResource("2_q4jna")
@@ -51,7 +51,7 @@ size_flags_horizontal = 3
 max_length = 8
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=942677404]
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=1216368521]
@@ -64,7 +64,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="2" unique_id=1511082682]
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="0" unique_id=794054242]
