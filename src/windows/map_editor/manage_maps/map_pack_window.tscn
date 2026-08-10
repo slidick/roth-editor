@@ -6,6 +6,7 @@
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="4_hoaj0"]
 
 [node name="MapPackWindow" unique_id=452268762 instance=ExtResource("1_0hoyb")]
+offset_bottom = 601.0
 script = ExtResource("2_gx553")
 exclusive = true
 show_close_button = false
@@ -30,9 +31,10 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="0" unique_id=1569652973]
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "Name:"
+horizontal_alignment = 2
 
 [node name="NameEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7" index="1" unique_id=1952201381]
 unique_name_in_owner = true
@@ -43,9 +45,10 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1615949382]
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "DBase:"
+horizontal_alignment = 2
 
 [node name="DBASEOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1654889071]
 unique_name_in_owner = true
@@ -56,9 +59,10 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1611074952]
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "DAS2:"
+horizontal_alignment = 2
 
 [node name="DAS2Option" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=20193939]
 unique_name_in_owner = true
@@ -69,9 +73,10 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="0" unique_id=1500172060]
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "SFX:"
+horizontal_alignment = 2
 
 [node name="SFXOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3" index="1" unique_id=794729022]
 unique_name_in_owner = true
@@ -82,9 +87,10 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=1653973273]
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "Backdrop:"
+horizontal_alignment = 2
 
 [node name="BackdropOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=1052326276]
 unique_name_in_owner = true
@@ -95,25 +101,109 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=130106949]
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "Icons:"
+horizontal_alignment = 2
 
 [node name="IconsOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5" index="1" unique_id=1681996020]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ErrorLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6" unique_id=710246847]
+[node name="DetailsContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6" unique_id=1408739701]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="0" unique_id=2088123107]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="1" unique_id=1996593297]
+layout_mode = 2
+text = "Additional Details"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="2" unique_id=888873585]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer" index="0" unique_id=1054006588]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Title:"
+horizontal_alignment = 2
+
+[node name="TitleEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer" index="1" unique_id=399418776]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="3" unique_id=1462401869]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer2" index="0" unique_id=2139446890]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Description:"
+horizontal_alignment = 2
+
+[node name="DescriptionEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer2" index="1" unique_id=581395195]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="4" unique_id=442502463]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer3" index="0" unique_id=1488352233]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Story:"
+horizontal_alignment = 2
+
+[node name="StoryEdit" type="TextEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer3" index="1" unique_id=505530990]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="5" unique_id=298478131]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer4" index="0" unique_id=949383574]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Initial Release:"
+horizontal_alignment = 2
+
+[node name="ReleaseEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer4" index="1" unique_id=1735758435]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer" index="6" unique_id=1374871705]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer5" index="0" unique_id=102644670]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Version:"
+horizontal_alignment = 2
+
+[node name="VersionEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer5" index="1" unique_id=1914200996]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ErrorLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7" unique_id=710246847]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7" unique_id=1538971956]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8" unique_id=1538971956]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8" unique_id=810483194]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9" unique_id=810483194]
 layout_mode = 2
 
 [node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6" index="0" unique_id=828630180]
@@ -128,6 +218,44 @@ layout_mode = 2
 size_flags_horizontal = 10
 text = "Save"
 
+[node name="FileDialog" type="FileDialog" parent="." index="2" unique_id=1702875713]
+unique_name_in_owner = true
+access = 2
+filters = PackedStringArray("*.roth.zip")
+use_native_dialog = true
+
+[node name="Subwindows" type="Control" parent="." index="3" unique_id=1471087967]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CompressingZip" parent="Subwindows" index="0" unique_id=286023673 instance=ExtResource("1_0hoyb")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+movable = false
+resizable = false
+exclusive = true
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("3_0rm7d")
+
+[node name="ProgressBar" type="ProgressBar" parent="Subwindows/CompressingZip/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(286023673, 2051013205) index="0" unique_id=1142778644]
+layout_mode = 2
+size_flags_vertical = 4
+indeterminate = true
+editor_preview_indeterminate = false
+
 [connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7/NameEdit" to="." method="_changed" unbinds=1]
 [connection signal="text_submitted" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer7/NameEdit" to="." method="_save" unbinds=1]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/DBASEOption" to="." method="_changed" unbinds=1]
@@ -135,5 +263,14 @@ text = "Save"
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer3/SFXOption" to="." method="_changed" unbinds=1]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer4/BackdropOption" to="." method="_changed" unbinds=1]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer5/IconsOption" to="." method="_changed" unbinds=1]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer/TitleEdit" to="." method="_changed" unbinds=1]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer2/DescriptionEdit" to="." method="_changed" unbinds=1]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer3/StoryEdit" to="." method="_changed"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer4/ReleaseEdit" to="." method="_changed" unbinds=1]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/DetailsContainer/HBoxContainer5/VersionEdit" to="." method="_changed" unbinds=1]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer6/SaveButton" to="." method="_save"]
+[connection signal="canceled" from="FileDialog" to="." method="_on_file_dialog_canceled"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+
+[editable path="Subwindows/CompressingZip"]

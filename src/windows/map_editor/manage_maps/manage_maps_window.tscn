@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://dplewkjlqcsb8" path="res://src/windows/map_editor/2d_view.gd" id="5_a6cut"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="5_xet6p"]
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/map_editor/manage_maps/new_map_window.tscn" id="6_yjel5"]
-[ext_resource type="PackedScene" uid="uid://bl4vofcsfauae" path="res://src/windows/map_editor/manage_maps/export_window.tscn" id="7_x7qhk"]
 [ext_resource type="PackedScene" uid="uid://be7yk2ubuv2c8" path="res://src/windows/map_editor/manage_maps/import_window.tscn" id="8_lah0d"]
 [ext_resource type="PackedScene" uid="uid://bynk5w4co0y3x" path="res://src/windows/map_editor/manage_maps/change_das_window.tscn" id="9_hyou8"]
 [ext_resource type="PackedScene" uid="uid://co726n1ta8sto" path="res://src/windows/map_editor/manage_maps/map_pack_window.tscn" id="10_d715q"]
@@ -441,23 +440,7 @@ offset_bottom = 102.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Export" parent="Dialogs" index="1" unique_id=2063992590 instance=ExtResource("7_x7qhk")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -579.5
-offset_top = -348.0
-offset_right = 579.5
-offset_bottom = 348.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Import" parent="Dialogs" index="2" unique_id=115071097 instance=ExtResource("8_lah0d")]
+[node name="Import" parent="Dialogs" index="1" unique_id=115071097 instance=ExtResource("8_lah0d")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -473,7 +456,7 @@ offset_bottom = 333.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ChangeDAS" parent="Dialogs" index="3" unique_id=452268762 instance=ExtResource("9_hyou8")]
+[node name="ChangeDAS" parent="Dialogs" index="2" unique_id=452268762 instance=ExtResource("9_hyou8")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -490,7 +473,7 @@ grow_horizontal = 2
 grow_vertical = 2
 minimize_style = "fade_out"
 
-[node name="MapPack" parent="Dialogs" index="4" unique_id=1864199248 instance=ExtResource("10_d715q")]
+[node name="MapPack" parent="Dialogs" index="3" unique_id=1864199248 instance=ExtResource("10_d715q")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -506,7 +489,7 @@ offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ModifyMap" parent="Dialogs" index="5" unique_id=269876620 instance=ExtResource("12_xqqyo")]
+[node name="ModifyMap" parent="Dialogs" index="4" unique_id=269876620 instance=ExtResource("12_xqqyo")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

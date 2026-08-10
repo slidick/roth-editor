@@ -1,10 +1,12 @@
 extends BaseWindow
 
 signal done(new_pack: Dictionary)
+signal popup_done(filepath: String)
 
 enum Type {
 	CREATE,
 	EDIT,
+	EXPORT,
 }
 
 var current_map_pack: Dictionary
@@ -21,6 +23,11 @@ func map_pack(p_type: Type, p_map_pack: Dictionary = {}) -> Variant:
 	current_map_pack = p_map_pack
 	%ErrorLabel.text = ""
 	%NameEdit.text = ""
+	%TitleEdit.text = ""
+	%DescriptionEdit.text = ""
+	%StoryEdit.text = ""
+	%ReleaseEdit.text = ""
+	%VersionEdit.text = ""
 	%DBASEOption.clear()
 	for dbase_info: Dictionary in DBasePack.dbase_packs:
 		%DBASEOption.add_item(dbase_info.name)
@@ -56,32 +63,82 @@ func map_pack(p_type: Type, p_map_pack: Dictionary = {}) -> Variant:
 		%NameEdit.text = p_map_pack.name
 	if p_map_pack and ("vanilla" in p_map_pack or "unassigned" in p_map_pack):
 		%NameEdit.editable = false
+		%DetailsContainer.hide()
 	else:
 		%NameEdit.editable = true
+		%DetailsContainer.show()
+	if p_map_pack and not ("vanilla" in p_map_pack or "unassigned" in p_map_pack):
+		%TitleEdit.text = p_map_pack.title
+		%DescriptionEdit.text = p_map_pack.description
+		%StoryEdit.text = p_map_pack.story
+		%ReleaseEdit.text = p_map_pack.release
+		%VersionEdit.text = p_map_pack.version
+	
+	if p_type == Type.EXPORT:
+		%SaveButton.text = "Export"
+		%SaveButton.disabled = false
+	else:
+		%SaveButton.text = "Save"
+	
 	toggle(true)
 	var new_pack: Dictionary = await done
-	toggle(false)
 	
 	match p_type:
 		Type.EDIT:
+			toggle(false)
 			if not new_pack.is_empty():
-				p_map_pack.name = new_pack.name
-				p_map_pack.dbase_info = new_pack.dbase_info
-				p_map_pack.das2_info = new_pack.das2_info
-				p_map_pack.sfx_info = new_pack.sfx_info
-				p_map_pack.backdrop_info = new_pack.backdrop_info
-				p_map_pack.icon_info = new_pack.icon_info
-				MapPack.save(p_map_pack)
+				update_pack(p_map_pack, new_pack)
 				return true
 			return false
 		Type.CREATE:
+			toggle(false)
 			if not new_pack.is_empty():
 				new_pack["maps"] = []
 				MapPack.save(new_pack)
 				return new_pack
 			return {}
-	
+		Type.EXPORT:
+			if new_pack.is_empty():
+				toggle(false)
+				return false
+			%FileDialog.current_file = new_pack.name.to_snake_case()
+			%FileDialog.popup_file_dialog()
+			var filepath: String = await popup_done
+			if filepath.is_empty():
+				toggle(false)
+				return false
+			if not new_pack.is_empty():
+				update_pack(p_map_pack, new_pack)
+			%CompressingZip.toggle(true)
+			var thread := Thread.new()
+			thread.start(func () -> bool: return MapPack.export(p_map_pack, filepath))
+			while thread.is_alive():
+				await get_tree().process_frame
+			var success: bool = thread.wait_to_finish()
+			%CompressingZip.toggle(false)
+			toggle(false)
+			if success:
+				await Dialog.information("Successfully exported:\n%s" % filepath, "Success", false, Vector2(400,150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
+			else:
+				await Dialog.information("Permission denied.", "Error", false, Vector2(400,150), "Close", HORIZONTAL_ALIGNMENT_CENTER)
+			return true
 	return null
+
+
+func update_pack(p_map_pack: Dictionary, new_info: Dictionary) -> void:
+	p_map_pack.name = new_info.name
+	p_map_pack.dbase_info = new_info.dbase_info
+	p_map_pack.das2_info = new_info.das2_info
+	p_map_pack.sfx_info = new_info.sfx_info
+	p_map_pack.backdrop_info = new_info.backdrop_info
+	p_map_pack.icon_info = new_info.icon_info
+	if "vanilla" not in p_map_pack and "unassigned" not in p_map_pack:
+		p_map_pack.title = new_info.title
+		p_map_pack.description = new_info.description
+		p_map_pack.story = new_info.story
+		p_map_pack.release = new_info.release
+		p_map_pack.version = new_info.version
+	MapPack.save(p_map_pack)
 
 
 func _on_cancel_button_pressed() -> void:
@@ -97,6 +154,11 @@ func _save() -> void:
 		"sfx_info": %SFXOption.get_selected_metadata(),
 		"backdrop_info": %BackdropOption.get_selected_metadata(),
 		"icon_info": %IconsOption.get_selected_metadata(),
+		"title": %TitleEdit.text,
+		"description": %DescriptionEdit.text,
+		"story": %StoryEdit.text,
+		"release": %ReleaseEdit.text,
+		"version": %VersionEdit.text,
 	})
 
 
@@ -116,3 +178,11 @@ func _changed() -> void:
 		or %IconsOption.get_selected_id() == -1
 	):
 		%SaveButton.disabled = true
+
+
+func _on_file_dialog_file_selected(path: String) -> void:
+	popup_done.emit(path)
+
+
+func _on_file_dialog_canceled() -> void:
+	popup_done.emit("")

@@ -31,6 +31,11 @@ static func save(p_map_pack: Dictionary) -> void:
 			"sfx_name": p_map_pack.sfx_info.name,
 			"backdrop_name": p_map_pack.backdrop_info.name,
 			"icon_name": p_map_pack.icon_info.name,
+			"title": p_map_pack.title,
+			"description": p_map_pack.description,
+			"story": p_map_pack.story,
+			"release": p_map_pack.release,
+			"version": p_map_pack.version,
 			"map_uuids": []
 		}
 		for map: Map in p_map_pack.maps:
@@ -93,6 +98,107 @@ static func delete(p_map_pack: Dictionary, p_delete_maps: bool) -> void:
 	map_packs.erase(p_map_pack)
 	if FileAccess.file_exists(p_map_pack.filepath):
 		DirAccess.remove_absolute(p_map_pack.filepath)
+
+
+static func export(p_map_pack: Dictionary, p_filepath: String) -> bool:
+	print("Exporting pack to: %s" % p_filepath)
+	
+	var writer := ZIPPacker.new()
+	var err := writer.open(p_filepath)
+	if err != OK:
+		return false
+	
+	var das_packs: Array = []
+	var export_info: Dictionary = {}
+	export_info["name"] = p_map_pack.name
+	if "vanilla" in p_map_pack:
+		export_info["vanilla"] = p_map_pack.vanilla.name
+	export_info["dbase_name"] = p_map_pack.dbase_info.name
+	if "vanilla" in p_map_pack.dbase_info:
+		export_info["dbase_vanilla"] = true
+	export_info["sfx_name"] = p_map_pack.sfx_info.name
+	if "vanilla" in p_map_pack.sfx_info:
+		export_info["sfx_vanilla"] = true
+	export_info["das2_name"] = p_map_pack.das2_info.name
+	if "vanilla" in p_map_pack.das2_info:
+		export_info["das2_vanilla"] = true
+	export_info["backdrop_name"] = p_map_pack.backdrop_info.name
+	if "vanilla" in p_map_pack.backdrop_info:
+		export_info["backdrop_vanilla"] = true
+	export_info["icon_name"] = p_map_pack.icon_info.name
+	if "vanilla" in p_map_pack.icon_info:
+		export_info["icon_vanilla"] = true
+	export_info["title"] = p_map_pack.get("title", "")
+	export_info["description"] = p_map_pack.get("description", "")
+	export_info["story"] = p_map_pack.get("story", "")
+	export_info["release"] = p_map_pack.get("release", "")
+	export_info["version"] = p_map_pack.get("version", "")
+	export_info["maps"] = []
+	for map: Map in p_map_pack.maps:
+		var map_info: Dictionary = {}
+		map_info["name"] = map.map_info.name
+		if "vanilla" in map.map_info:
+			map_info["vanilla"] = map.map_info.vanilla.name
+		map_info["das_name"] = map.map_info.das_info.get("base", map.map_info.das_info.name).get_file()
+		if "vanilla" in map.map_info.das_info:
+			map_info["das_vanilla"] = map.map_info.das_info.vanilla.name
+		export_info.maps.append(map_info)
+		if map.map_info.das_info not in das_packs:
+			das_packs.append(map.map_info.das_info)
+	writer.start_file("info.json")
+	writer.write_file(JSON.stringify(export_info, '\t', false).to_utf8_buffer())
+	writer.close_file()
+	
+	if "vanilla" not in p_map_pack.dbase_info:
+		for file: String in ["DBASE100", "DBASE200", "DBASE300", "DBASE400", "DBASE500"]:
+			writer.start_file(file+".DAT")
+			writer.write_file(FileAccess.get_file_as_bytes(p_map_pack.dbase_info.get(file.to_lower()+"_filepath")))
+			writer.close_file()
+	
+	if "vanilla" not in p_map_pack.sfx_info:
+		writer.start_file("FXSCRIPT.SFX")
+		writer.write_file(FileAccess.get_file_as_bytes(p_map_pack.sfx_info.filepath))
+		writer.close_file()
+	
+	if "vanilla" not in p_map_pack.das2_info:
+		writer.start_file("DAS2.DAS")
+		writer.write_file(FileAccess.get_file_as_bytes(p_map_pack.das2_info.filepath))
+		writer.close_file()
+	
+	if "vanilla" not in p_map_pack.backdrop_info:
+		writer.start_file("BACKDROP.RAW")
+		writer.write_file(FileAccess.get_file_as_bytes(p_map_pack.backdrop_info.filepath))
+		writer.close_file()
+	
+	if "vanilla" not in p_map_pack.icon_info:
+		writer.start_file("ICONS.ALL")
+		writer.write_file(FileAccess.get_file_as_bytes(p_map_pack.icon_info.filepath))
+		writer.close_file()
+	
+	if len(das_packs.filter(func (a: Dictionary) -> bool: return true if "vanilla" not in a else false )) > 0:
+		writer.add_directory("DAS")
+	for das_info: Dictionary in das_packs.filter(func (a: Dictionary) -> bool: return true if "vanilla" not in a else false ):
+		writer.start_file("DAS/"+das_info.get("base", das_info.name)+".DAS")
+		writer.write_file(FileAccess.get_file_as_bytes(das_info.filepath))
+		writer.close_file()
+	
+	if len(p_map_pack.maps.filter(func (a: Map) -> bool: return true if "vanilla" not in a.map_info else false )) > 0:
+		writer.add_directory("MAPS")
+	for map: Map in p_map_pack.maps.filter(func (a: Map) -> bool: return true if "vanilla" not in a.map_info else false ):
+		writer.start_file("MAPS/"+map.map_info.name+".RAW")
+		writer.write_file(FileAccess.get_file_as_bytes(map.map_info.filepath))
+		writer.close_file()
+	
+	#var roth_res: String = "version=\"%s\"\nsnd=D:\\fxscript\ndas2=D:\\das2\n\nmaps {\n" % [p_map_pack.name + (" - " + p_map_pack.version if ("version" in p_map_pack and not p_map_pack.version.is_empty()) else "")]
+	#for map: Map in p_map_pack.maps:
+		#roth_res += "D:\\%s D:\\%s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das_info.name.md5_text().to_upper().left(8)]
+	#roth_res += "}\n"
+	#writer.start_file("ROTH.RES")
+	#writer.write_file(roth_res.to_utf8_buffer())
+	#writer.close_file()
+	
+	writer.close()
+	return true
 
 
 static func init_vanilla(p_installation: ROTHInstallation) -> void:

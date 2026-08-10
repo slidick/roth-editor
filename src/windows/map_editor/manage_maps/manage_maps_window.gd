@@ -292,10 +292,15 @@ func select_maps(maps: Array) -> void:
 
 
 func _on_export_button_pressed() -> void:
-	var maps := get_selected_maps()
-	if maps.is_empty():
-		return
-	%Export.export_maps(maps)
+	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EXPORT, map_pack)
+	if changed:
+		%MapPackList.set_item_text(%MapPackList.get_selected_items()[0], map_pack.name)
+		%DBaseLabel.text = map_pack.dbase_info.name
+		%DAS2Label.text = map_pack.das2_info.name
+		%SFXLabel.text = map_pack.sfx_info.name
+		%BackdropLabel.text = map_pack.backdrop_info.name
+		%IconsLabel.text = map_pack.icon_info.name
 
 
 func _on_import_button_pressed() -> void:
