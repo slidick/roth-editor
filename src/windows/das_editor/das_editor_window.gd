@@ -51,6 +51,17 @@ func _on_settings_updated() -> void:
 		%DAS2List.set_item_metadata(idx, das_info)
 
 
+func select(das_info: Dictionary) -> void:
+	for i in range(%DASList.item_count):
+		if das_info == %DASList.get_item_metadata(i):
+			%DASList.select(i)
+			_on_das_list_item_selected(i)
+	for i in range(%DAS2List.item_count):
+		if das_info == %DAS2List.get_item_metadata(i):
+			%DAS2List.select(i)
+			_on_das_2_list_item_selected(i)
+
+
 #region DASList
 func _on_das_list_item_selected(_index: int) -> void:
 	%DAS2List.deselect_all()
@@ -74,26 +85,24 @@ func _on_das_list_item_clicked(index: int, at_position: Vector2, mouse_button_in
 
 
 func _on_das_list_popup_menu_index_pressed(index: int) -> void:
+	var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
 	match index:
 		0:
-			print("RENAME")
+			var new_name: String = await query_pack_name("Duplicating DAS File: %s" % das_info.name)
+			if new_name.is_empty():
+				return
+			DASPack.rename_das_pack(das_info, new_name)
+			select(das_info)
 		1:
-			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
 			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
 				return
 			DASPack.delete_das_pack(das_info)
 		2:
-			var das_info: Dictionary = %DASList.get_item_metadata(%DASList.get_selected_items()[0])
-			var err: String = "init"
-			var results: Array = [false, ""]
-			while not err.is_empty():
-				results = await Dialog.input("New Name:", "Duplicating DAS File: %s" % das_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
-				if not results[0]:
-					return
-				err = DASPack.check_name(results[1])
-			DASPack.duplicate_das_pack(das_info, results[1])
-			%DASList.select(%DASList.item_count - 1)
-			_on_das_list_item_selected(%DASList.item_count - 1)
+			var new_name: String = await query_pack_name("Duplicating DAS File: %s" % das_info.name)
+			if new_name.is_empty():
+				return
+			var new_info: Dictionary = DASPack.duplicate_das_pack(das_info, new_name)
+			select(new_info)
 
 
 func _on_das_list_item_activated(_index: int) -> void:
@@ -124,26 +133,36 @@ func _on_das_2_list_item_clicked(index: int, at_position: Vector2, mouse_button_
 
 
 func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:
+	var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
 	match index:
 		0:
-			print("RENAME")
+			var new_name: String = await query_pack_name("Rename DAS File: %s" % das_info.name)
+			if new_name.is_empty():
+				return
+			DASPack.rename_das2_pack(das_info, new_name)
+			select(das_info)
 		1:
-			var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
+			
 			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
 				return
 			DASPack.delete_das2_pack(das_info)
 		2:
-			var das_info: Dictionary = %DAS2List.get_item_metadata(%DAS2List.get_selected_items()[0])
-			var err: String = "init"
-			var results: Array = [false, ""]
-			while not err.is_empty():
-				results = await Dialog.input("New Name:", "Duplicating DAS File: %s" % das_info.name, results[1], err if err != "init" else "", false, Vector2(400,150))
-				if not results[0]:
-					return
-				err = DASPack.check_name(results[1])
-			DASPack.duplicate_das2_pack(das_info, results[1])
-			%DAS2List.select(%DAS2List.item_count - 1)
-			_on_das_2_list_item_selected(%DAS2List.item_count - 1)
+			var new_name: String = await query_pack_name("Duplicating DAS File: %s" % das_info.name)
+			if new_name.is_empty():
+				return
+			var new_info: Dictionary = DASPack.duplicate_das2_pack(das_info, new_name)
+			select(new_info)
+
+
+func query_pack_name(title: String) -> String:
+	var err: String = "init"
+	var results: Array = [false, ""]
+	while not err.is_empty():
+		results = await Dialog.input("New Name:", title, results[1], err if err != "init" else "", false, Vector2(400,150))
+		if not results[0]:
+			return ""
+		err = DASPack.check_name(results[1])
+	return results[1]
 
 
 func _on_das_2_list_item_activated(_index: int) -> void:

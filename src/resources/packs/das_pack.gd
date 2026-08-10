@@ -63,7 +63,7 @@ static func check_name(p_name: String) -> String:
 	return error
 
 
-static func duplicate_das_pack(p_das_info: Dictionary, p_new_name: String) -> void:
+static func duplicate_das_pack(p_das_info: Dictionary, p_new_name: String) -> Dictionary:
 	var das_info := p_das_info.duplicate()
 	das_info.name = p_new_name.to_upper()
 	das_info.erase("vanilla")
@@ -71,6 +71,7 @@ static func duplicate_das_pack(p_das_info: Dictionary, p_new_name: String) -> vo
 	DirAccess.copy_absolute(p_das_info.filepath, das_info.filepath)
 	das_packs.append(das_info)
 	Roth.settings_updated.emit()
+	return das_info
 
 
 static func delete_das_pack(p_das_info: Dictionary) -> void:
@@ -80,7 +81,17 @@ static func delete_das_pack(p_das_info: Dictionary) -> void:
 	Roth.settings_updated.emit()
 
 
-static func duplicate_das2_pack(p_das2_info: Dictionary, p_new_name: String) -> void:
+static func rename_das_pack(p_das_info: Dictionary, p_new_name: String) -> void:
+	DirAccess.rename_absolute(
+		p_das_info.filepath,
+		Roth.ROTH_CUSTOM_DAS_DIRECTORY.path_join(p_new_name.to_upper()+".DAS")
+	)
+	p_das_info.name = p_new_name
+	p_das_info.filepath = Roth.ROTH_CUSTOM_DAS_DIRECTORY.path_join(p_new_name.to_upper()+".DAS")
+	Roth.settings_updated.emit()
+
+
+static func duplicate_das2_pack(p_das2_info: Dictionary, p_new_name: String) -> Dictionary:
 	var das2_info := p_das2_info.duplicate()
 	das2_info.name = p_new_name.to_upper()
 	das2_info.erase("vanilla")
@@ -88,12 +99,24 @@ static func duplicate_das2_pack(p_das2_info: Dictionary, p_new_name: String) -> 
 	DirAccess.copy_absolute(p_das2_info.filepath, das2_info.filepath)
 	das2_packs.append(das2_info)
 	Roth.settings_updated.emit()
+	return das2_info
 
 
 static func delete_das2_pack(p_das2_info: Dictionary) -> void:
 	if FileAccess.file_exists(p_das2_info.filepath):
 		DirAccess.remove_absolute(p_das2_info.filepath)
 	das2_packs.erase(p_das2_info)
+	Roth.settings_updated.emit()
+
+
+static func rename_das2_pack(p_das_info: Dictionary, p_new_name: String) -> void:
+	DirAccess.rename_absolute(
+		p_das_info.filepath,
+		Roth.ROTH_CUSTOM_DAS2_DIRECTORY.path_join(p_new_name.to_upper()+".DAS")
+	)
+	p_das_info.name = p_new_name
+	p_das_info.filepath = Roth.ROTH_CUSTOM_DAS2_DIRECTORY.path_join(p_new_name.to_upper()+".DAS")
+	MapPack.update_subpack_name(p_das_info)
 	Roth.settings_updated.emit()
 
 
