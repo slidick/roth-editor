@@ -10,14 +10,14 @@ func _ready() -> void:
 func enter_draw_mode(force_reload: bool = false) -> void:
 	var texture_presets: Dictionary = Settings.settings.get("texture_presets", {})
 	
-	if current_das != %Map2D.map.map_info.das_info.name or force_reload:
+	if current_das != %Map2D.map.map_info.das_info.base or force_reload:
 		var current_preset: String = ""
 		if force_reload:
 			current_preset = %DrawModeTextureOptionButton.get_item_text(%DrawModeTextureOptionButton.get_item_index(%DrawModeTextureOptionButton.get_selected_id()))
-		current_das = %Map2D.map.map_info.das_info.name
+		current_das = %Map2D.map.map_info.das_info.base
 		%DrawModeTextureOptionButton.clear()
 		for das: String in texture_presets:
-			if %Map2D.map.map_info.das_info.name == das:
+			if %Map2D.map.map_info.das_info.base == das:
 				for preset_name: String in texture_presets[das]:
 					%DrawModeTextureOptionButton.add_item(preset_name)
 					%DrawModeTextureOptionButton.set_item_metadata(%DrawModeTextureOptionButton.item_count-1, texture_presets[das][preset_name])

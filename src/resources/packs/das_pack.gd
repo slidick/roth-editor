@@ -13,7 +13,8 @@ static func init_vanilla_das_pack(p_installation: ROTHInstallation) -> Array:
 			"name": p_installation.name + " - " + das_name,
 			"filepath": p_installation.get(das_name.to_lower()),
 			"vanilla": p_installation,
-			"is_ademo": false
+			"is_ademo": false,
+			"base": das_name,
 		}
 		vanilla_das_packs.append(das_info)
 	das_packs.append_array(vanilla_das_packs)
@@ -26,7 +27,8 @@ static func init_custom_das_packs(p_directory: String) -> void:
 			var das_info: Dictionary = {
 				"name": filename.get_basename().get_file(),
 				"filepath": p_directory.path_join(filename),
-				"is_ademo": false
+				"is_ademo": false,
+				"base": filename.get_basename().get_file(),
 			}
 			das_packs.append(das_info)
 

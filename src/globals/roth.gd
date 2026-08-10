@@ -43,27 +43,27 @@ const HIGHLIGHT_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://dhsattf813
 const SELECTED_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://b5iarhl24whsd")
 
 const DEFAULT_TEXTURE_PRESETS: Dictionary = {
-	"DEMO.DAS": {
+	"DEMO": {
 		"STUDY": { "ceiling": 201, "floor": 59, "wall": 35 },
 		"HALLWAY": { "ceiling": 201, "floor": 58, "wall": 8 },
 		"MAUSOLEUM": { "ceiling": 766, "floor": 761, "wall": 763 },
 	},
-	"DEMO1.DAS": {
+	"DEMO1": {
 		"CHURCH": { "ceiling": 153, "floor": 168, "wall": 154},
 		"GARDEN": { "ceiling": 1, "floor": 9, "wall": 26},
 		"TOWER": { "ceiling": 541, "floor": 535, "wall": 861},
 	},
-	"DEMO2.DAS": {
+	"DEMO2": {
 		"TEMPLE": { "ceiling": 5, "floor": 7, "wall": 4},
 		"LAVA": { "ceiling": 33, "floor": 30, "wall": 32},
 		"HALLWAY": { "ceiling": 115, "floor": 116, "wall": 118},
 	},
-	"DEMO3.DAS": {
+	"DEMO3": {
 		"ALIEN": { "ceiling": 179, "floor": 179, "wall": 180 },
 		"CAVERN": { "ceiling": 50, "floor": 118, "wall": 89 },
 		"RITUAL": { "ceiling": 625, "floor": 610, "wall": 605 },
 	},
-	"DEMO4.DAS": {
+	"DEMO4": {
 		"MAUSOLEUM": { "ceiling": 2778, "floor": 2751, "wall": 2787 },
 		"EXTERIOR": { "ceiling": 0, "floor": 331, "wall": 2201 },
 		"TOMB": { "ceiling": 2025, "floor": 2031, "wall": 2235 },

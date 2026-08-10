@@ -9,7 +9,7 @@ var texture_data: Dictionary = {}
 func edit_presets(p_das: Dictionary, preset_name: String, copied_data: Dictionary = {}) -> Variant:
 	das = p_das
 	toggle(true)
-	texture_data = Settings.settings.get("texture_presets", {}).get(das.das_info.name, {}).duplicate(true)
+	texture_data = Settings.settings.get("texture_presets", {}).get(das.das_info.base, {}).duplicate(true)
 	%ItemList.clear()
 	%RotatableItemList.clear()
 	var i: int = 0
@@ -80,7 +80,7 @@ func _on_item_list_item_selected(index: int) -> void:
 
 
 func _on_save_button_pressed() -> void:
-	Settings.update_settings("texture_presets", {das.das_info.name: texture_data})
+	Settings.update_settings("texture_presets", {das.das_info.base: texture_data})
 	toggle(false)
 	done.emit(true)
 
