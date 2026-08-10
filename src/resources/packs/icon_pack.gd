@@ -26,7 +26,7 @@ static func duplicate_pack(p_icon_info: Dictionary, p_new_name: String) -> Dicti
 
 static func rename(p_icon_info: Dictionary, p_new_name: String) -> void:
 	DirAccess.rename_absolute(
-		Roth.ROTH_CUSTOM_ICONS_DIRECTORY.path_join(p_icon_info.name+".ALL"),
+		p_icon_info.filepath,
 		Roth.ROTH_CUSTOM_ICONS_DIRECTORY.path_join(p_new_name+".ALL")
 	)
 	p_icon_info.name = p_new_name
