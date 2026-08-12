@@ -246,6 +246,7 @@ static func delete(p_dbase_info: Dictionary) -> void:
 	if DirAccess.dir_exists_absolute(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name)):
 		Utility.remove_dir_recursive(Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_dbase_info.name))
 	dbase_packs.erase(p_dbase_info)
+	MapPack.update_subpack_deleted(p_dbase_info)
 	Roth.settings_updated.emit()
 
 

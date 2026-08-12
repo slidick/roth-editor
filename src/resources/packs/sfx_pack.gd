@@ -39,6 +39,7 @@ static func delete(p_sfx_info: Dictionary) -> void:
 	if DirAccess.dir_exists_absolute(Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_info.name)):
 		Utility.remove_dir_recursive(Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_sfx_info.name))
 	sfx_packs.erase(p_sfx_info)
+	MapPack.update_subpack_deleted(p_sfx_info)
 	Roth.settings_updated.emit()
 
 

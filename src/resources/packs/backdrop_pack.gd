@@ -39,6 +39,7 @@ static func delete(p_backdrop_info: Dictionary) -> void:
 	if FileAccess.file_exists(Roth.ROTH_CUSTOM_BACKDROPS_DIRECTORY.path_join(p_backdrop_info.name)+".RAW"):
 		DirAccess.remove_absolute(Roth.ROTH_CUSTOM_BACKDROPS_DIRECTORY.path_join(p_backdrop_info.name)+".RAW")
 	backdrop_packs.erase(p_backdrop_info)
+	MapPack.update_subpack_deleted(p_backdrop_info)
 	Roth.settings_updated.emit()
 
 

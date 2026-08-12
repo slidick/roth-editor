@@ -268,6 +268,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var das_info: Dictionary = DASPack.das2_packs[i]
 		if "vanilla" in das_info and das_info.vanilla == installation:
 			DASPack.das2_packs.pop_at(i)
+			MapPack.update_subpack_deleted(das_info)
 			break
 	
 	# Remove sfx pack
@@ -275,6 +276,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var sfx_info: Dictionary = SFXPack.sfx_packs[i]
 		if "vanilla" in sfx_info and sfx_info.vanilla == installation:
 			SFXPack.sfx_packs.pop_at(i)
+			MapPack.update_subpack_deleted(sfx_info)
 			break
 	
 	# Remove dbase pack
@@ -282,6 +284,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var dbase_info: Dictionary = DBasePack.dbase_packs[i]
 		if "vanilla" in dbase_info and dbase_info.vanilla == installation:
 			DBasePack.dbase_packs.pop_at(i)
+			MapPack.update_subpack_deleted(dbase_info)
 			break
 	
 	# Remove backdrop pack
@@ -289,6 +292,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var backdrop_info: Dictionary = BackdropPack.backdrop_packs[i]
 		if "vanilla" in backdrop_info and backdrop_info.vanilla == installation:
 			BackdropPack.backdrop_packs.pop_at(i)
+			MapPack.update_subpack_deleted(backdrop_info)
 			break
 	
 	# Remove icon pack
@@ -296,6 +300,7 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var icon_info: Dictionary = IconPack.icon_packs[i]
 		if "vanilla" in icon_info and icon_info.vanilla == installation:
 			IconPack.icon_packs.pop_at(i)
+			MapPack.update_subpack_deleted(icon_info)
 			break
 	
 	# Remove runtime install

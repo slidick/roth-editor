@@ -304,3 +304,22 @@ static func update_subpack_name(p_pack_info: Dictionary) -> void:
 			or map_pack.icon_info == p_pack_info
 		):
 			save(map_pack)
+
+
+static func update_subpack_deleted(p_pack_info: Dictionary) -> void:
+	for map_pack: Dictionary in map_packs:
+		if map_pack.dbase_info == p_pack_info:
+			map_pack.dbase_info = DBasePack.get_by_installation(map_pack.vanilla) if "vanilla" in map_pack else DBasePack.get_first_vanilla()
+			save(map_pack)
+		if map_pack.das2_info == p_pack_info:
+			map_pack.das2_info = DASPack.get_das2_pack_by_installation(map_pack.vanilla) if "vanilla" in map_pack else DASPack.get_first_vanilla_das2_pack()
+			save(map_pack)
+		if map_pack.sfx_info == p_pack_info:
+			map_pack.sfx_info = SFXPack.get_by_installation(map_pack.vanilla) if "vanilla" in map_pack else SFXPack.get_first_vanilla()
+			save(map_pack)
+		if map_pack.backdrop_info == p_pack_info:
+			map_pack.backdrop_info = BackdropPack.get_by_installation(map_pack.vanilla) if "vanilla" in map_pack else BackdropPack.get_first_vanilla()
+			save(map_pack)
+		if map_pack.icon_info == p_pack_info:
+			map_pack.icon_info = IconPack.get_by_installation(map_pack.vanilla) if "vanilla" in map_pack else IconPack.get_first_vanilla()
+			save(map_pack)

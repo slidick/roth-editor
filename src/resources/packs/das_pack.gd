@@ -108,6 +108,7 @@ static func delete_das2_pack(p_das2_info: Dictionary) -> void:
 	if FileAccess.file_exists(p_das2_info.filepath):
 		DirAccess.remove_absolute(p_das2_info.filepath)
 	das2_packs.erase(p_das2_info)
+	MapPack.update_subpack_deleted(p_das2_info)
 	Roth.settings_updated.emit()
 
 

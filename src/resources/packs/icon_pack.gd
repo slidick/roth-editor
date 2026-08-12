@@ -39,6 +39,7 @@ static func delete(p_icon_info: Dictionary) -> void:
 	if FileAccess.file_exists(Roth.ROTH_CUSTOM_ICONS_DIRECTORY.path_join(p_icon_info.name)+".ALL"):
 		DirAccess.remove_absolute(Roth.ROTH_CUSTOM_ICONS_DIRECTORY.path_join(p_icon_info.name)+".ALL")
 	icon_packs.erase(p_icon_info)
+	MapPack.update_subpack_deleted(p_icon_info)
 	Roth.settings_updated.emit()
 
 
