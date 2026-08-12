@@ -42,6 +42,12 @@ func open() -> void:
 	_hide()
 
 
+func get_selected_map_pack() -> Dictionary:
+	if len(%MapPackList.get_selected_items()) > 0:
+		return %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
+	return {}
+
+
 func get_selected_maps() -> Array:
 	var maps: Array = []
 	var tree_item: TreeItem = %MapTree.get_next_selected(null)
@@ -54,6 +60,8 @@ func get_selected_maps() -> Array:
 
 
 func _on_settings_updated() -> void:
+	var selected_map_pack: Dictionary = get_selected_map_pack()
+	var selected_maps: Array = get_selected_maps()
 	clear()
 	%MapPackList.clear()
 	for map_pack: Dictionary in MapPack.map_packs:
@@ -68,9 +76,13 @@ func _on_settings_updated() -> void:
 		if "unassigned" in map_pack:
 			var idx: int = %MapPackList.add_item(map_pack.name)
 			%MapPackList.set_item_metadata(idx, map_pack)
-	if %MapPackList.item_count > 0:
+	if not selected_map_pack.is_empty():
+		select_map_pack(selected_map_pack)
+	elif %MapPackList.item_count > 0:
 		%MapPackList.select(0)
 		_on_map_pack_list_item_selected(0)
+	if not selected_maps.is_empty():
+		select_maps(selected_maps)
 
 
 func _on_map_pack_list_item_selected(index: int) -> void:
@@ -276,14 +288,18 @@ func _on_new_map_button_pressed() -> void:
 		select_maps([map])
 
 
+func select_map_pack(map_pack: Dictionary) -> void:
+	for i in range(%MapPackList.item_count):
+		if %MapPackList.get_item_metadata(i) == map_pack:
+			%MapPackList.select(i)
+			_on_map_pack_list_item_selected(i)
+
+
 func select_maps(maps: Array) -> void:
 	if len(maps) == 0:
 		return
 	var map: Map = maps[0]
-	for i in range(%MapPackList.item_count):
-		if %MapPackList.get_item_metadata(i) == map.map_info.map_pack:
-			%MapPackList.select(i)
-			_on_map_pack_list_item_selected(i)
+	select_map_pack(map.map_info.map_pack)
 	%MapTree.deselect_all()
 	for tree_item: TreeItem in %MapTree.get_root().get_children():
 		if tree_item.get_metadata(0) in maps:

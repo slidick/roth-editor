@@ -266,20 +266,46 @@ static func rename(p_dbase_info: Dictionary, p_new_name: String) -> void:
 	Roth.settings_updated.emit()
 
 
-static func import(p_name: String) -> void:
+static func import(p_name: String, p_data_array: Array) -> void:
+	var overwrite: bool = false
+	if p_name.to_lower() in dbase_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		overwrite = true
+	
+	var directory: String = Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(p_name)
+	DirAccess.make_dir_recursive_absolute(directory)
 	var dbase_info := {
 		"name": p_name,
+		"dbase100_filepath": directory.path_join("DBASE100.DAT"),
+		"dbase200_filepath": directory.path_join("DBASE200.DAT"),
+		"dbase300_filepath": directory.path_join("DBASE300.DAT"),
+		"dbase400_filepath": directory.path_join("DBASE400.DAT"),
+		"dbase500_filepath": directory.path_join("DBASE500.DAT"),
 	}
-	var dbase_dir: String = Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name)
-	var dbase_100_filename := dbase_dir.path_join("DBASE100.DAT")
-	var dbase_100 := FileAccess.open(dbase_100_filename, FileAccess.READ)
+	
+	var i: int = 0
+	for key: String in ["dbase100_filepath", "dbase200_filepath", "dbase300_filepath", "dbase400_filepath", "dbase500_filepath"]:
+		var filepath: String = dbase_info[key]
+		var data: PackedByteArray = p_data_array[i]
+		var file := FileAccess.open(filepath, FileAccess.WRITE)
+		file.store_buffer(data)
+		file.close()
+		i += 1
+	
+	var dbase_100 := FileAccess.open(dbase_info.dbase100_filepath, FileAccess.READ)
 	dbase_info.merge(Parser.parse_section(dbase_100, DBase100.DBASE100_HEADER))
 	dbase_info.erase("signature")
 	dbase_info.erase("unk_dword_02")
 	dbase_info.erase("unk_dword_11")
 	dbase_100.close()
 	
-	dbase_packs.append(dbase_info)
+	if overwrite:
+		for info: Dictionary in dbase_packs:
+			if info.name.to_lower() == p_name.to_lower():
+				for key: String in info:
+					if key in dbase_info:
+						info[key] = dbase_info[key]
+	else:
+		dbase_packs.append(dbase_info)
 
 
 static func get_first_vanilla() -> Dictionary:

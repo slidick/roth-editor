@@ -201,6 +201,81 @@ static func export(p_map_pack: Dictionary, p_filepath: String) -> bool:
 	return true
 
 
+static func import(p_import_data: Dictionary, p_map_data: Array) -> Dictionary:
+	var overwrite: bool = false
+	if p_import_data.name.to_snake_case() in map_packs.map(func (p: Dictionary) -> String: return p.name.to_snake_case()):
+		overwrite = true
+	
+	var map_pack: Dictionary = {
+		"name": p_import_data.name,
+		"maps": [],
+		"dbase_info": DBasePack.get_by_name(p_import_data.dbase_name),
+		"das2_info": DASPack.get_by_name(p_import_data.das2_name),
+		"sfx_info": SFXPack.get_by_name(p_import_data.sfx_name),
+		"backdrop_info": BackdropPack.get_by_name(p_import_data.backdrop_name),
+		"icon_info": IconPack.get_by_name(p_import_data.icon_name),
+		"title": p_import_data.title,
+		"description": p_import_data.description,
+		"story": p_import_data.story,
+		"release": p_import_data.release,
+		"version": p_import_data.version,
+	}
+	
+	var i: int = 0
+	for import_map_info: Dictionary in p_import_data.maps:
+		if "vanilla" in import_map_info:
+			continue
+		
+		var map_save: Dictionary = {
+			"name": import_map_info.name,
+			"das": import_map_info.das_name,
+		}
+		var uuid: String = Utility.uuidv4()
+		while FileAccess.file_exists(Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".RAW")):
+			uuid = Utility.uuidv4()
+		
+		var filepath: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".RAW")
+		var file := FileAccess.open(filepath, FileAccess.WRITE)
+		file.store_buffer(p_map_data[i])
+		file.close()
+		
+		var filepath_json: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".json")
+		var file_json := FileAccess.open(filepath_json, FileAccess.WRITE)
+		file_json.store_string(JSON.stringify(map_save, '\t'))
+		file_json.close()
+		
+		var map_info: Dictionary = {
+			"name": import_map_info.name,
+			"das_info": DASPack.get_by_name(import_map_info.das_name, true),
+			"filepath": filepath,
+			"filepath_json": filepath_json,
+			"uuid": uuid,
+			"map_pack": map_pack,
+		}
+		map_pack.maps.append(Map.new(map_info))
+		
+		i += 1
+	
+	if overwrite:
+		for pack: Dictionary in map_packs:
+			if pack.name.to_snake_case() == map_pack.name.to_snake_case():
+				for j in range(len(pack.maps)-1,-1,-1):
+					var map: Map = pack.maps[j]
+					if map.editable_map:
+						map.editable_map.unload()
+					map.unload()
+					map.delete_map(true)
+				for key: String in pack:
+					if key in map_pack:
+						pack[key] = map_pack[key]
+				print("Overwriting map pack: %s" % pack.name)
+				save(pack)
+				return pack
+	else:
+		save(map_pack)
+	return map_pack
+
+
 static func init_vanilla(p_installation: ROTHInstallation) -> void:
 	var das_packs: Array = DASPack.init_vanilla_das_pack(p_installation)
 	var map_infos: Array = p_installation.get_map_infos(das_packs)

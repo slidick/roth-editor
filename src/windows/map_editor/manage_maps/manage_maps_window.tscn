@@ -440,7 +440,7 @@ offset_bottom = 102.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Import" parent="Dialogs" index="1" unique_id=115071097 instance=ExtResource("8_lah0d")]
+[node name="Import" parent="Dialogs" index="1" unique_id=115071097 node_paths=PackedStringArray("manage_maps_window") instance=ExtResource("8_lah0d")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -449,12 +449,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -333.0
-offset_right = 512.0
-offset_bottom = 333.0
+offset_left = -316.5
+offset_top = -332.0
+offset_right = 316.5
+offset_bottom = 332.0
 grow_horizontal = 2
 grow_vertical = 2
+manage_maps_window = NodePath("../..")
 
 [node name="ChangeDAS" parent="Dialogs" index="2" unique_id=452268762 instance=ExtResource("9_hyou8")]
 unique_name_in_owner = true

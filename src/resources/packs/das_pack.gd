@@ -93,6 +93,19 @@ static func rename_das_pack(p_das_info: Dictionary, p_new_name: String) -> void:
 	Roth.settings_updated.emit()
 
 
+static func import_das_pack(p_name: String, p_data: PackedByteArray) -> void:
+	var das_info := {
+		"name": p_name,
+		"filepath": Roth.ROTH_CUSTOM_DAS_DIRECTORY.path_join(p_name.to_upper()+".DAS"),
+		"is_ademo": false,
+	}
+	var file := FileAccess.open(das_info.filepath, FileAccess.WRITE)
+	file.store_buffer(p_data)
+	file.close()
+	
+	das_packs.append(das_info)
+
+
 static func duplicate_das2_pack(p_das2_info: Dictionary, p_new_name: String) -> Dictionary:
 	var das2_info := p_das2_info.duplicate()
 	das2_info.name = p_new_name.to_upper()
@@ -123,6 +136,28 @@ static func rename_das2_pack(p_das_info: Dictionary, p_new_name: String) -> void
 	Roth.settings_updated.emit()
 
 
+static func import_das2_pack(p_name: String, p_data: PackedByteArray) -> void:
+	var overwrite: bool = false
+	if (p_name.to_lower() in das_packs.map(func (d: Dictionary) -> String: return d.name.to_lower())
+		or  p_name.to_lower() in das2_packs.map(func (d: Dictionary) -> String: return d.name.to_lower())
+	):
+		overwrite = true
+	
+	var das2_info := {
+		"name": p_name,
+		"filepath": Roth.ROTH_CUSTOM_DAS2_DIRECTORY.path_join(p_name.to_upper()+".DAS"),
+		"is_ademo": true,
+	}
+	var file := FileAccess.open(das2_info.filepath, FileAccess.WRITE)
+	file.store_buffer(p_data)
+	file.close()
+	
+	if overwrite:
+		pass
+	else:
+		das2_packs.append(das2_info)
+
+
 static func get_current_vanilla_das2_pack() -> Dictionary:
 	for das2_info: Dictionary in das2_packs:
 		if "vanilla" in das2_info and das2_info.vanilla == Roth.current_installation:
@@ -140,14 +175,21 @@ static func get_das2_pack_by_installation(p_installation: ROTHInstallation) -> D
 	return vanilla_das2_array[0] if len(vanilla_das2_array) > 0 else {"name": "None", "invalid": true}
 
 
-static func get_by_name(p_name: String) -> Dictionary:
+static func get_by_name(p_name: String, p_check_base_name: bool = false) -> Dictionary:
 	for das_info: Dictionary in das_packs:
 		if das_info.name == p_name:
 			return das_info
 	for das2_info: Dictionary in das2_packs:
 		if das2_info.name == p_name:
 			return das2_info
-	return {}
+	if p_check_base_name:
+		for das_info: Dictionary in das_packs:
+			if "base" in das_info and das_info.base == p_name:
+				return das_info
+		for das2_info: Dictionary in das2_packs:
+			if "base" in das2_info and das2_info.base == p_name:
+				return das2_info
+	return { "name": p_name + " (Invalid)", "invalid": true }
 
 
 static func get_das2_pack_by_name(p_name: String) -> Dictionary:

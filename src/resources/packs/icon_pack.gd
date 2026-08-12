@@ -43,8 +43,24 @@ static func delete(p_icon_info: Dictionary) -> void:
 	Roth.settings_updated.emit()
 
 
-static func import(_p_name: String) -> void:
-	pass
+static func import(p_name: String, p_data: PackedByteArray) -> void:
+	var overwrite: bool = false
+	if p_name.to_lower() in icon_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		overwrite = true
+	
+	var icon_info: Dictionary = {
+		"name": p_name,
+		"filepath": Roth.ROTH_CUSTOM_ICONS_DIRECTORY.path_join(p_name+".ALL"),
+	}
+	
+	var file := FileAccess.open(icon_info.filepath, FileAccess.WRITE)
+	file.store_buffer(p_data)
+	file.close()
+	
+	if overwrite:
+		pass
+	else:
+		icon_packs.append(icon_info)
 
 
 static func create(p_name: String) -> Dictionary:

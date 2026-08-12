@@ -43,8 +43,30 @@ static func delete(p_sfx_info: Dictionary) -> void:
 	Roth.settings_updated.emit()
 
 
-static func import(_p_name: String) -> void:
-	pass
+static func import(p_name: String, p_data: PackedByteArray) -> void:
+	var overwrite: bool = false
+	if p_name.to_lower() in sfx_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		overwrite = true
+	
+	var sfx_info: Dictionary = {
+		"name": p_name,
+		"filepath": Roth.ROTH_CUSTOM_SFX_DIRECTORY.path_join(p_name).path_join("FXSCRIPT.SFX")
+	}
+	DirAccess.make_dir_recursive_absolute(sfx_info.filepath.get_base_dir())
+	var file := FileAccess.open(sfx_info.filepath, FileAccess.WRITE)
+	file.store_buffer(p_data)
+	file.close()
+	
+	sfx_info.merge(FXScript.get_info(sfx_info.filepath))
+	
+	if overwrite:
+		for info: Dictionary in sfx_packs:
+			if info.name.to_lower() == p_name.to_lower():
+				for key: String in info:
+					if key in sfx_info:
+						info[key] = sfx_info[key]
+	else:
+		sfx_packs.append(sfx_info)
 
 
 static func create(p_name: String) -> void:

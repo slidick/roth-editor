@@ -43,8 +43,24 @@ static func delete(p_backdrop_info: Dictionary) -> void:
 	Roth.settings_updated.emit()
 
 
-static func import(_p_name: String) -> void:
-	pass
+static func import(p_name: String, p_data: PackedByteArray) -> void:
+	var overwrite: bool = false
+	if p_name.to_lower() in backdrop_packs.map(func (d: Dictionary) -> String: return d.name.to_lower()):
+		overwrite = true
+	
+	var backdrop_info: Dictionary = {
+		"name": p_name,
+		"filepath": Roth.ROTH_CUSTOM_BACKDROPS_DIRECTORY.path_join(p_name)+".RAW",
+	}
+	
+	var file := FileAccess.open(backdrop_info.filepath, FileAccess.WRITE)
+	file.store_buffer(p_data)
+	file.close()
+	
+	if overwrite:
+		pass
+	else:
+		backdrop_packs.append(backdrop_info)
 
 
 static func create(p_name: String) -> Dictionary:
