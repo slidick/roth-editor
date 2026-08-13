@@ -107,7 +107,7 @@ func _ready() -> void:
 	for directory: String in installations:
 		roth_installations.append(ROTHInstallation.new(directory))
 	var current_install: int = Settings.settings.get("options", {}).get("current_install", 0)
-	if current_install >= len(roth_installations):
+	if current_install >= len(roth_installations) or current_install < 0:
 		current_install = 0
 	
 	# Create sub packs (sfx,das2,dbase,backdrop,icon)
@@ -233,6 +233,8 @@ func add_installation(directory: String) -> void:
 	BackdropPack.init_vanilla(installation)
 	IconPack.init_vanilla(installation)
 	MapPack.init_vanilla(installation)
+	if current_installation == null:
+		current_installation = installation
 	settings_updated.emit()
 
 
@@ -242,7 +244,8 @@ func remove_installation(installation: ROTHInstallation) -> void:
 		var map_pack: Dictionary = MapPack.map_packs[i]
 		if "vanilla" in map_pack and map_pack.vanilla == installation:
 			MapPack.map_packs.pop_at(i)
-			for map: Map in map_pack.maps:
+			for j in range(len(map_pack.maps)-1,-1,-1):
+				var map: Map = map_pack.maps[j]
 				if map.editable_map:
 					map.editable_map.unload()
 				map.unload()
@@ -310,8 +313,8 @@ func remove_installation(installation: ROTHInstallation) -> void:
 	# Remove installation
 	roth_installations.erase(installation)
 	Settings.update_settings("roth_installations", roth_installations.map(func (i: ROTHInstallation) -> String: return i.directory))
-	if installation == Roth.current_installation:
-		Roth.current_installation = null
+	if installation == current_installation:
+		current_installation = null
 	
 	settings_updated.emit()
 
