@@ -44,7 +44,7 @@ var editable_map: Map = null
 
 
 static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) -> Map:
-	var map_json: Dictionary = Raw.parse_bytes(p_bytes)
+	var map_json: Dictionary = Raw.parse_bytes(p_bytes, "normality" in p_map_info)
 	if map_json.is_empty():
 		return
 	var loaded_map := Map.new(p_map_info)
@@ -88,7 +88,7 @@ func _init(p_map_info: Dictionary) -> void:
 
 func load_map() -> void:
 	if not is_loaded:
-		var map_json: Dictionary = Raw.parse_file(map_info.filepath)
+		var map_json: Dictionary = Raw.parse_file(map_info.filepath, "normality" in map_info)
 		if map_json.is_empty():
 			return
 		load_json(map_json)
@@ -135,11 +135,13 @@ func load_json(map_json: Dictionary) -> void:
 	
 	metadata = map_json.mapMetadataSection
 	vertices_count = len(map_json.verticesSection.vertices)
-	commands_section = map_json.commandsSection
 	
-	for i in range(len(commands_section.allCommands)):
-		commands_section.allCommands[i]["map"] = self
-		commands_section.allCommands[i]["index"] = i+1
+	if "commandsSection" in map_json:
+		commands_section = map_json.commandsSection
+		
+		for i in range(len(commands_section.allCommands)):
+			commands_section.allCommands[i]["map"] = self
+			commands_section.allCommands[i]["index"] = i+1
 	
 	if "vanilla" in map_info and map_info.name == "RAQUIA2":
 		for sector: Sector in sectors:

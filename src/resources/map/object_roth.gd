@@ -200,10 +200,10 @@ func _initialize_mesh_actual() -> void:
 	elif data.textureSource == 1:
 		object_das = map.map_info.das_info
 		object_index = data.textureIndex + 4096 + 256
-	elif data.textureSource == 2:
+	elif not "normality" in map.map_info and data.textureSource == 2:
 		object_das = map.map_info.map_pack.das2_info
 		object_index = data.textureIndex
-	elif data.textureSource == 3:
+	elif not "normality" in map.map_info and data.textureSource == 3:
 		object_das = map.map_info.map_pack.das2_info
 		object_index = data.textureIndex + 256
 	else:

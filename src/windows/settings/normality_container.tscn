@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://dyp6o41ncyedi"]
+
+[ext_resource type="Script" uid="uid://dfaqvisjop33x" path="res://src/windows/settings/normality_container.gd" id="1_ku47b"]
+
+[node name="NormalityContainer" type="MarginContainer" unique_id=123721110]
+offset_right = 926.0
+offset_bottom = 496.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+script = ExtResource("1_ku47b")
+metadata/_tab_index = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=950336576]
+layout_mode = 2
+
+[node name="InstallationsList" type="ItemList" parent="VBoxContainer" unique_id=463197793]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+
+[node name="InstallationsMenu" type="PopupMenu" parent="VBoxContainer/InstallationsList" unique_id=1331351619]
+unique_name_in_owner = true
+item_count = 1
+item_0/text = "Remove Installation"
+item_0/id = 0
+
+[node name="AddInstallationButton" type="Button" parent="VBoxContainer" unique_id=85926354]
+layout_mode = 2
+text = "Add Installation"
+
+[node name="InstallationsFileDialog" type="FileDialog" parent="VBoxContainer/AddInstallationButton" unique_id=1804169909]
+unique_name_in_owner = true
+title = "Open a Directory"
+file_mode = 2
+access = 2
+use_native_dialog = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1068584852]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1297179755]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="item_activated" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_activated"]
+[connection signal="item_clicked" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_clicked"]
+[connection signal="item_selected" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_selected"]
+[connection signal="index_pressed" from="VBoxContainer/InstallationsList/InstallationsMenu" to="." method="_on_installations_menu_index_pressed"]
+[connection signal="pressed" from="VBoxContainer/AddInstallationButton" to="." method="_on_add_installation_button_pressed"]
+[connection signal="dir_selected" from="VBoxContainer/AddInstallationButton/InstallationsFileDialog" to="." method="_on_installations_file_dialog_dir_selected"]

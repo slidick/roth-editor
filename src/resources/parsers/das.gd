@@ -292,13 +292,25 @@ static func load_das(das_info: Dictionary) -> Dictionary:
 	Utility.deinit_shader()
 	var thread := Thread.new()
 	Console.print("Loading das: %s" % das_info.filepath)
+	
+	if "normality" in das_info:
+		if not FileAccess.file_exists(das_info.filepath):
+			if not FileAccess.file_exists(das_info.filepath_mgl):
+				return {}
+			if not MGL.convert_to_das(das_info):
+				return {}
+	
 	var _err: Error = thread.start(_load_das_thread.bind(das_info))
 	var das: Dictionary = await Roth.das_loading_finished
 	thread.wait_to_finish()
 	return das
 
 
-static func _load_das_thread(das_info: Dictionary) -> Dictionary:
+static func _load_das_thread(das_info: Dictionary) -> void:
+	if not FileAccess.file_exists(das_info.filepath):
+		Roth.das_loading_finished.emit.call_deferred({})
+		return
+	
 	var file := FileAccess.open(das_info.filepath, FileAccess.READ)
 	var das: Dictionary = {
 		"das_info": das_info,
@@ -313,21 +325,22 @@ static func _load_das_thread(das_info: Dictionary) -> Dictionary:
 	# Palette
 	das.merge(_parse_palette(file, header.palette_offset))
 	
-	# Monster Mapping Section
-	file.seek(header.monster_mapping_section_offset)
-	var monster_mappings: Array = []
-	for i in range(header.monster_mapping_section_size / 104):
-		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
-		monster_mappings.append(monster_mapping)
-	das.monster_mappings = monster_mappings
-	
-	# Directional Objects
-	var directional_mappings: Array = []
-	for i in range(header.directional_object_table_size/20):
-		file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
-		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
-		directional_mappings.append(directional_mapping)
-	das.directional_object_mappings = directional_mappings
+	if not "normality" in das_info:
+		# Monster Mapping Section
+		file.seek(header.monster_mapping_section_offset)
+		var monster_mappings: Array = []
+		for i in range(header.monster_mapping_section_size / 104):
+			var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
+			monster_mappings.append(monster_mapping)
+		das.monster_mappings = monster_mappings
+		
+		# Directional Objects
+		var directional_mappings: Array = []
+		for i in range(header.directional_object_table_size/20):
+			file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
+			var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+			directional_mappings.append(directional_mapping)
+		das.directional_object_mappings = directional_mappings
 	
 	# Filenames
 	file.seek(header.filenames_offset)
@@ -346,9 +359,9 @@ static func _load_das_thread(das_info: Dictionary) -> Dictionary:
 		das.mapping[texture.index] = _load_texture_from_file(file, texture, das)
 		i += 1
 		Roth.das_loading_updated.emit.call_deferred(float(i) / len(das.textures), das_info)
-	Roth.das_loading_finished.emit.call_deferred(das)
+	
 	Utility.deinit_shader()
-	return das
+	Roth.das_loading_finished.emit.call_deferred(das)
 
 
 static func unload_das(das_info: Dictionary) -> void:
@@ -398,21 +411,22 @@ static func _get_index_from_das(index: int, das_info: Dictionary, p_range: int =
 	# Palette
 	das.merge(_parse_palette(file, header.palette_offset))
 	
-	# Monster Mapping Section
-	file.seek(header.monster_mapping_section_offset)
-	var monster_mappings: Array = []
-	for i in range(header.monster_mapping_section_size / 104):
-		var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
-		monster_mappings.append(monster_mapping)
-	das.monster_mappings = monster_mappings
-	
-	# Directional Objects
-	var directional_mappings: Array = []
-	for i in range(header.directional_object_table_size/20):
-		file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
-		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
-		directional_mappings.append(directional_mapping)
-	das.directional_object_mappings = directional_mappings
+	if "normality" not in das_info:
+		# Monster Mapping Section
+		file.seek(header.monster_mapping_section_offset)
+		var monster_mappings: Array = []
+		for i in range(header.monster_mapping_section_size / 104):
+			var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
+			monster_mappings.append(monster_mapping)
+		das.monster_mappings = monster_mappings
+		
+		# Directional Objects
+		var directional_mappings: Array = []
+		for i in range(header.directional_object_table_size/20):
+			file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
+			var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+			directional_mappings.append(directional_mapping)
+		das.directional_object_mappings = directional_mappings
 	
 	# Textures
 	var mappings := {}

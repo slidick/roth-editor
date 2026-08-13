@@ -20,6 +20,23 @@ const HEADER := {
 	"sectorCount": Parser.Type.Word,
 }
 
+const NORM_HEADER := {
+	"verticesOffset": Parser.Type.Word,
+	"version": Parser.Type.Word,
+	"sectorsOffset": Parser.Type.Word,
+	"facesOffset": Parser.Type.Word,
+	"faceTextureMapsOffset": Parser.Type.Word,
+	"mapMetadataOffset": Parser.Type.Word,
+	"verticesOffsetRepeat": Parser.Type.Word,
+	"signature": [Parser.Type.Char, Parser.Type.Char],
+	"midPlatformsSection": Parser.Type.Word,
+	"section7Size": Parser.Type.Word,
+	"verticesSectionSize": Parser.Type.Word,
+	"objectsSectionsSize": Parser.Type.Word,
+	"footerSize": Parser.Type.Word,
+	"sectorCount": Parser.Type.Word,
+}
+
 const SECTOR := {
 	"ceilingHeight": Parser.Type.SignedWord,
 	"floorHeight": Parser.Type.SignedWord,
@@ -152,6 +169,19 @@ const SOUND_EFFECT := {
 	"unk0x11": Parser.Type.Byte,         # Only 0 or 128
 }
 
+const NORM_SOUND_EFFECT := {
+	"posX": Parser.Type.SignedWord,      # Pos X
+	"posY": Parser.Type.SignedWord,      # Pos Y
+	"sfxIndex": Parser.Type.Word,        # SFX Index
+	"sfxID": Parser.Type.Word,           # SFX ID
+	"flags": Parser.Type.Byte,           # Flags (Loop, Loop w/delay, Unused*4, Unknown, Autoplay)
+	"zoneIndex": Parser.Type.Byte,       # Zone Index
+	"audibleRadius": Parser.Type.Word,   # Radius
+	"loopDelay": Parser.Type.Word,       # Max Loop Delay
+	"volume": Parser.Type.Byte,          # Volume
+	"unk0x11": Parser.Type.Byte,         # Only 0 or 128
+}
+
 const SOUND_EFFECT_ZONE := {
 	"zoneCount": Parser.Type.Word,
 	"zone1Dampen": Parser.Type.Byte,
@@ -197,7 +227,7 @@ const OBJECT := {
 	"unk0x0E": Parser.Type.Word,
 }
 
-static func parse_bytes(bytes: PackedByteArray) -> Dictionary:
+static func parse_bytes(bytes: PackedByteArray, normality: bool) -> Dictionary:
 	
 	var file: FileAccess = FileAccess.create_temp(FileAccess.WRITE_READ, "roth", "raw")
 	if not file:
@@ -206,29 +236,33 @@ static func parse_bytes(bytes: PackedByteArray) -> Dictionary:
 	
 	file.store_buffer(bytes)
 	file.seek(0)
-	var map: Dictionary = parse(file)
+	var map: Dictionary = parse(file, normality)
 	file.close()
 	
 	return map
 
 
-static func parse_file(filepath: String) -> Dictionary:
+static func parse_file(filepath: String, normality: bool) -> Dictionary:
 	#print("Parsing: %s" % filepath)
 	var file: FileAccess = FileAccess.open(filepath, FileAccess.READ)
 	if not file:
 		Console.print("Error: File not found: %s" % filepath)
 		return {}
 	
-	var map: Dictionary = parse(file)
+	var map: Dictionary = parse(file, normality)
 	file.close()
 	
 	return map
 
 
-static func parse(file: FileAccess) -> Dictionary:
+static func parse(file: FileAccess, normality: bool) -> Dictionary:
 	# Header
 	# -------------
-	var header: Dictionary = Parser.parse_section(file, HEADER)
+	var header: Dictionary = {}
+	if normality:
+		header = Parser.parse_section(file, NORM_HEADER)
+	else:
+		header = Parser.parse_section(file, HEADER)
 	
 	
 	# Sectors
@@ -300,33 +334,34 @@ static func parse(file: FileAccess) -> Dictionary:
 	
 	# Commands
 	# -------------
-	var command_header := Parser.parse_section(file, COMMAND_HEADER)
-	
-	for i in range(15):
-		var _entry_command_count := Parser.parse_section(file, ENTRY_COMMAND_COUNT)
+	var command_header: Dictionary = {}
+	var commands: Array = []
+	var command_entry_points: Array = []
+	if not normality:
+		command_header = Parser.parse_section(file, COMMAND_HEADER)
 		
-	
-	var command_entry_points_offsets := []
-	for i in range(command_header["commandCount"]):
-		var command_offset := Parser.parse_section(file, ENTRY_COMMAND_REFERENCES)
-		command_entry_points_offsets.append(command_offset.offset)
-	
-	var commands := []
-	var commands_relative_offset_map := {}
-	for i in range(command_header["commandCount"]):
-		commands_relative_offset_map[file.get_position() - (header["verticesOffset"] + header["verticesSectionSize"])] = i + 1
-		var command := Parser.parse_section(file, COMMAND)
-		command.erase("size")
-		commands.append(command)
-	
-	var command_entry_points := []
-	for command_offset: int in command_entry_points_offsets:
-		if command_offset == 0x000:
-			continue
-		var command_index: int = commands_relative_offset_map[command_offset]
-		command_entry_points.append(command_index)
-	command_header.erase("commandCount")
-	command_header.erase("commandsOffset")
+		for i in range(15):
+			var _entry_command_count := Parser.parse_section(file, ENTRY_COMMAND_COUNT)
+		
+		var command_entry_points_offsets := []
+		for i in range(command_header["commandCount"]):
+			var command_offset := Parser.parse_section(file, ENTRY_COMMAND_REFERENCES)
+			command_entry_points_offsets.append(command_offset.offset)
+		
+		var commands_relative_offset_map := {}
+		for i in range(command_header["commandCount"]):
+			commands_relative_offset_map[file.get_position() - (header["verticesOffset"] + header["verticesSectionSize"])] = i + 1
+			var command := Parser.parse_section(file, COMMAND)
+			command.erase("size")
+			commands.append(command)
+		
+		for command_offset: int in command_entry_points_offsets:
+			if command_offset == 0x000:
+				continue
+			var command_index: int = commands_relative_offset_map[command_offset]
+			command_entry_points.append(command_index)
+		command_header.erase("commandCount")
+		command_header.erase("commandsOffset")
 	
 	
 	# Section 7
@@ -335,7 +370,7 @@ static func parse(file: FileAccess) -> Dictionary:
 	var unk_array_01 := []
 	for i in range(section_7_header["count"]):
 		unk_array_01.append(
-			Parser.parse_section(file, SOUND_EFFECT)
+			Parser.parse_section(file, NORM_SOUND_EFFECT) if normality else Parser.parse_section(file, SOUND_EFFECT)
 		)
 	
 	var unk_array_02 := []
@@ -427,11 +462,12 @@ static func parse(file: FileAccess) -> Dictionary:
 		parsed_file["midPlatformsSection"] = { "platforms": mid_platforms }
 	parsed_file["mapMetadataSection"] = map_metadata
 	parsed_file["verticesSection"] = { "vertices": vertices }
-	parsed_file["commandsSection"] = {
-			"header": command_header,
-			"entryCommandIndexes": command_entry_points,
-			"allCommands": commands
-	}
+	if not normality:
+		parsed_file["commandsSection"] = {
+				"header": command_header,
+				"entryCommandIndexes": command_entry_points,
+				"allCommands": commands
+		}
 	parsed_file["section7"] = { "unkArray01": unk_array_01 }
 	if unk_array_02:
 		parsed_file["section7"]["unkArray02"] = unk_array_02

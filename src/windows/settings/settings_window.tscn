@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dtc6slaihq8s4" path="res://src/windows/settings/dosbox_container.tscn" id="5_njcte"]
 [ext_resource type="PackedScene" uid="uid://2pgkmy7djuv4" path="res://src/windows/settings/dosbox_keys_container.tscn" id="8_jcdax"]
 [ext_resource type="PackedScene" uid="uid://crhommatho1p7" path="res://src/windows/settings/history_container.tscn" id="8_ywjcv"]
+[ext_resource type="PackedScene" uid="uid://dyp6o41ncyedi" path="res://src/windows/settings/normality_container.tscn" id="9_jcdax"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o4xq7"]
 
@@ -33,11 +34,12 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-item_count = 4
+item_count = 5
 item_0/text = "Installations"
 item_1/text = "Dosbox"
 item_2/text = "Dosbox - Keys"
 item_3/text = "History"
+item_4/text = "Normality"
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1" unique_id=1432676521]
 unique_name_in_owner = true
@@ -63,6 +65,9 @@ metadata/_tab_index = 2
 
 [node name="HistoryContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="4" unique_id=652967712 instance=ExtResource("8_ywjcv")]
 visible = false
+layout_mode = 2
+
+[node name="NormalityContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="5" unique_id=123721110 instance=ExtResource("9_jcdax")]
 layout_mode = 2
 
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/SettingsList" to="." method="_on_settings_list_item_selected"]

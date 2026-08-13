@@ -8,8 +8,9 @@ enum Main {
 	ManageDAS,
 	BackdropEditor,
 	IconsEditor,
-	Sep0,
 	SaveEditor,
+	Sep0,
+	Normality,
 	Sep1,
 	Quit,
 }
@@ -172,6 +173,8 @@ func _on_main_index_pressed(index: int) -> void:
 			%IconsEditor.toggle(true)
 		Main.SaveEditor:
 			%SaveEditor.toggle(true)
+		Main.Normality:
+			%NormalityMaps.toggle(true)
 		Main.Quit:
 			quit()
 
