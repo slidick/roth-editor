@@ -258,6 +258,7 @@ func _on_object_texture_source_edit_value_changed(value: float) -> void:
 func _on_object_lighting_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.lighting = value
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 

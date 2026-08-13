@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cd2pjrkl62aaq"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_ojfav"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_t6r74"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="3_w025d"]
+
+[node name="UpdatingLightingDialog" unique_id=452268762 instance=ExtResource("1_ojfav")]
+offset_right = 526.0
+offset_bottom = 226.0
+theme = ExtResource("2_t6r74")
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+show_focus_highlight = false
+panel_corner_radius = 0
+panel_style_override = ExtResource("3_w025d")
+
+[node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=814574818]
+layout_mode = 2
+size_flags_vertical = 4
+indeterminate = true
+editor_preview_indeterminate = false

@@ -177,6 +177,17 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		if check_flag(texture_data.unk0x08, FLIP_X):
 			material.albedo_color.a8 = 128
 	
+	if Settings.settings.get("options", {}).get("shaded_lighting", true) and sector.data.lighting > 0:
+		if sector.data.textureFit & sector.CANDLE > 0:
+			material.albedo_color.r8 /= 2
+			material.albedo_color.g8 /= 2
+			material.albedo_color.b8 /= 2
+		var lighting_change: int = (sector.data.lighting - 128) * 4
+		if lighting_change < 0 or material.albedo_texture != null:
+			material.albedo_color.r8 = clampi(material.albedo_color.r8 + lighting_change, 0, 255)
+			material.albedo_color.g8 = clampi(material.albedo_color.g8 + lighting_change, 0, 255)
+			material.albedo_color.b8 = clampi(material.albedo_color.b8 + lighting_change, 0, 255)
+	
 	
 	var mesh_tool := SurfaceTool.new()
 	mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)

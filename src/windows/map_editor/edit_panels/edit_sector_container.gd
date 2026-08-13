@@ -347,6 +347,7 @@ func _on_floor_height_edit_value_changed(value: float) -> void:
 func _on_glow_edit_value_changed(value: float) -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.lighting = value
+	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
 
@@ -362,6 +363,7 @@ func _on_candle_check_box_toggled(toggled_on: bool) -> void:
 			sector.data.textureFit |= (Sector.CANDLE)
 		else:
 			sector.data.textureFit &= ~(Sector.CANDLE)
+	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
 

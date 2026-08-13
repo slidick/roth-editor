@@ -60,6 +60,9 @@ func _ready() -> void:
 	%EditSectorTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 	%EditObjectTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 	%EditSFXTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	
+	%FlatLightingCheckBox.set_pressed_no_signal(not Settings.settings.get("options", {}).get("shaded_lighting", true))
+	%ShadedLightingCheckBox.set_pressed_no_signal(Settings.settings.get("options", {}).get("shaded_lighting", true))
 
 
 func _input(event: InputEvent) -> void:
@@ -1040,7 +1043,10 @@ func redraw(redraw_list: Array) -> void:
 				if face.sister:
 					face.sister.get_ref().initialize_mesh()
 				face.initialize_mesh()
-		if resource is Object:
+			for object: ObjectRoth in resource.map.objects:
+				if object.sector.get_ref() == resource:
+					object.initialize_mesh()
+		if resource is ObjectRoth:
 			if %ObjectCheckBox.button_pressed:
 				for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 					if object_node.ref == resource:
@@ -1297,3 +1303,20 @@ func delete_selected_vertices() -> void:
 		%Map2D.show_vertices(true)
 		%Map2D.queue_redraw()
 #endregion
+
+
+func _on_flat_lighting_check_box_toggled(toggled_on: bool) -> void:
+	Settings.update_settings("options", { "shaded_lighting": not toggled_on })
+	%UpdatingLighting.toggle(true)
+	await get_tree().create_timer(0.2).timeout
+	var tree_item: TreeItem = %MapsTree.get_root().get_first_child()
+	while tree_item:
+		var map3d: Map.MapNode3D = tree_item.get_metadata(0)
+		tree_item = tree_item.get_next()
+		for sector3d: Sector.Sector3D in map3d.get_child(0).get_children():
+			sector3d.ref.initialize_mesh()
+		for face3d: Face.Face3D in map3d.get_child(1).get_children():
+			face3d.ref.initialize_mesh()
+		for object3d: ObjectRoth.ObjectNode3D in map3d.get_child(2).get_children():
+			object3d.ref.initialize_mesh()
+	%UpdatingLighting.toggle(false)

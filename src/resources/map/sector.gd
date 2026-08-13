@@ -472,6 +472,17 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 			Console.print("Sector has invalid texture index: %s, texture: %s" % [index, texture])
 			material.albedo_color = Color.BLUE
 	
+	if Settings.settings.get("options", {}).get("shaded_lighting", true) and data.lighting > 0:
+		if data.textureFit & CANDLE > 0:
+			material.albedo_color.r8 /= 2
+			material.albedo_color.g8 /= 2
+			material.albedo_color.b8 /= 2
+		var lighting_change: int = (data.lighting - 128) * 4
+		if lighting_change < 0 or material.albedo_texture != null:
+			material.albedo_color.r8 = clampi(material.albedo_color.r8 + lighting_change, 0, 255)
+			material.albedo_color.g8 = clampi(material.albedo_color.g8 + lighting_change, 0, 255)
+			material.albedo_color.b8 = clampi(material.albedo_color.b8 + lighting_change, 0, 255)
+	
 	mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
 	var verts := Geometry2D.triangulate_polygon(p_vertices)

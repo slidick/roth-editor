@@ -256,6 +256,17 @@ func _initialize_mesh_actual() -> void:
 		_initialize_mesh()
 		return
 	
+	if data.lighting == 128:
+		if Settings.settings.get("options", {}).get("shaded_lighting", true) and sector.get_ref().data.lighting > 0:
+			if sector.get_ref().data.textureFit & sector.get_ref().CANDLE > 0:
+				material.albedo_color.r8 /= 2
+				material.albedo_color.g8 /= 2
+				material.albedo_color.b8 /= 2
+			var lighting_change: int = (sector.get_ref().data.lighting - 128) * 4
+			material.albedo_color.r8 = clampi(material.albedo_color.r8 + lighting_change, 0, 255)
+			material.albedo_color.g8 = clampi(material.albedo_color.g8 + lighting_change, 0, 255)
+			material.albedo_color.b8 = clampi(material.albedo_color.b8 + lighting_change, 0, 255)
+	
 	
 	#print(texture)
 	if (modifier & (1<<7)) > 0:
@@ -399,6 +410,16 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 			else:
 				material.albedo_color = Color.REBECCA_PURPLE
 		
+		if data.lighting == 128:
+			if Settings.settings.get("options", {}).get("shaded_lighting", true) and sector.get_ref().data.lighting > 0:
+				if sector.get_ref().data.textureFit & sector.get_ref().CANDLE > 0:
+					material.albedo_color.r8 /= 2
+					material.albedo_color.g8 /= 2
+					material.albedo_color.b8 /= 2
+				var lighting_change: int = (sector.get_ref().data.lighting - 128) * 4
+				material.albedo_color.r8 = clampi(material.albedo_color.r8 + lighting_change, 0, 255)
+				material.albedo_color.g8 = clampi(material.albedo_color.g8 + lighting_change, 0, 255)
+				material.albedo_color.b8 = clampi(material.albedo_color.b8 + lighting_change, 0, 255)
 		
 		mesh_tool.generate_normals()
 		mesh_tool.index()
