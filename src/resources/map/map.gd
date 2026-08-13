@@ -158,9 +158,9 @@ func load_das() -> void:
 	das = await Das.get_das(map_info.das_info)
 
 
-func unload() -> void:
+func unload(unload_all: bool = true) -> void:
 	free.call_deferred()
-	if preview_map:
+	if preview_map and unload_all:
 		preview_map.editable_map = null
 
 

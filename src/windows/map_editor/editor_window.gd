@@ -827,8 +827,7 @@ func replace_map(old_map: Map, new_map: Map) -> void:
 			#Roth.loaded_maps.erase(old_map)
 			#Roth.loaded_maps.append(new_map)
 			new_map.preview_map = old_map.preview_map
-			old_map.unload()
-			
+			old_map.unload(false)
 
 #endregion
 
