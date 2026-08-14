@@ -36,7 +36,7 @@ func update_dosbox_executable() -> void:
 	%DosboxExecutableEdit.editable = not %UseInstallDosboxCheckButton.button_pressed
 	%DosboxExecutableBrowseButton.disabled = %UseInstallDosboxCheckButton.button_pressed
 	if %UseInstallDosboxCheckButton.button_pressed:
-		%DosboxExecutableEdit.text = Roth.current_installation.dosbox_exe
+		%DosboxExecutableEdit.text = Roth.current_installation.dosbox_exe if Roth.current_installation else ""
 	else:
 		%DosboxExecutableEdit.text = Settings.settings.get("dosbox_settings", {}).get("dosbox_executable", "")
 

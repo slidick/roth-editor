@@ -13,6 +13,11 @@ metadata/_tab_index = 4
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=950336576]
 layout_mode = 2
 
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=575051771]
+layout_mode = 2
+text = "Normality"
+horizontal_alignment = 1
+
 [node name="InstallationsList" type="ItemList" parent="VBoxContainer" unique_id=463197793]
 unique_name_in_owner = true
 layout_mode = 2

@@ -68,6 +68,7 @@ visible = false
 layout_mode = 2
 
 [node name="NormalityContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="5" unique_id=123721110 instance=ExtResource("9_jcdax")]
+visible = false
 layout_mode = 2
 
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/SettingsList" to="." method="_on_settings_list_item_selected"]
