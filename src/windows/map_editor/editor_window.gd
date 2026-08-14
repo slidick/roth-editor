@@ -265,8 +265,6 @@ func load_map(map: Map) -> void:
 		sfx_node.add_child(mesh)
 	
 	
-	%Map2D.setup(map)
-	
 	var map_node := Map.MapNode3D.new()
 	map_node.ref = map
 	map_node.add_child(sectors_node)
@@ -307,6 +305,10 @@ func load_map(map: Map) -> void:
 	reload_skybox()
 	
 	add_to_undo_redo(map, "Map Opened")
+	
+	if not visible:
+		await _show()
+	%Map2D.setup(map)
 
 
 func reload_skybox() -> void:
@@ -341,8 +343,6 @@ func _on_map_loaded(map: Map) -> void:
 
 
 func _on_map_completely_loaded() -> void:
-	if not visible:
-		_show()
 	%Maps.get_child(%Maps.get_child_count() - 1).visible = true
 	tree_root.get_child(%Maps.get_child_count() - 1).set_button(0, 0, EYE_ICON)
 	%Maps.get_child(%Maps.get_child_count() - 1).process_mode = PROCESS_MODE_INHERIT
