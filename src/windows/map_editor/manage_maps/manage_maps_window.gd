@@ -76,7 +76,7 @@ func _on_settings_updated() -> void:
 		if "unassigned" in map_pack:
 			var idx: int = %MapPackList.add_item(map_pack.name)
 			%MapPackList.set_item_metadata(idx, map_pack)
-	if not selected_map_pack.is_empty():
+	if not selected_map_pack.is_empty() and len(selected_map_pack.maps) > 0:
 		select_map_pack(selected_map_pack)
 	elif %MapPackList.item_count > 0:
 		%MapPackList.select(0)
