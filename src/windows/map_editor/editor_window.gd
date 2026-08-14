@@ -333,6 +333,7 @@ func reload_skybox() -> void:
 		sky_image.flip_x()
 		var panorama := PanoramaSkyMaterial.new()
 		panorama.panorama = ImageTexture.create_from_image(sky_image)
+		panorama.filter = false
 		%WorldEnvironment.environment.sky.sky_material = panorama
 	else:
 		%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
@@ -486,6 +487,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if results[0] == false:
 				return
 			map.metadata = results[1]
+			reload_skybox()
 			Roth.editor_action.emit(map, "Change map metadata")
 		MapMenu.EditArray02:
 			if len(selected) != 1:
