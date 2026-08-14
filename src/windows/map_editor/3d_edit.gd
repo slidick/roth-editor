@@ -3,7 +3,9 @@ extends Node3D
 signal properties_copied
 
 var mouse_inside: bool = true
-var moused_over_resource: RefCounted
+var moused_over_resource: RefCounted = null
+var last_moused_over_resource: RefCounted = null
+var moused_over_mesh_index: int = -1
 var shift_switched:bool = false
 var selected_nodes: Array = []
 var has_focus: bool = false :
@@ -119,6 +121,56 @@ func _unhandled_input(event: InputEvent) -> void:
 			moused_over_resource.node.unhighlight()
 			moused_over_resource = null
 		update_selections()
+	if event.is_action_pressed("raise", false, true):
+		if moused_over_resource is Face:
+			if moused_over_resource != last_moused_over_resource and moused_over_resource.sector != last_moused_over_resource and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
+				%EditSectorFloorCeilingTimer.stop()
+				%EditSectorFloorCeilingTimer.timeout.emit()
+			moused_over_resource.sector.data.ceilingHeight += %RelativeAmountBox.value
+			owner.redraw([moused_over_resource.sector])
+			%EditSectorFloorCeilingTimer.start()
+			last_moused_over_resource = moused_over_resource
+		if moused_over_resource is Sector:
+			if moused_over_resource != last_moused_over_resource and last_moused_over_resource not in moused_over_resource.faces.map(func (fr: WeakRef) -> Face: return fr.get_ref()) and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
+				%EditSectorFloorCeilingTimer.stop()
+				%EditSectorFloorCeilingTimer.timeout.emit()
+			match moused_over_mesh_index:
+				0: # Floor
+					moused_over_resource.data.floorHeight += %RelativeAmountBox.value
+				1: # Ceiling
+					moused_over_resource.data.ceilingHeight += %RelativeAmountBox.value
+				2: # Platform Floor
+					moused_over_resource.platform.floorHeight += %RelativeAmountBox.value
+				3: # Platform Ceiling
+					moused_over_resource.platform.ceilingHeight += %RelativeAmountBox.value
+			owner.redraw([moused_over_resource])
+			%EditSectorFloorCeilingTimer.start()
+			last_moused_over_resource = moused_over_resource
+	if event.is_action_pressed("lower", false, true):
+		if moused_over_resource is Face:
+			if moused_over_resource != last_moused_over_resource and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
+				%EditSectorFloorCeilingTimer.stop()
+				%EditSectorFloorCeilingTimer.timeout.emit()
+			moused_over_resource.sector.data.ceilingHeight -= %RelativeAmountBox.value
+			owner.redraw([moused_over_resource.sector])
+			%EditSectorFloorCeilingTimer.start()
+			last_moused_over_resource = moused_over_resource
+		if moused_over_resource is Sector:
+			if moused_over_resource != last_moused_over_resource and last_moused_over_resource not in moused_over_resource.faces.map(func (fr: WeakRef) -> Face: return fr.get_ref()) and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
+				%EditSectorFloorCeilingTimer.stop()
+				%EditSectorFloorCeilingTimer.timeout.emit()
+			match moused_over_mesh_index:
+				0: # Floor
+					moused_over_resource.data.floorHeight -= %RelativeAmountBox.value
+				1: # Ceiling
+					moused_over_resource.data.ceilingHeight -= %RelativeAmountBox.value
+				2: # Platform Floor
+					moused_over_resource.platform.floorHeight -= %RelativeAmountBox.value
+				3: # Platform Ceiling
+					moused_over_resource.platform.ceilingHeight -= %RelativeAmountBox.value
+			owner.redraw([moused_over_resource])
+			%EditSectorFloorCeilingTimer.start()
+			last_moused_over_resource = moused_over_resource
 
 
 func _process(_delta: float) -> void:
@@ -165,6 +217,7 @@ func _process(_delta: float) -> void:
 				moused_over_resource.node.unhighlight()
 			moused_node_changed = true
 			moused_over_resource = result.collider.get_parent().ref
+			moused_over_mesh_index = result.collider.get_parent().get_index()
 			if moused_over_resource not in owner.selected_faces and (moused_over_resource not in owner.selected_sectors or len(owner.selected_faces) == 1) and moused_over_resource not in owner.selected_objects and moused_over_resource not in owner.selected_sfx:
 				var amount := 2
 				if Input.is_physical_key_pressed(KEY_SHIFT):
@@ -274,3 +327,7 @@ func deselect_all() -> void:
 	moused_over_resource = null
 	show_selection_highlight = true
 	owner.select_resource(null)
+
+
+func _on_edit_sector_floor_ceiling_timer_timeout() -> void:
+	Roth.editor_action.emit(last_moused_over_resource.map, "Edit Sector")

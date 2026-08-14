@@ -586,6 +586,10 @@ enabled = false
 [node name="Maps" type="Node3D" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="4" unique_id=1921772226]
 unique_name_in_owner = true
 
+[node name="EditSectorFloorCeilingTimer" type="Timer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" index="5" unique_id=127821088]
+unique_name_in_owner = true
+one_shot = true
+
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer" index="1" unique_id=1973835417]
 layout_mode = 2
 
@@ -3607,6 +3611,7 @@ item_1/id = 1
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_entered"]
 [connection signal="mouse_exited" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_mouse_exited"]
+[connection signal="timeout" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D/EditSectorFloorCeilingTimer" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer/SubViewport/Map3D" method="_on_edit_sector_floor_ceiling_timer_timeout"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/VBoxContainer/CountAndSizeContainer/VBoxContainer/RecalculateButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/VBoxContainer/CountAndSizeContainer" method="_on_recalculate_button_pressed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/VBoxContainer/LightingFolder/VBoxContainer/FlatLightingCheckBox" to="." method="_on_flat_lighting_check_box_toggled"]
 [connection signal="mouse_entered" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D" to="." method="_on_sub_viewport_container_2d_mouse_entered"]

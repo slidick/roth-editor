@@ -60,6 +60,7 @@ func _ready() -> void:
 	%EditSectorTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 	%EditObjectTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 	%EditSFXTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
+	%EditSectorFloorCeilingTimer.wait_time = Roth.SEQUENTIAL_UNDO_TIMEOUT
 	
 	%FlatLightingCheckBox.set_pressed_no_signal(not Settings.settings.get("options", {}).get("shaded_lighting", true))
 	%ShadedLightingCheckBox.set_pressed_no_signal(Settings.settings.get("options", {}).get("shaded_lighting", true))
