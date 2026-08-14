@@ -378,7 +378,8 @@ func _on_sub_viewport_container_focus_exited() -> void:
 
 
 func _on_sub_viewport_container_mouse_entered() -> void:
-	%SubViewportContainer.grab_focus()
+	if not Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		%SubViewportContainer.grab_focus()
 
 
 func _on_sub_viewport_container_mouse_exited() -> void:

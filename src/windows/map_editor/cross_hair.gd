@@ -4,7 +4,7 @@ var _show_crosshair: bool = true
 
 # TODO: Fix lazy hack. Maybe setup a global signal to use when changing mouse mode.
 func _process(_delta: float) -> void:
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and _show_crosshair:
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and _show_crosshair and %Camera3D.mouse_looking:
 		show()
 	else:
 		hide()

@@ -18,6 +18,7 @@ extends Camera3D
 
 @export var has_focus: bool = false
 
+var mouse_looking: bool = false
 
 @onready var _velocity: float = default_velocity
 
@@ -44,11 +45,12 @@ func _input(event: InputEvent) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_VISIBLE)
 		get_viewport().warp_mouse(Vector2(get_viewport().size / 2))
 		%SubViewportContainer.grab_focus()
+		mouse_looking = not mouse_looking
 	
 	if not current or not has_focus:
 		return
 	
-	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED and mouse_looking:
 		if event is InputEventMouseMotion:
 			rotation.y -= event.relative.x / 1000 * sensitivity
 			rotation.x -= event.relative.y / 1000 * sensitivity
@@ -60,6 +62,10 @@ func _input(event: InputEvent) -> void:
 			MOUSE_BUTTON_RIGHT:
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if event.pressed else Input.MOUSE_MODE_VISIBLE)
 				get_viewport().warp_mouse(Vector2(get_viewport().size / 2))
+				if event.pressed:
+					mouse_looking = true
+				else:
+					mouse_looking = false
 			MOUSE_BUTTON_WHEEL_UP: # increase fly velocity
 				_velocity = clamp(_velocity * speed_scale, min_speed, max_speed)
 			MOUSE_BUTTON_WHEEL_DOWN: # decrease fly velocity
