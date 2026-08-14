@@ -80,5 +80,5 @@ func load_maps(maps_array: Array) -> void:
 	print("Maps loaded in: %.2fs" % ((Time.get_ticks_msec()-start_time)/1000.0))
 
 
-func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: Dictionary = {}) -> void:
+func test_run_maps(_map_pack: Dictionary, _starting_map: Map = null, _player_data: Dictionary = {}) -> void:
 	pass
