@@ -49,7 +49,7 @@ func _ready() -> void:
 	%Shortcuts.set_item_shortcut(Shortcuts.Run, shortcut, true)
 	%Options.set_item_checked(Options.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
 	%Options.set_item_checked(Options.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
-	%Options.set_item_checked(Options.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", true))
+	%Options.set_item_checked(Options.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", false))
 	%Options.set_item_checked(Options.ShowSky, Settings.settings.get("options", {}).get("show_sky", true))
 
 
