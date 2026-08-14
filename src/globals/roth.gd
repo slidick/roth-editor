@@ -235,6 +235,17 @@ func add_installation(directory: String) -> void:
 	MapPack.init_vanilla(installation)
 	if current_installation == null:
 		current_installation = installation
+	var unassigned_map_pack: Dictionary = MapPack.get_unassigned_pack()
+	if "invalid" in unassigned_map_pack.dbase_info:
+		unassigned_map_pack.dbase_info = DBasePack.get_first_vanilla()
+	if "invalid" in unassigned_map_pack.das2_info:
+		unassigned_map_pack.das2_info = DASPack.get_first_vanilla_das2_pack()
+	if "invalid" in unassigned_map_pack.sfx_info:
+		unassigned_map_pack.sfx_info = SFXPack.get_first_vanilla()
+	if "invalid" in unassigned_map_pack.backdrop_info:
+		unassigned_map_pack.backdrop_info = BackdropPack.get_first_vanilla()
+	if "invalid" in unassigned_map_pack.icon_info:
+		unassigned_map_pack.icon_info = IconPack.get_first_vanilla()
 	settings_updated.emit()
 
 
