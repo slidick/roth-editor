@@ -31,6 +31,8 @@ driver/mix_rate=22050
 
 Settings="*uid://cuo7ntpqjgbk"
 Roth="*res://src/globals/roth.gd"
+RothAudio="*uid://dgsohhq5wlcxx"
+Normality="*uid://b3iwms3nucj2q"
 Dialog="*res://src/windows/dialog_window.tscn"
 Console="*res://src/windows/console_window.tscn"
 
