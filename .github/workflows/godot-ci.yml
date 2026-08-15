@@ -1,102 +1,36 @@
-name: "godot-ci export"
+name: godot-ci
 on: push
 
-env:
-  GODOT_VERSION: 4.6.3
-  EXPORT_NAME: RotH_Editor
-  PROJECT_PATH: "."
-
 jobs:
-  export-linux:
-    name: Linux Export
-    runs-on: ubuntu-24.04
-    container:
-      image: barichello/godot-ci:4.6.3
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          lfs: true
-          submodules: recursive
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/export_templates/
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
-          if [ "${{ github.ref_type }}" = "tag" ]; then
-            echo "VERSION="${{ github.ref_name }}"" >> "$GITHUB_ENV"
-            awk 'NR == 2 {flag=1} flag && /^---/{exit} NR > 1' CHANGELOG.md > RELEASE_NOTES.txt
-          else
-            echo "VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> "$GITHUB_ENV"
-          fi
-      - name: Linux Build
-        run: |
-          mkdir -v -p build/linux
-          EXPORT_DIR="$(readlink -f build)"
-          cd $PROJECT_PATH
-          sed -i 's/config\/version="[^"]*"/config\/version="${{env.VERSION}}"/g' project.godot
-          godot --headless --verbose --export-debug "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{env.EXPORT_NAME}}-${{env.VERSION}}_linux
-          path: build/linux
-      - name: Package Release
-        if: github.ref_type == 'tag'
-        run: |
-          cd build/linux
-          tar -czf ../../${{env.EXPORT_NAME}}-${{env.VERSION}}_linux.tar.gz *
-      - name: Create Release
-        uses: softprops/action-gh-release@v3
-        if: github.ref_type == 'tag'
-        with:
-          name: ${{env.EXPORT_NAME}}-${{env.VERSION}}
-          body_path: RELEASE_NOTES.txt
-          files: ${{env.EXPORT_NAME}}-${{env.VERSION}}_linux.tar.gz
+  linux:
+    uses: $/.github/workflows/export-godot-project.yml
+    with:
+      godot-version: 4.7.1
+      godot-sha256: 32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde
+      linux-template-sha256: 0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808
+      windows-template-sha256: 5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752
+      macos-template-sha256: f9de131f5ed0210924b9b156aea43b1e20fd720dd97690e151081a65c0937a3e
+      export-name: RotH_Editor
+      export-type: linux
 
-  export-windows:
-    name: Windows Export
-    runs-on: ubuntu-24.04
-    container:
-      image: barichello/godot-ci:4.6.3
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          lfs: true
-          submodules: recursive
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/export_templates/
-          mkdir -v -p ~/.config/
-          mv /root/.config/godot ~/.config/godot
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
-          if [ "${{ github.ref_type }}" = "tag" ]; then
-            echo "VERSION="${{ github.ref_name }}"" >> "$GITHUB_ENV"
-            awk 'NR == 2 {flag=1} flag && /^---/{exit} NR > 1' CHANGELOG.md > RELEASE_NOTES.txt
-          else
-            echo "VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> "$GITHUB_ENV"
-          fi
-      - name: Windows Build
-        run: |
-          mkdir -v -p build/windows
-          EXPORT_DIR="$(readlink -f build)"
-          cd $PROJECT_PATH
-          sed -i 's/config\/version="[^"]*"/config\/version="${{env.VERSION}}"/g' project.godot
-          godot --headless --verbose --export-debug "Windows Desktop" "$EXPORT_DIR/windows/$EXPORT_NAME.exe"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{env.EXPORT_NAME}}-${{env.VERSION}}_windows
-          path: build/windows
-      - name: Package Release
-        if: github.ref_type == 'tag'
-        run: |
-          cd build/windows
-          zip ../../${{env.EXPORT_NAME}}-${{env.VERSION}}_windows.zip *
-      - name: Create Release
-        uses: softprops/action-gh-release@v3
-        if: github.ref_type == 'tag'
-        with:
-          name: ${{env.EXPORT_NAME}}-${{env.VERSION}}
-          body_path: RELEASE_NOTES.txt
-          files: ${{env.EXPORT_NAME}}-${{env.VERSION}}_windows.zip
+  windows:
+    uses: $/.github/workflows/export-godot-project.yml
+    with:
+      godot-version: 4.7.1
+      godot-sha256: 32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde
+      linux-template-sha256: 0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808
+      windows-template-sha256: 5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752
+      macos-template-sha256: f9de131f5ed0210924b9b156aea43b1e20fd720dd97690e151081a65c0937a3e
+      export-name: RotH_Editor
+      export-type: windows
+
+  macos:
+    uses: $/.github/workflows/export-godot-project.yml
+    with:
+      godot-version: 4.7.1
+      godot-sha256: 32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde
+      linux-template-sha256: 0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808
+      windows-template-sha256: 5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752
+      macos-template-sha256: f9de131f5ed0210924b9b156aea43b1e20fd720dd97690e151081a65c0937a3e
+      export-name: RotH_Editor
+      export-type: macos

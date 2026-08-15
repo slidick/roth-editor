@@ -1,0 +1,164 @@
+name: Export Godot Project
+
+on:
+  workflow_call:
+    inputs:
+      godot-version:
+        required: true
+        type: string
+      godot-sha256:
+        required: true
+        type: string
+      linux-template-sha256:
+        required: true
+        type: string
+      windows-template-sha256:
+        required: true
+        type: string
+      macos-template-sha256:
+        required: true
+        type: string
+      export-name:
+        required: true
+        type: string
+      export-type:
+        required: true
+        type: string
+
+jobs:
+  godot-export:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          lfs: true
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip git
+
+      - name: Cache Godot
+        id: cache-engine
+        uses: actions/cache@v6
+        with:
+          path: godot/
+          key: godot-engine-${{ runner.os }}-${{ inputs.godot-version }}
+
+      - name: Install Godot
+        if: ${{ steps.cache-engine.outputs.cache-hit != 'true' }}
+        run: |
+          mkdir -v godot
+          curl -L "https://downloads.godotengine.org/?version=${{ inputs.godot-version }}&flavor=stable&slug=linux.x86_64.zip&platform=linux.64" -o godot/godot.zip
+          cd godot/
+          unzip godot.zip
+          rm godot.zip
+
+      - name: Check Godot checksum
+        run: |
+          ACTUAL="$(sha256sum godot/Godot_v${{ inputs.godot-version }}-stable_linux.x86_64 | awk '{print $1}')"
+          if [ "$ACTUAL" != "${{ inputs.godot-sha256 }}" ]; then
+            echo "Godot engine checksum incorrect!"
+            exit 1
+          fi
+
+      - name: Cache export templates
+        id: cache-templates
+        uses: actions/cache@v6
+        with:
+          path: templates/
+          key: godot-templates-${{ runner.os }}-${{ inputs.godot-version }}
+
+      - name: Download export templates
+        if: ${{ steps.cache-templates.outputs.cache-hit != 'true' }}
+        run: |
+          mkdir -v templates
+          curl -L "https://downloads.godotengine.org/?version=${{ inputs.godot-version }}&flavor=stable&slug=export_templates.tpz&platform=templates" -o templates/templates.zip
+          unzip templates/templates.zip
+          rm templates/templates.zip
+
+      - name: Check template checksums
+        run: |
+          ACTUAL="$(sha256sum templates/linux_debug.x86_64 | awk '{print $1}')"
+          if [ "$ACTUAL" != "${{ inputs.linux-template-sha256 }}" ]; then
+            echo "Linux export template checksum incorrect!"
+            exit 1
+          fi
+          ACTUAL="$(sha256sum templates/windows_debug_x86_64.exe | awk '{print $1}')"
+          if [ "$ACTUAL" != "${{ inputs.windows-template-sha256 }}" ]; then
+            echo "Windows export template checksum incorrect!"
+            exit 1
+          fi
+          ACTUAL="$(sha256sum templates/macos.zip | awk '{print $1}')"
+          if [ "$ACTUAL" != "${{ inputs.macos-template-sha256 }}" ]; then
+            echo "macOS export template checksum incorrect!"
+            exit 1
+          fi
+
+      - name: Install export templates
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
+          cp templates/linux_debug.x86_64 ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
+          cp templates/windows_debug_x86_64.exe ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
+          cp templates/macos.zip ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
+
+      - name: Get version and release notes
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "VERSION="${{ github.ref_name }}"" >> "$GITHUB_ENV"
+            awk 'NR == 2 {flag=1} flag && /^---/{exit} NR > 1' CHANGELOG.md > RELEASE_NOTES.txt
+          else
+            echo "VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> "$GITHUB_ENV"
+          fi
+
+      - name: Update version
+        run: |
+          sed -i 's/config\/version="[^"]*"/config\/version="${{ env.VERSION }}"/g' project.godot
+
+      - name: Build project
+        run: |
+          mkdir -v -p build/${{ inputs.export-type }}
+          if [ "${{ inputs.export-type }}" = "linux" ]; then
+            EXTENSION=x86_64
+          elif [ "${{ inputs.export-type }}" = "windows" ]; then
+            EXTENSION=exe
+          else
+            EXTENSION=zip
+          fi
+          godot/Godot_v${{ inputs.godot-version }}-stable_linux.x86_64 --headless --verbose --export-debug "${{ inputs.export-type }}" "build/${{ inputs.export-type }}/${{ inputs.export-name }}.${EXTENSION}"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.export-name }}-${{ env.VERSION }}_${{ inputs.export-type }}
+          path: build/${{ inputs.export-type }}
+
+      - name: Package Release
+        if: github.ref_type == 'tag'
+        run: |
+          cd build/${{ inputs.export-type }}
+          if [ "${{ inputs.export-type }}" = "linux" ]; then
+            EXTENSION=tar.gz
+            echo "EXTENSION=tar.gz" >> "$GITHUB_ENV"
+          else
+            EXTENSION=zip
+            echo "EXTENSION=zip" >> "$GITHUB_ENV"
+          fi
+          if [ "${{ inputs.export-type }}" = "linux" ]; then
+            tar -czf ../../${{ inputs.export-name }}-${VERSION}_${{ inputs.export-type }}.tar.gz *
+          elif [ "${{ inputs.export-type }}" = "windows" ]; then
+            zip ../../${{ inputs.export-name }}-${VERSION}_${{ inputs.export-type }}.zip *
+          else
+            mv ${{ inputs.export-name }}.zip ../../${{ inputs.export-name }}-${VERSION}_${{ inputs.export-type }}.zip
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
+        with:
+          name: ${{ inputs.export-name }}-${{ env.VERSION }}
+          body_path: RELEASE_NOTES.txt
+          files: ${{ inputs.export-name }}-${{ env.VERSION }}_${{ inputs.export-type }}.${{ env.EXTENSION }}
+
