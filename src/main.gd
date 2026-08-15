@@ -74,13 +74,14 @@ func _notification(what: int) -> void:
 			Console.print("Quitting...")
 			for map_pack: Dictionary in MapPack.map_packs:
 				for map: Map in map_pack.maps:
-			#for map: Map in Roth.maps:
 					if map.editable_map:
 						map.editable_map.unload()
 					map.unload()
-			#for map: Variant in Roth.loaded_maps:
-				#if map:
-					#map.unload()
+			for map_pack: Dictionary in NormPack.map_packs:
+				for map: Map in map_pack.maps:
+					if map.editable_map:
+						map.editable_map.unload()
+					map.unload()
 			get_tree().quit()
 
 
