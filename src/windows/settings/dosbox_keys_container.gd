@@ -204,7 +204,7 @@ const SLIDICKS_CONTROLS_PRESET: Dictionary = {
 	"toggle_textures": ["%d" % SDL.SDLK_m],
 	"redraw_screen": ["%d" % SDL.SDLK_y],
 	"reload_after_death": ["%d" % SDL.SDLK_c],
-	"hold_run": ["%d" % SDL.SDLK_LSHIFT],
+	"hold_run": ["%d" % SDL.SDLK_RSHIFT],
 	"map_warp": ["%d" % SDL.SDLK_SEMICOLON],
 	"map_overlay": ["%d" % SDL.SDLK_l],
 	
