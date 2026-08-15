@@ -164,6 +164,10 @@ func unload(unload_all: bool = true) -> void:
 		preview_map.editable_map = null
 
 
+func get_map_preview() -> Dictionary:
+	return Raw.get_preview(map_info.filepath, "normality" in map_info)
+
+
 func delete_map(p_delete_backups: bool = false) -> void:
 	if FileAccess.file_exists(map_info.filepath):
 		DirAccess.remove_absolute(map_info.filepath)

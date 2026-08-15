@@ -255,6 +255,104 @@ static func parse_file(filepath: String, normality: bool) -> Dictionary:
 	return map
 
 
+static func get_preview(filepath: String, normality: bool) -> Dictionary:
+	var file: FileAccess = FileAccess.open(filepath, FileAccess.READ)
+	if not file:
+		Console.print("Error: File not found: %s" % filepath)
+		return {}
+	
+	var header: Dictionary = {}
+	if normality:
+		header = Parser.parse_section(file, NORM_HEADER)
+	else:
+		header = Parser.parse_section(file, HEADER)
+	
+	var sectors := []
+	for i in range(header["sectorCount"]):
+		var sector: Dictionary = Parser.parse_section(file, SECTOR)
+		sectors.append({
+			"floorHeight": sector.floorHeight,
+			"facesCount": sector.facesCount,
+			"firstFaceOffset": sector.firstFaceOffset
+		})
+	
+	var face_count: int = file.get_16()
+	var faces := []
+	var faces_offset_map := {}
+	for i in range(face_count):
+		faces_offset_map[file.get_position()] = i
+		faces.append(Parser.parse_section(file, FACE))
+	
+	file.seek(header["verticesOffset"])
+	var vertices_header := Parser.parse_section(file, VERTICES_HEADER)
+	var vertices := []
+	var vertices_relative_offset_map := {}
+	for i in range(vertices_header["verticesCount"]):
+		vertices_relative_offset_map[file.get_position() - header["verticesOffset"]] = i
+		var vertex := Parser.parse_section(file, VERTEX)
+		vertex.x *= -1
+		vertex.erase("unk0x00")
+		vertex.erase("unk0x02")
+		vertex.erase("unk0x04")
+		vertex.erase("unk0x06")
+		vertices.append(vertex)
+	
+	var command_header: Dictionary = Parser.parse_section(file, COMMAND_HEADER)
+	
+	file.seek(header["verticesOffset"] + header["verticesSectionSize"] + header["commandSectionSize"] + header["section7Size"])
+	var object_start_position: int = file.get_position()
+	var current_position: int = file.get_position()
+	var objects_count: int = 0
+	for i in range(header["sectorCount"]):
+		file.seek(current_position)
+		current_position += 0x02
+		
+		var relative_offset: int = file.get_16()
+		if relative_offset == 0x0000:
+			continue
+		file.seek(object_start_position + relative_offset)
+		var objects_container := Parser.parse_section(file, OBJECTS_CONTAINER)
+		objects_count += objects_container.count
+	
+	file.close()
+	
+	
+	for i in range(len(sectors)):
+		var sector: Dictionary = sectors[i]
+		for j in range(sector["facesCount"]):
+			var face_index: int = faces_offset_map[sector["firstFaceOffset"] + 0x0C * j]
+			faces[face_index]["sector"] = sector
+		sector.erase("facesCount")
+		sector.erase("firstFaceOffset")
+	
+	for face: Dictionary in faces:
+		face["v1"] = vertices[vertices_relative_offset_map[face["vertexOffset01"]]]
+		face["v2"] = vertices[vertices_relative_offset_map[face["vertexOffset02"]]]
+		
+		if face["sisterFaceOffset"] != 0xFFFF:
+			if face["sisterFaceOffset"] == 0x0000:
+				print("Found offset of 0x00. Skipping.")
+				continue
+			face["sister"] = faces[faces_offset_map[face["sisterFaceOffset"]]]
+		
+		face.erase("vertexOffset01")
+		face.erase("vertexOffset02")
+		face.erase("textureMapOffset")
+		face.erase("sisterFaceOffset")
+		face.erase("sectorOffset")
+		face.erase("addCollision")
+		face.erase("firstFaceOffset")
+	
+	
+	return {
+		faces = faces,
+		sector_count = len(sectors),
+		vertices_count = len(vertices),
+		objects_count = objects_count,
+		commands_count = command_header.commandCount
+	}
+
+
 static func parse(file: FileAccess, normality: bool) -> Dictionary:
 	# Header
 	# -------------
