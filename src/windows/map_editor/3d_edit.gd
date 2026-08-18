@@ -121,7 +121,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			moused_over_resource.node.unhighlight()
 			moused_over_resource = null
 		update_selections()
-	if event.is_action_pressed("raise", false, true):
+	if event.is_action_pressed("raise_floor_ceiling", false, true):
 		if moused_over_resource is Face:
 			if moused_over_resource != last_moused_over_resource and moused_over_resource.sector != last_moused_over_resource and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
 				%EditSectorFloorCeilingTimer.stop()
@@ -146,7 +146,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			owner.redraw([moused_over_resource])
 			%EditSectorFloorCeilingTimer.start()
 			last_moused_over_resource = moused_over_resource
-	if event.is_action_pressed("lower", false, true):
+	if event.is_action_pressed("lower_floor_ceiling", false, true):
 		if moused_over_resource is Face:
 			if moused_over_resource != last_moused_over_resource and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
 				%EditSectorFloorCeilingTimer.stop()

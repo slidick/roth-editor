@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://2pgkmy7djuv4" path="res://src/windows/settings/dosbox_keys_container.tscn" id="8_jcdax"]
 [ext_resource type="PackedScene" uid="uid://crhommatho1p7" path="res://src/windows/settings/history_container.tscn" id="8_ywjcv"]
 [ext_resource type="PackedScene" uid="uid://dyp6o41ncyedi" path="res://src/windows/settings/normality_container.tscn" id="9_jcdax"]
+[ext_resource type="PackedScene" uid="uid://c8d8wlq21lsbd" path="res://src/windows/settings/editor_hotkeys_container.tscn" id="10_jhixs"]
+[ext_resource type="PackedScene" uid="uid://c1ij8mqmgpvau" path="res://src/windows/settings/event_configuration_window.tscn" id="11_qhkyt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o4xq7"]
 
@@ -34,41 +36,59 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-item_count = 5
-item_0/text = "Installations"
-item_1/text = "Dosbox"
-item_2/text = "Dosbox - Keys"
-item_3/text = "History"
-item_4/text = "Normality"
+item_count = 1
 
 [node name="TabContainer" type="TabContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer" index="1" unique_id=1432676521]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_o4xq7")
-current_tab = 0
+current_tab = 5
 tabs_visible = false
 
-[node name="InstallationsContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="1" unique_id=1326368766 instance=ExtResource("4_hggqv")]
-visible = true
+[node name="Installations" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="1" unique_id=1326368766 instance=ExtResource("4_hggqv")]
 layout_mode = 2
 
-[node name="DosboxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="2" unique_id=43770463 node_paths=PackedStringArray("settings_window") instance=ExtResource("5_njcte")]
+[node name="Dosbox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="2" unique_id=43770463 node_paths=PackedStringArray("settings_window") instance=ExtResource("5_njcte")]
 visible = false
 layout_mode = 2
 settings_window = NodePath("../../../../../../..")
 
-[node name="DosboxKeysContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="3" unique_id=1947084000 instance=ExtResource("8_jcdax")]
+[node name="Dosbox - Controls" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="3" unique_id=1947084000 instance=ExtResource("8_jcdax")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="HistoryContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="4" unique_id=652967712 instance=ExtResource("8_ywjcv")]
+[node name="History" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="4" unique_id=652967712 instance=ExtResource("8_ywjcv")]
 visible = false
 layout_mode = 2
 
-[node name="NormalityContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="5" unique_id=123721110 instance=ExtResource("9_jcdax")]
+[node name="Normality" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="5" unique_id=123721110 instance=ExtResource("9_jcdax")]
 visible = false
 layout_mode = 2
+
+[node name="Editor Hotkeys" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="6" unique_id=1903957844 node_paths=PackedStringArray("event_window") instance=ExtResource("10_jhixs")]
+layout_mode = 2
+event_window = NodePath("../../../../../../../Subwindows/EventConfiguration")
+metadata/_tab_index = 5
+
+[node name="Subwindows" type="Control" parent="." index="2" unique_id=1964488133]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="EventConfiguration" parent="Subwindows" index="0" unique_id=1856255421 instance=ExtResource("11_qhkyt")]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -475.0
+offset_top = -275.0
+offset_right = 475.0
+offset_bottom = 275.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/SettingsList" to="." method="_on_settings_list_item_selected"]

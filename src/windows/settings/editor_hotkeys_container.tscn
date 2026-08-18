@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://c8d8wlq21lsbd"]
+
+[ext_resource type="Script" uid="uid://c1lxe71g1gvpc" path="res://src/windows/settings/editor_hotkeys_container.gd" id="1_rodsu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bkswr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b350a"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1jec1"]
+
+[node name="EditorHotkeysContainer" type="MarginContainer" unique_id=1903957844]
+offset_right = 758.0
+offset_bottom = 464.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+script = ExtResource("1_rodsu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1821881048]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=648770028]
+layout_mode = 2
+
+[node name="FilterNameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1217166234]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter by Name"
+clear_button_enabled = true
+
+[node name="FilterEventEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1826404288]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter by Event"
+context_menu_enabled = false
+clear_button_enabled = true
+middle_mouse_paste_enabled = false
+selecting_enabled = false
+
+[node name="ClearButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=364918934]
+layout_mode = 2
+text = "Clear Filters"
+
+[node name="Tree" type="Tree" parent="VBoxContainer" unique_id=451590327]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.728823, 0.72882146, 0.7288223, 1)
+theme_override_colors/parent_hl_line_color = Color(1, 1, 1, 1)
+theme_override_constants/draw_guides = 0
+theme_override_constants/draw_relationship_lines = 1
+theme_override_styles/hovered = SubResource("StyleBoxEmpty_bkswr")
+theme_override_styles/hovered_selected = SubResource("StyleBoxEmpty_b350a")
+theme_override_styles/selected = SubResource("StyleBoxEmpty_1jec1")
+columns = 2
+column_titles_visible = true
+hide_root = true
+
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/FilterNameEdit" to="." method="_on_filter_name_edit_text_changed"]
+[connection signal="editing_toggled" from="VBoxContainer/HBoxContainer/FilterEventEdit" to="." method="_on_filter_event_edit_editing_toggled"]
+[connection signal="gui_input" from="VBoxContainer/HBoxContainer/FilterEventEdit" to="." method="_on_filter_event_edit_gui_input"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/FilterEventEdit" to="." method="_on_filter_event_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
+[connection signal="button_clicked" from="VBoxContainer/Tree" to="." method="_on_tree_button_clicked"]
+[connection signal="item_activated" from="VBoxContainer/Tree" to="." method="_on_tree_item_activated"]

@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://c1ij8mqmgpvau"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_aucuh"]
+[ext_resource type="Script" uid="uid://bqjuw7n3lx6yo" path="res://src/windows/settings/event_configuration_window.gd" id="2_457bs"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_cekoq"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_i7qiw"]
+
+[node name="EventConfigurationWindow" unique_id=452268762 instance=ExtResource("1_aucuh")]
+offset_right = 900.0
+offset_bottom = 550.0
+theme = ExtResource("2_cekoq")
+script = ExtResource("2_457bs")
+exclusive = true
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_i7qiw")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=865544972]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1756960545]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="KeyLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1431032245]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+
+[node name="EventEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=891371125]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Filter by Event"
+clear_button_enabled = true
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=1608902845]
+visible = false
+layout_mode = 2
+
+[node name="FilterEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="3" unique_id=1531166185]
+visible = false
+layout_mode = 2
+placeholder_text = "Filter Inputs"
+
+[node name="Tree" type="Tree" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="4" unique_id=2051014804]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="5" unique_id=1089713921]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="6" unique_id=79960690]
+visible = false
+layout_mode = 2
+
+[node name="AltCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1184391861]
+layout_mode = 2
+text = "Alt"
+
+[node name="ShiftCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=329297965]
+layout_mode = 2
+text = "Shift"
+
+[node name="CtrlCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="2" unique_id=1138440339]
+layout_mode = 2
+text = "Ctrl"
+
+[node name="MetaCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="3" unique_id=926749082]
+layout_mode = 2
+text = "Meta"
+
+[node name="VSeparator" type="VSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="4" unique_id=387998019]
+layout_mode = 2
+
+[node name="AutoCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="5" unique_id=1641460432]
+layout_mode = 2
+text = "Command / Control (auto)"
+
+[node name="KeyTypeOption" type="OptionButton" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="7" unique_id=521007863]
+visible = false
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Keycode (Latin Equivalent)"
+popup/item_0/id = 0
+popup/item_1/text = "Physical Keycode (Position on US QUERTY Keyboard)"
+popup/item_1/id = 1
+popup/item_2/text = "Key Label (Unicode, Case-Insensitive)"
+popup/item_2/id = 2
+
+[node name="ErrorLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="8" unique_id=1208386651]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="9" unique_id=80835151]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1883169379]
+custom_minimum_size = Vector2(120, 35)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Cancel"
+
+[node name="SaveButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1791876596]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 35)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "OK"
+
+[connection signal="editing_toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/EventEdit" to="." method="_on_event_edit_editing_toggled"]
+[connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/EventEdit" to="." method="_on_event_edit_gui_input"]
+[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/FilterEdit" to="." method="_on_filter_edit_text_changed"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/AltCheckBox" to="." method="_on_alt_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ShiftCheckBox" to="." method="_on_shift_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CtrlCheckBox" to="." method="_on_ctrl_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/MetaCheckBox" to="." method="_on_meta_check_box_toggled"]
+[connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/AutoCheckBox" to="." method="_on_auto_check_box_toggled"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/KeyTypeOption" to="." method="_on_key_type_option_item_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
