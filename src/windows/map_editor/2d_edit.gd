@@ -453,6 +453,7 @@ func handle_object_mode_event(event: InputEvent) -> void:
 			for object: ObjectRoth in owner.selected_objects:
 				object.node_2d.update_position()
 			%EditObjectContainer.update_selections()
+			owner.redraw(owner.selected_objects)
 			Roth.editor_action.emit(map, "Rotate Object%s" % ("s" if len(owner.selected_objects) > 1 else ""))
 	if holding_alt and event is InputEventMouseMotion and not owner.selected_objects.is_empty():
 		var offset: Vector2 = (DisplayServer.mouse_get_position() - mouse_rotation_position)
