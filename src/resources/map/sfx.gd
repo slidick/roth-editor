@@ -76,7 +76,7 @@ func _initialize_mesh() -> void:
 	material.albedo_color = Color.ORANGE_RED
 	mesh_instance.material_override = material
 	var sector_floor_height:int = map.get_sector_floor_height_from_vertex(Vector2(-data.posX, data.posY))
-	mesh_instance.position = Vector3(
+	node.position = Vector3(
 			-data.posX / Roth.SCALE_3D_WORLD,
 			sector_floor_height / Roth.SCALE_3D_WORLD,
 			data.posY / Roth.SCALE_3D_WORLD,
@@ -255,11 +255,62 @@ class SFXNode3D extends Node3D:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
 	func select() -> void:
-		for child: MeshInstance3D in get_children():
-			child.material_overlay = Roth.SELECTED_MATERIAL
+		for i in range(get_child_count()):
+			if get_child(i).mesh is SphereMesh:
+				get_child(i).material_overlay = Roth.SELECTED_MATERIAL
+		if Settings.settings.get("options", {}).get("show_3d_sfx_zone", true):
+			var cylinder_mesh := CylinderMesh.new()
+			cylinder_mesh.top_radius = ref.data.audibleRadius / Roth.SCALE_3D_WORLD
+			cylinder_mesh.bottom_radius = ref.data.audibleRadius / Roth.SCALE_3D_WORLD
+			cylinder_mesh.cap_top = false
+			cylinder_mesh.cap_bottom = false
+			cylinder_mesh.height = 500
+			var mesh_instance := MeshInstance3D.new()
+			mesh_instance.mesh = cylinder_mesh
+			var material := StandardMaterial3D.new()
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			material.albedo_color = Color.ORANGE_RED
+			material.albedo_color.a = 0.2
+			material.cull_mode = BaseMaterial3D.CULL_DISABLED
+			mesh_instance.material_override = material
+			add_child(mesh_instance)
+			if ref.data.zoneIndex > 0:
+				if len(ref.map.sfx_zones) < ref.data.zoneIndex:
+					return
+				var zone_data: Dictionary = ref.map.sfx_zones[ref.data.zoneIndex-1]
+				for i in range(1, zone_data.zoneCount+1):
+					var x: float = -zone_data["zone%dXBoundUpper" % i] / Roth.SCALE_3D_WORLD
+					var y: float = zone_data["zone%dYBoundLower" % i] / Roth.SCALE_3D_WORLD
+					var length_x: float = (zone_data["zone%dXBoundUpper" % i] - zone_data["zone%dXBoundLower" % i]) / Roth.SCALE_3D_WORLD
+					var length_y: float = (zone_data["zone%dYBoundUpper" % i] - zone_data["zone%dYBoundLower" % i]) / Roth.SCALE_3D_WORLD
+					var zone_flags: int = zone_data["zone%dFlags" % i]
+					var invert_zone: bool = (zone_flags & (1<<0)) > 0
+					var rect_mesh := BoxMesh.new()
+					rect_mesh.size = Vector3(length_x, 500, length_y)
+					var mat := StandardMaterial3D.new()
+					mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+					mat.render_priority = 2
+					mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+					mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+					mat.grow = true
+					mat.grow_amount = 0.001
+					if invert_zone:
+						mat.albedo_color = Color.CRIMSON
+					else:
+						mat.albedo_color = Color.SEA_GREEN
+					mat.albedo_color.a = .7
+					var mesh_inst := MeshInstance3D.new()
+					mesh_inst.mesh = rect_mesh
+					mesh_inst.material_override = mat
+					add_child(mesh_inst)
+					mesh_inst.position = Vector3((x+x+length_x)/2, 0, ((y+y+length_y))/2)
 	func deselect() -> void:
-		for child: MeshInstance3D in get_children():
-			child.material_overlay = null
+		for i in range(get_child_count()):
+			if get_child(i).mesh is SphereMesh:
+				get_child(i).material_overlay = null
+			else:
+				get_child(i).queue_free()
 
 
 class SFXMesh3D extends MeshInstance3D:

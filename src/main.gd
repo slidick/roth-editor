@@ -17,7 +17,8 @@ enum Main {
 
 enum Options {
 	ConcaveSectors,
-	SFXZones,
+	SFXZone3D,
+	SFXZones2D,
 	MousePoint,
 	ShowSky,
 	Sep0,
@@ -48,7 +49,8 @@ func _ready() -> void:
 	shortcut.events.append(input)
 	%Shortcuts.set_item_shortcut(Shortcuts.Run, shortcut, true)
 	%Options.set_item_checked(Options.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
-	%Options.set_item_checked(Options.SFXZones, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
+	%Options.set_item_checked(Options.SFXZone3D, Settings.settings.get("options", {}).get("show_3d_sfx_zone", true))
+	%Options.set_item_checked(Options.SFXZones2D, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
 	%Options.set_item_checked(Options.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", false))
 	%Options.set_item_checked(Options.ShowSky, Settings.settings.get("options", {}).get("show_sky", true))
 
@@ -189,10 +191,17 @@ func _on_options_index_pressed(index: int) -> void:
 			var map_2d: Node = find_child("Map2D", true, false)
 			if map_2d:
 				map_2d.queue_redraw()
-		Options.SFXZones:
-			var checked: bool = not %Options.is_item_checked(Options.SFXZones)
+		Options.SFXZone3D:
+			var checked: bool = not %Options.is_item_checked(Options.SFXZone3D)
+			Settings.update_settings("options", {"show_3d_sfx_zone": checked })
+			%Options.set_item_checked(Options.SFXZone3D, checked)
+			var map_3d: Node = find_child("Map3D", true, false)
+			if map_3d:
+				map_3d.update_selections()
+		Options.SFXZones2D:
+			var checked: bool = not %Options.is_item_checked(Options.SFXZones2D)
 			Settings.update_settings("options", {"always_show_sfx_zones": checked })
-			%Options.set_item_checked(Options.SFXZones, checked)
+			%Options.set_item_checked(Options.SFXZones2D, checked)
 			var map_2d: Node = find_child("Map2D", true, false)
 			if map_2d:
 				map_2d.redraw_sfx()

@@ -1193,6 +1193,7 @@ func _on_sfx_drag_ended(object: SFX.SFXNode2D) -> void:
 		if sfx_node != object:
 			sfx_node.end_drag()
 	Roth.editor_action.emit(map, "Move SFX")
+	%EditSFXContainer.update_selections()
 	%Map3D.update_selections()
 
 
