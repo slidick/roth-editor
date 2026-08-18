@@ -359,6 +359,10 @@ func is_object_inside(object: ObjectRoth) -> bool:
 	return polygon_path_finder.is_point_inside(point)
 
 
+func is_sfx_inside(sfx: SFX) -> bool:
+	return Geometry2D.is_point_in_polygon(Vector2(-sfx.data.posX, sfx.data.posY), vertices.slice(0,-1))
+
+
 func get_floor_scale() -> float:
 	var floor_a: int = 0
 	var floor_b: int = 0

@@ -1069,6 +1069,9 @@ func redraw(redraw_list: Array) -> void:
 			for object: ObjectRoth in resource.map.objects:
 				if object.sector.get_ref() == resource:
 					object.initialize_mesh()
+			for sfx: SFX in resource.map.sound_effects:
+				if resource.is_sfx_inside(sfx):
+					sfx.initialize_mesh()
 		if resource is ObjectRoth:
 			if %ObjectCheckBox.button_pressed:
 				for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
