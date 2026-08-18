@@ -1,8 +1,6 @@
 extends RefCounted
 class_name Face
 
-const SCALE_3D_WORLD: float = 100.0
-
 # Texture Flags ( Unk0x08 )
 const TRANSPARENT = 1 << 0
 const FLIP_X = 1 << 1
@@ -255,10 +253,10 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		
 		
 		var new_points: Array = [
-			Vector3(vertices[0].x, vertices[0].y + ((mesh_height - float(sector.data.textureMapOverride*4))/SCALE_3D_WORLD), vertices[0].z),
+			Vector3(vertices[0].x, vertices[0].y + ((mesh_height - float(sector.data.textureMapOverride*4))/Roth.SCALE_3D_WORLD), vertices[0].z),
 			Vector3(vertices[1].x, vertices[1].y, vertices[1].z),
 			Vector3(vertices[2].x, vertices[2].y, vertices[2].z),
-			Vector3(vertices[3].x, vertices[3].y + ((mesh_height - float(sector.data.textureMapOverride*4))/SCALE_3D_WORLD), vertices[3].z),
+			Vector3(vertices[3].x, vertices[3].y + ((mesh_height - float(sector.data.textureMapOverride*4))/Roth.SCALE_3D_WORLD), vertices[3].z),
 		]
 		
 		mesh_tool = SurfaceTool.new()
@@ -286,8 +284,8 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		
 		var new_points: Array = [
 			Vector3(vertices[0].x, vertices[0].y, vertices[0].z),
-			Vector3(vertices[1].x, vertices[0].y + abs(float(sector.data.textureMapOverride*4)/SCALE_3D_WORLD), vertices[1].z),
-			Vector3(vertices[2].x, vertices[0].y + abs(float(sector.data.textureMapOverride*4)/SCALE_3D_WORLD), vertices[2].z),
+			Vector3(vertices[1].x, vertices[0].y + abs(float(sector.data.textureMapOverride*4)/Roth.SCALE_3D_WORLD), vertices[1].z),
+			Vector3(vertices[2].x, vertices[0].y + abs(float(sector.data.textureMapOverride*4)/Roth.SCALE_3D_WORLD), vertices[2].z),
 			Vector3(vertices[3].x, vertices[3].y, vertices[3].z),
 		]
 		
@@ -392,10 +390,10 @@ func _initialize_meshes() -> void:
 		var mesh_height: int = sector.data.ceilingHeight - sector.data.floorHeight
 		var mesh_instance: FaceMesh3D = create_mesh(
 			[
-				Vector3(v1.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-				Vector3(v1.x/SCALE_3D_WORLD, sector.data.ceilingHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-				Vector3(v2.x/SCALE_3D_WORLD, sector.data.ceilingHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-				Vector3(v2.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+				Vector3(v1.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+				Vector3(v1.x/Roth.SCALE_3D_WORLD, sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+				Vector3(v2.x/Roth.SCALE_3D_WORLD, sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+				Vector3(v2.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 			],
 			texture_data.midTextureIndex,
 			das,
@@ -412,10 +410,10 @@ func _initialize_meshes() -> void:
 			
 			var mesh_instance: FaceMesh3D = create_mesh(
 				[
-					Vector3(v1.x/SCALE_3D_WORLD, floor_height/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v1.x/SCALE_3D_WORLD, ceiling_height/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, ceiling_height/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, floor_height/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, floor_height/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, ceiling_height/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, ceiling_height/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, floor_height/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 				],
 				texture_data.midTextureIndex,
 				das,
@@ -430,10 +428,10 @@ func _initialize_meshes() -> void:
 			var mesh_height: int = sister.get_ref().sector.data.floorHeight - sector.data.floorHeight
 			var mesh_instance: FaceMesh3D = create_mesh(
 				[
-					Vector3(v1.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v1.x/SCALE_3D_WORLD, sister.get_ref().sector.data.floorHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, sister.get_ref().sector.data.floorHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.floorHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.floorHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 				],
 				texture_data.lowerTextureIndex,
 				das,
@@ -447,10 +445,10 @@ func _initialize_meshes() -> void:
 			var mesh_height: int = sector.data.ceilingHeight - sister.get_ref().sector.data.ceilingHeight
 			var mesh_instance: FaceMesh3D = create_mesh(
 				[
-					Vector3(v1.x/SCALE_3D_WORLD, sister.get_ref().sector.data.ceilingHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v1.x/SCALE_3D_WORLD, sector.data.ceilingHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, sector.data.ceilingHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-					Vector3(v2.x/SCALE_3D_WORLD, sister.get_ref().sector.data.ceilingHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 				],
 				texture_data.upperTextureIndex,
 				das,
@@ -482,19 +480,19 @@ func _initialize_meshes() -> void:
 			mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 			
 			var collision_points := [
-				Vector3(a1.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a1.y/SCALE_3D_WORLD),
-				Vector3(a2.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a2.y/SCALE_3D_WORLD),
-				Vector3(a3.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a3.y/SCALE_3D_WORLD),
-				Vector3(a4.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a4.y/SCALE_3D_WORLD),
+				Vector3(a1.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a1.y/Roth.SCALE_3D_WORLD),
+				Vector3(a2.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a2.y/Roth.SCALE_3D_WORLD),
+				Vector3(a3.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a3.y/Roth.SCALE_3D_WORLD),
+				Vector3(a4.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a4.y/Roth.SCALE_3D_WORLD),
 			]
 			
-			mesh_tool.add_vertex(Vector3(a1.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a1.y/SCALE_3D_WORLD))
-			mesh_tool.add_vertex(Vector3(a2.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a2.y/SCALE_3D_WORLD))
-			mesh_tool.add_vertex(Vector3(a3.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a3.y/SCALE_3D_WORLD))
+			mesh_tool.add_vertex(Vector3(a1.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a1.y/Roth.SCALE_3D_WORLD))
+			mesh_tool.add_vertex(Vector3(a2.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a2.y/Roth.SCALE_3D_WORLD))
+			mesh_tool.add_vertex(Vector3(a3.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a3.y/Roth.SCALE_3D_WORLD))
 			
-			mesh_tool.add_vertex(Vector3(a1.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a1.y/SCALE_3D_WORLD))
-			mesh_tool.add_vertex(Vector3(a3.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a3.y/SCALE_3D_WORLD))
-			mesh_tool.add_vertex(Vector3(a4.x/SCALE_3D_WORLD, sector.data.floorHeight/SCALE_3D_WORLD+0.01, a4.y/SCALE_3D_WORLD))
+			mesh_tool.add_vertex(Vector3(a1.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a1.y/Roth.SCALE_3D_WORLD))
+			mesh_tool.add_vertex(Vector3(a3.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a3.y/Roth.SCALE_3D_WORLD))
+			mesh_tool.add_vertex(Vector3(a4.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD+0.01, a4.y/Roth.SCALE_3D_WORLD))
 			mesh_tool.generate_normals()
 			var mesh: ArrayMesh = mesh_tool.commit()
 			
@@ -512,10 +510,10 @@ func _initialize_meshes() -> void:
 			if mesh_height > 0:
 				var mesh_instance: FaceMesh3D = create_mesh(
 					[
-						Vector3(v1.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.ceilingHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-						Vector3(v1.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.floorHeight/SCALE_3D_WORLD, v1.y/SCALE_3D_WORLD),
-						Vector3(v2.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.floorHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
-						Vector3(v2.x/SCALE_3D_WORLD, sister.get_ref().sector.platform.ceilingHeight/SCALE_3D_WORLD, v2.y/SCALE_3D_WORLD),
+						Vector3(v1.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.platform.ceilingHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+						Vector3(v1.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.platform.floorHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+						Vector3(v2.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.platform.floorHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+						Vector3(v2.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.platform.ceilingHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 					],
 					texture_data.midTextureIndex,
 					das,
