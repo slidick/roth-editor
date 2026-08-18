@@ -126,24 +126,48 @@ func _unhandled_input(event: InputEvent) -> void:
 			if moused_over_resource != last_moused_over_resource and moused_over_resource.sector != last_moused_over_resource and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
 				%EditSectorFloorCeilingTimer.stop()
 				%EditSectorFloorCeilingTimer.timeout.emit()
-			moused_over_resource.sector.data.ceilingHeight += %RelativeAmountBox.value
-			owner.redraw([moused_over_resource.sector])
+			if moused_over_resource in owner.selected_faces:
+				for face: Face in owner.selected_faces:
+					face.sector.data.ceilingHeight += %RelativeAmountBox.value
+				owner.redraw(owner.selected_faces.map(func (face: Face) -> Sector: return face.sector))
+			else:
+				moused_over_resource.sector.data.ceilingHeight += %RelativeAmountBox.value
+				owner.redraw([moused_over_resource.sector])
 			%EditSectorFloorCeilingTimer.start()
 			last_moused_over_resource = moused_over_resource
 		if moused_over_resource is Sector:
 			if moused_over_resource != last_moused_over_resource and last_moused_over_resource not in moused_over_resource.faces.map(func (fr: WeakRef) -> Face: return fr.get_ref()) and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
 				%EditSectorFloorCeilingTimer.stop()
 				%EditSectorFloorCeilingTimer.timeout.emit()
-			match moused_over_mesh_index:
-				0: # Floor
-					moused_over_resource.data.floorHeight += %RelativeAmountBox.value
-				1: # Ceiling
-					moused_over_resource.data.ceilingHeight += %RelativeAmountBox.value
-				2: # Platform Floor
-					moused_over_resource.platform.floorHeight += %RelativeAmountBox.value
-				3: # Platform Ceiling
-					moused_over_resource.platform.ceilingHeight += %RelativeAmountBox.value
-			owner.redraw([moused_over_resource])
+			if moused_over_resource in owner.selected_sectors:
+				for sector: Sector in owner.selected_sectors:
+					match moused_over_mesh_index:
+						0: # Floor
+							sector.data.floorHeight += %RelativeAmountBox.value
+							if %IncludeObjectsCheckBox.button_pressed:
+								for object: Dictionary in sector.data.objectInformation:
+									object.posZ += %RelativeAmountBox.value
+						1: # Ceiling
+							sector.data.ceilingHeight += %RelativeAmountBox.value
+						2: # Platform Floor
+							sector.platform.floorHeight += %RelativeAmountBox.value
+						3: # Platform Ceiling
+							sector.platform.ceilingHeight += %RelativeAmountBox.value
+					owner.redraw(owner.selected_sectors)
+			else:
+				match moused_over_mesh_index:
+					0: # Floor
+						moused_over_resource.data.floorHeight += %RelativeAmountBox.value
+						if %IncludeObjectsCheckBox.button_pressed:
+							for object: Dictionary in moused_over_resource.data.objectInformation:
+								object.posZ += %RelativeAmountBox.value
+					1: # Ceiling
+						moused_over_resource.data.ceilingHeight += %RelativeAmountBox.value
+					2: # Platform Floor
+						moused_over_resource.platform.floorHeight += %RelativeAmountBox.value
+					3: # Platform Ceiling
+						moused_over_resource.platform.ceilingHeight += %RelativeAmountBox.value
+				owner.redraw([moused_over_resource])
 			%EditSectorFloorCeilingTimer.start()
 			last_moused_over_resource = moused_over_resource
 	if event.is_action_pressed("lower_floor_ceiling", false, true):
@@ -151,24 +175,50 @@ func _unhandled_input(event: InputEvent) -> void:
 			if moused_over_resource != last_moused_over_resource and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
 				%EditSectorFloorCeilingTimer.stop()
 				%EditSectorFloorCeilingTimer.timeout.emit()
-			moused_over_resource.sector.data.ceilingHeight -= %RelativeAmountBox.value
-			owner.redraw([moused_over_resource.sector])
+			if moused_over_resource in owner.selected_faces:
+				for face: Face in owner.selected_faces:
+					face.sector.data.ceilingHeight -= %RelativeAmountBox.value
+				owner.redraw(owner.selected_faces.map(func (face: Face) -> Sector: return face.sector))
+			else:
+				moused_over_resource.sector.data.ceilingHeight -= %RelativeAmountBox.value
+				owner.redraw([moused_over_resource.sector])
 			%EditSectorFloorCeilingTimer.start()
 			last_moused_over_resource = moused_over_resource
 		if moused_over_resource is Sector:
 			if moused_over_resource != last_moused_over_resource and last_moused_over_resource not in moused_over_resource.faces.map(func (fr: WeakRef) -> Face: return fr.get_ref()) and last_moused_over_resource != null and not %EditSectorFloorCeilingTimer.is_stopped():
 				%EditSectorFloorCeilingTimer.stop()
 				%EditSectorFloorCeilingTimer.timeout.emit()
-			match moused_over_mesh_index:
-				0: # Floor
-					moused_over_resource.data.floorHeight -= %RelativeAmountBox.value
-				1: # Ceiling
-					moused_over_resource.data.ceilingHeight -= %RelativeAmountBox.value
-				2: # Platform Floor
-					moused_over_resource.platform.floorHeight -= %RelativeAmountBox.value
-				3: # Platform Ceiling
-					moused_over_resource.platform.ceilingHeight -= %RelativeAmountBox.value
-			owner.redraw([moused_over_resource])
+			if moused_over_resource in owner.selected_sectors:
+				for sector: Sector in owner.selected_sectors:
+					match moused_over_mesh_index:
+						0: # Floor
+							sector.data.floorHeight -= %RelativeAmountBox.value
+							if %IncludeObjectsCheckBox.button_pressed:
+								for object: Dictionary in sector.data.objectInformation:
+									object.posZ -= %RelativeAmountBox.value
+						1: # Ceiling
+							sector.data.ceilingHeight -= %RelativeAmountBox.value
+						2: # Platform Floor
+							sector.platform.floorHeight -= %RelativeAmountBox.value
+						3: # Platform Ceiling
+							sector.platform.ceilingHeight -= %RelativeAmountBox.value
+					
+					owner.redraw(owner.selected_sectors)
+			else:
+				match moused_over_mesh_index:
+					0: # Floor
+						moused_over_resource.data.floorHeight -= %RelativeAmountBox.value
+						if %IncludeObjectsCheckBox.button_pressed:
+							for object: Dictionary in moused_over_resource.data.objectInformation:
+								object.posZ -= %RelativeAmountBox.value
+					1: # Ceiling
+						moused_over_resource.data.ceilingHeight -= %RelativeAmountBox.value
+					2: # Platform Floor
+						moused_over_resource.platform.floorHeight -= %RelativeAmountBox.value
+					3: # Platform Ceiling
+						moused_over_resource.platform.ceilingHeight -= %RelativeAmountBox.value
+				
+				owner.redraw([moused_over_resource])
 			%EditSectorFloorCeilingTimer.start()
 			last_moused_over_resource = moused_over_resource
 
@@ -226,13 +276,13 @@ func _process(_delta: float) -> void:
 						moused_over_resource.node.unhighlight()
 						
 				if moused_over_resource is not Face and len(owner.selected_faces) >= amount:
-					pass
+					moused_over_resource = null
 				elif moused_over_resource is not Sector and len(owner.selected_sectors) >= amount and len(owner.selected_faces) != 1:
-					pass
+					moused_over_resource = null
 				elif moused_over_resource is not ObjectRoth and len(owner.selected_objects) >= amount:
-					pass
+					moused_over_resource = null
 				elif moused_over_resource is not SFX and len(owner.selected_sfx) >= amount:
-					pass
+					moused_over_resource = null
 				else:
 					if show_selection_highlight:
 						moused_over_resource.node.highlight()
