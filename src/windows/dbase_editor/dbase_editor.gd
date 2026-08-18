@@ -105,9 +105,14 @@ func edit() -> void:
 	var dbase_info: Dictionary = %DBaseList.get_item_metadata(%DBaseList.get_selected_items()[0])
 	if "vanilla" in dbase_info:
 		return
+	%Loading.toggle(true)
 	var directory: String = Roth.ROTH_CUSTOM_DBASE_DIRECTORY.path_join(dbase_info.name)
-	var results := DBase100.parse_files_at_directory(directory)
-	
+	var thread := Thread.new()
+	thread.start(DBase100.parse_files_at_directory.bind(directory))
+	while thread.is_alive():
+		await get_tree().process_frame
+	var results: Dictionary = thread.wait_to_finish()
+	%Loading.toggle(false)
 	if results.is_empty():
 		return
 	dbase_data["dbase_info"] = dbase_info
@@ -148,8 +153,7 @@ func _on_cancel_button_pressed() -> void:
 	%Actions.reset()
 	%Text.reset()
 
-
-func _on_save_button_pressed() -> void:
+func _save_files() -> int:
 	# DBase500
 	if audio_changed:
 		var data5 := DBase500.compile(dbase_data["dbase100"])
@@ -181,13 +185,25 @@ func _on_save_button_pressed() -> void:
 	file.store_buffer(data)
 	file.close()
 	
+	return len(data)
+
+
+func _on_save_button_pressed() -> void:
+	%Saving.toggle(true)
+	var thread := Thread.new()
+	thread.start(_save_files)
+	while thread.is_alive():
+		await get_tree().process_frame
+	var dbase100_filesize: int = thread.wait_to_finish()
+	%Saving.toggle(false)
+	
 	# Update metadata
 	var dbase_info: Dictionary = dbase_data["dbase_info"]
 	dbase_info.inventory_count = len(dbase_data["dbase100"].inventory)
 	dbase_info.action_count = len(dbase_data["dbase100"].actions)
 	dbase_info.cutscene_count = len(dbase_data["dbase100"].cutscenes)
 	dbase_info.interface_count = len(dbase_data["dbase100"].interfaces)
-	dbase_info.filesize = len(data)
+	dbase_info.filesize = dbase100_filesize
 	%DBaseNameLabel.text = dbase_info.name
 	%InventoryCountLabel.text = str(dbase_info.inventory_count)
 	%ActionCountLabel.text = str(dbase_info.action_count)

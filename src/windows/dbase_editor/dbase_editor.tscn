@@ -397,6 +397,7 @@ offset_right = 640.0
 offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
+start_rotated = true
 
 [node name="MusicSelector" parent="SubWindows" index="5" unique_id=2093027154 instance=ExtResource("16_gcuy8")]
 unique_name_in_owner = true
@@ -414,6 +415,68 @@ offset_bottom = 270.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Loading" parent="SubWindows" index="6" unique_id=1155640091 instance=ExtResource("1_6v7rq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -224.99997
+offset_top = -100.0
+offset_right = 224.99997
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_fspgq")
+movable = false
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_yc78u")
+
+[node name="ProgressBar" type="ProgressBar" parent="SubWindows/Loading/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(1155640091, 2051013205) index="0" unique_id=1228804067]
+layout_mode = 2
+size_flags_vertical = 4
+indeterminate = true
+editor_preview_indeterminate = false
+
+[node name="Saving" parent="SubWindows" index="7" unique_id=1769334180 instance=ExtResource("1_6v7rq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -224.99997
+offset_top = -100.0
+offset_right = 224.99997
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_fspgq")
+movable = false
+resizable = false
+exclusive = true
+show_maximize_button = false
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_yc78u")
+
+[node name="ProgressBar" type="ProgressBar" parent="SubWindows/Saving/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(1769334180, 2051013205) index="0" unique_id=294030600]
+layout_mode = 2
+size_flags_vertical = 4
+indeterminate = true
+editor_preview_indeterminate = false
+
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_activated"]
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListControl/HBoxContainer2/MarginContainer/VBoxContainer/DBaseList" to="." method="_on_d_base_list_item_selected"]
@@ -426,3 +489,6 @@ grow_vertical = 2
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/IntegerOption" to="." method="_on_integer_option_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditControl/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
+
+[editable path="SubWindows/Loading"]
+[editable path="SubWindows/Saving"]
