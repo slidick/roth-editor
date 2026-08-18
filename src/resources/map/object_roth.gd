@@ -29,7 +29,7 @@ static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) ->
 	object.data.posY = p_position.y
 	object.data.posZ = floor_height
 	object.map.sectors[new_sector_index].data.objectInformation.append(object.data)
-	object.sector = weakref(object.sectors[new_sector_index])
+	object.sector = weakref(object.map.sectors[new_sector_index])
 	
 	return object
 
