@@ -76,21 +76,37 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_pressed("move_object_to_ceiling"):
 			var maps: Array = []
 			for object: ObjectRoth in selected_objects:
-				object.data.posZ = object.sector.get_ref().data.ceilingHeight
-				redraw(selected_objects)
-				%EditObjectContainer.update_selections()
+				if object.sector.get_ref().platform:
+					if object.data.posZ < object.sector.get_ref().platform.ceilingHeight:
+						object.data.posZ = object.sector.get_ref().platform.ceilingHeight
+					elif object.data.posZ < object.sector.get_ref().platform.floorHeight:
+						object.data.posZ = object.sector.get_ref().platform.floorHeight
+					else:
+						object.data.posZ = object.sector.get_ref().data.ceilingHeight
+				else:
+					object.data.posZ = object.sector.get_ref().data.ceilingHeight
 				if object.map not in maps:
 					maps.append(object.map)
+			redraw(selected_objects)
+			%EditObjectContainer.update_selections()
 			for map: Map in maps:
 				Roth.editor_action.emit(map, "Snap to Ceiling")
 		if event.is_action_pressed("move_object_to_floor"):
 			var maps: Array = []
 			for object: ObjectRoth in selected_objects:
-				object.data.posZ = object.sector.get_ref().data.floorHeight
-				redraw(selected_objects)
-				%EditObjectContainer.update_selections()
+				if object.sector.get_ref().platform:
+					if object.data.posZ > object.sector.get_ref().platform.floorHeight:
+						object.data.posZ = object.sector.get_ref().platform.floorHeight
+					elif object.data.posZ > object.sector.get_ref().platform.ceilingHeight:
+						object.data.posZ = object.sector.get_ref().platform.ceilingHeight
+					else:
+						object.data.posZ = object.sector.get_ref().data.floorHeight
+				else:
+					object.data.posZ = object.sector.get_ref().data.floorHeight
 				if object.map not in maps:
 					maps.append(object.map)
+			redraw(selected_objects)
+			%EditObjectContainer.update_selections()
 			for map: Map in maps:
 				Roth.editor_action.emit(map, "Snap to Floor")
 		if event.is_action_pressed("open_3d_context_menu"):

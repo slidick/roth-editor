@@ -56,9 +56,6 @@ func clear(p_force_timeout: bool = true) -> void:
 	%PlatformFloorOffsetYEdit.get_line_edit().clear()
 	%SelectFacesButton.show()
 	%EditSectorContainer.hide()
-	#%RelativeAmountControls.hide()
-	#%RelativeRoofControls.hide()
-	#%RelativeFloorControls.hide()
 	last_selection_length = 0
 	# Custom arrow steps on spinboxs are broken
 	#%FloorHeightEdit.custom_arrow_step = %RelativeAmountBox.value
@@ -81,15 +78,9 @@ func update_selections(p_force_timeout: bool = true) -> void:
 			%SelectFacesPopupMenu.add_item("%d" % face.index)
 			%SelectFacesPopupMenu.set_item_metadata(i, face)
 		%SelectFacesButton.show()
-		#%RelativeAmountControls.hide()
-		#%RelativeRoofControls.hide()
-		#%RelativeFloorControls.hide()
 	elif len(owner.selected_sectors) > 1:
 		%SectorIndexLabel.text = "Sector: %d Selected" % len(owner.selected_sectors)
 		%SelectFacesButton.hide()
-		%RelativeAmountControls.show()
-		%RelativeRoofControls.show()
-		%RelativeFloorControls.show()
 	
 	
 	%RoofHeightEdit.get_line_edit().text = "%d" % sector.data.ceilingHeight
@@ -792,6 +783,10 @@ func _on_edit_sector_timer_timeout() -> void:
 func _on_lower_roof_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight -= %RelativeAmountBox.value
+		if %IncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.posZ > sector.data.ceilingHeight:
+					object.posZ = sector.data.ceilingHeight
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
@@ -800,6 +795,10 @@ func _on_lower_roof_button_pressed() -> void:
 func _on_raise_roof_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight += %RelativeAmountBox.value
+		if %IncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.posZ == (sector.data.ceilingHeight - %RelativeAmountBox.value):
+					object.posZ = sector.data.ceilingHeight
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
@@ -808,6 +807,12 @@ func _on_raise_roof_button_pressed() -> void:
 func _on_lower_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight -= %RelativeAmountBox.value
+		if %IncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if sector.platform and object.posZ == sector.platform.ceilingHeight:
+					pass
+				elif object.posZ != sector.data.ceilingHeight:
+					object.posZ -= %RelativeAmountBox.value
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
@@ -816,13 +821,62 @@ func _on_lower_floor_button_pressed() -> void:
 func _on_raise_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight += %RelativeAmountBox.value
+		if %IncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if sector.platform and object.posZ == sector.platform.ceilingHeight:
+					pass
+				else:
+					object.posZ += %RelativeAmountBox.value
+				if object.posZ > sector.data.ceilingHeight:
+					object.posZ = sector.data.ceilingHeight
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
 
-func _on_relative_amount_box_value_changed(_value: float) -> void:
-	# Broken
-	#%FloorHeightEdit.custom_arrow_step = value
-	#%RoofHeightEdit.custom_arrow_step = value
-	pass
+func _on_lower_platform_floor_button_pressed() -> void:
+	for sector: Sector in owner.selected_sectors:
+		sector.platform.floorHeight -= %RelativeAmountBox.value
+		if %PlatformIncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.posZ >= (sector.platform.floorHeight + %RelativeAmountBox.value):
+					object.posZ -= %RelativeAmountBox.value
+	update_selections(false)
+	owner.redraw(owner.selected_sectors)
+	%EditSectorTimer.start()
+
+
+func _on_lower_platform_ceiling_button_pressed() -> void:
+	for sector: Sector in owner.selected_sectors:
+		sector.platform.ceilingHeight -= %RelativeAmountBox.value
+		if %IncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.posZ <= (sector.platform.ceilingHeight + %RelativeAmountBox.value) and object.posZ > sector.platform.ceilingHeight:
+					object.posZ = sector.platform.ceilingHeight
+	update_selections(false)
+	owner.redraw(owner.selected_sectors)
+	%EditSectorTimer.start()
+
+
+func _on_raise_platform_floor_button_pressed() -> void:
+	for sector: Sector in owner.selected_sectors:
+		sector.platform.floorHeight += %RelativeAmountBox.value
+		if %PlatformIncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.posZ >= (sector.platform.floorHeight - %RelativeAmountBox.value):
+					object.posZ += %RelativeAmountBox.value
+	update_selections(false)
+	owner.redraw(owner.selected_sectors)
+	%EditSectorTimer.start()
+
+
+func _on_raise_platform_ceiling_button_pressed() -> void:
+	for sector: Sector in owner.selected_sectors:
+		sector.platform.ceilingHeight += %RelativeAmountBox.value
+		if %IncludeObjectsCheckBox.button_pressed:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.posZ == (sector.platform.ceilingHeight - %RelativeAmountBox.value):
+					object.posZ = sector.platform.ceilingHeight
+	update_selections(false)
+	owner.redraw(owner.selected_sectors)
+	%EditSectorTimer.start()

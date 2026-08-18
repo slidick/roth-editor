@@ -3,7 +3,10 @@ extends MarginContainer
 var last_selection_length: int = -1
 
 
-func clear() -> void:
+func clear(p_force_timeout: bool = true) -> void:
+	if p_force_timeout and not %EditObjectTimer.is_stopped():
+		%EditObjectTimer.stop()
+		%EditObjectTimer.timeout.emit()
 	%ObjectIndexLabel.text = "Object:"
 	%ObjectSectorIndexLabel.text = "Sector:"
 	%ObjectXEdit.get_line_edit().clear()
@@ -42,8 +45,8 @@ func clear() -> void:
 	last_selection_length = 0
 
 
-func update_selections() -> void:
-	clear()
+func update_selections(p_force_timeout: bool = true) -> void:
+	clear(p_force_timeout)
 	if len(owner.selected_objects) == 0:
 		return
 	
@@ -103,7 +106,6 @@ func update_selections() -> void:
 		%RenderDirectionalCheckBox.disabled = false
 	
 	update_texture(object)
-	
 	
 	for each_object: ObjectRoth in owner.selected_objects:
 		if each_object.data.posX != object.data.posX:
@@ -432,3 +434,19 @@ func _on_edit_object_das_button_pressed() -> void:
 		object_das = object.map.map_info.map_pack.das2_info
 		object_index = object.data.textureIndex + 256
 	Roth.edit_texture.emit(object_das, object_index)
+
+
+func _on_lower_object_relative_button_pressed() -> void:
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.posZ -= %ObjectRelativeSpinBox.value
+	owner.redraw(owner.selected_objects)
+	%EditObjectTimer.start()
+	update_selections(false)
+
+
+func _on_raise_object_relative_button_pressed() -> void:
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.posZ += %ObjectRelativeSpinBox.value
+	owner.redraw(owner.selected_objects)
+	%EditObjectTimer.start()
+	update_selections(false)
