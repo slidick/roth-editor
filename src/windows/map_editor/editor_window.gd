@@ -303,7 +303,7 @@ func load_map(map: Map) -> void:
 	if tree_root.get_child_count() == 1:
 		first_load = true
 	
-	reload_skybox()
+	reload_skybox(map)
 	
 	add_to_undo_redo(map, "Map Opened")
 	
@@ -312,9 +312,12 @@ func load_map(map: Map) -> void:
 	%Map2D.setup(map)
 
 
-func reload_skybox() -> void:
-	if %Map2D.map and Settings.settings.get("options", {}).get("show_sky", true):
-		var texture_data: Dictionary =  Das.get_index_from_das(%Map2D.map.metadata.skyTexture, %Map2D.map.map_info.das_info)
+func reload_skybox(p_map: Map = null) -> void:
+	var map: Map = p_map
+	if not map:
+		map = %Map2D.map
+	if map and Settings.settings.get("options", {}).get("show_sky", true):
+		var texture_data: Dictionary =  Das.get_index_from_das(map.metadata.skyTexture, map.map_info.das_info)
 		if "image" not in texture_data:
 			%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
 			return
