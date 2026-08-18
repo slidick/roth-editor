@@ -1058,6 +1058,7 @@ func redraw(redraw_list: Array) -> void:
 				for object_node: ObjectRoth.ObjectNode2D in %Objects.get_children():
 					if object_node.ref == resource:
 						object_node.circle.roth_rotation = resource.data.rotation
+						object_node.position = Vector2(-resource.data.posX / Roth.SCALE_2D_WORLD, resource.data.posY / Roth.SCALE_2D_WORLD)
 						object_node.circle.queue_redraw()
 		if resource is SFX:
 			if %SFXCheckBox.button_pressed:
