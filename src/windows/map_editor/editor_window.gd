@@ -1171,6 +1171,7 @@ func hide_selected_sectors() -> void:
 		%Map2D.show_objects()
 	%Map2D.update_selections()
 	%Map3D.update_selections()
+	%EditSectorContainer.update_selections()
 
 
 func hide_non_selected_sectors() -> void:
@@ -1191,7 +1192,6 @@ func hide_non_selected_sectors() -> void:
 		if object.sector.get_ref().hidden:
 			object.initialize_mesh()
 	redraw(hidden_sectors)
-	selected_sectors.clear()
 	hovered_sector = null
 	if %ObjectCheckBox.button_pressed:
 		%Map2D.show_objects()
