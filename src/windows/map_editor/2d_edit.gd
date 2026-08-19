@@ -1807,6 +1807,7 @@ func unmerge_vertices() -> void:
 			vertex_node.vertex_deleted.connect(_on_vertex_deleted)
 			vertex_node.start_sector_split.connect(_on_sector_split)
 			vertex_node.vertex_dragged.connect(_on_vertex_dragged)
+			vertex_node.vertex_drag_canceled.connect(_on_vertex_drag_canceled)
 			vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 			%Vertices.add_child(vertex_node)
 	
