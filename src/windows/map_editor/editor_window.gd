@@ -1122,6 +1122,8 @@ func _delete_selected_sectors() -> Dictionary:
 
 
 func merge_selected_sectors() -> void:
+	if len(selected_sectors) <= 1:
+		return
 	var all_sector_faces: Array = []
 	for sector: Sector in selected_sectors:
 		for face_ref: WeakRef in sector.faces:

@@ -404,6 +404,12 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 						owner.deselect_resource(owner.hovered_sector)
 					elif owner.hovered_face and owner.hovered_face in owner.selected_faces:
 						owner.deselect_resource(owner.hovered_face)
+					elif not owner.hovered_sector:
+						if owner.copied_sector_data.is_empty():
+							%SectorPopupMenu.set_item_disabled(%EditSectorContainer.SectorMenu.PASTE_SECTORS, true)
+						else:
+							%SectorPopupMenu.set_item_disabled(%EditSectorContainer.SectorMenu.PASTE_SECTORS, false)
+						%SectorPopupMenu.popup(Rect2i(get_tree().get_root().get_mouse_position(), Vector2.ZERO))
 				if event.shift_pressed:
 					if event.pressed:
 						holding_shift = true

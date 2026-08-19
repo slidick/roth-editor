@@ -34,6 +34,7 @@
 [ext_resource type="PackedScene" uid="uid://jjbbemd4pjs3" path="res://src/windows/map_editor/object_selection_window.tscn" id="20_12tai"]
 [ext_resource type="Script" uid="uid://c7rh7bpqr6cl2" path="res://src/windows/map_editor/edit_panels/draw_mode_container.gd" id="20_tv4rk"]
 [ext_resource type="PackedScene" uid="uid://bqhl386iytr5w" path="res://src/windows/map_editor/paste_options_dialog.tscn" id="21_dyevs"]
+[ext_resource type="Texture2D" uid="uid://6m64harf4mfw" path="res://assets/icons/menu-2.svg" id="23_bgknm"]
 [ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="27_6txe1"]
 [ext_resource type="PackedScene" uid="uid://83l60nlqs38r" path="res://src/windows/map_editor/texture_presets_window.tscn" id="29_wknxc"]
 [ext_resource type="PackedScene" uid="uid://vokegmkg3lq8" path="res://src/windows/map_editor/manage_maps/modify_map_window.tscn" id="37_yi0n0"]
@@ -1397,12 +1398,43 @@ vertical_alignment = 1
 
 [node name="SelectFacesButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12" index="1" unique_id=1045143030]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 text = "Faces"
 
 [node name="SelectFacesPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton" index="0" unique_id=153040136]
 unique_name_in_owner = true
+
+[node name="SectorMenuButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12" index="2" unique_id=206238145]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("23_bgknm")
+
+[node name="SectorPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SectorMenuButton" index="0" unique_id=166426456]
+unique_name_in_owner = true
+item_count = 11
+item_0/text = "Hide"
+item_0/id = 0
+item_1/text = "Hide Non-Selected"
+item_1/id = 1
+item_2/text = "Unhide Sectors"
+item_2/id = 2
+item_3/id = 3
+item_3/separator = true
+item_4/text = "Merge"
+item_4/id = 9
+item_5/id = 10
+item_5/separator = true
+item_6/text = "Copy"
+item_6/id = 4
+item_7/text = "Cut"
+item_7/id = 5
+item_8/text = "Paste"
+item_8/id = 8
+item_9/id = 6
+item_9/separator = true
+item_10/text = "Delete"
+item_10/id = 7
 
 [node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer" index="1" unique_id=1483358828]
 layout_mode = 2
@@ -3719,6 +3751,8 @@ item_1/id = 1
 [connection signal="timeout" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/EditFaceTimer" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_edit_face_timer_timeout"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_select_faces_button_pressed"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SelectFacesButton/SelectFacesPopupMenu" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_select_faces_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SectorMenuButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_sector_menu_button_pressed"]
+[connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer12/SectorMenuButton/SectorPopupMenu" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_sector_popup_menu_index_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer13/VBoxContainer/RoofHeightEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_roof_height_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer13/VBoxContainer/FloorHeightEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_floor_height_edit_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer/VBoxContainer/HBoxContainer13/VBoxContainer3/LowerRoofButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSectorContainer" method="_on_lower_roof_button_pressed"]

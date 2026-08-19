@@ -8,6 +8,20 @@ enum {
 	EDIT_TEXTURE,
 }
 
+enum SectorMenu {
+	HIDE_SELECTED,
+	HIDE_UNSELECTED,
+	UNHIDE_SECTORS,
+	SEP1,
+	MERGE_SECTORS,
+	SEP2,
+	COPY_SECTORS,
+	CUT_SECTORS,
+	PASTE_SECTORS,
+	SEP3,
+	DELETE_SECTORS,
+}
+
 var last_selection_length: int = 0
 
 
@@ -771,6 +785,34 @@ func _on_select_faces_button_pressed() -> void:
 func _on_select_faces_popup_menu_index_pressed(index: int) -> void:
 	var face: Face = %SelectFacesPopupMenu.get_item_metadata(index)
 	owner.select_resource(face)
+
+
+func _on_sector_menu_button_pressed() -> void:
+	if owner.copied_sector_data.is_empty():
+		%SectorPopupMenu.set_item_disabled(SectorMenu.PASTE_SECTORS, true)
+	else:
+		%SectorPopupMenu.set_item_disabled(SectorMenu.PASTE_SECTORS, false)
+	%SectorPopupMenu.popup(Rect2i(%SectorMenuButton.global_position.x, %SectorMenuButton.global_position.y+%SectorMenuButton.size.y, %SectorMenuButton.size.x, 0))
+
+
+func _on_sector_popup_menu_index_pressed(index: int) -> void:
+	match index:
+		SectorMenu.HIDE_SELECTED:
+			owner.hide_selected_sectors()
+		SectorMenu.HIDE_UNSELECTED:
+			owner.hide_non_selected_sectors()
+		SectorMenu.UNHIDE_SECTORS:
+			owner.show_hidden_sectors()
+		SectorMenu.MERGE_SECTORS:
+			owner.merge_selected_sectors()
+		SectorMenu.COPY_SECTORS:
+			owner.copy_selected_sectors()
+		SectorMenu.CUT_SECTORS:
+			owner.cut_selected_sectors()
+		SectorMenu.PASTE_SECTORS:
+			owner.enter_paste_sectors_mode()
+		SectorMenu.DELETE_SECTORS:
+			owner.delete_selected_sectors()
 
 
 func _on_edit_sector_timer_timeout() -> void:
