@@ -70,8 +70,12 @@ func update_selections() -> void:
 	%SFXUnk0x0AEdit.set_value_no_signal(sfx.data.audibleRadius)
 	%SFXUnk0x0CEdit.get_line_edit().text = "%d" % sfx.data.loopDelay
 	%SFXUnk0x0CEdit.set_value_no_signal(sfx.data.loopDelay)
-	%SFXUnk0x0EEdit.get_line_edit().text = "%d" % sfx.data.unk0x0E
-	%SFXUnk0x0EEdit.set_value_no_signal(sfx.data.unk0x0E)
+	if "unk0x0E" in sfx.data:
+		%SFXUnk0x0EEdit.get_line_edit().text = "%d" % sfx.data.unk0x0E
+		%SFXUnk0x0EEdit.set_value_no_signal(sfx.data.unk0x0E)
+		%SFXUnk0x0EEdit.get_parent().show()
+	else:
+		%SFXUnk0x0EEdit.get_parent().hide()
 	%SFXVolumeEdit.get_line_edit().text = "%d" % sfx.data.volume
 	%SFXVolumeEdit.set_value_no_signal(sfx.data.volume)
 	%SFXUnk0x11Edit.get_line_edit().text = "%d" % sfx.data.unk0x11
@@ -105,7 +109,7 @@ func update_selections() -> void:
 			%SFXUnk0x0AEdit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.loopDelay != sfx.data.loopDelay:
 			%SFXUnk0x0CEdit.get_line_edit().clear.call_deferred()
-		if each_sfx.data.unk0x0E != sfx.data.unk0x0E:
+		if "unk0x0E" in each_sfx.data and each_sfx.data.unk0x0E != sfx.data.unk0x0E:
 			%SFXUnk0x0EEdit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.volume != sfx.data.volume:
 			%SFXVolumeEdit.get_line_edit().clear.call_deferred()

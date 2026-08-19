@@ -333,14 +333,14 @@ static func _load_das_thread(das_info: Dictionary) -> void:
 			var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
 			monster_mappings.append(monster_mapping)
 		das.monster_mappings = monster_mappings
-		
-		# Directional Objects
-		var directional_mappings: Array = []
-		for i in range(header.directional_object_table_size/20):
-			file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
-			var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
-			directional_mappings.append(directional_mapping)
-		das.directional_object_mappings = directional_mappings
+	
+	# Directional Objects
+	var directional_mappings: Array = []
+	for i in range(header.directional_object_table_size/20):
+		file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
+		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+		directional_mappings.append(directional_mapping)
+	das.directional_object_mappings = directional_mappings
 	
 	# Filenames
 	file.seek(header.filenames_offset)
@@ -419,14 +419,14 @@ static func _get_index_from_das(index: int, das_info: Dictionary, p_range: int =
 			var monster_mapping: Dictionary = Parser.parse_section(file, MONSTER_MAPPING_ENTRY)
 			monster_mappings.append(monster_mapping)
 		das.monster_mappings = monster_mappings
-		
-		# Directional Objects
-		var directional_mappings: Array = []
-		for i in range(header.directional_object_table_size/20):
-			file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
-			var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
-			directional_mappings.append(directional_mapping)
-		das.directional_object_mappings = directional_mappings
+	
+	# Directional Objects
+	var directional_mappings: Array = []
+	for i in range(header.directional_object_table_size/20):
+		file.seek(header.directional_object_table_offset + (header.directional_object_table_size/20*2) + (i*18))
+		var directional_mapping: Dictionary = Parser.parse_section(file, DIRECTIONAL_OBJECT_MAPPING_ENTRY)
+		directional_mappings.append(directional_mapping)
+	das.directional_object_mappings = directional_mappings
 	
 	# Textures
 	var mappings := {}
@@ -484,7 +484,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	
 	# Parse as Directional object
 	elif texture.flags_1 & FLAGS_1.DIRECTIONAL > 0:
-		if das.das_info.is_ademo:
+		if "is_ademo" in das.das_info and das.das_info.is_ademo:
 			var first_byte: int = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx & 0xFF
 			var second_byte: int = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx >> 8
 			var directional_index: int = first_byte | (((second_byte & 0x7F) - 0x12) << 8)

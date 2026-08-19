@@ -80,8 +80,12 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	%ObjectLightingEdit.set_value_no_signal(object.data.lighting)
 	%ObjectUnk0x0CEdit.get_line_edit().text = "%d" % object.data.unk0x0C
 	%ObjectUnk0x0CEdit.set_value_no_signal(object.data.unk0x0C)
-	%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.data.unk0x0E
-	%ObjectUnk0x0EEdit.set_value_no_signal(object.data.unk0x0E)
+	if "unk0x0E" in object.data:
+		%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.data.unk0x0E
+		%ObjectUnk0x0EEdit.set_value_no_signal(object.data.unk0x0E)
+		%ObjectUnk0x0EEdit.get_parent().show()
+	else:
+		%ObjectUnk0x0EEdit.get_parent().hide()
 	%ObjectFlagButton1.set_pressed_no_signal((object.data.unk0x07 & (1<<0)) > 0)
 	%ObjectFlagButton2.set_pressed_no_signal((object.data.unk0x07 & (1<<1)) > 0)
 	%ObjectFlagButton3.set_pressed_no_signal((object.data.unk0x07 & (1<<2)) > 0)
@@ -130,7 +134,7 @@ func update_selections(p_force_timeout: bool = true) -> void:
 			%ObjectLightingEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.unk0x0C != object.data.unk0x0C:
 			%ObjectUnk0x0CEdit.get_line_edit().clear.call_deferred()
-		if each_object.data.unk0x0E != object.data.unk0x0E:
+		if "unk0x0E" in each_object.data and each_object.data.unk0x0E != object.data.unk0x0E:
 			%ObjectUnk0x0EEdit.get_line_edit().clear.call_deferred()
 		if ((each_object.data.renderType & (1<<7)) > 0) != ((object.data.renderType & (1<<7)) > 0):
 			%RenderBillboardCheckBox.set_pressed_no_signal(false)

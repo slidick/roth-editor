@@ -886,7 +886,7 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	if "rotation" in player_data:
 		json["mapMetadataSection"]["rotation"] = player_data.rotation
 	
-	return Raw.compile(json)
+	return Raw.compile(json, "normality" in map_info)
 
 
 class MapNode3D extends Node3D:

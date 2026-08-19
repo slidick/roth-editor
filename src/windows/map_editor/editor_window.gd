@@ -540,9 +540,10 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				var das_info: Dictionary = item.get_metadata(0).ref.map_info.das_info
 				if das_info not in das_packs:
 					das_packs.append(das_info)
-				var das2_info: Dictionary = item.get_metadata(0).ref.map_info.map_pack.das2_info
-				if das2_info not in das_packs:
-					das_packs.append(das2_info)
+				if "das2_info" in item.get_metadata(0).ref.map_info.map_pack:
+					var das2_info: Dictionary = item.get_metadata(0).ref.map_info.map_pack.das2_info
+					if das2_info not in das_packs:
+						das_packs.append(das2_info)
 			for das_info: Dictionary in das_packs:
 				Das.unload_das(das_info)
 				%Texture.unload_das(das_info)
@@ -550,7 +551,8 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				var map: Map = Map.load_from_bytes(item.get_metadata(0).ref.map_info, item.get_metadata(0).ref.compile())
 				if not map:
 					return
-				Das.get_index_from_das(0, map.map_info.map_pack.das2_info, 293)
+				if "das2_info" in map.map_info.map_pack:
+					Das.get_index_from_das(0, map.map_info.map_pack.das2_info, 293)
 				Roth.das_loading_started.emit("Reloading DAS")
 				await map.load_das()
 				replace_map(item.get_metadata(0).ref, map)
