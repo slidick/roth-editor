@@ -2,11 +2,19 @@ extends Node
 
 signal settings_updated
 
+const NORMALITY_CUSTOM_MAP_DIRECTORY: String = "user://normality/maps"
+const NORMALITY_CUSTOM_MAP_PACKS_DIRECTORY: String = "user://normality/map_packs"
+
 var installations: Array = []
 var current_installation: NormalityInstallation = null
 
 
 func _ready() -> void:
+	if not DirAccess.dir_exists_absolute(NORMALITY_CUSTOM_MAP_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(NORMALITY_CUSTOM_MAP_DIRECTORY)
+	if not DirAccess.dir_exists_absolute(NORMALITY_CUSTOM_MAP_PACKS_DIRECTORY):
+		DirAccess.make_dir_recursive_absolute(NORMALITY_CUSTOM_MAP_PACKS_DIRECTORY)
+	
 	var normality_installations: Array = Settings.settings.get("normality_installations", [])
 	for installation_directory: String in normality_installations:
 		installations.append(NormalityInstallation.new(installation_directory))
@@ -19,6 +27,8 @@ func _ready() -> void:
 		current_installation = installations[current_install]
 		for installation: NormalityInstallation in installations:
 			NormPack.init_vanilla(installation)
+	
+	NormPack.init_custom(NORMALITY_CUSTOM_MAP_DIRECTORY, NORMALITY_CUSTOM_MAP_PACKS_DIRECTORY)
 	
 	await get_tree().get_root().ready
 	settings_updated.emit()

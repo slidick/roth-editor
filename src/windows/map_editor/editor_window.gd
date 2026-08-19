@@ -490,7 +490,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
 				return
 			var map: Map = selected[0].get_metadata(0).ref
-			var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.SAVE_AS)
+			var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.SAVE_AS, "normality" in map.map_info)
 			if results[0]:
 				var new_map_name: String = results[1]
 				Console.print("Saving file as: %s" % new_map_name)

@@ -25,6 +25,7 @@ var valid: Variant = null
 var das_packs: Array = []
 var maps: Array = []
 
+
 func _init(p_directory: String) -> void:
 	directory = p_directory
 
@@ -63,14 +64,13 @@ func is_valid() -> bool:
 
 func get_das_packs() -> Array:
 	var das_infos: Array = []
-	
 	for filename: String in DirAccess.get_files_at(maps_directory):
 		if filename.get_extension().to_upper() == "MGL":
 			var das_info: Dictionary = {
 				"name": filename.get_basename().to_upper(),
 				"filepath": maps_directory.path_join(filename).replacen(".MGL", ".DAS"),
 				"filepath_mgl": maps_directory.path_join(filename),
-				"vanilla": true,
+				"vanilla": self,
 				"normality": true,
 			}
 			das_infos.append(das_info)
@@ -80,14 +80,14 @@ func get_das_packs() -> Array:
 
 func get_map_infos(p_das_packs: Array) -> Array:
 	var map_infos: Array = []
-	
-	for filename: String in DirAccess.get_files_at(maps_directory):
-		if filename.get_extension().to_upper() == "RAW":
+	var map_das_list: Array = get_map_das_list()
+	for map_das: Array in map_das_list:
+		if FileAccess.file_exists(maps_directory.path_join(map_das[0])+".RAW"):
 			var map_info: Dictionary = {
-				"name": filename.get_basename().to_upper(),
-				"das_info": find_das(p_das_packs, filename.get_basename().to_upper()),
-				"filepath": maps_directory.path_join(filename),
-				"vanilla": true,
+				"name": map_das[0],
+				"das_info": find_das(p_das_packs, map_das[1]),
+				"filepath": maps_directory.path_join(map_das[0])+".RAW",
+				"vanilla": self,
 				"normality": true,
 			}
 			map_infos.append(map_info)
@@ -95,10 +95,21 @@ func get_map_infos(p_das_packs: Array) -> Array:
 	return map_infos
 
 
-func find_das(p_das_packs: Array, p_map_name: String) -> Dictionary:
+func find_das(p_das_packs: Array, p_das_name: String) -> Dictionary:
 	for das_info: Dictionary in p_das_packs:
-		if p_map_name.to_upper() == das_info.name.to_upper():
+		if p_das_name == das_info.name:
 			return das_info
-		if p_map_name.left(-1).to_upper() == das_info.name.to_upper():
-			return das_info
-	return { "name": "Invalid", "invalid": true }
+	return { "name": p_das_name + " (Invalid)", "invalid": true }
+
+
+func get_map_das_list() -> Array:
+	var das_list: Array = []
+	var map_list: Array = []
+	var file := FileAccess.open(normality_exe, FileAccess.READ)
+	file.seek(0xBA5A5)
+	for i in range(30):
+		das_list.append(file.get_line().to_upper().trim_prefix("MAPS\\"))
+	for i in range(30):
+		map_list.append([file.get_line().to_upper().trim_prefix("MAPS\\").trim_suffix(".RAW"), das_list[i]])
+	file.close()
+	return map_list

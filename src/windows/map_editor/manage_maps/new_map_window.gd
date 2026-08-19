@@ -3,16 +3,16 @@ extends BaseWindow
 signal done(map: Map)
 
 
-func new_map(p_map_pack: Dictionary) -> Map:
+func new_map(p_map_pack: Dictionary, p_das_packs: Array, p_map_packs: Array) -> Map:
 	%MapNameEdit.text = ""
 	%ErrorLabel.text = ""
 	%CreateButton.disabled = true
 	%DasOption.clear()
 	%MapPackOption.clear()
-	for das_info: Dictionary in DASPack.das_packs:
+	for das_info: Dictionary in p_das_packs:
 		%DasOption.add_item(das_info.name)
 		%DasOption.set_item_metadata(%DasOption.item_count-1, das_info)
-	for map_pack: Dictionary in MapPack.map_packs:
+	for map_pack: Dictionary in p_map_packs:
 		if "vanilla" in map_pack:
 			continue
 		%MapPackOption.add_item(map_pack.name)
@@ -46,10 +46,15 @@ func _submit() -> void:
 		"das_info": %DasOption.get_selected_metadata(),
 		"map_pack": map_pack,
 	}
+	if "normality" in map_pack:
+		create_info["normality"] = true
 	var map := Map.new(create_info)
 	map.save_map()
 	map_pack.maps.append(map)
-	MapPack.save(map.map_info.map_pack)
+	if "normality" in map_pack:
+		NormPack.save(map.map_info.map_pack)
+	else:
+		MapPack.save(map.map_info.map_pack)
 	done.emit(map)
 
 

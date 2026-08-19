@@ -12,15 +12,19 @@ enum Modification {
 
 var maps: Array
 var type: Modification
+var normality: bool = false
 
-
-func modify_maps(p_maps: Array, p_type: Modification) -> Array:
+func modify_maps(p_maps: Array, p_type: Modification, p_normality: bool = false) -> Array:
 	maps = p_maps
 	type = p_type
+	normality = p_normality
 	var map: Map = p_maps[0]
 	%ErrorLabel.text = ""
 	%MapPackOption.clear()
-	for map_pack: Dictionary in MapPack.map_packs:
+	var map_packs: Array = MapPack.map_packs
+	if normality:
+		map_packs = NormPack.map_packs
+	for map_pack: Dictionary in map_packs:
 		if "vanilla" in map_pack:
 			continue
 		%MapPackOption.add_item(map_pack.name)
@@ -61,7 +65,10 @@ func modify_maps(p_maps: Array, p_type: Modification) -> Array:
 		match type:
 			Modification.RENAME:
 				results = [map.map_info.name != data.new_name, map.map_info.map_pack != data.new_map_pack, data.new_name, data.new_map_pack ]
-				MapPack.move_map(map, data.new_map_pack)
+				if normality:
+					NormPack.move_map(map, data.new_map_pack)
+				else:
+					MapPack.move_map(map, data.new_map_pack)
 				map.rename_map(data.new_name)
 			Modification.DUPLICATE:
 				var new_map: Map = map.duplicate_map(data.new_name, data.new_map_pack)
@@ -76,8 +83,12 @@ func modify_maps(p_maps: Array, p_type: Modification) -> Array:
 				map.save_map_as(data.new_name, data.new_map_pack)
 				results = [true, data.new_name]
 			Modification.MOVE:
-				for each_map: Map in maps:
-					MapPack.move_map(each_map, data.new_map_pack)
+				if normality:
+					for each_map: Map in maps:
+						NormPack.move_map(each_map, data.new_map_pack)
+				else:
+					for each_map: Map in maps:
+						MapPack.move_map(each_map, data.new_map_pack)
 				results = [true]
 	return results
 

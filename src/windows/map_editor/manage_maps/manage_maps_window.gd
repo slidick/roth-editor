@@ -286,7 +286,7 @@ func _on_run_button_pressed() -> void:
 
 
 func _on_new_map_button_pressed() -> void:
-	var map: Map = await %NewMap.new_map(%MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0]))
+	var map: Map = await %NewMap.new_map(%MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0]), DASPack.das_packs, MapPack.map_packs)
 	if map:
 		select_maps([map])
 
@@ -312,7 +312,7 @@ func select_maps(maps: Array) -> void:
 
 func _on_export_button_pressed() -> void:
 	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
-	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EXPORT, map_pack)
+	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EXPORT, false, map_pack)
 	if changed:
 		%MapPackList.set_item_text(%MapPackList.get_selected_items()[0], map_pack.name)
 		%DBaseLabel.text = map_pack.dbase_info.name
@@ -323,12 +323,12 @@ func _on_export_button_pressed() -> void:
 
 
 func _on_import_button_pressed() -> void:
-	%Import.import_map()
+	%Import.import_map(false)
 
 
 func _on_change_das_button_pressed() -> void:
 	var map: Map = %MapTree.get_selected().get_metadata(0)
-	var new_das: Dictionary = await %ChangeDAS.change_das(map.map_info.das_info)
+	var new_das: Dictionary = await %ChangeDAS.change_das(map.map_info.das_info, DASPack.das_packs)
 	if new_das.is_empty():
 		return
 	map.map_info.das_info = new_das
@@ -340,7 +340,7 @@ func _on_change_das_button_pressed() -> void:
 
 func _on_edit_map_pack_button_pressed() -> void:
 	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
-	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EDIT, map_pack)
+	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EDIT, false, map_pack)
 	if changed:
 		%MapPackList.set_item_text(%MapPackList.get_selected_items()[0], map_pack.name)
 		%DBaseLabel.text = map_pack.dbase_info.name
@@ -351,7 +351,7 @@ func _on_edit_map_pack_button_pressed() -> void:
 
 
 func _on_new_map_pack_button_pressed() -> void:
-	var map_pack: Dictionary = await %MapPack.map_pack(%MapPack.Type.CREATE)
+	var map_pack: Dictionary = await %MapPack.map_pack(%MapPack.Type.CREATE, false)
 	if map_pack:
 		var idx: int = %MapPackList.add_item(map_pack.name)
 		%MapPackList.set_item_metadata(idx, map_pack)

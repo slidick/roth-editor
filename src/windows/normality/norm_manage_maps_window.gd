@@ -181,14 +181,14 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 			
 			if len(maps) > 1:
 				maps = maps.map(func (item: TreeItem) -> Map: return item.get_metadata(0))
-				var results: Array = await %ModifyMap.modify_maps(maps, %ModifyMap.Modification.MOVE)
+				var results: Array = await %ModifyMap.modify_maps(maps, %ModifyMap.Modification.MOVE, true)
 				if results[0]:
 					select_maps(maps)
 			else:
 				tree_item = maps[0]
 				map = maps[0].get_metadata(0)
 				
-				var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.RENAME)
+				var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.RENAME, true)
 				
 				if results[1]:
 					select_maps([map])
@@ -218,12 +218,12 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 		2:
 			var maps: Array = get_selected_maps()
 			if len(maps) > 1:
-				var results: Array = await %ModifyMap.modify_maps(maps, %ModifyMap.Modification.DUPLICATE_MULTIPLE)
+				var results: Array = await %ModifyMap.modify_maps(maps, %ModifyMap.Modification.DUPLICATE_MULTIPLE, true)
 				if results[0]:
 					select_maps(results[1])
 			else:
 				var map: Map = maps[0]
-				var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.DUPLICATE)
+				var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.DUPLICATE, true)
 				if results[0]:
 					select_maps([results[1]])
 
@@ -239,7 +239,6 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 				else:
 					%MapPopupMenu.set_item_disabled(0, true)
 					%MapPopupMenu.set_item_disabled(1, true)
-					%MapPopupMenu.set_item_disabled(2, true)
 				if len(get_selected_maps()) > 1:
 					%MapPopupMenu.set_item_text(0, "Move Maps")
 					%MapPopupMenu.set_item_text(1, "Delete Maps")
@@ -258,7 +257,7 @@ func _on_run_button_pressed() -> void:
 
 
 func _on_new_map_button_pressed() -> void:
-	var map: Map = await %NewMap.new_map(%MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0]))
+	var map: Map = await %NewMap.new_map(%MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0]), NormPack.das_packs, NormPack.map_packs)
 	if map:
 		select_maps([map])
 
@@ -284,23 +283,23 @@ func select_maps(maps: Array) -> void:
 
 func _on_export_button_pressed() -> void:
 	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
-	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EXPORT, map_pack)
+	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EXPORT, true, map_pack)
 	if changed:
 		%MapPackList.set_item_text(%MapPackList.get_selected_items()[0], map_pack.name)
-		%DBaseLabel.text = map_pack.dbase_info.name
-		%DAS2Label.text = map_pack.das2_info.name
-		%SFXLabel.text = map_pack.sfx_info.name
-		%BackdropLabel.text = map_pack.backdrop_info.name
-		%IconsLabel.text = map_pack.icon_info.name
+		#%DBaseLabel.text = map_pack.dbase_info.name
+		#%DAS2Label.text = map_pack.das2_info.name
+		#%SFXLabel.text = map_pack.sfx_info.name
+		#%BackdropLabel.text = map_pack.backdrop_info.name
+		#%IconsLabel.text = map_pack.icon_info.name
 
 
 func _on_import_button_pressed() -> void:
-	%Import.import_map()
+	%Import.import_map(true)
 
 
 func _on_change_das_button_pressed() -> void:
 	var map: Map = %MapTree.get_selected().get_metadata(0)
-	var new_das: Dictionary = await %ChangeDAS.change_das(map.map_info.das_info)
+	var new_das: Dictionary = await %ChangeDAS.change_das(map.map_info.das_info, NormPack.das_packs)
 	if new_das.is_empty():
 		return
 	map.map_info.das_info = new_das
@@ -312,27 +311,27 @@ func _on_change_das_button_pressed() -> void:
 
 func _on_edit_map_pack_button_pressed() -> void:
 	var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
-	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EDIT, map_pack)
+	var changed: bool = await %MapPack.map_pack(%MapPack.Type.EDIT, true, map_pack)
 	if changed:
 		%MapPackList.set_item_text(%MapPackList.get_selected_items()[0], map_pack.name)
-		%DBaseLabel.text = map_pack.dbase_info.name
-		%DAS2Label.text = map_pack.das2_info.name
-		%SFXLabel.text = map_pack.sfx_info.name
-		%BackdropLabel.text = map_pack.backdrop_info.name
-		%IconsLabel.text = map_pack.icon_info.name
+		#%DBaseLabel.text = map_pack.dbase_info.name
+		#%DAS2Label.text = map_pack.das2_info.name
+		#%SFXLabel.text = map_pack.sfx_info.name
+		#%BackdropLabel.text = map_pack.backdrop_info.name
+		#%IconsLabel.text = map_pack.icon_info.name
 
 
 func _on_new_map_pack_button_pressed() -> void:
-	var map_pack: Dictionary = await %MapPack.map_pack(%MapPack.Type.CREATE)
+	var map_pack: Dictionary = await %MapPack.map_pack(%MapPack.Type.CREATE, true)
 	if map_pack:
 		var idx: int = %MapPackList.add_item(map_pack.name)
 		%MapPackList.set_item_metadata(idx, map_pack)
 		%MapPackList.move_item(idx, idx-1)
-		%DBaseLabel.text = map_pack.dbase_info.name
-		%DAS2Label.text = map_pack.das2_info.name
-		%SFXLabel.text = map_pack.sfx_info.name
-		%BackdropLabel.text = map_pack.backdrop_info.name
-		%IconsLabel.text = map_pack.icon_info.name
+		#%DBaseLabel.text = map_pack.dbase_info.name
+		#%DAS2Label.text = map_pack.das2_info.name
+		#%SFXLabel.text = map_pack.sfx_info.name
+		#%BackdropLabel.text = map_pack.backdrop_info.name
+		#%IconsLabel.text = map_pack.icon_info.name
 		%MapPackList.select(idx-1)
 		_on_map_pack_list_item_selected(idx-1)
 
@@ -350,7 +349,7 @@ func _on_map_tree_item_moved() -> void:
 		new_map_order.append(map)
 		tree_item = tree_item.get_next()
 	map_pack.maps = new_map_order
-	MapPack.save(map_pack)
+	NormPack.save(map_pack)
 
 
 func _on_map_pack_menu_index_pressed(index: int) -> void:
@@ -359,18 +358,18 @@ func _on_map_pack_menu_index_pressed(index: int) -> void:
 			var map_pack: Dictionary = %MapPackList.get_item_metadata(%MapPackList.get_selected_items()[0])
 			var results: Array = await Dialog.confirm_additional("Deleting map pack\n%s" % map_pack.name, "Confirm Delete", "Also delete maps and backups!")
 			if results[0]:
-				MapPack.delete(map_pack, results[1])
+				NormPack.delete(map_pack, results[1])
 				for i in range(%MapPackList.item_count):
 					if %MapPackList.get_item_metadata(i) == map_pack:
 						%MapPackList.remove_item(i)
 						break
 				clear()
 				%MapTree.clear()
-				%DBaseLabel.text = ""
-				%DAS2Label.text = ""
-				%SFXLabel.text = ""
-				%BackdropLabel.text = ""
-				%IconsLabel.text = ""
+				#%DBaseLabel.text = ""
+				#%DAS2Label.text = ""
+				#%SFXLabel.text = ""
+				#%BackdropLabel.text = ""
+				#%IconsLabel.text = ""
 				%ExportButton.disabled = true
 				%NewMapButton.disabled = true
 				%RunButton.disabled = true

@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_fbvgd"]
 [ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_jpxmu"]
 [ext_resource type="Script" uid="uid://bsv4hbseaoyiq" path="res://src/windows/normality/norm_manage_maps_window.gd" id="3_wot8u"]
+[ext_resource type="StyleBox" uid="uid://mqkvd8h3nsgt" path="res://src/themes/normality_window_panel_theme.tres" id="4_fbvgd"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="5_1quj8"]
 [ext_resource type="Script" uid="uid://dplewkjlqcsb8" path="res://src/windows/map_editor/2d_view.gd" id="6_k081i"]
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/map_editor/manage_maps/new_map_window.tscn" id="7_ew12k"]
@@ -24,9 +25,8 @@ offset_right = 1400.0
 offset_bottom = 850.0
 theme = ExtResource("2_jpxmu")
 script = ExtResource("3_wot8u")
-focus_border_color = Color(0.63226885, 0.61528045, 0.9353586, 1)
-panel_color = Color(0.45834607, 0.47593665, 0.81462085, 1)
 panel_corner_radius = 0
+panel_style_override = ExtResource("4_fbvgd")
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=843433278]
 layout_mode = 2
@@ -136,15 +136,13 @@ layout_mode = 2
 
 [node name="EditMapPackButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/Control" index="5" unique_id=1953144089]
 unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Change"
+text = "Edit Map Pack"
 
 [node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="3" unique_id=1690409886]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -152,7 +150,6 @@ text = "Import Map Pack"
 
 [node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="4" unique_id=479801140]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -162,7 +159,6 @@ text = "Export Map Pack"
 
 [node name="NewMapPackButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="5" unique_id=1304687570]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -206,7 +202,6 @@ item_2/id = 2
 
 [node name="ReorderMapsCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=1272577152]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -214,7 +209,6 @@ text = "Reorder Maps"
 
 [node name="NewMapButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="3" unique_id=1512522683]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -354,6 +348,7 @@ text = "DAS File:"
 vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" index="1" unique_id=733849355]
+visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Commands:"
@@ -379,6 +374,7 @@ vertical_alignment = 1
 
 [node name="Commands" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" index="1" unique_id=707923710]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 horizontal_alignment = 2
@@ -452,6 +448,7 @@ offset_right = 375.0
 offset_bottom = 102.5
 grow_horizontal = 2
 grow_vertical = 2
+panel_style_override = ExtResource("4_fbvgd")
 
 [node name="Import" parent="Dialogs" index="1" unique_id=115071097 node_paths=PackedStringArray("manage_maps_window") instance=ExtResource("8_kfqv4")]
 unique_name_in_owner = true
@@ -469,6 +466,7 @@ offset_bottom = 332.0
 grow_horizontal = 2
 grow_vertical = 2
 manage_maps_window = NodePath("../..")
+panel_style_override = ExtResource("4_fbvgd")
 
 [node name="ChangeDAS" parent="Dialogs" index="2" unique_id=452268762 instance=ExtResource("9_k6yai")]
 unique_name_in_owner = true
@@ -486,6 +484,7 @@ offset_bottom = 110.5
 grow_horizontal = 2
 grow_vertical = 2
 minimize_style = "fade_out"
+panel_style_override = ExtResource("4_fbvgd")
 
 [node name="MapPack" parent="Dialogs" index="3" unique_id=1864199248 instance=ExtResource("10_aust4")]
 unique_name_in_owner = true
@@ -502,6 +501,7 @@ offset_right = 300.0
 offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
+panel_style_override = ExtResource("4_fbvgd")
 
 [node name="ModifyMap" parent="Dialogs" index="4" unique_id=269876620 instance=ExtResource("11_oxckc")]
 unique_name_in_owner = true
@@ -518,6 +518,7 @@ offset_right = 225.0
 offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
+panel_style_override = ExtResource("4_fbvgd")
 
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MapPackList" to="." method="_on_map_pack_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MapPackList" to="." method="_on_map_pack_list_item_selected"]

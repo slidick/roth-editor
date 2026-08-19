@@ -184,7 +184,10 @@ func delete_map(p_delete_backups: bool = false) -> void:
 			count += 1
 	#Roth.maps.erase(self)
 	map_info.map_pack.maps.erase(self)
-	MapPack.save(map_info.map_pack)
+	if "normality" in map_info:
+		NormPack.save(map_info.map_pack)
+	else:
+		MapPack.save(map_info.map_pack)
 	unload()
 
 
@@ -195,10 +198,15 @@ func rename_map(new_map_name: String) -> void:
 	var old_map_info: Dictionary = map_info.duplicate()
 	
 	map_info.name = new_map_name
-	map_info.erase("filepath")
-	map_info.erase("filepath_json")
 	
-	save_map()
+	if is_loaded:
+		save_map()
+	else:
+		var temp_map: Map = create_editable_map(true)
+		temp_map.load_map()
+		
+		temp_map.save_map()
+		temp_map.unload()
 	
 	if FileAccess.file_exists(map_info.filepath) and map_info.filepath != old_map_info.filepath:
 		if FileAccess.file_exists(old_map_info.filepath):
@@ -228,7 +236,10 @@ func duplicate_map(new_map_name: String, map_pack: Dictionary) -> Map:
 	new_map.save_metadata()
 	#Roth.maps.append(new_map)
 	map_pack.maps.append(new_map)
-	MapPack.save(map_pack)
+	if "normality" in map_info:
+		NormPack.save(map_pack)
+	else:
+		MapPack.save(map_pack)
 	DirAccess.copy_absolute(map_info.filepath, new_map.map_info.filepath)
 	return new_map
 
@@ -301,17 +312,25 @@ func _reload_map_info() -> void:
 						map_info[key] = file_json[key]
 					else:
 						map_info.erase(key)
-				for das_info: Dictionary in DASPack.das_packs:
-					if das_info.name == file_json.das.get_basename().get_file():
-						map_info.das_info = das_info
+				map_info["uuid"] = map_info.filepath_json.get_file().get_basename()
+				if "normality" in file_json:
+					map_info["das_info"] = NormPack.get_das_by_name(file_json.das)
+				else:
+					map_info["das_info"] = DASPack.get_by_name(file_json.das)
 
 
-func save_map(directory: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY, player_data: Dictionary = {}) -> void:
+func save_map(directory: String = "", player_data: Dictionary = {}) -> void:
+	if directory.is_empty():
+		if "normality" in map_info:
+			directory = Normality.NORMALITY_CUSTOM_MAP_DIRECTORY
+		else:
+			directory = Roth.ROTH_CUSTOM_MAP_DIRECTORY
+	
 	_add_missing_map_info()
 	
 	var raw_map := compile(player_data)
 	
-	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY:
+	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY or directory == Normality.NORMALITY_CUSTOM_MAP_DIRECTORY:
 		if FileAccess.file_exists(map_info.filepath):
 			var count: int = 1
 			while FileAccess.file_exists(map_info.filepath + ".%d" % count):
@@ -349,17 +368,22 @@ func save_map(directory: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY, player_data: D
 
 
 func _add_missing_map_info() -> void:
+	var directory: String = ""
+	if "normality" in map_info:
+		directory = Normality.NORMALITY_CUSTOM_MAP_DIRECTORY
+	else:
+		directory = Roth.ROTH_CUSTOM_MAP_DIRECTORY
 	if "vanilla" not in map_info:
 		if "uuid" not in map_info:
 			map_info["uuid"] = Utility.uuidv4()
-			while FileAccess.file_exists(Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.uuid + ".RAW")):
+			while FileAccess.file_exists(directory.path_join(map_info.uuid + ".RAW")):
 				map_info["uuid"] = Utility.uuidv4()
 		
 		if "filepath" not in map_info:
-			map_info["filepath"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.uuid + ".RAW")
+			map_info["filepath"] = directory.path_join(map_info.uuid + ".RAW")
 		
 		if "filepath_json" not in map_info:
-			map_info["filepath_json"] = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(map_info.uuid + ".json")
+			map_info["filepath_json"] = directory.path_join(map_info.uuid + ".json")
 
 
 func save_metadata() -> void:
@@ -392,7 +416,10 @@ func save_map_as(new_map_name: String, map_pack: Dictionary) -> void:
 	preview_map.editable_map = self
 	#Roth.maps.append(preview_map)
 	map_pack.maps.append(preview_map)
-	MapPack.save(map_pack)
+	if "normality" in map_info:
+		NormPack.save(map_pack)
+	else:
+		MapPack.save(map_pack)
 	name_changed.emit(new_map_name)
 
 
