@@ -1265,7 +1265,11 @@ func enter_paste_sectors_mode() -> void:
 	for sector: Sector in copied_sector_data:
 		original_pasted_sector_data.append(sector.duplicate(true))
 		current_pasted_sector_data.append(sector.duplicate(true))
+	
+	selected_sectors.clear()
 	%Map2D.queue_redraw()
+	%Map3D.update_selections()
+	%EditSectorContainer.update_selections()
 
 
 func cancel_paste_sectors_mode() -> void:
