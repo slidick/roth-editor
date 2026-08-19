@@ -297,9 +297,13 @@ static func get_preview(filepath: String, normality: bool) -> Dictionary:
 		vertex.erase("unk0x06")
 		vertices.append(vertex)
 	
-	var command_header: Dictionary = Parser.parse_section(file, COMMAND_HEADER)
+	var command_header: Dictionary = {"commandCount": 0}
+	if not normality:
+		command_header = Parser.parse_section(file, COMMAND_HEADER)
+		file.seek(header["verticesOffset"] + header["verticesSectionSize"] + header["commandSectionSize"] + header["section7Size"])
+	else:
+		file.seek(header["verticesOffset"] + header["verticesSectionSize"] + header["section7Size"])
 	
-	file.seek(header["verticesOffset"] + header["verticesSectionSize"] + header["commandSectionSize"] + header["section7Size"])
 	var object_start_position: int = file.get_position()
 	var current_position: int = file.get_position()
 	var objects_count: int = 0

@@ -131,15 +131,17 @@ func _on_open_button_pressed() -> void:
 
 func _on_map_tree_cell_selected() -> void:
 	var map: Map = %MapTree.get_selected().get_metadata(0)
-	map.load_map()
-	%Map.setup(map.sectors)
-	%Sectors.text = "%s" % len(map.sectors)
-	%Faces.text = "%s" % len(map.faces)
-	%Vertices.text = "%s" % map.vertices_count
-	%Objects.text = "%s" % len(map.objects)
+	var map_preview: Dictionary = map.get_map_preview()
+	if map_preview.is_empty():
+		return
+	%Map.setup(map_preview.faces)
+	%Sectors.text = "%d" % map_preview.sector_count
+	%Faces.text = "%d" % len(map_preview.faces)
+	%Vertices.text = "%d" % map_preview.vertices_count
+	%Objects.text = "%d" % map_preview.objects_count
 	%MapName.text = "%s" % map.map_info.name
 	%DASFile.text = "%s" % map.map_info.das_info.name
-	%Commands.text = "%s" % len(map.commands_section.allCommands)
+	%Commands.text = "%d" % map_preview.commands_count
 	if "uuid" in map.map_info:
 		%UUID.text = "%s" % map.map_info.uuid
 		%UUID.tooltip_text = "%s" % map.map_info.uuid
