@@ -1252,6 +1252,8 @@ func cut_selected_sectors() -> void:
 func enter_paste_sectors_mode() -> void:
 	if not %SectorCheckBox.button_pressed:
 		return
+	if copied_sector_data.is_empty():
+		return
 	paste_sectors_mode = true
 	current_copied_sector_center = original_copied_sector_center
 	original_pasted_sector_data.clear()
