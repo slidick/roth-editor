@@ -72,6 +72,7 @@ func get_das_packs() -> Array:
 				"filepath_mgl": maps_directory.path_join(filename),
 				"vanilla": self,
 				"normality": true,
+				"base": filename.get_basename().to_upper(),
 			}
 			das_infos.append(das_info)
 	
