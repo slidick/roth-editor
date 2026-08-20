@@ -429,7 +429,7 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 	if starting_map:
 		roth_res_test += "D:\\%s D:\\%s\n" % [starting_map.map_info.name.get_file().get_basename(), starting_map.map_info.das_info.name.md5_text().to_upper().left(8)]
 	for map: Map in map_pack.maps:
-		if map != starting_map:
+		if map != starting_map and map != starting_map.preview_map:
 			roth_res_test += "D:\\%s D:\\%s\n" % [map.map_info.name.get_file().get_basename(), map.map_info.das_info.name.md5_text().to_upper().left(8)]
 	roth_res_test += "}\n"
 	
