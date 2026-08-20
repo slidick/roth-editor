@@ -307,11 +307,12 @@ func _reload_map_info() -> void:
 			if file_json:
 				file_json["filepath"] = map_info.filepath
 				file_json["filepath_json"] = map_info.filepath_json
-				for key: String in map_info:
+				for key: String in map_info.keys():
 					if key in file_json:
 						map_info[key] = file_json[key]
 					else:
-						map_info.erase(key)
+						if key != "map_pack":
+							map_info.erase(key)
 				map_info["uuid"] = map_info.filepath_json.get_file().get_basename()
 				if "normality" in file_json:
 					map_info["das_info"] = NormPack.get_das_by_name(file_json.das)
