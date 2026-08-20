@@ -391,8 +391,6 @@ func _on_sub_viewport_container_focus_entered() -> void:
 
 
 func _on_sub_viewport_container_focus_exited() -> void:
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		return
 	%Camera3D.has_focus = false
 	%Map3D.has_focus = false
 	%ViewportBorder.self_modulate.a = 0.0
@@ -404,6 +402,8 @@ func _on_sub_viewport_container_mouse_entered() -> void:
 
 
 func _on_sub_viewport_container_mouse_exited() -> void:
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
 	%SubViewportContainer.release_focus()
 
 
