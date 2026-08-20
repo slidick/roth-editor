@@ -166,7 +166,8 @@ func update_texture_options(texture_data: Dictionary) -> void:
 func _on_draw_mode_adjust_ceiling_height_button_pressed() -> void:
 	var das: Dictionary = %Map2D.map.das
 	var index: int = %DrawModeWallOption.get_selected_metadata()
-	%DrawModeRoofHeightSpinBox.set_value_no_signal(%DrawModeFloorHeightSpinBox.value + (das.mapping[index].width * 2))
+	if index in das.mapping:
+		%DrawModeRoofHeightSpinBox.set_value_no_signal(%DrawModeFloorHeightSpinBox.value + (das.mapping[index].width * 2))
 
 
 func _on_draw_mode_edit_texture_presets_button_pressed() -> void:
