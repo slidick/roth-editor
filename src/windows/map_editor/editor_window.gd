@@ -231,7 +231,10 @@ func test_map() -> void:
 		"rotation": player_rotation,
 	}
 	
-	Roth.test_run_maps(map.map_info.map_pack, map, player_data)
+	if "normality" in map.map_info:
+		Normality.test_run_maps(map.map_info.map_pack, map, player_data)
+	else:
+		Roth.test_run_maps(map.map_info.map_pack, map, player_data)
 
 
 func close_map(map: Map) -> void:

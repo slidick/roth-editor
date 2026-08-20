@@ -35,6 +35,7 @@ var commands_section := {
 	"entryCommandIndexes": [],
 	"allCommands": []
 }
+var footer := []
 var node: MapNode3D
 var editor_metadata := {}
 var das: Dictionary
@@ -142,6 +143,8 @@ func load_json(map_json: Dictionary) -> void:
 		for i in range(len(commands_section.allCommands)):
 			commands_section.allCommands[i]["map"] = self
 			commands_section.allCommands[i]["index"] = i+1
+	
+	footer = map_json.footer
 	
 	if "vanilla" in map_info and map_info.name == "RAQUIA2":
 		for sector: Sector in sectors:
@@ -906,13 +909,21 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	if sfx_zones:
 		json["section7"]["unkArray02"] = sfx_zones
 	
+	var l_footer := PackedByteArray()
+	l_footer.resize(8)
+	l_footer.encode_s16(0, json["mapMetadataSection"]["initPosX"])
+	l_footer.encode_s16(2, json["mapMetadataSection"]["initPosY"])
 	
 	if "position" in player_data:
+		l_footer.encode_s16(0, -player_data.position.x)
+		l_footer.encode_s16(2, player_data.position.z)
 		json["mapMetadataSection"]["initPosX"] = -player_data.position.x
 		json["mapMetadataSection"]["initPosY"] = player_data.position.z
 		json["mapMetadataSection"]["initPosZ"] = player_data.position.y
 	if "rotation" in player_data:
 		json["mapMetadataSection"]["rotation"] = player_data.rotation
+	
+	json["footer"] = l_footer
 	
 	return Raw.compile(json, "normality" in map_info)
 

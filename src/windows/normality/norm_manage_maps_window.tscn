@@ -416,7 +416,6 @@ text = "Cancel
 
 [node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1798164462]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -426,7 +425,6 @@ text = "Run Selected"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-size_flags_horizontal = 10
 text = "Edit Selected"
 
 [node name="Dialogs" type="Control" parent="." index="2" unique_id=2137666810]

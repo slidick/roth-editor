@@ -48,9 +48,15 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="DisableCDROMCheckBox" type="CheckBox" parent="VBoxContainer/VBoxContainer" unique_id=1589286318]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Disable Cutscenes/Music/Dialog"
+
 [connection signal="item_activated" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_activated"]
 [connection signal="item_clicked" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_clicked"]
 [connection signal="item_selected" from="VBoxContainer/InstallationsList" to="." method="_on_installations_list_item_selected"]
 [connection signal="index_pressed" from="VBoxContainer/InstallationsList/InstallationsMenu" to="." method="_on_installations_menu_index_pressed"]
 [connection signal="pressed" from="VBoxContainer/AddInstallationButton" to="." method="_on_add_installation_button_pressed"]
 [connection signal="dir_selected" from="VBoxContainer/AddInstallationButton/InstallationsFileDialog" to="." method="_on_installations_file_dialog_dir_selected"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/DisableCDROMCheckBox" to="." method="_on_disable_cdrom_check_box_toggled"]

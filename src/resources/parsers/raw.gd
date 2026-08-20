@@ -586,7 +586,7 @@ static func parse(file: FileAccess, normality: bool) -> Dictionary:
 	parsed_file["section7"] = { "unkArray01": unk_array_01 }
 	if unk_array_02:
 		parsed_file["section7"]["unkArray02"] = unk_array_02
-	
+	parsed_file["footer"] = footer
 	
 	return parsed_file
 
@@ -689,7 +689,7 @@ static func _calculate_section_sizes_and_offsets(json: Dictionary, normality: bo
 	
 	var footer := {
 		"startsAt": objectsSection.startsAt + objectsSection.size,
-		"size": 0x08
+		"size": 0x08 if json.footer.is_empty() else len(json.footer)
 	}
 	
 	return {
@@ -1005,8 +1005,10 @@ static func _write_objects_section(buffer: PackedByteArray, json: Dictionary, se
 		sector_object_mapping_pos += 0x02
 
 
-static func _write_footer(buffer: PackedByteArray, _json: Dictionary, section_sizes: Dictionary) -> void:
-	const footer := [0x08, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00]
+static func _write_footer(buffer: PackedByteArray, json: Dictionary, section_sizes: Dictionary) -> void:
+	var footer := [0x08, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00]
+	if not json.footer.is_empty():
+		footer = json.footer
 	var position: int = section_sizes.footer.startsAt
 	for byte: int in footer:
 		buffer.encode_u8(position, byte)

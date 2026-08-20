@@ -2,6 +2,7 @@ extends MarginContainer
 
 func _ready() -> void:
 	Normality.settings_updated.connect(_on_settings_updated)
+	%DisableCDROMCheckBox.set_pressed_no_signal(Settings.settings.get("normality_options", {}).get("disable_cdrom", true))
 
 
 func _on_settings_updated() -> void:
@@ -59,3 +60,7 @@ func _on_installations_file_dialog_dir_selected(dir: String) -> void:
 		return
 	
 	Normality.add_installation(dir)
+
+
+func _on_disable_cdrom_check_box_toggled(toggled_on: bool) -> void:
+	Settings.update_settings("normality_options", { "disable_cdrom": toggled_on })
