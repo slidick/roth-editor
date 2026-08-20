@@ -389,27 +389,40 @@ func _on_browse_objects_button_pressed() -> void:
 	if new_object.is_empty():
 		return
 	var i: int = 0
-	var active_ademo: Dictionary = owner.selected_objects[0].map.map_info.map_pack.das2_info
-	for object: ObjectRoth in owner.selected_objects:
-		var source := 0
-		var index := 0
-		if new_object.das_info == active_ademo:
-			source = 2
-			index = new_object.index
-			if new_object.index >= 256:
-				source = 3
-				index -= 256
-		else:
-			source = 0
-			index = new_object.index - 4096
+	if "normality" in owner.selected_objects[0].map.map_info:
+		for object: ObjectRoth in owner.selected_objects:
+			var source: int = 0
+			var index: int = new_object.index - 4096
 			if new_object.index >= 4352:
 				source = 1
 				index -= 256
-		object.data.textureIndex = index
-		object.data.textureSource = source
-		if i == 0:
-			update_texture(object)
-			i += 1
+			object.data.textureIndex = index
+			object.data.textureSource = source
+			if i == 0:
+				update_texture(object)
+				i += 1
+	else:
+		var active_ademo: Dictionary = owner.selected_objects[0].map.map_info.map_pack.das2_info
+		for object: ObjectRoth in owner.selected_objects:
+			var source := 0
+			var index := 0
+			if new_object.das_info == active_ademo:
+				source = 2
+				index = new_object.index
+				if new_object.index >= 256:
+					source = 3
+					index -= 256
+			else:
+				source = 0
+				index = new_object.index - 4096
+				if new_object.index >= 4352:
+					source = 1
+					index -= 256
+			object.data.textureIndex = index
+			object.data.textureSource = source
+			if i == 0:
+				update_texture(object)
+				i += 1
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 

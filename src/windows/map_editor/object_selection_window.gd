@@ -33,9 +33,13 @@ func wait_for_object_selection(p_current_object: ObjectRoth) -> Dictionary:
 	%FavoriteItemList.clear()
 	%SearchEdit.show()
 	load_das(p_current_object.map.das)
-	load_favorites(p_current_object.map.das.das_info, p_current_object.map.map_info.map_pack.das2_info)
-	load_recents(p_current_object.map.das.das_info, p_current_object.map.map_info.map_pack.das2_info)
-	load_ademo(p_current_object.map.map_info.map_pack.das2_info, true)
+	if "normality" in p_current_object.map.map_info:
+		load_favorites(p_current_object.map.das.das_info, {})
+		load_recents(p_current_object.map.das.das_info, {})
+	else:
+		load_favorites(p_current_object.map.das.das_info, p_current_object.map.map_info.map_pack.das2_info)
+		load_recents(p_current_object.map.das.das_info, p_current_object.map.map_info.map_pack.das2_info)
+		load_ademo(p_current_object.map.map_info.map_pack.das2_info, true)
 	_on_search_edit_text_changed(%SearchEdit.text)
 	select_object(p_current_object)
 	toggle(true)
@@ -110,7 +114,11 @@ func load_das(p_das: Dictionary) -> void:
 
 func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 	for favorite_data: Dictionary in favorites:
-		var das_info: Dictionary = DASPack.get_by_name(favorite_data.das)
+		var das_info: Dictionary = {}
+		if p_das2_info.is_empty():
+			das_info = NormPack.get_das_by_name(favorite_data.das)
+		else:
+			das_info = DASPack.get_by_name(favorite_data.das)
 		var texture_data: Dictionary = Das.get_index_from_das(favorite_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
@@ -125,7 +133,11 @@ func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 
 func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 	for recent_data: Dictionary in recents:
-		var das_info: Dictionary = DASPack.get_by_name(recent_data.das)
+		var das_info: Dictionary = {}
+		if p_das2_info.is_empty():
+			das_info = NormPack.get_das_by_name(recent_data.das)
+		else:
+			das_info = DASPack.get_by_name(recent_data.das)
 		var texture_data: Dictionary = Das.get_index_from_das(recent_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
