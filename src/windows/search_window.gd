@@ -43,12 +43,12 @@ const FIELDS: Array = [
 	"textureIndex",
 	"textureSource",
 	"rotation",
-	"unk0x07",
+	"flags_obj",
 	"lighting_obj",
 	"renderType",
 	"posZ",
 	"unk0x0C_obj",
-	"unk0x0E_obj",
+	"objectID",
 	"SFXData",
 	"unk0x00_snd",
 	"unk0x02_snd",
@@ -192,12 +192,12 @@ func search() -> void:
 			or search_field == "textureIndex"
 			or search_field == "textureSource"
 			or search_field == "rotation"
-			or search_field == "unk0x07"
+			or search_field == "flags_obj"
 			or search_field == "lighting_obj"
 			or search_field == "renderType"
 			or search_field == "posZ"
 			or search_field == "unk0x0C_obj"
-			or search_field == "unk0x0E_obj"
+			or search_field == "objectID"
 			
 	):
 		search_field = search_field.trim_suffix("_obj")

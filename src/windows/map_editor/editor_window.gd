@@ -911,7 +911,7 @@ func select_face(index: int, type: String, p_map: Map = null, count: int = 0, de
 						select_resource(object.ref, deselect_others)
 			"Object ID":
 				for object: Node3D in map_node.get_node("Objects").get_children():
-					if index == object.ref.data.unk0x0E:
+					if "objectID" in object.ref.data and index == object.ref.data.objectID:
 						if count == 0:
 							select_resource(object.ref, deselect_others)
 							return

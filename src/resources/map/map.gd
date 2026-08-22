@@ -925,7 +925,10 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	
 	json["footer"] = l_footer
 	
-	return Raw.compile(json, "normality" in map_info)
+	if "normality" in map_info:
+		json["normality"] = true
+	
+	return Raw.compile(json)
 
 
 class MapNode3D extends Node3D:

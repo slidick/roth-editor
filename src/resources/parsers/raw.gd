@@ -219,12 +219,12 @@ const OBJECT := {
 	"textureIndex": Parser.Type.Byte,
 	"textureSource": Parser.Type.Byte,
 	"rotation": Parser.Type.Byte,
-	"unk0x07": Parser.Type.Byte,  # Flags [bit 8 is start hidden]
+	"flags": Parser.Type.Byte,
 	"lighting": Parser.Type.Byte,
 	"renderType": Parser.Type.Byte,
 	"posZ": Parser.Type.SignedWord,
 	"unk0x0C": Parser.Type.Word,
-	"unk0x0E": Parser.Type.Word,
+	"objectID": Parser.Type.Word,
 }
 
 const NORM_OBJECT := {
@@ -233,9 +233,9 @@ const NORM_OBJECT := {
 	"textureIndex": Parser.Type.Byte,
 	"textureSource": Parser.Type.Byte,
 	"rotation": Parser.Type.Byte,
-	"unk0x07": Parser.Type.Byte,
+	"flags": Parser.Type.Byte,
 	"lighting": Parser.Type.Byte,
-	"renderType": Parser.Type.Byte,
+	"unk0x09": Parser.Type.Byte,
 	"posZ": Parser.Type.SignedWord,
 	"unk0x0C": Parser.Type.Word,
 }
@@ -591,20 +591,20 @@ static func parse(file: FileAccess, normality: bool) -> Dictionary:
 	return parsed_file
 
 
-static func compile(json: Dictionary, normality: bool = false) -> PackedByteArray:
-	var section_sizes: Dictionary = _calculate_section_sizes_and_offsets(json, normality)
+static func compile(json: Dictionary) -> PackedByteArray:
+	var section_sizes: Dictionary = _calculate_section_sizes_and_offsets(json)
 	if section_sizes.verticesSection.startsAt > 65535:
 		return []
 	var buffer := PackedByteArray()
 	buffer.resize(section_sizes.footer.startsAt + section_sizes.footer.size)
-	_write_header(buffer, json, section_sizes, normality)
+	_write_header(buffer, json, section_sizes)
 	_write_sectors(buffer, json, section_sizes)
 	var texture_mapping_offsets: Array = _write_texture_mapping_section(buffer, json, section_sizes)
 	_write_faces(buffer, json, section_sizes, texture_mapping_offsets)
 	_write_mid_platform_section(buffer, json, section_sizes)
 	_write_map_metadata(buffer, json, section_sizes)
 	_write_vertices_section(buffer, json, section_sizes)
-	if not normality:
+	if not "normality" in json:
 		_write_commands_section(buffer, json, section_sizes)
 	_write_section7(buffer, json, section_sizes)
 	_write_objects_section(buffer, json, section_sizes)
@@ -613,10 +613,10 @@ static func compile(json: Dictionary, normality: bool = false) -> PackedByteArra
 	return buffer
 
 
-static func _calculate_section_sizes_and_offsets(json: Dictionary, normality: bool) -> Dictionary:
+static func _calculate_section_sizes_and_offsets(json: Dictionary) -> Dictionary:
 	var header := {
 		"startsAt": 0x00,
-		"size": 0x1E if not normality else 0x1C,
+		"size": 0x1E if not "normality" in json else 0x1C,
 	}
 	
 	var sectorsSection := {
@@ -664,12 +664,12 @@ static func _calculate_section_sizes_and_offsets(json: Dictionary, normality: bo
 		"size": commandSectionSize
 	}
 	
-	if normality:
+	if "normality" in json:
 		commandsSection.size = 0
 	
 	var section7A := {
 		"startsAt": commandsSection.startsAt + commandsSection.size,
-		"size": 0x04 + len(json.section7.unkArray01) * (0x12 if not normality else 0x10)
+		"size": 0x04 + len(json.section7.unkArray01) * (0x12 if not "normality" in json else 0x10)
 	}
 	
 	var section7B := {
@@ -680,7 +680,7 @@ static func _calculate_section_sizes_and_offsets(json: Dictionary, normality: bo
 	var objectsSectionSize: int = 0x02 + 0x02 * len(json.sectorsSection.sectors)
 	for sector: Dictionary in json.sectorsSection.sectors:
 		if len(sector.objectInformation) > 0:
-			objectsSectionSize += 0x02 + len(sector.objectInformation) * (0x10 if not normality else 0x0E)
+			objectsSectionSize += 0x02 + len(sector.objectInformation) * (0x10 if not "normality" in json else 0x0E)
 	
 	var objectsSection := {
 		"startsAt": section7B.startsAt + section7B.size,
@@ -708,9 +708,9 @@ static func _calculate_section_sizes_and_offsets(json: Dictionary, normality: bo
 	}
 
 
-static func _write_header(buffer: PackedByteArray, json: Dictionary, section_sizes: Dictionary, normality: bool) -> void:
+static func _write_header(buffer: PackedByteArray, json: Dictionary, section_sizes: Dictionary) -> void:
 	buffer.encode_u16(0x00, section_sizes.verticesSection.startsAt)  # VERTICES_OFFSET
-	if normality:
+	if "normality" in json:
 		buffer.encode_u16(0x02, 0x006D)  # VERSION 
 	else:
 		buffer.encode_u16(0x02, 0x0070)  # VERSION 
@@ -725,7 +725,7 @@ static func _write_header(buffer: PackedByteArray, json: Dictionary, section_siz
 	buffer.encode_u16(0x14, section_sizes.verticesSection.size)  # VERTICES_SECTION_SIZE
 	buffer.encode_u16(0x16, section_sizes.objectsSection.size)  # OBJECTS_SECTION_SIZE
 	buffer.encode_u16(0x18, section_sizes.footer.size)  # FOOTER_SIZE
-	if not normality:
+	if not "normality" in json:
 		buffer.encode_u16(0x1A, section_sizes.commandsSection.size)  # COMMANDS_SECTION_SIZE
 		buffer.encode_u16(0x1C, len(json.sectorsSection.sectors))  # SECTOR_COUNT
 	else:
@@ -992,13 +992,16 @@ static func _write_objects_section(buffer: PackedByteArray, json: Dictionary, se
 				buffer.encode_u8(object_container_pos + 0x04, object.textureIndex)
 				buffer.encode_u8(object_container_pos + 0x05, object.textureSource)
 				buffer.encode_u8(object_container_pos + 0x06, object.rotation)
-				buffer.encode_u8(object_container_pos + 0x07, object.unk0x07)
+				buffer.encode_u8(object_container_pos + 0x07, object.flags)
 				buffer.encode_u8(object_container_pos + 0x08, object.lighting)
-				buffer.encode_u8(object_container_pos + 0x09, object.renderType)
+				if "normality" not in json:
+					buffer.encode_u8(object_container_pos + 0x09, object.renderType)
+				else:
+					buffer.encode_u8(object_container_pos + 0x09, object.unk0x09)
 				buffer.encode_s16(object_container_pos + 0x0A, object.posZ)
 				buffer.encode_u16(object_container_pos + 0x0C, object.unk0x0C)
-				if "unk0x0E" in object:
-					buffer.encode_u16(object_container_pos + 0x0E, object.unk0x0E)
+				if "normality" not in json:
+					buffer.encode_u16(object_container_pos + 0x0E, object.objectID)
 					object_container_pos += 0x10
 				else:
 					object_container_pos += 0x0E

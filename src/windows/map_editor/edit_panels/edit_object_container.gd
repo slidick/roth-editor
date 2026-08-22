@@ -17,7 +17,7 @@ func clear(p_force_timeout: bool = true) -> void:
 	%ObjectTextureSourceEdit.get_line_edit().clear()
 	%ObjectLightingEdit.get_line_edit().clear()
 	%ObjectUnk0x0CEdit.get_line_edit().clear()
-	%ObjectUnk0x0EEdit.get_line_edit().clear()
+	%ObjectIDEdit.get_line_edit().clear()
 	%TextureNameLabel.text = ""
 	%TextureDescLabel.text = ""
 	%ObjectTexture.texture = null
@@ -80,34 +80,38 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	%ObjectLightingEdit.set_value_no_signal(object.data.lighting)
 	%ObjectUnk0x0CEdit.get_line_edit().text = "%d" % object.data.unk0x0C
 	%ObjectUnk0x0CEdit.set_value_no_signal(object.data.unk0x0C)
-	if "unk0x0E" in object.data:
-		%ObjectUnk0x0EEdit.get_line_edit().text = "%d" % object.data.unk0x0E
-		%ObjectUnk0x0EEdit.set_value_no_signal(object.data.unk0x0E)
-		%ObjectUnk0x0EEdit.get_parent().show()
+	if not "normality" in object.map.map_info:
+		%ObjectIDEdit.get_line_edit().text = "%d" % object.data.objectID
+		%ObjectIDEdit.set_value_no_signal(object.data.objectID)
+		%ObjectIDEdit.get_parent().show()
+		%RenderBillboardCheckBox.get_parent().show()
+		if (object.data.renderType & (1<<7)) > 0:
+			%RenderBillboardCheckBox.set_pressed_no_signal(false)
+			%RenderDirectionalCheckBox.set_pressed_no_signal(true)
+		else:
+			%RenderBillboardCheckBox.set_pressed_no_signal(true)
+			%RenderDirectionalCheckBox.set_pressed_no_signal(false)
+		if (object.data.flags & (1<<0)) > 0:
+			%RenderBillboardCheckBox.button_pressed = true
+			%RenderBillboardCheckBox.disabled = true
+			%RenderDirectionalCheckBox.disabled = true
+		else:
+			%RenderBillboardCheckBox.disabled = false
+			%RenderDirectionalCheckBox.disabled = false
+		%ObjectUnk0x09Edit.get_parent().hide()
 	else:
-		%ObjectUnk0x0EEdit.get_parent().hide()
-	%ObjectFlagButton1.set_pressed_no_signal((object.data.unk0x07 & (1<<0)) > 0)
-	%ObjectFlagButton2.set_pressed_no_signal((object.data.unk0x07 & (1<<1)) > 0)
-	%ObjectFlagButton3.set_pressed_no_signal((object.data.unk0x07 & (1<<2)) > 0)
-	%ObjectFlagButton4.set_pressed_no_signal((object.data.unk0x07 & (1<<3)) > 0)
-	%ObjectFlagButton5.set_pressed_no_signal((object.data.unk0x07 & (1<<4)) > 0)
-	%ObjectFlagButton6.set_pressed_no_signal((object.data.unk0x07 & (1<<5)) > 0)
-	%ObjectFlagButton7.set_pressed_no_signal((object.data.unk0x07 & (1<<6)) > 0)
-	%ObjectFlagButton8.set_pressed_no_signal((object.data.unk0x07 & (1<<7)) > 0)
-	
-	if (object.data.renderType & (1<<7)) > 0:
-		%RenderBillboardCheckBox.set_pressed_no_signal(false)
-		%RenderDirectionalCheckBox.set_pressed_no_signal(true)
-	else:
-		%RenderBillboardCheckBox.set_pressed_no_signal(true)
-		%RenderDirectionalCheckBox.set_pressed_no_signal(false)
-	if (object.data.unk0x07 & (1<<0)) > 0:
-		%RenderBillboardCheckBox.button_pressed = true
-		%RenderBillboardCheckBox.disabled = true
-		%RenderDirectionalCheckBox.disabled = true
-	else:
-		%RenderBillboardCheckBox.disabled = false
-		%RenderDirectionalCheckBox.disabled = false
+		%ObjectIDEdit.get_parent().hide()
+		%RenderBillboardCheckBox.get_parent().hide()
+		%ObjectUnk0x09Edit.get_parent().show()
+		%ObjectUnk0x09Edit.get_line_edit().text = "%d" % object.data.unk0x09
+	%ObjectFlagButton1.set_pressed_no_signal((object.data.flags & (1<<0)) > 0)
+	%ObjectFlagButton2.set_pressed_no_signal((object.data.flags & (1<<1)) > 0)
+	%ObjectFlagButton3.set_pressed_no_signal((object.data.flags & (1<<2)) > 0)
+	%ObjectFlagButton4.set_pressed_no_signal((object.data.flags & (1<<3)) > 0)
+	%ObjectFlagButton5.set_pressed_no_signal((object.data.flags & (1<<4)) > 0)
+	%ObjectFlagButton6.set_pressed_no_signal((object.data.flags & (1<<5)) > 0)
+	%ObjectFlagButton7.set_pressed_no_signal((object.data.flags & (1<<6)) > 0)
+	%ObjectFlagButton8.set_pressed_no_signal((object.data.flags & (1<<7)) > 0)
 	
 	update_texture(object)
 	
@@ -134,26 +138,27 @@ func update_selections(p_force_timeout: bool = true) -> void:
 			%ObjectLightingEdit.get_line_edit().clear.call_deferred()
 		if each_object.data.unk0x0C != object.data.unk0x0C:
 			%ObjectUnk0x0CEdit.get_line_edit().clear.call_deferred()
-		if "unk0x0E" in each_object.data and each_object.data.unk0x0E != object.data.unk0x0E:
-			%ObjectUnk0x0EEdit.get_line_edit().clear.call_deferred()
-		if ((each_object.data.renderType & (1<<7)) > 0) != ((object.data.renderType & (1<<7)) > 0):
-			%RenderBillboardCheckBox.set_pressed_no_signal(false)
-			%RenderDirectionalCheckBox.set_pressed_no_signal(false)
-		if ((each_object.data.unk0x07 & (1<<0)) > 0) != ((object.data.unk0x07 & (1<<0)) > 0):
+		if not "normality" in object.map.map_info:
+			if each_object.data.objectID != object.data.objectID:
+				%ObjectIDEdit.get_line_edit().clear.call_deferred()
+			if ((each_object.data.renderType & (1<<7)) > 0) != ((object.data.renderType & (1<<7)) > 0):
+				%RenderBillboardCheckBox.set_pressed_no_signal(false)
+				%RenderDirectionalCheckBox.set_pressed_no_signal(false)
+		if ((each_object.data.flags & (1<<0)) > 0) != ((object.data.flags & (1<<0)) > 0):
 			%ObjectFlagButton1.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<1)) > 0) != ((object.data.unk0x07 & (1<<1)) > 0):
+		if ((each_object.data.flags & (1<<1)) > 0) != ((object.data.flags & (1<<1)) > 0):
 			%ObjectFlagButton2.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<2)) > 0) != ((object.data.unk0x07 & (1<<2)) > 0):
+		if ((each_object.data.flags & (1<<2)) > 0) != ((object.data.flags & (1<<2)) > 0):
 			%ObjectFlagButton3.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<3)) > 0) != ((object.data.unk0x07 & (1<<3)) > 0):
+		if ((each_object.data.flags & (1<<3)) > 0) != ((object.data.flags & (1<<3)) > 0):
 			%ObjectFlagButton4.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<4)) > 0) != ((object.data.unk0x07 & (1<<4)) > 0):
+		if ((each_object.data.flags & (1<<4)) > 0) != ((object.data.flags & (1<<4)) > 0):
 			%ObjectFlagButton5.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<5)) > 0) != ((object.data.unk0x07 & (1<<5)) > 0):
+		if ((each_object.data.flags & (1<<5)) > 0) != ((object.data.flags & (1<<5)) > 0):
 			%ObjectFlagButton6.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<6)) > 0) != ((object.data.unk0x07 & (1<<6)) > 0):
+		if ((each_object.data.flags & (1<<6)) > 0) != ((object.data.flags & (1<<6)) > 0):
 			%ObjectFlagButton7.indeterminate = true
-		if ((each_object.data.unk0x07 & (1<<7)) > 0) != ((object.data.unk0x07 & (1<<7)) > 0):
+		if ((each_object.data.flags & (1<<7)) > 0) != ((object.data.flags & (1<<7)) > 0):
 			%ObjectFlagButton8.indeterminate = true
 	
 	if object.data.textureSource == 0 or object.data.textureSource ==  1:
@@ -232,6 +237,12 @@ func _on_object_z_edit_value_changed(value: float) -> void:
 	%EditObjectTimer.start()
 
 
+func _on_object_unk_0x_09_edit_value_changed(value: float) -> void:
+	for object: ObjectRoth in owner.selected_objects:
+		object.data.unk0x09 = value
+	%EditObjectTimer.start()
+
+
 func _on_object_rotation_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.rotation = value
@@ -282,57 +293,58 @@ func _on_object_unk_0x_0c_edit_value_changed(value: float) -> void:
 
 func _on_object_unk_0x_0e_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
-		object.data.unk0x0E = value
+		object.data.objectID = value
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_1_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 0)
+			object.data.flags |= (1 << 0)
 			%RenderBillboardCheckBox.button_pressed = true
 			%RenderBillboardCheckBox.disabled = true
 			%RenderDirectionalCheckBox.disabled = true
 		else:
 			%RenderBillboardCheckBox.disabled = false
 			%RenderDirectionalCheckBox.disabled = false
-			object.data.unk0x07 &= ~(1 << 0)
+			object.data.flags &= ~(1 << 0)
+	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_2_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 1)
+			object.data.flags |= (1 << 1)
 		else:
-			object.data.unk0x07 &= ~(1 << 1)
+			object.data.flags &= ~(1 << 1)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_3_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 2)
+			object.data.flags |= (1 << 2)
 		else:
-			object.data.unk0x07 &= ~(1 << 2)
+			object.data.flags &= ~(1 << 2)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_4_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 3)
+			object.data.flags |= (1 << 3)
 		else:
-			object.data.unk0x07 &= ~(1 << 3)
+			object.data.flags &= ~(1 << 3)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_5_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 4)
+			object.data.flags |= (1 << 4)
 		else:
-			object.data.unk0x07 &= ~(1 << 4)
+			object.data.flags &= ~(1 << 4)
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
@@ -340,27 +352,27 @@ func _on_object_flag_button_5_toggled(toggled_on: bool) -> void:
 func _on_object_flag_button_6_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 5)
+			object.data.flags |= (1 << 5)
 		else:
-			object.data.unk0x07 &= ~(1 << 5)
+			object.data.flags &= ~(1 << 5)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_7_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 6)
+			object.data.flags |= (1 << 6)
 		else:
-			object.data.unk0x07 &= ~(1 << 6)
+			object.data.flags &= ~(1 << 6)
 	%EditObjectTimer.start()
 
 
 func _on_object_flag_button_8_toggled(toggled_on: bool) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		if toggled_on:
-			object.data.unk0x07 |= (1 << 7)
+			object.data.flags |= (1 << 7)
 		else:
-			object.data.unk0x07 &= ~(1 << 7)
+			object.data.flags &= ~(1 << 7)
 	%EditObjectTimer.start()
 
 
@@ -424,6 +436,7 @@ func _on_browse_objects_button_pressed() -> void:
 				update_texture(object)
 				i += 1
 	owner.redraw(owner.selected_objects)
+	update_selections(false)
 	%EditObjectTimer.start()
 
 

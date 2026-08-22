@@ -76,14 +76,14 @@ static func new_object(p_map: Map, p_position: Vector2) -> ObjectRoth:
 		"posX": 0,
 		"posY": 0,
 		"textureIndex": 0,
-		"textureSource": 2,
+		"textureSource": 0,
 		"rotation": 0,
-		"unk0x07": 0,
+		"flags": 0,
 		"lighting": 128,
 		"renderType": 0,
 		"posZ": floor_height,
 		"unk0x0C": 0,
-		"unk0x0E": 0,
+		"objectID": 0,
 	}
 	
 	var object := ObjectRoth.new(default_data, p_map)
@@ -113,14 +113,14 @@ static func new_object_3d(p_map: Map, p_position: Vector3, extra_info: Dictionar
 		"posX": 0,
 		"posY": 0,
 		"textureIndex": 0,
-		"textureSource": 2,
+		"textureSource": 0,
 		"rotation": 0,
-		"unk0x07": 0,
+		"flags": 0,
 		"lighting": 128,
 		"renderType": 0,
 		"posZ": floor_height,
 		"unk0x0C": 0,
-		"unk0x0E": 0,
+		"objectID": 0,
 	}
 	
 	var object := ObjectRoth.new(default_data, p_map)
@@ -143,6 +143,8 @@ func _init(p_data: Dictionary, p_map: Map, p_sector: Sector = null) -> void:
 	#sectors = p_sectors
 	if p_sector:
 		sector = weakref(p_sector)
+	if "renderType" not in data:
+		data["renderType"] = 0
 
 
 func duplicate() -> ObjectRoth:
@@ -303,7 +305,7 @@ func _initialize_mesh_actual() -> void:
 	mdt.set_vertex(2, Vector3(width, high_y, 0))
 	mdt.set_vertex(3, Vector3(-width, high_y, 0))
 	
-	if (data.unk0x07 & (1<<4)) > 0:
+	if (data.flags & (1<<4)) > 0:
 		mdt.set_vertex_uv(0, Vector2(1,0))
 		mdt.set_vertex_uv(1, Vector2(1,1))
 		mdt.set_vertex_uv(2, Vector2(0,0))
@@ -633,7 +635,7 @@ class ObjectNode3D extends Node3D:
 		if not _selected:
 			_highlighted = true
 			for child: MeshInstance3D in get_children():
-				if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.unk0x07 & (1 << 0)) > 0:
+				if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.flags & (1 << 0)) > 0:
 					child.material_overlay = Roth.HIGHLIGHT_FIXED_Y_MATERIAL
 				else:
 					child.material_overlay = Roth.HIGHLIGHT_MATERIAL
@@ -645,7 +647,7 @@ class ObjectNode3D extends Node3D:
 	func select() -> void:
 		_selected = true
 		for child: MeshInstance3D in get_children():
-			if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.unk0x07 & (1 << 0)) > 0:
+			if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.flags & (1 << 0)) > 0:
 				child.material_overlay = Roth.SELECTED_FIXED_Y_MATERIAL
 			else:
 				child.material_overlay = Roth.SELECTED_MATERIAL
