@@ -38,7 +38,7 @@
 [ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="27_6txe1"]
 [ext_resource type="PackedScene" uid="uid://83l60nlqs38r" path="res://src/windows/map_editor/texture_presets_window.tscn" id="29_wknxc"]
 [ext_resource type="PackedScene" uid="uid://vokegmkg3lq8" path="res://src/windows/map_editor/manage_maps/modify_map_window.tscn" id="37_yi0n0"]
-[ext_resource type="PackedScene" uid="uid://cd2pjrkl62aaq" path="res://src/windows/map_editor/updating_lighting_dialog.tscn" id="38_2ca5n"]
+[ext_resource type="PackedScene" uid="uid://cd2pjrkl62aaq" path="res://src/windows/map_editor/loading_indeterminate_dialog.tscn" id="38_2ca5n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf4qd"]
 bg_color = Color(0.1, 0.1, 0.1, 0.6)
@@ -3640,7 +3640,22 @@ offset_right = 263.0
 offset_bottom = 113.0
 grow_horizontal = 2
 grow_vertical = 2
-minimize_style = "fade_out"
+
+[node name="LoadingCommands" parent="Dialogs" index="10" unique_id=1840666035 instance=ExtResource("38_2ca5n")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -263.0
+offset_top = -113.0
+offset_right = 263.0
+offset_bottom = 113.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="3DObjectContextMenu" type="PopupMenu" parent="." index="3" unique_id=556158273]
 unique_name_in_owner = true

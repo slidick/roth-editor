@@ -527,7 +527,10 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
 				return
 			var map: Map = selected[0].get_metadata(0).ref
+			%LoadingCommands.toggle(true)
+			await get_tree().create_timer(0.2).timeout
 			%"Command Editor".load_command_editor(map)
+			%LoadingCommands.toggle(false)
 			%TabBar.current_tab = 1
 		MapMenu.EditMode:
 			if len(selected) != 1:
