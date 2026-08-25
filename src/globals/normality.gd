@@ -9,6 +9,7 @@ var NORMALITY_CUSTOM_INSTALLS_DIRECTORY: String = OS.get_user_data_dir().path_jo
 
 var installations: Array = []
 var current_installation: NormalityInstallation = null
+var dosbox_pid: int = -1
 
 
 func _ready() -> void:
@@ -255,4 +256,6 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 	
 	
 	# Run dosbox
-	OS.execute(dosbox_executable, dosbox_args)
+	if dosbox_pid > -1 and OS.is_process_running(dosbox_pid):
+		OS.kill(dosbox_pid)
+	dosbox_pid = OS.create_process(dosbox_executable, dosbox_args)

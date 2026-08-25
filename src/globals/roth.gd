@@ -72,6 +72,7 @@ const DEFAULT_TEXTURE_PRESETS: Dictionary = {
 
 var roth_installations: Array = []
 var current_installation: ROTHInstallation
+var dosbox_pid: int = -1
 
 
 func _ready() -> void:
@@ -496,4 +497,6 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 	
 	
 	# Run dosbox
-	OS.execute(dosbox_executable, dosbox_args)
+	if dosbox_pid > -1 and OS.is_process_running(dosbox_pid):
+		OS.kill(dosbox_pid)
+	dosbox_pid = OS.create_process(dosbox_executable, dosbox_args)
