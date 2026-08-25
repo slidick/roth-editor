@@ -311,16 +311,22 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	
 	if texture in mapping and "additionalMetadata" in texture_data and (texture_data.type & 128) > 0 and not check_flag(texture_data.unk0x08, IMAGE_FIT):
 		if texture_data.additionalMetadata.shiftTextureX != 0:
-				if texture_data.additionalMetadata.shiftTextureX > 0:
-					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureX) / texture_width
-				else:
-					material.uv1_offset.y = float(texture_data.additionalMetadata.shiftTextureX + 256) / texture_width
+			var shift_amount := float(texture_data.additionalMetadata.shiftTextureX)
+			if check_flag(texture_data.unk0x08, HALF_PIXEL):
+				shift_amount /= 2.0
+			if shift_amount > 0:
+				material.uv1_offset.y = shift_amount / texture_width
+			else:
+				material.uv1_offset.y = (shift_amount + 256) / texture_width
 		
 		if texture_data.additionalMetadata.shiftTextureY != 0:
-				if texture_data.additionalMetadata.shiftTextureY > 0:
-					material.uv1_offset.x = float(texture_data.additionalMetadata.shiftTextureY) / texture_height
-				else:
-					material.uv1_offset.x = float(texture_data.additionalMetadata.shiftTextureY + 256) / texture_height
+			var shift_amount := float(texture_data.additionalMetadata.shiftTextureY)
+			if check_flag(texture_data.unk0x08, HALF_PIXEL):
+				shift_amount /= 2.0
+			if shift_amount > 0:
+				material.uv1_offset.x = shift_amount / texture_height
+			else:
+				material.uv1_offset.x = (shift_amount + 256) / texture_height
 	
 	
 	
