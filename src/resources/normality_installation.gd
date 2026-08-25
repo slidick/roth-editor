@@ -82,6 +82,12 @@ var directory: String = ""
 var normality_exe: String :
 	get():
 		return find("NORM.EXE")
+var normality_exe_md5: String :
+	get():
+		if not normality_exe_md5.is_empty():
+			return normality_exe_md5
+		normality_exe_md5 = FileAccess.get_md5(normality_exe)
+		return normality_exe_md5
 var normality_iso: String :
 	get():
 		return find("NORMAL.GOG")
@@ -112,11 +118,30 @@ var maps_directory: String :
 var id: String :
 	get():
 		return directory.md5_text()
+var language: String :
+	get():
+		match normality_exe_md5:
+			"2e9c068f1d87cd327da5d3fcc773702c":
+				return "French"
+			"1f70981fb8556f6a2514700654b5cefa":
+				return "German"
+			"57c595d94b424b155b15faf091f5716b":
+				return "English (UK)"
+		return "Unknown"
 var name: String :
 	get():
 		if is_valid():
-			return "Normality"
+			return language
 		return "Invalid Installation"
+var map_das_offset: int = -2 :
+	get():
+		if map_das_offset != -2:
+			return map_das_offset
+		var search: PackedByteArray = "maps\\eureka0".to_ascii_buffer()
+		search.append(0)
+		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(normality_exe)
+		map_das_offset = find_array_in_bytes(bytes, search)
+		return map_das_offset
 var valid: Variant = null
 var das_packs: Array = []
 var maps: Array = []
@@ -137,6 +162,30 @@ static func write_config_ini(config_ini_filepath: String, disable_cdrom: bool = 
 	config_ini_file.store_string("MusicCard=0xa009\n")
 	config_ini_file.store_string("MusicPort=0x330\n")
 	config_ini_file.close()
+
+
+static func find_array_in_bytes(bytes: PackedByteArray, search_array: PackedByteArray) -> int:
+	var prev_index: int = 0
+	while prev_index < bytes.size():
+		var starting_index: int = -1
+		var i: int = 0
+		for byte: int in search_array:
+			var index: int = bytes.find(byte, prev_index)
+			if index >= 0:
+				if i == 0:
+					starting_index = index
+				else:
+					if index != prev_index + 1:
+						prev_index = starting_index + 1
+						starting_index = -1
+						break
+				prev_index = index
+			else:
+				return -1
+			i += 1
+		if starting_index != -1:
+			return starting_index
+	return -1
 
 
 func _init(p_directory: String) -> void:
@@ -217,15 +266,31 @@ func find_das(p_das_packs: Array, p_das_name: String) -> Dictionary:
 
 
 func get_map_das_list() -> Array:
-	var das_list: Array = []
-	var map_list: Array = []
+	if map_das_offset < 0:
+		return []
+	
 	var file := FileAccess.open(normality_exe, FileAccess.READ)
-	file.seek(0xBA5A5)
-	for i in range(30):
-		das_list.append(file.get_line().to_upper().trim_prefix("MAPS\\"))
-	for i in range(30):
-		map_list.append([file.get_line().to_upper().trim_prefix("MAPS\\").trim_suffix(".RAW"), das_list[i]])
+	file.seek(map_das_offset)
+	var names: Array = []
+	while names.size() < 120:
+		var s: String = file.get_line().to_upper()
+		if not s.begins_with("MAPS\\"):
+			break
+		names.append(s.trim_prefix("MAPS\\"))
 	file.close()
+	
+	var n: int = roundi(names.size() / 2.0)
+	if names.size() % 2 != 0 or n == 0:
+		push_warning("Map table has uneven strings: %d" % names.size())
+		return []
+	
+	var map_list: Array = []
+	for i in range(n):
+		if names[i].ends_with(".RAW") or not names[n + i].ends_with(".RAW"):
+			push_warning("Map table invalid")
+			return []
+		map_list.append([names[n+i].trim_suffix(".RAW"), names[i]])
+	
 	return map_list
 
 
