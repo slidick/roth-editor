@@ -664,7 +664,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				texture.offsets_flipped.append((offset & 0x8000) > 0)
 			file.seek(texture["offset"] + 32)
 			var alignment := file.get_position() & 0xF
-			texture["directional_images"] = []
+			texture["image_pack"] = []
 			for i in range(len(unique_offsets)):
 				var sub_data: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
 				var raw_img := file.get_buffer(sub_data.width * sub_data.height)
@@ -676,7 +676,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				var img := Image.create_from_data(sub_data.width, sub_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
 				sub_data["image"] = image_texture
-				texture["directional_images"].append(sub_data)
+				texture["image_pack"].append(sub_data)
 				
 				var lower_ptr_4_bits := file.get_position() & 0xF
 				var pos := file.get_position()
@@ -685,8 +685,8 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				else:
 					pos = pos + (alignment - lower_ptr_4_bits)
 				file.seek(pos)
-			if len(texture.directional_images) > 0:
-				texture["image"] = texture.directional_images[0].image
+			if len(texture.image_pack) > 0:
+				texture["image"] = texture.image_pack[0].image
 			unique_offsets.sort()
 			var offsets_mappings := {}
 			for i in range(len(unique_offsets)):
@@ -713,7 +713,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 			var _type := file.get_8()
 			var width := file.get_16()
 			var height := file.get_16()
-			texture["image"] = []
+			texture["image_pack"] = []
 			for j in range(numImgs):
 				#Console.print("3D Objs Textures: %s, ref: %s, type: %s, width: %s, height: %s" % [texture.name, img_reference, type, width, height])
 				if width == 0:
@@ -725,7 +725,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
 				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
-				texture["image"].append(image_texture)
+				texture["image_pack"].append({"image": image_texture})
 				
 				var lower_ptr_4_bits := file.get_position() & 0xF
 				var pos := file.get_position()
@@ -739,6 +739,8 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				_type = file.get_8()
 				width = file.get_16()
 				height = file.get_16()
+			if len(texture.image_pack) > 0:
+				texture["image"] = texture.image_pack[0].image
 	
 	# Parse as plain image
 	else:

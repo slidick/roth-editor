@@ -153,13 +153,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 			material.albedo_color = Color.TRANSPARENT
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 		else:
-			var mapping_image: ImageTexture
-			if typeof(mapping[texture].image) == TYPE_ARRAY:
-				mapping_image = mapping[texture].image[0]
-			else:
-				mapping_image = mapping[texture].image
-			
-			material.albedo_texture = mapping_image
+			material.albedo_texture = mapping[texture].image
 
 	else:
 		if texture == 65535:

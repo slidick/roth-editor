@@ -253,8 +253,8 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 	material.grow = true
 	material.grow_amount = 0.001
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	if "image" in texture and "directional_images" not in texture:
-		material.albedo_texture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+	if "image" in texture and "image_pack" not in texture:
+		material.albedo_texture = texture.image
 	elif "animation" in texture:
 		material.albedo_texture = texture.animation[0]
 	elif "monster" in texture:
@@ -346,7 +346,7 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 			modifier = directional_texture.modifier
 		else:
 			_initialize_mesh_invalid()
-	elif "directional_images" in texture:
+	elif "image_pack" in texture:
 		directional_object = true
 		var player_rotation: float = node.get_viewport().get_camera_3d().global_rotation_degrees.y + 180 if node.get_viewport() else 0.0
 		if player_rotation > 180:
@@ -360,35 +360,35 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 		var texture_data: Dictionary = {}
 		match direction:
 			Direction.FRONT:
-				texture_data = texture.directional_images[texture.offsets_index[4]]
+				texture_data = texture.image_pack[texture.offsets_index[4]]
 				if texture.offsets_flipped[4]:
 					material.uv1_scale.y *= -1
 			Direction.FRONT_RIGHT:
-				texture_data = texture.directional_images[texture.offsets_index[3]]
+				texture_data = texture.image_pack[texture.offsets_index[3]]
 				if texture.offsets_flipped[3]:
 					material.uv1_scale.y *= -1
 			Direction.RIGHT:
-				texture_data = texture.directional_images[texture.offsets_index[2]]
+				texture_data = texture.image_pack[texture.offsets_index[2]]
 				if texture.offsets_flipped[2]:
 					material.uv1_scale.y *= -1
 			Direction.BACK_RIGHT:
-				texture_data = texture.directional_images[texture.offsets_index[1]]
+				texture_data = texture.image_pack[texture.offsets_index[1]]
 				if texture.offsets_flipped[1]:
 					material.uv1_scale.y *= -1
 			Direction.BACK:
-				texture_data = texture.directional_images[texture.offsets_index[0]]
+				texture_data = texture.image_pack[texture.offsets_index[0]]
 				if texture.offsets_flipped[0]:
 					material.uv1_scale.y *= -1
 			Direction.BACK_LEFT:
-				texture_data = texture.directional_images[texture.offsets_index[7]]
+				texture_data = texture.image_pack[texture.offsets_index[7]]
 				if texture.offsets_flipped[7]:
 					material.uv1_scale.y *= -1
 			Direction.LEFT:
-				texture_data = texture.directional_images[texture.offsets_index[6]]
+				texture_data = texture.image_pack[texture.offsets_index[6]]
 				if texture.offsets_flipped[6]:
 					material.uv1_scale.y *= -1
 			Direction.FRONT_LEFT:
-				texture_data = texture.directional_images[texture.offsets_index[5]]
+				texture_data = texture.image_pack[texture.offsets_index[5]]
 				if texture.offsets_flipped[5]:
 					material.uv1_scale.y *= -1
 		if texture_data.is_empty():
@@ -539,8 +539,8 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		if fat_index in map.das.mapping:
 			var texture_data: Dictionary = map.das.mapping[fat_index]
 			var texture_image: ImageTexture
-			if texture_data.image is Array:
-				texture_image = texture_data.image[object_face.sub_texture_index]
+			if "image_pack" in texture_data:
+				texture_image = texture_data.image_pack[object_face.sub_texture_index].image
 			else:
 				texture_image = texture_data.image
 			material.albedo_texture = texture_image

@@ -331,7 +331,7 @@ func _on_inventory_list_item_selected(index: int) -> void:
 	if inventory_item["object_texture_index"] >= 512:
 		var image: Dictionary = Das.get_index_from_das(inventory_item["object_texture_index"]-512, DASPack.get_current_vanilla_das2_pack())
 		if "image" in image:
-			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
+			%ObjectTextureRect.texture = image.image
 	if not inventory_item.image_data.is_empty():
 		draw_inventory_icon()
 	if inventory_item.closeup_video:
@@ -683,7 +683,7 @@ func _on_object_texture_index_edit_text_submitted(_new_text: String = "") -> voi
 	if inventory_item["object_texture_index"] >= 512:
 		var image: Dictionary = Das.get_index_from_das(inventory_item["object_texture_index"]-512, DASPack.get_current_vanilla_das2_pack())
 		if "image" in image:
-			%ObjectTextureRect.texture = image.image[0] if typeof(image.image) == TYPE_ARRAY else image.image
+			%ObjectTextureRect.texture = image.image
 		else:
 			%ObjectTextureRect.texture = null
 		%ObjectTextureIndexEdit.text = str(inventory_item["object_texture_index"]-512)

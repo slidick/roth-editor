@@ -98,7 +98,7 @@ func load_das(p_das: Dictionary) -> void:
 				continue
 			var tex: Texture2D
 			if "image" in texture:
-				tex = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+				tex = texture.image
 			elif "monster_index" in texture:
 				var monster_texture: Dictionary = das.mapping[texture.monster_index]
 				tex = monster_texture.image
@@ -122,7 +122,7 @@ func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 		var texture_data: Dictionary = Das.get_index_from_das(favorite_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
-			tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
+			tex = texture_data.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
@@ -141,7 +141,7 @@ func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 		var texture_data: Dictionary = Das.get_index_from_das(recent_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
-			tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
+			tex = texture_data.image
 		else:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
@@ -157,7 +157,7 @@ func load_ademo(p_das2_info: Dictionary, p_show_add_to_favorites: bool = false) 
 			continue
 		var tex: Texture2D
 		if "image" in texture:
-			tex = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
+			tex = texture.image
 		elif "monster_index" in texture:
 			var monster_texture: Dictionary = Das.get_index_from_das(texture.monster_index, p_das2_info)
 			tex = monster_texture.image
@@ -227,7 +227,7 @@ func add_to_recent(texture_data: Dictionary) -> void:
 	
 	var tex: Texture2D
 	if "image" in texture_data:
-		tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
+		tex = texture_data.image
 	else:
 		tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 	var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
@@ -273,7 +273,7 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 			
 			var tex: Texture2D
 			if "image" in texture_data:
-				tex = texture_data.image[0] if typeof(texture_data.image) == TYPE_ARRAY else texture_data.image
+				tex = texture_data.image
 			else:
 				tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 			var idx: int = %FavoriteItemList.add_item("%s\n" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))

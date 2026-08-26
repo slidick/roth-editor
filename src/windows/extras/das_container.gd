@@ -42,8 +42,7 @@ func load_das(das_variant: Dictionary) -> void:
 			#%TextureList.set_item_text(index, "%s:%s" % [texture["index"], texture["name"]])
 		%TextureList.set_item_metadata(index, texture)
 		if "image" in texture:
-			var image_texture: ImageTexture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
-			%TextureList.set_item_icon(index, image_texture)
+			%TextureList.set_item_icon(index, texture.image)
 		else:
 			%TextureList.set_item_icon(index, ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8)))
 
@@ -69,11 +68,10 @@ func _on_texture_list_item_selected(index: int) -> void:
 	if meta:
 		if meta.has("animation"):
 			show_texture_animation(meta.get("animation"))
+		elif meta.has("image_pack"):
+			show_texture_array(meta.get("image_pack"))
 		elif meta.has("image"):
-			if meta.get("image") is Array:
-				show_texture_array(meta.get("image"))
-			else:
-				show_texture(meta.get("image"))
+			show_texture(meta.get("image"))
 		else:
 			clear_texture()
 			
@@ -127,13 +125,12 @@ func show_texture(img: ImageTexture) -> void:
 
 func show_texture_array(array: Array) -> void:
 	clear_texture()
-	for img: ImageTexture in array:
-		
+	for image_data: Dictionary in array:
 		var texture_rect := TextureRect.new()
 		texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		texture_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		texture_rect.texture = img
+		texture_rect.texture = image_data.image
 		
 		var rotation_container := RotationContainer.new()
 		rotation_container.size_flags_vertical = Control.SIZE_EXPAND_FILL

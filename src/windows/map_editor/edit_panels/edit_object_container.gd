@@ -198,10 +198,7 @@ func update_texture(object: ObjectRoth) -> void:
 		%TextureNameLabel.text = texture.name
 		%TextureDescLabel.text = texture.desc
 		if "image" in texture:
-			if typeof(texture.image) == TYPE_ARRAY:
-				%ObjectTexture.texture = texture.image[0]
-			else:
-				%ObjectTexture.texture = texture.image
+			%ObjectTexture.texture = texture.image
 		elif "monster_index" in texture:
 			var monster_texture: Dictionary = Das.get_index_from_das(texture.monster_index, object_das)
 			%ObjectTexture.texture = monster_texture.image

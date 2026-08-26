@@ -60,8 +60,7 @@ func _on_item_list_item_selected(index: int) -> void:
 			var texture: Dictionary = das.mapping[texture_preset_data[key]]
 			if not "image" in texture:
 				continue
-			var tex: Texture2D = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
-			var idx: int = %RotatableItemList.add_item("%s\n%d: %s" % [key, texture.index, texture.name], tex, Vector2(150,150), Array(["Set to Sky", "Select from palette"], TYPE_STRING, "", null))
+			var idx: int = %RotatableItemList.add_item("%s\n%d: %s" % [key, texture.index, texture.name], texture.image, Vector2(150,150), Array(["Set to Sky", "Select from palette"], TYPE_STRING, "", null))
 			%RotatableItemList.set_item_metadata(idx, texture)
 			if key != "wall":
 				%RotatableItemList.set_rotated(idx, false)
@@ -103,9 +102,8 @@ func _on_rotatable_item_list_item_activated(index: int) -> void:
 	if texture_index == -1:
 		return
 	var new_texture: Dictionary = das.mapping[texture_index]
-	var tex: Texture2D = new_texture.image[0] if typeof(new_texture.image) == TYPE_ARRAY else new_texture.image
 	%RotatableItemList.set_item_text(index, "%s\n%d: %s" % [key, new_texture.index, new_texture.name])
-	%RotatableItemList.set_item_icon(index, tex)
+	%RotatableItemList.set_item_icon(index, new_texture.image)
 	%RotatableItemList.set_item_metadata(index, new_texture)
 	texture_data[%ItemList.get_item_text(%ItemList.get_selected_items()[0])][key] = new_texture.index
 
@@ -179,9 +177,8 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 			key = "wall"
 	match context_index:
 		0:
-			var tex: Texture2D = das.mapping[das.header.sky_index].image[0] if typeof(das.mapping[das.header.sky_index].image) == TYPE_ARRAY else das.mapping[das.header.sky_index].image
 			%RotatableItemList.set_item_text(index, "%s\n%d: %s" % [key, das.header.sky_index, das.textures[0].name])
-			%RotatableItemList.set_item_icon(index, tex)
+			%RotatableItemList.set_item_icon(index, das.mapping[das.header.sky_index].image)
 			%RotatableItemList.set_item_metadata(index, das.header.sky_index)
 			texture_data[%ItemList.get_item_text(%ItemList.get_selected_items()[0])][key] = das.header.sky_index
 		1:
