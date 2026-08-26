@@ -667,5 +667,5 @@ class StaticBodyObject3D extends StaticBody3D:
 		follow = p_follow
 	func _process(_delta: float) -> void:
 		if follow:
-			look_at(get_viewport().get_camera_3d().global_position)
+			rotation.y = get_viewport().get_camera_3d().global_rotation.y + PI
 			rotation.x = 0
