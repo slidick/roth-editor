@@ -200,7 +200,6 @@ offset_right = 300.0
 offset_bottom = 230.0
 grow_horizontal = 2
 grow_vertical = 2
-exclusive = true
 allow_off_click = true
 header = false
 

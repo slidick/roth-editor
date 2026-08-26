@@ -9,13 +9,7 @@ on:
       godot-sha256:
         required: true
         type: string
-      linux-template-sha256:
-        required: true
-        type: string
-      windows-template-sha256:
-        required: true
-        type: string
-      macos-template-sha256:
+      template-sha256:
         required: true
         type: string
       export-name:
@@ -79,29 +73,49 @@ jobs:
           unzip templates/templates.zip
           rm templates/templates.zip
 
-      - name: Check template checksums
+      - name: Check template checksum (linux)
+        if: ${{ inputs.export-type == 'linux' }}
         run: |
           ACTUAL="$(sha256sum templates/linux_debug.x86_64 | awk '{print $1}')"
-          if [ "$ACTUAL" != "${{ inputs.linux-template-sha256 }}" ]; then
-            echo "Linux export template checksum incorrect!"
+          if [ "$ACTUAL" != "${{ inputs.template-sha256 }}" ]; then
+            echo "${{ inputs.export-type }} export template checksum incorrect!"
             exit 1
           fi
+
+      - name: Check template checksum (windows)
+        if: ${{ inputs.export-type == 'windows' }}
+        run: |
           ACTUAL="$(sha256sum templates/windows_debug_x86_64.exe | awk '{print $1}')"
-          if [ "$ACTUAL" != "${{ inputs.windows-template-sha256 }}" ]; then
-            echo "Windows export template checksum incorrect!"
+          if [ "$ACTUAL" != "${{ inputs.template-sha256 }}" ]; then
+            echo "${{ inputs.export-type }} export template checksum incorrect!"
             exit 1
           fi
+
+      - name: Check template checksum (macos)
+        if: ${{ inputs.export-type == 'macos' }}
+        run: |
           ACTUAL="$(sha256sum templates/macos.zip | awk '{print $1}')"
-          if [ "$ACTUAL" != "${{ inputs.macos-template-sha256 }}" ]; then
+          if [ "$ACTUAL" != "${{ inputs.template-sha256 }}" ]; then
             echo "macOS export template checksum incorrect!"
             exit 1
           fi
 
-      - name: Install export templates
+      - name: Install export templates (linux)
+        if: ${{ inputs.export-type == 'linux' }}
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
           cp templates/linux_debug.x86_64 ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
+
+      - name: Install export templates (windows)
+        if: ${{ inputs.export-type == 'windows' }}
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
           cp templates/windows_debug_x86_64.exe ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
+
+      - name: Install export templates (macos)
+        if: ${{ inputs.export-type == 'macos' }}
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
           cp templates/macos.zip ~/.local/share/godot/export_templates/${{ inputs.godot-version }}.stable/
 
       - name: Get version and release notes

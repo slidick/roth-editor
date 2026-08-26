@@ -5,32 +5,26 @@ jobs:
   linux:
     uses: $/.github/workflows/export-godot-project.yml
     with:
-      godot-version: 4.7.1
-      godot-sha256: 32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde
-      linux-template-sha256: 0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808
-      windows-template-sha256: 5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752
-      macos-template-sha256: f9de131f5ed0210924b9b156aea43b1e20fd720dd97690e151081a65c0937a3e
+      godot-version: 4.7.2
+      godot-sha256: 8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e
+      template-sha256: 1a291d3d15e4180b60b0af96cf6458f11fe143636d76575ddf1e23d1a3f24f2e
       export-name: RotH_Editor
       export-type: linux
 
   windows:
     uses: $/.github/workflows/export-godot-project.yml
     with:
-      godot-version: 4.7.1
-      godot-sha256: 32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde
-      linux-template-sha256: 0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808
-      windows-template-sha256: 5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752
-      macos-template-sha256: f9de131f5ed0210924b9b156aea43b1e20fd720dd97690e151081a65c0937a3e
+      godot-version: 4.7.2
+      godot-sha256: 8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e
+      template-sha256: 51498b72b3a237f882ebd7d1787f06a4bc1eaf0572daab93837adcfd3cfdc107
       export-name: RotH_Editor
       export-type: windows
 
   macos:
     uses: $/.github/workflows/export-godot-project.yml
     with:
-      godot-version: 4.7.1
-      godot-sha256: 32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde
-      linux-template-sha256: 0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808
-      windows-template-sha256: 5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752
-      macos-template-sha256: f9de131f5ed0210924b9b156aea43b1e20fd720dd97690e151081a65c0937a3e
+      godot-version: 4.7.2
+      godot-sha256: 8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e
+      template-sha256: 88df5e2e6fee99088699be66e6d42e4da4fb0c5619d054297d755a49558a4792
       export-name: RotH_Editor
       export-type: macos

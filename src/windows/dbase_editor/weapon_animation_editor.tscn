@@ -143,6 +143,7 @@ offset_right = 640.0
 offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
+start_rotated = true
 
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/EditOffsetsButton" to="." method="_on_edit_offsets_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/FramesSpinBox" to="." method="_on_frames_spin_box_value_changed"]

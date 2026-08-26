@@ -33,4 +33,5 @@ visible = false
 layout_mode = 2
 
 [node name="Cutscenes" parent="Contents/VBoxContainer/MainContainer/TabContainer" index="4" unique_id=38437870 instance=ExtResource("7_4m5i3")]
+visible = false
 layout_mode = 2
