@@ -480,7 +480,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 			texture.monster_index = monster_index
 		else:
 			texture.monster_index = das.monster_mappings[texture.flags_2].walking_front & 0x7FFF
-		
+		texture.monster = das.monster_mappings[texture.flags_2]
 	
 	# Parse as Directional object
 	elif texture.flags_1 & FLAGS_1.DIRECTIONAL > 0:
@@ -491,6 +491,7 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 			texture.directional_index = directional_index
 		else:
 			texture.directional_index = das.directional_object_mappings[texture.flags_2].dir_5_fat_idx & 0x7FFF
+		texture.directional = das.directional_object_mappings[texture.flags_2]
 	
 	# Return if no offset
 	elif texture.offset == 0:
@@ -652,28 +653,30 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 		var size_of_offsets: int = file.get_8()
 		var pack_type: int = file.get_8()
 		if pack_type & 128 > 0:
+			texture["offsets"] = []
+			texture["offsets_flipped"] = []
 			var unique_offsets: Array = []
 			for i in range(size_of_offsets/2.0):
 				var offset: int = file.get_16()
+				texture.offsets.append(offset & 0x7FF)
 				if offset & 0x7FF not in unique_offsets:
 					unique_offsets.append(offset & 0x7FF)
+				texture.offsets_flipped.append((offset & 0x8000) > 0)
 			file.seek(texture["offset"] + 32)
 			var alignment := file.get_position() & 0xF
-			texture["image"] = []
+			texture["directional_images"] = []
 			for i in range(len(unique_offsets)):
-				var _modifier := file.get_8()
-				var _type := file.get_8()
-				var width := file.get_16()
-				var height := file.get_16()
-				var raw_img := file.get_buffer(width * height)
+				var sub_data: Dictionary = Parser.parse_section(file, IMAGE_STANDARD_HEADER)
+				var raw_img := file.get_buffer(sub_data.width * sub_data.height)
 				if len(raw_img) == 0:
 					print(texture)
-				var is_transparent: bool = _type & IMAGE_TYPE.TRANSPARENT > 0 or _type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
-				var is_fully_transparent: bool = texture.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
+				var is_transparent: bool = sub_data.image_type & IMAGE_TYPE.TRANSPARENT > 0 or sub_data.image_type & IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0 or is_fat3
+				var is_fully_transparent: bool = sub_data.image_type & Das.IMAGE_TYPE.TRANSPARENT > 0
 				var data: Array = Utility.convert_palette_image(das.raw_palette, raw_img, is_transparent, is_fully_transparent)
-				var img := Image.create_from_data(width, height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
+				var img := Image.create_from_data(sub_data.width, sub_data.height, false, Image.FORMAT_RGBA8 if is_transparent else Image.FORMAT_RGB8, data)
 				var image_texture := ImageTexture.create_from_image(img)
-				texture["image"].append(image_texture)
+				sub_data["image"] = image_texture
+				texture["directional_images"].append(sub_data)
 				
 				var lower_ptr_4_bits := file.get_position() & 0xF
 				var pos := file.get_position()
@@ -682,7 +685,16 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 				else:
 					pos = pos + (alignment - lower_ptr_4_bits)
 				file.seek(pos)
-				
+			if len(texture.directional_images) > 0:
+				texture["image"] = texture.directional_images[0].image
+			unique_offsets.sort()
+			var offsets_mappings := {}
+			for i in range(len(unique_offsets)):
+				offsets_mappings[unique_offsets[i]] = i
+			
+			texture["offsets_index"] = []
+			for offset: int in texture.offsets:
+				texture.offsets_index.append(offsets_mappings[offset])
 		
 		# Parse as 3d object images pack
 		else:

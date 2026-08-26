@@ -1,6 +1,17 @@
 extends RefCounted
 class_name ObjectRoth
 
+enum Direction {
+	FRONT,
+	FRONT_RIGHT,
+	RIGHT,
+	BACK_RIGHT,
+	BACK,
+	BACK_LEFT,
+	LEFT,
+	FRONT_LEFT
+}
+
 var data: Dictionary = {}
 var index: int :
 	get():
@@ -10,6 +21,8 @@ var map: Map
 var node: ObjectNode3D
 var node_2d: ObjectNode2D
 var sector: WeakRef
+var directional_object: bool = false
+var direction := Direction.FRONT
 
 
 static func new_from_copied_object(p_object: ObjectRoth, p_position: Vector2) -> ObjectRoth:
@@ -155,20 +168,18 @@ func initialize_mesh() -> Node3D:
 	if node:
 		for child: Node in node.get_children():
 			child.queue_free()
-		#_initialize_mesh()
 		if sector.get_ref().hidden:
 			return
-		_initialize_mesh_actual()
+		_initialize_mesh()
 		return
 	
 	node = ObjectNode3D.new()
 	node.ref = self
-	_initialize_mesh_actual()
-	#_initialize_mesh()
+	_initialize_mesh()
 	return node
 
 
-func _initialize_mesh() -> void:
+func _initialize_mesh_invalid() -> void:
 	var shape := SphereShape3D.new()
 	shape.radius = 0.125
 	var static_body := StaticBody3D.new()
@@ -193,7 +204,7 @@ func _initialize_mesh() -> void:
 	node.add_child(mesh_instance)
 
 
-func _initialize_mesh_actual() -> void:
+func _initialize_mesh() -> void:
 	var object_das: Dictionary = {}
 	var object_index: int
 	if data.textureSource == 0:
@@ -209,17 +220,20 @@ func _initialize_mesh_actual() -> void:
 		object_das = map.map_info.map_pack.das2_info
 		object_index = data.textureIndex + 256
 	else:
-		_initialize_mesh()
+		_initialize_mesh_invalid()
 		return
 	
 	var texture := Das.get_index_from_das(object_index, object_das)
 	if texture.name == "Invalid":
-		_initialize_mesh()
+		_initialize_mesh_invalid()
 		return
 	elif "object_data" in texture:
 		_initialize_3d_object(texture)
 		return
-	
+	_initialize_mesh_texture(texture)
+
+
+func _initialize_mesh_texture(texture: Dictionary) -> void:
 	var width: float = texture.height / Roth.SCALE_3D_WORLD
 	var height: float = texture.width / Roth.SCALE_3D_WORLD
 	var modifier: int = texture.modifier
@@ -239,23 +253,153 @@ func _initialize_mesh_actual() -> void:
 	material.grow = true
 	material.grow_amount = 0.001
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	if "image" in texture:
+	if "image" in texture and "directional_images" not in texture:
 		material.albedo_texture = texture.image[0] if typeof(texture.image) == TYPE_ARRAY else texture.image
 	elif "animation" in texture:
 		material.albedo_texture = texture.animation[0]
-	elif "monster_index" in texture:
-		var monster_texture: Dictionary = Das.get_index_from_das(texture.monster_index, object_das)
-		material.albedo_texture = monster_texture.image
-		width = monster_texture.height / Roth.SCALE_3D_WORLD
-		height = monster_texture.width / Roth.SCALE_3D_WORLD
-	elif "directional_index" in texture:
-		var directional_texture: Dictionary = Das.get_index_from_das(texture.directional_index, object_das)
-		material.albedo_texture = directional_texture.image
-		width = directional_texture.height / Roth.SCALE_3D_WORLD
-		height = directional_texture.width / Roth.SCALE_3D_WORLD
-		modifier = directional_texture.modifier
+	elif "monster" in texture:
+		directional_object = true
+		var player_rotation: float = node.get_viewport().get_camera_3d().global_rotation_degrees.y + 180 if node.get_viewport() else 0.0
+		if player_rotation > 180:
+			player_rotation -= 360
+		var object_rotation: float = (data.rotation/256.0) * 360
+		if object_rotation > 180:
+			object_rotation -= 360
+		object_rotation *= -1
+		var diff: float = player_rotation - object_rotation
+		direction = get_direction(diff)
+		var texture_index: int = -1
+		match direction:
+			Direction.FRONT:
+				texture_index = texture.monster.walking_front
+			Direction.FRONT_RIGHT:
+				texture_index = texture.monster.walking_front_right
+			Direction.RIGHT:
+				texture_index = texture.monster.walking_right
+			Direction.BACK_RIGHT:
+				texture_index = texture.monster.walking_back_right
+			Direction.BACK:
+				texture_index = texture.monster.walking_back
+			Direction.BACK_LEFT:
+				texture_index = texture.monster.walking_back_left
+			Direction.LEFT:
+				texture_index = texture.monster.walking_left
+			Direction.FRONT_LEFT:
+				texture_index = texture.monster.walking_front_left
+		if texture_index > -1 and texture_index & 0x8000:
+			texture_index &= 0x7FFF
+			material.uv1_scale.y *= -1
+		if texture_index > 4608:
+			texture_index -= 4608
+		if texture_index > -1:
+			var monster_texture: Dictionary = Das.get_index_from_das(texture_index, texture.das_info)
+			if monster_texture.name == "Invalid":
+				_initialize_mesh_invalid()
+				return
+			material.albedo_texture = monster_texture.image
+			width = monster_texture.height / Roth.SCALE_3D_WORLD
+			height = monster_texture.width / Roth.SCALE_3D_WORLD
+		else:
+			_initialize_mesh_invalid()
+	elif "directional" in texture:
+		directional_object = true
+		var player_rotation: float = node.get_viewport().get_camera_3d().global_rotation_degrees.y + 180 if node.get_viewport() else 0.0
+		if player_rotation > 180:
+			player_rotation -= 360
+		var object_rotation: float = (data.rotation/256.0) * 360
+		if object_rotation > 180:
+			object_rotation -= 360
+		object_rotation *= -1
+		var diff: float = player_rotation - object_rotation
+		direction = get_direction(diff)
+		var texture_index: int = -1
+		match direction:
+			Direction.FRONT:
+				texture_index = texture.directional.dir_5_fat_idx
+			Direction.FRONT_RIGHT:
+				texture_index = texture.directional.dir_4_fat_idx
+			Direction.RIGHT:
+				texture_index = texture.directional.dir_3_fat_idx
+			Direction.BACK_RIGHT:
+				texture_index = texture.directional.dir_2_fat_idx
+			Direction.BACK:
+				texture_index = texture.directional.dir_1_fat_idx
+			Direction.BACK_LEFT:
+				texture_index = texture.directional.dir_8_fat_idx
+			Direction.LEFT:
+				texture_index = texture.directional.dir_7_fat_idx
+			Direction.FRONT_LEFT:
+				texture_index = texture.directional.dir_6_fat_idx
+		if texture_index > -1 and texture_index & 0x8000:
+			texture_index &= 0x7FFF
+			material.uv1_scale.y *= -1
+		if texture_index > 4608:
+			texture_index -= 4608
+		if texture_index > -1:
+			var directional_texture: Dictionary = Das.get_index_from_das(texture_index, texture.das_info)
+			if directional_texture.name == "Invalid":
+				_initialize_mesh_invalid()
+				return
+			material.albedo_texture = directional_texture.image
+			width = directional_texture.height / Roth.SCALE_3D_WORLD
+			height = directional_texture.width / Roth.SCALE_3D_WORLD
+			modifier = directional_texture.modifier
+		else:
+			_initialize_mesh_invalid()
+	elif "directional_images" in texture:
+		directional_object = true
+		var player_rotation: float = node.get_viewport().get_camera_3d().global_rotation_degrees.y + 180 if node.get_viewport() else 0.0
+		if player_rotation > 180:
+			player_rotation -= 360
+		var object_rotation: float = (data.rotation/256.0) * 360
+		if object_rotation > 180:
+			object_rotation -= 360
+		object_rotation *= -1
+		var diff: float = player_rotation - object_rotation
+		direction = get_direction(diff)
+		var texture_data: Dictionary = {}
+		match direction:
+			Direction.FRONT:
+				texture_data = texture.directional_images[texture.offsets_index[4]]
+				if texture.offsets_flipped[4]:
+					material.uv1_scale.y *= -1
+			Direction.FRONT_RIGHT:
+				texture_data = texture.directional_images[texture.offsets_index[3]]
+				if texture.offsets_flipped[3]:
+					material.uv1_scale.y *= -1
+			Direction.RIGHT:
+				texture_data = texture.directional_images[texture.offsets_index[2]]
+				if texture.offsets_flipped[2]:
+					material.uv1_scale.y *= -1
+			Direction.BACK_RIGHT:
+				texture_data = texture.directional_images[texture.offsets_index[1]]
+				if texture.offsets_flipped[1]:
+					material.uv1_scale.y *= -1
+			Direction.BACK:
+				texture_data = texture.directional_images[texture.offsets_index[0]]
+				if texture.offsets_flipped[0]:
+					material.uv1_scale.y *= -1
+			Direction.BACK_LEFT:
+				texture_data = texture.directional_images[texture.offsets_index[7]]
+				if texture.offsets_flipped[7]:
+					material.uv1_scale.y *= -1
+			Direction.LEFT:
+				texture_data = texture.directional_images[texture.offsets_index[6]]
+				if texture.offsets_flipped[6]:
+					material.uv1_scale.y *= -1
+			Direction.FRONT_LEFT:
+				texture_data = texture.directional_images[texture.offsets_index[5]]
+				if texture.offsets_flipped[5]:
+					material.uv1_scale.y *= -1
+		if texture_data.is_empty():
+			_initialize_mesh_invalid()
+		else:
+			material.albedo_texture = texture_data.image
+			width = texture_data.height / Roth.SCALE_3D_WORLD
+			height = texture_data.width / Roth.SCALE_3D_WORLD
+			modifier = texture_data.modifier
 	else:
-		_initialize_mesh()
+		_initialize_mesh_invalid()
 		return
 	
 	if data.lighting == 128:
@@ -463,6 +607,30 @@ func delete() -> void:
 	map.objects.erase(self)
 
 
+func get_direction(diff: float) -> Direction:
+	if diff > 180:
+		diff -= 360
+	if diff < -180:
+		diff += 360
+	if diff > -22.5 and diff < 22.5:
+		return Direction.FRONT
+	if diff >= -67.5 and diff <= -22.5:
+		return Direction.FRONT_RIGHT
+	if diff > -112.5 and diff < -67.5:
+		return Direction.RIGHT
+	if diff >= -157.5 and diff <= -112.5:
+		return Direction.BACK_RIGHT
+	if diff < -157.5 or diff > 157.5:
+		return Direction.BACK
+	if diff >= 22.5 and diff <= 67.5:
+		return Direction.FRONT_LEFT
+	if diff > 67.5 and diff < 112.5:
+		return Direction.LEFT
+	if diff >= 112.5 and diff <= 157.5:
+		return Direction.BACK_LEFT
+	return direction
+
+
 class CircleDraw2D extends Node2D:
 	var roth_rotation: int = 0
 	var radius: int = 1
@@ -659,6 +827,20 @@ class ObjectNode3D extends Node3D:
 
 class ObjectMesh3D extends MeshInstance3D:
 	var ref: ObjectRoth
+	func _process(_delta: float) -> void:
+		if ref.directional_object:
+			var player_rotation: float = get_viewport().get_camera_3d().global_rotation_degrees.y + 180
+			if player_rotation > 180:
+				player_rotation -= 360
+			var object_rotation: float = (ref.data.rotation/256.0) * 360
+			if object_rotation > 180:
+				object_rotation -= 360
+			object_rotation *= -1
+			var diff: float = player_rotation - object_rotation
+			if ref.direction != ref.get_direction(diff):
+				ref.initialize_mesh()
+				if ref in ref.map.node.owner.selected_objects:
+					ref.map.node.owner.redraw(ref.map.node.owner.selected_objects)
 
 
 class StaticBodyObject3D extends StaticBody3D:

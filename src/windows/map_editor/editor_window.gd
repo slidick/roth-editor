@@ -296,6 +296,7 @@ func load_map(map: Map) -> void:
 	map_node.process_mode = PROCESS_MODE_DISABLED
 	%Maps.add_child(map_node)
 	map.node = map_node
+	map_node.owner = self
 	
 	var tree_child: TreeItem = tree_root.create_child()
 	tree_child.set_text(0, map.map_info.name)
@@ -838,6 +839,7 @@ func replace_map(old_map: Map, new_map: Map) -> void:
 			map_node.process_mode = old_map_node.process_mode
 			%Maps.add_child(map_node)
 			new_map.node = map_node
+			map_node.owner = self
 			
 			tree_item.set_metadata(0, map_node)
 			
