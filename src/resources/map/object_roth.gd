@@ -238,6 +238,13 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 	var height: float = texture.width / Roth.SCALE_3D_WORLD
 	var modifier: int = texture.modifier
 	
+	var mesh_instance := ObjectMesh3D.new()
+	mesh_instance.position = Vector3(
+			-data.posX / Roth.SCALE_3D_WORLD,
+			data.posZ / Roth.SCALE_3D_WORLD,
+			data.posY / Roth.SCALE_3D_WORLD,
+	)
+	
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -254,7 +261,16 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 	material.grow_amount = 0.001
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	if "image" in texture and "image_pack" not in texture:
-		material.albedo_texture = texture.image
+		if texture.flags_1 & (1<<3):
+			var i_width: int = texture.image.get_width() + (abs(texture.shift_data[1]) / 2.0) 
+			var i_height: int = texture.image.get_height() + abs(texture.shift_data[0])
+			var shifted_image := Image.create_empty(i_width, i_height, false, texture.image.get_format())
+			shifted_image.blit_rect(texture.image.get_image(), Rect2i(Vector2.ZERO, texture.image.get_size()), Vector2(0 if texture.shift_data[1] < 0 else (texture.shift_data[1] / 2.0), 0 if texture.shift_data[0] < 0 else texture.shift_data[0]))
+			material.albedo_texture = ImageTexture.create_from_image(shifted_image)
+			if texture.shift_data[1] > 0:
+				mesh_instance.position.y -= (texture.shift_data[1]/2) / Roth.SCALE_3D_WORLD
+		else:
+			material.albedo_texture = texture.image
 	elif "animation" in texture:
 		material.albedo_texture = texture.animation[0]
 	elif "monster" in texture:
@@ -296,9 +312,19 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 			if monster_texture.name == "Invalid":
 				_initialize_mesh_invalid()
 				return
-			material.albedo_texture = monster_texture.image
+			if monster_texture.flags_1 & (1<<3):
+				var i_width: int = monster_texture.image.get_width() + (abs(monster_texture.shift_data[1]) / 2.0) 
+				var i_height: int = monster_texture.image.get_height() + abs(monster_texture.shift_data[0])
+				var shifted_image := Image.create_empty(i_width, i_height, false, monster_texture.image.get_format())
+				shifted_image.blit_rect(monster_texture.image.get_image(), Rect2i(Vector2.ZERO, monster_texture.image.get_size()), Vector2(0 if monster_texture.shift_data[1] < 0 else (monster_texture.shift_data[1] / 2.0), 0 if monster_texture.shift_data[0] < 0 else monster_texture.shift_data[0]))
+				material.albedo_texture = ImageTexture.create_from_image(shifted_image)
+				if monster_texture.shift_data[1] > 0:
+					mesh_instance.position.y -= (monster_texture.shift_data[1]/2) / Roth.SCALE_3D_WORLD
+			else:
+				material.albedo_texture = monster_texture.image
 			width = monster_texture.height / Roth.SCALE_3D_WORLD
 			height = monster_texture.width / Roth.SCALE_3D_WORLD
+			modifier = monster_texture.modifier
 		else:
 			_initialize_mesh_invalid()
 	elif "directional" in texture:
@@ -340,7 +366,16 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 			if directional_texture.name == "Invalid":
 				_initialize_mesh_invalid()
 				return
-			material.albedo_texture = directional_texture.image
+			if directional_texture.flags_1 & (1<<3):
+				var i_width: int = directional_texture.image.get_width() + (abs(directional_texture.shift_data[1]) / 2.0)
+				var i_height: int = directional_texture.image.get_height() + (abs(directional_texture.shift_data[0]))
+				var shifted_image := Image.create_empty(i_width, i_height, false, directional_texture.image.get_format())
+				shifted_image.blit_rect(directional_texture.image.get_image(), Rect2i(Vector2.ZERO, directional_texture.image.get_size()), Vector2(0 if directional_texture.shift_data[1] < 0 else (directional_texture.shift_data[1] / 2.0), 0 if directional_texture.shift_data[0] < 0 else directional_texture.shift_data[0]))
+				if directional_texture.shift_data[1] > 0:
+					mesh_instance.position.y -= (directional_texture.shift_data[1]/2) / Roth.SCALE_3D_WORLD
+				material.albedo_texture = ImageTexture.create_from_image(shifted_image)
+			else:
+				material.albedo_texture = directional_texture.image
 			width = directional_texture.height / Roth.SCALE_3D_WORLD
 			height = directional_texture.width / Roth.SCALE_3D_WORLD
 			modifier = directional_texture.modifier
@@ -459,15 +494,10 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 	mesh_array.clear_surfaces()
 	mdt.commit_to_surface(mesh_array)
 	
-	var mesh_instance := ObjectMesh3D.new()
+	
 	mesh_instance.mesh = mesh_array
 	mesh_instance.material_override = material
 	mesh_instance.ref = self
-	mesh_instance.position = Vector3(
-			-data.posX / Roth.SCALE_3D_WORLD,
-			data.posZ / Roth.SCALE_3D_WORLD,
-			data.posY / Roth.SCALE_3D_WORLD,
-	)
 	node.add_child(mesh_instance)
 	
 	var shape := BoxShape3D.new()

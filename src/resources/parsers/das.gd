@@ -463,6 +463,13 @@ static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: 
 	# Seek to Data
 	file.seek(texture.offset)
 	
+	# Get shift data if defined
+	if texture.flags_1 & (1<<3):
+		file.seek(file.get_position() - 4)
+		texture.shift_data = []
+		for i in range(2):
+			texture.shift_data.append(Parser.unsigned16_to_signed(file.get_16()))
+	
 	# Read standard header
 	texture.merge(Parser.parse_section(file, IMAGE_STANDARD_HEADER))
 	
