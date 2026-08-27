@@ -153,6 +153,17 @@ func find(p_file: String) -> String:
 	for sub_directory: String in SUB_DIRECTORIES:
 		if FileAccess.file_exists(directory.path_join(sub_directory).path_join(p_file)):
 			return directory.path_join(sub_directory).path_join(p_file)
+		
+		if p_file.contains("/"):
+			for dirname: String in DirAccess.get_directories_at(directory.path_join(sub_directory)):
+				if dirname.to_lower() == p_file.get_base_dir().to_lower():
+					for filename: String in DirAccess.get_files_at(directory.path_join(sub_directory).path_join(dirname)):
+						if filename.to_lower() == p_file.get_file().to_lower():
+							return directory.path_join(sub_directory).path_join(dirname).path_join(filename)
+		else:
+			for filename: String in DirAccess.get_files_at(directory.path_join(sub_directory)):
+				if filename.to_lower() == p_file.to_lower():
+					return directory.path_join(sub_directory).path_join(filename)
 	return ""
 
 
@@ -160,6 +171,9 @@ func find_directory(p_directory: String) -> String:
 	for sub_directory: String in SUB_DIRECTORIES:
 		if DirAccess.dir_exists_absolute(directory.path_join(sub_directory).path_join(p_directory)):
 			return directory.path_join(sub_directory).path_join(p_directory)
+		for dirname: String in DirAccess.get_directories_at(directory.path_join(sub_directory)):
+			if dirname.to_lower() == p_directory.to_lower():
+				return directory.path_join(sub_directory).path_join(dirname)
 	return ""
 
 
