@@ -1270,7 +1270,7 @@ func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 		for sector: Sector in sectors:
 			for face_ref: WeakRef in sector.faces:
 				var face: Face = face_ref.get_ref()
-				if face.v1 in vertex_map:
+				if face.v1 in vertex_map and not vertex_map[face.v1].split_vertex:
 					vertex_map[face.v1].faces.append(face)
 					if face.sector not in vertex_map[face.v1].sectors:
 						vertex_map[face.v1].sectors.append(face.sector)
@@ -1283,7 +1283,7 @@ func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 							vertices[face.v1].faces.append(face)
 					if sector not in vertices[face.v1].sectors:
 						vertices[face.v1].sectors.append(sector)
-				if face.v2 in vertex_map:
+				if face.v2 in vertex_map and not vertex_map[face.v2].split_vertex:
 					vertex_map[face.v2].faces.append(face)
 					if face.sector not in vertex_map[face.v2].sectors:
 						vertex_map[face.v2].sectors.append(face.sector)
@@ -1300,7 +1300,7 @@ func show_vertices(allow_move: bool, sectors: Array = []) -> void:
 				
 				var split_vertex := (face.v1 + face.v2) / 2
 				
-				if split_vertex in vertex_map:
+				if split_vertex in vertex_map and vertex_map[split_vertex].split_vertex:
 					vertex_map[split_vertex].faces.append(face)
 					if face.sector not in vertex_map[split_vertex].sectors:
 						vertex_map[split_vertex].sectors.append(face.sector)
