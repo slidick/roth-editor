@@ -38,7 +38,7 @@ void main() {
     else if (pixel > 0 && pixel < 128)
       output_buffer.data[4*gl_GlobalInvocationID.x+3] = 255;
     else
-      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 128;
+      output_buffer.data[4*gl_GlobalInvocationID.x+3] = 160;
   } else if (options_buffer.partial_alpha) {
     if (options_buffer.eight_bit_palette) {
       output_buffer.data[4*gl_GlobalInvocationID.x+0] = palette_buffer.data[3*pixel+0];

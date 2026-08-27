@@ -161,7 +161,7 @@ static func convert_palette_image(p_raw_palette: PackedByteArray, p_raw_img: Pac
 					if pixel > 0 and pixel < 128:
 						data.append(255)
 					else:
-						data.append(128)
+						data.append(160)
 				else:
 					data.append(255)
 		return data
