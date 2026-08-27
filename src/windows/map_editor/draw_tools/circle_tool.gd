@@ -94,6 +94,9 @@ func draw_box() -> void:
 		draw_line(vertices[i], vertices[(i+1)%len(vertices)], Color.GHOST_WHITE, %Map2D.line_width, true)
 		#draw_circle(vertices[i], 2, Color.GHOST_WHITE, false, %Map2D.line_width, true)
 	
-	%BoxSizeLabel.text = "Radius: %.0f" % (size.length() * Roth.SCALE_2D_WORLD)
+	var length: float = size.length() * Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		length /= 2
+	%BoxSizeLabel.text = "Radius: %.0f" % length
 	%BoxSizeLabel.show()
 	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - start_position) * %Camera2D.zoom.x

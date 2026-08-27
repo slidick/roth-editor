@@ -15,15 +15,25 @@ func _draw() -> void:
 	var size: Vector2 = (current_mouse - start_position).snappedf(%Map2D.snap)
 	var ratio: float = %InnerToolRatioSpinBox.value
 	
-	draw_rect(Rect2(start_position.x, start_position.y, size.x, size.y), Color.GHOST_WHITE, false, %Map2D.line_width, true)
-	draw_rect(Rect2(start_position.x + (size.x * ratio / 2), start_position.y + (size.y * ratio / 2), size.x * (1-ratio), size.y * (1-ratio)), Color.GHOST_WHITE, false, %Map2D.line_width, true)
+	if size.x != 0 and size.y != 0:
+		draw_rect(Rect2(start_position.x, start_position.y, size.x, size.y), Color.GHOST_WHITE, false, %Map2D.line_width, true)
+		draw_rect(Rect2(start_position.x + (size.x * ratio / 2), start_position.y + (size.y * ratio / 2), size.x * (1-ratio), size.y * (1-ratio)), Color.GHOST_WHITE, false, %Map2D.line_width, true)
+	elif size.x == 0:
+		draw_line(start_position, Vector2(start_position.x, start_position.y+size.y), Color.GHOST_WHITE, %Map2D.line_width, true)
+	elif size.y == 0:
+		draw_line(start_position, Vector2(start_position.x+size.x, start_position.y), Color.GHOST_WHITE, %Map2D.line_width, true)
 	
 	draw_line(start_position, Vector2(start_position.x + (size.x * ratio / 2), start_position.y + (size.y * ratio / 2)), Color.GHOST_WHITE, %Map2D.line_width, true)
 	draw_line(Vector2(start_position.x + size.x, start_position.y), Vector2(start_position.x + size.x - (size.x * ratio / 2), start_position.y + (size.y * ratio / 2)), Color.GHOST_WHITE, %Map2D.line_width, true)
 	draw_line(Vector2(start_position.x, start_position.y + size.y), Vector2(start_position.x + (size.x * ratio / 2) , start_position.y + size.y - (size.y * ratio / 2)), Color.GHOST_WHITE, %Map2D.line_width, true)
 	draw_line(Vector2(start_position.x + size.x, start_position.y + size.y), Vector2(start_position.x + size.x - (size.x * ratio / 2) , start_position.y + size.y - (size.y * ratio / 2)), Color.GHOST_WHITE, %Map2D.line_width, true)
 	
-	%BoxSizeLabel.text = "%.0f x %.0f" % [size.x * Roth.SCALE_2D_WORLD, size.y * Roth.SCALE_2D_WORLD]
+	var x: float = size.x * Roth.SCALE_2D_WORLD
+	var y: float = size.y * Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+	%BoxSizeLabel.text = "%.0f x %.0f" % [x, y]
 	%BoxSizeLabel.show()
 	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (start_position + current_mouse) / 2) * %Camera2D.zoom.x
 

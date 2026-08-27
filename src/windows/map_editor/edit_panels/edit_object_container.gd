@@ -63,13 +63,19 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		%ObjectIndexLabel.text = "Object: %d Selected" % len(owner.selected_objects)
 		%ObjectSectorIndexLabel.hide()
 	
-	
-	%ObjectXEdit.get_line_edit().text = "%d" % -object.data.posX
-	%ObjectXEdit.set_value_no_signal(-object.data.posX)
-	%ObjectYEdit.get_line_edit().text = "%d" % object.data.posY
-	%ObjectYEdit.set_value_no_signal(object.data.posY)
-	%ObjectZEdit.get_line_edit().text = "%d" % object.data.posZ
-	%ObjectZEdit.set_value_no_signal(object.data.posZ)
+	var x: float = -object.data.posX
+	var y: float = object.data.posY
+	var z: float = object.data.posZ
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+		z /= 2
+	%ObjectXEdit.get_line_edit().text = "%d" % x
+	%ObjectXEdit.set_value_no_signal(int(x))
+	%ObjectYEdit.get_line_edit().text = "%d" % y
+	%ObjectYEdit.set_value_no_signal(int(y))
+	%ObjectZEdit.get_line_edit().text = "%d" % z
+	%ObjectZEdit.set_value_no_signal(int(z))
 	%ObjectRotationEdit.get_line_edit().text = "%d" % object.data.rotation
 	%ObjectRotationEdit.set_value_no_signal(object.data.rotation)
 	%ObjectTextureIndexEdit.get_line_edit().text = "%d" % object.data.textureIndex
@@ -216,6 +222,8 @@ func update_texture(object: ObjectRoth) -> void:
 func _on_object_x_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.posX = -value
+		if Roth.halve_display_values:
+			object.data.posX *= 2
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
@@ -223,6 +231,8 @@ func _on_object_x_edit_value_changed(value: float) -> void:
 func _on_object_y_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.posY = value
+		if Roth.halve_display_values:
+			object.data.posY *= 2
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
@@ -230,6 +240,8 @@ func _on_object_y_edit_value_changed(value: float) -> void:
 func _on_object_z_edit_value_changed(value: float) -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.posZ = value
+		if Roth.halve_display_values:
+			object.data.posZ *= 2
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 
@@ -466,6 +478,8 @@ func _on_edit_object_das_button_pressed() -> void:
 func _on_lower_object_relative_button_pressed() -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.posZ -= %ObjectRelativeSpinBox.value
+		if Roth.halve_display_values:
+			object.data.posZ -= %ObjectRelativeSpinBox.value
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 	update_selections(false)
@@ -474,6 +488,8 @@ func _on_lower_object_relative_button_pressed() -> void:
 func _on_raise_object_relative_button_pressed() -> void:
 	for object: ObjectRoth in owner.selected_objects:
 		object.data.posZ += %ObjectRelativeSpinBox.value
+		if Roth.halve_display_values:
+			object.data.posZ += %ObjectRelativeSpinBox.value
 	owner.redraw(owner.selected_objects)
 	%EditObjectTimer.start()
 	update_selections(false)

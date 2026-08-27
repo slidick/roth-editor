@@ -224,7 +224,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
-	%PositionLabel.text = "(%d, %d, %d)" % [%Camera3D.global_position.x * Roth.SCALE_3D_WORLD, %Camera3D.global_position.z * Roth.SCALE_3D_WORLD, (%Camera3D.global_position.y * Roth.SCALE_3D_WORLD) - (%Map2D.map.metadata.playerHeight*2) if %Map2D.map else 0]
+	var x: float = %Camera3D.global_position.x * Roth.SCALE_3D_WORLD
+	var y: float = %Camera3D.global_position.z * Roth.SCALE_3D_WORLD
+	var z: float = (%Camera3D.global_position.y * Roth.SCALE_3D_WORLD) - (%Map2D.map.metadata.playerHeight*2) if %Map2D.map else 0
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+		z /= 2
+	%PositionLabel.text = "(%d, %d, %d)" % [x, y, z]
 	
 	if (
 			not mouse_inside

@@ -54,10 +54,15 @@ func update_selections() -> void:
 	elif len(owner.selected_sfx) > 1:
 		%SFXIndexLabel.text = "SFX: %d Selected" % len(owner.selected_sfx)
 	
-	%SFXPosXEdit.get_line_edit().text = "%d" % -sfx.data.posX
-	%SFXPosXEdit.set_value_no_signal(-sfx.data.posX)
-	%SFXPosYEdit.get_line_edit().text = "%d" % sfx.data.posY
-	%SFXPosYEdit.set_value_no_signal(sfx.data.posY)
+	var x: float = -sfx.data.posX
+	var y: float = sfx.data.posY
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+	%SFXPosXEdit.get_line_edit().text = "%d" % x
+	%SFXPosXEdit.set_value_no_signal(int(x))
+	%SFXPosYEdit.get_line_edit().text = "%d" % y
+	%SFXPosYEdit.set_value_no_signal(int(y))
 	%SFXSoundIndexEdit.get_line_edit().text = "%d" % (sfx.data.sfxIndex+1)
 	%SFXSoundIndexEdit.set_value_no_signal(sfx.data.sfxIndex+1)
 	%SFXUnk0x06Edit.get_line_edit().text = "%d" % sfx.data.sfxID
@@ -165,6 +170,8 @@ func load_sfx_zone_data() -> void:
 func _on_sfx_pos_x_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		sfx.data.posX = -value
+		if Roth.halve_display_values:
+			sfx.data.posX *= 2
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 
@@ -172,6 +179,8 @@ func _on_sfx_pos_x_edit_value_changed(value: float) -> void:
 func _on_sfx_pos_y_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		sfx.data.posY = value
+		if Roth.halve_display_values:
+			sfx.data.posY *= 2
 	owner.redraw(owner.selected_sfx)
 	%EditSFXTimer.start()
 

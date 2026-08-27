@@ -27,7 +27,7 @@ var holding_right_mouse: bool = false
 var holding_shift: bool = false
 var holding_ctrl: bool = false
 var holding_alt: bool = false
-var snap: float = 0.2
+var snap: float = 0.1
 var timer: Timer
 var start_sector_split: bool = false
 var start_sector_split_vertex: VertexNode
@@ -55,8 +55,8 @@ func _ready() -> void:
 	timer.timeout.connect(check_for_hover)
 	add_child(timer)
 	
-	var data: Variant = Settings.cache.get("2d_edit")
-	if data and typeof(data) == TYPE_DICTIONARY:
+	var data: Dictionary = Settings.cache.get("2d_edit", {})
+	if data:
 		if "grid_enabled" in data:
 			%GridCheckBox.button_pressed = data.grid_enabled
 		if "grid_size" in data:
@@ -70,6 +70,10 @@ func _ready() -> void:
 		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
 	
 	grid_size = Vector2.ONE * %GridEdit.value / Roth.SCALE_2D_WORLD
+	
+	if Roth.halve_display_values:
+		snap *= 2
+		grid_size *= 2
 
 
 func _notification(what: int) -> void:
@@ -93,6 +97,9 @@ func _process(_delta: float) -> void:
 		timer.wait_time = 0.1
 	var mouse_x: float = snappedf(get_global_mouse_position().x + global_position.x, snap)
 	var mouse_y: float = snappedf(get_global_mouse_position().y + global_position.y, snap)
+	if Roth.halve_display_values:
+		mouse_x /= 2
+		mouse_y /= 2
 	%CoordinatesLabel.text = "(%d, %d)" % [mouse_x * Roth.SCALE_2D_WORLD, mouse_y * Roth.SCALE_2D_WORLD]
 
 #region Input
@@ -1740,20 +1747,26 @@ func _on_grid_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_grid_edit_value_changed(value: float) -> void:
 	grid_size = Vector2.ONE * value / Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		grid_size *= 2
 	queue_redraw()
 
 
 func _on_snap_check_box_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		snap = %SnapEdit.value / Roth.SCALE_2D_WORLD
+		if Roth.halve_display_values:
+			snap *= 2
 		%SnapEdit.editable = true
 	else:
-		snap = 0.2
+		snap = 0.1
 		%SnapEdit.editable = false
 
 
 func _on_snap_edit_value_changed(value: float) -> void:
 	snap = value / Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		snap *= 2
 
 #endregion
 

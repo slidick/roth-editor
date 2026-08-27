@@ -56,7 +56,17 @@ func draw_box() -> void:
 		return
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(%Map2D.snap)
 	var size: Vector2 = (current_mouse - start_box_position).snappedf(%Map2D.snap)
-	draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, %Map2D.line_width, true)
-	%BoxSizeLabel.text = "%.0f x %.0f" % [size.x * Roth.SCALE_2D_WORLD, size.y * Roth.SCALE_2D_WORLD]
+	if size.x != 0 and size.y != 0:
+		draw_rect(Rect2(start_box_position.x, start_box_position.y, size.x, size.y), Color.GHOST_WHITE, false, %Map2D.line_width, true)
+	elif size.x == 0:
+		draw_line(start_box_position, Vector2(start_box_position.x, start_box_position.y+size.y), Color.GHOST_WHITE, %Map2D.line_width, true)
+	elif size.y == 0:
+		draw_line(start_box_position, Vector2(start_box_position.x+size.x, start_box_position.y), Color.GHOST_WHITE, %Map2D.line_width, true)
+	var x: float = size.x * Roth.SCALE_2D_WORLD
+	var y: float = size.y * Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+	%BoxSizeLabel.text = "%.0f x %.0f" % [x, y]
 	%BoxSizeLabel.show()
 	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (start_box_position + current_mouse) / 2) * %Camera2D.zoom.x

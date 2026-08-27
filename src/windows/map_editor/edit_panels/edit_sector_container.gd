@@ -96,9 +96,11 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		%SectorIndexLabel.text = "Sector: %d Selected" % len(owner.selected_sectors)
 		%SelectFacesButton.hide()
 	
-	
-	%RoofHeightEdit.get_line_edit().text = "%d" % sector.data.ceilingHeight
-	%RoofHeightEdit.set_value_no_signal(sector.data.ceilingHeight)
+	var ceiling_height: float = sector.data.ceilingHeight
+	if Roth.halve_display_values:
+		ceiling_height /= 2
+	%RoofHeightEdit.get_line_edit().text = "%d" % ceiling_height
+	%RoofHeightEdit.set_value_no_signal(int(ceiling_height))
 	var roof_a: int = sector.data.textureFit & Sector.CEILING_A > 0
 	var roof_b: int = sector.data.textureFit & Sector.CEILING_B > 0
 	if roof_a == 0 and roof_b == 0:
@@ -110,8 +112,11 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	elif roof_a == 1 and roof_b == 1:
 		%RoofScaleOption.select(3)
 	
-	%FloorHeightEdit.get_line_edit().text = "%d" % sector.data.floorHeight
-	%FloorHeightEdit.set_value_no_signal(sector.data.floorHeight)
+	var floor_height: float = sector.data.floorHeight
+	if Roth.halve_display_values:
+		floor_height /= 2
+	%FloorHeightEdit.get_line_edit().text = "%d" % floor_height
+	%FloorHeightEdit.set_value_no_signal(int(floor_height))
 	var floor_a: int = sector.data.textureFit & Sector.FLOOR_A > 0
 	var floor_b: int = sector.data.textureFit & Sector.FLOOR_B > 0
 	if floor_a == 0 and floor_b == 0:
@@ -175,12 +180,18 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	if sector.platform:
 		%PlatformCheckButton.set_pressed_no_signal(true)
 		%PlatformContainer.show()
-	
-		%PlatformFloorHeightEdit.get_line_edit().text = "%d" % sector.platform.floorHeight
-		%PlatformFloorHeightEdit.set_value_no_signal(sector.platform.floorHeight)
 		
-		%PlatformRoofHeightEdit.get_line_edit().text = "%d" % sector.platform.ceilingHeight
-		%PlatformRoofHeightEdit.set_value_no_signal(sector.platform.ceilingHeight)
+		var platform_floor_height: float = sector.platform.floorHeight
+		if Roth.halve_display_values:
+			platform_floor_height /= 2
+		%PlatformFloorHeightEdit.get_line_edit().text = "%d" % platform_floor_height
+		%PlatformFloorHeightEdit.set_value_no_signal(int(platform_floor_height))
+		
+		var platform_ceiling_height: float = sector.platform.ceilingHeight
+		if Roth.halve_display_values:
+			platform_ceiling_height /= 2
+		%PlatformRoofHeightEdit.get_line_edit().text = "%d" % platform_ceiling_height
+		%PlatformRoofHeightEdit.set_value_no_signal(int(platform_ceiling_height))
 		
 		var platform_floor_a: int = sector.platform.floorTextureScale & Sector.FLOOR_A > 0
 		var platform_floor_b: int = sector.platform.floorTextureScale & Sector.FLOOR_B > 0
@@ -338,6 +349,8 @@ func update_selections(p_force_timeout: bool = true) -> void:
 func _on_roof_height_edit_value_changed(value: float) -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight = value
+		if Roth.halve_display_values:
+			sector.data.ceilingHeight *= 2
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -345,6 +358,8 @@ func _on_roof_height_edit_value_changed(value: float) -> void:
 func _on_floor_height_edit_value_changed(value: float) -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight = value
+		if Roth.halve_display_values:
+			sector.data.floorHeight *= 2
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -583,6 +598,8 @@ func _on_floor_flip_y_check_box_toggled(toggled_on: bool) -> void:
 func _on_platform_floor_height_edit_value_changed(value: float) -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.platform.floorHeight = value
+		if Roth.halve_display_values:
+			sector.platform.floorHeight *= 2
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -609,6 +626,8 @@ func _on_platform_floor_scale_option_item_selected(index: int) -> void:
 func _on_platform_roof_height_edit_value_changed(value: float) -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.platform.ceilingHeight = value
+		if Roth.halve_display_values:
+			sector.platform.ceilingHeight *= 2
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -825,6 +844,8 @@ func _on_edit_sector_timer_timeout() -> void:
 func _on_lower_roof_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight -= %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.data.ceilingHeight -= %RelativeAmountBox.value
 		if %IncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
 				if object.posZ > sector.data.ceilingHeight:
@@ -837,9 +858,14 @@ func _on_lower_roof_button_pressed() -> void:
 func _on_raise_roof_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.ceilingHeight += %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.data.ceilingHeight += %RelativeAmountBox.value
 		if %IncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
-				if object.posZ == (sector.data.ceilingHeight - %RelativeAmountBox.value):
+				var amount: float = %RelativeAmountBox.value
+				if Roth.halve_display_values:
+					amount *= 2
+				if object.posZ == (sector.data.ceilingHeight - amount):
 					object.posZ = sector.data.ceilingHeight
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
@@ -849,12 +875,16 @@ func _on_raise_roof_button_pressed() -> void:
 func _on_lower_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight -= %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.data.floorHeight -= %RelativeAmountBox.value
 		if %IncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
 				if sector.platform and object.posZ == sector.platform.ceilingHeight:
 					pass
 				elif object.posZ != sector.data.ceilingHeight:
 					object.posZ -= %RelativeAmountBox.value
+					if Roth.halve_display_values:
+						object.posZ -= %RelativeAmountBox.value
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
@@ -863,12 +893,16 @@ func _on_lower_floor_button_pressed() -> void:
 func _on_raise_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.data.floorHeight += %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.data.floorHeight += %RelativeAmountBox.value
 		if %IncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
 				if sector.platform and object.posZ == sector.platform.ceilingHeight:
 					pass
 				else:
 					object.posZ += %RelativeAmountBox.value
+					if Roth.halve_display_values:
+						object.posZ += %RelativeAmountBox.value
 				if object.posZ > sector.data.ceilingHeight:
 					object.posZ = sector.data.ceilingHeight
 	update_selections(false)
@@ -879,10 +913,15 @@ func _on_raise_floor_button_pressed() -> void:
 func _on_lower_platform_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.platform.floorHeight -= %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.platform.floorHeight -= %RelativeAmountBox.value
 		if %PlatformIncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
-				if object.posZ >= (sector.platform.floorHeight + %RelativeAmountBox.value):
-					object.posZ -= %RelativeAmountBox.value
+				var amount: float = %RelativeAmountBox.value
+				if Roth.halve_display_values:
+					amount *= 2
+				if object.posZ >= (sector.platform.floorHeight + amount):
+					object.posZ -= amount
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
@@ -891,9 +930,14 @@ func _on_lower_platform_floor_button_pressed() -> void:
 func _on_lower_platform_ceiling_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.platform.ceilingHeight -= %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.platform.ceilingHeight -= %RelativeAmountBox.value
 		if %IncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
-				if object.posZ <= (sector.platform.ceilingHeight + %RelativeAmountBox.value) and object.posZ > sector.platform.ceilingHeight:
+				var amount: float = %RelativeAmountBox.value
+				if Roth.halve_display_values:
+					amount *= 2
+				if object.posZ <= (sector.platform.ceilingHeight + amount) and object.posZ > sector.platform.ceilingHeight:
 					object.posZ = sector.platform.ceilingHeight
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
@@ -903,10 +947,15 @@ func _on_lower_platform_ceiling_button_pressed() -> void:
 func _on_raise_platform_floor_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.platform.floorHeight += %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.platform.floorHeight += %RelativeAmountBox.value
 		if %PlatformIncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
-				if object.posZ >= (sector.platform.floorHeight - %RelativeAmountBox.value):
-					object.posZ += %RelativeAmountBox.value
+				var amount: float = %RelativeAmountBox.value
+				if Roth.halve_display_values:
+					amount *= 2
+				if object.posZ >= (sector.platform.floorHeight - amount):
+					object.posZ += amount
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
@@ -915,9 +964,14 @@ func _on_raise_platform_floor_button_pressed() -> void:
 func _on_raise_platform_ceiling_button_pressed() -> void:
 	for sector: Sector in owner.selected_sectors:
 		sector.platform.ceilingHeight += %RelativeAmountBox.value
+		if Roth.halve_display_values:
+			sector.platform.ceilingHeight += %RelativeAmountBox.value
 		if %IncludeObjectsCheckBox.button_pressed:
 			for object: Dictionary in sector.data.objectInformation:
-				if object.posZ == (sector.platform.ceilingHeight - %RelativeAmountBox.value):
+				var amount: float = %RelativeAmountBox.value
+				if Roth.halve_display_values:
+					amount *= 2
+				if object.posZ == (sector.platform.ceilingHeight - amount):
 					object.posZ = sector.platform.ceilingHeight
 	update_selections(false)
 	owner.redraw(owner.selected_sectors)

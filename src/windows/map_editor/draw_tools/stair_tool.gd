@@ -76,7 +76,12 @@ func draw_box() -> void:
 		return
 	var current_mouse: Vector2 = (get_global_mouse_position() + global_position).snappedf(%Map2D.snap)
 	var size: Vector2 = (current_mouse - start_position).snappedf(%Map2D.snap)
-	draw_rect(Rect2(start_position.x, start_position.y, size.x, size.y), Color.GHOST_WHITE, false, %Map2D.line_width, true)
+	if size.x != 0 and size.y != 0:
+		draw_rect(Rect2(start_position.x, start_position.y, size.x, size.y), Color.GHOST_WHITE, false, %Map2D.line_width, true)
+	elif size.x == 0:
+		draw_line(start_position, Vector2(start_position.x, start_position.y+size.y), Color.GHOST_WHITE, %Map2D.line_width, true)
+	elif size.y == 0:
+		draw_line(start_position, Vector2(start_position.x+size.x, start_position.y), Color.GHOST_WHITE, %Map2D.line_width, true)
 	
 	var number_of_steps: int = int(%StepsSpinBox.value)
 	if %StairHorizontalCheckBox.button_pressed:
@@ -86,6 +91,11 @@ func draw_box() -> void:
 		for i in range(number_of_steps-1):
 			draw_line(Vector2(start_position.x, start_position.y + size.y * (i+1) / number_of_steps), Vector2(current_mouse.x, start_position.y + size.y * (i+1) /number_of_steps), Color.GHOST_WHITE, %Map2D.line_width, true)
 	
-	%BoxSizeLabel.text = "%.0f x %.0f" % [size.x * Roth.SCALE_2D_WORLD, size.y * Roth.SCALE_2D_WORLD]
+	var x: float = size.x * Roth.SCALE_2D_WORLD
+	var y: float = size.y * Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+	%BoxSizeLabel.text = "%.0f x %.0f" % [x, y]
 	%BoxSizeLabel.show()
 	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (start_position + current_mouse) / 2) * %Camera2D.zoom.x

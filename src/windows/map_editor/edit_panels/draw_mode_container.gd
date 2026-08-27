@@ -90,10 +90,10 @@ func get_sector_options() -> Dictionary:
 		"wall": %DrawModeWallOption.get_selected_metadata(),
 		"texture_fit": texture_fit,
 		"texture_flags": texture_flags,
-		"ceiling_height": %DrawModeRoofHeightSpinBox.value,
-		"floor_height": %DrawModeFloorHeightSpinBox.value,
+		"ceiling_height": (%DrawModeRoofHeightSpinBox.value * 2) if Roth.halve_display_values else %DrawModeRoofHeightSpinBox.value,
+		"floor_height": (%DrawModeFloorHeightSpinBox.value * 2) if Roth.halve_display_values else %DrawModeFloorHeightSpinBox.value,
 		"auto_split_walls": %AutoSplitWallCheckBox.button_pressed,
-		"auto_split_walls_value": %AutoSplitWallSpinBox.value,
+		"auto_split_walls_value": (%AutoSplitWallSpinBox.value * 2) if Roth.halve_display_values else %AutoSplitWallSpinBox.value,
 	}
 
 
@@ -167,7 +167,10 @@ func _on_draw_mode_adjust_ceiling_height_button_pressed() -> void:
 	var das: Dictionary = %Map2D.map.das
 	var index: int = %DrawModeWallOption.get_selected_metadata()
 	if index in das.mapping:
-		%DrawModeRoofHeightSpinBox.set_value_no_signal(%DrawModeFloorHeightSpinBox.value + (das.mapping[index].width * 2))
+		var value: float = %DrawModeFloorHeightSpinBox.value + (das.mapping[index].width * 2)
+		if Roth.halve_display_values:
+			value /= 2
+		%DrawModeRoofHeightSpinBox.set_value_no_signal(int(value))
 
 
 func _on_draw_mode_edit_texture_presets_button_pressed() -> void:

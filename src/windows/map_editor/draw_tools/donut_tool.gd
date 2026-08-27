@@ -3,6 +3,9 @@ extends Node2D
 var start_draw: bool = false
 var start_position := Vector2.ZERO
 
+func _ready() -> void:
+	if Roth.halve_display_values:
+		%DonutStepHeightSpinBox.value /= 2
 
 func _on_donut_shape_check_box_pressed() -> void:
 	%DonutOptionsControl.show()
@@ -38,7 +41,10 @@ func _draw() -> void:
 		draw_line(inner_vertices[(i+1)%len(inner_vertices)], inner_vertices[i], color, %Map2D.line_width, true)
 		draw_line(inner_vertices[i], vertices[i], color, %Map2D.line_width, true)
 	
-	%BoxSizeLabel.text = "Radius: %.0f" % (size.length() * Roth.SCALE_2D_WORLD)
+	var length: float = size.length() * Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		length /= 2
+	%BoxSizeLabel.text = "Radius: %.0f" % length
 	%BoxSizeLabel.show()
 	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - start_position) * %Camera2D.zoom.x
 
@@ -135,8 +141,12 @@ func handle_input(event: InputEvent) -> void:
 						new_sectors.append(%Map2D.map.add_sector(vertices_scaled, sector_options))
 						if %DonutSteppedFloorCheckBox.button_pressed:
 							sector_options.floor_height += %DonutStepHeightSpinBox.value
+							if Roth.halve_display_values:
+								sector_options.floor_height += %DonutStepHeightSpinBox.value
 						if %DonutSteppedCeilingCheckBox.button_pressed:
 							sector_options.ceiling_height += %DonutStepHeightSpinBox.value
+							if Roth.halve_display_values:
+								sector_options.ceiling_height += %DonutStepHeightSpinBox.value
 					
 					if %DonutHollowCheckBox.button_pressed:
 						sector_options.floor_height = initial_floor_height
@@ -144,6 +154,8 @@ func handle_input(event: InputEvent) -> void:
 							sector_options.ceiling_height = initial_ceiling_height
 						elif %DonutSteppedCeilingCheckBox.button_pressed:
 							sector_options.ceiling_height -= %DonutStepHeightSpinBox.value
+							if Roth.halve_display_values:
+								sector_options.ceiling_height -= %DonutStepHeightSpinBox.value
 						var inner_vertices_scaled: Array = inner_vertices.map(func (v: Vector2) -> Vector2: return v * Roth.SCALE_2D_WORLD)
 						if not %DonutClockwiseCheckBox.button_pressed:
 							inner_vertices_scaled.reverse()

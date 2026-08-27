@@ -84,6 +84,13 @@ func draw_box() -> void:
 	
 	draw_line(vertices[-1], current_mouse, Color.GHOST_WHITE, %Map2D.line_width, true)
 	var length: Vector2 = current_mouse - vertices[-1]
-	%BoxSizeLabel.text = "%.0f x %.0f \n %.0f" % [length.x * Roth.SCALE_2D_WORLD, length.y * Roth.SCALE_2D_WORLD, length.length() * Roth.SCALE_2D_WORLD]
+	var x: float = length.x * Roth.SCALE_2D_WORLD
+	var y: float = length.y * Roth.SCALE_2D_WORLD
+	var size: float = length.length() * Roth.SCALE_2D_WORLD
+	if Roth.halve_display_values:
+		x /= 2
+		y /= 2
+		size /= 2
+	%BoxSizeLabel.text = "%.0f x %.0f \n %.0f" % [x, y, size]
 	%BoxSizeLabel.show()
 	%BoxSizeLabel.position = (%SubViewportContainer2D.size / 2) - (%BoxSizeLabel.size / 2) - (%Camera2D.global_position - (vertices[-1] + current_mouse) / 2) * %Camera2D.zoom.x

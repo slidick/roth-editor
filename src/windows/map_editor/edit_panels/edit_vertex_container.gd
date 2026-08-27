@@ -13,7 +13,12 @@ func update_selections() -> void:
 	var vertex_node: VertexNode = owner.selected_vertex_nodes[0]
 	
 	if len(owner.selected_vertex_nodes) == 1:
-		%VertexPositionLabel.text = "Vertex: %s" % vertex_node.coordinate
+		var x: float = vertex_node.coordinate.x
+		var y: float = vertex_node.coordinate.y
+		if Roth.halve_display_values:
+			x /= 2
+			y /= 2
+		%VertexPositionLabel.text = "Vertex: (%d, %d)" % [x, y]
 	
 	elif len(owner.selected_vertex_nodes) > 1:
 		%VertexPositionLabel.text = "Vertex: %d selected" % len(owner.selected_vertex_nodes)

@@ -73,6 +73,9 @@ const DEFAULT_TEXTURE_PRESETS: Dictionary = {
 var roth_installations: Array = []
 var current_installation: ROTHInstallation
 var dosbox_pid: int = -1
+var halve_display_values: bool :
+	get():
+		return Settings.settings.get("options", {}).get("halve_display_values", true)
 
 
 func _ready() -> void:
