@@ -5,7 +5,9 @@ func _ready() -> void:
 	Roth.das_loading_started.connect(_on_das_loading_started)
 	Roth.das_loading_updated.connect(_on_das_loading_updated)
 	Roth.das_loading_finished.connect(_on_das_loading_finished)
+	Roth.map_loading_completely_finished.connect(_on_map_loading_completely_finished)
 	Roth.settings_updated.connect(_on_settings_updated)
+	_on_texture_layout_option_item_selected(%TextureLayoutOption.get_item_index(%TextureLayoutOption.get_selected_id()))
 
 
 func _on_settings_updated() -> void:
@@ -81,16 +83,11 @@ func _on_texture_list_item_selected(index: int) -> void:
 
 
 func show_texture_data(data: Dictionary) -> void:
-	for key: String in data:
-		if key == "image" or key == "animation":
-			continue
+	for key: String in ["name", "desc", "width", "height"]:
 		var label := Label.new()
 		label.text = "%s: %s" % [key, data[key]]
 		label.clip_text = true
 		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		#label.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
-		#label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		#label.custom_minimum_size.y = 32
 		%DataContainer.add_child(label)
 
 
@@ -175,6 +172,10 @@ func _on_das_loading_updated(progress: float, _das_info: Dictionary) -> void:
 func _on_das_loading_finished(p_das: Dictionary) -> void:
 	if %DASFiles.selected == -1:
 		load_das(p_das)
+	%ProgressBar.hide()
+
+
+func _on_map_loading_completely_finished() -> void:
 	%ProgressBar.hide()
 
 
