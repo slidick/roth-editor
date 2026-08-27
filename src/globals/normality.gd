@@ -94,7 +94,7 @@ func load_maps(maps_array: Array) -> void:
 
 
 func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: Dictionary = {}) -> void:
-# Check for valid install
+	# Check for valid install
 	if not current_installation.is_valid():
 		return
 	
@@ -167,16 +167,16 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 	var i: int = 0
 	
 	if starting_map:
-		file.seek(NormalityInstallation.DAS_OFFSETS[i])
+		file.seek(current_installation.das_offsets[i])
 		file.store_8(ord("m"))
 		file.store_8(ord(":"))
 		file.store_8(ord("\\"))
 		for c: String in starting_map.map_info.das_info.name.to_lower():
 			file.store_8(ord(c))
 		file.store_8(0)
-		while file.get_position() < NormalityInstallation.DAS_OFFSETS[i+1]:
+		while file.get_position() < current_installation.das_offsets[i+1]:
 			file.store_8(0)
-		file.seek(NormalityInstallation.MAP_OFFSETS[i])
+		file.seek(current_installation.map_offsets[i])
 		file.store_8(ord("m"))
 		file.store_8(ord(":"))
 		file.store_8(ord("\\"))
@@ -187,22 +187,22 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 		file.store_8(ord("a"))
 		file.store_8(ord("w"))
 		file.store_8(0)
-		while file.get_position() < NormalityInstallation.MAP_OFFSETS[i+1]:
+		while file.get_position() < current_installation.map_offsets[i+1]:
 			file.store_8(0)
 		i += 1
 	for map: Map in map_pack.maps:
 		if map == starting_map.preview_map or starting_map == map:
 			continue
-		file.seek(NormalityInstallation.DAS_OFFSETS[i])
+		file.seek(current_installation.das_offsets[i])
 		file.store_8(ord("m"))
 		file.store_8(ord(":"))
 		file.store_8(ord("\\"))
 		for c: String in map.map_info.das_info.name.to_lower():
 			file.store_8(ord(c))
 		file.store_8(0)
-		while file.get_position() < NormalityInstallation.DAS_OFFSETS[i+1]:
+		while file.get_position() < current_installation.das_offsets[i+1]:
 			file.store_8(0)
-		file.seek(NormalityInstallation.MAP_OFFSETS[i])
+		file.seek(current_installation.map_offsets[i])
 		file.store_8(ord("m"))
 		file.store_8(ord(":"))
 		file.store_8(ord("\\"))
@@ -213,14 +213,16 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 		file.store_8(ord("a"))
 		file.store_8(ord("w"))
 		file.store_8(0)
-		while file.get_position() < NormalityInstallation.MAP_OFFSETS[i+1]:
+		while file.get_position() < current_installation.map_offsets[i+1]:
 			file.store_8(0)
 		i += 1
 	while i < 30:
-		file.seek(NormalityInstallation.DAS_OFFSETS[i])
-		file.store_8(0)
-		file.seek(NormalityInstallation.MAP_OFFSETS[i])
-		file.store_8(0)
+		file.seek(current_installation.das_offsets[i])
+		while file.get_position() < current_installation.das_offsets[i+1]:
+			file.store_8(0)
+		file.seek(current_installation.map_offsets[i])
+		while file.get_position() < current_installation.map_offsets[i+1]:
+			file.store_8(0)
 		i += 1
 	file.close()
 	

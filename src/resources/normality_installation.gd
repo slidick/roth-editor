@@ -9,74 +9,8 @@ const SUB_DIRECTORIES: Array = [
 	""
 ]
 
-const DAS_OFFSETS: Array = [
-	0xBA5A5,
-	0xBA5B2,
-	0xBA5BF,
-	0xBA5CA,
-	0xBA5D6,
-	0xBA5E1,
-	0xBA5EE,
-	0xBA5FB,
-	0xBA608,
-	0xBA616,
-	0xBA623,
-	0xBA630,
-	0xBA63D,
-	0xBA64A,
-	0xBA657,
-	0xBA665,
-	0xBA66E,
-	0xBA67A,
-	0xBA684,
-	0xBA691,
-	0xBA69B,
-	0xBA6A8,
-	0xBA6B5,
-	0xBA6C0,
-	0xBA6CB,
-	0xBA6D6,
-	0xBA6E1,
-	0xBA6EC,
-	0xBA6F7,
-	0xBA704,
-	0xBA711,
-]
-
-const MAP_OFFSETS: Array = [
-	0xBA711,
-	0xBA722,
-	0xBA733,
-	0xBA742,
-	0xBA752,
-	0xBA761,
-	0xBA772,
-	0xBA783,
-	0xBA794,
-	0xBA7A6,
-	0xBA7B7,
-	0xBA7C8,
-	0xBA7D9,
-	0xBA7EA,
-	0xBA7FB,
-	0xBA80D,
-	0xBA81A,
-	0xBA82A,
-	0xBA838,
-	0xBA849,
-	0xBA857,
-	0xBA869,
-	0xBA87A,
-	0xBA889,
-	0xBA899,
-	0xBA8A9,
-	0xBA8B9,
-	0xBA8C9,
-	0xBA8D9,
-	0xBA8EA,
-	0xBA8F9,
-]
-
+var das_offsets: Array = []
+var map_offsets: Array = []
 
 var directory: String = ""
 var normality_exe: String :
@@ -272,7 +206,9 @@ func get_map_das_list() -> Array:
 	var file := FileAccess.open(normality_exe, FileAccess.READ)
 	file.seek(map_das_offset)
 	var names: Array = []
+	var offsets: Array = []
 	while names.size() < 120:
+		offsets.append(file.get_position())
 		var s: String = file.get_line().to_upper()
 		if not s.begins_with("MAPS\\"):
 			break
@@ -290,7 +226,11 @@ func get_map_das_list() -> Array:
 			push_warning("Map table invalid")
 			return []
 		map_list.append([names[n+i].trim_suffix(".RAW"), names[i]])
+		das_offsets.append(offsets[i])
+		map_offsets.append(offsets[n+i])
 	
+	das_offsets.append(map_offsets[0])
+	map_offsets.append(offsets[-1])
 	return map_list
 
 
