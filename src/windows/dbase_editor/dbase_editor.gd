@@ -223,6 +223,12 @@ func _on_save_button_pressed() -> void:
 	save_tween.tween_property(%SuccessLabel, "modulate:a", 0.0, 2.0)
 
 
+func get_modified_dbase_name() -> String:
+	if original_dbase_data != dbase_data:
+		return dbase_data.dbase_info.name
+	return ""
+
+
 func _on_d_base_100_contents_list_item_selected(index: int) -> void:
 	%TabContainer.current_tab = index
 

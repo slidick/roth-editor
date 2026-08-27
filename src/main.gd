@@ -8,10 +8,11 @@ enum Main {
 	ManageDAS,
 	BackdropEditor,
 	IconsEditor,
-	SaveEditor,
 	Sep0,
-	Normality,
+	SaveEditor,
 	Sep1,
+	Normality,
+	Sep2,
 	Quit,
 }
 
@@ -70,7 +71,50 @@ func _unhandled_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		if await Dialog.confirm("Are you sure?\nMake sure to save!", "Confirm Quit", false):
+		var quit_string: String = "Are you sure?"
+		var nothing_to_save: bool = true
+		
+		var map_editor: Node = find_child("Editor")
+		if map_editor:
+			var map_names: Array = map_editor.get_modified_map_names()
+			if len(map_names) > 0:
+				quit_string += "\nThe following maps are unsaved:"
+				for map_name: String in map_names:
+					quit_string += "\n" + map_name
+				nothing_to_save = false
+		
+		var dbase_editor: Node = find_child("ManageDbase")
+		if dbase_editor:
+			var dbase_name: String = dbase_editor.get_modified_dbase_name()
+			if not dbase_name.is_empty():
+				quit_string += "\nThe following dbase pack is unsaved:\n%s" % dbase_name
+				nothing_to_save = false
+		
+		var sfx_editor: Node = find_child("ManageSFX")
+		if sfx_editor:
+			var sfx_name: String = sfx_editor.get_modified_sfx_name()
+			if not sfx_name.is_empty():
+				quit_string += "\nThe following sfx pack is unsaved:\n%s" % sfx_name
+				nothing_to_save = false
+		
+		var das_editor: Node = find_child("ManageDAS")
+		if das_editor:
+			var das_name: String = das_editor.get_modified_das_name()
+			if not das_name.is_empty():
+				quit_string += "\nThe following das pack is unsaved:\n%s" % das_name
+				nothing_to_save = false
+		
+		var icons_editor: Node = find_child("IconsEditor")
+		if icons_editor:
+			var icon_name: String = icons_editor.get_modified_icon_name()
+			if not icon_name.is_empty():
+				quit_string += "\nThe following icon pack is unsaved:\n%s" % icon_name
+				nothing_to_save = false
+		
+		if Settings.settings.get("options", {}).get("always_warn_on_exit", true):
+			nothing_to_save = false
+		
+		if nothing_to_save or await Dialog.confirm(quit_string, "Confirm Quit", false):
 			Utility.deinit_shader()
 			Console.print("Quitting...")
 			for map_pack: Dictionary in MapPack.map_packs:

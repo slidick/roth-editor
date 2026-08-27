@@ -363,6 +363,16 @@ func reload_skybox(p_map: Map = null) -> void:
 		%WorldEnvironment.environment.sky.sky_material = ProceduralSkyMaterial.new()
 
 
+func get_modified_map_names() -> Array:
+	var modified_map_names: Array = []
+	var tree_item: TreeItem = %MapsTree.get_root().get_first_child()
+	while tree_item:
+		if tree_item.get_text(0).ends_with("*"):
+			modified_map_names.append(tree_item.get_text(0).trim_suffix("*"))
+		tree_item = tree_item.get_next()
+	return modified_map_names
+
+
 func _on_map_loaded(map: Map) -> void:
 	load_map(map)
 
@@ -489,6 +499,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 			if "vanilla" not in map.map_info:
 				Console.print("Saving file: %s" % map.map_info.name)
 				map.save_map()
+				selected[0].set_text(0, selected[0].get_text(0).trim_suffix("*"))
 		MapMenu.SaveAs:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to save as.", "Info", false, Vector2(400,150))
@@ -501,7 +512,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				selected[0].set_text(0, new_map_name)
 				undo_lists[map].name = new_map_name
 				Roth.settings_updated.emit()
-		
+				selected[0].set_text(0, selected[0].get_text(0).trim_suffix("*"))
 		MapMenu.EditMetadata:
 			if len(selected) != 1:
 				await Dialog.information("Please select only one map to edit.", "Info", false, Vector2(400,150))
@@ -763,6 +774,12 @@ func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 		undo_lists[p_map].add_item(undo_stacks[p_map][i].name)
 	if undo_lists[p_map].item_count > 0:
 		undo_lists[p_map].select(0)
+	
+	var tree_item: TreeItem = %MapsTree.get_root().get_first_child()
+	while tree_item:
+		if tree_item.get_metadata(0) == p_map.node:
+			tree_item.set_text(0, tree_item.get_text(0).trim_suffix("*")+"*")
+		tree_item = tree_item.get_next()
 
 
 func close_undo_redo(p_map: Map) -> void:

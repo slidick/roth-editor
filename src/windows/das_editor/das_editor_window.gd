@@ -248,6 +248,12 @@ func reset_das() -> void:
 		child.reset()
 
 
+func get_modified_das_name() -> String:
+	if original_das != das:
+		return das.das_info.name
+	return ""
+
+
 func _on_section_item_list_item_selected(index: int) -> void:
 	%DASTabContainer.current_tab = index
 	if %DASTabContainer.get_child(index).has_method("reload_palette"):

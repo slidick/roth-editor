@@ -230,7 +230,6 @@ offset_right = 640.0
 offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
-start_rotated = true
 
 [node name="SpriteSheetImporter" parent="SubWindows" index="1" unique_id=999387797 instance=ExtResource("15_1uofs")]
 unique_name_in_owner = true

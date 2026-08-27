@@ -1,7 +1,8 @@
 extends BaseWindow
 
 var raw_palette: PackedByteArray = Das.DEFAULT_RAW_PALETTE
-
+var previous_select: int = -1
+var modified: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -9,10 +10,15 @@ func _ready() -> void:
 
 
 func _hide() -> void:
+	if modified:
+		if not await Dialog.confirm("There are unsaved changes!\nAre you sure?", "Changes will be lost!", false, Vector2(400,200)):
+			%ItemList.select(previous_select)
+			return
 	super._hide()
 	%IconsList.clear()
 	%ItemList.deselect_all()
 	%HotspotContainer.hide()
+	modified = false
 
 
 func _on_settings_updated() -> void:
@@ -25,6 +31,12 @@ func _on_settings_updated() -> void:
 
 
 func _on_item_list_item_selected(index: int) -> void:
+	if modified:
+		if not await Dialog.confirm("There are unsaved changes!\nAre you sure?", "Changes will be lost!", false, Vector2(400,200)):
+			%ItemList.select(previous_select)
+			return
+	modified = false
+	previous_select = index
 	%IconsList.clear()
 	var icon_info: Dictionary = %ItemList.get_item_metadata(index)
 	var icon_data: Array = IconsAll.parse(icon_info.filepath)
@@ -124,6 +136,7 @@ func _on_icons_list_item_activated(index: int) -> void:
 		icon = new_icon
 		%IconsList.set_item_metadata(index, icon)
 		%IconsList.set_item_icon(index, ImageTexture.create_from_image(Image.create_from_data(icon.width, icon.height, false, Image.FORMAT_RGBA8 if icon.is_transparent else Image.FORMAT_RGB8, Utility.convert_palette_image(raw_palette, icon.raw_image, icon.is_transparent, false))))
+		modified = true
 
 
 func _on_x_offset_edit_value_changed(value: float) -> void:
@@ -136,6 +149,7 @@ func _on_x_offset_edit_value_changed(value: float) -> void:
 	if icon.y_offset or icon.x_offset:
 		image_name += "\n%d,%d" % [icon.x_offset, icon.y_offset]
 	%IconsList.set_item_text(index, image_name)
+	modified = true
 
 
 func _on_y_offset_edit_value_changed(value: float) -> void:
@@ -148,6 +162,7 @@ func _on_y_offset_edit_value_changed(value: float) -> void:
 	if icon.y_offset or icon.x_offset:
 		image_name += "\n%d,%d" % [icon.x_offset, icon.y_offset]
 	%IconsList.set_item_text(index, image_name)
+	modified = true
 
 
 func _on_save_button_pressed() -> void:
@@ -161,3 +176,10 @@ func _on_save_button_pressed() -> void:
 	var file := FileAccess.open(%ItemList.get_item_metadata(%ItemList.get_selected_items()[0]).filepath, FileAccess.WRITE)
 	file.store_buffer(data)
 	file.close()
+	modified = false
+
+
+func get_modified_icon_name() -> String:
+	if modified:
+		return %ItemList.get_item_text(%ItemList.get_selected_items()[0])
+	return ""
