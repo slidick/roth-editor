@@ -3,6 +3,16 @@ extends RefCounted
 
 const REQUIRED_FILES: Array = [
 	"normality_exe",
+	"lang_dat",
+	"hmidet_386",
+	"hmidrv_386",
+	"eureka0_sfx",
+	"hmimdrv_386",
+	"drum",
+	"melodic",
+	"maps_directory",
+	"gfx_directory",
+	"gfx1_directory",
 ]
 
 const SUB_DIRECTORIES: Array = [
@@ -49,6 +59,12 @@ var melodic: String :
 var maps_directory: String :
 	get():
 		return find_directory("MAPS")
+var gfx_directory: String :
+	get():
+		return find_directory("GFX")
+var gfx1_directory: String :
+	get():
+		return find_directory("GFX1")
 var id: String :
 	get():
 		return directory.md5_text()
@@ -236,6 +252,9 @@ func get_map_das_list() -> Array:
 
 
 func populate_custom_install(new_directory: String) -> bool:
+	if not is_valid():
+		return false
+	
 	if DirAccess.dir_exists_absolute(new_directory):
 		if (FileAccess.file_exists(new_directory.path_join("NORM.EXE"))
 			and FileAccess.file_exists(new_directory.path_join("LANG.DAT"))
@@ -266,10 +285,8 @@ func populate_custom_install(new_directory: String) -> bool:
 	DirAccess.copy_absolute(melodic, new_directory.path_join("MIDI/MELODIC.BNK"))
 	write_config_ini(new_directory.path_join("CONFIG.INI"))
 	
-	var gfx_directory: String = find_directory("GFX")
 	for filename: String in DirAccess.get_files_at(gfx_directory):
 		DirAccess.copy_absolute(gfx_directory.path_join(filename), new_directory.path_join("GFX").path_join(filename))
-	var gfx1_directory: String = find_directory("GFX1")
 	for filename: String in DirAccess.get_files_at(gfx1_directory):
 		DirAccess.copy_absolute(gfx1_directory.path_join(filename), new_directory.path_join("GFX1").path_join(filename))
 	
