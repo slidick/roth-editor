@@ -27,7 +27,6 @@ enum Options {
 
 enum WindowID {
 	Editor,
-	Search,
 	Extras,
 }
 
@@ -224,8 +223,6 @@ func _on_windows_index_pressed(index: int) -> void:
 	match index:
 		WindowID.Editor:
 			%Editor.toggle()
-		WindowID.Search:
-			%Search.toggle()
 		WindowID.Extras:
 			%Extras.toggle()
 
@@ -248,10 +245,6 @@ func _on_view_3d_window_window_shown(_bool: bool) -> void:
 
 func _on_controls_window_shown(_bool: bool) -> void:
 	%Help.set_item_checked(HelpID.Controls, _bool)
-
-
-func _on_search_window_shown(_bool: bool) -> void:
-	%Windows.set_item_checked(WindowID.Search, _bool)
 
 
 func _on_extras_window_shown(_bool: bool) -> void:

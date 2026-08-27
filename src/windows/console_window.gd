@@ -36,3 +36,7 @@ func _handle_command(command: String) -> void:
 				Console.print("Usage: create_patch [a_dir] [b_dir] [out_dir]")
 				return
 			ROTHPatch.create_patch_from_folders(command_array[1], command_array[2], command_array[3])
+		"search":
+			var node := get_node_or_null("/root/Main/Windows/Search")
+			if node:
+				node.toggle(true)
