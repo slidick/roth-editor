@@ -425,12 +425,13 @@ func _initialize_meshes() -> void:
 			node.add_child(mesh_instance)
 		
 		if sector.data.floorHeight < sister.get_ref().sector.data.floorHeight:
-			var mesh_height: int = sister.get_ref().sector.data.floorHeight - sector.data.floorHeight
+			var mesh_height: int = min(sector.data.ceilingHeight, sister.get_ref().sector.data.floorHeight) - sector.data.floorHeight
+			
 			var mesh_instance: FaceMesh3D = create_mesh(
 				[
 					Vector3(v1.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
-					Vector3(v1.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.floorHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
-					Vector3(v2.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.floorHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, min(sector.data.ceilingHeight, sister.get_ref().sector.data.floorHeight)/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, min(sector.data.ceilingHeight, sister.get_ref().sector.data.floorHeight)/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 					Vector3(v2.x/Roth.SCALE_3D_WORLD, sector.data.floorHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 				],
 				texture_data.lowerTextureIndex,
@@ -442,13 +443,13 @@ func _initialize_meshes() -> void:
 			node.add_child(mesh_instance)
 		
 		if sector.data.ceilingHeight > sister.get_ref().sector.data.ceilingHeight:
-			var mesh_height: int = sector.data.ceilingHeight - sister.get_ref().sector.data.ceilingHeight
+			var mesh_height: int = sector.data.ceilingHeight - max(sector.data.floorHeight, sister.get_ref().sector.data.ceilingHeight)
 			var mesh_instance: FaceMesh3D = create_mesh(
 				[
-					Vector3(v1.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
+					Vector3(v1.x/Roth.SCALE_3D_WORLD, max(sector.data.floorHeight, sister.get_ref().sector.data.ceilingHeight)/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
 					Vector3(v1.x/Roth.SCALE_3D_WORLD, sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v1.y/Roth.SCALE_3D_WORLD),
 					Vector3(v2.x/Roth.SCALE_3D_WORLD, sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
-					Vector3(v2.x/Roth.SCALE_3D_WORLD, sister.get_ref().sector.data.ceilingHeight/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
+					Vector3(v2.x/Roth.SCALE_3D_WORLD, max(sector.data.floorHeight, sister.get_ref().sector.data.ceilingHeight)/Roth.SCALE_3D_WORLD, v2.y/Roth.SCALE_3D_WORLD),
 				],
 				texture_data.upperTextureIndex,
 				das,
