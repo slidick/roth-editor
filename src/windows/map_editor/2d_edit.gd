@@ -1823,7 +1823,7 @@ func unmerge_vertices() -> void:
 			vertex_node.vertex_drag_canceled.connect(_on_vertex_drag_canceled)
 			vertex_node.vertex_drag_ended.connect(_on_vertex_drag_ended)
 			%Vertices.add_child(vertex_node)
-	
+	owner.select_resource(null)
 	Roth.editor_action.emit(map, "Unmerge Vertices")
 
 
