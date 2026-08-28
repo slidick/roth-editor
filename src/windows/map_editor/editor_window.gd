@@ -222,6 +222,9 @@ func test_map() -> void:
 	var map: Map = %Map2D.map
 	if not map:
 		return
+	if map.compile().is_empty():
+		await Dialog.information("Map %s is too large!\nMap cannot be run" % map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Okay")
+		return
 	
 	var player_position: Vector3 = %Camera3D.global_position
 	player_position.y -= (map.metadata["playerHeight"]*2) / Roth.SCALE_3D_WORLD
