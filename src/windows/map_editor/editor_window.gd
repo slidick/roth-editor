@@ -958,9 +958,11 @@ func select_face(index: int, type: String, p_map: Map = null, count: int = 0, de
 
 
 func select_resources(resource_list: Array, deselect_others: bool = true) -> void:
+	if deselect_others:
+		select_resource(null)
 	for i in range(len(resource_list)-1):
-		select_resource(resource_list[i], deselect_others, false)
-	select_resource(resource_list[-1], deselect_others, true)
+		select_resource(resource_list[i], false, false)
+	select_resource(resource_list[-1], false, true)
 
 
 func select_resource(resource: Variant, deselect_others: bool = true, update_selections: bool = true) -> void:
