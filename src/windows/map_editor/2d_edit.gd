@@ -330,10 +330,7 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 						if not event.shift_pressed:
 							owner.select_resource(null)
 					else:
-						if not event.shift_pressed:
-							owner.select_resource(null)
-						for sector: Sector in sectors_in_selection:
-							owner.select_resource(sector, false)
+						owner.select_resources(sectors_in_selection, not event.shift_pressed)
 					start_box_select = false
 					highlight_sectors.clear()
 					start_box_select_position = Vector2.ZERO
