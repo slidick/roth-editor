@@ -775,11 +775,12 @@ func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 	if undo_lists[p_map].item_count > 0:
 		undo_lists[p_map].select(0)
 	
-	var tree_item: TreeItem = %MapsTree.get_root().get_first_child()
-	while tree_item:
-		if tree_item.get_metadata(0) == p_map.node:
-			tree_item.set_text(0, tree_item.get_text(0).trim_suffix("*")+"*")
-		tree_item = tree_item.get_next()
+	if p_name != "Map Opened":
+		var tree_item: TreeItem = %MapsTree.get_root().get_first_child()
+		while tree_item:
+			if tree_item.get_metadata(0) == p_map.node:
+				tree_item.set_text(0, tree_item.get_text(0).trim_suffix("*")+"*")
+			tree_item = tree_item.get_next()
 
 
 func close_undo_redo(p_map: Map) -> void:
