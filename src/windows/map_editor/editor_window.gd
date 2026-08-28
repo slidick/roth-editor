@@ -217,6 +217,8 @@ func _on_paste_options_button_pressed() -> void:
 #region Map / Viewports
 
 func test_map() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	
 	var map: Map = %Map2D.map
 	if not map:
 		return
