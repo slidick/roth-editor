@@ -296,6 +296,7 @@ func close_map(unload_map: bool = false) -> void:
 	is_loaded = false
 	if unload_map:
 		unload()
+		preview_map._reload_map_info()
 	else:
 		_reload_map_info()
 	Roth.map_closed.emit(self)
@@ -309,19 +310,8 @@ func _reload_map_info() -> void:
 		if not file_string.is_empty():
 			var file_json: Variant = JSON.parse_string(file_string)
 			if file_json:
-				file_json["filepath"] = map_info.filepath
-				file_json["filepath_json"] = map_info.filepath_json
-				for key: String in map_info.keys():
-					if key in file_json:
-						map_info[key] = file_json[key]
-					else:
-						if key != "map_pack":
-							map_info.erase(key)
-				map_info["uuid"] = map_info.filepath_json.get_file().get_basename()
-				if "normality" in file_json:
-					map_info["das_info"] = NormPack.get_das_by_name(file_json.das)
-				else:
-					map_info["das_info"] = DASPack.get_by_name(file_json.das)
+				if "command_positions" in file_json:
+					map_info["command_positions"] = file_json.command_positions
 
 
 func save_map(directory: String = "", player_data: Dictionary = {}) -> void:
