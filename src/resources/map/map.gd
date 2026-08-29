@@ -202,7 +202,15 @@ func get_map_preview() -> Dictionary:
 			objects_count = objects_count,
 			commands_count = len(json.commandsSection.allCommands),
 		}
-	return Raw.get_preview(map_info.filepath, "normality" in map_info)
+	
+	var preview: Dictionary = Raw.get_preview(map_info.filepath, "normality" in map_info)
+	if "vanilla" in map_info and map_info.name == "RAQUIA2":
+		for face: Dictionary in preview.faces:
+			if face.v1.y > 20000:
+				face.v1.y -= 65536
+			if face.v2.y > 20000:
+				face.v2.y -= 65536
+	return preview
 
 
 func delete_map(p_delete_backups: bool = false) -> void:
