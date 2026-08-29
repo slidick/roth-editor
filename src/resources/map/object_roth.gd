@@ -556,8 +556,6 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		var material := StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-		material.grow = true
-		material.grow_amount = 0.001
 		if object_face.render_flag_1 & (1<<1) > 0:
 			material.uv1_scale.y *= -1
 			material.uv1_offset.y *= -1
@@ -834,9 +832,9 @@ class ObjectNode3D extends Node3D:
 			_highlighted = true
 			for child: MeshInstance3D in get_children():
 				if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.flags & (1 << 0)) > 0:
-					child.material_overlay = Roth.HIGHLIGHT_FIXED_Y_MATERIAL
+					child.material_overlay = Roth.highlight_fixed_y_material
 				else:
-					child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+					child.material_overlay = Roth.highlight_material
 	func unhighlight() -> void:
 		if _highlighted and not _selected:
 			_highlighted = false
@@ -846,9 +844,9 @@ class ObjectNode3D extends Node3D:
 		_selected = true
 		for child: MeshInstance3D in get_children():
 			if not ((ref.data.renderType & (1<<7)) > 0) and not (ref.data.flags & (1 << 0)) > 0:
-				child.material_overlay = Roth.SELECTED_FIXED_Y_MATERIAL
+				child.material_overlay = Roth.selected_fixed_y_material
 			else:
-				child.material_overlay = Roth.SELECTED_MATERIAL
+				child.material_overlay = Roth.selected_material
 	func deselect() -> void:
 		_selected = false
 		for child: MeshInstance3D in get_children():

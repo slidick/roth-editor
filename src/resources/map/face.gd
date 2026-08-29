@@ -529,13 +529,13 @@ class Face3D extends Node3D:
 	var ref: Face
 	func highlight() -> void:
 		for child: MeshInstance3D in get_children():
-			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+			child.material_overlay = Roth.highlight_material
 	func unhighlight() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
 	func select() -> void:
 		for child: MeshInstance3D in get_children():
-			child.material_overlay = Roth.SELECTED_MATERIAL
+			child.material_overlay = Roth.selected_material
 	func deselect() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null

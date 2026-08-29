@@ -250,14 +250,14 @@ class SFXNode3D extends Node3D:
 	var ref: SFX
 	func highlight() -> void:
 		for child: MeshInstance3D in get_children():
-			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+			child.material_overlay = Roth.highlight_material
 	func unhighlight() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
 	func select() -> void:
 		for i in range(get_child_count()):
 			if get_child(i).mesh is SphereMesh:
-				get_child(i).material_overlay = Roth.SELECTED_MATERIAL
+				get_child(i).material_overlay = Roth.selected_material
 		if Settings.settings.get("options", {}).get("show_3d_sfx_zone", true):
 			var cylinder_mesh := CylinderMesh.new()
 			cylinder_mesh.top_radius = ref.data.audibleRadius / Roth.SCALE_3D_WORLD

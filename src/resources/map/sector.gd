@@ -528,7 +528,8 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 		mesh_tool.set_uv(Vector2(u,vv))
 		mesh_tool.add_vertex(Vector3(v.x/Roth.SCALE_3D_WORLD, y_pos/Roth.SCALE_3D_WORLD, v.y/Roth.SCALE_3D_WORLD))
 		collision_points.append(Vector3(v.x/Roth.SCALE_3D_WORLD, y_pos/Roth.SCALE_3D_WORLD, v.y/Roth.SCALE_3D_WORLD))
-
+	
+	mesh_tool.generate_normals()
 	var mesh: ArrayMesh = mesh_tool.commit()
 	
 	
@@ -705,13 +706,13 @@ class Sector3D extends Node3D:
 	var ref: Sector
 	func highlight() -> void:
 		for child: MeshInstance3D in get_children():
-			child.material_overlay = Roth.HIGHLIGHT_MATERIAL
+			child.material_overlay = Roth.highlight_material
 	func unhighlight() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null
 	func select() -> void:
 		for child: MeshInstance3D in get_children():
-			child.material_overlay = Roth.SELECTED_MATERIAL
+			child.material_overlay = Roth.selected_material
 	func deselect() -> void:
 		for child: MeshInstance3D in get_children():
 			child.material_overlay = null

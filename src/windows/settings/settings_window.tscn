@@ -7,7 +7,7 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_ooyma"]
 [ext_resource type="PackedScene" uid="uid://dtc6slaihq8s4" path="res://src/windows/settings/dosbox_container.tscn" id="5_njcte"]
 [ext_resource type="PackedScene" uid="uid://2pgkmy7djuv4" path="res://src/windows/settings/dosbox_keys_container.tscn" id="8_jcdax"]
-[ext_resource type="PackedScene" uid="uid://crhommatho1p7" path="res://src/windows/settings/history_container.tscn" id="8_ywjcv"]
+[ext_resource type="PackedScene" uid="uid://crhommatho1p7" path="res://src/windows/settings/editor_container.tscn" id="8_ywjcv"]
 [ext_resource type="PackedScene" uid="uid://dyp6o41ncyedi" path="res://src/windows/settings/normality_container.tscn" id="9_jcdax"]
 [ext_resource type="PackedScene" uid="uid://c8d8wlq21lsbd" path="res://src/windows/settings/editor_hotkeys_container.tscn" id="10_jhixs"]
 [ext_resource type="PackedScene" uid="uid://c1ij8mqmgpvau" path="res://src/windows/settings/event_configuration_window.tscn" id="11_qhkyt"]
@@ -43,10 +43,11 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_o4xq7")
-current_tab = 5
+current_tab = 0
 tabs_visible = false
 
 [node name="Installations" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="1" unique_id=1326368766 instance=ExtResource("4_hggqv")]
+visible = true
 layout_mode = 2
 
 [node name="Dosbox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="2" unique_id=43770463 node_paths=PackedStringArray("settings_window") instance=ExtResource("5_njcte")]
@@ -59,15 +60,18 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="History" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="4" unique_id=652967712 instance=ExtResource("8_ywjcv")]
+[node name="Normality" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="4" unique_id=123721110 instance=ExtResource("9_jcdax")]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 3
 
-[node name="Normality" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="5" unique_id=123721110 instance=ExtResource("9_jcdax")]
+[node name="Editor" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="5" unique_id=652967712 instance=ExtResource("8_ywjcv")]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 4
 
 [node name="Editor Hotkeys" parent="Contents/VBoxContainer/MainContainer/MarginContainer/HBoxContainer/TabContainer" index="6" unique_id=1903957844 node_paths=PackedStringArray("event_window") instance=ExtResource("10_jhixs")]
+visible = false
 layout_mode = 2
 event_window = NodePath("../../../../../../../Subwindows/EventConfiguration")
 metadata/_tab_index = 5

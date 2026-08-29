@@ -43,6 +43,13 @@ const HIGHLIGHT_MATERIAL: StandardMaterial3D = preload("uid://b3vv75mwnat5k")
 const SELECTED_MATERIAL: StandardMaterial3D = preload("uid://bcwfrjbr5vhmi")
 const HIGHLIGHT_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://dhsattf813kya")
 const SELECTED_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://b5iarhl24whsd")
+const HIGHLIGHT_MATERIAL_OUTLINE: StandardMaterial3D = preload("uid://cbbku465w3quc")
+const SELECTED_MATERIAL_OUTLINE: StandardMaterial3D = preload("uid://72eo5yrxeip7")
+
+var highlight_material: StandardMaterial3D = HIGHLIGHT_MATERIAL
+var selected_material: StandardMaterial3D = SELECTED_MATERIAL
+var highlight_fixed_y_material: StandardMaterial3D = HIGHLIGHT_FIXED_Y_MATERIAL
+var selected_fixed_y_material: StandardMaterial3D = SELECTED_FIXED_Y_MATERIAL
 
 const DEFAULT_TEXTURE_PRESETS: Dictionary = {
 	"DEMO": {
