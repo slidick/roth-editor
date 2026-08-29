@@ -423,6 +423,7 @@ text = "Edit Selected"
 [node name="Dialogs" type="Control" parent="." index="2" unique_id=2137666810]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="NewMap" parent="Dialogs" index="0" unique_id=871067230 instance=ExtResource("6_yjel5")]
 unique_name_in_owner = true

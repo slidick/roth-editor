@@ -298,6 +298,7 @@ func close_map(unload_map: bool = false) -> void:
 		unload()
 	else:
 		_reload_map_info()
+	Roth.map_closed.emit(self)
 
 
 func _reload_map_info() -> void:

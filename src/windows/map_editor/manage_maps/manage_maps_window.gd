@@ -4,6 +4,7 @@ extends BaseWindow
 func _ready() -> void:
 	super._ready()
 	Roth.settings_updated.connect(_on_settings_updated)
+	Roth.map_closed.connect(_on_map_closed)
 	%ExportButton.disabled = true
 	%NewMapButton.disabled = true
 	%RunButton.disabled = true
@@ -134,6 +135,8 @@ func _on_open_button_pressed() -> void:
 
 
 func _on_map_tree_cell_selected() -> void:
+	if not %MapTree.get_selected():
+		return
 	var map: Map = %MapTree.get_selected().get_metadata(0)
 	var map_preview: Dictionary = map.get_map_preview()
 	if map_preview.is_empty():
@@ -415,3 +418,7 @@ func _on_map_pack_list_item_clicked(index: int, at_position: Vector2, mouse_butt
 			else:
 				%MapPackMenu.set_item_disabled(0, false)
 			%MapPackMenu.popup(Rect2(%MapPackList.global_position+at_position, Vector2.ZERO))
+
+
+func _on_map_closed(_map: Map) -> void:
+	_on_map_tree_cell_selected()
