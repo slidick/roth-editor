@@ -127,6 +127,12 @@ func _notification(what: int) -> void:
 					if map.editable_map:
 						map.editable_map.unload()
 					map.unload()
+			for sector: Sector in %Editor.copied_sector_data:
+				sector.faces.clear()
+			for sector: Sector in %Editor.original_pasted_sector_data:
+				sector.faces.clear()
+			for sector: Sector in %Editor.current_pasted_sector_data:
+				sector.faces.clear()
 			get_tree().quit()
 
 

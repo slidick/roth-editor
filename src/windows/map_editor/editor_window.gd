@@ -1266,6 +1266,8 @@ func show_hidden_sectors() -> void:
 func copy_selected_sectors() -> void:
 	if selected_sectors.is_empty():
 		return
+	for sector: Sector in copied_sector_data:
+		sector.faces.clear()
 	copied_sector_data.clear()
 	original_copied_sector_center = Vector2.ZERO
 	var count: int = 0
@@ -1297,7 +1299,11 @@ func enter_paste_sectors_mode() -> void:
 		return
 	paste_sectors_mode = true
 	current_copied_sector_center = original_copied_sector_center
+	for sector: Sector in original_pasted_sector_data:
+		sector.faces.clear()
 	original_pasted_sector_data.clear()
+	for sector: Sector in current_pasted_sector_data:
+		sector.faces.clear()
 	current_pasted_sector_data.clear()
 	pin_paste = false
 	
