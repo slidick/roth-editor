@@ -54,6 +54,13 @@ static func load_from_bytes(p_map_info: Dictionary, p_bytes: PackedByteArray) ->
 	return loaded_map
 
 
+static func load_from_json(p_map_info: Dictionary, p_json_map: Dictionary) -> Map:
+	var loaded_map := Map.new(p_map_info)
+	loaded_map.load_json(p_json_map.duplicate(true))
+	loaded_map.is_loaded = true
+	return loaded_map
+
+
 static func get_triggering_ids(command_section: Dictionary, command_index: int) -> Array:
 	var triggering_ids: Array = []
 	for entry_command: int in command_section.entryCommandIndexes:
@@ -89,7 +96,13 @@ func _init(p_map_info: Dictionary) -> void:
 
 func load_map() -> void:
 	if not is_loaded:
-		var map_json: Dictionary = Raw.parse_file(map_info.filepath, "normality" in map_info)
+		var map_json: Dictionary
+		if "filepath_map" in map_info and FileAccess.file_exists(map_info.filepath_map):
+			map_json = JSON.parse_string(FileAccess.get_file_as_string(map_info.filepath_map))
+			@warning_ignore("static_called_on_instance")
+			Settings.convert_json_to_int(map_json)
+		else:
+			map_json = Raw.parse_file(map_info.filepath, "normality" in map_info)
 		if map_json.is_empty():
 			return
 		load_json(map_json)
@@ -144,7 +157,7 @@ func load_json(map_json: Dictionary) -> void:
 			commands_section.allCommands[i]["map"] = self
 			commands_section.allCommands[i]["index"] = i+1
 	
-	footer = map_json.footer
+	#footer = map_json.footer
 	
 	if "vanilla" in map_info and map_info.name == "RAQUIA2":
 		for sector: Sector in sectors:
@@ -168,6 +181,27 @@ func unload(unload_all: bool = true) -> void:
 
 
 func get_map_preview() -> Dictionary:
+	if "filepath_map" in map_info and FileAccess.file_exists(map_info.filepath_map):
+		var json: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(map_info.filepath_map))
+		var objects_count: int = 0
+		for v: Dictionary in json.verticesSection.vertices:
+			v.x *= -1
+		for sector: Dictionary in json.sectorsSection.sectors:
+			objects_count += len(sector.objectInformation)
+			for j in range(sector.facesCount):
+				json.facesSection.faces[sector.firstFaceIndex + j]["sector"] = sector
+		for face: Dictionary in json.facesSection.faces:
+			face["v1"] = json.verticesSection.vertices[face.vertexIndex01]
+			face["v2"] = json.verticesSection.vertices[face.vertexIndex02]
+			if "sisterFaceIndex" in face:
+				face["sister"] = json.facesSection.faces[face.sisterFaceIndex]
+		return {
+			faces = json.facesSection.faces,
+			sector_count = len(json.sectorsSection.sectors),
+			vertices_count = len(json.verticesSection.vertices),
+			objects_count = objects_count,
+			commands_count = len(json.commandsSection.allCommands),
+		}
 	return Raw.get_preview(map_info.filepath, "normality" in map_info)
 
 
@@ -176,6 +210,8 @@ func delete_map(p_delete_backups: bool = false) -> void:
 		DirAccess.remove_absolute(map_info.filepath)
 	if FileAccess.file_exists(map_info.filepath_json):
 		DirAccess.remove_absolute(map_info.filepath_json)
+	if FileAccess.file_exists(map_info.filepath_map):
+		DirAccess.remove_absolute(map_info.filepath_map)
 	if p_delete_backups:
 		var count: int = 1
 		while FileAccess.file_exists(map_info.filepath + ".%d" % count):
@@ -185,7 +221,10 @@ func delete_map(p_delete_backups: bool = false) -> void:
 		while FileAccess.file_exists(map_info.filepath_json + ".%d" % count):
 			DirAccess.remove_absolute(map_info.filepath_json + ".%d" % count)
 			count += 1
-	#Roth.maps.erase(self)
+		count = 1
+		while FileAccess.file_exists(map_info.filepath_map + ".%d" % count):
+			DirAccess.remove_absolute(map_info.filepath_map + ".%d" % count)
+			count += 1
 	map_info.map_pack.maps.erase(self)
 	if "normality" in map_info:
 		NormPack.save(map_info.map_pack)
@@ -216,6 +255,8 @@ func rename_map(new_map_name: String) -> void:
 			DirAccess.remove_absolute(old_map_info.filepath)
 		if FileAccess.file_exists(old_map_info.filepath_json):
 			DirAccess.remove_absolute(old_map_info.filepath_json)
+		if FileAccess.file_exists(old_map_info.filepath_map):
+			DirAccess.remove_absolute(old_map_info.filepath_map)
 		var count: int = 1
 		while FileAccess.file_exists(old_map_info.filepath + ".%d" % count):
 			DirAccess.rename_absolute(old_map_info.filepath + ".%d" % count, map_info.filepath + ".%d" % count)
@@ -223,6 +264,10 @@ func rename_map(new_map_name: String) -> void:
 		count = 1
 		while FileAccess.file_exists(old_map_info.filepath_json + ".%d" % count):
 			DirAccess.rename_absolute(old_map_info.filepath_json + ".%d" % count, map_info.filepath_json + ".%d" % count)
+			count += 1
+		count = 1
+		while FileAccess.file_exists(old_map_info.filepath_map + ".%d" % count):
+			DirAccess.rename_absolute(old_map_info.filepath_map + ".%d" % count, map_info.filepath_map + ".%d" % count)
 			count += 1
 	
 	name_changed.emit(new_map_name)
@@ -315,17 +360,12 @@ func _reload_map_info() -> void:
 
 
 func save_map(directory: String = "", player_data: Dictionary = {}) -> void:
-	if directory.is_empty():
-		if "normality" in map_info:
-			directory = Normality.NORMALITY_CUSTOM_MAP_DIRECTORY
-		else:
-			directory = Roth.ROTH_CUSTOM_MAP_DIRECTORY
-	
 	_add_missing_map_info()
 	
-	var raw_map := compile(player_data)
+	var json_map: Dictionary = compile_to_json(player_data)
+	var raw_map: PackedByteArray = Raw.compile(json_map)
 	
-	if directory == Roth.ROTH_CUSTOM_MAP_DIRECTORY or directory == Normality.NORMALITY_CUSTOM_MAP_DIRECTORY:
+	if directory.is_empty():
 		if FileAccess.file_exists(map_info.filepath):
 			var count: int = 1
 			while FileAccess.file_exists(map_info.filepath + ".%d" % count):
@@ -334,21 +374,28 @@ func save_map(directory: String = "", player_data: Dictionary = {}) -> void:
 			for i in range(count, 0, -1):
 				DirAccess.rename_absolute(map_info.filepath + ".%d" % i, map_info.filepath + ".%d" % (i+1))
 				DirAccess.rename_absolute(map_info.filepath_json + ".%d" % i, map_info.filepath_json + ".%d" % (i+1))
+				DirAccess.rename_absolute(map_info.filepath_map + ".%d" % i, map_info.filepath_map + ".%d" % (i+1))
 			
 			DirAccess.rename_absolute(map_info.filepath, map_info.filepath + ".1")
 			DirAccess.rename_absolute(map_info.filepath_json, map_info.filepath_json + ".1")
+			DirAccess.rename_absolute(map_info.filepath_map, map_info.filepath_map + ".1")
 			
 			count += 1
 			while count > Settings.settings.get("options", {}).get("backup_saves", 5):
 				DirAccess.remove_absolute(map_info.filepath + ".%d" % count)
 				DirAccess.remove_absolute(map_info.filepath_json + ".%d" % count)
+				DirAccess.remove_absolute(map_info.filepath_map + ".%d" % count)
 				count -= 1
 				if count < 1:
 					break
 		
-		var file := FileAccess.open(map_info.filepath, FileAccess.WRITE)
-		file.store_buffer(raw_map)
-		file.close()
+		var file_raw := FileAccess.open(map_info.filepath, FileAccess.WRITE)
+		file_raw.store_buffer(raw_map)
+		file_raw.close()
+		
+		var file_map := FileAccess.open(map_info.filepath_map, FileAccess.WRITE)
+		file_map.store_string(JSON.stringify(json_map, '', false))
+		file_map.close()
 		
 		save_metadata()
 		
@@ -357,9 +404,9 @@ func save_map(directory: String = "", player_data: Dictionary = {}) -> void:
 	
 	else:
 		var filepath: String = directory.path_join(map_info.name+".RAW")
-		var file := FileAccess.open(filepath, FileAccess.WRITE)
-		file.store_buffer(raw_map)
-		file.close()
+		var file_raw := FileAccess.open(filepath, FileAccess.WRITE)
+		file_raw.store_buffer(raw_map)
+		file_raw.close()
 
 
 func _add_missing_map_info() -> void:
@@ -379,6 +426,9 @@ func _add_missing_map_info() -> void:
 		
 		if "filepath_json" not in map_info:
 			map_info["filepath_json"] = directory.path_join(map_info.uuid + ".json")
+		
+		if "filepath_map" not in map_info:
+			map_info["filepath_map"] = directory.path_join(map_info.uuid + ".map")
 
 
 func save_metadata() -> void:
@@ -388,6 +438,7 @@ func save_metadata() -> void:
 	var save_info: Dictionary = map_info.duplicate()
 	save_info.erase("filepath")
 	save_info.erase("filepath_json")
+	save_info.erase("filepath_map")
 	save_info["das"] = save_info.das_info.name
 	save_info.erase("das_info")
 	save_info.erase("map_pack")
@@ -784,7 +835,12 @@ func get_texture_mappings_counts() -> Array:
 
 
 func compile(player_data: Dictionary = {}) -> PackedByteArray:
-	
+	var json: Dictionary = compile_to_json(player_data)
+	var raw: PackedByteArray = Raw.compile(json)
+	return raw
+
+
+func compile_to_json(player_data: Dictionary = {}) -> Dictionary:
 	var json := {}
 	json["mapMetadataSection"] = metadata.duplicate()
 	json["sectorsSection"] = { "sectors": sectors.map(func (sector: Sector) -> Dictionary: return sector.data) }
@@ -897,7 +953,11 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 		vertices_array.append(vertex)
 	json["verticesSection"] = { "vertices": vertices_array }
 	
-	json["commandsSection"] = commands_section
+	json["commandsSection"] = commands_section.duplicate(true)
+	for command: Dictionary in json.commandsSection.allCommands:
+		command.erase("map")
+		command.erase("index")
+	
 	json["section7"] = { "unkArray01": sound_effects.map(func (sfx: SFX) -> Dictionary: return sfx.data) }
 	if sfx_zones:
 		json["section7"]["unkArray02"] = sfx_zones
@@ -910,9 +970,9 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	if "position" in player_data:
 		l_footer.encode_s16(0, -player_data.position.x)
 		l_footer.encode_s16(2, player_data.position.z)
-		json["mapMetadataSection"]["initPosX"] = -player_data.position.x
-		json["mapMetadataSection"]["initPosY"] = player_data.position.z
-		json["mapMetadataSection"]["initPosZ"] = player_data.position.y
+		json["mapMetadataSection"]["initPosX"] = -int(player_data.position.x)
+		json["mapMetadataSection"]["initPosY"] = int(player_data.position.z)
+		json["mapMetadataSection"]["initPosZ"] = int(player_data.position.y)
 	if "rotation" in player_data:
 		json["mapMetadataSection"]["rotation"] = player_data.rotation
 	
@@ -921,7 +981,10 @@ func compile(player_data: Dictionary = {}) -> PackedByteArray:
 	if "normality" in map_info:
 		json["normality"] = true
 	
-	return Raw.compile(json)
+	var return_json: Dictionary = json.duplicate(true)
+	@warning_ignore("static_called_on_instance")
+	Settings.convert_json_to_int(return_json)
+	return return_json
 
 
 class MapNode3D extends Node3D:

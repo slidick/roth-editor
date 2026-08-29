@@ -223,7 +223,7 @@ func test_map() -> void:
 	if not map:
 		return
 	if map.compile().is_empty():
-		await Dialog.information("Map %s is too large!\nMap cannot be run" % map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Okay")
+		await Dialog.information("Map %s is too large!\nMap cannot be run" % map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Okay", HORIZONTAL_ALIGNMENT_CENTER)
 		return
 	
 	var player_position: Vector3 = %Camera3D.global_position
@@ -571,7 +571,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				Das.unload_das(das_info)
 				%Texture.unload_das(das_info)
 			for item: TreeItem in selected:
-				var map: Map = Map.load_from_bytes(item.get_metadata(0).ref.map_info, item.get_metadata(0).ref.compile())
+				var map: Map = Map.load_from_json(item.get_metadata(0).ref.map_info, item.get_metadata(0).ref.compile_to_json())
 				if not map:
 					return
 				if "das2_info" in map.map_info.map_pack:
@@ -724,7 +724,9 @@ func _on_undo_list_item_selected(index: int, item_list: ItemList) -> void:
 			effected_map = i_map
 	undo_positions[effected_map] = len(undo_stacks[effected_map]) - index
 	var undo_state: Dictionary = undo_stacks[effected_map][ undo_positions[effected_map] - 1]
-	var map: Map = Map.load_from_bytes(undo_state.map_info, undo_state.bytes)
+	
+	var map: Map
+	map = Map.load_from_json(undo_state.map_info, undo_state.json_map)
 	if not map:
 		return
 	await map.load_das()
@@ -749,20 +751,22 @@ func add_to_undo_redo(p_map: Map, p_name: String = "") -> void:
 		var action: Dictionary = {
 			"name": p_name,
 			"map_info": p_map.map_info,
-			"bytes": p_map.compile(),
+			"json_map": p_map.compile_to_json(),
 		}
 		
+		# Check if state is same as previous state
+		if not undo_stacks[p_map].is_empty() and "json_map" in undo_stacks[p_map][undo_positions[p_map]-1] and JSON.stringify(action.json_map, "", false) == JSON.stringify(undo_stacks[p_map][undo_positions[p_map]-1].json_map, "", false):
+			return
+		
 		# Check if map actually compiles, if not give a warning
-		if action.bytes.is_empty():
+		if p_map.compile().is_empty():
 			if not compilation_failure_warning_given[p_map]:
 				compilation_failure_warning_given[p_map] = true
-				Dialog.information("Map %s is too large!\nMap cannot be saved!\nUndo history will not be recorded until corrected!" % p_map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
-			return
-		compilation_failure_warning_given[p_map] = false
+				Dialog.information("Map %s is too large!\nMap will not run until corrected!" % p_map.map_info.name, "Map Compilation Failure!", false, Vector2(400,200), "Understood")
+			
+		else:
+			compilation_failure_warning_given[p_map] = false
 		
-		# Check if state is same as previous state
-		if not undo_stacks[p_map].is_empty() and action.bytes == undo_stacks[p_map][undo_positions[p_map]-1].bytes:
-			return
 		
 		while undo_positions[p_map] < len(undo_stacks[p_map]):
 			undo_stacks[p_map].pop_back()
@@ -874,7 +878,7 @@ func replace_map(old_map: Map, new_map: Map) -> void:
 			if not is_same(old_map_node.ref.commands_section, new_map.commands_section) and %"Command Editor".map and %"Command Editor".map.map_info == new_map.map_info:
 				%"Command Editor".load_command_editor(new_map, false)
 			
-			compilation_failure_warning_given[new_map] = false
+			compilation_failure_warning_given[new_map] = compilation_failure_warning_given[old_map]
 			undo_lists[new_map] = undo_lists[old_map]
 			undo_positions[new_map] = undo_positions[old_map]
 			undo_stacks[new_map] = undo_stacks[old_map]

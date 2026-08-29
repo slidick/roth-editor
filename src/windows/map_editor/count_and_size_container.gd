@@ -60,5 +60,11 @@ func recalculate() -> void:
 	%SizeTotalLabel.text = "%d" % total
 	if total > 65474:
 		%SizeTotalLabel.add_theme_color_override("font_color", Color.RED)
+		%CountAndSizeContainer.add_theme_color_override("font_color", Color.RED)
+		%CountAndSizeContainer.add_theme_color_override("hover_font_color", Color.RED)
+		%CountAndSizeContainer.add_theme_color_override("collapsed_font_color", Color.RED)
 	else:
 		%SizeTotalLabel.add_theme_color_override("font_color", Color.GREEN)
+		%CountAndSizeContainer.add_theme_color_override("font_color", Color.WHITE)
+		%CountAndSizeContainer.add_theme_color_override("hover_font_color", Color.WHITE)
+		%CountAndSizeContainer.add_theme_color_override("collapsed_font_color", Color.WHITE)

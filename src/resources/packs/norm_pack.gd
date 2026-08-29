@@ -257,6 +257,7 @@ static func init_custom(p_map_directory: String, p_map_pack_directory: String) -
 				if map_info and "das" in map_info:
 					map_info["filepath"] = p_map_directory.path_join(filename).get_basename() + ".RAW"
 					map_info["filepath_json"] = p_map_directory.path_join(filename)
+					map_info["filepath_map"] = p_map_directory.path_join(filename).get_basename() + ".map"
 					map_info["uuid"] = filename.get_file().get_basename()
 					map_info["normality"] = true
 					map_info["map_pack"] = { "invalid": true }
