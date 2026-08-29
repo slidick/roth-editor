@@ -75,11 +75,27 @@ static func new_from_copied_object_3d(p_map: Map, p_object: ObjectRoth, p_positi
 
 static func new_object(p_map: Map, p_position: Vector2) -> ObjectRoth:
 	var new_sector_index: int = -1
+	var closest_sector_index: int = -1
+	var closest_distance: float = INF
+	var closest_floor_height: int = 0
 	var floor_height: int = 0
 	for f_sector: Sector in p_map.sectors:
+		for face_ref: WeakRef in f_sector.faces:
+			var face: Face = face_ref.get_ref()
+			var distance: float = Utility.distance_to_face(p_position, face)
+			if distance < closest_distance:
+				closest_distance = distance
+				closest_sector_index = f_sector.index
+				closest_floor_height = f_sector.data.floorHeight
 		if Geometry2D.is_point_in_polygon(p_position, f_sector.vertices.slice(0,-1)):
 			new_sector_index = f_sector.index
 			floor_height = f_sector.data.floorHeight
+	
+	
+	if new_sector_index == -1:
+		new_sector_index = closest_sector_index
+		floor_height = closest_floor_height
+	
 	
 	if new_sector_index == -1:
 		Console.print("Can't create object outside a sector")
