@@ -50,7 +50,7 @@ func _init(p_data: Dictionary, p_map: Map, p_platforms: Array = []) -> void:
 
 
 func duplicate(p_faces: bool = false) -> Sector:
-	var new_sector := Sector.new(data.duplicate(true), map)
+	var new_sector := Sector.new(data.duplicate(true), null)
 	if platform:
 		new_sector.platform = platform.duplicate(true)
 	if p_faces:
@@ -188,6 +188,7 @@ func split_face(face_to_split: Face) -> Face:
 		if face == face_to_split:
 			idx = i
 			new_face = face.duplicate()
+			new_face.map = map
 			var mid_point: Vector2 = (face.v1 + face.v2) / 2
 			face.v2 = mid_point
 			new_face.v1 = mid_point

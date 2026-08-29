@@ -541,6 +541,7 @@ func add_stairs(starting_position: Vector2, ending_position: Vector2, sector_dat
 func add_copied_sectors(sector_data: Array, original_data: Array) -> void:
 	for i in range(len(sector_data)):
 		var sector: Sector = sector_data[i]
+		sector.map = self
 		var new_faces: Array = []
 		var sector_center := Vector2.ZERO
 		var original_center := Vector2.ZERO
@@ -602,6 +603,7 @@ func split_sector(existing_sector: Sector, vertex_node_1: VertexNode, vertex_nod
 	#Console.print("Splitting sector")
 	
 	var new_sector: Sector = existing_sector.duplicate()
+	new_sector.map = self
 	new_sector.data.objectInformation = []
 	sectors.append(new_sector)
 	

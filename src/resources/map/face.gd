@@ -97,7 +97,7 @@ func _init(p_data: Dictionary, p_map: Map, p_vertices: Array = [], p_sectors: Ar
 
 
 func duplicate() -> Face:
-	var new_face := Face.new(data.duplicate(true), map)
+	var new_face := Face.new(data.duplicate(true), null)
 	new_face.v1 = Vector2(v1)
 	new_face.v2 = Vector2(v2)
 	new_face.sector = sector
