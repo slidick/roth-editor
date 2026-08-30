@@ -575,7 +575,7 @@ func _on_maps_tree_menu_index_pressed(index: int) -> void:
 				if not map:
 					return
 				if "das2_info" in map.map_info.map_pack:
-					Das.get_index_from_das(0, map.map_info.map_pack.das2_info, 293)
+					Das.load_das2_textures(map.map_info.map_pack.das2_info)
 				Roth.das_loading_started.emit("Reloading DAS")
 				await map.load_das()
 				replace_map(item.get_metadata(0).ref, map)

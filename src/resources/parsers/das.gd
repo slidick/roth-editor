@@ -380,23 +380,64 @@ static func get_das(das_info: Dictionary) -> Dictionary:
 		return loaded_das[das_info]
 
 
+static func load_das2_textures(p_das2_info: Dictionary, wanted_objects: Array = []) -> void:
+	# Load all 293 fat3 objects
+	var results: Array = _get_indices_from_das(p_das2_info, range(293))
+	if p_das2_info not in loaded_das:
+		loaded_das[p_das2_info] = results[0]
+		loaded_das[p_das2_info]["mapping"] = {}
+	
+	# Any that are monster or directional grab their front index
+	var additional_indicies: Array = []
+	for i in range(293):
+		loaded_das[p_das2_info].mapping[results[1][i].index] = results[1][i]
+		if "directional_index" in results[1][i]:
+			additional_indicies.append(results[1][i].directional_index)
+		if "monster_index" in results[1][i]:
+			additional_indicies.append(results[1][i].monster_index)
+	
+	# Any wanted objects, see if they're monsters, and grab all their directions
+	for i: int in wanted_objects:
+		if (loaded_das[p_das2_info].mapping[i].flags_1 & FLAGS_1.DIRECTIONAL > 0 and loaded_das[p_das2_info].mapping[i].flags_1 & FLAGS_1.MONSTER > 0):
+			var monster: Dictionary = loaded_das[p_das2_info].monster_mappings[loaded_das[p_das2_info].mapping[i].flags_2]
+			additional_indicies.append((monster.walking_back & 0x7FFF) if monster.walking_back > 0 and monster.walking_back <= 4608 else ((monster.walking_back & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_back_right & 0x7FFF) if monster.walking_back_right > 0 and monster.walking_back_right <= 4608 else ((monster.walking_back_right & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_right & 0x7FFF) if monster.walking_right > 0 and monster.walking_right <= 4608 else ((monster.walking_right & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_front_right & 0x7FFF) if monster.walking_front_right > 0 and monster.walking_front_right <= 4608 else ((monster.walking_front_right & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_front & 0x7FFF) if monster.walking_front > 0 and monster.walking_front <= 4608 else ((monster.walking_front & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_front_left & 0x7FFF) if monster.walking_front_left > 0 and monster.walking_front_left <= 4608 else ((monster.walking_front_left & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_left & 0x7FFF) if monster.walking_left > 0 and monster.walking_left <= 4608 else ((monster.walking_left & 0x7FFF) - 4608))
+			additional_indicies.append((monster.walking_back_left & 0x7FFF) if monster.walking_back_left > 0 and monster.walking_back_left <= 4608 else ((monster.walking_back_left & 0x7FFF) - 4608))
+	
+	# Filter only unique and not already loaded
+	var unique: Array = []
+	for index: int in additional_indicies:
+		if index not in unique and index not in loaded_das[p_das2_info].mapping:
+			unique.append(index)
+	
+	# Load remaining
+	results = _get_indices_from_das(p_das2_info, unique)
+	for i in range(len(unique)):
+		loaded_das[p_das2_info].mapping[results[1][i].index] = results[1][i]
+
+
 static func get_index_from_das(index: int, das_info: Dictionary, p_range: int = 1) -> Dictionary:
 	if das_info in loaded_das:
 		if index not in loaded_das[das_info].mapping:
-			var results: Array = _get_index_from_das(index, das_info, p_range)
+			var results: Array = _get_indices_from_das(das_info, range(index, index+p_range))
 			for i in range(p_range):
-				loaded_das[das_info].mapping[results[i].index] = results[i]
+				loaded_das[das_info].mapping[results[1][i].index] = results[1][i]
 	else:
-		loaded_das[das_info] = {"mapping": {}}
-		var results: Array = _get_index_from_das(index, das_info, p_range)
+		var results: Array = _get_indices_from_das(das_info, range(index, index+p_range))
+		loaded_das[das_info] = results[0]
+		loaded_das[das_info]["mapping"] = {}
 		for i in range(p_range):
-			loaded_das[das_info].mapping[results[i].index] = results[i]
+			loaded_das[das_info].mapping[results[1][i].index] = results[1][i]
 	return loaded_das[das_info].mapping[index]
 
 
-static func _get_index_from_das(index: int, das_info: Dictionary, p_range: int = 1) -> Array:
+static func _get_indices_from_das(das_info: Dictionary, index_array: Array) -> Array:
 	#print("Getting index: %d from das: %s" %[index, das_info.name])
-
 	
 	# Init
 	var das: Dictionary = {
@@ -441,7 +482,7 @@ static func _get_index_from_das(index: int, das_info: Dictionary, p_range: int =
 		mappings[entry.index] = entry
 	
 	# Load requested textures
-	for i in range(index, index+p_range):
+	for i: int in index_array:
 		if i in mappings:
 			var texture: Dictionary = _load_texture_from_file(file, mappings[i], das)
 			texture["das_info"] = das_info
@@ -449,7 +490,7 @@ static func _get_index_from_das(index: int, das_info: Dictionary, p_range: int =
 		else:
 			texture_array.append({"index": i, "name": "Invalid", "desc": ""})
 	
-	return texture_array
+	return [das, texture_array]
 
 
 static func _load_texture_from_file(file: FileAccess, texture: Dictionary, das: Dictionary) -> Dictionary:

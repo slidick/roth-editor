@@ -351,17 +351,19 @@ func set_current_installation(installation: ROTHInstallation) -> void:
 
 func load_maps(maps_array: Array) -> void:
 	var start_time: int = Time.get_ticks_msec()
-	var unique_map_packs: Array = []
-	for map: Map in maps_array:
-		if map.map_info.map_pack not in unique_map_packs:
-			unique_map_packs.append(map.map_info.map_pack)
-	for map_pack: Dictionary in unique_map_packs:
-		Das.get_index_from_das(0, map_pack.das2_info, 293)
 	for map: Map in maps_array:
 		var loaded_map: Map = map.create_editable_map()
 		loaded_map.load_map()
 		das_loading_started.emit(map.map_info.name)
 		await loaded_map.load_das()
+		
+		var wanted_objects: Array = []
+		for sector: Sector in loaded_map.sectors:
+			for object: Dictionary in sector.data.objectInformation:
+				if object.textureSource == 2 or object.textureSource == 3:
+					wanted_objects.append(object.textureIndex + (256 if object.textureSource == 3 else 0))
+		Das.load_das2_textures(map.map_info.map_pack.das2_info, wanted_objects)
+		
 		map_loading_finished.emit(loaded_map)
 	map_loading_completely_finished.emit()
 	print("Maps loaded in: %.2fs" % ((Time.get_ticks_msec()-start_time)/1000.0))
