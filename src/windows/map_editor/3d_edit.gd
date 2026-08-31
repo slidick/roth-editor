@@ -64,7 +64,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					moused_over_resource.texture_data.upperTextureIndex = copied_face_texture_data.upperTextureIndex
 				if "additionalMetadata" in copied_face_texture_data and (copied_face_texture_data.type & 0x80) > 0:
 					if "additionalMetadata" not in moused_over_resource.texture_data:
-						moused_over_resource.texture_data.additionalMetadata = { "shiftTextureX": 0, "shiftTextureY": 0, "unk0x0C": 0 }
+						moused_over_resource.texture_data.additionalMetadata = { "shiftTextureX": 0, "shiftTextureY": 0, "faceID": 0 }
 					if moused_over_resource.texture_data.type & 0x80 == 0:
 						moused_over_resource.texture_data.type += 0x80
 					if paste_options.get("texture_x_shift"):
@@ -72,11 +72,11 @@ func _unhandled_input(event: InputEvent) -> void:
 					if paste_options.get("texture_y_shift"):
 						moused_over_resource.texture_data.additionalMetadata.shiftTextureY = copied_face_texture_data.additionalMetadata.shiftTextureY
 					if paste_options.get("face_id"):
-						moused_over_resource.texture_data.additionalMetadata.unk0x0C = copied_face_texture_data.additionalMetadata.unk0x0C
+						moused_over_resource.texture_data.additionalMetadata.faceID = copied_face_texture_data.additionalMetadata.faceID
 				if paste_options.get("face_texture_flags"):
-					moused_over_resource.texture_data.unk0x08 = copied_face_texture_data.unk0x08
+					moused_over_resource.texture_data.textureFlags = copied_face_texture_data.textureFlags
 				if paste_options.get("face_flags"):
-					moused_over_resource.data.addCollision = copied_face_data.addCollision
+					moused_over_resource.data.faceFlags = copied_face_data.faceFlags
 				var value: int = int(ceil(moused_over_resource.face_length))
 				moused_over_resource.texture_data.unk0x00 = int(value) & 255
 				moused_over_resource.texture_data.type = (int(value) >> 8) | (moused_over_resource.texture_data.type & (1<<7))
@@ -101,15 +101,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				if paste_options.get("floor_height"):
 					moused_over_resource.data.floorHeight = copied_sector_data.floorHeight
 				if paste_options.get("sector_flip"):
-					moused_over_resource.data.unk0x16 = copied_sector_data.unk0x16
+					moused_over_resource.data.additionalSectorFlags = copied_sector_data.additionalSectorFlags
 				if paste_options.get("sector_flags"):
-					moused_over_resource.data.textureFit = copied_sector_data.textureFit
+					moused_over_resource.data.sectorFlags = copied_sector_data.sectorFlags
 				if paste_options.get("glow"):
 					moused_over_resource.data.lighting = copied_sector_data.lighting
 				if paste_options.get("texture_height_override"):
 					moused_over_resource.data.textureMapOverride = copied_sector_data.textureMapOverride
 				if paste_options.get("sector_id"):
-					moused_over_resource.data.floorTriggerID = copied_sector_data.floorTriggerID
+					moused_over_resource.data.sectorID = copied_sector_data.sectorID
 				if paste_options.get("platform"):
 					moused_over_resource.platform = copied_platform_data.duplicate()
 				owner.redraw([moused_over_resource])

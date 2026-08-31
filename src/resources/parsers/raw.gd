@@ -43,7 +43,7 @@ const SECTOR := {
 	"unk0x04": Parser.Type.Word,
 	"ceilingTextureIndex": Parser.Type.Word,
 	"floorTextureIndex": Parser.Type.Word,
-	"textureFit": Parser.Type.Byte,
+	"sectorFlags": Parser.Type.Byte,
 	"lighting": Parser.Type.Byte,
 	"textureMapOverride": Parser.Type.SignedByte,
 	"facesCount": Parser.Type.Byte,
@@ -52,8 +52,8 @@ const SECTOR := {
 	"ceilingTextureShiftY": Parser.Type.Byte,
 	"floorTextureShiftX": Parser.Type.Byte,
 	"floorTextureShiftY": Parser.Type.Byte,
-	"floorTriggerID": Parser.Type.Word,
-	"unk0x16": Parser.Type.Word,
+	"sectorID": Parser.Type.Word,
+	"additionalSectorFlags": Parser.Type.Word,
 	"intermediateFloorOffset": Parser.Type.Word,
 }
 
@@ -63,7 +63,7 @@ const FACE := {
 	"textureMapOffset": Parser.Type.Word,
 	"sectorOffset": Parser.Type.Word,
 	"sisterFaceOffset": Parser.Type.Word,
-	"addCollision": Parser.Type.Word,
+	"faceFlags": Parser.Type.Word,
 }
 
 const TEXTURE_MAPPING := {
@@ -72,13 +72,13 @@ const TEXTURE_MAPPING := {
 	"midTextureIndex": Parser.Type.Word,
 	"upperTextureIndex": Parser.Type.Word,
 	"lowerTextureIndex": Parser.Type.Word,
-	"unk0x08": Parser.Type.Word,
+	"textureFlags": Parser.Type.Word,
 }
 
 const ADDITIONAL_METADATA := {
 	"shiftTextureX": Parser.Type.Byte,
 	"shiftTextureY": Parser.Type.Byte,
-	"unk0x0C": Parser.Type.Word,
+	"faceID": Parser.Type.Word,
 }
 
 const MID_PLATFORM := {
@@ -357,7 +357,7 @@ static func get_preview(filepath: String, normality: bool) -> Dictionary:
 		face.erase("textureMapOffset")
 		face.erase("sisterFaceOffset")
 		face.erase("sectorOffset")
-		face.erase("addCollision")
+		face.erase("faceFlags")
 		face.erase("firstFaceOffset")
 	
 	
@@ -745,7 +745,7 @@ static func _write_sectors(buffer: PackedByteArray, json: Dictionary, section_si
 		buffer.encode_u16(position + 0x04, sector.unk0x04)
 		buffer.encode_u16(position + 0x06, sector.ceilingTextureIndex)
 		buffer.encode_u16(position + 0x08, sector.floorTextureIndex)
-		buffer.encode_u8(position + 0x0A, sector.textureFit)
+		buffer.encode_u8(position + 0x0A, sector.sectorFlags)
 		buffer.encode_u8(position + 0x0B, sector.lighting)
 		buffer.encode_s8(position + 0x0C, sector.textureMapOverride)
 		buffer.encode_u8(position + 0x0D, sector.facesCount)
@@ -754,8 +754,8 @@ static func _write_sectors(buffer: PackedByteArray, json: Dictionary, section_si
 		buffer.encode_u8(position + 0x11, sector.ceilingTextureShiftY)
 		buffer.encode_u8(position + 0x12, sector.floorTextureShiftX)
 		buffer.encode_u8(position + 0x13, sector.floorTextureShiftY)
-		buffer.encode_u16(position + 0x14, sector.floorTriggerID)
-		buffer.encode_u16(position + 0x16, sector.unk0x16)
+		buffer.encode_u16(position + 0x14, sector.sectorID)
+		buffer.encode_u16(position + 0x16, sector.additionalSectorFlags)
 		buffer.encode_u16(position + 0x18, mid_platform_offset)
 		position += 0x1A
 	buffer.encode_u16(position, len(json.facesSection.faces))
@@ -771,12 +771,12 @@ static func _write_texture_mapping_section(buffer: PackedByteArray, json: Dictio
 		buffer.encode_u16(position + 0x02, mapping.midTextureIndex)
 		buffer.encode_u16(position + 0x04, mapping.upperTextureIndex)
 		buffer.encode_u16(position + 0x06, mapping.lowerTextureIndex)
-		buffer.encode_u16(position + 0x08, mapping.unk0x08)
+		buffer.encode_u16(position + 0x08, mapping.textureFlags)
 		position += 0x0A
 		if "additionalMetadata" in mapping and (mapping.type & 128) > 0:
 			buffer.encode_u8(position, mapping.additionalMetadata.shiftTextureX)
 			buffer.encode_u8(position + 0x01, mapping.additionalMetadata.shiftTextureY)
-			buffer.encode_u16(position + 0x02, mapping.additionalMetadata.unk0x0C)
+			buffer.encode_u16(position + 0x02, mapping.additionalMetadata.faceID)
 			position += 0x04
 	return offsets
 
@@ -797,7 +797,7 @@ static func _write_faces(buffer: PackedByteArray, json: Dictionary, section_size
 		buffer.encode_u16(position + 0x04, texture_mapping_offset)
 		buffer.encode_u16(position + 0x06, sector_offset)
 		buffer.encode_u16(position + 0x08, sister_face_offset)
-		buffer.encode_u16(position + 0x0A, face.addCollision)
+		buffer.encode_u16(position + 0x0A, face.faceFlags)
 		position += 0x0C
 	buffer.encode_u16(position, len(json.faceTextureMappingSection.mappings))
 

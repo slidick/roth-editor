@@ -1,7 +1,7 @@
 extends RefCounted
 class_name Face
 
-# Texture Flags ( Unk0x08 )
+# Texture Flags
 const TRANSPARENT = 1 << 0
 const FLIP_X = 1 << 1
 const IMAGE_FIT = 1 << 2
@@ -11,25 +11,15 @@ const HALF_PIXEL = 1 << 5
 const EDGE_MAP = 1 << 6
 const PIN_BOTTOM = 1 << 7
 
-# Texture Flags Additional ( Unk0x0C )
-const FLAG1_UNK = 1 << 0
-const FLAG2_UNK = 1 << 1
-const FLAG3_UNK = 1 << 2
-const FLAG4_UNK = 1 << 3
-const FLAG5_UNK = 1 << 4
-const FLAG6_UNK = 1 << 5
-const FLAG7_UNK = 1 << 6
-const FLAG8_UNK = 1 << 7
-
-# Face Flags ( AddCollision )
+# Face Flags
 const STOP_WALK = 1 << 0 # Stop player
 const STOP_ALEN = 1 << 1 # Stop enemies
 const TRIGGER = 1 << 2 # Set when toggling trigger in demo editor. Mostly unused across retail maps.
-const ROOMBLK = 1 << 3 # No idea. Used to mark the entrances of certain rooms.
+const ROOMBLK = 1 << 3 # Defines the edges of rooms. Certain commands can be set to effect all connecting sectors. Setting this will stop the spread of those command's effects.
 const FLAG5 = 1 << 4 # Only one face in whole game. An inconsequential face on DOPPLE
 const FLAG6 = 1 << 5 # ^^ Same face has this plus a few faces on LRINTH and LRINTH1
 const FLAG7 = 1 << 6 # Nothing
-const FLAG8 = 1 << 7 # When combined with STOP_WALK, only stops movement under a platform. Seems to be used in a lot of unnecessary places though.
+const STOP_UNDER = 1 << 7 # When combined with STOP_WALK, only stops movement under a platform. Seems to be used in a lot of unnecessary places though.
 
 
 var data: Dictionary
@@ -62,7 +52,7 @@ static func check_flag(byte_value: int, flag: int) -> bool:
 
 static func create_new_face(p_map: Map, p_sector: Sector, sector_data: Dictionary = {}) -> Face:
 	var initial_data := {
-		"addCollision": 0,
+		"faceFlags": 0,
 	}
 	var new_face := Face.new(initial_data, p_map)
 	new_face.sector = p_sector
@@ -72,7 +62,7 @@ static func create_new_face(p_map: Map, p_sector: Sector, sector_data: Dictionar
 		"midTextureIndex": sector_data.get("wall", 65535),
 		"upperTextureIndex": sector_data.get("upper_wall", 65535),
 		"lowerTextureIndex": sector_data.get("lower_wall", 65535),
-		"unk0x08": sector_data.get("texture_flags", 0),
+		"textureFlags": sector_data.get("texture_flags", 0),
 	}
 	new_face.texture_data = initial_texture_data
 	return new_face
@@ -140,12 +130,12 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		#material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	if allow_transparency:
-		if (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0)) or (texture not in mapping and check_flag(texture_data.unk0x08, FLIP_X)):
+		if (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0)) or (texture not in mapping and check_flag(texture_data.textureFlags, FLIP_X)):
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
 		elif (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0)):
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	
-	if sector.data.floorTriggerID == 65534 and sister:
+	if sector.data.sectorID == 65534 and sister:
 		material.albedo_color = Color.TRANSPARENT
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	elif texture in mapping and "image" in mapping[texture]:
@@ -166,11 +156,11 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 			Console.print("Face has invalid texture; index: %s, texture: %s" % [index, texture])
 			material.albedo_color = Color.WHITE
 		
-		if check_flag(texture_data.unk0x08, FLIP_X):
+		if check_flag(texture_data.textureFlags, FLIP_X):
 			material.albedo_color.a8 = 128
 	
 	if Settings.settings.get("options", {}).get("shaded_lighting", true) and sector.data.lighting > 0:
-		if sector.data.textureFit & sector.CANDLE > 0:
+		if sector.data.sectorFlags & sector.CANDLE > 0:
 			material.albedo_color.r8 /= 2
 			material.albedo_color.g8 /= 2
 			material.albedo_color.b8 /= 2
@@ -201,7 +191,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	var mesh: ArrayMesh = mesh_tool.commit()
 	
 	
-	if check_flag(texture_data.unk0x08, PIN_BOTTOM):
+	if check_flag(texture_data.textureFlags, PIN_BOTTOM):
 		mesh_tool = SurfaceTool.new()
 		mesh_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 		mesh_tool.set_uv(Vector2(0,0))
@@ -228,20 +218,20 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		texture_width = mapping[texture].height
 		texture_height = mapping[texture].width
 		
-	if check_flag(texture_data.unk0x08, HALF_PIXEL):
+	if check_flag(texture_data.textureFlags, HALF_PIXEL):
 		texture_width *= 0.5
 		texture_height *= 0.5
 		
 	
-	if not check_flag(texture_data.unk0x08, IMAGE_FIT) or (check_flag(texture_data.unk0x08, TRANSPARENT) and not mid):
+	if not check_flag(texture_data.textureFlags, IMAGE_FIT) or (check_flag(texture_data.textureFlags, TRANSPARENT) and not mid):
 		material.uv1_scale.y = (texture_data.unk0x00 + ((texture_data.type & ~(1<<7))<<8)) / (2 * texture_width)
 		material.uv1_scale.x = mesh_height / (2 * texture_height)
 		
 		
 		
-	if sector.data.textureMapOverride > 0 and sister and mid and check_flag(texture_data.unk0x08, TRANSPARENT_UPPER_LOWER):
+	if sector.data.textureMapOverride > 0 and sister and mid and check_flag(texture_data.textureFlags, TRANSPARENT_UPPER_LOWER):
 		
-		if not check_flag(texture_data.unk0x08, IMAGE_FIT):
+		if not check_flag(texture_data.textureFlags, IMAGE_FIT):
 			material.uv1_scale.x = float(sector.data.textureMapOverride * 2) / texture_height
 		
 		
@@ -271,9 +261,9 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		mesh_tool.generate_normals()
 		mesh = mesh_tool.commit()
 		
-	if sector.data.textureMapOverride < 0 and sister and mid and check_flag(texture_data.unk0x08, TRANSPARENT_UPPER_LOWER):
+	if sector.data.textureMapOverride < 0 and sister and mid and check_flag(texture_data.textureFlags, TRANSPARENT_UPPER_LOWER):
 		
-		if not check_flag(texture_data.unk0x08, IMAGE_FIT):
+		if not check_flag(texture_data.textureFlags, IMAGE_FIT):
 			material.uv1_scale.x = abs(float(sector.data.textureMapOverride * 2)) / texture_height
 		
 		var new_points: Array = [
@@ -303,10 +293,10 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	
 	
 	
-	if texture in mapping and "additionalMetadata" in texture_data and (texture_data.type & 128) > 0 and not check_flag(texture_data.unk0x08, IMAGE_FIT):
+	if texture in mapping and "additionalMetadata" in texture_data and (texture_data.type & 128) > 0 and not check_flag(texture_data.textureFlags, IMAGE_FIT):
 		if texture_data.additionalMetadata.shiftTextureX != 0:
 			var shift_amount := float(texture_data.additionalMetadata.shiftTextureX)
-			if check_flag(texture_data.unk0x08, HALF_PIXEL):
+			if check_flag(texture_data.textureFlags, HALF_PIXEL):
 				shift_amount /= 2.0
 			if shift_amount > 0:
 				material.uv1_offset.y = shift_amount / texture_width
@@ -315,7 +305,7 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 		
 		if texture_data.additionalMetadata.shiftTextureY != 0:
 			var shift_amount := float(texture_data.additionalMetadata.shiftTextureY)
-			if check_flag(texture_data.unk0x08, HALF_PIXEL):
+			if check_flag(texture_data.textureFlags, HALF_PIXEL):
 				shift_amount /= 2.0
 			if shift_amount > 0:
 				material.uv1_offset.x = shift_amount / texture_height
@@ -325,16 +315,16 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	
 	
 	
-	if check_flag(texture_data.unk0x08, PIN_BOTTOM):
+	if check_flag(texture_data.textureFlags, PIN_BOTTOM):
 		material.uv1_scale.x *= -1
 		material.uv1_offset.x *= -1
 	
-	if check_flag(texture_data.unk0x08, FLIP_X):
+	if check_flag(texture_data.textureFlags, FLIP_X):
 		material.uv1_scale.y *= -1
 		material.uv1_offset.y *= -1
 	
 	
-	if check_flag(texture_data.unk0x08, TRANSPARENT) and mid:
+	if check_flag(texture_data.textureFlags, TRANSPARENT) and mid:
 		if material.uv1_scale.x < 0:
 			material.uv1_offset.x += 1
 	
@@ -403,7 +393,7 @@ func _initialize_meshes() -> void:
 		mesh_instance.ref = self
 		node.add_child(mesh_instance)
 	else:
-		if check_flag(texture_data.unk0x08, TRANSPARENT):
+		if check_flag(texture_data.textureFlags, TRANSPARENT):
 			var floor_height: int = max(sector.data.floorHeight, sister.get_ref().sector.data.floorHeight)
 			var ceiling_height: int = min(sector.data.ceilingHeight, sister.get_ref().sector.data.ceilingHeight)
 			var mesh_height: int = ceiling_height - floor_height
@@ -506,7 +496,7 @@ func _initialize_meshes() -> void:
 			mesh_instance.ref = self
 			node.add_child(mesh_instance)
 		
-		if sister and sister.get_ref().sector.platform and not check_flag(texture_data.unk0x08, TRANSPARENT):
+		if sister and sister.get_ref().sector.platform and not check_flag(texture_data.textureFlags, TRANSPARENT):
 			var mesh_height: int = sister.get_ref().sector.platform.floorHeight - sister.get_ref().sector.platform.ceilingHeight
 			if mesh_height > 0:
 				var mesh_instance: FaceMesh3D = create_mesh(

@@ -8,7 +8,6 @@ func clear() -> void:
 	%SFXPosYEdit.get_line_edit().clear()
 	%SFXSoundIndexEdit.get_line_edit().clear()
 	%SFXUnk0x06Edit.get_line_edit().clear()
-	%SFXUnk0x08Edit.get_line_edit().clear()
 	%SFXZoneIndexEdit.get_line_edit().clear()
 	%SFXUnk0x0AEdit.get_line_edit().clear()
 	%SFXUnk0x0CEdit.get_line_edit().clear()
@@ -67,8 +66,6 @@ func update_selections() -> void:
 	%SFXSoundIndexEdit.set_value_no_signal(sfx.data.sfxIndex+1)
 	%SFXUnk0x06Edit.get_line_edit().text = "%d" % sfx.data.sfxID
 	%SFXUnk0x06Edit.set_value_no_signal(sfx.data.sfxID)
-	%SFXUnk0x08Edit.get_line_edit().text = "%d" % sfx.data.flags
-	%SFXUnk0x08Edit.set_value_no_signal(sfx.data.flags)
 	%SFXZoneIndexEdit.get_line_edit().text = "%d" % sfx.data.zoneIndex
 	%SFXZoneIndexEdit.set_value_no_signal(sfx.data.zoneIndex)
 	%SFXUnk0x0AEdit.get_line_edit().text = "%d" % sfx.data.audibleRadius
@@ -105,8 +102,6 @@ func update_selections() -> void:
 			%SFXPlayButton.hide()
 		if each_sfx.data.sfxID != sfx.data.sfxID:
 			%SFXUnk0x06Edit.get_line_edit().clear.call_deferred()
-		if each_sfx.data.flags != sfx.data.flags:
-			%SFXUnk0x08Edit.get_line_edit().clear.call_deferred()
 		if each_sfx.data.zoneIndex != sfx.data.zoneIndex:
 			%SFXZoneIndexEdit.get_line_edit().clear.call_deferred()
 			%SFXZoneDataContainer.hide()
@@ -195,12 +190,6 @@ func _on_sfx_sound_index_edit_value_changed(value: float) -> void:
 func _on_sfx_unk_0x_06_edit_value_changed(value: float) -> void:
 	for sfx: SFX in owner.selected_sfx:
 		sfx.data.sfxID = value
-	%EditSFXTimer.start()
-
-
-func _on_sfx_unk_0x_08_edit_value_changed(value: float) -> void:
-	for sfx: SFX in owner.selected_sfx:
-		sfx.data.flags = value
 	%EditSFXTimer.start()
 
 

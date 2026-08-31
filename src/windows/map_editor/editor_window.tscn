@@ -1150,11 +1150,12 @@ rounded = true
 editable = false
 update_on_text_changed = true
 
-[node name="0x0CEdit" type="LineEdit" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="2" unique_id=1654255356]
+[node name="FaceIDEdit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="2" unique_id=1970171968]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-max_length = 5
+max_value = 65535.0
+rounded = true
 editable = false
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer" index="3" unique_id=1231016823]
@@ -1173,7 +1174,7 @@ text = "YSHF"
 [node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer4" index="2" unique_id=1975084483]
 layout_mode = 2
 size_flags_vertical = 6
-text = "TID"
+text = "ID"
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer" index="4" unique_id=660374721]
 layout_mode = 2
@@ -2444,23 +2445,7 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="6" unique_id=1878088589]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer4" index="0" unique_id=1842381043]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-text = "Unk0x08:"
-
-[node name="SFXUnk0x08Edit" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer4" index="1" unique_id=2119467187]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 255.0
-rounded = true
-update_on_text_changed = true
-
-[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="7" unique_id=1808545190]
+[node name="HBoxContainer5" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="6" unique_id=1808545190]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer5" index="0" unique_id=903888469]
@@ -2475,7 +2460,7 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="8" unique_id=1363272704]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="7" unique_id=1363272704]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer6" index="0" unique_id=1682568009]
@@ -2490,7 +2475,7 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="9" unique_id=121655406]
+[node name="HBoxContainer7" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="8" unique_id=121655406]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer7" index="0" unique_id=1033932564]
@@ -2505,7 +2490,7 @@ max_value = 65535.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="10" unique_id=1495705269]
+[node name="HBoxContainer8" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="9" unique_id=1495705269]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer8" index="0" unique_id=1239106405]
@@ -2520,7 +2505,7 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="11" unique_id=1648348436]
+[node name="HBoxContainer10" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="10" unique_id=1648348436]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer10" index="0" unique_id=2065160276]
@@ -2535,14 +2520,14 @@ max_value = 255.0
 rounded = true
 update_on_text_changed = true
 
-[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="12" unique_id=1778463411]
+[node name="HSeparator2" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="11" unique_id=1778463411]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="13" unique_id=397614600]
+[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="12" unique_id=397614600]
 layout_mode = 2
 text = "SFX Flags"
 
-[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="14" unique_id=1268491637]
+[node name="HBoxContainer11" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="13" unique_id=1268491637]
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer11" index="0" unique_id=1467377877]
@@ -2599,10 +2584,10 @@ layout_mode = 2
 text = "Auto Play"
 script = ExtResource("13_tep3q")
 
-[node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="15" unique_id=2011288008]
+[node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="14" unique_id=2011288008]
 layout_mode = 2
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="16" unique_id=490937591]
+[node name="HBoxContainer9" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="15" unique_id=490937591]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer9" index="0" unique_id=453178596]
@@ -2619,7 +2604,7 @@ max_value = 255.0
 layout_mode = 2
 text = "New Zone"
 
-[node name="SFXZoneDataContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="17" unique_id=1468131542]
+[node name="SFXZoneDataContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer" index="16" unique_id=1468131542]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -3742,7 +3727,7 @@ item_1/id = 1
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/BottomTextureOption" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_bottom_texture_option_item_selected"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/XShiftEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_x_shift_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/YShiftEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_y_shift_edit_value_changed"]
-[connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/0x0CEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_x_0c_edit_text_changed"]
+[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer3/FaceIDEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_face_id_edit_value_changed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/TransparencyCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_transparency_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/FlipXCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_flip_x_check_box_toggled"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer/VBoxContainer/ImageFitCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditFaceContainer" method="_on_image_fit_check_box_toggled"]
@@ -3836,7 +3821,6 @@ item_1/id = 1
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2/SFXPlayButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_play_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer2/SelectSFXButton" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_select_sfx_button_pressed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer3/SFXUnk0x06Edit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_06_edit_value_changed"]
-[connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer4/SFXUnk0x08Edit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_08_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer5/SFXUnk0x0AEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0a_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer6/SFXUnk0x0CEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0c_edit_value_changed"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer/VBoxContainer/HBoxContainer7/SFXUnk0x0EEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/InspectorSidePanel/Inspector/ScrollContainer/Edit/EditSFXContainer" method="_on_sfx_unk_0x_0e_edit_value_changed"]

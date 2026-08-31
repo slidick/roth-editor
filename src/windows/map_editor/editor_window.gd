@@ -64,6 +64,13 @@ func _ready() -> void:
 	
 	%FlatLightingCheckBox.set_pressed_no_signal(not Settings.settings.get("options", {}).get("shaded_lighting", true))
 	%ShadedLightingCheckBox.set_pressed_no_signal(Settings.settings.get("options", {}).get("shaded_lighting", true))
+	
+	%EditFaceContainer.hide()
+	%EditSectorContainer.hide()
+	%EditObjectContainer.hide()
+	%EditSFXContainer.hide()
+	%EditVertexContainer.hide()
+	%DrawModeContainer.hide()
 
 
 func _input(event: InputEvent) -> void:
@@ -916,7 +923,7 @@ func select_face(index: int, type: String, p_map: Map = null, count: int = 0, de
 						return
 			"Sector ID":
 				for sector: Node3D in map_node.get_node("Sectors").get_children():
-					if index == sector.ref.data.floorTriggerID:
+					if index == sector.ref.data.sectorID:
 						if count == 0:
 							select_resource(sector.ref, deselect_others)
 							return
@@ -930,7 +937,7 @@ func select_face(index: int, type: String, p_map: Map = null, count: int = 0, de
 			"Face ID":
 				for face: Node3D in map_node.get_node("Faces").get_children():
 					if ("additionalMetadata" in face.ref.texture_data
-						and index == face.ref.texture_data.additionalMetadata.unk0x0C
+						and index == face.ref.texture_data.additionalMetadata.faceID
 					):
 						if face.get_child_count() > 0:
 							if count == 0:

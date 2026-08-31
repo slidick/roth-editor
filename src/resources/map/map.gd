@@ -490,7 +490,7 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 		"unk0x04": 0,
 		"ceilingTextureIndex": sector_data.ceiling,
 		"floorTextureIndex": sector_data.floor,
-		"textureFit": sector_data.texture_fit,
+		"sectorFlags": sector_data.texture_fit,
 		"lighting": 128,
 		"textureMapOverride": 0,
 		"facesCount": len(vertices),
@@ -498,8 +498,8 @@ func add_sector(vertices: Array, sector_data: Dictionary) -> Sector:
 		"ceilingTextureShiftY": 0,
 		"floorTextureShiftX": 0,
 		"floorTextureShiftY": 0,
-		"floorTriggerID": 0,
-		"unk0x16": 0b00010100,
+		"sectorID": 0,
+		"additionalSectorFlags": 0b00010100,
 		"objectInformation": [],
 	}
 	
@@ -836,7 +836,7 @@ func get_texture_mappings_counts() -> Array:
 			else:
 				# Map command 52 can't modify face flags if the texture mapping is assigned to more than one face
 				var texture_mapping: Dictionary = texture_mappings[texture_mappings.find(face.texture_data)]
-				if "additionalMetadata" in texture_mapping and face.texture_data.type & 128 > 0 and texture_mapping.additionalMetadata.unk0x0C in command_52_face_ids:
+				if "additionalMetadata" in texture_mapping and face.texture_data.type & 128 > 0 and texture_mapping.additionalMetadata.faceID in command_52_face_ids:
 					texture_mappings.append(face.texture_data)
 					texture_additional_count += 1
 	return [len(texture_mappings), texture_additional_count]
@@ -905,7 +905,7 @@ func compile_to_json(player_data: Dictionary = {}) -> Dictionary:
 			texture_map_index += 1
 		else:
 			# Map command 52 can't modify face flags if the texture mapping is assigned to more than one face
-			if "additionalMetadata" in face.texture_data and face.texture_data.additionalMetadata.unk0x0C in command_52_face_ids:
+			if "additionalMetadata" in face.texture_data and face.texture_data.additionalMetadata.faceID in command_52_face_ids:
 				additional_texture_faces.append(face)
 			else:
 				face.data["textureMappingIndex"] = texture_mappings_map[face.texture_data]

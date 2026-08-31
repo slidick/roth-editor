@@ -9,7 +9,7 @@ const FIELDS: Array = [
 	"unk0x04",
 	"ceilingTextureIndex",
 	"floorTextureIndex",
-	"textureFit",
+	"sectorFlags",
 	"lighting",
 	"textureMapOverride",
 	"facesCount",
@@ -18,25 +18,25 @@ const FIELDS: Array = [
 	"ceilingTextureShiftY",
 	"floorTextureShiftX",
 	"floorTextureShiftY",
-	"floorTriggerID",
-	"unk0x16",
+	"sectorID",
+	"additionalSectorFlags",
 	"FaceData",
 	"vertexIndex01",
 	"vertexIndex02",
 	"textureMappingIndex",
 	"sectorIndex",
 	"sisterFaceIndex",
-	"addCollision",
+	"faceFlags",
 	"TextureMappingData",
 	"unk0x00",
 	"type",
 	"midTextureIndex",
 	"upperTextureIndex",
 	"lowerTextureIndex",
-	"unk0x08",
+	"textureFlags",
 	"shiftTextureX",
 	"shiftTextureY",
-	"unk0x0C",
+	"faceID",
 	"ObjectData",
 	"posX",
 	"posY",
@@ -50,15 +50,14 @@ const FIELDS: Array = [
 	"unk0x0C_obj",
 	"objectID",
 	"SFXData",
-	"unk0x00_snd",
-	"unk0x02_snd",
-	"unk0x04_snd",
-	"unk0x06_snd",
-	"unk0x08_snd",
+	"posX_snd",
+	"posY_snd",
+	"sfxIndex",
+	"sfxID",
+	"flags_snd",
 	"zoneIndex_snd",
-	"unk0x0A_snd",
-	"unk0x0C_snd",
-	"unk0x0E_snd",
+	"audibleRadius",
+	"loopDelay",
 	"volume_snd",
 	"unk0x11_snd",
 	"CommandData",
@@ -142,7 +141,7 @@ func search() -> void:
 			or search_field == "unk0x04"
 			or search_field == "ceilingTextureIndex"
 			or search_field == "floorTextureIndex"
-			or search_field == "textureFit"
+			or search_field == "sectorFlags"
 			or search_field == "lighting"
 			or search_field == "textureMapOverride"
 			or search_field == "facesCount"
@@ -151,8 +150,8 @@ func search() -> void:
 			or search_field == "ceilingTextureShiftY"
 			or search_field == "floorTextureShiftX"
 			or search_field == "floorTextureShiftY"
-			or search_field == "floorTriggerID"
-			or search_field == "unk0x16"
+			or search_field == "sectorID"
+			or search_field == "additionalSectorFlags"
 	):
 		for sector: Sector in sectors:
 			if compare(int(sector.data[search_field]), search_value, operator):
@@ -164,7 +163,7 @@ func search() -> void:
 			or search_field == "textureMappingIndex"
 			or search_field == "sectorIndex"
 			or search_field == "sisterFaceIndex"
-			or search_field == "addCollision"
+			or search_field == "faceFlags"
 	):
 		for face: Face in faces:
 			if compare(int(face.data[search_field]), search_value, operator):
@@ -176,10 +175,10 @@ func search() -> void:
 			or search_field == "midTextureIndex"
 			or search_field == "upperTextureIndex"
 			or search_field == "lowerTextureIndex"
-			or search_field == "unk0x08"
+			or search_field == "textureFlags"
 			or search_field == "shiftTextureX"
 			or search_field == "shiftTextureY"
-			or search_field == "unk0x0C"
+			or search_field == "faceID"
 			
 	):
 		for face: Face in faces:
@@ -206,15 +205,14 @@ func search() -> void:
 				results.append({"type": "Object", "value": object})
 	
 	elif (
-			search_field == "unk0x00_snd"
-			or search_field == "unk0x02_snd"
-			or search_field == "unk0x04_snd"
-			or search_field == "unk0x06_snd"
-			or search_field == "unk0x08_snd"
+			search_field == "posX_snd"
+			or search_field == "posY_snd"
+			or search_field == "sfxIndex"
+			or search_field == "sfxID"
+			or search_field == "flags_snd"
 			or search_field == "zoneIndex_snd"
-			or search_field == "unk0x0A_snd"
-			or search_field == "unk0x0C_snd"
-			or search_field == "unk0x0E_snd"
+			or search_field == "audibleRadius"
+			or search_field == "loopDelay"
 			or search_field == "volume_snd"
 			or search_field == "unk0x11_snd"
 	):

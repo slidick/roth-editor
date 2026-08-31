@@ -101,8 +101,8 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		ceiling_height /= 2
 	%RoofHeightEdit.get_line_edit().text = "%d" % ceiling_height
 	%RoofHeightEdit.set_value_no_signal(int(ceiling_height))
-	var roof_a: int = sector.data.textureFit & Sector.CEILING_A > 0
-	var roof_b: int = sector.data.textureFit & Sector.CEILING_B > 0
+	var roof_a: int = sector.data.sectorFlags & Sector.CEILING_A > 0
+	var roof_b: int = sector.data.sectorFlags & Sector.CEILING_B > 0
 	if roof_a == 0 and roof_b == 0:
 		%RoofScaleOption.select(0)
 	elif roof_a == 1 and roof_b == 0:
@@ -117,8 +117,8 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		floor_height /= 2
 	%FloorHeightEdit.get_line_edit().text = "%d" % floor_height
 	%FloorHeightEdit.set_value_no_signal(int(floor_height))
-	var floor_a: int = sector.data.textureFit & Sector.FLOOR_A > 0
-	var floor_b: int = sector.data.textureFit & Sector.FLOOR_B > 0
+	var floor_a: int = sector.data.sectorFlags & Sector.FLOOR_A > 0
+	var floor_b: int = sector.data.sectorFlags & Sector.FLOOR_B > 0
 	if floor_a == 0 and floor_b == 0:
 		%FloorScaleOption.select(0)
 	elif floor_a == 1 and floor_b == 0:
@@ -131,13 +131,13 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	%GlowEdit.get_line_edit().text = "%d" % sector.data.lighting
 	%GlowEdit.set_value_no_signal(sector.data.lighting)
 	
-	%FloorTriggerIDEdit.get_line_edit().text = "%d" % sector.data.floorTriggerID
-	%FloorTriggerIDEdit.set_value_no_signal(sector.data.floorTriggerID)
+	%FloorTriggerIDEdit.get_line_edit().text = "%d" % sector.data.sectorID
+	%FloorTriggerIDEdit.set_value_no_signal(sector.data.sectorID)
 	
-	if sector.data.textureFit & Sector.CANDLE > 0:
+	if sector.data.sectorFlags & Sector.CANDLE > 0:
 		%CandleCheckBox.set_pressed_no_signal(true)
 	
-	if sector.data.textureFit & Sector.LIGHTNING > 0:
+	if sector.data.sectorFlags & Sector.LIGHTNING > 0:
 		%LightningCheckBox.set_pressed_no_signal(true)
 	
 	%TextureHeightOverrideEdit.get_line_edit().text = "%d" % sector.data.textureMapOverride
@@ -152,13 +152,13 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	%FloorOffsetYEdit.get_line_edit().text = "%d" % sector.data.floorTextureShiftY
 	%FloorOffsetYEdit.set_value_no_signal(sector.data.floorTextureShiftY)
 	
-	if sector.data.unk0x16 & Sector.CEILING_FLIP_X > 0:
+	if sector.data.additionalSectorFlags & Sector.CEILING_FLIP_X > 0:
 		%RoofFlipXCheckBox.set_pressed_no_signal(true)
-	if sector.data.unk0x16 & Sector.CEILING_FLIP_Y > 0:
+	if sector.data.additionalSectorFlags & Sector.CEILING_FLIP_Y > 0:
 		%RoofFlipYCheckBox.set_pressed_no_signal(true)
-	if sector.data.unk0x16 & Sector.FLOOR_FLIP_X > 0:
+	if sector.data.additionalSectorFlags & Sector.FLOOR_FLIP_X > 0:
 		%FloorFlipXCheckBox.set_pressed_no_signal(true)
-	if sector.data.unk0x16 & Sector.FLOOR_FLIP_Y > 0:
+	if sector.data.additionalSectorFlags & Sector.FLOOR_FLIP_Y > 0:
 		%FloorFlipYCheckBox.set_pressed_no_signal(true)
 	
 	%RoofTextureOption.clear()
@@ -242,25 +242,25 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	for each_sector: Sector in owner.selected_sectors:
 		if each_sector.data.ceilingHeight != sector.data.ceilingHeight:
 			%RoofHeightEdit.get_line_edit().clear.call_deferred()
-		var each_roof_a: int = (each_sector.data.textureFit & Sector.CEILING_A > 0)
-		var each_roof_b: int = (each_sector.data.textureFit & Sector.CEILING_B > 0)
+		var each_roof_a: int = (each_sector.data.sectorFlags & Sector.CEILING_A > 0)
+		var each_roof_b: int = (each_sector.data.sectorFlags & Sector.CEILING_B > 0)
 		if  roof_a != each_roof_a or roof_b != each_roof_b:
 			%RoofScaleOption.select(-1)
 		
 		if each_sector.data.floorHeight != sector.data.floorHeight:
 			%FloorHeightEdit.get_line_edit().clear.call_deferred()
-		var each_floor_a: int = (each_sector.data.textureFit & Sector.FLOOR_A > 0)
-		var each_floor_b: int = (each_sector.data.textureFit & Sector.FLOOR_B > 0)
+		var each_floor_a: int = (each_sector.data.sectorFlags & Sector.FLOOR_A > 0)
+		var each_floor_b: int = (each_sector.data.sectorFlags & Sector.FLOOR_B > 0)
 		if  floor_a != each_floor_a or floor_b != each_floor_b:
 			%FloorScaleOption.select(-1)
 		
 		if each_sector.data.lighting != sector.data.lighting:
 			%GlowEdit.get_line_edit().clear.call_deferred()
-		if each_sector.data.floorTriggerID != sector.data.floorTriggerID:
+		if each_sector.data.sectorID != sector.data.sectorID:
 			%FloorTriggerIDEdit.get_line_edit().clear.call_deferred()
-		if ((each_sector.data.textureFit & Sector.CANDLE) > 0) != ((sector.data.textureFit & Sector.CANDLE) > 0):
+		if ((each_sector.data.sectorFlags & Sector.CANDLE) > 0) != ((sector.data.sectorFlags & Sector.CANDLE) > 0):
 			%CandleCheckBox.indeterminate = true
-		if ((each_sector.data.textureFit & Sector.LIGHTNING) > 0) != ((sector.data.textureFit & Sector.LIGHTNING) > 0):
+		if ((each_sector.data.sectorFlags & Sector.LIGHTNING) > 0) != ((sector.data.sectorFlags & Sector.LIGHTNING) > 0):
 			%LightningCheckBox.indeterminate = true
 		if each_sector.data.textureMapOverride != sector.data.textureMapOverride:
 			%TextureHeightOverrideEdit.get_line_edit().clear.call_deferred()
@@ -272,13 +272,13 @@ func update_selections(p_force_timeout: bool = true) -> void:
 			%FloorOffsetXEdit.get_line_edit().clear.call_deferred()
 		if each_sector.data.floorTextureShiftY != sector.data.floorTextureShiftY:
 			%FloorOffsetYEdit.get_line_edit().clear.call_deferred()
-		if ((each_sector.data.unk0x16 & Sector.CEILING_FLIP_X) > 0) != ((sector.data.unk0x16 & Sector.CEILING_FLIP_X) > 0):
+		if ((each_sector.data.additionalSectorFlags & Sector.CEILING_FLIP_X) > 0) != ((sector.data.additionalSectorFlags & Sector.CEILING_FLIP_X) > 0):
 			%RoofFlipXCheckBox.indeterminate = true
-		if ((each_sector.data.unk0x16 & Sector.CEILING_FLIP_Y) > 0) != ((sector.data.unk0x16 & Sector.CEILING_FLIP_Y) > 0):
+		if ((each_sector.data.additionalSectorFlags & Sector.CEILING_FLIP_Y) > 0) != ((sector.data.additionalSectorFlags & Sector.CEILING_FLIP_Y) > 0):
 			%RoofFlipYCheckBox.indeterminate = true
-		if ((each_sector.data.unk0x16 & Sector.FLOOR_FLIP_X) > 0) != ((sector.data.unk0x16 & Sector.FLOOR_FLIP_X) > 0):
+		if ((each_sector.data.additionalSectorFlags & Sector.FLOOR_FLIP_X) > 0) != ((sector.data.additionalSectorFlags & Sector.FLOOR_FLIP_X) > 0):
 			%FloorFlipXCheckBox.indeterminate = true
-		if ((each_sector.data.unk0x16 & Sector.FLOOR_FLIP_Y) > 0) != ((sector.data.unk0x16 & Sector.FLOOR_FLIP_Y) > 0):
+		if ((each_sector.data.additionalSectorFlags & Sector.FLOOR_FLIP_Y) > 0) != ((sector.data.additionalSectorFlags & Sector.FLOOR_FLIP_Y) > 0):
 			%FloorFlipYCheckBox.indeterminate = true
 		
 		if each_sector.data.ceilingTextureIndex != sector.data.ceilingTextureIndex:
@@ -373,16 +373,16 @@ func _on_glow_edit_value_changed(value: float) -> void:
 
 func _on_floor_trigger_id_edit_value_changed(value: float) -> void:
 	for sector: Sector in owner.selected_sectors:
-		sector.data.floorTriggerID = value
+		sector.data.sectorID = value
 	%EditSectorTimer.start()
 
 
 func _on_candle_check_box_toggled(toggled_on: bool) -> void:
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
-			sector.data.textureFit |= (Sector.CANDLE)
+			sector.data.sectorFlags |= (Sector.CANDLE)
 		else:
-			sector.data.textureFit &= ~(Sector.CANDLE)
+			sector.data.sectorFlags &= ~(Sector.CANDLE)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -390,9 +390,9 @@ func _on_candle_check_box_toggled(toggled_on: bool) -> void:
 func _on_lightning_check_box_toggled(toggled_on: bool) -> void:
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
-			sector.data.textureFit |= (Sector.LIGHTNING)
+			sector.data.sectorFlags |= (Sector.LIGHTNING)
 		else:
-			sector.data.textureFit &= ~(Sector.LIGHTNING)
+			sector.data.sectorFlags &= ~(Sector.LIGHTNING)
 	%EditSectorTimer.start()
 
 
@@ -435,17 +435,17 @@ func _on_roof_scale_option_item_selected(index: int) -> void:
 	for sector: Sector in owner.selected_sectors:
 		match index:
 			0:
-				sector.data.textureFit &= ~Sector.CEILING_A
-				sector.data.textureFit &= ~Sector.CEILING_B
+				sector.data.sectorFlags &= ~Sector.CEILING_A
+				sector.data.sectorFlags &= ~Sector.CEILING_B
 			1:
-				sector.data.textureFit |= Sector.CEILING_A
-				sector.data.textureFit &= ~Sector.CEILING_B
+				sector.data.sectorFlags |= Sector.CEILING_A
+				sector.data.sectorFlags &= ~Sector.CEILING_B
 			2:
-				sector.data.textureFit &= ~Sector.CEILING_A
-				sector.data.textureFit |= Sector.CEILING_B
+				sector.data.sectorFlags &= ~Sector.CEILING_A
+				sector.data.sectorFlags |= Sector.CEILING_B
 			3:
-				sector.data.textureFit |= Sector.CEILING_A
-				sector.data.textureFit |= Sector.CEILING_B
+				sector.data.sectorFlags |= Sector.CEILING_A
+				sector.data.sectorFlags |= Sector.CEILING_B
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -454,17 +454,17 @@ func _on_floor_scale_option_item_selected(index: int) -> void:
 	for sector: Sector in owner.selected_sectors:
 		match index:
 			0:
-				sector.data.textureFit &= ~Sector.FLOOR_A
-				sector.data.textureFit &= ~Sector.FLOOR_B
+				sector.data.sectorFlags &= ~Sector.FLOOR_A
+				sector.data.sectorFlags &= ~Sector.FLOOR_B
 			1:
-				sector.data.textureFit |= Sector.FLOOR_A
-				sector.data.textureFit &= ~Sector.FLOOR_B
+				sector.data.sectorFlags |= Sector.FLOOR_A
+				sector.data.sectorFlags &= ~Sector.FLOOR_B
 			2:
-				sector.data.textureFit &= ~Sector.FLOOR_A
-				sector.data.textureFit |= Sector.FLOOR_B
+				sector.data.sectorFlags &= ~Sector.FLOOR_A
+				sector.data.sectorFlags |= Sector.FLOOR_B
 			3:
-				sector.data.textureFit |= Sector.FLOOR_A
-				sector.data.textureFit |= Sector.FLOOR_B
+				sector.data.sectorFlags |= Sector.FLOOR_A
+				sector.data.sectorFlags |= Sector.FLOOR_B
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -558,9 +558,9 @@ func _on_floor_texture_option_item_selected(index: int) -> void:
 func _on_roof_flip_x_check_box_toggled(toggled_on: bool) -> void:
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
-			sector.data.unk0x16 |= (Sector.CEILING_FLIP_X)
+			sector.data.additionalSectorFlags |= (Sector.CEILING_FLIP_X)
 		else:
-			sector.data.unk0x16 &= ~(Sector.CEILING_FLIP_X)
+			sector.data.additionalSectorFlags &= ~(Sector.CEILING_FLIP_X)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -568,9 +568,9 @@ func _on_roof_flip_x_check_box_toggled(toggled_on: bool) -> void:
 func _on_roof_flip_y_check_box_toggled(toggled_on: bool) -> void:
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
-			sector.data.unk0x16 |= (Sector.CEILING_FLIP_Y)
+			sector.data.additionalSectorFlags |= (Sector.CEILING_FLIP_Y)
 		else:
-			sector.data.unk0x16 &= ~(Sector.CEILING_FLIP_Y)
+			sector.data.additionalSectorFlags &= ~(Sector.CEILING_FLIP_Y)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -578,9 +578,9 @@ func _on_roof_flip_y_check_box_toggled(toggled_on: bool) -> void:
 func _on_floor_flip_x_check_box_toggled(toggled_on: bool) -> void:
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
-			sector.data.unk0x16 |= (Sector.FLOOR_FLIP_X)
+			sector.data.additionalSectorFlags |= (Sector.FLOOR_FLIP_X)
 		else:
-			sector.data.unk0x16 &= ~(Sector.FLOOR_FLIP_X)
+			sector.data.additionalSectorFlags &= ~(Sector.FLOOR_FLIP_X)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 
@@ -588,9 +588,9 @@ func _on_floor_flip_x_check_box_toggled(toggled_on: bool) -> void:
 func _on_floor_flip_y_check_box_toggled(toggled_on: bool) -> void:
 	for sector: Sector in owner.selected_sectors:
 		if toggled_on:
-			sector.data.unk0x16 |= (Sector.FLOOR_FLIP_Y)
+			sector.data.additionalSectorFlags |= (Sector.FLOOR_FLIP_Y)
 		else:
-			sector.data.unk0x16 &= ~(Sector.FLOOR_FLIP_Y)
+			sector.data.additionalSectorFlags &= ~(Sector.FLOOR_FLIP_Y)
 	owner.redraw(owner.selected_sectors)
 	%EditSectorTimer.start()
 

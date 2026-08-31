@@ -88,38 +88,38 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		%SelectSisterButton.hide()
 	
 	
-	if face.texture_data.unk0x08 & (1 << 0) > 0:
+	if face.texture_data.textureFlags & (1 << 0) > 0:
 		%TransparencyCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 1) > 0:
+	if face.texture_data.textureFlags & (1 << 1) > 0:
 		%FlipXCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 2) > 0:
+	if face.texture_data.textureFlags & (1 << 2) > 0:
 		%ImageFitCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 3) > 0:
+	if face.texture_data.textureFlags & (1 << 3) > 0:
 		%FixedSizeTransparencyCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 4) > 0:
+	if face.texture_data.textureFlags & (1 << 4) > 0:
 		%NoReflectCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 5) > 0:
+	if face.texture_data.textureFlags & (1 << 5) > 0:
 		%HalfPixelCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 6) > 0:
+	if face.texture_data.textureFlags & (1 << 6) > 0:
 		%EdgeMapCheckBox.set_pressed_no_signal(true)
-	if face.texture_data.unk0x08 & (1 << 7) > 0:
+	if face.texture_data.textureFlags & (1 << 7) > 0:
 		%DrawFromBottomCheckBox.set_pressed_no_signal(true)
 	
-	if face.data.addCollision & (1 << 0) > 0:
+	if face.data.faceFlags & (1 << 0) > 0:
 		%StopWalkCheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 1) > 0:
+	if face.data.faceFlags & (1 << 1) > 0:
 		%StopAlenCheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 2) > 0:
+	if face.data.faceFlags & (1 << 2) > 0:
 		%Flag3CheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 3) > 0:
+	if face.data.faceFlags & (1 << 3) > 0:
 		%RoomBlkCheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 4) > 0:
+	if face.data.faceFlags & (1 << 4) > 0:
 		%Flag5CheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 5) > 0:
+	if face.data.faceFlags & (1 << 5) > 0:
 		%Flag6CheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 6) > 0:
+	if face.data.faceFlags & (1 << 6) > 0:
 		%Flag7CheckBox.set_pressed_no_signal(true)
-	if face.data.addCollision & (1 << 7) > 0:
+	if face.data.faceFlags & (1 << 7) > 0:
 		%Flag8CheckBox.set_pressed_no_signal(true)
 	
 	
@@ -131,19 +131,20 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		%XShiftEdit.get_line_edit().text = "%d" % face.texture_data.additionalMetadata.shiftTextureX
 		%YShiftEdit.set_value_no_signal(face.texture_data.additionalMetadata.shiftTextureY)
 		%YShiftEdit.get_line_edit().text = "%d" % face.texture_data.additionalMetadata.shiftTextureY
-		%"0x0CEdit".text = str(face.texture_data.additionalMetadata.unk0x0C)
+		%FaceIDEdit.set_value_no_signal(face.texture_data.additionalMetadata.faceID)
+		%FaceIDEdit.get_line_edit().text = "%d" % face.texture_data.additionalMetadata.faceID
 		%AdditionalCheckButton.set_pressed_no_signal(true)
 		%XShiftEdit.editable = true
 		%YShiftEdit.editable = true
-		%"0x0CEdit".editable = true
+		%FaceIDEdit.editable = true
 	else:
 		%XShiftEdit.get_line_edit().clear()
 		%YShiftEdit.get_line_edit().clear()
-		%"0x0CEdit".text = ""
+		%FaceIDEdit.get_line_edit().clear()
 		%AdditionalCheckButton.set_pressed_no_signal(false)
 		%XShiftEdit.editable = false
 		%YShiftEdit.editable = false
-		%"0x0CEdit".editable = false
+		%FaceIDEdit.editable = false
 	
 	
 	%TopTextureOption.clear()
@@ -173,37 +174,37 @@ func update_selections(p_force_timeout: bool = true) -> void:
 	
 	
 	for each_face: Face in owner.selected_faces:
-		if each_face.texture_data.unk0x08 & (1 << 0) > 0 != (face.texture_data.unk0x08 & (1 << 0) > 0):
+		if each_face.texture_data.textureFlags & (1 << 0) > 0 != (face.texture_data.textureFlags & (1 << 0) > 0):
 			%TransparencyCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 1) > 0 != (face.texture_data.unk0x08 & (1 << 1) > 0):
+		if each_face.texture_data.textureFlags & (1 << 1) > 0 != (face.texture_data.textureFlags & (1 << 1) > 0):
 			%FlipXCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 2) > 0 != (face.texture_data.unk0x08 & (1 << 2) > 0):
+		if each_face.texture_data.textureFlags & (1 << 2) > 0 != (face.texture_data.textureFlags & (1 << 2) > 0):
 			%ImageFitCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 3) > 0 != (face.texture_data.unk0x08 & (1 << 3) > 0):
+		if each_face.texture_data.textureFlags & (1 << 3) > 0 != (face.texture_data.textureFlags & (1 << 3) > 0):
 			%FixedSizeTransparencyCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 4) > 0 != (face.texture_data.unk0x08 & (1 << 4) > 0):
+		if each_face.texture_data.textureFlags & (1 << 4) > 0 != (face.texture_data.textureFlags & (1 << 4) > 0):
 			%NoReflectCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 5) > 0 != (face.texture_data.unk0x08 & (1 << 5) > 0):
+		if each_face.texture_data.textureFlags & (1 << 5) > 0 != (face.texture_data.textureFlags & (1 << 5) > 0):
 			%HalfPixelCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 6) > 0 != (face.texture_data.unk0x08 & (1 << 6) > 0):
+		if each_face.texture_data.textureFlags & (1 << 6) > 0 != (face.texture_data.textureFlags & (1 << 6) > 0):
 			%EdgeMapCheckBox.indeterminate = true
-		if each_face.texture_data.unk0x08 & (1 << 7) > 0 != (face.texture_data.unk0x08 & (1 << 7) > 0):
+		if each_face.texture_data.textureFlags & (1 << 7) > 0 != (face.texture_data.textureFlags & (1 << 7) > 0):
 			%DrawFromBottomCheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 0) > 0 != (face.data.addCollision & (1 << 0) > 0):
+		if each_face.data.faceFlags & (1 << 0) > 0 != (face.data.faceFlags & (1 << 0) > 0):
 			%StopWalkCheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 1) > 0 != (face.data.addCollision & (1 << 1) > 0):
+		if each_face.data.faceFlags & (1 << 1) > 0 != (face.data.faceFlags & (1 << 1) > 0):
 			%StopAlenCheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 2) > 0 != (face.data.addCollision & (1 << 2) > 0):
+		if each_face.data.faceFlags & (1 << 2) > 0 != (face.data.faceFlags & (1 << 2) > 0):
 			%Flag3CheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 3) > 0 != (face.data.addCollision & (1 << 3) > 0):
+		if each_face.data.faceFlags & (1 << 3) > 0 != (face.data.faceFlags & (1 << 3) > 0):
 			%RoomBlkCheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 4) > 0 != (face.data.addCollision & (1 << 4) > 0):
+		if each_face.data.faceFlags & (1 << 4) > 0 != (face.data.faceFlags & (1 << 4) > 0):
 			%Flag5CheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 5) > 0 != (face.data.addCollision & (1 << 5) > 0):
+		if each_face.data.faceFlags & (1 << 5) > 0 != (face.data.faceFlags & (1 << 5) > 0):
 			%Flag6CheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 6) > 0 != (face.data.addCollision & (1 << 6) > 0):
+		if each_face.data.faceFlags & (1 << 6) > 0 != (face.data.faceFlags & (1 << 6) > 0):
 			%Flag7CheckBox.indeterminate = true
-		if each_face.data.addCollision & (1 << 7) > 0 != (face.data.addCollision & (1 << 7) > 0):
+		if each_face.data.faceFlags & (1 << 7) > 0 != (face.data.faceFlags & (1 << 7) > 0):
 			%Flag8CheckBox.indeterminate = true
 			
 		if (each_face.texture_data.unk0x00 + ((face.texture_data.type & ~(1<<7))<<8)) != (face.texture_data.unk0x00 + ((face.texture_data.type & ~(1<<7))<<8)):
@@ -218,18 +219,18 @@ func update_selections(p_force_timeout: bool = true) -> void:
 		if not "additionalMetadata" in each_face.texture_data or each_face.texture_data.type & 128 == 0:
 			%XShiftEdit.get_line_edit().clear.call_deferred()
 			%YShiftEdit.get_line_edit().clear.call_deferred()
-			%"0x0CEdit".text = ""
+			%FaceIDEdit.get_line_edit().clear.call_deferred()
 			%XShiftEdit.editable = false
 			%YShiftEdit.editable = false
-			%"0x0CEdit".editable = false
+			%FaceIDEdit.editable = false
 			%AdditionalCheckButton.set_pressed_no_signal(false)
 		elif "additionalMetadata" in face.texture_data:
 			if each_face.texture_data.additionalMetadata.shiftTextureX != face.texture_data.additionalMetadata.shiftTextureX:
 				%XShiftEdit.get_line_edit().clear.call_deferred()
 			if each_face.texture_data.additionalMetadata.shiftTextureY != face.texture_data.additionalMetadata.shiftTextureY:
 				%YShiftEdit.get_line_edit().clear.call_deferred()
-			if each_face.texture_data.additionalMetadata.unk0x0C != face.texture_data.additionalMetadata.unk0x0C:
-				%"0x0CEdit".text = ""
+			if each_face.texture_data.additionalMetadata.faceID != face.texture_data.additionalMetadata.faceID:
+				%FaceIDEdit.get_line_edit().clear.call_deferred()
 	
 	%TopTextureOption.add_item("--------", SELECT_DASH)
 	%TopTextureOption.add_item("Sky", SELECT_SKY)
@@ -381,9 +382,9 @@ func _on_top_texture_option_item_selected(index: int) -> void:
 func _on_transparency_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 0)
+			face.texture_data.textureFlags |= (1 << 0)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 0)
+			face.texture_data.textureFlags &= ~(1 << 0)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -391,9 +392,9 @@ func _on_transparency_check_box_toggled(toggled_on: bool) -> void:
 func _on_flip_x_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 1)
+			face.texture_data.textureFlags |= (1 << 1)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 1)
+			face.texture_data.textureFlags &= ~(1 << 1)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -401,9 +402,9 @@ func _on_flip_x_check_box_toggled(toggled_on: bool) -> void:
 func _on_image_fit_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 2)
+			face.texture_data.textureFlags |= (1 << 2)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 2)
+			face.texture_data.textureFlags &= ~(1 << 2)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -411,9 +412,9 @@ func _on_image_fit_check_box_toggled(toggled_on: bool) -> void:
 func _on_fixed_size_transparency_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 3)
+			face.texture_data.textureFlags |= (1 << 3)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 3)
+			face.texture_data.textureFlags &= ~(1 << 3)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -421,9 +422,9 @@ func _on_fixed_size_transparency_check_box_toggled(toggled_on: bool) -> void:
 func _on_no_reflect_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 4)
+			face.texture_data.textureFlags |= (1 << 4)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 4)
+			face.texture_data.textureFlags &= ~(1 << 4)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -431,9 +432,9 @@ func _on_no_reflect_check_box_toggled(toggled_on: bool) -> void:
 func _on_half_pixel_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 5)
+			face.texture_data.textureFlags |= (1 << 5)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 5)
+			face.texture_data.textureFlags &= ~(1 << 5)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -441,9 +442,9 @@ func _on_half_pixel_check_box_toggled(toggled_on: bool) -> void:
 func _on_edge_map_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 6)
+			face.texture_data.textureFlags |= (1 << 6)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 6)
+			face.texture_data.textureFlags &= ~(1 << 6)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -451,9 +452,9 @@ func _on_edge_map_check_box_toggled(toggled_on: bool) -> void:
 func _on_draw_from_bottom_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.texture_data.unk0x08 |= (1 << 7)
+			face.texture_data.textureFlags |= (1 << 7)
 		else:
-			face.texture_data.unk0x08 &= ~(1 << 7)
+			face.texture_data.textureFlags &= ~(1 << 7)
 	owner.redraw(owner.selected_faces)
 	%EditFaceTimer.start()
 
@@ -461,72 +462,72 @@ func _on_draw_from_bottom_check_box_toggled(toggled_on: bool) -> void:
 func _on_stop_walk_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 0)
+			face.data.faceFlags |= (1 << 0)
 		else:
-			face.data.addCollision &= ~(1 << 0)
+			face.data.faceFlags &= ~(1 << 0)
 	%EditFaceTimer.start()
 
 
 func _on_stop_alen_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 1)
+			face.data.faceFlags |= (1 << 1)
 		else:
-			face.data.addCollision &= ~(1 << 1)
+			face.data.faceFlags &= ~(1 << 1)
 	%EditFaceTimer.start()
 
 
 func _on_flag_3_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 2)
+			face.data.faceFlags |= (1 << 2)
 		else:
-			face.data.addCollision &= ~(1 << 2)
+			face.data.faceFlags &= ~(1 << 2)
 	%EditFaceTimer.start()
 
 
 func _on_room_blk_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 3)
+			face.data.faceFlags |= (1 << 3)
 		else:
-			face.data.addCollision &= ~(1 << 3)
+			face.data.faceFlags &= ~(1 << 3)
 	%EditFaceTimer.start()
 
 
 func _on_flag_5_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 4)
+			face.data.faceFlags |= (1 << 4)
 		else:
-			face.data.addCollision &= ~(1 << 4)
+			face.data.faceFlags &= ~(1 << 4)
 	%EditFaceTimer.start()
 
 
 func _on_flag_6_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 5)
+			face.data.faceFlags |= (1 << 5)
 		else:
-			face.data.addCollision &= ~(1 << 5)
+			face.data.faceFlags &= ~(1 << 5)
 	%EditFaceTimer.start()
 
 
 func _on_flag_7_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 6)
+			face.data.faceFlags |= (1 << 6)
 		else:
-			face.data.addCollision &= ~(1 << 6)
+			face.data.faceFlags &= ~(1 << 6)
 	%EditFaceTimer.start()
 
 
 func _on_flag_8_check_box_toggled(toggled_on: bool) -> void:
 	for face: Face in owner.selected_faces:
 		if toggled_on:
-			face.data.addCollision |= (1 << 7)
+			face.data.faceFlags |= (1 << 7)
 		else:
-			face.data.addCollision &= ~(1 << 7)
+			face.data.faceFlags &= ~(1 << 7)
 	%EditFaceTimer.start()
 
 
@@ -537,20 +538,20 @@ func _on_additional_check_button_toggled(toggled_on: bool) -> void:
 				face.texture_data["additionalMetadata"] = {
 					"shiftTextureX": 0,
 					"shiftTextureY": 0,
-					"unk0x0C": 0,
+					"faceID": 0,
 				}
 			face.texture_data.type |= 0x80
 			%XShiftEdit.editable = true
 			%YShiftEdit.editable = true
-			%"0x0CEdit".editable = true
+			%FaceIDEdit.editable = true
 		else:
 			face.texture_data.type &= ~0x80
 			%XShiftEdit.editable = false
 			%YShiftEdit.editable = false
-			%"0x0CEdit".editable = false
+			%FaceIDEdit.editable = false
 			#face.texture_data.additionalMetadata.shiftTextureX = 0
 			#face.texture_data.additionalMetadata.shiftTextureY = 0
-			#face.texture_data.additionalMetadata.unk0x0C = 0
+			#face.texture_data.additionalMetadata.faceID = 0
 	owner.redraw(owner.selected_faces)
 	update_selections(false)
 	%EditFaceTimer.start()
@@ -570,9 +571,9 @@ func _on_y_shift_edit_value_changed(value: float) -> void:
 	%EditFaceTimer.start()
 
 
-func _on_x_0c_edit_text_changed(new_text: String) -> void:
+func _on_face_id_edit_value_changed(value: float) -> void:
 	for face: Face in owner.selected_faces:
-		face.texture_data.additionalMetadata.unk0x0C = int(new_text)
+		face.texture_data.additionalMetadata.faceID = int(value)
 	%EditFaceTimer.start()
 
 

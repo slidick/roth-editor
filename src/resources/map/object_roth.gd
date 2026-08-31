@@ -455,7 +455,7 @@ func _initialize_mesh_texture(texture: Dictionary) -> void:
 	
 	if data.lighting == 128:
 		if Settings.settings.get("options", {}).get("shaded_lighting", true) and sector.get_ref().data.lighting > 0:
-			if sector.get_ref().data.textureFit & sector.get_ref().CANDLE > 0:
+			if sector.get_ref().data.sectorFlags & sector.get_ref().CANDLE > 0:
 				material.albedo_color.r8 /= 2
 				material.albedo_color.g8 /= 2
 				material.albedo_color.b8 /= 2
@@ -602,7 +602,7 @@ func _initialize_3d_object(texture: Dictionary) -> void:
 		
 		if data.lighting == 128:
 			if Settings.settings.get("options", {}).get("shaded_lighting", true) and sector.get_ref().data.lighting > 0:
-				if sector.get_ref().data.textureFit & sector.get_ref().CANDLE > 0:
+				if sector.get_ref().data.sectorFlags & sector.get_ref().CANDLE > 0:
 					material.albedo_color.r8 /= 2
 					material.albedo_color.g8 /= 2
 					material.albedo_color.b8 /= 2

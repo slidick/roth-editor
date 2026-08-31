@@ -7,7 +7,7 @@ class_name Sector
 # (0, 1) = 2:1
 # (1, 1) = 4:1
 
-# "Texture Fit" Flags
+# Sector Flags
 const LINK_EXISTS = 1 << 0
 const CANDLE = 1 << 1
 const CEILING_A = 1 << 2
@@ -17,7 +17,7 @@ const FLOOR_B = 1 << 5
 const LIGHTNING = 1 << 6
 const UNUSED = 1 << 7
 
-# Texture Flip Flags (unk0x16)
+# Additional Sector Flags
 const FLOOR_FLIP_X = 1 << 8
 const FLOOR_FLIP_Y = 1 << 9
 const CEILING_FLIP_X = 1 << 10
@@ -367,9 +367,9 @@ func is_sfx_inside(sfx: SFX) -> bool:
 func get_floor_scale() -> float:
 	var floor_a: int = 0
 	var floor_b: int = 0
-	if check_flag(data.textureFit, FLOOR_A):
+	if check_flag(data.sectorFlags, FLOOR_A):
 		floor_a = 1
-	if check_flag(data.textureFit, FLOOR_B):
+	if check_flag(data.sectorFlags, FLOOR_B):
 		floor_b = 1
 	var scale: float = 1.0
 	if floor_a == 0 and floor_b == 0:
@@ -386,9 +386,9 @@ func get_floor_scale() -> float:
 func get_ceiling_scale() -> float:
 	var floor_a: int = 0
 	var floor_b: int = 0
-	if check_flag(data.textureFit, CEILING_A):
+	if check_flag(data.sectorFlags, CEILING_A):
 		floor_a = 1
-	if check_flag(data.textureFit, CEILING_B):
+	if check_flag(data.sectorFlags, CEILING_B):
 		floor_b = 1
 	var scale: float = 1.0
 	if floor_a == 0 and floor_b == 0:
@@ -456,7 +456,6 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	
 	if is_platform:
 		if (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.TRANSPARENT > 0)):
-		#if (check_flag(texture_data.unk0x08, TRANSPARENT) and mid):
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		elif (texture in mapping and (mapping[texture].image_type & Das.IMAGE_TYPE.PALETTE_ZERO_OPAQUE == 0)):
 			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
@@ -478,7 +477,7 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 			material.albedo_color = Color.BLUE
 	
 	if Settings.settings.get("options", {}).get("shaded_lighting", true) and data.lighting > 0:
-		if data.textureFit & CANDLE > 0:
+		if data.sectorFlags & CANDLE > 0:
 			material.albedo_color.r8 /= 2
 			material.albedo_color.g8 /= 2
 			material.albedo_color.b8 /= 2
@@ -549,14 +548,14 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 		
 		if not is_platform:
 			if is_ceiling:
-				if check_flag(data.textureFit, CEILING_A):
+				if check_flag(data.sectorFlags, CEILING_A):
 					floor_a = 1
-				if check_flag(data.textureFit, CEILING_B):
+				if check_flag(data.sectorFlags, CEILING_B):
 					floor_b = 1
 			else:
-				if check_flag(data.textureFit, FLOOR_A):
+				if check_flag(data.sectorFlags, FLOOR_A):
 					floor_a = 1
-				if check_flag(data.textureFit, FLOOR_B):
+				if check_flag(data.sectorFlags, FLOOR_B):
 					floor_b = 1
 		else:
 			if is_ceiling:
@@ -631,17 +630,17 @@ func create_mesh(p_vertices: Array, texture: int, das: Dictionary, y_pos: int, i
 	
 	
 		if not is_ceiling:
-			if check_flag(data.unk0x16, FLOOR_FLIP_X):
+			if check_flag(data.additionalSectorFlags, FLOOR_FLIP_X):
 				material.uv1_scale.x *= -1
 				material.uv1_offset.x *= -1
-			if check_flag(data.unk0x16, FLOOR_FLIP_Y):
+			if check_flag(data.additionalSectorFlags, FLOOR_FLIP_Y):
 				material.uv1_scale.y *= -1
 				material.uv1_offset.y *= -1
 		if is_ceiling:
-			if check_flag(data.unk0x16, CEILING_FLIP_X):
+			if check_flag(data.additionalSectorFlags, CEILING_FLIP_X):
 				material.uv1_scale.x *= -1
 				material.uv1_offset.x *= -1
-			if check_flag(data.unk0x16, CEILING_FLIP_Y):
+			if check_flag(data.additionalSectorFlags, CEILING_FLIP_Y):
 				material.uv1_scale.y *= -1
 				material.uv1_offset.y *= -1
 	
