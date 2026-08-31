@@ -231,7 +231,7 @@ static func import(p_import_data: Dictionary, p_map_data: Array) -> Dictionary:
 			"das": import_map_info.das_name,
 		}
 		var uuid: String = Utility.uuidv4()
-		while FileAccess.file_exists(Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".RAW")):
+		while FileAccess.file_exists(Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".RAW")) or FileAccess.file_exists(Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".RAW.0")):
 			uuid = Utility.uuidv4()
 		
 		var filepath: String = Roth.ROTH_CUSTOM_MAP_DIRECTORY.path_join(uuid + ".RAW")

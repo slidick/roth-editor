@@ -438,7 +438,7 @@ func _add_missing_map_info() -> void:
 	if "vanilla" not in map_info:
 		if "uuid" not in map_info:
 			map_info["uuid"] = Utility.uuidv4()
-			while FileAccess.file_exists(directory.path_join(map_info.uuid + ".RAW")):
+			while FileAccess.file_exists(directory.path_join(map_info.uuid + ".RAW")) or FileAccess.file_exists(directory.path_join(map_info.uuid + ".RAW.0")):
 				map_info["uuid"] = Utility.uuidv4()
 		
 		if "filepath" not in map_info:
