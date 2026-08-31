@@ -1,3 +1,4 @@
+class_name Editor
 extends BaseWindow
 
 const EYE_ICON: Texture2D = preload("uid://crb7de5pvofid")

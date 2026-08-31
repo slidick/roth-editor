@@ -186,7 +186,6 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 					maps.append(tree_item)
 				tree_item = %MapTree.get_next_selected(tree_item)
 			
-			
 			if len(maps) > 1:
 				maps = maps.map(func (item: TreeItem) -> Map: return item.get_metadata(0))
 				var results: Array = await %ModifyMap.modify_maps(maps, %ModifyMap.Modification.MOVE)
@@ -202,13 +201,6 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 					select_maps([map])
 				elif results[0]:
 					tree_item.set_text(0, results[2])
-			
-			
-			#var new_map_name := await Roth.query_for_map_name("Rename %s" % map.map_info.name)
-			#if new_map_name.is_empty() or new_map_name == map.map_info.name:
-				#return
-			#map.rename_map(new_map_name)
-			#tree_item.set_text(0, new_map_name)
 		
 		1:
 			var maps: Array = []
@@ -230,6 +222,7 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 						tree_item.free.call_deferred()
 					tree_item = tree_item.get_next()
 				clear()
+		
 		2:
 			var maps: Array = get_selected_maps()
 			if len(maps) > 1:
@@ -241,12 +234,15 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 				var results: Array = await %ModifyMap.modify_maps([map], %ModifyMap.Modification.DUPLICATE)
 				if results[0]:
 					select_maps([results[1]])
-			
-			#var new_map_name := await Roth.query_for_map_name("Duplicate %s" % map.map_info.name)
-			#if new_map_name.is_empty():
-				#return
-			
-			#_on_settings_updated()
+		
+		3:
+			var maps: Array = get_selected_maps()
+			if len(maps) == 1:
+				var new_map: Map = await %PreviousVersions.previous_versions(maps[0])
+				if new_map:
+					var tree_item: TreeItem = %MapTree.get_next_selected(null)
+					tree_item.set_metadata(0, new_map)
+					_on_map_tree_cell_selected()
 
 
 func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
@@ -257,9 +253,14 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 				if "vanilla" not in tree_item.get_metadata(0).map_info:
 					%MapPopupMenu.set_item_disabled(0, false)
 					%MapPopupMenu.set_item_disabled(1, false)
+					if len(get_selected_maps()) > 1:
+						%MapPopupMenu.set_item_disabled(3, true)
+					else:
+						%MapPopupMenu.set_item_disabled(3, false)
 				else:
 					%MapPopupMenu.set_item_disabled(0, true)
 					%MapPopupMenu.set_item_disabled(1, true)
+					%MapPopupMenu.set_item_disabled(3, true)
 				if len(get_selected_maps()) > 1:
 					%MapPopupMenu.set_item_text(0, "Move Maps")
 					%MapPopupMenu.set_item_text(1, "Delete Maps")
