@@ -119,6 +119,8 @@ func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 			das_info = NormPack.get_das_by_name(favorite_data.das)
 		if "invalid" in das_info:
 			return
+		if das_info.name != p_das_info.name and das_info != p_das2_info:
+			return
 		var texture_data: Dictionary = Das.get_index_from_das(favorite_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
@@ -127,8 +129,6 @@ func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 		%FavoriteItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != p_das2_info:
-			%FavoriteItemList.set_hidden(idx, true)
 
 
 func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
@@ -138,6 +138,8 @@ func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 			das_info = NormPack.get_das_by_name(recent_data.das)
 		if "invalid" in das_info:
 			return
+		if das_info.name != p_das_info.name and das_info != p_das2_info:
+			return
 		var texture_data: Dictionary = Das.get_index_from_das(recent_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
@@ -146,8 +148,6 @@ func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 			tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 		var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 		%RecentItemList.set_item_metadata(idx, texture_data)
-		if texture_data.das_info.name != p_das_info.name and texture_data.das_info != p_das2_info:
-			%RecentItemList.set_hidden(idx, true)
 
 
 func load_ademo(p_das2_info: Dictionary, p_show_add_to_favorites: bool = false) -> void:
