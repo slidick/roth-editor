@@ -212,7 +212,7 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 					maps.append(map)
 					maps_string += "%s\n" % map.map_info.name
 				tree_item = %MapTree.get_next_selected(tree_item)
-			var results: Array = await Dialog.confirm_additional("Are you sure you wish to delete the following maps?\n%s" % maps_string.trim_suffix("\n"), "Confirm Deletion", "Delete backup saves (CANNOT BE UNDONE)", false)
+			var results: Array = await Dialog.confirm_additional("Are you sure you wish to trash the following maps?\n%s" % maps_string.trim_suffix("\n"), "Send to Trash", "Permanently delete maps and all backup saves (CANNOT BE UNDONE)", false)
 			if results[0]:
 				for map: Map in maps:
 					map.delete_map(results[1])
@@ -263,11 +263,11 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 					%MapPopupMenu.set_item_disabled(3, true)
 				if len(get_selected_maps()) > 1:
 					%MapPopupMenu.set_item_text(0, "Move Maps")
-					%MapPopupMenu.set_item_text(1, "Delete Maps")
+					%MapPopupMenu.set_item_text(1, "Trash Maps")
 					%MapPopupMenu.set_item_text(2, "Duplicate Maps")
 				else:
 					%MapPopupMenu.set_item_text(0, "Rename/Move Map")
-					%MapPopupMenu.set_item_text(1, "Delete Map")
+					%MapPopupMenu.set_item_text(1, "Trash Map")
 					%MapPopupMenu.set_item_text(2, "Duplicate Map")
 				%MapPopupMenu.popup(Rect2i(int(mouse_position.x + %MapTree.global_position.x), int(mouse_position.y + %MapTree.global_position.y), 0, 0))
 

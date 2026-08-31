@@ -213,14 +213,17 @@ func get_map_preview() -> Dictionary:
 	return preview
 
 
-func delete_map(p_delete_backups: bool = false) -> void:
-	if FileAccess.file_exists(map_info.filepath):
+func delete_map(p_actually_delete: bool = false) -> void:
+	if p_actually_delete:
 		DirAccess.remove_absolute(map_info.filepath)
-	if FileAccess.file_exists(map_info.filepath_json):
 		DirAccess.remove_absolute(map_info.filepath_json)
-	if FileAccess.file_exists(map_info.filepath_map):
 		DirAccess.remove_absolute(map_info.filepath_map)
-	if p_delete_backups:
+		
+		if map_info.filepath_json.ends_with(".0"):
+			map_info.filepath = map_info.filepath.trim_suffix(".0")
+			map_info.filepath_json = map_info.filepath_json.trim_suffix(".0")
+			map_info.filepath_map = map_info.filepath_map.trim_suffix(".0")
+		
 		var count: int = 1
 		while FileAccess.file_exists(map_info.filepath + ".%d" % count):
 			DirAccess.remove_absolute(map_info.filepath + ".%d" % count)
@@ -233,11 +236,20 @@ func delete_map(p_delete_backups: bool = false) -> void:
 		while FileAccess.file_exists(map_info.filepath_map + ".%d" % count):
 			DirAccess.remove_absolute(map_info.filepath_map + ".%d" % count)
 			count += 1
-	map_info.map_pack.maps.erase(self)
-	if "normality" in map_info:
-		NormPack.save(map_info.map_pack)
 	else:
-		MapPack.save(map_info.map_pack)
+		if FileAccess.file_exists(map_info.filepath):
+			DirAccess.rename_absolute(map_info.filepath, map_info.filepath + ".0")
+		if FileAccess.file_exists(map_info.filepath_json):
+			DirAccess.rename_absolute(map_info.filepath_json, map_info.filepath_json + ".0")
+		if FileAccess.file_exists(map_info.filepath_map):
+			DirAccess.rename_absolute(map_info.filepath_map, map_info.filepath_map + ".0")
+	
+	if "maps" in map_info.map_pack:
+		map_info.map_pack.maps.erase(self)
+		if "normality" in map_info:
+			NormPack.save(map_info.map_pack)
+		else:
+			MapPack.save(map_info.map_pack)
 	unload()
 
 
