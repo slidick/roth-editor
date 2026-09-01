@@ -173,6 +173,10 @@ func _on_map_popup_menu_index_pressed(index: int) -> void:
 			var results: Array = await Dialog.confirm_additional("Are you sure you wish to trash the following maps?\n%s" % maps_string.trim_suffix("\n"), "Send to Trash", "Permanently delete maps and all backup saves (CANNOT BE UNDONE)", false)
 			if results[0]:
 				for map: Map in maps:
+					if map.editable_map:
+						var editor: Editor = get_tree().get_root().find_child("Editor", true, false)
+						if editor:
+							editor.close_map(map.editable_map)
 					map.delete_map(results[1])
 				tree_item = %MapTree.get_root().get_first_child()
 				while tree_item:
