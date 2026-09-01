@@ -18,9 +18,9 @@ func load_das(p_das: Dictionary) -> void:
 	var node: Node = _create_palette_node(p_das.palette)
 	if node:
 		%DefaultPalette.add_child(node)
-		%SidePanel.show()
+		%PaletteLoaded.show()
 	else:
-		%SidePanel.hide()
+		%NoPalette.show()
 
 
 func load_8bit_palette(p_8bit_palette: Array) -> void:
@@ -30,9 +30,9 @@ func load_8bit_palette(p_8bit_palette: Array) -> void:
 	var node: Node = _create_palette_node(p_8bit_palette)
 	if node:
 		%DefaultPalette.add_child(node)
-		%SidePanel.show()
+		%PaletteLoaded.show()
 	else:
-		%SidePanel.hide()
+		%NoPalette.show()
 
 
 func reset() -> void:
@@ -274,3 +274,10 @@ func _on_reset_selected_button_pressed() -> void:
 
 func _on_hue_slider_drag_ended(_value_changed: bool) -> void:
 	update_hue_start()
+
+
+func _on_add_palette_button_pressed() -> void:
+	das.palette = Das.DEFAULT_PALETTE
+	das.raw_palette = Das.DEFAULT_RAW_PALETTE
+	das.palette_shading = Das.get_default_palette_shading()
+	load_das(das)

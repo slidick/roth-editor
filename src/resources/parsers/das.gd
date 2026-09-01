@@ -288,6 +288,14 @@ static var loaded_das: Dictionary = {}
 static var loading_das: Dictionary = {}
 
 
+static func get_default_palette_shading() -> Array:
+	var shading: Array = []
+	var bytes: PackedByteArray = FileAccess.get_file_as_bytes("res://assets/default_palette_shading.bin")
+	for i in range(0, 82432, 256):
+		shading.append(Array(bytes.slice(i, i+256)))
+	return shading
+
+
 static func load_das(das_info: Dictionary) -> Dictionary:
 	Utility.deinit_shader()
 	var thread := Thread.new()
