@@ -54,6 +54,13 @@ func setup(map: Map, is_restore: bool = false) -> void:
 	else:
 		%ChangeDASButton.show()
 	
+	if "normality" in map.map_info:
+		%CommandsLabel.hide()
+		%Commands.hide()
+	else:
+		%CommandsLabel.show()
+		%Commands.show()
+	
 	if is_restore:
 		%ChangeDASButton.hide()
 

@@ -23,7 +23,6 @@ func previous_versions(p_map: Map) -> Map:
 	%ItemList.select(0)
 	_on_item_list_item_selected(0)
 	
-	
 	toggle(true)
 	var results: Map = await done
 	await _fade_out()
@@ -95,7 +94,6 @@ func _on_save_button_pressed() -> void:
 		DirAccess.rename_absolute(new_map.map_info.filepath_map, new_map.map_info.filepath_map.get_basename())
 		
 		# Update map_info
-		new_map.map_info.erase("date")
 		new_map.map_info.filepath = new_map.map_info.filepath.get_basename()
 		new_map.map_info.filepath_json = new_map.map_info.filepath_json.get_basename()
 		new_map.map_info.filepath_map = new_map.map_info.filepath_map.get_basename()

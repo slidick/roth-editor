@@ -411,6 +411,7 @@ func _reload_map_info() -> void:
 			if file_json:
 				if "command_positions" in file_json:
 					map_info["command_positions"] = file_json.command_positions
+			map_info["modified_time"] = FileAccess.get_modified_time(map_info.filepath_json)
 
 
 func save_map(directory: String = "", player_data: Dictionary = {}) -> void:
@@ -483,9 +484,6 @@ func _add_missing_map_info() -> void:
 		
 		if "filepath_map" not in map_info:
 			map_info["filepath_map"] = directory.path_join(map_info.uuid + ".map")
-		
-		if "modified_time" not in map_info:
-			map_info["modified_time"] = int(Time.get_unix_time_from_system())
 
 
 func save_metadata() -> void:
@@ -500,10 +498,13 @@ func save_metadata() -> void:
 	save_info.erase("das_info")
 	save_info.erase("map_pack")
 	save_info.erase("uuid")
+	save_info.erase("modified_time")
 	
 	var json_file := FileAccess.open(map_info.filepath_json, FileAccess.WRITE)
 	json_file.store_string(JSON.stringify(save_info, "\t"))
 	json_file.close()
+	
+	map_info["modified_time"] = FileAccess.get_modified_time(map_info.filepath_json)
 
 
 func save_map_as(new_map_name: String, map_pack: Dictionary) -> void:

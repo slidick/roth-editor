@@ -97,7 +97,10 @@ func _on_restore_button_pressed() -> void:
 			DirAccess.rename_absolute(map.map_info.filepath + ".0", map.map_info.filepath)
 			DirAccess.rename_absolute(map.map_info.filepath_json + ".0", map.map_info.filepath_json)
 			DirAccess.rename_absolute(map.map_info.filepath_map + ".0", map.map_info.filepath_map)
-			map.map_info.map_pack = MapPack.get_unassigned_pack()
+			if "normality" in map.map_info:
+				map.map_info.map_pack = NormPack.get_unassigned_pack()
+			else:
+				map.map_info.map_pack = MapPack.get_unassigned_pack()
 			map.map_info.map_pack.maps.append(map)
 		var indices: Array = %ItemList.get_selected_items()
 		indices.sort_custom(func (a: int, b: int) -> bool: return a > b)
@@ -106,4 +109,7 @@ func _on_restore_button_pressed() -> void:
 		%MapPreview.clear()
 		%TrashButton.disabled = true
 		%RestoreButton.disabled = true
-		Roth.settings_updated.emit()
+		if "normality" in maps[0].map_info:
+			Normality.settings_updated.emit()
+		else:
+			Roth.settings_updated.emit()

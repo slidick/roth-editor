@@ -5,20 +5,14 @@
 [ext_resource type="Script" uid="uid://bsv4hbseaoyiq" path="res://src/windows/normality/norm_manage_maps_window.gd" id="3_wot8u"]
 [ext_resource type="StyleBox" uid="uid://mqkvd8h3nsgt" path="res://src/themes/normality_window_panel_theme.tres" id="4_fbvgd"]
 [ext_resource type="Script" uid="uid://bh8vniea2yee2" path="res://src/ui/drag_drop_tree.gd" id="5_1quj8"]
-[ext_resource type="Script" uid="uid://dplewkjlqcsb8" path="res://src/windows/map_editor/2d_view.gd" id="6_k081i"]
+[ext_resource type="PackedScene" uid="uid://dybv1jduphh31" path="res://src/windows/map_editor/manage_maps/map_preview_container.tscn" id="6_fbvgd"]
 [ext_resource type="PackedScene" uid="uid://5dfgd2lm0jth" path="res://src/windows/map_editor/manage_maps/new_map_window.tscn" id="7_ew12k"]
 [ext_resource type="PackedScene" uid="uid://be7yk2ubuv2c8" path="res://src/windows/map_editor/manage_maps/import_window.tscn" id="8_kfqv4"]
 [ext_resource type="PackedScene" uid="uid://bynk5w4co0y3x" path="res://src/windows/map_editor/manage_maps/change_das_window.tscn" id="9_k6yai"]
 [ext_resource type="PackedScene" uid="uid://co726n1ta8sto" path="res://src/windows/map_editor/manage_maps/map_pack_window.tscn" id="10_aust4"]
 [ext_resource type="PackedScene" uid="uid://vokegmkg3lq8" path="res://src/windows/map_editor/manage_maps/modify_map_window.tscn" id="11_oxckc"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6cut"]
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
+[ext_resource type="PackedScene" uid="uid://d0mdfxs2u0qo1" path="res://src/windows/map_editor/manage_maps/previous_versions_window.tscn" id="12_2ca1a"]
+[ext_resource type="PackedScene" uid="uid://bg8dq4vg1ohuc" path="res://src/windows/map_editor/manage_maps/trash_window.tscn" id="13_xwpuv"]
 
 [node name="NormManageMapsWindow" unique_id=1530350823 instance=ExtResource("1_fbvgd")]
 offset_right = 1400.0
@@ -57,6 +51,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
 allow_rmb_select = true
 
 [node name="MapPackMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MapPackList" index="2" unique_id=35971826]
@@ -67,7 +62,6 @@ item_0/id = 1
 
 [node name="Control" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="2" unique_id=1375634961]
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/Control" index="0" unique_id=2144913634]
 visible = false
@@ -134,35 +128,49 @@ text = "Icons:"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="EditMapPackButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/Control" index="5" unique_id=1953144089]
+[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="3" unique_id=1737553200]
+layout_mode = 2
+size_flags_vertical = 6
+size_flags_stretch_ratio = 2.0
+
+[node name="EditMapPackButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4" index="0" unique_id=1953144089]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Edit Map Pack"
 
-[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="3" unique_id=1690409886]
+[node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4" index="1" unique_id=479801140]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 0.2
+text = "Export Map Pack"
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4" index="2" unique_id=161672868]
+layout_mode = 2
+
+[node name="ImportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4" index="3" unique_id=1690409886]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Import Map Pack"
 
-[node name="ExportButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="4" unique_id=479801140]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 0)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 2
-size_flags_stretch_ratio = 0.2
-text = "Export Map Pack"
-
-[node name="NewMapPackButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="5" unique_id=1304687570]
+[node name="NewMapPackButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4" index="4" unique_id=1304687570]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "New Map Pack"
+
+[node name="ViewTrashButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3" index="4" unique_id=1374768365]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "View Trash"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1161687080]
 custom_minimum_size = Vector2(300, 0)
@@ -192,13 +200,15 @@ reorder_enabled = false
 
 [node name="MapPopupMenu" type="PopupMenu" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" index="5" unique_id=1139488808]
 unique_name_in_owner = true
-item_count = 3
+item_count = 4
 item_0/text = "Rename/Move Map"
 item_0/id = 0
 item_1/text = "Delete Map"
 item_1/id = 1
 item_2/text = "Duplicate Map"
 item_2/id = 2
+item_3/text = "Previous Versions"
+item_3/id = 3
 
 [node name="ReorderMapsCheckBox" type="CheckBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=1272577152]
 unique_name_in_owner = true
@@ -219,217 +229,34 @@ text = "New Map"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=1530513111]
-layout_mode = 2
-text = "Preview"
-horizontal_alignment = 1
-
-[node name="Panel" type="Panel" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1" unique_id=1188494252]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_a6cut")
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel" index="0" unique_id=56268648]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = -2.0
-offset_bottom = -2.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 3
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer" index="0" unique_id=306755383]
-handle_input_locally = false
-size = Vector2i(758, 551)
-render_target_update_mode = 4
-
-[node name="Camera2D" type="Camera2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="0" unique_id=1553784041]
-unique_name_in_owner = true
-
-[node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport/Camera2D" index="0" unique_id=1846242899]
-offset_left = -8000.0
-offset_top = -8000.0
-offset_right = 8000.0
-offset_bottom = 8000.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.199622, 0.246742, 0.296914, 1)
-
-[node name="Map" type="Node2D" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/Panel/SubViewportContainer/SubViewport" index="1" unique_id=869076936]
-unique_name_in_owner = true
-script = ExtResource("6_k081i")
-
-[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2" unique_id=1991040149]
-layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer" index="0" unique_id=1246995720]
-layout_mode = 2
-theme_override_constants/separation = 200
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" index="0" unique_id=2089665631]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" index="0" unique_id=1096812494]
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=638476634]
-layout_mode = 2
-text = "Map Name:"
-
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" index="1" unique_id=996082620]
-layout_mode = 2
-text = "Sectors:"
-
-[node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" index="2" unique_id=185247291]
-layout_mode = 2
-text = "Faces:"
-
-[node name="Label4" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" index="3" unique_id=427284809]
-layout_mode = 2
-text = "Vertices:"
-
-[node name="Label5" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" index="4" unique_id=715125389]
-layout_mode = 2
-text = "Objects:"
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer" index="1" unique_id=2132523725]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="MapName" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" index="0" unique_id=1433936983]
+[node name="MapPreview" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=1136729127 instance=ExtResource("6_fbvgd")]
 unique_name_in_owner = true
 layout_mode = 2
-horizontal_alignment = 2
 
-[node name="Sectors" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" index="1" unique_id=627358300]
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="1" unique_id=1412848635]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="2" unique_id=2120722402]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1798164462]
 unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="Faces" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=1293801140]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="Vertices" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" index="3" unique_id=1330623976]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="Objects" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" index="4" unique_id=1356657840]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" index="1" unique_id=1397917656]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2" index="0" unique_id=48652603]
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" index="0" unique_id=622598558]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "DAS File:"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" index="1" unique_id=733849355]
-visible = false
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Commands:"
-vertical_alignment = 1
-
-[node name="UUIDLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" index="2" unique_id=1848593317]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "UUID:"
-vertical_alignment = 1
-
-[node name="VBoxContainer4" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2" index="1" unique_id=652903820]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="DASFile" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" index="0" unique_id=1544398248]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="Commands" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" index="1" unique_id=707923710]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="UUID" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" index="2" unique_id=1656663869]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-mouse_filter = 1
-horizontal_alignment = 2
-vertical_alignment = 1
-text_overrun_behavior = 3
-
-[node name="VBoxContainer5" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2" index="2" unique_id=1481544396]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-
-[node name="ChangeDASButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer5" index="0" unique_id=1143489648]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(100, 32)
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Change"
-
-[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="3" unique_id=1412848635]
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" index="4" unique_id=2120722402]
-layout_mode = 2
-
-[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=70969196]
-visible = false
 custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-text = "Cancel
-"
-
-[node name="RunButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1798164462]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Run Selected"
 
-[node name="OpenButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1952445414]
+[node name="OpenButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1952445414]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Edit Selected"
 
 [node name="Dialogs" type="Control" parent="." index="2" unique_id=2137666810]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="NewMap" parent="Dialogs" index="0" unique_id=871067230 instance=ExtResource("7_ew12k")]
 unique_name_in_owner = true
@@ -518,13 +345,48 @@ grow_horizontal = 2
 grow_vertical = 2
 panel_style_override = ExtResource("4_fbvgd")
 
+[node name="PreviousVersions" parent="Dialogs" index="5" unique_id=2084759638 instance=ExtResource("12_2ca1a")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = -400.0
+offset_right = 600.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+panel_style_override = ExtResource("4_fbvgd")
+
+[node name="Trash" parent="Dialogs" index="6" unique_id=466255481 instance=ExtResource("13_xwpuv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = -400.0
+offset_right = 600.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+panel_style_override = ExtResource("4_fbvgd")
+
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MapPackList" to="." method="_on_map_pack_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MapPackList" to="." method="_on_map_pack_list_item_selected"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/MapPackList/MapPackMenu" to="." method="_on_map_pack_menu_index_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/Control/EditMapPackButton" to="." method="_on_edit_map_pack_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/ImportButton" to="." method="_on_import_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/ExportButton" to="." method="_on_export_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/NewMapPackButton" to="." method="_on_new_map_pack_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4/EditMapPackButton" to="." method="_on_edit_map_pack_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4/ExportButton" to="." method="_on_export_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4/ImportButton" to="." method="_on_import_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/VBoxContainer4/NewMapPackButton" to="." method="_on_new_map_pack_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/ViewTrashButton" to="." method="_on_view_trash_button_pressed"]
 [connection signal="cell_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_cell_selected"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_item_activated"]
 [connection signal="item_mouse_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree" to="." method="_on_map_tree_item_mouse_selected"]
@@ -532,7 +394,5 @@ panel_style_override = ExtResource("4_fbvgd")
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/MapTree/MapPopupMenu" to="." method="_on_map_popup_menu_index_pressed"]
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ReorderMapsCheckBox" to="." method="_on_reorder_maps_check_box_toggled"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/NewMapButton" to="." method="_on_new_map_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer5/ChangeDASButton" to="." method="_on_change_das_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/RunButton" to="." method="_on_run_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/OpenButton" to="." method="_on_open_button_pressed"]

@@ -104,7 +104,8 @@ layout_mode = 2
 text = "Objects:"
 horizontal_alignment = 2
 
-[node name="Label6" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=729513572]
+[node name="CommandsLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=729513572]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Commands:"
