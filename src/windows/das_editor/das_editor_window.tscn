@@ -62,6 +62,10 @@ item_1/id = 1
 item_2/text = "Duplicate"
 item_2/id = 2
 
+[node name="NewDASButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer" index="2" unique_id=2075987882]
+layout_mode = 2
+text = "New DAS"
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer" index="1" unique_id=1445784456]
 layout_mode = 2
 
@@ -85,6 +89,10 @@ item_1/text = "Delete"
 item_1/id = 1
 item_2/text = "Duplicate"
 item_2/id = 2
+
+[node name="NewDAS2Button" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2" index="2" unique_id=1599610618]
+layout_mode = 2
+text = "New DAS2"
 
 [node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer" index="1" unique_id=588298500]
 layout_mode = 2
@@ -329,10 +337,12 @@ editor_preview_indeterminate = false
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList" to="." method="_on_das_list_item_selected"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/DASList/DASListPopupMenu" to="." method="_on_das_list_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer/NewDASButton" to="." method="_on_new_das_button_pressed"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List" to="." method="_on_das_2_list_item_activated"]
 [connection signal="item_clicked" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List" to="." method="_on_das_2_list_item_clicked"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List" to="." method="_on_das_2_list_item_selected"]
 [connection signal="index_pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/DAS2List/DAS2ListPopupMenu" to="." method="_on_das_2_list_popup_menu_index_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer/VBoxContainer2/NewDAS2Button" to="." method="_on_new_das_2_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/ListContainer/HBoxContainer2/EditDASButton" to="." method="_on_edit_das_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/SectionItemList" to="." method="_on_section_item_list_item_selected"]
 [connection signal="set_new_sky" from="Contents/VBoxContainer/MainContainer/MarginContainer/EditContainer/HBoxContainer3/DASTabContainer/Fat1" to="." method="_on_set_new_sky"]

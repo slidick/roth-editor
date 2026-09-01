@@ -206,3 +206,58 @@ static func get_das2_pack_by_name_then_installation(p_name: String, p_installati
 		if das2_pack.name == p_name:
 			das2_info = das2_pack
 	return das2_info
+
+
+static func create(p_name: String, is_das2: bool) -> Dictionary:
+	var filepath: String = ""
+	if is_das2:
+		filepath = Roth.ROTH_CUSTOM_DAS2_DIRECTORY.path_join(p_name+".DAS")
+	else:
+		filepath = Roth.ROTH_CUSTOM_DAS_DIRECTORY.path_join(p_name+".DAS")
+	
+	var das_info: Dictionary = {
+		"name": p_name,
+		"filepath": filepath,
+		"is_ademo": is_das2,
+		"base": p_name,
+	}
+	
+	var das := {
+		"header": {
+			"unk_0x20": 0,
+			"sky_index": 0,
+		},
+		"palette": [],
+		"fat_1": [],
+		"fat_2": [],
+		"fat_3": [],
+		"fat_4": [],
+		"object_collisions": [],
+		"unk_0x10_section": {"raw_data": []},
+		"unk_0x38_section": {"raw_data": []},
+		"unk_0x40_section": {"raw_data": []},
+		"das_info": das_info,
+	}
+	
+	if is_das2:
+		for i in range(293):
+			das.fat_3.append({"offset": 0, "size": 0, "flags_1": 0, "flags_2": 0})
+	else:
+		for i in range(3840):
+			das.fat_1.append({"offset": 0, "size": 0, "flags_1": 0, "flags_2": 0})
+		for i in range(256):
+			das.fat_2.append({"offset": 0, "size": 0, "flags_1": 0, "flags_2": 0})
+		for i in range(256):
+			das.fat_3.append({"offset": 0, "size": 0, "flags_1": 0, "flags_2": 0})
+	
+	var data: PackedByteArray = await Das.compile(das)
+	var file := FileAccess.open(filepath, FileAccess.WRITE)
+	file.store_buffer(data)
+	file.close()
+	
+	if is_das2:
+		das2_packs.append(das_info)
+	else:
+		das_packs.append(das_info)
+	Roth.settings_updated.emit()
+	return das_info

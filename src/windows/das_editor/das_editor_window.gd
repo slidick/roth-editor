@@ -314,3 +314,19 @@ func _on_set_new_sky(old_index: int) -> void:
 		%Fat4.remove_old_sky(old_index-len(das.fat_1)-len(das.fat_2)-len(das.fat_3))
 	else:
 		assert(false)
+
+
+func _on_new_das_button_pressed() -> void:
+	var new_name: String = await query_pack_name("New DAS Name")
+	if new_name.is_empty():
+		return
+	var das_info: Dictionary = await DASPack.create(new_name, false)
+	select(das_info)
+
+
+func _on_new_das_2_button_pressed() -> void:
+	var new_name: String = await query_pack_name("New DAS2 Name")
+	if new_name.is_empty():
+		return
+	var das_info: Dictionary = await DASPack.create(new_name, true)
+	select(das_info)
