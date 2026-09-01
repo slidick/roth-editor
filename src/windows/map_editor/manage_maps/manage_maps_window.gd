@@ -14,21 +14,8 @@ func _ready() -> void:
 
 func clear() -> void:
 	%MapTree.deselect_all()
-	%Map.clear()
-	%Sectors.text = ""
-	%Faces.text = ""
-	%Vertices.text = ""
-	%Objects.text = ""
-	%MapName.text = ""
-	%DASFile.text = ""
-	%Commands.text = ""
-	%UUID.text = ""
+	%MapPreview.clear()
 	%OpenButton.disabled = true
-	%ChangeDASButton.hide()
-
-
-func cancel() -> void:
-	_hide()
 
 
 func open() -> void:
@@ -53,9 +40,9 @@ func get_selected_maps() -> Array:
 	var maps: Array = []
 	var tree_item: TreeItem = %MapTree.get_next_selected(null)
 	while tree_item:
-		var map_info: Variant = tree_item.get_metadata(0)
-		if map_info:
-			maps.append(map_info)
+		var map: Map = tree_item.get_metadata(0)
+		if map:
+			maps.append(map)
 		tree_item = %MapTree.get_next_selected(tree_item)
 	return maps
 
@@ -98,15 +85,10 @@ func _on_map_pack_list_item_selected(index: int) -> void:
 		maps.sort_custom(func (m1: Map, m2: Map) -> bool: return m1.map_info.name < m2.map_info.name)
 	
 	for map: Map in maps:
-		#if "vanilla" not in map.map_info:
-			var tree_item: TreeItem = %MapTree.get_root().create_child()
-			tree_item.set_text(0, map.map_info.name)
-			tree_item.set_metadata(0, map)
-	#for map: Map in Roth.maps:
-		#if "vanilla" in map.map_info:
-			#var tree_item: TreeItem = %MapTree.get_root().create_child()
-			#tree_item.set_text(0, map.map_info.name)
-			#tree_item.set_metadata(0, map)
+		var tree_item: TreeItem = %MapTree.get_root().create_child()
+		tree_item.set_text(0, map.map_info.name)
+		tree_item.set_metadata(0, map)
+	
 	if Roth.current_installation:
 		%NewMapButton.disabled = false
 		%ExportButton.disabled = false
@@ -119,15 +101,12 @@ func _on_map_pack_list_item_selected(index: int) -> void:
 	else:
 		%ReorderMapsCheckBox.disabled = false
 		%ReorderMapsCheckBox.button_pressed = false
+	
 	%DBaseLabel.text = map_pack.dbase_info.name
 	%DAS2Label.text = map_pack.das2_info.name
 	%SFXLabel.text = map_pack.sfx_info.name
 	%BackdropLabel.text = map_pack.backdrop_info.name
 	%IconsLabel.text = map_pack.icon_info.name
-
-
-func _on_cancel_button_pressed() -> void:
-	cancel()
 
 
 func _on_open_button_pressed() -> void:
@@ -138,36 +117,15 @@ func _on_map_tree_cell_selected() -> void:
 	if not %MapTree.get_selected():
 		return
 	var map: Map = %MapTree.get_selected().get_metadata(0)
-	var map_preview: Dictionary = map.get_map_preview()
-	if map_preview.is_empty():
-		return
-	%Map.setup(map_preview.faces)
+	%MapPreview.setup(map)
 	
-	%Sectors.text = "%d" % map_preview.sector_count
-	%Faces.text = "%d" % len(map_preview.faces)
-	%Vertices.text = "%d" % map_preview.vertices_count
-	%Objects.text = "%d" % map_preview.objects_count
-	%MapName.text = "%s" % map.map_info.name
-	%DASFile.text = "%s" % map.map_info.das_info.name
-	%Commands.text = "%d" % map_preview.commands_count
-	if "uuid" in map.map_info:
-		%UUID.text = "%s" % map.map_info.uuid
-		%UUID.tooltip_text = "%s" % map.map_info.uuid
-		%UUID.show()
-		%UUIDLabel.show()
-	else:
-		%UUID.hide()
-		%UUIDLabel.hide()
 	if "invalid" in map.map_info.das_info:
 		%RunButton.disabled = true
 		%OpenButton.disabled = true
 	else:
 		%RunButton.disabled = false
 		%OpenButton.disabled = false
-	if "vanilla" in map.map_info:
-		%ChangeDASButton.hide()
-	else:
-		%ChangeDASButton.show()
+
 
 
 func _on_map_tree_item_activated() -> void:
@@ -337,7 +295,7 @@ func _on_change_das_button_pressed() -> void:
 		return
 	map.map_info.das_info = new_das
 	map.save_metadata()
-	%DASFile.text = new_das.name
+	%MapPreview.set_das_name(new_das.name)
 	%RunButton.disabled = false
 	%OpenButton.disabled = false
 
@@ -423,3 +381,7 @@ func _on_map_pack_list_item_clicked(index: int, at_position: Vector2, mouse_butt
 
 func _on_map_closed(_map: Map) -> void:
 	_on_map_tree_cell_selected()
+
+
+func _on_view_trash_button_pressed() -> void:
+	%Trash.view_trash(Roth.ROTH_CUSTOM_MAP_DIRECTORY)

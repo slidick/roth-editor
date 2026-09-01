@@ -1,0 +1,221 @@
+[gd_scene format=3 uid="uid://dybv1jduphh31"]
+
+[ext_resource type="Script" uid="uid://b0hw8nafdt247" path="res://src/windows/map_editor/manage_maps/map_preview_container.gd" id="1_nndy3"]
+[ext_resource type="Script" uid="uid://dplewkjlqcsb8" path="res://src/windows/map_editor/2d_view.gd" id="1_yyqr1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6cut"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[node name="MapPreviewContainer" type="VBoxContainer" unique_id=1136729127]
+offset_right = 1086.0
+offset_bottom = 752.0
+size_flags_vertical = 3
+script = ExtResource("1_nndy3")
+
+[node name="Label" type="Label" parent="." unique_id=918473440]
+layout_mode = 2
+text = "Preview"
+horizontal_alignment = 1
+
+[node name="Panel" type="Panel" parent="." unique_id=1442762914]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_a6cut")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Panel" unique_id=539052773]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Panel/SubViewportContainer" unique_id=768438219]
+handle_input_locally = false
+size = Vector2i(1082, 540)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="Panel/SubViewportContainer/SubViewport" unique_id=346507451]
+unique_name_in_owner = true
+
+[node name="ColorRect" type="ColorRect" parent="Panel/SubViewportContainer/SubViewport/Camera2D" unique_id=591347548]
+offset_left = -8000.0
+offset_top = -8000.0
+offset_right = 8000.0
+offset_bottom = 8000.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.199622, 0.246742, 0.296914, 1)
+
+[node name="Map" type="Node2D" parent="Panel/SubViewportContainer/SubViewport" unique_id=1571990323]
+unique_name_in_owner = true
+script = ExtResource("1_yyqr1")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=347628397]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=104408591]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1082256499]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=265561642]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=846676095]
+layout_mode = 2
+text = "Map Name:"
+horizontal_alignment = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=385313841]
+layout_mode = 2
+text = "Sectors:"
+horizontal_alignment = 2
+
+[node name="Label3" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1896787075]
+layout_mode = 2
+text = "Faces:"
+horizontal_alignment = 2
+
+[node name="Label4" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=605476244]
+layout_mode = 2
+text = "Vertices:"
+horizontal_alignment = 2
+
+[node name="Label5" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1820245659]
+layout_mode = 2
+text = "Objects:"
+horizontal_alignment = 2
+
+[node name="Label6" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=729513572]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Commands:"
+horizontal_alignment = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=942082155]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="MapName" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1961517754]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Sectors" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1810287545]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Faces" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1463002962]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Vertices" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1545167261]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Objects" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1681815324]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="Commands" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1444938363]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1625419051]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer2" unique_id=907114970]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=1955026202]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "DAS File:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ModifiedLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=827271302]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Modified:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="UUIDLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=1981496875]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "UUID:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer2" unique_id=1845078397]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DASFile" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=601270476]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Modified" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=567975641]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+mouse_filter = 1
+horizontal_alignment = 2
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="UUID" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=1910401397]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+mouse_filter = 1
+horizontal_alignment = 2
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer2" unique_id=2129074470]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="ChangeDASButton" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer5" unique_id=1223134438]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(100, 32)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Change"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer2/VBoxContainer5/ChangeDASButton" to="." method="_on_change_das_button_pressed"]

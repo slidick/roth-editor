@@ -10,25 +10,15 @@ func previous_versions(p_map: Map) -> Map:
 	%ItemList.clear()
 	%ItemList.add_item("Current")
 	%ItemList.set_item_metadata(0, p_map)
-	p_map.map_info["date"] = Time.get_datetime_string_from_unix_time(FileAccess.get_modified_time(p_map.map_info.filepath_json), true)
 	var count: int = 1
 	while FileAccess.file_exists(p_map.map_info.filepath_json + ".%d" % count):
-		var file_string: String = FileAccess.get_file_as_string(p_map.map_info.filepath_json + ".%d" % count)
-		if not file_string.is_empty():
-			var map_info: Variant = JSON.parse_string(file_string)
-			if map_info and "das" in map_info:
-				map_info["filepath"] = p_map.map_info.filepath + ".%d" % count
-				map_info["filepath_json"] = p_map.map_info.filepath_json + ".%d" % count
-				map_info["filepath_map"] = p_map.map_info.filepath_map + ".%d" % count
-				map_info["uuid"] = p_map.map_info.uuid
-				map_info["map_pack"] = p_map.map_info.map_pack
-				map_info["das_info"] = p_map.map_info.das_info
-				map_info["date"] = Time.get_datetime_string_from_unix_time(FileAccess.get_modified_time(p_map.map_info.filepath_json + ".%d" % count), true)
-				map_info.erase("das")
-				%ItemList.add_item("%d" % count)
-				%ItemList.set_item_metadata(count, Map.new(map_info))
+		var map_info: Dictionary = Map.get_map_info_from_json_file(p_map.map_info.filepath_json + ".%d" % count)
+		if map_info:
+			map_info["map_pack"] = p_map.map_info.map_pack
+			map_info["das_info"] = p_map.map_info.das_info
+			%ItemList.add_item("%d" % count)
+			%ItemList.set_item_metadata(count, Map.new(map_info))
 		count += 1
-	
 	
 	%ItemList.select(0)
 	_on_item_list_item_selected(0)
@@ -44,34 +34,12 @@ func previous_versions(p_map: Map) -> Map:
 func clear() -> void:
 	current_map = null
 	%ItemList.clear()
-	%Map.clear()
-	%Sectors.text = ""
-	%Faces.text = ""
-	%Vertices.text = ""
-	%Objects.text = ""
-	%MapName.text = ""
-	%DASFile.text = ""
-	%Commands.text = ""
-	%UUID.text = ""
-	%Date.text = ""
+	%MapPreview.clear()
 
 
 func _on_item_list_item_selected(index: int) -> void:
 	var map: Map = %ItemList.get_item_metadata(index)
-	var map_preview: Dictionary = map.get_map_preview()
-	if map_preview.is_empty():
-		return
-	%Map.setup(map_preview.faces)
-	%Sectors.text = "%d" % map_preview.sector_count
-	%Faces.text = "%d" % len(map_preview.faces)
-	%Vertices.text = "%d" % map_preview.vertices_count
-	%Objects.text = "%d" % map_preview.objects_count
-	%MapName.text = "%s" % map.map_info.name
-	%DASFile.text = "%s" % map.map_info.das_info.name
-	%Commands.text = "%d" % map_preview.commands_count
-	%UUID.text = "%s" % map.map_info.uuid
-	%UUID.tooltip_text = "%s" % map.map_info.uuid
-	%Date.text = "%s" % map.map_info.date
+	%MapPreview.setup(map, true)
 	if index == 0:
 		%SaveButton.disabled = true
 	else:

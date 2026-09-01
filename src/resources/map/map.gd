@@ -90,6 +90,40 @@ static func check_map_name(title: String, map_pack: Dictionary) -> String:
 	return error
 
 
+static func get_map_info_from_json_file(filepath: String) -> Dictionary:
+	var file_string: String = FileAccess.get_file_as_string(filepath)
+	if not file_string.is_empty():
+		var info: Variant = JSON.parse_string(file_string)
+		if info and "name" in info and "das" in info:
+			if filepath.to_lower().ends_with(".json"):
+				info["filepath"] = filepath.get_basename() + ".RAW"
+				info["filepath_json"] = filepath
+				info["filepath_map"] = filepath.get_basename() + ".map"
+				info["uuid"] = filepath.get_file().get_basename()
+			else:
+				var extension: String = filepath.get_extension()
+				info["filepath"] = filepath.get_basename().get_basename() + ".RAW." + extension
+				info["filepath_json"] = filepath
+				info["filepath_map"] = filepath.get_basename().get_basename() + ".map." + extension
+				info["uuid"] = filepath.get_file().get_basename().get_basename()
+			info["modified_time"] = FileAccess.get_modified_time(filepath)
+			info["map_pack"] = { "invalid": true }
+			info["das_info"] = { "name": info.das + " (Invalid)", "invalid": true }
+			if "normality" in info:
+				for das_info: Dictionary in NormPack.das_packs:
+					if info.das.get_file().get_basename() == das_info.name:
+						info.das_info = das_info
+						break
+			else:
+				for das_info: Dictionary in DASPack.das_packs:
+					if info.das.get_file().get_basename() == das_info.name:
+						info.das_info = das_info
+						break
+			info.erase("das")
+			return info
+	return {}
+
+
 func _init(p_map_info: Dictionary) -> void:
 	map_info = p_map_info
 
@@ -449,6 +483,9 @@ func _add_missing_map_info() -> void:
 		
 		if "filepath_map" not in map_info:
 			map_info["filepath_map"] = directory.path_join(map_info.uuid + ".map")
+		
+		if "modified_time" not in map_info:
+			map_info["modified_time"] = int(Time.get_unix_time_from_system())
 
 
 func save_metadata() -> void:

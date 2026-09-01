@@ -251,23 +251,9 @@ static func init_custom(p_map_directory: String, p_map_pack_directory: String) -
 	var custom_map_infos: Array = []
 	for filename in DirAccess.get_files_at(p_map_directory):
 		if filename.to_lower().ends_with(".json"):
-			var file_string: String = FileAccess.get_file_as_string(p_map_directory.path_join(filename))
-			if not file_string.is_empty():
-				var map_info: Variant = JSON.parse_string(file_string)
-				if map_info and "das" in map_info:
-					map_info["filepath"] = p_map_directory.path_join(filename).get_basename() + ".RAW"
-					map_info["filepath_json"] = p_map_directory.path_join(filename)
-					map_info["filepath_map"] = p_map_directory.path_join(filename).get_basename() + ".map"
-					map_info["uuid"] = filename.get_file().get_basename()
-					map_info["normality"] = true
-					map_info["map_pack"] = { "invalid": true }
-					map_info["das_info"] = { "name": map_info.das + " (Invalid)", "invalid": true }
-					for das_info: Dictionary in das_packs:
-						if map_info.das.get_file().get_basename() == das_info.name:
-							map_info.das_info = das_info
-							break
-					map_info.erase("das")
-					custom_map_infos.append(map_info)
+			var map_info: Dictionary = Map.get_map_info_from_json_file(p_map_directory.path_join(filename))
+			if map_info:
+				custom_map_infos.append(map_info)
 	
 	# Parse custom map_packs. Creates maps
 	for filename: String in DirAccess.get_files_at(p_map_pack_directory):

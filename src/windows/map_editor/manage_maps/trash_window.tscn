@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://bg8dq4vg1ohuc"]
+
+[ext_resource type="PackedScene" uid="uid://dmlpnp15mw2fo" path="res://addons/window_system/windows/base_window.tscn" id="1_63fvu"]
+[ext_resource type="Script" uid="uid://ddcjld12tgu4f" path="res://src/windows/map_editor/manage_maps/trash_window.gd" id="2_x7iab"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="2_yy6mw"]
+[ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_3cn6l"]
+[ext_resource type="PackedScene" uid="uid://dybv1jduphh31" path="res://src/windows/map_editor/manage_maps/map_preview_container.tscn" id="5_3cn6l"]
+
+[node name="TrashWindow" unique_id=452268762 instance=ExtResource("1_63fvu")]
+offset_right = 1206.0
+offset_bottom = 784.0
+theme = ExtResource("2_yy6mw")
+script = ExtResource("2_x7iab")
+exclusive = true
+show_close_button = false
+minimize_style = "fade_out"
+panel_corner_radius = 0
+panel_style_override = ExtResource("4_3cn6l")
+
+[node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=877674952]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer" index="0" unique_id=1041367863]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="0" unique_id=1954675542]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1670280832]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+select_mode = 1
+allow_reselect = true
+
+[node name="MapPreview" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1136729127 instance=ExtResource("5_3cn6l")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="1" unique_id=815387074]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" index="2" unique_id=809728249]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=447681701]
+custom_minimum_size = Vector2(180, 35)
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Close"
+
+[node name="EmptyTrashButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=148765289]
+custom_minimum_size = Vector2(180, 35)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Empty Trash"
+
+[node name="TrashButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="2" unique_id=1957248608]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 35)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Trash Selected"
+
+[node name="RestoreButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="3" unique_id=381520788]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 35)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Restore"
+
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="multi_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/ItemList" to="." method="_on_item_list_multi_selected"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/EmptyTrashButton" to="." method="_on_empty_trash_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/TrashButton" to="." method="_on_trash_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/RestoreButton" to="." method="_on_restore_button_pressed"]
