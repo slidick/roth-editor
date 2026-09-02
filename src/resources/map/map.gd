@@ -512,10 +512,12 @@ func save_map_as(new_map_name: String, map_pack: Dictionary) -> void:
 	map_info.map_pack = map_pack
 	map_info.erase("filepath")
 	map_info.erase("filepath_json")
+	map_info.erase("filepath_map")
 	map_info.erase("vanilla")
 	map_info.erase("uuid")
 	save_map()
 	preview_map.editable_map = null
+	preview_map._reload_map_info()
 	preview_map = Map.new(map_info.duplicate())
 	preview_map.editable_map = self
 	#Roth.maps.append(preview_map)
