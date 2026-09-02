@@ -333,6 +333,7 @@ func duplicate_map(new_map_name: String, map_pack: Dictionary) -> Map:
 	new_map.map_info.map_pack = map_pack
 	new_map.map_info.erase("filepath")
 	new_map.map_info.erase("filepath_json")
+	new_map.map_info.erase("filepath_map")
 	new_map.map_info.erase("vanilla")
 	new_map.map_info.erase("uuid")
 	new_map.save_metadata()
