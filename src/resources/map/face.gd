@@ -138,13 +138,11 @@ func create_mesh(vertices: Array, texture: int, das: Dictionary, mesh_height: fl
 	if sector.data.sectorID == 65534 and sister:
 		material.albedo_color = Color.TRANSPARENT
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	elif texture == das.header.sky_index:
+		material.albedo_color = Color.TRANSPARENT
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	elif texture in mapping and "image" in mapping[texture]:
-		if texture == das.header.sky_index:
-			material.albedo_color = Color.TRANSPARENT
-			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-		else:
-			material.albedo_texture = mapping[texture].image
-
+		material.albedo_texture = mapping[texture].image
 	else:
 		if texture == 65535:
 			var color: Array = das.palette[texture - 65280]
