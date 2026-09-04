@@ -111,10 +111,7 @@ func redraw_textures() -> void:
 					%PopupMenu.set_item_disabled(1, true)
 				else:
 					%PopupMenu.set_item_disabled(1, false)
-				if %RotatedCheckButton.button_pressed:
-					%PopupMenu.popup(Rect2(texture_rect.global_position.x + event.position.y, texture_rect.global_position.y + event.position.x, 10, 10))
-				else:
-					%PopupMenu.popup(Rect2(texture_rect.global_position.x + event.position.x, texture_rect.global_position.y + event.position.y, 0, 0))
+				%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 		)
 		
 		var rotation_container := RotationContainer.new()

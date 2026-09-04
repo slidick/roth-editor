@@ -72,7 +72,7 @@ func _on_das_list_item_selected(_index: int) -> void:
 		%EditDASButton.disabled = false
 
 
-func _on_das_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_das_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			if "vanilla" in %DASList.get_item_metadata(index):
@@ -81,7 +81,7 @@ func _on_das_list_item_clicked(index: int, at_position: Vector2, mouse_button_in
 			else:
 				%DASListPopupMenu.set_item_disabled(0, false)
 				%DASListPopupMenu.set_item_disabled(1, false)
-			%DASListPopupMenu.popup(Rect2(%DASList.global_position.x+at_position.x, %DASList.global_position.y+at_position.y, 0, 0))
+			%DASListPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_das_list_popup_menu_index_pressed(index: int) -> void:
@@ -120,7 +120,7 @@ func _on_das_2_list_item_selected(_index: int) -> void:
 		%EditDASButton.disabled = false
 
 
-func _on_das_2_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_das_2_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			if "vanilla" in %DAS2List.get_item_metadata(index):
@@ -129,7 +129,7 @@ func _on_das_2_list_item_clicked(index: int, at_position: Vector2, mouse_button_
 			else:
 				%DAS2ListPopupMenu.set_item_disabled(0, false)
 				%DAS2ListPopupMenu.set_item_disabled(1, false)
-			%DAS2ListPopupMenu.popup(Rect2(%DAS2List.global_position.x+at_position.x, %DAS2List.global_position.y+at_position.y, 0, 0))
+			%DAS2ListPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:

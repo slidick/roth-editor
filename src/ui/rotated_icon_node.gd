@@ -111,7 +111,7 @@ func _ready() -> void:
 		for option: String in context_options:
 			popup_menu.add_item(option)
 		popup_menu.index_pressed.connect(_on_popup_menu_index_pressed)
-		popup_menu.mouse_passthrough = true
+		#popup_menu.mouse_passthrough = true
 		add_child(popup_menu)
 
 func deselect() -> void:
@@ -134,7 +134,7 @@ func _gui_input(event: InputEvent) -> void:
 			MOUSE_BUTTON_RIGHT:
 				select()
 				if popup_menu:
-					popup_menu.popup(Rect2i(int(event.global_position.x), int(event.global_position.y), 0, 0))
+					popup_menu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_popup_menu_index_pressed(p_index: int) -> void:

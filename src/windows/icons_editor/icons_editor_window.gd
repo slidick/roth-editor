@@ -64,7 +64,7 @@ func _on_item_list_item_selected(index: int) -> void:
 		%HotspotContainer.show()
 
 
-func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_item_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			var icon_info: Dictionary = %ItemList.get_item_metadata(index)
@@ -74,7 +74,7 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 			else:
 				%PopupMenu.set_item_disabled(0, false)
 				%PopupMenu.set_item_disabled(1, false)
-			%PopupMenu.popup(Rect2i(%ItemList.global_position+at_position, Vector2.ZERO))
+			%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_popup_menu_index_pressed(index: int) -> void:

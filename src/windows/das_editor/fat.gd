@@ -388,7 +388,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			_on_item_list_item_selected(item_index)
 
 
-func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_item_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
 		if owner.copied_data.is_empty():
 			%PopupMenu.set_item_disabled(InitMenu.PASTE, true)
@@ -425,7 +425,7 @@ func _on_item_list_item_clicked(index: int, at_position: Vector2, mouse_button_i
 			%PopupMenu.set_item_disabled(InitMenu.IMAGE_PACK, true)
 			%PopupMenu.set_item_disabled(InitMenu.DIRECTIONAL, true)
 			%PopupMenu.set_item_disabled(InitMenu.MONSTER, true)
-		%PopupMenu.popup(Rect2(%ItemList.global_position.x + at_position.x, %ItemList.global_position.y + at_position.y, 0, 0))
+		%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_find_empty_button_pressed() -> void:

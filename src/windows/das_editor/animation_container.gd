@@ -290,10 +290,7 @@ func update_texture() -> void:
 					%PopupMenu.set_item_disabled(1, true)
 				else:
 					%PopupMenu.set_item_disabled(1, false)
-				if %RotatedCheckButton.button_pressed:
-					%PopupMenu.popup(Rect2(texture_rect.global_position.x + event.position.y, texture_rect.global_position.y + event.position.x, 10, 10))
-				else:
-					%PopupMenu.popup(Rect2(texture_rect.global_position.x + event.position.x, texture_rect.global_position.y + event.position.y, 0, 0))
+				%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 		)
 		
 		var rotation_container := RotationContainer.new()
@@ -579,7 +576,7 @@ func _on_animation_popup_menu_index_pressed(index: int) -> void:
 
 func _on_animation_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		%AnimationPopupMenu.popup(Rect2(event.global_position.x, event.global_position.y, 0, 0))
+		%AnimationPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_shift_x_spin_box_value_changed(value: float) -> void:

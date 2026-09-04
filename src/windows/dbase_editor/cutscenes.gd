@@ -73,10 +73,10 @@ func _on_tree_item_selected() -> void:
 
 
 
-func _on_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+func _on_tree_item_mouse_selected(_mouse_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
-			%PopupMenu.popup(Rect2i(int(%Tree.global_position.x+mouse_position.x), int(%Tree.global_position.y+mouse_position.y), 0, 0))
+			%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_popup_menu_index_pressed(index: int) -> void:

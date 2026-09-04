@@ -42,7 +42,7 @@ func _on_d_base_list_item_selected(index: int) -> void:
 	%DuplicateButton.disabled = false
 
 
-func _on_d_base_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_d_base_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			if "vanilla" in %DBaseList.get_item_metadata(index):
@@ -52,7 +52,7 @@ func _on_d_base_list_item_clicked(index: int, at_position: Vector2, mouse_button
 				%DBasePopupMenu.set_item_disabled(0, false)
 				%DBasePopupMenu.set_item_disabled(1, false)
 			right_click_index = index
-			%DBasePopupMenu.popup(Rect2i(%DBaseList.global_position.x+at_position.x, %DBaseList.global_position.y+at_position.y, 0, 0))
+			%DBasePopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_d_base_popup_menu_index_pressed(index: int) -> void:

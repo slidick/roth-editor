@@ -100,9 +100,9 @@ func _on_file_dialog_dir_selected(dir: String) -> void:
 	load_savegame_directory(dir)
 
 
-func _on_save_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_save_list_item_clicked(_index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		%SaveListMenu.popup(Rect2(%SaveList.global_position+at_position, Vector2.ZERO))
+		%SaveListMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_save_list_menu_index_pressed(menu_index: int) -> void:
@@ -181,9 +181,9 @@ func _on_save_list_item_selected(index: int) -> void:
 				_load_other_data(entry)
 
 
-func _on_map_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_map_list_item_clicked(_index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		%MapListMenu.popup(Rect2i(%MapList.global_position+at_position, Vector2.ZERO))
+		%MapListMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_map_list_menu_index_pressed(menu_index: int) -> void:

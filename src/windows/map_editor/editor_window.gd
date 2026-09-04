@@ -153,7 +153,7 @@ func _input(event: InputEvent) -> void:
 						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 						get_viewport().warp_mouse(pos)
 						
-					%"3DContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+					%"3DContextMenu".popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 				if result.collider.get_parent().ref is ObjectRoth:
 					if result.collider.get_parent().ref not in selected_objects:
 						select_resource(result.collider.get_parent().ref, not event.shift_pressed)
@@ -164,7 +164,7 @@ func _input(event: InputEvent) -> void:
 						pos += %SubViewportContainer.size / 2
 						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 						get_viewport().warp_mouse(pos)
-					%"3DObjectContextMenu".popup(Rect2i(int(pos.x), int(pos.y), 0, 0))
+					%"3DObjectContextMenu".popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 		
 		if Input.is_action_just_pressed("paste_options_dialog"):
 			%PasteOptions.toggle(true)
@@ -493,7 +493,7 @@ func _on_maps_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_ind
 			%MapsTreeMenu.set_item_disabled(MapMenu.Save, false)
 		else:
 			%MapsTreeMenu.set_item_disabled(MapMenu.Save, true)
-		%MapsTreeMenu.popup(Rect2i(int(%MapsTree.global_position.x+mouse_position.x), int(%MapsTree.global_position.y+mouse_position.y), 0, 0))
+		%MapsTreeMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_maps_tree_menu_index_pressed(index: int) -> void:

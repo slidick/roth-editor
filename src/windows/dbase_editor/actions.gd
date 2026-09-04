@@ -176,10 +176,10 @@ func _add_tree_item(p_command: Dictionary) -> void:
 	%Tree.queue_redraw()
 
 
-func _on_action_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_action_list_item_clicked(_index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
-			%ActionListPopupMenu.popup(Rect2(%ActionList.global_position.x+at_position.x, %ActionList.global_position.y+at_position.y, 0, 0))
+			%ActionListPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_action_list_popup_menu_index_pressed(index: int) -> void:
@@ -247,7 +247,7 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			_update_current_action()
 
 
-func _on_tree_empty_clicked(click_position: Vector2, mouse_button_index: int) -> void:
+func _on_tree_empty_clicked(_click_position: Vector2, mouse_button_index: int) -> void:
 	if %ActionList.get_selected_items().is_empty():
 		return
 	match mouse_button_index:
@@ -256,16 +256,16 @@ func _on_tree_empty_clicked(click_position: Vector2, mouse_button_index: int) ->
 				%EmptyPopupMenu.set_item_disabled(1, true)
 			else:
 				%EmptyPopupMenu.set_item_disabled(1, false)
-			%EmptyPopupMenu.popup(Rect2i(int(%Tree.global_position.x+click_position.x), int(%Tree.global_position.y+click_position.y), 0, 0))
+			%EmptyPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 		MOUSE_BUTTON_LEFT:
 			%Tree.deselect_all()
 			%Tree.release_focus()
 
 
-func _on_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+func _on_tree_item_mouse_selected(_mouse_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
-			%PopupMenu.popup(Rect2i(int(%Tree.global_position.x+mouse_position.x), int(%Tree.global_position.y+mouse_position.y), 0, 0))
+			%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_tree_item_selected() -> void:

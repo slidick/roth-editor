@@ -228,7 +228,7 @@ func _on_map_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_inde
 					%MapPopupMenu.set_item_text(0, "Rename/Move Map")
 					%MapPopupMenu.set_item_text(1, "Delete Map")
 					%MapPopupMenu.set_item_text(2, "Duplicate Map")
-				%MapPopupMenu.popup(Rect2i(int(mouse_position.x + %MapTree.global_position.x), int(mouse_position.y + %MapTree.global_position.y), 0, 0))
+				%MapPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_run_button_pressed() -> void:
@@ -358,7 +358,7 @@ func _on_map_pack_menu_index_pressed(index: int) -> void:
 				%ReorderMapsCheckBox.disabled = true
 
 
-func _on_map_pack_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_map_pack_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			var map_pack: Dictionary = %MapPackList.get_item_metadata(index)
@@ -366,7 +366,7 @@ func _on_map_pack_list_item_clicked(index: int, at_position: Vector2, mouse_butt
 				%MapPackMenu.set_item_disabled(0, true)
 			else:
 				%MapPackMenu.set_item_disabled(0, false)
-			%MapPackMenu.popup(Rect2(%MapPackList.global_position+at_position, Vector2.ZERO))
+			%MapPackMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_map_closed(_map: Map) -> void:

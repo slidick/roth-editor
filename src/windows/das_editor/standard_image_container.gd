@@ -258,7 +258,7 @@ func _on_rotated_check_button_toggled(toggled_on: bool) -> void:
 
 func _on_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		%PopupMenu.popup(Rect2(event.global_position.x, event.global_position.y, 0, 0))
+		%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_popup_menu_index_pressed(index: int) -> void:

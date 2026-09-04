@@ -286,7 +286,7 @@ func _gui_input(event: InputEvent) -> void:
 			else:
 				%CommandPopupMenu.set_item_disabled(0, true)
 			%CommandPopupMenu.set_item_disabled(1, true)
-		%CommandPopupMenu.popup(Rect2i(int(event.global_position.x), int(event.global_position.y), 0, 0))
+		%CommandPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 		get_viewport().set_input_as_handled()
 
 

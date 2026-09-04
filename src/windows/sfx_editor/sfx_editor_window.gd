@@ -36,7 +36,7 @@ func _on_sfx_pack_list_item_selected(index: int) -> void:
 	%DuplicateButton.disabled = false
 
 
-func _on_sfx_pack_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_sfx_pack_list_item_clicked(index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
 			if "vanilla" in %SFXPackList.get_item_metadata(index):
@@ -46,7 +46,7 @@ func _on_sfx_pack_list_item_clicked(index: int, at_position: Vector2, mouse_butt
 				%SFXPackPopupMenu.set_item_disabled(0, false)
 				%SFXPackPopupMenu.set_item_disabled(1, false)
 			#right_click_index = index
-			%SFXPackPopupMenu.popup(Rect2i(%SFXPackList.global_position.x+at_position.x, %SFXPackList.global_position.y+at_position.y, 0, 0))
+			%SFXPackPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_sfx_pack_popup_menu_index_pressed(index: int) -> void:

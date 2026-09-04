@@ -636,7 +636,7 @@ func _on_graph_edit_popup_request(at_position: Vector2) -> void:
 	else:
 		%GraphPopupMenu.set_item_disabled(1, false)
 	add_at_position = (at_position + graph_edit.scroll_offset) / graph_edit.zoom
-	%GraphPopupMenu.popup(Rect2i(int(at_position.x + graph_edit.global_position.x), int(at_position.y + graph_edit.global_position.y), 0, 0))
+	%GraphPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_graph_popup_menu_index_pressed(index: int) -> void:

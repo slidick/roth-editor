@@ -798,7 +798,9 @@ func _on_platform_check_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_select_faces_button_pressed() -> void:
-	%SelectFacesPopupMenu.popup(Rect2i(%SelectFacesButton.global_position.x, %SelectFacesButton.global_position.y+%SelectFacesButton.size.y, %SelectFacesButton.size.x, 0))
+	%SelectFacesPopupMenu.position = %SelectFacesButton.get_screen_position()
+	%SelectFacesPopupMenu.position.y += %SelectFacesButton.size.y
+	%SelectFacesPopupMenu.popup()
 
 
 func _on_select_faces_popup_menu_index_pressed(index: int) -> void:
@@ -811,7 +813,9 @@ func _on_sector_menu_button_pressed() -> void:
 		%SectorPopupMenu.set_item_disabled(SectorMenu.PASTE_SECTORS, true)
 	else:
 		%SectorPopupMenu.set_item_disabled(SectorMenu.PASTE_SECTORS, false)
-	%SectorPopupMenu.popup(Rect2i(%SectorMenuButton.global_position.x, %SectorMenuButton.global_position.y+%SectorMenuButton.size.y, %SectorMenuButton.size.x, 0))
+	%SectorPopupMenu.position = %SectorMenuButton.get_screen_position()
+	%SectorPopupMenu.position.y += %SectorMenuButton.size.y
+	%SectorPopupMenu.popup()
 
 
 func _on_sector_popup_menu_index_pressed(index: int) -> void:

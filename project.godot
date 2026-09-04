@@ -45,6 +45,7 @@ gdscript/warnings/untyped_declaration=1
 window/size/viewport_width=1792
 window/size/viewport_height=1008
 window/stretch/mode="viewport"
+window/subwindows/embed_subwindows=false
 window/vsync/vsync_mode=0
 
 [editor_plugins]

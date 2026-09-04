@@ -349,10 +349,10 @@ func _on_inventory_list_item_selected(index: int) -> void:
 		tree_item.set_text(1, Opcodes.triggers[trigger.trigger].name)
 
 
-func _on_inventory_list_item_clicked(_index: int, at_position: Vector2, mouse_button_index: int) -> void:
+func _on_inventory_list_item_clicked(_index: int, _at_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
-			%InventoryListPopupMenu.popup(Rect2(%InventoryList.global_position.x+at_position.x, %InventoryList.global_position.y+at_position.y, 0, 0))
+			%InventoryListPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_inventory_list_popup_menu_index_pressed(index: int) -> void:
@@ -442,13 +442,13 @@ func _on_add_trigger_button_pressed() -> void:
 	_add_action()
 
 
-func _on_trigger_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+func _on_trigger_tree_item_mouse_selected(_mouse_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
-			%TriggerPopupMenu.popup(Rect2(%TriggerTree.global_position.x+mouse_position.x, %TriggerTree.global_position.y+mouse_position.y, 0, 0))
+			%TriggerPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
-func _on_trigger_tree_empty_clicked(click_position: Vector2, mouse_button_index: int) -> void:
+func _on_trigger_tree_empty_clicked(_click_position: Vector2, mouse_button_index: int) -> void:
 	if %InventoryList.get_selected_items().is_empty():
 		return
 	match mouse_button_index:
@@ -457,7 +457,7 @@ func _on_trigger_tree_empty_clicked(click_position: Vector2, mouse_button_index:
 				%TriggerEmptyPopupMenu.set_item_disabled(1, true)
 			else:
 				%TriggerEmptyPopupMenu.set_item_disabled(1, false)
-			%TriggerEmptyPopupMenu.popup(Rect2(%TriggerTree.global_position.x+click_position.x, %TriggerTree.global_position.y+click_position.y, 0, 0))
+			%TriggerEmptyPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_trigger_tree_item_edited() -> void:
@@ -519,13 +519,13 @@ func _on_tree_item_moved() -> void:
 	_update_commands()
 
 
-func _on_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+func _on_tree_item_mouse_selected(_mouse_position: Vector2, mouse_button_index: int) -> void:
 	match mouse_button_index:
 		MOUSE_BUTTON_RIGHT:
-			%PopupMenu.popup(Rect2(%Tree.global_position.x+mouse_position.x, %Tree.global_position.y+mouse_position.y, 0, 0))
+			%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
-func _on_tree_empty_clicked(click_position: Vector2, mouse_button_index: int) -> void:
+func _on_tree_empty_clicked(_click_position: Vector2, mouse_button_index: int) -> void:
 	if not %TriggerTree.get_selected():
 		return
 	match mouse_button_index:
@@ -534,7 +534,7 @@ func _on_tree_empty_clicked(click_position: Vector2, mouse_button_index: int) ->
 				%EmptyPopupMenu.set_item_disabled(1, true)
 			else:
 				%EmptyPopupMenu.set_item_disabled(1, false)
-			%EmptyPopupMenu.popup(Rect2(%Tree.global_position.x+click_position.x, %Tree.global_position.y+click_position.y, 0, 0))
+			%EmptyPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 		MOUSE_BUTTON_LEFT:
 			%Tree.deselect_all()
 			%Tree.release_focus()

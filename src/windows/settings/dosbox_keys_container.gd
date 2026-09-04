@@ -425,7 +425,7 @@ func _on_change_all_dos_box_button_pressed() -> void:
 func _on_label_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 		_current_key = get_viewport().gui_get_hovered_control().name
-		%PopupMenu.popup(Rect2i(int(event.global_position.x), int(event.global_position.y), 0, 0))
+		%PopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func _on_popup_menu_index_pressed(_index: int) -> void:

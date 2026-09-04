@@ -413,7 +413,7 @@ func handle_sector_mode_event(event: InputEvent) -> void:
 							%SectorPopupMenu.set_item_disabled(%EditSectorContainer.SectorMenu.PASTE_SECTORS, true)
 						else:
 							%SectorPopupMenu.set_item_disabled(%EditSectorContainer.SectorMenu.PASTE_SECTORS, false)
-						%SectorPopupMenu.popup(Rect2i(get_tree().get_root().get_mouse_position(), Vector2.ZERO))
+						%SectorPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 				if event.shift_pressed:
 					if event.pressed:
 						holding_shift = true
@@ -541,7 +541,7 @@ func handle_object_mode_event(event: InputEvent) -> void:
 				if moused_over_object:
 					if moused_over_object not in owner.selected_objects:
 						owner.select_resource(moused_over_object, not event.shift_pressed)
-					%OnObjectContextPopupMenu.popup(Rect2(get_viewport().get_parent().global_position.x + event.global_position.x, get_viewport().get_parent().global_position.y + event.global_position.y, 0, 0))
+					%OnObjectContextPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 					context_menu_object = moused_over_object
 					return
 				if event.pressed:
@@ -549,7 +549,7 @@ func handle_object_mode_event(event: InputEvent) -> void:
 						get_global_mouse_position().x + global_position.x,
 						get_global_mouse_position().y + global_position.y
 					)
-					%ObjectContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+					%ObjectContextPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 
 func handle_vertex_mode_event(event: InputEvent) -> void:
@@ -660,14 +660,14 @@ func handle_sfx_mode_event(event: InputEvent) -> void:
 					if moused_over_sfx:
 						if moused_over_sfx not in owner.selected_sfx:
 							owner.select_resource(moused_over_sfx, not event.shift_pressed)
-						%OnSFXContextPopupMenu.popup(Rect2(get_viewport().get_parent().global_position.x + event.global_position.x, get_viewport().get_parent().global_position.y + event.global_position.y, 0, 0))
+						%OnSFXContextPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 						context_menu_sfx = moused_over_sfx
 						return
 					mouse_paste_position = Vector2(
 						get_global_mouse_position().x + global_position.x,
 						get_global_mouse_position().y + global_position.y
 					)
-					%SFXContextPopupMenu.popup(Rect2i(int(get_viewport().get_parent().global_position.x + event.global_position.x), int(get_viewport().get_parent().global_position.y + event.global_position.y), 0, 0))
+					%SFXContextPopupMenu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2.ZERO))
 
 #endregion
 
