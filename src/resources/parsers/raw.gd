@@ -260,6 +260,7 @@ static func parse_file(filepath: String, normality: bool) -> Dictionary:
 	var file: FileAccess = FileAccess.open(filepath, FileAccess.READ)
 	if not file:
 		Console.print("Error: File not found: %s" % filepath)
+		assert(false)
 		return {}
 	
 	var map: Dictionary = parse(file, normality)
@@ -272,6 +273,7 @@ static func get_preview(filepath: String, normality: bool) -> Dictionary:
 	var file: FileAccess = FileAccess.open(filepath, FileAccess.READ)
 	if not file:
 		Console.print("Error: File not found: %s" % filepath)
+		assert(false)
 		return {}
 	
 	var header: Dictionary = {}
