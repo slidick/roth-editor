@@ -429,7 +429,10 @@ func _on_item_list_item_clicked(index: int, _at_position: Vector2, mouse_button_
 
 
 func _on_find_empty_button_pressed() -> void:
-	for i in range(%ItemList.item_count):
+	var start: int = 0
+	if len(%ItemList.get_selected_items()) > 0:
+		start = %ItemList.get_selected_items()[0] + 1
+	for i in range(start, %ItemList.item_count):
 		var fat_data: Dictionary = das[key][i]
 		if fat_data.offset == 0:
 			%ItemList.select(i)
