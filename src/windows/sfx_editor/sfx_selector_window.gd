@@ -21,7 +21,7 @@ func select_sfx(p_fxscript: Dictionary = {}, p_sfx_info: Dictionary = {}) -> Dic
 		fxscript = FXScript.parse_sfx_info(p_sfx_info)
 	else:
 		fxscript = p_fxscript
-	
+	%SelectButton.disabled = true
 	%Tree.clear()
 	%Tree.create_item()
 	for entry: Dictionary in fxscript.entries:
@@ -70,3 +70,7 @@ func _on_search_edit_text_changed(new_text: String) -> void:
 	for entry: Dictionary in fxscript.entries:
 		if search_text.is_empty() or entry.name.to_lower().find(search_text) != -1 or entry.desc.to_lower().find(search_text) != -1:
 			add_sound_effect(entry)
+
+
+func _on_tree_item_selected() -> void:
+	%SelectButton.disabled = false
