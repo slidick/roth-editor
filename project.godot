@@ -292,6 +292,10 @@ lower_floor_ceiling={
 ]
 }
 
+[physics]
+
+common/physics_ticks_per_second=20
+
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
