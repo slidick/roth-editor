@@ -332,3 +332,11 @@ static func get_by_name_then_installation(p_name: String, p_installation: ROTHIn
 		if dbase_pack.name == p_name:
 			dbase_info = dbase_pack
 	return dbase_info
+
+
+static func is_in_use(p_dbase_info: Dictionary) -> Array:
+	var pack_names: Array = []
+	for map_pack: Dictionary in MapPack.map_packs:
+		if map_pack.dbase_info == p_dbase_info:
+			pack_names.append(map_pack.name)
+	return pack_names

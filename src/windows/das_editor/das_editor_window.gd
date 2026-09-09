@@ -94,7 +94,11 @@ func _on_das_list_popup_menu_index_pressed(index: int) -> void:
 			DASPack.rename_das_pack(das_info, new_name)
 			select(das_info)
 		1:
-			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
+			var confirm_string: String = "Delete %s?" % das_info.name
+			var is_in_use_by: Array = DASPack.is_das_in_use(das_info)
+			if is_in_use_by:
+				confirm_string += "\nIt is in use by maps:\n%s" % "\n".join(is_in_use_by)
+			if not await Dialog.confirm(confirm_string, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
 				return
 			DASPack.delete_das_pack(das_info)
 		2:
@@ -142,8 +146,11 @@ func _on_das_2_list_popup_menu_index_pressed(index: int) -> void:
 			DASPack.rename_das2_pack(das_info, new_name)
 			select(das_info)
 		1:
-			
-			if not await Dialog.confirm("Are you sure you wish to delete:\n%s" % das_info.filepath, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
+			var confirm_string: String = "Delete %s?" % das_info.name
+			var is_in_use_by: Array = DASPack.is_das2_in_use(das_info)
+			if is_in_use_by:
+				confirm_string += "\nIt is in use by map packs:\n%s" % "\n".join(is_in_use_by)
+			if not await Dialog.confirm(confirm_string, "Deleting DAS File: %s" % das_info.name, false, Vector2(400,150)):
 				return
 			DASPack.delete_das2_pack(das_info)
 		2:

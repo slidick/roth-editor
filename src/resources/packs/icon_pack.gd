@@ -114,3 +114,11 @@ static func get_by_name_then_installation(p_name: String, p_installation: ROTHIn
 		if icon_pack.name == p_name:
 			icon_info = icon_pack
 	return icon_info
+
+
+static func is_in_use(p_icon_info: Dictionary) -> Array:
+	var pack_names: Array = []
+	for map_pack: Dictionary in MapPack.map_packs:
+		if map_pack.icon_info == p_icon_info:
+			pack_names.append(map_pack.name)
+	return pack_names

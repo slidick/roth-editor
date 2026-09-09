@@ -50,9 +50,9 @@ func _on_sfx_pack_list_item_clicked(index: int, _at_position: Vector2, mouse_but
 
 
 func _on_sfx_pack_popup_menu_index_pressed(index: int) -> void:
+	var sfx_info: Dictionary = %SFXPackList.get_item_metadata(%SFXPackList.get_selected_items()[0])
 	match index:
 		0:
-			var sfx_info: Dictionary = %SFXPackList.get_item_metadata(%SFXPackList.get_selected_items()[0])
 			var err: String = "init"
 			var results: Array = [false, ""]
 			while not err.is_empty():
@@ -62,20 +62,22 @@ func _on_sfx_pack_popup_menu_index_pressed(index: int) -> void:
 				err = SFXPack.check_name(results[1])
 			SFXPack.rename(sfx_info, results[1])
 		1:
-			var sfx_info: Dictionary = %SFXPackList.get_item_metadata(%SFXPackList.get_selected_items()[0])
-			if not await Dialog.confirm("Are you sure?", "Deleting SFX Pack: %s" % sfx_info.name, false, Vector2(400,150)):
+			var confirm_string: String = "Delete %s?" % sfx_info.name
+			var is_in_use_by: Array = SFXPack.is_in_use(sfx_info)
+			if is_in_use_by:
+				confirm_string += "\nIt is in use by map packs:\n%s" % "\n".join(is_in_use_by)
+			if not await Dialog.confirm(confirm_string, "Deleting SFX Pack: %s" % sfx_info.name, false, Vector2(400,150)):
 				return
 			SFXPack.delete(sfx_info)
 		2:
-			duplicate_sfx_pack(%SFXPackList.get_selected_items()[0])
+			duplicate_sfx_pack(sfx_info)
 
 
 func _on_sfx_pack_list_item_activated(_index: int) -> void:
 	edit()
 
 
-func duplicate_sfx_pack(index: int) -> void:
-	var sfx_info: Dictionary = %SFXPackList.get_item_metadata(index)
+func duplicate_sfx_pack(sfx_info: Dictionary) -> void:
 	var err: String = "init"
 	var results: Array = [false, ""]
 	while not err.is_empty():
@@ -102,7 +104,7 @@ func _on_new_button_pressed() -> void:
 
 func _on_duplicate_button_pressed() -> void:
 	if len(%SFXPackList.get_selected_items()) > 0:
-		duplicate_sfx_pack(%SFXPackList.get_selected_items()[0])
+		duplicate_sfx_pack(%SFXPackList.get_item_metadata(%SFXPackList.get_selected_items()[0]))
 
 
 func _on_edit_button_pressed() -> void:

@@ -261,3 +261,20 @@ static func create(p_name: String, is_das2: bool) -> Dictionary:
 		das_packs.append(das_info)
 	Roth.settings_updated.emit()
 	return das_info
+
+
+static func is_das_in_use(p_das_info: Dictionary) -> Array:
+	var map_names: Array = []
+	for map_pack: Dictionary in MapPack.map_packs:
+		for map: Map in map_pack.maps:
+			if map.map_info.das_info == p_das_info:
+				map_names.append(map.map_info.name)
+	return map_names
+
+
+static func is_das2_in_use(p_das2_info: Dictionary) -> Array:
+	var pack_names: Array = []
+	for map_pack: Dictionary in MapPack.map_packs:
+		if map_pack.das2_info == p_das2_info:
+			pack_names.append(map_pack.name)
+	return pack_names

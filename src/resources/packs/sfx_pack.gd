@@ -136,3 +136,11 @@ static func get_by_name_then_installation(p_name: String, p_installation: ROTHIn
 		if sfx_pack.name == p_name:
 			sfx_info = sfx_pack
 	return sfx_info
+
+
+static func is_in_use(p_sfx_info: Dictionary) -> Array:
+	var pack_names: Array = []
+	for map_pack: Dictionary in MapPack.map_packs:
+		if map_pack.sfx_info == p_sfx_info:
+			pack_names.append(map_pack.name)
+	return pack_names

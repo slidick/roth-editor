@@ -87,7 +87,11 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			IconPack.rename(icon_info, new_name)
 			select(icon_info)
 		1:
-			if await Dialog.confirm("Delete %s" % icon_info.name, "Confirm Delete", false, Vector2(400,200)):
+			var confirm_string: String = "Delete %s?" % icon_info.name
+			var is_in_use_by: Array = IconPack.is_in_use(icon_info)
+			if is_in_use_by:
+				confirm_string += "\nIt is in use by map packs:\n%s" % "\n".join(is_in_use_by)
+			if await Dialog.confirm(confirm_string, "Confirm Delete", false, Vector2(400,200)):
 				IconPack.delete(icon_info)
 		2:
 			var new_name: String = await query_for_name("Duplicate IconPack: %s" % icon_info.name)

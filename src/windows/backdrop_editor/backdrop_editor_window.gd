@@ -64,7 +64,11 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 			BackdropPack.rename(backdrop_info, new_name)
 			select(backdrop_info)
 		1:
-			if await Dialog.confirm("Delete %s" % backdrop_info.name, "Confirm Delete", false, Vector2(400,200)):
+			var confirm_string: String = "Delete %s?" % backdrop_info.name
+			var is_in_use_by: Array = BackdropPack.is_in_use(backdrop_info)
+			if is_in_use_by:
+				confirm_string += "\nIt is in use by map packs:\n%s" % "\n".join(is_in_use_by)
+			if await Dialog.confirm(confirm_string, "Confirm Delete", false, Vector2(400,200)):
 				BackdropPack.delete(backdrop_info)
 				%EditButton.hide()
 		2:

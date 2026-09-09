@@ -131,3 +131,11 @@ static func get_by_name_then_installation(p_name: String, p_installation: ROTHIn
 		if backdrop_pack.name == p_name:
 			backdrop_info = backdrop_pack
 	return backdrop_info
+
+
+static func is_in_use(p_backdrop_info: Dictionary) -> Array:
+	var pack_names: Array = []
+	for map_pack: Dictionary in MapPack.map_packs:
+		if map_pack.backdrop_info == p_backdrop_info:
+			pack_names.append(map_pack.name)
+	return pack_names

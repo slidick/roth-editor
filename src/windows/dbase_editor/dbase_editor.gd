@@ -56,9 +56,9 @@ func _on_d_base_list_item_clicked(index: int, _at_position: Vector2, mouse_butto
 
 
 func _on_d_base_popup_menu_index_pressed(index: int) -> void:
+	var dbase_info: Dictionary = %DBaseList.get_item_metadata(right_click_index)
 	match index:
 		0:
-			var dbase_info: Dictionary = %DBaseList.get_item_metadata(right_click_index)
 			var err: String = "init"
 			var results: Array = [false, ""]
 			while not err.is_empty():
@@ -68,8 +68,11 @@ func _on_d_base_popup_menu_index_pressed(index: int) -> void:
 				err = DBasePack.check_name(results[1])
 			DBasePack.rename(dbase_info, results[1])
 		1:
-			var dbase_info: Dictionary = %DBaseList.get_item_metadata(right_click_index)
-			if not await Dialog.confirm("Are you sure?", "Deleting DBase: %s" % dbase_info.name, false, Vector2(400,150)):
+			var confirm_string: String = "Delete %s?" % dbase_info.name
+			var is_in_use_by: Array = DBasePack.is_in_use(dbase_info)
+			if is_in_use_by:
+				confirm_string += "\nIt is in use by map packs:\n%s" % "\n".join(is_in_use_by)
+			if not await Dialog.confirm(confirm_string, "Deleting DBase: %s" % dbase_info.name, false, Vector2(400,150)):
 				return
 			DBasePack.delete(dbase_info)
 		2:
