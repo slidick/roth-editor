@@ -39,6 +39,7 @@ static func init_vanilla_das2_pack(p_installation: ROTHInstallation) -> void:
 		"filepath": p_installation.ademo,
 		"vanilla": p_installation,
 		"is_ademo": true,
+		"base": p_installation.ademo.get_basename().get_file(),
 	}
 	das2_packs.append(das2_info)
 
@@ -50,6 +51,7 @@ static func init_custom_das2_packs(p_directory: String) -> void:
 				"name": filename.get_basename().get_file(),
 				"filepath": p_directory.path_join(filename),
 				"is_ademo": true,
+				"base": filename.get_basename().get_file(),
 			}
 			das2_packs.append(das2_info)
 
