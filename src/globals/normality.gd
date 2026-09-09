@@ -2,10 +2,11 @@ extends Node
 
 signal settings_updated
 
-const NORMALITY_CUSTOM_MAP_DIRECTORY: String = "user://normality/maps"
-const NORMALITY_CUSTOM_MAP_PACKS_DIRECTORY: String = "user://normality/map_packs"
-var NORMALITY_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("normality/temp")
-var NORMALITY_CUSTOM_INSTALLS_DIRECTORY: String = OS.get_user_data_dir().path_join("normality/installs")
+var NORMALITY_CUSTOM_DIRECTORY: String = OS.get_user_data_dir().path_join("normality")
+var NORMALITY_CUSTOM_MAP_DIRECTORY: String = NORMALITY_CUSTOM_DIRECTORY.path_join("maps")
+var NORMALITY_CUSTOM_MAP_PACKS_DIRECTORY: String = NORMALITY_CUSTOM_DIRECTORY.path_join("map_packs")
+var NORMALITY_TEMP_DIRECTORY: String = NORMALITY_CUSTOM_DIRECTORY.path_join("temp")
+var NORMALITY_CUSTOM_INSTALLS_DIRECTORY: String = NORMALITY_CUSTOM_DIRECTORY.path_join("installs")
 
 var installations: Array = []
 var current_installation: NormalityInstallation = null

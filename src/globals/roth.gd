@@ -25,16 +25,17 @@ signal map_closed(p_map_preview: Map)
 
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0
-var ROTH_CUSTOM_MAP_DIRECTORY: String = OS.get_user_data_dir().path_join("maps")
-var ROTH_CUSTOM_MAP_PACKS_DIRECTORY: String = OS.get_user_data_dir().path_join("map_packs")
-var ROTH_CUSTOM_DBASE_DIRECTORY: String = OS.get_user_data_dir().path_join("dbase")
-var ROTH_CUSTOM_SFX_DIRECTORY: String = OS.get_user_data_dir().path_join("sfx")
-var ROTH_CUSTOM_DAS_DIRECTORY: String = OS.get_user_data_dir().path_join("das")
-var ROTH_CUSTOM_DAS2_DIRECTORY: String = OS.get_user_data_dir().path_join("das2")
-var ROTH_CUSTOM_INSTALLS_DIRECTORY: String = OS.get_user_data_dir().path_join("installs")
-var ROTH_CUSTOM_BACKDROPS_DIRECTORY: String = OS.get_user_data_dir().path_join("backdrops")
-var ROTH_CUSTOM_ICONS_DIRECTORY: String = OS.get_user_data_dir().path_join("icons")
-var ROTH_TEMP_DIRECTORY: String = OS.get_user_data_dir().path_join("temp")
+var ROTH_CUSTOM_DIRECTORY: String = OS.get_user_data_dir().path_join("roth")
+var ROTH_CUSTOM_MAP_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("maps")
+var ROTH_CUSTOM_MAP_PACKS_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("map_packs")
+var ROTH_CUSTOM_DBASE_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("dbase")
+var ROTH_CUSTOM_SFX_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("sfx")
+var ROTH_CUSTOM_DAS_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("das")
+var ROTH_CUSTOM_DAS2_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("das2")
+var ROTH_CUSTOM_INSTALLS_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("installs")
+var ROTH_CUSTOM_BACKDROPS_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("backdrops")
+var ROTH_CUSTOM_ICONS_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("icons")
+var ROTH_TEMP_DIRECTORY: String = ROTH_CUSTOM_DIRECTORY.path_join("temp")
 
 const SEQUENTIAL_UNDO_TIMEOUT: float = 1.5
 const DRAGGING_THRESHOLD: float = 2.0
@@ -476,7 +477,7 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 	
 	
 	# Create the dosbox auto exec .conf file
-	var dosbox_autoexec_filepath := OS.get_user_data_dir().path_join("dosbox_roth_auto.conf")
+	var dosbox_autoexec_filepath := ROTH_CUSTOM_DIRECTORY.path_join("dosbox_roth_auto.conf")
 	var autoexec := FileAccess.open(dosbox_autoexec_filepath, FileAccess.WRITE)
 	autoexec.store_string("[autoexec]\n")
 	autoexec.store_string("mount d \"%s\"\n" % ROTH_TEMP_DIRECTORY)
