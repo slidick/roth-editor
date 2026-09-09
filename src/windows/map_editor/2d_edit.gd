@@ -55,7 +55,7 @@ func _ready() -> void:
 	timer.timeout.connect(check_for_hover)
 	add_child(timer)
 	
-	var data: Dictionary = Settings.cache.get("2d_edit", {})
+	var data: Dictionary = Settings.settings.get("options", {})
 	if data:
 		if "grid_enabled" in data:
 			%GridCheckBox.button_pressed = data.grid_enabled
@@ -85,7 +85,7 @@ func _notification(what: int) -> void:
 				"snap_enabled": %SnapCheckBox.button_pressed,
 				"snap_size": int(%SnapEdit.value),
 			}
-			Settings.update_cache("2d_edit", data)
+			Settings.update_settings("options", data)
 
 
 func _process(_delta: float) -> void:
