@@ -33,8 +33,8 @@ func init_das(p_das: Dictionary) -> void:
 	loaded_das[p_das.das_info.name] = {}
 	if p_das.das_info.name not in favorites:
 		favorites[p_das.das_info.name] = []
-	if p_das.das_info.name not in recents:
-		recents[p_das.das_info.name] = []
+	if p_das.das_info.base not in recents:
+		recents[p_das.das_info.base] = []
 	for texture: Dictionary in p_das.textures:
 		if not "image" in texture:
 			continue
@@ -45,7 +45,7 @@ func init_das(p_das: Dictionary) -> void:
 func unload_das(das_info: Dictionary) -> void:
 	loaded_das.erase(das_info.name)
 	favorites.erase(das_info.name)
-	recents.erase(das_info.name)
+	recents.erase(das_info.base)
 	for i in range(%RotatableItemList.item_count-1, -1, -1):
 		var texture: Dictionary = %RotatableItemList.get_item_metadata(i)
 		if texture.das_info == das_info:
@@ -76,7 +76,7 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 	
 	
 	%RecentItemList.clear()
-	for texture_index: int in recents[p_das.das_info.name]:
+	for texture_index: int in recents[p_das.das_info.base]:
 		var texture_data: Dictionary = p_das.mapping[texture_index]
 		if is_viable(texture_data):
 			var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], texture_data.image, Vector2(75,75))
@@ -196,20 +196,20 @@ func add_to_recents(texture_index: int) -> void:
 	if texture_index == -1:
 		return
 	
-	if (texture_index in recents[current_das.das_info.name]
-		or float(texture_index) in recents[current_das.das_info.name]
+	if (texture_index in recents[current_das.das_info.base]
+		or float(texture_index) in recents[current_das.das_info.base]
 	):
-		var idx: int = recents[current_das.das_info.name].find(texture_index)
+		var idx: int = recents[current_das.das_info.base].find(texture_index)
 		if idx == -1:
-			idx = recents[current_das.das_info.name].find(float(texture_index))
-		recents[current_das.das_info.name].pop_at(idx)
-		recents[current_das.das_info.name].push_front(texture_index)
+			idx = recents[current_das.das_info.base].find(float(texture_index))
+		recents[current_das.das_info.base].pop_at(idx)
+		recents[current_das.das_info.base].push_front(texture_index)
 		return
 	
-	recents[current_das.das_info.name].push_front(texture_index)
+	recents[current_das.das_info.base].push_front(texture_index)
 	
-	if len(recents[current_das.das_info.name]) > 20:
-		recents[current_das.das_info.name].pop_back()
+	if len(recents[current_das.das_info.base]) > 20:
+		recents[current_das.das_info.base].pop_back()
 
 
 func _on_rotatable_item_list_item_activated(index: int) -> void:
