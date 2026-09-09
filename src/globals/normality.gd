@@ -191,7 +191,7 @@ func test_run_maps(map_pack: Dictionary, starting_map: Map = null, player_data: 
 			file.store_8(0)
 		i += 1
 	for map: Map in map_pack.maps:
-		if map == starting_map.preview_map or starting_map == map:
+		if starting_map and (map == starting_map.preview_map or starting_map == map):
 			continue
 		file.seek(current_installation.das_offsets[i])
 		file.store_8(ord("m"))
