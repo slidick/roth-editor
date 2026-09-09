@@ -118,9 +118,9 @@ func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 		if "invalid" in das_info:
 			das_info = NormPack.get_das_by_name(favorite_data.das)
 		if "invalid" in das_info:
-			return
+			continue
 		if das_info.name != p_das_info.name and das_info != p_das2_info:
-			return
+			continue
 		var texture_data: Dictionary = Das.get_index_from_das(favorite_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
@@ -137,9 +137,9 @@ func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 		if "invalid" in das_info:
 			das_info = NormPack.get_das_by_name(recent_data.das)
 		if "invalid" in das_info:
-			return
+			continue
 		if das_info.name != p_das_info.name and das_info != p_das2_info:
-			return
+			continue
 		var texture_data: Dictionary = Das.get_index_from_das(recent_data.index, das_info)
 		var tex: Texture2D
 		if "image" in texture_data:
