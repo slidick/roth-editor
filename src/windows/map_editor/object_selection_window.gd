@@ -119,7 +119,7 @@ func load_favorites(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 			das_info = NormPack.get_das_by_name(favorite_data.das)
 		if "invalid" in das_info:
 			continue
-		if das_info.name != p_das_info.name and das_info != p_das2_info:
+		if das_info.base != p_das_info.base and das_info != p_das2_info:
 			continue
 		var texture_data: Dictionary = Das.get_index_from_das(favorite_data.index, das_info)
 		var tex: Texture2D
@@ -138,7 +138,7 @@ func load_recents(p_das_info: Dictionary, p_das2_info: Dictionary) -> void:
 			das_info = NormPack.get_das_by_name(recent_data.das)
 		if "invalid" in das_info:
 			continue
-		if das_info.name != p_das_info.name and das_info != p_das2_info:
+		if das_info.base != p_das_info.base and das_info != p_das2_info:
 			continue
 		var texture_data: Dictionary = Das.get_index_from_das(recent_data.index, das_info)
 		var tex: Texture2D
@@ -221,7 +221,7 @@ func add_to_recent(texture_data: Dictionary) -> void:
 		if texture_data.index == %RecentItemList.get_item_metadata(i).index:
 			%RecentItemList.move_item(i, 0)
 			recents.pop_at(i)
-			recents.push_front({"das": texture_data.das_info.name, "index": texture_data.index})
+			recents.push_front({"das": texture_data.das_info.base, "index": texture_data.index})
 			return
 	
 	
@@ -233,7 +233,7 @@ func add_to_recent(texture_data: Dictionary) -> void:
 	var idx: int = %RecentItemList.add_item("%s" % [texture_data.name], tex, Vector2(75,75))
 	%RecentItemList.set_item_metadata(idx, texture_data)
 	%RecentItemList.move_item(idx, 0)
-	recents.push_front({"das": texture_data.das_info.name, "index": texture_data.index})
+	recents.push_front({"das": texture_data.das_info.base, "index": texture_data.index})
 	
 	if len(recents) > 30:
 		recents.pop_back()
@@ -268,7 +268,7 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 			var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
 			
 			for favorite: Dictionary in favorites:
-				if favorite.index == texture_data.index and favorite.das == texture_data.das_info.name:
+				if favorite.index == texture_data.index and favorite.das == texture_data.das_info.base:
 					return
 			
 			var tex: Texture2D
@@ -278,7 +278,7 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 				tex =  ImageTexture.create_from_image(Image.create_empty(1,1, false, Image.FORMAT_L8))
 			var idx: int = %FavoriteItemList.add_item("%s\n" % [texture_data.name], tex, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 			%FavoriteItemList.set_item_metadata(idx, texture_data)
-			favorites.append({"das": texture_data.das_info.name, "index": texture_data.index})
+			favorites.append({"das": texture_data.das_info.base, "index": texture_data.index})
 			Settings.update_settings("objects", {"favorites": favorites})
 
 
