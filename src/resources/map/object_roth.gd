@@ -871,7 +871,7 @@ class ObjectNode3D extends Node3D:
 
 class ObjectMesh3D extends MeshInstance3D:
 	var ref: ObjectRoth
-	func _process(_delta: float) -> void:
+	func _physics_process(_delta: float) -> void:
 		if ref.directional_object:
 			var player_rotation: float = get_viewport().get_camera_3d().global_rotation_degrees.y + 180
 			if player_rotation > 180:
@@ -891,7 +891,7 @@ class StaticBodyObject3D extends StaticBody3D:
 	var follow: bool = false
 	func _init(p_follow: bool) -> void:
 		follow = p_follow
-	func _process(_delta: float) -> void:
+	func _physics_process(_delta: float) -> void:
 		if follow:
 			rotation.y = get_viewport().get_camera_3d().global_rotation.y + PI
 			rotation.x = 0
