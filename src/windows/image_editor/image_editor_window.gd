@@ -71,8 +71,11 @@ func _input(event: InputEvent) -> void:
 
 
 func init_zoom() -> void:
+	if not image:
+		return
 	while %Camera2D.get_viewport().size.y < 5:
 		await get_tree().process_frame
+	await get_tree().process_frame
 	var zoom_y: float = %Camera2D.get_viewport().size.y / float(image.get_height())
 	var zoom_x: float = %Camera2D.get_viewport().size.x / float(image.get_width())
 	if %RotateCanvasCheckBox.button_pressed:
@@ -213,11 +216,15 @@ func load_palette(p_raw_palette: Array) -> void:
 		child.queue_free()
 	color_rects.clear()
 	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 10)
+	hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	#hbox.add_theme_constant_override("separation", 10)
+	hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var i: int = 0
 	for j in range(16):
 		var vbox := VBoxContainer.new()
-		vbox.add_theme_constant_override("separation", 10)
+		#vbox.add_theme_constant_override("separation", 10)
+		vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		for k in range(16):
 			var color_rect := ColorRectButton.new()
 			if i == 0:
@@ -236,7 +243,9 @@ func load_palette(p_raw_palette: Array) -> void:
 				else:
 					color_rect.color = Color(((p_raw_palette[3*i+0] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+1] * 259 + 33) >> 6) / float(255), ((p_raw_palette[3*i+2] * 259 + 33) >> 6) / float(255))
 			
-			color_rect.custom_minimum_size = Vector2(20,20)
+			color_rect.custom_minimum_size = Vector2(4,4)
+			color_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			color_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			color_rect.gui_input.connect(
 				func (event: InputEvent) -> void:
 					if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -611,3 +620,13 @@ func _on_crop_changed(data: Dictionary) -> void:
 	%TextureRect.texture = texture
 	%PreviewTextureRect.texture = texture
 	%BackgroundCanvas.queue_redraw()
+
+
+func _on_viewport_size_changed() -> void:
+	await super._on_viewport_size_changed()
+	_on_window_resized()
+
+
+func _on_window_resized() -> void:
+	await get_tree().process_frame
+	init_zoom()

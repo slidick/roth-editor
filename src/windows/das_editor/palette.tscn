@@ -19,12 +19,11 @@ script = ExtResource("1_rm4ei")
 [node name="TabContainer" type="TabContainer" parent="." unique_id=719098308]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_etre1")
-current_tab = 1
+current_tab = 0
 tabs_visible = false
 
 [node name="PaletteLoaded" type="HBoxContainer" parent="TabContainer" unique_id=1772276684]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_tab_index = 0
@@ -33,16 +32,23 @@ metadata/_tab_index = 0
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.95
 mouse_filter = 1
 
 [node name="VSeparator" type="VSeparator" parent="TabContainer/PaletteLoaded" unique_id=91097016]
 layout_mode = 2
 
-[node name="SidePanel" type="VBoxContainer" parent="TabContainer/PaletteLoaded" unique_id=1134429254]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/PaletteLoaded" unique_id=1653267329]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SidePanel" type="VBoxContainer" parent="TabContainer/PaletteLoaded/ScrollContainer" unique_id=1134429254]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="ColorPicker" type="ColorPicker" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=1402062615]
+[node name="ColorPicker" type="ColorPicker" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=1402062615]
 unique_name_in_owner = true
 layout_mode = 2
 edit_alpha = false
@@ -50,50 +56,51 @@ edit_intensity = false
 picker_shape = 2
 presets_visible = false
 
-[node name="Label" type="Label" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=1745955335]
+[node name="Label" type="Label" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=1745955335]
 layout_mode = 2
 text = "Hue"
 
-[node name="HueSlider" type="HSlider" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=257321723]
+[node name="HueSlider" type="HSlider" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=257321723]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="HSeparator" type="HSeparator" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=91254556]
+[node name="HSeparator" type="HSeparator" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=91254556]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=303075016]
+[node name="Label2" type="Label" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=303075016]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Hue Shift"
 
-[node name="HueShiftSlider" type="HSlider" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=856816374]
+[node name="HueShiftSlider" type="HSlider" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=856816374]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 2
 max_value = 1.0
 step = 0.01
 
-[node name="RandomizeButton" type="Button" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=1041380499]
+[node name="RandomizeButton" type="Button" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=1041380499]
 layout_mode = 2
 text = "Randomize Selected"
 
-[node name="ResetSelectedButton" type="Button" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=1983753141]
+[node name="ResetSelectedButton" type="Button" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=1983753141]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Reset Selected"
 
-[node name="HSeparator2" type="HSeparator" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=1501436626]
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=1501436626]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="ResetPaletteButton" type="Button" parent="TabContainer/PaletteLoaded/SidePanel" unique_id=866905697]
+[node name="ResetPaletteButton" type="Button" parent="TabContainer/PaletteLoaded/ScrollContainer/SidePanel" unique_id=866905697]
 layout_mode = 2
 text = "Reset All"
 
 [node name="NoPalette" type="VBoxContainer" parent="TabContainer" unique_id=1999178464]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -115,12 +122,12 @@ unique_name_in_owner = true
 wait_time = 0.1
 one_shot = true
 
-[connection signal="color_changed" from="TabContainer/PaletteLoaded/SidePanel/ColorPicker" to="." method="_on_color_picker_color_changed"]
-[connection signal="drag_ended" from="TabContainer/PaletteLoaded/SidePanel/HueSlider" to="." method="_on_hue_slider_drag_ended"]
-[connection signal="value_changed" from="TabContainer/PaletteLoaded/SidePanel/HueSlider" to="." method="_on_hue_slider_value_changed"]
-[connection signal="drag_ended" from="TabContainer/PaletteLoaded/SidePanel/HueShiftSlider" to="." method="_on_hue_shift_slider_drag_ended"]
-[connection signal="value_changed" from="TabContainer/PaletteLoaded/SidePanel/HueShiftSlider" to="." method="_on_hue_shift_slider_value_changed"]
-[connection signal="pressed" from="TabContainer/PaletteLoaded/SidePanel/RandomizeButton" to="." method="_on_randomize_button_pressed"]
-[connection signal="pressed" from="TabContainer/PaletteLoaded/SidePanel/ResetSelectedButton" to="." method="_on_reset_selected_button_pressed"]
-[connection signal="pressed" from="TabContainer/PaletteLoaded/SidePanel/ResetPaletteButton" to="." method="_on_reset_palette_button_pressed"]
+[connection signal="color_changed" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/ColorPicker" to="." method="_on_color_picker_color_changed"]
+[connection signal="drag_ended" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/HueSlider" to="." method="_on_hue_slider_drag_ended"]
+[connection signal="value_changed" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/HueSlider" to="." method="_on_hue_slider_value_changed"]
+[connection signal="drag_ended" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/HueShiftSlider" to="." method="_on_hue_shift_slider_drag_ended"]
+[connection signal="value_changed" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/HueShiftSlider" to="." method="_on_hue_shift_slider_value_changed"]
+[connection signal="pressed" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/RandomizeButton" to="." method="_on_randomize_button_pressed"]
+[connection signal="pressed" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/ResetSelectedButton" to="." method="_on_reset_selected_button_pressed"]
+[connection signal="pressed" from="TabContainer/PaletteLoaded/ScrollContainer/SidePanel/ResetPaletteButton" to="." method="_on_reset_palette_button_pressed"]
 [connection signal="pressed" from="TabContainer/NoPalette/AddPaletteButton" to="." method="_on_add_palette_button_pressed"]

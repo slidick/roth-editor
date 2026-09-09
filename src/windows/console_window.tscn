@@ -6,7 +6,18 @@
 [ext_resource type="StyleBox" uid="uid://8fmbo06bq5bv" path="res://src/themes/window_panel_theme.tres" id="4_oms8o"]
 
 [node name="ConsoleWindow" unique_id=251086978 instance=ExtResource("1_o30bm")]
+anchors_preset = -1
+anchor_top = 0.4
+anchor_right = 0.6
+offset_top = 0.0
+offset_right = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_n8c6h")
 script = ExtResource("3_n8c6h")
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_oms8o")
+is_subwindow = true
+
+[node name="ConsoleEdit" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(1447921744) index="1" unique_id=669413057]
+keep_editing_on_text_submit = true

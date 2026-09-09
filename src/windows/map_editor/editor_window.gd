@@ -74,6 +74,12 @@ func _ready() -> void:
 	%DrawModeContainer.hide()
 
 
+func _on_viewport_size_changed() -> void:
+	#%Map2D.additional_zoom *= ((Vector2(get_viewport().size) / previous_viewport_size).x + (Vector2(get_viewport().size) / previous_viewport_size).y) / 2
+	super._on_viewport_size_changed()
+	#%Map2D.update_camera_zoom()
+
+
 func _input(event: InputEvent) -> void:
 	if %Camera3D.has_focus:
 	
@@ -339,7 +345,6 @@ func load_map(map: Map) -> void:
 	reload_skybox(map)
 	
 	add_to_undo_redo(map, "Map Opened")
-	
 	if not visible:
 		await _show()
 	%Map2D.setup(map)

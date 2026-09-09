@@ -14,6 +14,7 @@ show_maximize_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_pbabh")
+is_subwindow = true
 
 [node name="ColorRect" type="ColorRect" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=619817649]
 visible = false

@@ -21,17 +21,21 @@ corner_detail = 5
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_3yom7"]
 
 [node name="AudioClipEditorWindow" unique_id=2013615627 instance=ExtResource("1_dbmt3")]
-offset_right = 1161.0
-offset_bottom = 764.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_f20dw")
 script = ExtResource("2_xgf3c")
-resizable = false
 exclusive = true
-show_maximize_button = false
 show_close_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_denbt")
+is_subwindow = true
 
 [node name="Main" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=164103662]
 clip_contents = true
@@ -107,61 +111,56 @@ color = Color(0.1201851, 0.30128837, 0.20325923, 1)
 
 [node name="Waveform" type="Panel" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="2" unique_id=1815019451]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 350)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_oa4cw")
 script = ExtResource("5_oa4cw")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="3" unique_id=138923235]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2" index="0" unique_id=1814110418]
+[node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer" index="3" unique_id=1814110418]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="AmpDownButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="0" unique_id=1232203141]
+[node name="AmpDownButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=1232203141]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Amplitude Down"
 
-[node name="AmpUpButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="1" unique_id=1727970315]
+[node name="AmpUpButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1727970315]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Amplitude Up"
 
-[node name="ReverseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="2" unique_id=1632480833]
+[node name="ReverseButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="2" unique_id=1632480833]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Reverse"
 
-[node name="StopButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="3" unique_id=1189959595]
+[node name="StopButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="3" unique_id=1189959595]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("6_prwse")
 
-[node name="PlayButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="4" unique_id=654349092]
+[node name="PlayButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="4" unique_id=654349092]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 icon = ExtResource("7_3yom7")
 
-[node name="RecordButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="5" unique_id=1501356]
+[node name="RecordButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="5" unique_id=1501356]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 icon = ExtResource("9_3yom7")
 
-[node name="LengthLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="6" unique_id=258215437]
+[node name="LengthLabel" type="Label" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="6" unique_id=258215437]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
@@ -170,7 +169,7 @@ size_flags_vertical = 0
 size_flags_stretch_ratio = 1.52
 vertical_alignment = 2
 
-[node name="BrowseFilesystemButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer" index="7" unique_id=1155550662]
+[node name="BrowseFilesystemButton" type="Button" parent="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer" index="7" unique_id=1155550662]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 32)
 layout_mode = 2
@@ -229,6 +228,7 @@ file_mode = 0
 display_mode = 1
 access = 2
 filters = PackedStringArray("*.wav")
+use_native_dialog = true
 
 [node name="Timer" type="Timer" parent="." index="3" unique_id=1035708640]
 unique_name_in_owner = true
@@ -245,13 +245,13 @@ bus = &"Record"
 
 [connection signal="moved" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/StartMarker" to="." method="_on_start_marker_moved"]
 [connection signal="moved" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/Control/EndMarker" to="." method="_on_end_marker_moved"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/AmpDownButton" to="." method="_on_amp_down_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/AmpUpButton" to="." method="_on_amp_up_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/ReverseButton" to="." method="_on_reverse_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/StopButton" to="." method="_on_stop_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/RecordButton" to="." method="_on_record_button_pressed"]
-[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/VBoxContainer2/HBoxContainer/BrowseFilesystemButton" to="." method="_on_browse_filesystem_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/AmpDownButton" to="." method="_on_amp_down_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/AmpUpButton" to="." method="_on_amp_up_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/ReverseButton" to="." method="_on_reverse_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/RecordButton" to="." method="_on_record_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer/BrowseFilesystemButton" to="." method="_on_browse_filesystem_button_pressed"]
 [connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3/DeviceOption" to="." method="_on_device_option_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/VBoxContainer/HBoxContainer3/BrowseExistingButton" to="." method="_on_browse_existing_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/Main/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]

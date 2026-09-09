@@ -128,98 +128,103 @@ use_native_dialog = true
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=10652567]
 layout_mode = 2
 
-[node name="DosboxSettingsContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1928251748]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=665621606]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DosboxSettingsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1928251748]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 24
 
-[node name="Label" type="Label" parent="VBoxContainer/DosboxSettingsContainer" unique_id=1593019005]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer" unique_id=1593019005]
 layout_mode = 2
 text = "Dosbox Settings"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/DosboxSettingsContainer" unique_id=1116430992]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer" unique_id=1116430992]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer" unique_id=390146122]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer" unique_id=390146122]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=689606938]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=689606938]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Fullscreen:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1566209720]
+[node name="Label2" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1566209720]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Fullscreen Double Buffering:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label3" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1485045579]
+[node name="Label3" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1485045579]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Fullscreen Resolution:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label4" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1349907600]
+[node name="Label4" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1349907600]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Window Resolution:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label5" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=189398023]
+[node name="Label5" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=189398023]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Output:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label6" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1052829263]
+[node name="Label6" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1052829263]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Mouse Autolock:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label7" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1413522961]
+[node name="Label7" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1413522961]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Scaler:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label8" type="Label" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1825325440]
+[node name="Label8" type="Label" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer" unique_id=1825325440]
 custom_minimum_size = Vector2(340, 34)
 layout_mode = 2
 text = "Cycles:"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer" unique_id=972930551]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer" unique_id=972930551]
 layout_mode = 2
 size_flags_horizontal = 2
 
-[node name="FullscreenCheckButton" type="CheckButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=384492429]
+[node name="FullscreenCheckButton" type="CheckButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=384492429]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="FulldoubleCheckButton" type="CheckButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=971603175]
+[node name="FulldoubleCheckButton" type="CheckButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=971603175]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 0
 button_pressed = true
 
-[node name="FullResolutionOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1888535637]
+[node name="FullResolutionOption" type="OptionButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1888535637]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
@@ -242,7 +247,7 @@ popup/item_6/id = 6
 popup/item_7/text = "Desktop"
 popup/item_7/id = 7
 
-[node name="WindowResolutionOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1157057961]
+[node name="WindowResolutionOption" type="OptionButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1157057961]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
@@ -263,7 +268,7 @@ popup/item_5/id = 5
 popup/item_6/text = "1600x1200"
 popup/item_6/id = 6
 
-[node name="OutputOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1719583381]
+[node name="OutputOption" type="OptionButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1719583381]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
@@ -280,14 +285,14 @@ popup/item_3/id = 3
 popup/item_4/text = "Surface"
 popup/item_4/id = 4
 
-[node name="AutolockCheckButton" type="CheckButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=403449344]
+[node name="AutolockCheckButton" type="CheckButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=403449344]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 0
 button_pressed = true
 
-[node name="ScalerOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1766118241]
+[node name="ScalerOption" type="OptionButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=1766118241]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
@@ -330,7 +335,7 @@ popup/item_16/id = 16
 popup/item_17/text = "scan3x"
 popup/item_17/id = 17
 
-[node name="CyclesOption" type="OptionButton" parent="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=723858566]
+[node name="CyclesOption" type="OptionButton" parent="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2" unique_id=723858566]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
@@ -367,11 +372,11 @@ popup/item_8/id = 8
 [connection signal="timeout" from="VBoxContainer/HBoxContainer3/DosboxConfigEdit/DosboxConfigTimer" to="." method="_on_dosbox_config_timer_timeout"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/DosboxConfigBrowseButton" to="." method="_on_dosbox_config_browse_button_pressed"]
 [connection signal="file_selected" from="VBoxContainer/HBoxContainer3/DosboxConfigBrowseButton/DosboxConfigFileDialog" to="." method="_on_dosbox_config_file_dialog_file_selected"]
-[connection signal="toggled" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FullscreenCheckButton" to="." method="_save"]
-[connection signal="toggled" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FulldoubleCheckButton" to="." method="_save"]
-[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FullResolutionOption" to="." method="_save"]
-[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/WindowResolutionOption" to="." method="_save"]
-[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/OutputOption" to="." method="_save"]
-[connection signal="toggled" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/AutolockCheckButton" to="." method="_save"]
-[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/ScalerOption" to="." method="_save"]
-[connection signal="item_selected" from="VBoxContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/CyclesOption" to="." method="_save"]
+[connection signal="toggled" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FullscreenCheckButton" to="." method="_save"]
+[connection signal="toggled" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FulldoubleCheckButton" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/FullResolutionOption" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/WindowResolutionOption" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/OutputOption" to="." method="_save"]
+[connection signal="toggled" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/AutolockCheckButton" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/ScalerOption" to="." method="_save"]
+[connection signal="item_selected" from="VBoxContainer/ScrollContainer/DosboxSettingsContainer/HBoxContainer/VBoxContainer2/CyclesOption" to="." method="_save"]

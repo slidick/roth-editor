@@ -9,12 +9,21 @@
 [ext_resource type="PackedScene" uid="uid://de6v51e5rld6l" path="res://src/windows/sfx_editor/sfx_selector_window.tscn" id="7_xyr4a"]
 
 [node name="SFXEditorWindow" unique_id=1114986034 instance=ExtResource("1_wbsbi")]
-offset_right = 954.0
-offset_bottom = 677.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_kvtwo")
 script = ExtResource("2_7qk70")
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_rq1sk")
+start_maximized = null
+header = null
+contain_to_viewport = null
+is_subwindow = null
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1679254212]
 layout_mode = 2
@@ -199,31 +208,19 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -580.5
-offset_top = -382.0
-offset_right = 580.5
-offset_bottom = 382.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_bottom = 0.0
 
 [node name="SFXSelector" parent="SubWindows" index="1" unique_id=2130089447 instance=ExtResource("7_xyr4a")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -532.5
-offset_top = -321.5
-offset_right = 532.5
-offset_bottom = 321.5
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 

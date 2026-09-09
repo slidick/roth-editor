@@ -721,7 +721,7 @@ func update_camera_center() -> void:
 	
 	while %Camera2D.get_viewport().size.y < 10:
 		await get_tree().process_frame
-		await get_tree().process_frame
+	await get_tree().process_frame
 	
 	var zoom_y: float = %Camera2D.get_viewport().size.y / size.y
 	var zoom_x: float = %Camera2D.get_viewport().size.x / size.x

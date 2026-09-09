@@ -9,7 +9,6 @@
 theme = ExtResource("2_0oqo4")
 script = ExtResource("2_63kas")
 exclusive = true
-show_maximize_button = false
 show_close_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0

@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://em40vlxultjc"]
 
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_4dwt3"]
 [ext_resource type="Script" uid="uid://plr1iatjjf6p" path="res://src/windows/das_editor/monster_container.gd" id="1_khemh"]
 
 [node name="MonsterContainer" type="MarginContainer" unique_id=1578364445]
 offset_right = 1477.0
 offset_bottom = 763.0
+theme = ExtResource("1_4dwt3")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -20,9 +22,13 @@ theme_override_constants/separation = 20
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=929841863]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+tooltip_text = "Name"
+mouse_filter = 1
 text = "Name"
+text_overrun_behavior = 5
 
 [node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=428552880]
 unique_name_in_owner = true
@@ -31,9 +37,13 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1812738277]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+tooltip_text = "Description"
+mouse_filter = 1
 text = "Description"
+text_overrun_behavior = 5
 
 [node name="DescriptionEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=140034800]
 unique_name_in_owner = true
@@ -51,8 +61,11 @@ size_flags_vertical = 4
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=1441930386]
 layout_mode = 2
+tooltip_text = "Collision"
+mouse_filter = 1
 text = "Collision"
 horizontal_alignment = 1
+text_overrun_behavior = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=486331944]
 layout_mode = 2
@@ -60,7 +73,10 @@ layout_mode = 2
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer" unique_id=1419885523]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+tooltip_text = "Height"
+mouse_filter = 1
 text = "Height"
+text_overrun_behavior = 5
 
 [node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer" unique_id=481567278]
 unique_name_in_owner = true
@@ -75,7 +91,10 @@ layout_mode = 2
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2" unique_id=625356338]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+tooltip_text = "Radius"
+mouse_filter = 1
 text = "Radius"
+text_overrun_behavior = 5
 
 [node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2" unique_id=1810487211]
 unique_name_in_owner = true

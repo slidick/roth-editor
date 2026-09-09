@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://dr1767uott2uo"]
 
 [ext_resource type="Script" uid="uid://bb4hmtbc2qda4" path="res://src/windows/das_editor/directional_container.gd" id="1_3ddx1"]
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_d0ymd"]
 [ext_resource type="Script" uid="uid://bdfvkk5hbrn6c" path="res://src/ui/roth_texture_container.gd" id="2_d0ymd"]
 
 [node name="DirectionalContainer" type="MarginContainer" unique_id=1578364445]
-offset_right = 1477.0
-offset_bottom = 763.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_d0ymd")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -21,9 +26,13 @@ theme_override_constants/separation = 20
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=929841863]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+tooltip_text = "Name"
+mouse_filter = 1
 text = "Name"
+text_overrun_behavior = 5
 
 [node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=428552880]
 unique_name_in_owner = true
@@ -32,9 +41,13 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1812738277]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+tooltip_text = "Description"
+mouse_filter = 1
 text = "Description"
+text_overrun_behavior = 5
 
 [node name="DescriptionEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=140034800]
 unique_name_in_owner = true
@@ -52,8 +65,11 @@ size_flags_vertical = 4
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=1735830852]
 layout_mode = 2
+tooltip_text = "Collision"
+mouse_filter = 1
 text = "Collision"
 horizontal_alignment = 1
+text_overrun_behavior = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ObjectCollision" unique_id=7582892]
 layout_mode = 2
@@ -61,7 +77,10 @@ layout_mode = 2
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer" unique_id=1143210098]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+tooltip_text = "Height"
+mouse_filter = 1
 text = "Height"
+text_overrun_behavior = 5
 
 [node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer" unique_id=1340472679]
 unique_name_in_owner = true
@@ -76,7 +95,10 @@ layout_mode = 2
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2" unique_id=584603695]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+tooltip_text = "Radius"
+mouse_filter = 1
 text = "Radius"
+text_overrun_behavior = 5
 
 [node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer/ObjectCollision/HBoxContainer2" unique_id=1264305260]
 unique_name_in_owner = true
@@ -108,6 +130,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=681314526]
 layout_mode = 2
+tooltip_text = "Front"
+mouse_filter = 1
 text = "Front"
 horizontal_alignment = 1
 
@@ -133,6 +157,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToFrontButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1724785388]
@@ -146,6 +171,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=461343138]
 layout_mode = 2
+tooltip_text = "Front-Left"
+mouse_filter = 1
 text = "Front-Left"
 horizontal_alignment = 1
 
@@ -171,6 +198,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToFrontLeftButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer2" unique_id=1101240579]
@@ -184,6 +212,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=1379014213]
 layout_mode = 2
+tooltip_text = "Left"
+mouse_filter = 1
 text = "Left"
 horizontal_alignment = 1
 
@@ -209,6 +239,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToLeftButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer3" unique_id=372651512]
@@ -222,6 +253,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=1721102217]
 layout_mode = 2
+tooltip_text = "Back-Left"
+mouse_filter = 1
 text = "Back-Left"
 horizontal_alignment = 1
 
@@ -247,6 +280,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToBackLeftButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer4" unique_id=941980364]
@@ -260,6 +294,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=798860703]
 layout_mode = 2
+tooltip_text = "Back"
+mouse_filter = 1
 text = "Back"
 horizontal_alignment = 1
 
@@ -285,6 +321,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToBackButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer5" unique_id=112000899]
@@ -298,6 +335,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1998774366]
 layout_mode = 2
+tooltip_text = "Back-Right"
+mouse_filter = 1
 text = "Back-Right"
 horizontal_alignment = 1
 
@@ -323,6 +362,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToBackRightButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer6" unique_id=1231800906]
@@ -336,6 +376,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1432272392]
 layout_mode = 2
+tooltip_text = "Right"
+mouse_filter = 1
 text = "Right"
 horizontal_alignment = 1
 
@@ -361,6 +403,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToRightButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer7" unique_id=1034110337]
@@ -374,6 +417,8 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1935145589]
 layout_mode = 2
+tooltip_text = "Front-Right"
+mouse_filter = 1
 text = "Front-Right"
 horizontal_alignment = 1
 
@@ -399,6 +444,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Mirrored"
 text = "Mirrored"
 
 [node name="JumpToFrontRightButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer/ScrollContainer/HBoxContainer/VBoxContainer8" unique_id=1796500426]

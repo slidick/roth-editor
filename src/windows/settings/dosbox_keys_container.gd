@@ -367,9 +367,11 @@ func _on_key_edit_gui_input(event: InputEvent) -> void:
 				Settings.update_settings("dosbox_keymap", {_current_key: current_mapping})
 				var mapping_text: String = get_mapping_text(current_mapping)
 				find_child(_current_key).text = mapping_text
+				find_child(_current_key).tooltip_text = mapping_text
 			else:
 				Settings.update_settings("dosbox_keymap", {_current_key: ["%d" % code]})
 				find_child(_current_key).text = key_string
+				find_child(_current_key).tooltip_text = key_string
 		
 		if find_child(_current_key).get_child_count() > 0:
 			find_child(_current_key).get_child(0).hide()
@@ -444,6 +446,7 @@ func load_controls(controls: Dictionary) -> void:
 		var node: Label = find_child(key)
 		if node:
 			node.text = get_mapping_text(controls[key])
+			node.tooltip_text = get_mapping_text(controls[key])
 
 
 func _on_save_button_pressed() -> void:

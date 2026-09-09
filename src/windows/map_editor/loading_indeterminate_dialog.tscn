@@ -16,6 +16,7 @@ show_focus_highlight = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_gaf10")
+is_subwindow = true
 
 [node name="ProgressBar" type="ProgressBar" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=814574818]
 layout_mode = 2

@@ -25,9 +25,13 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=697454943]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+tooltip_text = "Name"
+mouse_filter = 1
 text = "Name"
+text_overrun_behavior = 5
 
 [node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=503227414]
 unique_name_in_owner = true
@@ -36,9 +40,13 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1403747147]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+tooltip_text = "Description"
+mouse_filter = 1
 text = "Description"
+text_overrun_behavior = 5
 
 [node name="DescriptionEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=1168230163]
 unique_name_in_owner = true
@@ -53,14 +61,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1344124341]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Flags 1"
+mouse_filter = 1
 text = "Flags 1"
+text_overrun_behavior = 5
 
 [node name="Flags1Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=2103532449]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1768030105]
@@ -69,28 +80,32 @@ size_flags_horizontal = 3
 
 [node name="Flags1CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1562742173]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 1"
 text = "Flag 1"
+text_overrun_behavior = 5
 
 [node name="Flags1CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1276191778]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Sky"
 text = "Sky"
+text_overrun_behavior = 5
 
 [node name="Flags1CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=1911062418]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Monster"
 disabled = true
 text = "Monster"
+text_overrun_behavior = 5
 
 [node name="Flags1CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=412487109]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 4"
 text = "Flag 4"
+text_overrun_behavior = 5
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=201772293]
 layout_mode = 2
@@ -98,28 +113,32 @@ size_flags_horizontal = 3
 
 [node name="Flags1CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=504316797]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 5"
 text = "Flag 5"
+text_overrun_behavior = 5
 
 [node name="Flags1CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=834609483]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Directional"
 disabled = true
 text = "Directional"
+text_overrun_behavior = 5
 
 [node name="Flags1CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1917064705]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 7"
 text = "Flag 7"
+text_overrun_behavior = 5
 
 [node name="Flags1CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer/VBoxContainer2" unique_id=470573492]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 8"
 text = "Flag 8"
+text_overrun_behavior = 5
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1361688792]
 layout_mode = 2
@@ -129,14 +148,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=877329009]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Flags 2"
+mouse_filter = 1
 text = "Flags 2"
+text_overrun_behavior = 5
 
 [node name="Flags2Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=2115591118]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=1980011402]
@@ -145,29 +167,33 @@ size_flags_horizontal = 3
 
 [node name="Flags2CheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=413964003]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Animation"
 disabled = true
 text = "Animation"
+text_overrun_behavior = 5
 
 [node name="Flags2CheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=911604616]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Animation 2"
 disabled = true
 text = "Animation 2"
+text_overrun_behavior = 5
 
 [node name="Flags2CheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=77551278]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 3"
 text = "Flag 3"
+text_overrun_behavior = 5
 
 [node name="Flags2CheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=853924220]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 4"
 text = "Flag 4"
+text_overrun_behavior = 5
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=284090068]
 layout_mode = 2
@@ -175,27 +201,31 @@ size_flags_horizontal = 3
 
 [node name="Flags2CheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=2055900525]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 5"
 text = "Flag 5"
+text_overrun_behavior = 5
 
 [node name="Flags2CheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=2031526481]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 6"
 text = "Flag 6"
+text_overrun_behavior = 5
 
 [node name="Flags2CheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=1025591514]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 7"
 text = "Flag 7"
+text_overrun_behavior = 5
 
 [node name="Flags2CheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer/HBoxContainer2/VBoxContainer4" unique_id=2013851580]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 8"
 text = "Flag 8"
+text_overrun_behavior = 5
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=591504805]
 layout_mode = 2
@@ -208,14 +238,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=1419470834]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Modifier"
+mouse_filter = 1
 text = "Modifier"
+text_overrun_behavior = 5
 
 [node name="ModifierEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=689163208]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=1242720434]
@@ -224,27 +257,31 @@ size_flags_horizontal = 3
 
 [node name="ModifierCheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=471412644]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 1"
 text = "Flag 1"
+text_overrun_behavior = 5
 
 [node name="ModifierCheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=1270556606]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 2"
 text = "Flag 2"
+text_overrun_behavior = 5
 
 [node name="ModifierCheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=864501546]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 3"
 text = "Flag 3"
+text_overrun_behavior = 5
 
 [node name="ModifierCheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer" unique_id=2056407776]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 4"
 text = "Flag 4"
+text_overrun_behavior = 5
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=708162838]
 layout_mode = 2
@@ -252,28 +289,32 @@ size_flags_horizontal = 3
 
 [node name="ModifierCheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=240027800]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Draw Downward"
 text = "Draw Downward"
+text_overrun_behavior = 5
 
 [node name="ModifierCheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=632869429]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 6"
 text = "Flag 6"
+text_overrun_behavior = 5
 
 [node name="ModifierCheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=622926774]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Image Pack"
 disabled = true
 text = "Image Pack"
+text_overrun_behavior = 5
 
 [node name="ModifierCheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer/VBoxContainer2" unique_id=1941403966]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Half Size"
 text = "Half Size"
+text_overrun_behavior = 5
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer3" unique_id=625209736]
 layout_mode = 2
@@ -283,14 +324,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=1470990345]
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Image Type"
+mouse_filter = 1
 text = "Image Type"
+text_overrun_behavior = 5
 
 [node name="ImageTypeEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=614160657]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=99818349]
@@ -299,28 +343,32 @@ size_flags_horizontal = 3
 
 [node name="ImageTypeCheckBox1" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=847050637]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Animation"
 disabled = true
 text = "Animation"
+text_overrun_behavior = 5
 
 [node name="ImageTypeCheckBox2" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=742871961]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Disable Pixel 0"
 text = "Disable Pixel 0"
+text_overrun_behavior = 5
 
 [node name="ImageTypeCheckBox3" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=1977920167]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Transparency"
 text = "Transparency"
+text_overrun_behavior = 5
 
 [node name="ImageTypeCheckBox4" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer3" unique_id=909214855]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Create Mirror"
 text = "Create Mirror"
+text_overrun_behavior = 5
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer2" unique_id=630549615]
 layout_mode = 2
@@ -328,28 +376,32 @@ size_flags_horizontal = 3
 
 [node name="ImageTypeCheckBox5" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=1687138748]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 5"
 text = "Flag 5"
+text_overrun_behavior = 5
 
 [node name="ImageTypeCheckBox6" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=342257121]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 6"
 text = "Flag 6"
+text_overrun_behavior = 5
 
 [node name="ImageTypeCheckBox7" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=523023821]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "Flag 7"
 text = "Flag 7"
+text_overrun_behavior = 5
 
 [node name="ImageTypeCheckBox8" type="CheckBox" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/VBoxContainer4" unique_id=1091105186]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+tooltip_text = "3D Object"
 disabled = true
 text = "3D Object"
+text_overrun_behavior = 5
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1690642865]
 visible = false
@@ -529,103 +581,128 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1659052363]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer5" unique_id=1116654184]
 layout_mode = 2
-theme_override_constants/separation = 20
+size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=929874999]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer" unique_id=1659052363]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=929874999]
+layout_mode = 2
+tooltip_text = "Animation"
+mouse_filter = 1
 text = "Animation"
 horizontal_alignment = 1
+text_overrun_behavior = 5
 
-[node name="DimensionLabel" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=635061636]
+[node name="DimensionLabel" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=635061636]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1292248496]
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=1292248496]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4" unique_id=1543288260]
-custom_minimum_size = Vector2(100, 0)
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer4" unique_id=1543288260]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Frames"
+mouse_filter = 1
 text = "Frames"
+text_overrun_behavior = 5
 
-[node name="FramesSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4" unique_id=1779061810]
+[node name="FramesSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer4" unique_id=1779061810]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 min_value = 1.0
 max_value = 65535.0
 value = 1.0
 rounded = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1176358351]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=1176358351]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer" unique_id=766922182]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer" unique_id=766922182]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Unk_0x0E"
 
-[node name="Unk0x0EEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer" unique_id=1119528603]
+[node name="Unk0x0EEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer" unique_id=1119528603]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1811079844]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=1811079844]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2" unique_id=1504983245]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer2" unique_id=1504983245]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Unk_0x10"
 
-[node name="Unk0x10Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2" unique_id=1303849358]
+[node name="Unk0x10Edit" type="LineEdit" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer2" unique_id=1303849358]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=850679550]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=850679550]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=1468059727]
-custom_minimum_size = Vector2(100, 0)
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer3" unique_id=1468059727]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Speed"
+mouse_filter = 1
 text = "Speed"
+text_overrun_behavior = 5
 
-[node name="AnimationSpeedSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3" unique_id=1459382804]
+[node name="AnimationSpeedSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer3" unique_id=1459382804]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 max_value = 255.0
 rounded = true
 
-[node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1003809134]
+[node name="RotatedCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=1003809134]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Rotated"
 button_pressed = true
 text = "Rotated"
+text_overrun_behavior = 5
 
-[node name="AsImagesCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=200641478]
+[node name="AsImagesCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=200641478]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "As Images"
 text = "As Images"
+text_overrun_behavior = 5
 
-[node name="ImportSpriteSheetButton" type="Button" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1200078584]
+[node name="ImportSpriteSheetButton" type="Button" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=1200078584]
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Import Sprite Sheet"
 
-[node name="ShiftDataContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=1532200385]
+[node name="ShiftDataContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=1532200385]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer" unique_id=1152634277]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer" unique_id=1152634277]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer" unique_id=1210505086]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/HBoxContainer" unique_id=1210505086]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Shift X"
+mouse_filter = 1
 text = "Shift X"
+text_overrun_behavior = 5
 
-[node name="ShiftXSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer" unique_id=168846399]
+[node name="ShiftXSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/HBoxContainer" unique_id=168846399]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -633,14 +710,18 @@ min_value = -32768.0
 max_value = 32767.0
 rounded = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer" unique_id=45787015]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer" unique_id=45787015]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2" unique_id=1807704789]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/HBoxContainer2" unique_id=1807704789]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Shift Y"
+mouse_filter = 1
 text = "Shift Y"
+text_overrun_behavior = 5
 
-[node name="ShiftYSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2" unique_id=902253970]
+[node name="ShiftYSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/HBoxContainer2" unique_id=902253970]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -648,44 +729,55 @@ min_value = -32768.0
 max_value = 32767.0
 rounded = true
 
-[node name="ShowShiftCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer" unique_id=1974016627]
+[node name="ShowShiftCheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer" unique_id=1974016627]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Show Shift"
 text = "Show Shift"
+text_overrun_behavior = 5
 
-[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2" unique_id=753821730]
+[node name="ObjectCollision" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2" unique_id=753821730]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=400704415]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision" unique_id=400704415]
 layout_mode = 2
+tooltip_text = "Collision"
+mouse_filter = 1
 text = "Collision"
 horizontal_alignment = 1
+text_overrun_behavior = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=1566693078]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision" unique_id=1566693078]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=2134054077]
-custom_minimum_size = Vector2(70, 0)
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=2134054077]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Height"
+mouse_filter = 1
 text = "Height"
+text_overrun_behavior = 5
 
-[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=213697198]
+[node name="CollisionHeightSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision/HBoxContainer" unique_id=213697198]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 65535.0
 rounded = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision" unique_id=562623729]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision" unique_id=562623729]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=2094050198]
-custom_minimum_size = Vector2(70, 0)
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=2094050198]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Radius"
+mouse_filter = 1
 text = "Radius"
+text_overrun_behavior = 5
 
-[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1750122703]
+[node name="CollisionRadiusSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision/HBoxContainer2" unique_id=1750122703]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -696,6 +788,7 @@ rounded = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 
 [node name="RotationContainer" type="Container" parent="VBoxContainer/HBoxContainer5/AnimationContainer" unique_id=931176528]
 unique_name_in_owner = true
@@ -708,6 +801,7 @@ metadata/_custom_type_script = "uid://2rrlixceot6j"
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+expand_mode = 1
 stretch_mode = 5
 script = ExtResource("3_6cdqi")
 
@@ -728,6 +822,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 
 [node name="ImagesContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer5/AsImagesContainer" unique_id=1474000291]
 unique_name_in_owner = true
@@ -802,18 +897,18 @@ item_2/id = 2
 [connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox6" to="." method="_on_image_type_2_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox7" to="." method="_on_image_type_2_check_box_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer4/HBoxContainer2/VBoxContainer4/ImageType2CheckBox8" to="." method="_on_image_type_2_check_box_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer4/FramesSpinBox" to="." method="_on_frames_spin_box_value_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer/Unk0x0EEdit" to="." method="_on_unk_0x0e_edit_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer2/Unk0x10Edit" to="." method="_on_unk_0x_10_edit_text_changed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/HBoxContainer3/AnimationSpeedSpinBox" to="." method="_on_animation_speed_spin_box_value_changed"]
-[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
-[connection signal="toggled" from="VBoxContainer/HBoxContainer5/VBoxContainer2/AsImagesCheckButton" to="." method="_on_as_images_check_button_toggled"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ImportSpriteSheetButton" to="." method="_on_import_sprite_sheet_button_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer/ShiftXSpinBox" to="." method="_on_shift_x_spin_box_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/HBoxContainer2/ShiftYSpinBox" to="." method="_on_shift_y_spin_box_value_changed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ShiftDataContainer/ShowShiftCheckButton" to="." method="_on_show_shift_check_button_pressed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
-[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/VBoxContainer2/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer4/FramesSpinBox" to="." method="_on_frames_spin_box_value_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer/Unk0x0EEdit" to="." method="_on_unk_0x0e_edit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer2/Unk0x10Edit" to="." method="_on_unk_0x_10_edit_text_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/HBoxContainer3/AnimationSpeedSpinBox" to="." method="_on_animation_speed_spin_box_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/RotatedCheckButton" to="." method="_on_rotated_check_button_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/AsImagesCheckButton" to="." method="_on_as_images_check_button_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ImportSpriteSheetButton" to="." method="_on_import_sprite_sheet_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/HBoxContainer/ShiftXSpinBox" to="." method="_on_shift_x_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/HBoxContainer2/ShiftYSpinBox" to="." method="_on_shift_y_spin_box_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ShiftDataContainer/ShowShiftCheckButton" to="." method="_on_show_shift_check_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision/HBoxContainer/CollisionHeightSpinBox" to="." method="_on_collision_height_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer5/ScrollContainer/VBoxContainer2/ObjectCollision/HBoxContainer2/CollisionRadiusSpinBox" to="." method="_on_collision_radius_spin_box_value_changed"]
 [connection signal="gui_input" from="VBoxContainer/HBoxContainer5/AnimationContainer/RotationContainer/AnimationTextureRect" to="." method="_on_animation_texture_rect_gui_input"]
 [connection signal="index_pressed" from="VBoxContainer/HBoxContainer5/AnimationContainer/AnimationPopupMenu" to="." method="_on_animation_popup_menu_index_pressed"]
 [connection signal="index_pressed" from="PopupMenu" to="." method="_on_popup_menu_index_pressed"]

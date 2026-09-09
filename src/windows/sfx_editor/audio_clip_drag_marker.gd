@@ -10,6 +10,7 @@ func initialize() -> void:
 	else:
 		if is_equal_approx(get_parent().size.x, 0):
 			await get_tree().process_frame
+		await get_tree().process_frame
 		position.x = get_parent().size.x-size.x/2
 
 func _gui_input(event: InputEvent) -> void:

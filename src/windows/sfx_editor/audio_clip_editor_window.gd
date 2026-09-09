@@ -122,6 +122,7 @@ func _on_browse_filesystem_button_pressed() -> void:
 
 func _on_cancel_button_pressed() -> void:
 	done.emit({})
+	toggle(false)
 
 
 func _on_reset_button_pressed() -> void:
@@ -357,3 +358,17 @@ func _on_record_button_pressed() -> void:
 
 func _on_device_option_item_selected(index: int) -> void:
 	AudioServer.input_device = AudioServer.get_input_device_list()[index]
+
+
+func _on_viewport_size_changed() -> void:
+	await super._on_viewport_size_changed()
+	_on_window_resized()
+
+
+func _on_window_resized() -> void:
+	if audio_entry:
+		await get_tree().process_frame
+		%StartMarker.position.x = ((start_index * 2.0 * %Waveform.size.x) / len(audio_entry.raw_data)) - (%StartMarker.size.x/2.0)
+		%Waveform.update_start_marker(%StartMarker.position.x+%StartMarker.size.x/2)
+		%EndMarker.position.x = ((end_index * 2.0 * %Waveform.size.x) / len(audio_entry.raw_data)) - (%EndMarker.size.x/2.0)
+		%Waveform.update_end_marker(%EndMarker.position.x+%EndMarker.size.x/2)

@@ -34,6 +34,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+expand_mode = 1
 stretch_mode = 5
 
 [node name="SubtitleLabel" type="Label" parent="VBoxContainer/VideoRect" unique_id=602632349]

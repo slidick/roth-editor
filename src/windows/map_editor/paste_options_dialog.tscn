@@ -16,6 +16,7 @@ show_close_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_tk4xa")
+is_subwindow = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1530646525]
 layout_mode = 2

@@ -56,7 +56,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	$FPSLabel.text = "FPS: %s" % Engine.get_frames_per_second()
+	%FPSLabel.text = "FPS: %s" % Engine.get_frames_per_second()
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -73,7 +73,7 @@ layout_mode = 2
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=986516925]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 1
+current_tab = 2
 
 [node name="Basic Controls" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=1148319331]
 unique_name_in_owner = true
@@ -101,13 +101,13 @@ size_flags_horizontal = 3
 text = "Move Forward:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="move_forward" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=302841403]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -124,13 +124,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=969731868]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=2146332533]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=246278916]
 layout_mode = 2
@@ -141,13 +145,13 @@ size_flags_horizontal = 3
 text = "Move Backward:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="move_backward" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1468325215]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -164,13 +168,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=2004497604]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1443411729]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=819767631]
 layout_mode = 2
@@ -181,13 +189,13 @@ size_flags_horizontal = 3
 text = "Strafe Left:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="strafe_left" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=522300176]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -204,13 +212,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=444661780]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=1880045131]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1742011819]
 layout_mode = 2
@@ -221,13 +233,13 @@ size_flags_horizontal = 3
 text = "Strafe Right:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="strafe_right" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=564270203]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -244,13 +256,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=105521761]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer4" unique_id=393526924]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=731213422]
 layout_mode = 2
@@ -261,13 +277,13 @@ size_flags_horizontal = 3
 text = "Turn Left:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="turn_left" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=397622895]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -284,13 +300,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=561089108]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer5" unique_id=834363866]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=850821369]
 layout_mode = 2
@@ -301,13 +321,13 @@ size_flags_horizontal = 3
 text = "Turn Right: "
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="turn_right" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=702579037]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -324,13 +344,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1571973281]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1490616014]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="Control" type="Control" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=462745046]
 custom_minimum_size = Vector2(0, 15)
@@ -345,13 +369,13 @@ size_flags_horizontal = 3
 text = "Look Up:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="look_up" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=143276874]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -368,13 +392,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=361535121]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=917048421]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=571787686]
 layout_mode = 2
@@ -385,13 +413,13 @@ size_flags_horizontal = 3
 text = "Look Down:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="look_down" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1328466180]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -408,13 +436,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=731997254]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=2040658659]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1103448975]
 layout_mode = 2
@@ -425,13 +457,13 @@ size_flags_horizontal = 3
 text = "Tilt Up:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="tilt_up" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=2035384107]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -448,13 +480,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=152275511]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1736178273]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1077683103]
 layout_mode = 2
@@ -465,13 +501,13 @@ size_flags_horizontal = 3
 text = "Tilt Down:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="tilt_down" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1058432485]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -488,13 +524,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=121723670]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1916809615]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="ChangeAllButton" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer" unique_id=1356101745]
 custom_minimum_size = Vector2(130, 42)
@@ -516,13 +556,13 @@ size_flags_horizontal = 3
 text = "Jump:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="jump" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1303829005]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -539,13 +579,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=1541333373]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer" unique_id=654547209]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=327771878]
 layout_mode = 2
@@ -556,13 +600,13 @@ size_flags_horizontal = 3
 text = "Crouch:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="crouch" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=2011817909]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -579,13 +623,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=17030137]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer2" unique_id=862293238]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1650735583]
 layout_mode = 2
@@ -596,13 +644,13 @@ size_flags_horizontal = 3
 text = "Attack:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="attack" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=624993559]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -619,13 +667,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=1672209198]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer3" unique_id=509093864]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=297680238]
 layout_mode = 2
@@ -636,13 +688,13 @@ size_flags_horizontal = 3
 text = "Inventory:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="inventory" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=988516571]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -659,13 +711,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=760615528]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer4" unique_id=165132661]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=405350244]
 layout_mode = 2
@@ -676,13 +732,13 @@ size_flags_horizontal = 3
 text = "Toggle Run:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="toggle_run" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=1295301239]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -699,13 +755,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=1638080765]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer5" unique_id=1898302063]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer20" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1510548186]
 layout_mode = 2
@@ -721,13 +781,13 @@ size_flags_horizontal = 3
 text = "Hold Run:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="hold_run" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=585660203]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -744,13 +804,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=1782678712]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer20" unique_id=821374509]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="Control" type="Control" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1775210820]
 custom_minimum_size = Vector2(0, 15)
@@ -765,13 +829,13 @@ size_flags_horizontal = 3
 text = "Unarmed:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="unarmed" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=488891197]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -788,13 +852,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=1165405652]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer8" unique_id=1545624713]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=54055068]
 layout_mode = 2
@@ -805,13 +873,13 @@ size_flags_horizontal = 3
 text = "Quickslot 1:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quickslot_1" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=1563759216]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -828,13 +896,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=960551279]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer9" unique_id=221458376]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1309377486]
 layout_mode = 2
@@ -845,13 +917,13 @@ size_flags_horizontal = 3
 text = "Quickslot 2:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quickslot_2" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=285065506]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -868,13 +940,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=868035206]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer10" unique_id=815969597]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=431798113]
 layout_mode = 2
@@ -885,13 +961,13 @@ size_flags_horizontal = 3
 text = "Quickslot 3:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quickslot_3" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=1179306852]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -908,13 +984,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=1385695713]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer11" unique_id=263424160]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer12" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=1528962156]
 layout_mode = 2
@@ -925,13 +1005,13 @@ size_flags_horizontal = 3
 text = "Quickslot 4:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quickslot_4" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=1806103047]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -948,13 +1028,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=477660147]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer12" unique_id=2067489105]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer13" type="HBoxContainer" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3" unique_id=736271359]
 layout_mode = 2
@@ -965,13 +1049,13 @@ size_flags_horizontal = 3
 text = "Quickslot 5:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quickslot_5" type="Label" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=1502031440]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -988,16 +1072,21 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=40738113]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Basic Controls/HBoxContainer/VBoxContainer3/HBoxContainer13" unique_id=1188360647]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="Advanced Controls" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=427162944]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -1021,15 +1110,16 @@ size_flags_horizontal = 3
 text = "Quicksave:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quicksave" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1262803025]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6/quicksave" unique_id=775078986]
 visible = false
@@ -1044,12 +1134,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=833250098]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=1934307894]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=435914287]
@@ -1061,15 +1154,16 @@ size_flags_horizontal = 3
 text = "Quickload:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="quickload" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=665247194]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9/quickload" unique_id=892309530]
 visible = false
@@ -1084,12 +1178,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=1064450471]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer9" unique_id=811505351]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=491392947]
@@ -1101,15 +1198,16 @@ size_flags_horizontal = 3
 text = "Escape:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="escape" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=1223885677]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7/escape" unique_id=1962864827]
 visible = false
@@ -1124,12 +1222,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=948938710]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=177676870]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=2103606887]
@@ -1141,15 +1242,16 @@ size_flags_horizontal = 3
 text = "Enter:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="enter" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1243001666]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8/enter" unique_id=341517704]
 visible = false
@@ -1164,12 +1266,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1159653585]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=57493963]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer11" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=234439769]
@@ -1181,15 +1286,16 @@ size_flags_horizontal = 3
 text = "Hide Weapon:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="hide_weapon" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=1899702784]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11/hide_weapon" unique_id=1863241551]
 visible = false
@@ -1204,12 +1310,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=616562176]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=796220964]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer12" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1101168726]
@@ -1221,15 +1330,16 @@ size_flags_horizontal = 3
 text = "Toggle Subtitles:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="toggle_subtitles" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=114210050]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12/toggle_subtitles" unique_id=379256821]
 visible = false
@@ -1244,12 +1354,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=1061836265]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer12" unique_id=32712588]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer13" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1898666823]
@@ -1262,15 +1375,16 @@ text = "Toggle
 Adventure Mode:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="toggle_adventure_mode" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=124730614]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13/toggle_adventure_mode" unique_id=1207706660]
 visible = false
@@ -1285,14 +1399,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=770367837]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer13" unique_id=86969898]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
-size_flags_stretch_ratio = 0.4
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer17" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1777986490]
@@ -1304,15 +1421,16 @@ size_flags_horizontal = 3
 text = "Main Menu:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="main_menu" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=625271631]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17/main_menu" unique_id=2131443480]
 visible = false
@@ -1327,12 +1445,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=370693738]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer17" unique_id=477513623]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer19" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=1051216832]
@@ -1346,15 +1467,16 @@ Dev Open Door /
 Reload after Death:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="reload_after_death" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=1277729670]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19/reload_after_death" unique_id=937104320]
 visible = false
@@ -1369,14 +1491,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=1588638560]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer/HBoxContainer19" unique_id=64953498]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
-size_flags_stretch_ratio = 0.4
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="ChangeAllAdvancedButton" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer" unique_id=393304032]
@@ -1399,15 +1524,16 @@ size_flags_horizontal = 3
 text = "Increase Gamma:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="increase_gamma" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=1371021337]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9/increase_gamma" unique_id=619290678]
 visible = false
@@ -1422,12 +1548,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=721150599]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer9" unique_id=1097329416]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=2118250932]
@@ -1439,15 +1568,16 @@ size_flags_horizontal = 3
 text = "Decrease Gamma:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="decrease_gamma" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=1419252470]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10/decrease_gamma" unique_id=1094835091]
 visible = false
@@ -1462,12 +1592,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=1393935065]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer10" unique_id=611373292]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer14" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=2135634848]
@@ -1479,15 +1612,16 @@ size_flags_horizontal = 3
 text = "Increase Viewport:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="increase_viewport" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=1444341283]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14/increase_viewport" unique_id=1213694791]
 visible = false
@@ -1502,12 +1636,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=1707827464]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer14" unique_id=2074848247]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer15" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=378858361]
@@ -1519,15 +1656,16 @@ size_flags_horizontal = 3
 text = "Decrease Viewport:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="decrease_viewport" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=1864797470]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15/decrease_viewport" unique_id=1975672600]
 visible = false
@@ -1542,12 +1680,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=765568348]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer15" unique_id=553613139]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer16" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=127731591]
@@ -1559,15 +1700,16 @@ size_flags_horizontal = 3
 text = "Redraw Screen:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="redraw_screen" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=964613966]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16/redraw_screen" unique_id=350333178]
 visible = false
@@ -1582,12 +1724,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=2060423498]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer16" unique_id=619015984]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer18" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=529549639]
@@ -1599,15 +1744,16 @@ size_flags_horizontal = 3
 text = "Toggle Textures:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="toggle_textures" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=756586757]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18/toggle_textures" unique_id=485604540]
 visible = false
@@ -1622,12 +1768,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=1776472457]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer18" unique_id=1458317709]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer21" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=2132334034]
@@ -1639,15 +1788,16 @@ size_flags_horizontal = 3
 text = "Toggle Mouse Buttons:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="toggle_mouse_buttons" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=1843443761]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21/toggle_mouse_buttons" unique_id=1787108496]
 visible = false
@@ -1662,12 +1812,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=962285764]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer21" unique_id=1030030009]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer22" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1987476530]
@@ -1679,15 +1832,16 @@ size_flags_horizontal = 3
 text = "Display Version:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="display_version" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=897693646]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22/display_version" unique_id=422160191]
 visible = false
@@ -1702,12 +1856,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=233595187]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer22" unique_id=1302103590]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer23" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1196858361]
@@ -1719,14 +1876,15 @@ size_flags_horizontal = 3
 text = "Dev Map Warp:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="map_warp" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=1343748598]
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23/map_warp" unique_id=326350266]
 visible = false
@@ -1741,12 +1899,15 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=1609603832]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer23" unique_id=706013765]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="HBoxContainer24" type="HBoxContainer" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2" unique_id=1454269274]
@@ -1758,14 +1919,15 @@ size_flags_horizontal = 3
 text = "Dev Map Overlay:"
 horizontal_alignment = 2
 clip_text = true
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="map_overlay" type="Label" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=835283152]
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24/map_overlay" unique_id=1615041579]
 visible = false
@@ -1780,17 +1942,19 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=581281227]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/Advanced Controls/HBoxContainer/VBoxContainer2/HBoxContainer24" unique_id=1921190680]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
 
 [node name="DosBox Controls" type="MarginContainer" parent="VBoxContainer/TabContainer" unique_id=1971308343]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -1813,12 +1977,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Toggle Fullscreen:"
 horizontal_alignment = 2
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="toggle_fullscreen" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=2081588759]
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -1835,13 +1999,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=470166435]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer6" unique_id=861568286]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer10" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=2096115323]
 layout_mode = 2
@@ -1851,13 +2019,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Capture Mouse:"
 horizontal_alignment = 2
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="capture_mouse" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=765674963]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -1874,13 +2042,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=915841214]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer10" unique_id=1442556176]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=2144377258]
 layout_mode = 2
@@ -1890,13 +2062,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Cycles Up:"
 horizontal_alignment = 2
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="cycles_up" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=70564547]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -1913,13 +2085,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=614908440]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer7" unique_id=1099913697]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=1411480032]
 layout_mode = 2
@@ -1929,13 +2105,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Cycles Down:"
 horizontal_alignment = 2
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 script = ExtResource("3_wqx06")
 
 [node name="cycles_down" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1639646039]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -1952,13 +2128,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=449804353]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer8" unique_id=1478032635]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=623031985]
 visible = false
@@ -2008,11 +2188,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Fast Forward:"
 horizontal_alignment = 2
-text_overrun_behavior = 3
+text_overrun_behavior = 5
 
 [node name="fast_forward" type="Label" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=953204768]
-custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 horizontal_alignment = 1
 
@@ -2029,13 +2209,17 @@ color = Color(0.565382, 0.436127, 0.398421, 1)
 
 [node name="Button" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=1530376472]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Change"
+text_overrun_behavior = 5
 
 [node name="Button2" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer/HBoxContainer11" unique_id=421886052]
 layout_mode = 2
-size_flags_horizontal = 2
-size_flags_stretch_ratio = 0.4
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "Add"
+text_overrun_behavior = 5
 
 [node name="ChangeAllDosBoxButton" type="Button" parent="VBoxContainer/TabContainer/DosBox Controls/HBoxContainer/VBoxContainer" unique_id=335733050]
 custom_minimum_size = Vector2(130, 42)

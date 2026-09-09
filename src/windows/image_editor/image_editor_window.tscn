@@ -35,6 +35,7 @@ show_close_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_vgo61")
+is_subwindow = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=163977548]
 layout_mode = 2
@@ -65,7 +66,7 @@ handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
 physics_object_picking_first_only = true
-size = Vector2i(732, 647)
+size = Vector2i(623, 647)
 render_target_update_mode = 4
 
 [node name="RotationContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/SubViewportContainer/SubViewport" index="0" unique_id=1696174823]
@@ -113,6 +114,7 @@ text = "Rotate Canvas"
 [node name="VBoxContainer2" type="VBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1350186580]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="0" unique_id=1467783165]
 layout_mode = 2
@@ -144,11 +146,14 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="0" unique_id=1537524889]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Draw Size:"
+text_overrun_behavior = 5
 
 [node name="DrawSizeSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="1" unique_id=1506563066]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 min_value = 1.0
 max_value = 64.0
 value = 1.0
@@ -157,14 +162,20 @@ rounded = true
 [node name="TextureSizeContainer" type="HBoxContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2" index="2" unique_id=1643946416]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
 
 [node name="Label2" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="0" unique_id=1637433269]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Width:"
+text_overrun_behavior = 5
 
 [node name="WidthSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="1" unique_id=1172273463]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 min_value = 1.0
 max_value = 1024.0
 value = 32.0
@@ -172,11 +183,15 @@ rounded = true
 
 [node name="Label3" type="Label" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="2" unique_id=50821418]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Height:"
+text_overrun_behavior = 5
 
 [node name="HeightSpinBox" type="SpinBox" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2/HBoxContainer2/TextureSizeContainer" index="3" unique_id=443703408]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 min_value = 1.0
 max_value = 1024.0
 value = 32.0
@@ -215,8 +230,8 @@ text = "Edit Palette"
 [node name="PaletteContainer" type="PanelContainer" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="3" unique_id=1977510581]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 0
-size_flags_stretch_ratio = 0.5
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q5his")
 
 [node name="RotationPreviewContainer" type="Container" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" index="4" unique_id=1643524020]

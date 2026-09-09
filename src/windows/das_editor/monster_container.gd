@@ -35,7 +35,9 @@ func load_textures() -> void:
 		
 		var section_vbox := VBoxContainer.new()
 		var section_label := Label.new()
+		section_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		section_label.text = type.to_pascal_case()
+		section_label.tooltip_text = section_label.text
 		section_vbox.add_child(section_label)
 		section_vbox.add_child(hbox)
 		
@@ -66,7 +68,9 @@ func load_textures() -> void:
 func create_vbox(key_label: String, full_key: String) -> VBoxContainer:
 	var mapping: Dictionary = monster_data.monster_mapping
 	var label := Label.new()
+	label.mouse_filter = Control.MOUSE_FILTER_PASS
 	label.text = key_label.to_pascal_case()
+	label.tooltip_text = label.text
 	
 	var texture_container := RothTextureContainer.new()
 	texture_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -87,6 +91,7 @@ func create_vbox(key_label: String, full_key: String) -> VBoxContainer:
 	
 	var checkbox := CheckBox.new()
 	checkbox.text = "Mirror"
+	checkbox.tooltip_text = checkbox.text
 	checkbox.button_pressed = mapping[full_key] & 0x8000
 	checkbox.toggled.connect(func (toggled_on: bool) -> void:
 		if toggled_on:

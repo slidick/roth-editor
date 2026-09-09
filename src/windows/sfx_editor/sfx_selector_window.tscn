@@ -9,7 +9,6 @@
 offset_right = 1065.0
 offset_bottom = 643.0
 script = ExtResource("2_vcynu")
-resizable = false
 exclusive = true
 show_maximize_button = false
 show_close_button = false
@@ -17,6 +16,7 @@ show_focus_highlight = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_embwl")
+is_subwindow = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1638552400]
 layout_mode = 2
@@ -53,6 +53,7 @@ layout_mode = 2
 text = "Cancel"
 
 [node name="SelectButton" type="Button" parent="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=937935957]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 theme = ExtResource("4_drd3d")
@@ -60,5 +61,6 @@ text = "Select"
 
 [connection signal="text_changed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/SearchEdit" to="." method="_on_search_edit_text_changed"]
 [connection signal="item_activated" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree" to="." method="_on_tree_item_activated"]
+[connection signal="item_selected" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/Tree" to="." method="_on_tree_item_selected"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/MarginContainer/VBoxContainer/HBoxContainer/SelectButton" to="." method="_on_select_button_pressed"]

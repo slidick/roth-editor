@@ -13,6 +13,7 @@ show_close_button = false
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_0rm7d")
+is_subwindow = true
 
 [node name="MainContainer" parent="Contents/VBoxContainer" parent_id_path=PackedInt32Array(384367087) index="1" unique_id=2051013205]
 theme = ExtResource("4_hoaj0")
@@ -232,15 +233,13 @@ mouse_filter = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -100.0
-offset_right = 200.0
-offset_bottom = 100.0
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.3
+anchor_right = 0.7
+anchor_bottom = 0.7
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 movable = false
@@ -249,6 +248,7 @@ exclusive = true
 minimize_style = "fade_out"
 panel_corner_radius = 0
 panel_style_override = ExtResource("3_0rm7d")
+is_subwindow = true
 
 [node name="ProgressBar" type="ProgressBar" parent="Subwindows/CompressingZip/Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(286023673, 2051013205) index="0" unique_id=1142778644]
 layout_mode = 2

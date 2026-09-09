@@ -13,6 +13,7 @@ func setup(p_entry: Dictionary, p_reset: bool = false) -> void:
 		play_position = 0
 		if is_equal_approx(size.x, 0):
 			await get_tree().process_frame
+		await get_tree().process_frame
 		end_position = size.x
 	jump = max(roundi(len(data) / 10000.0), 1)
 	queue_redraw()
