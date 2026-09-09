@@ -31,8 +31,8 @@ func _fade_out() -> void:
 
 func init_das(p_das: Dictionary) -> void:
 	loaded_das[p_das.das_info.name] = {}
-	if p_das.das_info.name not in favorites:
-		favorites[p_das.das_info.name] = []
+	if p_das.das_info.base not in favorites:
+		favorites[p_das.das_info.base] = []
 	if p_das.das_info.base not in recents:
 		recents[p_das.das_info.base] = []
 	for texture: Dictionary in p_das.textures:
@@ -44,7 +44,7 @@ func init_das(p_das: Dictionary) -> void:
 
 func unload_das(das_info: Dictionary) -> void:
 	loaded_das.erase(das_info.name)
-	favorites.erase(das_info.name)
+	favorites.erase(das_info.base)
 	recents.erase(das_info.base)
 	for i in range(%RotatableItemList.item_count-1, -1, -1):
 		var texture: Dictionary = %RotatableItemList.get_item_metadata(i)
@@ -66,7 +66,7 @@ func show_texture(p_das: Dictionary, p_only_ceilings: bool = false, p_selected_i
 	
 	
 	%FavoriteItemList.clear()
-	for texture_index: int in favorites[p_das.das_info.name]:
+	for texture_index: int in favorites[p_das.das_info.base]:
 		var texture_data: Dictionary = p_das.mapping[texture_index]
 		if is_viable(texture_data):
 			var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], texture_data.image, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
@@ -178,10 +178,10 @@ func _on_favorite_item_list_context_option_selected(index: int, context_index: i
 		0:
 			var texture_index: int = %FavoriteItemList.get_item_metadata(index).index
 			%FavoriteItemList.remove_item(index)
-			var idx: int = favorites[current_das.das_info.name].find(texture_index)
+			var idx: int = favorites[current_das.das_info.base].find(texture_index)
 			if idx == -1:
-				idx = favorites[current_das.das_info.name].find(float(texture_index))
-			favorites[current_das.das_info.name].pop_at(idx)
+				idx = favorites[current_das.das_info.base].find(float(texture_index))
+			favorites[current_das.das_info.base].pop_at(idx)
 			Settings.update_settings("favorite_textures", favorites)
 
 
@@ -223,11 +223,11 @@ func _on_rotatable_item_list_context_option_selected(index: int, context_index: 
 	match context_index:
 		0:
 			var texture_data: Dictionary = %RotatableItemList.get_item_metadata(index)
-			if texture_data.index in favorites[current_das.das_info.name]:
+			if texture_data.index in favorites[current_das.das_info.base]:
 				return
 			var idx: int = %FavoriteItemList.add_item("%s" % [texture_data.name], texture_data.image, Vector2(75,75), Array(["Remove from Favorites"], TYPE_STRING, "", null))
 			%FavoriteItemList.set_item_metadata(idx, texture_data)
-			favorites[current_das.das_info.name].append(texture_data.index)
+			favorites[current_das.das_info.base].append(texture_data.index)
 			Settings.update_settings("favorite_textures", favorites)
 
 
