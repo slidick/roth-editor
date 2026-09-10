@@ -20,10 +20,6 @@ theme = ExtResource("2_kvtwo")
 script = ExtResource("2_7qk70")
 panel_corner_radius = 0
 panel_style_override = ExtResource("4_rq1sk")
-start_maximized = null
-header = null
-contain_to_viewport = null
-is_subwindow = null
 
 [node name="MarginContainer" type="MarginContainer" parent="Contents/VBoxContainer/MainContainer" parent_id_path=PackedInt32Array(2051013205) index="0" unique_id=1679254212]
 layout_mode = 2

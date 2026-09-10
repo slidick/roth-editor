@@ -3462,7 +3462,6 @@ anchor_right = 0.5
 offset_bottom = 28.0
 grow_horizontal = 2
 mouse_filter = 1
-theme_override_font_sizes/font_size = 36
 theme_override_styles/tab_unselected = SubResource("StyleBoxEmpty_3aa3u")
 theme_override_styles/tab_hovered = SubResource("StyleBoxEmpty_sf4qd")
 theme_override_styles/tab_selected = SubResource("StyleBoxEmpty_6txe1")

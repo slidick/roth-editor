@@ -28,7 +28,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 36
 text = "No Commands Loaded"
 horizontal_alignment = 1
 

@@ -49,6 +49,9 @@ const SELECTED_FIXED_Y_MATERIAL: StandardMaterial3D = preload("uid://b5iarhl24wh
 const HIGHLIGHT_MATERIAL_OUTLINE: StandardMaterial3D = preload("uid://cbbku465w3quc")
 const SELECTED_MATERIAL_OUTLINE: StandardMaterial3D = preload("uid://72eo5yrxeip7")
 
+const RETRO_FONT: Font = preload("uid://bmx77ca0le7ge")
+const MODERN_FONT: Font = preload("uid://dtw03rv8nc63x")
+
 var highlight_material: StandardMaterial3D = HIGHLIGHT_MATERIAL
 var selected_material: StandardMaterial3D = SELECTED_MATERIAL
 var highlight_fixed_y_material: StandardMaterial3D = HIGHLIGHT_FIXED_Y_MATERIAL

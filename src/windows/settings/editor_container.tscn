@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://crhommatho1p7"]
 
+[ext_resource type="Theme" uid="uid://03q268pfdt2r" path="res://src/themes/font_theme.tres" id="1_1sslk"]
 [ext_resource type="Script" uid="uid://dtr7xu0mbohfx" path="res://src/windows/settings/editor_container.gd" id="1_pk1is"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pk1is"]
@@ -7,6 +8,7 @@
 [node name="EditorContainer" type="MarginContainer" unique_id=652967712]
 offset_right = 640.0
 offset_bottom = 480.0
+theme = ExtResource("1_1sslk")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 script = ExtResource("1_pk1is")
@@ -74,8 +76,29 @@ layout_mode = 2
 button_group = SubResource("ButtonGroup_pk1is")
 text = "None"
 
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1911710112]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=295840894]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1504564365]
+layout_mode = 2
+text = "UI Font:"
+
+[node name="FontOption" type="OptionButton" parent="VBoxContainer/HBoxContainer4" unique_id=386705721]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Modern"
+popup/item_0/id = 0
+popup/item_1/text = "Retro"
+popup/item_1/id = 1
+
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/UndoHistorySpinBox" to="." method="_changed" unbinds=1]
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer2/BackupSavesSpinBox" to="." method="_changed" unbinds=1]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer3/DefaultHighlightCheckBox" to="." method="_on_default_highlight_check_box_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer3/OutlineHighlightCheckBox" to="." method="_on_outline_highlight_check_box_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer3/NoHighlightCheckBox" to="." method="_on_no_highlight_check_box_toggled"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer4/FontOption" to="." method="_on_font_option_item_selected"]

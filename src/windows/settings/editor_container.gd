@@ -1,5 +1,10 @@
 extends MarginContainer
 
+enum FontStyle {
+	MODERN,
+	RETRO,
+}
+
 @onready var _things: Dictionary = {
 	"options": {
 		"undo_history": { "node": %UndoHistorySpinBox, "value": %UndoHistorySpinBox.value },
@@ -36,6 +41,8 @@ func _ready() -> void:
 			Roth.highlight_material = null
 			Roth.selected_fixed_y_material = null
 			Roth.highlight_fixed_y_material = null
+	var font_style: int = Settings.settings.get("options", {}).get("font_style", 0)
+	%FontOption.select(font_style)
 
 
 func _changed() -> void:
@@ -67,3 +74,14 @@ func _on_no_highlight_check_box_toggled(toggled_on: bool) -> void:
 		Roth.highlight_material = null
 		Roth.selected_fixed_y_material = null
 		Roth.highlight_fixed_y_material = null
+
+
+func _on_font_option_item_selected(index: int) -> void:
+	Settings.update_settings("options", {"font_style": index})
+	match index:
+		FontStyle.MODERN:
+			theme.default_font = Roth.MODERN_FONT
+			theme.default_font_size = 16
+		FontStyle.RETRO:
+			theme.default_font = Roth.RETRO_FONT
+			theme.default_font_size = 32

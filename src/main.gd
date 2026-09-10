@@ -36,6 +36,17 @@ enum HelpID {
 }
 
 
+func _init() -> void:
+	var font_style: int = Settings.settings.get("options", {}).get("font_style", 0)
+	match font_style:
+		0:
+			theme.default_font = Roth.MODERN_FONT
+			theme.default_font_size = 16
+		1:
+			theme.default_font = Roth.RETRO_FONT
+			theme.default_font_size = 32
+
+
 func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	%Version.text = "v%s" % ProjectSettings.get_setting("application/config/version")
