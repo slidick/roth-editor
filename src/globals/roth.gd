@@ -130,6 +130,8 @@ func _ready() -> void:
 	if current_install < len(roth_installations):
 		current_installation = roth_installations[current_install]
 		for installation: ROTHInstallation in roth_installations:
+			if not installation.is_valid():
+				continue
 			DASPack.init_vanilla_das2_pack(installation)
 			DBasePack.init_vanilla(installation)
 			SFXPack.init_vanilla(installation)
@@ -144,6 +146,8 @@ func _ready() -> void:
 	# Create das and map packs
 	if current_install < len(roth_installations):
 		for installation: ROTHInstallation in roth_installations:
+			if not installation.is_valid():
+				continue
 			MapPack.init_vanilla(installation)
 	DASPack.init_custom_das_packs(ROTH_CUSTOM_DAS_DIRECTORY)
 	MapPack.init_custom(ROTH_CUSTOM_MAP_DIRECTORY, ROTH_CUSTOM_MAP_PACKS_DIRECTORY)

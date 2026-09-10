@@ -7,7 +7,7 @@ func _ready() -> void:
 
 func _on_settings_updated() -> void:
 	%ItemList.clear()
-	if not Roth.current_installation:
+	if not Roth.current_installation or not Roth.current_installation.is_valid():
 		return
 	var cutscenes: Array = DBase100.parse_cutscenes(Roth.current_installation)
 	for cutscene: Dictionary in cutscenes:
