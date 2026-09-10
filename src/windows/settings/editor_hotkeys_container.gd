@@ -107,6 +107,8 @@ func _ready() -> void:
 	%Tree.set_column_title(0, "Name")
 	%Tree.set_column_title(1, "Binding")
 	setup_tree()
+	
+	Roth.editor_keybinds_updated.emit()
 
 
 func setup_tree() -> void:
@@ -181,7 +183,7 @@ func _on_tree_button_clicked(tree_item: TreeItem, _column: int, id: int, _mouse_
 			InputMap.action_erase_event(action, event_data[2][event_data[1]])
 			event_data[2].pop_at(event_data[1])
 			key_rebinds.key_rebinds[action] = event_data[2]
-			save()
+			
 			if len(InputMap.action_get_events(action)) > 0:
 				tree_item.get_parent().set_text(1, ", ".join(InputMap.action_get_events(action).map(func (e: InputEvent) -> String: return e.as_text())))
 			else:
@@ -193,6 +195,7 @@ func _on_tree_button_clicked(tree_item: TreeItem, _column: int, id: int, _mouse_
 			if tree_item.get_index() == 0 and tree_item.get_parent().get_child_count() > 1:
 				tree_item.get_next().set_text(0, "Primary")
 			tree_item.free()
+			save()
 		2:
 			var new_event: InputEvent = await event_window.get_event(get_event_from_tree_item(tree_item, true))
 			if new_event:
@@ -214,15 +217,16 @@ func _on_tree_button_clicked(tree_item: TreeItem, _column: int, id: int, _mouse_
 			InputMap.action_erase_events(action)
 			key_rebinds.key_rebinds[action] = []
 			tree_item.set_text(1, "None")
-			save()
+			
 			tree_item.clear_buttons()
 			tree_item.add_button(1, REVERT_ICON, 4)
 			tree_item.add_button(1, PLUS_ICON, 2)
 			tree_item.add_button(1, X_ICON, 3)
+			save()
 		4:
 			InputMap.action_erase_events(action)
 			key_rebinds.key_rebinds.erase(action)
-			save()
+			
 			for child: TreeItem in tree_item.get_children():
 				child.free()
 			var j: int = 0
@@ -241,6 +245,7 @@ func _on_tree_button_clicked(tree_item: TreeItem, _column: int, id: int, _mouse_
 			tree_item.clear_buttons()
 			tree_item.add_button(1, PLUS_ICON, 2)
 			tree_item.add_button(1, X_ICON, 3)
+			save()
 
 
 func get_event_from_tree_item(tree_item: TreeItem, is_parent: bool = false) -> Array:
@@ -272,15 +277,16 @@ func activate(tree_item: TreeItem) -> void:
 		parent_item.add_button(1, PLUS_ICON, 2)
 		parent_item.add_button(1, X_ICON, 3)
 		parent_item.set_text(1, ", ".join(event_data[2].map(func (e: InputEvent) -> String: return e.as_text())))
-		save()
 		
 		InputMap.action_erase_events(event_data[0])
 		for event: InputEvent in event_data[2]:
 			InputMap.action_add_event(event_data[0], event)
+		save()
 
 
 func save() -> void:
 	ResourceSaver.save(key_rebinds, KEY_REBINDS_FILEPATH)
+	Roth.editor_keybinds_updated.emit()
 
 
 func _on_filter_name_edit_text_changed(_new_text: String) -> void:

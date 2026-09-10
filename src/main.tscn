@@ -180,21 +180,6 @@ item_0/text = "Controls"
 item_0/checkable = 1
 item_0/id = 2
 
-[node name="HiddenMenuBar" type="MenuBar" parent="Menu/MenuPanel" unique_id=1098209346]
-layout_mode = 2
-offset_transform_enabled = true
-offset_transform_position = Vector2(400, 50)
-offset_transform_visual_only = false
-prefer_global_menu = false
-
-[node name="Shortcuts" type="PopupMenu" parent="Menu/MenuPanel/HiddenMenuBar" unique_id=1128245576]
-unique_name_in_owner = true
-oversampling_override = 1.0
-size = Vector2i(117, 100)
-item_count = 1
-item_0/text = "Run Maps"
-item_0/id = 0
-
 [node name="FPSLabel" type="Label" parent="Menu" unique_id=1502798165]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
@@ -294,10 +279,6 @@ anchor_left = 0.05
 anchor_top = 0.08
 anchor_right = 0.95
 anchor_bottom = 0.95
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="ManageMaps" parent="Windows" unique_id=1707608338 instance=ExtResource("8_5mrjc")]
 unique_name_in_owner = true
@@ -308,10 +289,6 @@ anchor_left = 0.05
 anchor_top = 0.08
 anchor_right = 0.95
 anchor_bottom = 0.95
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="ManageSFX" parent="Windows" unique_id=1506724836 instance=ExtResource("12_d3u4l")]
 unique_name_in_owner = true
@@ -322,14 +299,9 @@ anchor_left = 0.05
 anchor_top = 0.08
 anchor_right = 0.95
 anchor_bottom = 0.95
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="BackdropEditor" parent="Windows" unique_id=312449859 instance=ExtResource("13_tb146")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -406,10 +378,6 @@ anchor_left = 0.05
 anchor_top = 0.08
 anchor_right = 0.95
 anchor_bottom = 0.95
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="AlwaysInFrontWindows" type="Control" parent="." unique_id=1615074608]
 layout_mode = 1
@@ -440,7 +408,6 @@ grow_vertical = 2
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Options" to="." method="_on_options_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Windows" to="." method="_on_windows_index_pressed"]
 [connection signal="index_pressed" from="Menu/MenuPanel/MenuBar/Help" to="." method="_on_help_index_pressed"]
-[connection signal="index_pressed" from="Menu/MenuPanel/HiddenMenuBar/Shortcuts" to="." method="_on_shortcuts_menu_index_pressed"]
 [connection signal="window_shown" from="AlwaysBehindWindows/Editor" to="." method="_on_view_3d_window_window_shown"]
 [connection signal="window_shown" from="Windows/Controls" to="." method="_on_controls_window_shown"]
 [connection signal="search_result_activated" from="Windows/Search" to="AlwaysBehindWindows/Editor" method="_on_search_result_activated"]

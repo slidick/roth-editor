@@ -22,6 +22,8 @@ signal editor_action(p_map: Map, p_name: String)
 signal edit_texture(p_das_info: Dictionary, p_index: int)
 @warning_ignore("unused_signal")
 signal map_closed(p_map_preview: Map)
+@warning_ignore("unused_signal")
+signal editor_keybinds_updated
 
 const SCALE_3D_WORLD: float = 100.0
 const SCALE_2D_WORLD: float = 10.0

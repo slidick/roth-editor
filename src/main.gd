@@ -35,19 +35,10 @@ enum HelpID {
 	Controls=0,
 }
 
-enum Shortcuts {
-	Run,
-}
-
 
 func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	%Version.text = "v%s" % ProjectSettings.get_setting("application/config/version")
-	var input := InputEventAction.new()
-	input.action = "test_map"
-	var shortcut := Shortcut.new()
-	shortcut.events.append(input)
-	%Shortcuts.set_item_shortcut(Shortcuts.Run, shortcut, true)
 	%Options.set_item_checked(Options.ConcaveSectors, Settings.settings.get("options", {}).get("highlight_concave_sectors", false))
 	%Options.set_item_checked(Options.SFXZone3D, Settings.settings.get("options", {}).get("show_3d_sfx_zone", true))
 	%Options.set_item_checked(Options.SFXZones2D, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
@@ -275,12 +266,6 @@ func _on_windows_index_pressed(index: int) -> void:
 			%Editor.toggle()
 		WindowID.Extras:
 			%Extras.toggle()
-
-
-func _on_shortcuts_menu_index_pressed(index: int) -> void:
-	match index:
-		Shortcuts.Run:
-			%Editor.test_map()
 
 
 func _on_help_index_pressed(index: int) -> void:

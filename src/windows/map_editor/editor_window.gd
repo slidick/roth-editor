@@ -72,6 +72,19 @@ func _ready() -> void:
 	%EditSFXContainer.hide()
 	%EditVertexContainer.hide()
 	%DrawModeContainer.hide()
+	
+	
+	Roth.editor_keybinds_updated.connect(_on_editor_keybinds_updated)
+	_on_editor_keybinds_updated()
+
+
+func _on_editor_keybinds_updated() -> void:
+	var input := InputEventAction.new()
+	input.action = "test_map"
+	var shortcut := Shortcut.new()
+	shortcut.events.append(input)
+	%RunMapsButton.shortcut = shortcut
+	%RunMapsButton.text = "Run Maps (%s)" % shortcut.get_as_text()
 
 
 func _on_viewport_size_changed() -> void:
@@ -1411,3 +1424,7 @@ func _on_flat_lighting_check_box_toggled(toggled_on: bool) -> void:
 		for object3d: ObjectRoth.ObjectNode3D in map3d.get_child(2).get_children():
 			object3d.ref.initialize_mesh()
 	%UpdatingLighting.toggle(false)
+
+
+func _on_run_maps_button_pressed() -> void:
+	test_map()

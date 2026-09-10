@@ -454,6 +454,15 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Paste Options"
 
+[node name="HSeparator3" type="HSeparator" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MarginContainer/ToolsContainer" index="13" unique_id=107644996]
+layout_mode = 2
+
+[node name="RunMapsButton" type="Button" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MarginContainer/ToolsContainer" index="14" unique_id=1237639742]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Run Maps"
+text_overrun_behavior = 5
+
 [node name="HSplitContainer" type="HSplitContainer" parent="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer" index="1" unique_id=1280956178]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -3704,6 +3713,7 @@ item_1/id = 1
 [connection signal="toggled" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MarginContainer/ToolsContainer/HBoxContainer2/SnapCheckBox" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_check_box_toggled"]
 [connection signal="value_changed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MarginContainer/ToolsContainer/HBoxContainer2/SnapEdit" to="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/ViewportBorder2/SubViewportContainer2D/SubViewport2D/Map2D" method="_on_snap_edit_value_changed"]
 [connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MarginContainer/ToolsContainer/PasteOptionsButton" to="." method="_on_paste_options_button_pressed"]
+[connection signal="pressed" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/MapPanelContainer/VSplitContainer/MarginContainer/ToolsContainer/RunMapsButton" to="." method="_on_run_maps_button_pressed"]
 [connection signal="focus_entered" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_entered"]
 [connection signal="focus_exited" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_focus_exited"]
 [connection signal="gui_input" from="Contents/VBoxContainer/MainContainer/VBoxContainer/MapContainer/HSplitContainer/VBoxContainer/EditorTab/Map Editor/HBoxContainer/AspectRatioContainer/ViewportBorder/SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]
