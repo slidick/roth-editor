@@ -282,7 +282,6 @@ anchor_bottom = 0.95
 
 [node name="ManageMaps" parent="Windows" unique_id=1707608338 instance=ExtResource("8_5mrjc")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -302,6 +301,7 @@ anchor_bottom = 0.95
 
 [node name="BackdropEditor" parent="Windows" unique_id=312449859 instance=ExtResource("13_tb146")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05

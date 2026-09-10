@@ -44,6 +44,10 @@ func _ready() -> void:
 	%Options.set_item_checked(Options.SFXZones2D, Settings.settings.get("options", {}).get("always_show_sfx_zones", false))
 	%Options.set_item_checked(Options.MousePoint, Settings.settings.get("options", {}).get("show_mouse_point", false))
 	%Options.set_item_checked(Options.ShowSky, Settings.settings.get("options", {}).get("show_sky", true))
+	%Editor.hide()
+	for child: Node in $Windows.get_children():
+		child.hide()
+	%Loading.hide()
 
 
 func _process(_delta: float) -> void:
